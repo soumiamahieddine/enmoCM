@@ -121,7 +121,6 @@ $config = $xmlconfig->CONFIG;
 $GLOBALS['MaarchDirectory']   = $_SESSION['config']['corepath'] = (string)$config->MaarchDirectory;
 $_SESSION['config']['app_id'] = 'maarch_entreprise';
 $GLOBALS['CustomId']          = $_SESSION['custom_override_id'] = (string)$config->CustomId;
-$GLOBALS['TmpDirectory']      = $_SESSION['config']['tmppath'] = (string)$config->TmpDirectory;
 $GLOBALS['batchDirectory']    = $GLOBALS['MaarchDirectory'] . 'modules' . DIRECTORY_SEPARATOR . 'visa' . DIRECTORY_SEPARATOR . 'batch';
 $validatedStatus              = (string)$config->validatedStatus;
 $refusedStatus                = (string)$config->refusedStatus;
@@ -210,20 +209,9 @@ if (file_exists($GLOBALS['errorLckFile'])) {
     exit(13);
 }
 
-/*if (file_exists($GLOBALS['lckFile'])) {
-    $GLOBALS['logger']->write(
-        'An instance of the batch is already in progress',
-        'ERROR', 109
-    );
-    exit(109);
-}
-$semaphore = fopen($GLOBALS['lckFile'], 'a');
-fwrite($semaphore, '1');
-fclose($semaphore);*/
-
 Bt_getWorkBatch();
 
-// On récupère les pj qui ont été envoyés au parapheur distant
+$GLOBALS['logger']->write('Retrieve mails sent to remote signatory book', 'INFO');
 $query = "SELECT res_id, res_id_version, external_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user, typist 
         FROM res_view_attachments WHERE status = 'FRZ'";
 $stmt = $GLOBALS['db']->query($query, []);
@@ -239,6 +227,7 @@ while ($reqResult = $stmt->fetchObject()) {
 }
 
 // On récupère les pj signés dans le parapheur distant
+$GLOBALS['logger']->write('Retrieve signed mails from remote signatory book', 'INFO');
 if ($configRemoteSignatoryBook['id'] == 'ixbus') {
     $retrievedMails = IxbusController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 } elseif ($configRemoteSignatoryBook['id'] == 'iParapheur') {
@@ -247,13 +236,12 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
     $retrievedMails = FastParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 }
 
-// $retrievedMails retourne seulement les mails récupérés
-
 // On dégele les pj et on créé une nouvelle ligne si le document a été signé
 foreach ($retrievedMails['isVersion'] as $resId => $value) {
+    $GLOBALS['logger']->write('Update version attachment', 'INFO');
     if ($value->status == 'validated') {
         $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
-        createAttachment([
+        Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
             'identifier'      => $value->identifier,
@@ -265,20 +253,19 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
         ]);
         $GLOBALS['db']->query("UPDATE res_letterbox SET status = '".$validatedStatus."' WHERE res_id = ?", [$value->res_id_master]);
     } elseif ($value->status == 'refused') {
-        $GLOBALS['db']->query("UPDATE res_version_attachments SET status = 'A_TRA' WHERE res_id = ?", [$resId]);
-        $GLOBALS['db']->query("UPDATE res_letterbox SET status = '".$refusedStatus."' WHERE res_id = ?", [$value->res_id_master]);
-        if (!empty($value->note)) {
-            $GLOBALS['db']->query("INSERT INTO notes 
-            SET identifier = ?, tablename = 'res_letterbox', user_id = 'superadmin', date_note = CURRENT_TIMESTAMP, note_text = ?, coll_id = 'letterbox_coll'",
-            [$value->res_id_master, $value->note]);
-        }
+        Bt_refusedSignedMail(['tableAttachment' => 'res_version_attachments',
+        'resIdAttachment' => $resId,
+                                'refusedStatus'   => $refusedStatus,
+                                'resIdMaster'     => $value->res_id_master,
+                                'noteContent'     => $value->noteContent]);
     }
 }
 
 foreach ($retrievedMails['noVersion'] as $resId => $value) {
+    $GLOBALS['logger']->write('Update attachment', 'INFO');
     if ($value->status == 'validated') {
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
-        createAttachment([
+        Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
             'identifier'      => $value->identifier,
@@ -292,28 +279,21 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
         ]);
         $GLOBALS['db']->query("UPDATE res_letterbox SET status = '".$validatedStatus."' WHERE res_id = ?", [$value->res_id_master]);
     } elseif ($value->status == 'refused') {
-        $GLOBALS['db']->query("UPDATE res_attachments SET status = 'A_TRA' WHERE res_id = ?", [$resId]);
-        $GLOBALS['db']->query("UPDATE res_letterbox SET status = '".$refusedStatus."' WHERE res_id = ?", [$value->res_id_master]);
-        if (!empty($value->note)) {
-            $GLOBALS['db']->query("INSERT INTO notes 
-            SET identifier = ?, tablename = 'res_letterbox', user_id = 'superadmin', date_note = CURRENT_TIMESTAMP, note_text = ?, coll_id = 'letterbox_coll'",
-            [$value->res_id_master, $value->note]);
-        }
+        Bt_refusedSignedMail(['tableAttachment' => 'res_attachments',
+                                'resIdAttachment' => $resId,
+                                'refusedStatus'   => $refusedStatus,
+                                'resIdMaster'     => $value->res_id_master,
+                                'noteContent'     => $value->noteContent]);
     }
 }
 
-$nbMailsRetrieved = count($retrievedMails['noVersion']) + count($retrievedMails['isVersion']);
-
 $GLOBALS['logger']->write('end of process', 'INFO');
+$nbMailsRetrieved = count($retrievedMails['noVersion']) + count($retrievedMails['isVersion']);
+$GLOBALS['logger']->write($nbMailsRetrieved.' mail(s) retrieved', 'INFO');
 
 Bt_logInDataBase(
     $nbMailsRetrieved, $err, $nbMailsRetrieved.' mail(s) retrieved'
 );
 Bt_updateWorkBatch();
 
-//clean tmp directory
-echo "clean tmp path ....\n";
-array_map('unlink', glob($_SESSION['config']['tmppath']."/*"));
-
-//unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);

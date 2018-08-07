@@ -298,10 +298,11 @@ class IxbusController
 
     public static function retrieveSignedMails($aArgs)
     {
-
-        // Si besoin, ajouter un attribut 'note' à l'objet $aArgs['idsToRetrieve']['noVersion']['resId'][]
+        
+        // $aArgs['idsToRetrieve']['noVersion']['1120']->status = 'refused';
+        // $aArgs['idsToRetrieve']['noVersion']['1120']->noteContent = 'pas bon';
+        
         // retourne seulement les mails récupérés
-
         return $aArgs['idsToRetrieve'];
     }
 }

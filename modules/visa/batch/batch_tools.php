@@ -154,7 +154,7 @@ function Bt_myInclude($file)
     }
 }
 
-function createAttachment($aArgs = [])
+function Bt_createAttachment($aArgs = [])
 {
     $dataValue = [];
     array_push($dataValue, ['column' => 'res_id_master',    'value' => $aArgs['res_id_master'],   'type' => 'integer']);
@@ -177,4 +177,14 @@ function createAttachment($aArgs = [])
     ];
 
     // TODO curl storeResource
+}
+
+function Bt_refusedSignedMail($aArgs = [])
+{
+    $GLOBALS['db']->query("UPDATE ".$aArgs['tableAttachment']." SET status = 'A_TRA' WHERE res_id = ?", [$aArgs['resIdAttachment']]);
+    $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $aArgs['refusedStatus'] . "' WHERE res_id = ?", [$aArgs['resIdMaster']]);
+    if (!empty($aArgs['noteContent'])) {
+        $GLOBALS['db']->query("INSERT INTO notes (identifier, tablename, user_id, date_note, note_text, coll_id) VALUES (?, 'res_letterbox', 'superadmin', CURRENT_TIMESTAMP, ?, 'letterbox_coll')",
+        [$aArgs['resIdMaster'], $aArgs['noteContent']]);
+    }
 }
