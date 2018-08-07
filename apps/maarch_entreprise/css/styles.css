@@ -3733,3 +3733,25 @@ width:auto;
 .typeahead__list {
     min-width: 150px !important;
 }
+.iconDoc span {
+    display: none;
+}
+.iconDoc:hover span {
+    display: block;
+    position:fixed;
+    left:10px;
+    top:10px;
+    -moz-box-shadow: 0px 0px 5px 0px #656565;
+    -webkit-box-shadow: 0px 0px 5px 0px #656565;
+    -o-box-shadow: 0px 0px 5px 0px #656565;
+    box-shadow: 0px 0px 5px 0px #656565;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
+    z-index:100;
+    height:auto;
+    width:auto;
+}
+
+.iconDoc:hover span img {
+    height:auto;
+    width:auto;
+}

@@ -146,44 +146,18 @@ foreach (array_keys($data) as $key) {
     }
 }
 
-require_once 'modules'.DIRECTORY_SEPARATOR.'thumbnails'.DIRECTORY_SEPARATOR
-            .'class'.DIRECTORY_SEPARATOR
-            .'class_modules_tools.php';
-
 $getAttach = '';
 
-$tnl = new thumbnails();
-
 $db = new Database();
-if (isset($_REQUEST['res_id_master'])) {
-    //$ac->getCorrespondingPdf($att_id);
-    require_once 'modules/attachments/class/attachments_controler.php';
-    $ac = new attachments_controler();
-    $infos_attach = $ac->getAttachmentInfos($att_id);
-    $pdf_id = $ac->getCorrespondingPdf($att_id);
-    //echo "pdf : ".$pdf_id;
-
-    $path = $tnl->getPathTnl($s_id, $coll_id);
-    if (!is_file($path)) {
-        $path = $tnl->generateTnl($s_id, $coll_id);
-    }
-
-    $path = $tnl->getPathTnl($pdf_id, $coll_id, 'res_attachments');
-    $getAttach = '&res_id_attach='.$pdf_id;
-
-    if (!is_file($path)) {
-        $path = $tnl->generateTnl($pdf_id, $coll_id, 'res_attachments');
-    }
-} else {
-    $path = $tnl->getPathTnl($s_id, $coll_id);
-    if (!is_file($path)) {
-        $path = $tnl->generateTnl($s_id, $coll_id);
-    }
-}
+$tnlAdr = \Resource\models\AdrModel::getTypedDocumentAdrByResId([
+    'select'    => [1],
+    'resId'     => $s_id,
+    'type'      => 'TNL'
+]);
 ?>
 <div id="details" title="Détails" class="panel">
     <?php
-        if (!is_file($path)) {
+        if (empty($tnlAdr)) {
             echo 'pdf : '.$pdf_id; ?>
     <div align="center">
         <input type="button" class="whiteButton" value="<?php 
@@ -193,11 +167,8 @@ if (isset($_REQUEST['res_id_master'])) {
 
         } else {
             ?>
-    <!--<img style="width:90%;" src="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=doc_thumb&module=thumbnails&res_id='.$s_id.'&coll_id=letterbox_coll&display=true'; ?>" onclick="window.open('
-    <?php echo $fileUrl; ?>', '_blank');"/>-->
-
     <div id="frameThumb">
-        <iframe id="ifrm" frameborder="0" scrolling="no" width="0" height="0" src="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails&res_id='.$s_id.'&coll_id=letterbox_coll'.$getAttach; ?>"></iframe>
+        <iframe id="ifrm" frameborder="0" scrolling="no" width="0" height="0" src="<?php echo '../../../rest/res/'.$s_id.'/thumbnail' ?>"></iframe>
     </div>
 
     <?php
@@ -242,10 +213,6 @@ if (isset($_REQUEST['res_id_master'])) {
                     <i class="fa fa-hand-point-up fa-2x mCdarkGrey" aria-hidden="true"></i>
                 </span>
             </a>
-
-            <span class="bubble" style="cursor: pointer;margin-right: 5px;" onclick="switchFrame('<?php functions::xecho($_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails'); ?>',<?php functions::xecho($s_id); ?>,<?php functions::xecho($pdf_id); ?>);">
-                <i class="fa fa-retweet fa-2x mCdarkGrey"></i>
-            </span>
             <input type="hidden" id="type_doc_show" value="attach" />
             <?php
 

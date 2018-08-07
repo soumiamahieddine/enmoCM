@@ -76,7 +76,7 @@
             <div *ngIf="headerTab == 1" class="contentShow">
                 <div *ngIf="showTopLeftPanel" class="pjDoc">
                     <div style="height:100%;">
-                        <img title="{{document.title}}" id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="document.thumbnailLink"
+                        <img title="{{document.title}}" id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="coreUrl + document.thumbnailLink"
                                  class="leftPanelThumbnails" [ngClass]="{'panelSelectedThumbnail': i == leftSelectedThumbnail}"/>
                     </div>
                 </div>

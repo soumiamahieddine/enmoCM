@@ -73,7 +73,7 @@ class StoreController
             $resId = false;
             if ($aArgs['table'] == 'res_letterbox') {
                 $resId = ResModel::create($data);
-                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => 260]);
+                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $resId]);
             } elseif ($aArgs['table'] == 'res_attachments') {
                 $resId = AttachmentModel::create($data);
             }

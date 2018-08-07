@@ -154,6 +154,7 @@ DO $$ BEGIN
     ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_filename;
   END IF;
 END$$;
+INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Taille des imagettes', '750x900');
 
 /* Refactoring */
 DROP VIEW IF EXISTS af_view_customer_target_view;

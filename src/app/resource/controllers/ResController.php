@@ -326,21 +326,47 @@ class ResController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
+        $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
         $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
             'select'    => ['docserver_id', 'path', 'filename'],
             'resId'     => $aArgs['resId'],
             'type'      => 'TNL'
         ]);
         if (empty($tnlAdr)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Thumbnail does not exist']);
+            $extDocument = ResModel::getExtById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
+            if ($extDocument['category_id'] == 'outgoing') {
+                $attachment = AttachmentModel::getOnView([
+                    'select'    => ['res_id', 'res_id_version'],
+                    'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
+                    'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
+                    'limit'     => 1
+                ]);
+                if (!empty($attachment[0])) {
+                    ConvertThumbnailController::convert([
+                        'collId'            => 'letterbox_coll',
+                        'resId'             => $aArgs['resId'],
+                        'outgoingId'        => empty($attachment[0]['res_id']) ? $attachment[0]['res_id_version'] : $attachment[0]['res_id'],
+                        'isOutgoingVersion' => empty($attachment[0]['res_id'])
+                    ]);
+                }
+            } else {
+                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $aArgs['resId']]);
+            }
+            $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
+                'select'    => ['docserver_id', 'path', 'filename'],
+                'resId'     => $aArgs['resId'],
+                'type'      => 'TNL'
+            ]);
         }
 
-        $docserver = DocserverModel::getByDocserverId(['docserverId' => $tnlAdr['docserver_id'], 'select' => ['path_template']]);
-        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
-        }
+        if (!empty($tnlAdr)) {
+            $docserver = DocserverModel::getByDocserverId(['docserverId' => $tnlAdr['docserver_id'], 'select' => ['path_template']]);
+            if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+            }
 
-        $pathToThumbnail = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $tnlAdr['path']) . $tnlAdr['filename'];
+            $pathToThumbnail = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $tnlAdr['path']) . $tnlAdr['filename'];
+        }
 
         $fileContent = file_get_contents($pathToThumbnail);
         if ($fileContent === false) {

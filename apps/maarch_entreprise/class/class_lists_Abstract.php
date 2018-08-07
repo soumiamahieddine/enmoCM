@@ -1190,7 +1190,7 @@ abstract class lists_Abstract extends Database
         }
 
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
-        if ($core->is_module_loaded('thumbnails') === true && !$isAttachment) {
+        if (!$isAttachment) {
             $return .= '<div align="center" class="iconDoc" onmouseover="displayThumbnail(\''.$res_id.'\')"><a href="'.$href.'" target="_blank" title="'
                     ._VIEW_DOC.'"><i class="tooltip fa fa-download fa-2x" title="'._VISUALIZE.'"></i><span id="thumb_'.$res_id.'" name="thumb_'.$res_id.'"></span></a></div>';
         } else {

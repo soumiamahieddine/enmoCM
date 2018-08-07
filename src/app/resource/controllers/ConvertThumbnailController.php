@@ -19,6 +19,7 @@ namespace Resource\controllers;
 use Attachment\models\AttachmentModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use Parameter\models\ParameterModel;
 use Resource\models\AdrModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
@@ -64,7 +65,12 @@ class ConvertThumbnailController
             $command = "wkhtmltoimage --height 600 --width 400 --quality 100 --zoom 0.2 "
                 . escapeshellarg($pathToDocument) . ' ' . escapeshellarg("{$tmpPath}{$fileNameOnTmp}.png");
         } else {
-            $command = "convert -thumbnail 1000x1500 -background white -alpha remove "
+            $size = '750x900';
+            $parameter = ParameterModel::getById(['id' => 'thumbnailsSize', 'select' => ['param_value_string']]);
+            if (!empty($parameter) && preg_match('/[0-9]{3,4}[x][0-9]{3,4}/', $parameter['param_value_string'])) {
+                $size = $parameter['param_value_string'];
+            }
+            $command = "convert -thumbnail {$size} -background white -alpha remove "
                 . escapeshellarg($pathToDocument) . '[0] ' . escapeshellarg("{$tmpPath}{$fileNameOnTmp}.png");
         }
         exec($command, $output, $return);
