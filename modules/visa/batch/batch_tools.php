@@ -176,7 +176,23 @@ function Bt_createAttachment($aArgs = [])
         "status"      => 'TRA'
     ];
 
-    // TODO curl storeResource
+    $opts = [
+        CURLOPT_URL => $GLOBALS['applicationUrl'] . 'rest/res',
+        CURLOPT_HTTPHEADER => [
+            'accept:application/json',
+            'content-type:application/json'
+        ],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => 'Authorization: Basic ' . base64_encode($GLOBALS['userWS']. ':' .$GLOBALS['passwordWS']),
+        CURLOPT_POSTFIELDS => json_encode($allDatas),
+        CURLOPT_POST => true
+    ];
+
+    $curl = curl_init();
+    curl_setopt_array($curl, $opts);
+    $rawResponse = curl_exec($curl);
+
+    return json_decode($rawResponse, true);
 }
 
 function Bt_refusedSignedMail($aArgs = [])

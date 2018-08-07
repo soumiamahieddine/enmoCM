@@ -121,6 +121,9 @@ $config = $xmlconfig->CONFIG;
 $GLOBALS['MaarchDirectory']   = $_SESSION['config']['corepath'] = (string)$config->MaarchDirectory;
 $_SESSION['config']['app_id'] = 'maarch_entreprise';
 $GLOBALS['CustomId']          = $_SESSION['custom_override_id'] = (string)$config->CustomId;
+$GLOBALS['applicationUrl']    = (string)$config->applicationUrl;
+$GLOBALS['userWS']            = (string)$config->userWS;
+$GLOBALS['passwordWS']        = (string)$config->passwordWS;
 $GLOBALS['batchDirectory']    = $GLOBALS['MaarchDirectory'] . 'modules' . DIRECTORY_SEPARATOR . 'visa' . DIRECTORY_SEPARATOR . 'batch';
 $validatedStatus              = (string)$config->validatedStatus;
 $refusedStatus                = (string)$config->refusedStatus;
@@ -163,7 +166,7 @@ try {
             }
         }
     } else {
-        $GLOBALS['logger']->write($path . ' dfoes not exist', 'ERROR', 102);
+        $GLOBALS['logger']->write($path . ' does not exist', 'ERROR', 102);
         echo "\nConfiguration file ".$path." does not exist ! \nThe batch cannot be launched !\n\n";
         exit(102);
     }

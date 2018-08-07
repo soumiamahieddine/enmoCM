@@ -5,6 +5,9 @@
 		<CustomId>cs_maarch_v2</CustomId>
         <validatedStatus>VAL</validatedStatus>
         <refusedStatus>COU</refusedStatus>
+        <applicationUrl>http://localhost/maarch_v2/</applicationUrl>
+        <userWS>superadmin</userWS>
+        <passwordWS>superadmin</passwordWS>
     </CONFIG>
     <LOG4PHP>
         <enabled>true</enabled>
