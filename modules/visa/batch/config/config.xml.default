@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
     <CONFIG>
-        <MaarchDirectory>/var/www/MaarchCourrier/</MaarchDirectory>
+        <MaarchDirectory>/var/www/html/maarch_v2/</MaarchDirectory>
 		<CustomId>cs_maarch_v2</CustomId>
         <validatedStatus>VAL</validatedStatus>
         <refusedStatus>COU</refusedStatus>
@@ -10,6 +10,6 @@
         <enabled>true</enabled>
         <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
         <Log4PhpBusinessCode>retrieveMailsFromSignatoryBook</Log4PhpBusinessCode>
-        <Log4PhpConfigPath>/var/www/MaarchCourrier/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
+        <Log4PhpConfigPath>/var/www/html/maarch_v2/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
     </LOG4PHP>
 </ROOT>
