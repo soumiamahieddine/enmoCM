@@ -404,6 +404,7 @@ export const LANG_FR = {
     "redirects"                         : "Redirections",
     "redirectWhenAbscence"              : "Rediriger la bannette à une personne",
     "reinitPassword"                    : "Réinitialiser le mot de passe",
+    "relatedContactNumber"              : "Nombre de contacts associé",
     "relatedUsers"                      : "Utilisateur(s) associé(s)",
     "relatedBaskets"                    : "Bannette(s) associée(s)",
     "removeUserRedirect"                : "Supprimer la personne (liste de diffusion + modèle de l'entité)",
@@ -630,5 +631,10 @@ export const LANG_FR = {
     "maarchLicence"                     : "Maarch Courrier est diffusé sous les termes de la",
     "groupeCompany"                     : "société du groupe Archiveco",
     "welcomeInGEC"                      : "Bienvenue dans votre Gestion Electronique de Courriers",
+    "myLastResources"                   : "Mes derniers courriers",
+    "shortcut"                          : "Raccourcis",
+    "searchMails"                       : "Rechercher des courriers",
+    "noAvailableBasket"                 : "Aucune bannette disponible",
+    "othersBaskets"                     : "Autres bannettes",
 
 };

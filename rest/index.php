@@ -211,6 +211,7 @@ $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 $app->post('/res', \Resource\controllers\ResController::class . ':create');
 $app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
 $app->get('/res/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
+$app->get('/res/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
 $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':isLock');

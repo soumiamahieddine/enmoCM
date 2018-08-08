@@ -248,11 +248,20 @@ function setFinalVersion(path) {
 
 function loadSelectedContact() {
     var ContactAndAddress = $('selectContactIdRes').value;
-    var value = ContactAndAddress.split("#");
-    $('contactidAttach').value=value[0];
-    $('addressidAttach').value=value[1];
-    $('contact_attach').value=value[2];
-    $('contact_attach').focus();
+
+    if (ContactAndAddress == 'mailing') {
+        $j("#contactDiv").hide();
+        $j("#newAttachDiv").hide();
+        $j('#contactidAttach').val('mailing');
+    } else {
+        $j("#contactDiv").show();
+        $j("#newAttachDiv").show();
+        var value = ContactAndAddress.split("#");
+        $j('#contactidAttach').val(value[0]);
+        $j('#addressidAttach').val(value[1]);
+        $j('#contact_attach').val(value[2]);
+        $j('#contact_attach').focus();
+    }
 }
 
 function createModalinAttachmentList(txt, id_mod, height, width, mode_frm){

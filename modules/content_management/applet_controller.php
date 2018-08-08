@@ -149,6 +149,7 @@ if (!empty($_REQUEST['action'])
             && $objectType <> 'attachmentFromTemplate'
             && $objectType <> 'attachment'
             && $objectType <> 'attachmentVersion'
+            && $objectType <> 'attachmentMailing'
             && $objectType <> 'outgoingMail'
             && $objectType <> 'attachmentUpVersion'
             && $objectType <> 'newAttachment'
@@ -282,7 +283,7 @@ if (!empty($_REQUEST['action'])
             fclose($inF);
             
             //Récupération de la version pdf du document
-            if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail' || $objectType == 'resourceEdit' || $objectType == 'transmission' || $objectType == 'newAttachment') && isset($_REQUEST['pdfContent'])) {
+            if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion' || $objectType == 'attachmentMailing' || $objectType == 'outgoingMail' || $objectType == 'resourceEdit' || $objectType == 'transmission' || $objectType == 'newAttachment') && isset($_REQUEST['pdfContent'])) {
                 $pdfEncodedContent = str_replace(
                     ' ',
                     '+',
@@ -325,7 +326,7 @@ if (!empty($_REQUEST['action'])
                 } elseif ($objectType == 'templateStyle' || $objectType == 'template') {
                     include 'modules/content_management/save_template_from_cm.php';
                 //ADD - EDIT NEW ATTACHMENT (FOR TEMPORARY SAVE)
-                } elseif ($objectType == 'attachmentVersion' || $objectType == 'attachmentUpVersion' || $objectType == 'outgoingMail' || $objectType == 'newAttachment') {
+                } elseif ($objectType == 'attachmentVersion' || $objectType == 'attachmentMailing' || $objectType == 'attachmentUpVersion' || $objectType == 'outgoingMail' || $objectType == 'newAttachment') {
                     include 'modules/content_management/save_attachment_from_cm.php';
                 }
 

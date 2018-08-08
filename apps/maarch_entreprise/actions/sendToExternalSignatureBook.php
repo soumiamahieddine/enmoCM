@@ -64,7 +64,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         }
 
         foreach ($attachmentToFreeze as $resId => $externalId) {
-            \Attachment\modelsx\AttachmentModel::freezeAttachment(['resId' => $resId, 'table' => 'res_attachments', 'externalId' => $externalId]);
+            \Attachment\models\AttachmentModel::freezeAttachment(['resId' => $resId, 'table' => 'res_attachments', 'externalId' => $externalId]);
         }
     }
 
@@ -84,8 +84,6 @@ function getXml()
         $loadedXml = simplexml_load_file($path);
         if ($loadedXml) {
             $config['id']               = (string)$loadedXml->signatoryBookEnabled;
-            $config['validatedStatus']  = (string)$loadedXml->validatedStatus;
-            $config['refusedStatus']    = (string)$loadedXml->refusedStatus;
             foreach ($loadedXml->signatoryBook as $value) {
                 if ($value->id == $config['id']) {
                     $config['data'] = (array)$value;

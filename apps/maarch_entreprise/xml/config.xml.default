@@ -292,10 +292,6 @@
         <moduleid>sendmail</moduleid>
         <comment>_SENDMAIL_COMMENT</comment>
     </MODULES>
-    <MODULES>
-        <moduleid>thumbnails</moduleid>
-        <comment>_THUMBNAILS_COMMENT</comment>
-    </MODULES>
 	<MODULES>
         <moduleid>visa</moduleid>
         <comment>_VISA_WORKFLOW_COMMENT</comment>

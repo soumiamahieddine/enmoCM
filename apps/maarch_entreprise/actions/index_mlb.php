@@ -1188,18 +1188,17 @@ function check_docserver($collId)
         $newFileName = $_SESSION['upfile']['name'];
     }
 
-    $fileInfos = array(
-        'tmpDir' => $_SESSION['config']['tmppath'],
-        'size' => $_SESSION['upfile']['size'],
-        'format' => $_SESSION['upfile']['format'],
-        'tmpFileName' => $newFileName,
-    );
-    //print_r($fileInfos);
+    $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
+        'collId'            => $collId,
+        'docserverTypeId'   => 'DOC',
+        'fileInfos'         => [
+            'tmpDir'            => $_SESSION['config']['tmppath'],
+            'tmpFileName'       => $newFileName
+        ]
+    ]);
 
-    $storeResult = $docserverControler->storeResourceOnDocserver($collId, $fileInfos);
-    //print_r($storeResult);
-    if (isset($storeResult['error']) && $storeResult['error'] != '') {
-        $_SESSION['action_error'] = $storeResult['error'];
+    if (isset($storeResult['errors']) && $storeResult['errors'] != '') {
+        $_SESSION['action_error'] = $storeResult['errors'];
 
         return false;
     } else {
@@ -1207,6 +1206,7 @@ function check_docserver($collId)
         $_SESSION['indexing']['destination_dir'] = $storeResult['destination_dir'];
         $_SESSION['indexing']['docserver_id'] = $storeResult['docserver_id'];
         $_SESSION['indexing']['file_destination_name'] = $storeResult['file_destination_name'];
+        $_SESSION['indexing']['fingerPrint'] = $storeResult['fingerPrint'];
         $_SESSION['action_error'] = _CHECK_FORM_OK;
 
         return true;
@@ -1762,7 +1762,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     }
 
     if ($core->is_module_loaded('folder')) {
-        $folderId = '';
         $folderId = get_value_fields($formValues, 'folder');
 
         if (!empty($folderId)) {
@@ -1797,14 +1796,28 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
     }
 
-    //print_r($_SESSION['data']);
-    $resId = $resource->load_into_db(
-        $table, $_SESSION['indexing']['destination_dir'],
-        $_SESSION['indexing']['file_destination_name'],
-        $_SESSION['indexing']['path_template'],
-        $_SESSION['indexing']['docserver_id'], $_SESSION['data'],
-        $_SESSION['config']['databasetype']
-    );
+    $data = \Resource\controllers\StoreController::prepareStorage([
+        'data'          => $_SESSION['data'],
+        'docserverId'   => $_SESSION['indexing']['docserver_id'],
+        'fileName'      => $_SESSION['indexing']['file_destination_name'],
+        'fileFormat'    => $_SESSION['upfile']['format'],
+        'fileSize'      => $_SESSION['upfile']['size'],
+        'path'          => $_SESSION['indexing']['destination_dir'],
+        'fingerPrint'   => $_SESSION['indexing']['fingerPrint']
+    ]);
+
+    $resId = \Resource\models\ResModel::create($data);
+    \Resource\controllers\ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $resId]);
+
+    \History\controllers\HistoryController::add([
+        'tableName' => 'res_letterbox',
+        'recordId'  => $resId,
+        'eventType' => 'ADD',
+        'info'      => _DOC_CREATED,
+        'moduleId'  => 'res',
+        'eventId'   => 'resadd',
+        'userId'    => $_SESSION['user']['UserId']
+    ]);
 
     // Contact
     if (isset($_ENV['categories'][$catId]['other_cases']['contact'])) {

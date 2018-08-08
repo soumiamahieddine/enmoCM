@@ -28,7 +28,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
-    displayedColumns = ['label', 'description', 'public', 'owner', 'actions'];
+    displayedColumns = ['label', 'description', 'nbContacts', 'public', 'owner', 'actions',];
     dataSource = new MatTableDataSource(this.contactsGroups);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

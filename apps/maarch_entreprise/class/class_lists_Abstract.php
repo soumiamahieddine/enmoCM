@@ -1190,8 +1190,8 @@ abstract class lists_Abstract extends Database
         }
 
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
-        if ($core->is_module_loaded('thumbnails') === true && !$isAttachment) {
-            $return .= '<div align="center" class="iconDoc" onmouseover="showThumb(\'thumb_\',\''.$res_id.'\', \'letterbox_coll\')"><a href="'.$href.'" target="_blank" title="'
+        if (!$isAttachment) {
+            $return .= '<div align="center" class="iconDoc" onmouseover="displayThumbnail(\''.$res_id.'\')"><a href="'.$href.'" target="_blank" title="'
                     ._VIEW_DOC.'"><i class="tooltip fa fa-download fa-2x" title="'._VISUALIZE.'"></i><span id="thumb_'.$res_id.'" name="thumb_'.$res_id.'"></span></a></div>';
         } else {
             $return .= '<div align="right" class="iconDoc" style="" ><a href="'.$href.'" target="_blank" title="'
@@ -1617,9 +1617,9 @@ abstract class lists_Abstract extends Database
             $return .= 'checked ';
         }
 
-        $isVersion = 'false';
+        $isVersion = false;
         if ($resultTheLine[1]['value'] > 1) {
-            $isVersion = 'true';
+            $isVersion = true;
         }
         $return .= 'onclick="setAttachmentInSignatureBook('.$resultTheLine[0]['value'].', '.$isVersion.');"/>Intégrer au parapheur';
 

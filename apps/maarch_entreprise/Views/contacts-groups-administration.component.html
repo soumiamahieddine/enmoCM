@@ -44,11 +44,15 @@
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="label" matSortDirection="asc">
                     <ng-container matColumnDef="label">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">{{lang.label}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;"> <span matBadge="{{element.nbContacts}}" matBadgeOverlap="false"> {{element.label}} </span> </mat-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">{{element.label}}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="description">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.description}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" style="flex:2;"> {{element.description}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="nbContacts">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.relatedContactNumber}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:1;justify-content:center;"> {{element.nbContacts}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="public">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.public}}</mat-header-cell>
@@ -60,7 +64,7 @@
                     <ng-container matColumnDef="owner">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.createdBy}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" style="flex:1;"> {{element.labelledOwner}} </mat-cell>
-                    </ng-container>
+                    </ng-container>                    
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="justify-content: flex-end;">

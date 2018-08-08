@@ -320,6 +320,7 @@ export const LANG_EN = {
     "redirectModelInfo"                 : "This user is in diffusion list model of this entity.",
     "redirects"                         : "Redirections",
     "reinitPassword"                    : "Reset password",
+    "relatedContactNumber"              : "Number of contacts related",
     "relatedUsers"                      : "Related users",
     "relatedBaskets"                    : "Related basket(s)",
     "removeUserRedirect"                : "Remove user (diffusion list + diffusion model entity)",
@@ -602,6 +603,11 @@ export const LANG_EN = {
     "community"                         : "Community",
     "officialWebsite"                   : "Official website",
     "maarchLicence"                     : "Maarch Courrier is circulated under the terms of",
-    "groupeCompany"                     : ", Archiveco group company"
+    "groupeCompany"                     : ", Archiveco group company",
+    "myLastResources"                   : "My last mails",
+    "shortcut"                          : "Shortcut",
+    "searchMails"                       : "Search mails",
+    "noAvailableBasket"                 : "No available basket",
+    "othersBaskets"                     : "Others baskets",
 
 };

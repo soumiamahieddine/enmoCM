@@ -40,11 +40,11 @@ abstract class AttachmentModelAbstract
 
     public static function getById(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'isVersion']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['isVersion']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
 
-        if ($aArgs['isVersion'] == 'true') {
+        if (!empty($aArgs['isVersion'])) {
             $table = 'res_version_attachments';
         } else {
             $table = 'res_attachments';
@@ -113,7 +113,7 @@ abstract class AttachmentModelAbstract
         $originalAttachment = AttachmentModel::getById([
             'select'    => ['path', 'filename'],
             'id'        => $aArgs['id'],
-            'isVersion' => (empty($aArgs['isVersion']) ? 'false' : 'true')
+            'isVersion' => $aArgs['isVersion']
         ]);
 
         $PdfFilename = substr($originalAttachment['filename'], 0, strrpos($originalAttachment['filename'], '.')) . '.pdf';

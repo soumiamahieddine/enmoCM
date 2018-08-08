@@ -591,7 +591,6 @@
     <xi:include href="../../../../modules/sendmail/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/tags/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/templates/xml/IVS/requests_definitions.xml"/>
-    <xi:include href="../../../../modules/thumbnails/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/visa/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/avis/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/thesaurus/xml/IVS/requests_definitions.xml"/>
@@ -623,7 +622,6 @@
     <xi:include href="../../../../modules/sendmail/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/tags/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/templates/xml/IVS/validation_rules.xml"/>
-    <xi:include href="../../../../modules/thumbnails/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/visa/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/avis/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/thesaurus/xml/IVS/validation_rules.xml"/>
@@ -655,7 +653,6 @@
     <xi:include href="../../../../modules/sendmail/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/tags/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/templates/xml/IVS/data_types.xml"/>
-    <xi:include href="../../../../modules/thumbnails/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/visa/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/avis/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/thesaurus/xml/IVS/data_types.xml"/>

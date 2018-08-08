@@ -17,7 +17,7 @@ if ($objectType == 'templateStyle') {
         );
         createXML('ERROR', $result);
     }
-} elseif ($objectType == 'template' || $objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail' || $objectType == 'transmission') {
+} elseif ($objectType == 'template' || $objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion' || $objectType == 'attachmentMailing' || $objectType == 'outgoingMail' || $objectType == 'transmission') {
     if ($_SESSION['m_admin']['templates']['current_style'] <> '') {
         // edition in progress
         $fileExtension = $func->extractFileExt(
@@ -48,7 +48,7 @@ if ($objectType == 'templateStyle') {
             $filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
             $templateObj = $templateCtrl->get($objectId);
             $_SESSION['cm']['templateStyle'] = $templateObj->template_style;
-        } elseif ($objectType == 'template') {
+        } elseif ($objectType == 'template' || $objectType == 'attachmentMailing') {
             $filePathOnTmp = $templateCtrl->copyTemplateOnTmp($objectId);
             if ($filePathOnTmp == '') {
                 $result = array('ERROR' => _FAILED_TO_COPY_ON_TMP 

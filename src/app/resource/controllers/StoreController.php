@@ -73,6 +73,7 @@ class StoreController
             $resId = false;
             if ($aArgs['table'] == 'res_letterbox') {
                 $resId = ResModel::create($data);
+                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $resId]);
             } elseif ($aArgs['table'] == 'res_attachments') {
                 $resId = AttachmentModel::create($data);
             }
@@ -119,7 +120,7 @@ class StoreController
 
     public static function prepareStorage(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['data', 'docserverId', 'status', 'fileName', 'fileFormat', 'fileSize', 'path', 'fingerPrint']);
+        ValidatorModel::notEmpty($aArgs, ['data', 'docserverId', 'fileName', 'fileFormat', 'fileSize', 'path', 'fingerPrint']);
         ValidatorModel::stringType($aArgs, ['docserverId', 'status', 'fileName', 'fileFormat', 'path', 'fingerPrint']);
         ValidatorModel::arrayType($aArgs, ['data']);
         ValidatorModel::intVal($aArgs, ['fileSize']);

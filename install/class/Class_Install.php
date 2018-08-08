@@ -125,9 +125,9 @@ class Install extends functions
         if (!$this->isPhpRequirements('gd')) {
             return false;
         }
-        /*if (!$this->isPhpRequirements('imagick')) {
+        if (!$this->isPhpRequirements('imagick')) {
             return false;
-        }*/
+        }
         /*if (!$this->isPhpRequirements('ghostscript')) {
             return false;
         }*/
@@ -323,16 +323,6 @@ class Install extends functions
                 $cheminCustomMaarchCourrierModules = realpath('.')."/custom/cs_$databasename/modules";
                 mkdir($cheminCustomMaarchCourrierModules, 0755);
 
-                /** Création répertoire thumbnails dans le custom **/
-                $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
-                mkdir($cheminCustomMaarchCourrierModulesThumbnails, 0755);
-
-                $cheminCustomMaarchCourrierModulesThumbnailsXml = realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml";
-                mkdir($cheminCustomMaarchCourrierModulesThumbnailsXml, 0755);
-
-                $cheminCustomMaarchCourrierModulesThumbnailsScripts = realpath('.')."/custom/cs_$databasename/modules/thumbnails/scripts";
-                mkdir($cheminCustomMaarchCourrierModulesThumbnailsScripts, 0755);
-
                 /** Création répertoire notification dans le custom **/
                 $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications";
                 mkdir($cheminCustomMaarchCourrierModulesNotifications, 0755);
@@ -381,22 +371,8 @@ class Install extends functions
             }
 
             if (is_dir(realpath('.')."/custom/cs_$databasename/modules/")) {
-                /* Création répertoire thumbnails dans le custom **/
 
-                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/thumbnails/")) {
-                    $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
-                    mkdir($cheminCustomMaarchCourrierModulesThumbnails, 0755);
-                }
-                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml/")) {
-                    $cheminCustomMaarchCourrierModulesThumbnailsXml = realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml";
-                    mkdir($cheminCustomMaarchCourrierModulesThumbnailsXml, 0755);
-                }
-                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/thumbnails/scripts/")) {
-                    $cheminCustomMaarchCourrierModulesThumbnailsScripts = realpath('.')."/custom/cs_$databasename/modules/thumbnails/scripts";
-                    mkdir($cheminCustomMaarchCourrierModulesThumbnailsScripts, 0755);
-                }
-
-                /* Création répertoire thumbnails dans le custom **/
+                /* Création répertoire notif dans le custom **/
                 if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/")) {
                     $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications/";
                     mkdir($cheminCustomMaarchCourrierModulesNotifications, 0755);
@@ -414,7 +390,7 @@ class Install extends functions
                     mkdir($cheminCustomMaarchCourrierModulesNotificationsScripts, 0755);
                 }
 
-                /* Création répertoire thumbnails dans le custom **/
+                /* Création répertoire sendmail dans le custom **/
                 if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/")) {
                     $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
                     mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
@@ -567,16 +543,6 @@ class Install extends functions
              */
             $cheminCustomMaarchCourrierModules = realpath('.')."/custom/cs_$databasename/modules";
             mkdir($cheminCustomMaarchCourrierModules, 0755);
-
-            /** Création répertoire thumbnails dans le custom **/
-            $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
-            mkdir($cheminCustomMaarchCourrierModulesThumbnails, 0755);
-
-            $cheminCustomMaarchCourrierModulesThumbnailsXml = realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml";
-            mkdir($cheminCustomMaarchCourrierModulesThumbnailsXml, 0755);
-
-            $cheminCustomMaarchCourrierModulesThumbnailsScripts = realpath('.')."/custom/cs_$databasename/modules/thumbnails/scripts";
-            mkdir($cheminCustomMaarchCourrierModulesThumbnailsScripts, 0755);
 
             /** Création répertoire notification dans le custom **/
             $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications";
@@ -782,18 +748,6 @@ class Install extends functions
         $connect .= 'password='.$_SESSION['config']['databasepassword'].' ';
         $connect .= 'dbname=postgres';
 
-        if (!$this->setConfigXmlThumbnails()) {
-            return false;
-            exit;
-        }
-        if (!$this->setConfig_batch_XmlThumbnails()) {
-            return false;
-            exit;
-        }
-        if (!$this->setConfigScriptLaunchThumbnails()) {
-            return false;
-            exit;
-        }
         if (!$this->setConfig_sendmail()) {
             return false;
             exit;
@@ -911,18 +865,6 @@ class Install extends functions
             exit;
         }
 
-        if (!$this->setConfigXmlThumbnails()) {
-            return false;
-            exit;
-        }
-        if (!$this->setConfig_batch_XmlThumbnails()) {
-            return false;
-            exit;
-        }
-        if (!$this->setConfigScriptLaunchThumbnails()) {
-            return false;
-            exit;
-        }
         if (!$this->setConfig_sendmail()) {
             return false;
             exit;
@@ -1032,10 +974,6 @@ class Install extends functions
 #                                                                                  #
 ####################################################################################
 
-
-######################THUMBNAILS####################################################
-*/5 5-21 * * 1-5       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/scripts/launch_batch_thumbnails.sh
-15 12 * * 0        rm -Rf '.realpath('.').'/modules/thumbnails/log/*.log
 
 ######################notification#################################################
 
@@ -1148,95 +1086,6 @@ class Install extends functions
     //     return true;
     // }
 
-    private function setConfigXmlThumbnails()
-    {
-        //var_dump("setConfigXmlThumbnails");
-        $xmlconfig = simplexml_load_file('modules/thumbnails/xml/config.xml.default');
-        //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
-        $CONFIG = $xmlconfig->CONFIG;
-
-        $CONFIG->docserver_id = 'TNL';
-        $chemin_no_file = realpath('.').'/modules/thumbnails/no_thumb.png';
-        $CONFIG->no_file = $chemin_no_file;
-        $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config.xml', 'w+');
-        if (!$fp) {
-            return false;
-            exit;
-        }
-        $write = fwrite($fp, $res);
-        if (!$write) {
-            return false;
-            exit;
-        }
-
-        return true;
-    }
-
-    private function setConfig_batch_XmlThumbnails()
-    {
-        $xmlconfig = simplexml_load_file('modules/thumbnails/xml/config_batch_letterbox.xml.default');
-
-        $CONFIG = $xmlconfig->CONFIG;
-
-        $chemin_core = realpath('.').'/core/';
-
-        $CONFIG->MaarchDirectory = realpath('.').'/';
-
-        $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
-        $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
-        $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
-        $CONFIG_BASE->databasename = $_SESSION['config']['databasename'];
-        $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
-        $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
-
-        $LOG4PHP = $xmlconfig->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
-
-        $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config_batch_letterbox.xml', 'w+');
-        if (!$fp) {
-            return false;
-            exit;
-        }
-
-        $write = fwrite($fp, $res);
-        if (!$write) {
-            return false;
-            exit;
-        }
-        $xmlconfig = simplexml_load_file('modules/thumbnails/xml/config_batch_attachments.xml.default');
-
-        $CONFIG = $xmlconfig->CONFIG;
-
-        $chemin_core = realpath('.').'/core/';
-
-        $CONFIG->MaarchDirectory = realpath('.').'/';
-
-        $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
-        $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
-        $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
-        $CONFIG_BASE->databasename = $_SESSION['config']['databasename'];
-        $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
-        $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
-
-        $LOG4PHP = $xmlconfig->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
-
-        $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config_batch_attachments.xml', 'w+');
-        if (!$fp) {
-            return false;
-            exit;
-        }
-        $write = fwrite($fp, $res);
-        if (!$write) {
-            return false;
-            exit;
-        }
-
-        return true;
-    }
 
     private function setConfig_batch_XmlNotifications()
     {
@@ -1664,52 +1513,6 @@ class Install extends functions
         }
 
         return true;
-    }
-
-    private function setConfigScriptLaunchThumbnails()
-    {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $res = 'cd '.realpath('.')."\modules\\thumbnails\\";
-            $res .= "\n";
-            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\thumbnails\create_tnl.php  '.realpath('.')."\custom\cs_".$_SESSION['config']['databasename'].'\modules\\thumbnails\xml\config_batch_letterbox.xml';
-            $res .= "\n";
-            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\thumbnails\create_tnl.php  '.realpath('.')."\custom\cs_".$_SESSION['config']['databasename'].'\modules\\thumbnails\xml\config_batch_attachments.xml';
-            $res .= "\n";
-
-            $fp = @fopen(realpath('.')."\custom\cs_".$_SESSION['config']['databasename']."\modules\\thumbnails\scripts\launch_batch_thumbnails.bat", 'w+');
-            if (!$fp) {
-                return false;
-                exit;
-            }
-            $write = fwrite($fp, $res);
-            if (!$write) {
-                return false;
-                exit;
-            }
-
-            return true;
-        } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
-            $res = '#!/bin/bash';
-            $res .= "\n\n";
-            $res .= 'cd '.realpath('.').'/modules/thumbnails/';
-            $res .= "\n\n";
-            $res .= 'php '.realpath('.').'/modules/thumbnails/create_tnl.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config_batch_letterbox.xml';
-            $res .= "\n\n";
-            $res .= 'php '.realpath('.').'/modules/thumbnails/create_tnl.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config_batch_attachments.xml';
-
-            $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/scripts/launch_batch_thumbnails.sh', 'w+');
-            if (!$fp) {
-                return false;
-                exit;
-            }
-            $write = fwrite($fp, $res);
-            if (!$write) {
-                return false;
-                exit;
-            }
-
-            return true;
-        }
     }
 
     private function setScriptNotificationNctNccAndAncSh()

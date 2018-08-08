@@ -151,3 +151,8 @@ function setSessionForSignatureBook(resId) {
         }
     });
 }
+
+function displayThumbnail(resId)
+{
+    $j('#thumb_' + resId).html('<img src="../../rest/res/' + resId + '/thumbnail">');
+}

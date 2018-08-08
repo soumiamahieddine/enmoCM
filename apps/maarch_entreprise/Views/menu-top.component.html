@@ -1,3 +1,34 @@
+<button mat-button [matMenuTriggerFor]="lastresource" *ngIf="!mobileMode && homeData" style="min-width: unset" matTooltip="{{lang.myLastResources}}">
+    <mat-icon mat-list-icon class="fa fa-list-ul fa-lg" style="color:white; margin:0px 0px -11px 0px;"></mat-icon></button>
+<mat-menu #lastresource="matMenu" class="headerMaarchShortcut">
+    <mat-nav-list *ngIf="homeData">
+        <mat-list-item *ngFor="let resource of homeData.lastResources">
+            <a matLine href="index.php?page=details&dir=indexing_searching&id={{resource.res_id}}" matTooltip="{{resource.subject}}" style="color:#135F7F">{{resource.alt_identifier}}<br>{{resource.subject}}</a>
+            <mat-divider></mat-divider>
+        </mat-list-item>   
+    </mat-nav-list>
+</mat-menu>
+<button mat-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode && homeData" style="min-width: unset" matTooltip="{{lang.shortcut}}">
+    <mat-icon mat-list-icon class="fa fa-th fa-lg" style="color:white; margin:0px 0px -11px 0px;"></mat-icon></button>
+<mat-menu #applications="matMenu" class="headerMaarchShortcut">
+    <!-- TODO -->
+    <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary">
+        <i class="fa fa-users fa-2x"></i>
+        <br/>Utilisateurs
+    </button>
+    <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary">
+        <i class="fa fa-users fa-2x"></i>
+        <br/>Utilisateurs
+    </button>
+    <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary">
+        <i class="fa fa-users fa-2x"></i>
+        <br/>Utilisateurs
+    </button>
+    <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary">
+        <i class="fa fa-users fa-2x"></i>
+        <br/>Utilisateurs
+    </button>
+</mat-menu>
 <button mat-button [matMenuTriggerFor]="menu" *ngIf="!mobileMode">
     <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white; margin:0px 12px 8px 0px;"></mat-icon>{{user.firstname.charAt(0) | uppercase}}. {{user.lastname | uppercase}}</button>
 <mat-menu #menu="matMenu" class="headerMaarch">

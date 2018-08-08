@@ -20,18 +20,18 @@
  */
 
 /**
- * @brief API to manage batchs 
+ * @brief API to manage batchs
  *
  * @file
- * @author Laurent Giovannoni
+ * @author Laurent Giovannoni <dev@maarch.org>
  * @date $date$
  * @version $Revision$
- * @ingroup core
+ * @ingroup sendmail
  */
 
 /**
  * Execute a sql query
- * 
+ *
  * @param object $dbConn connection object to the database
  * @param string $queryTxt path of the file to include
  * @param boolean $transaction for rollback if error
@@ -59,9 +59,9 @@ function Bt_doQuery($dbConn, $queryTxt, $param=array(), $transaction=false)
 }
 
 /**
- * Exit the batch with a return code, message in the log and 
+ * Exit the batch with a return code, message in the log and
  * in the database if necessary
- * 
+ *
  * @param int $returnCode code to exit (if > O error)
  * @param string $message message to the log and the DB
  * @return nothing exit the program
@@ -76,7 +76,7 @@ function Bt_exitBatch($returnCode, $message='')
         if ($GLOBALS['totalProcessedResources'] == -1) {
             $GLOBALS['totalProcessedResources'] = 0;
         }
-        if($returnCode < 100) {
+        if ($returnCode < 100) {
             if (file_exists($GLOBALS['errorLckFile'])) {
                 unlink($GLOBALS['errorLckFile']);
             }
@@ -110,10 +110,10 @@ function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
 
 /**
  * Get the batch if of the batch
- * 
+ *
  * @return nothing
  */
-function Bt_getWorkBatch() 
+function Bt_getWorkBatch()
 {
     $req = "SELECT param_value_int FROM parameters WHERE id = ? ";
     $stmt = $GLOBALS['db']->query($req, array($GLOBALS['batchName']."_id"));
@@ -130,7 +130,7 @@ function Bt_getWorkBatch()
 
 /**
  * Update the database with the new batch id of the batch
- * 
+ *
  * @return nothing
  */
 function Bt_updateWorkBatch()
@@ -141,15 +141,69 @@ function Bt_updateWorkBatch()
 
 /**
  * Include the file requested if exists
- * 
+ *
  * @param string $file path of the file to include
  * @return nothing
  */
-function Bt_myInclude($file) 
+function Bt_myInclude($file)
 {
     if (file_exists($file)) {
-        include_once ($file);
+        include_once($file);
     } else {
         throw new IncludeFileError($file);
     }
+}
+
+function Bt_createAttachment($aArgs = [])
+{
+    $dataValue = [];
+    array_push($dataValue, ['column' => 'res_id_master',    'value' => $aArgs['res_id_master'],   'type' => 'integer']);
+    array_push($dataValue, ['column' => 'title',            'value' => $aArgs['title'],           'type' => 'string']);
+    array_push($dataValue, ['column' => 'identifier',       'value' => $aArgs['identifier'],      'type' => 'string']);
+    array_push($dataValue, ['column' => 'type_id',          'value' => 1,                         'type' => 'integer']);
+    array_push($dataValue, ['column' => 'dest_contact_id',  'value' => $aArgs['dest_contact_id'], 'type' => 'integer']);
+    array_push($dataValue, ['column' => 'dest_address_id',  'value' => $aArgs['dest_address_id'], 'type' => 'integer']);
+    array_push($dataValue, ['column' => 'dest_user',        'value' => $aArgs['dest_user'],       'type' => 'string']);
+    array_push($dataValue, ['column' => 'typist',           'value' => $aArgs['typist'],          'type' => 'string']);
+    array_push($dataValue, ['column' => 'attachment_type',  'value' => 'signed_response',         'type' => 'string']);
+    array_push($dataValue, ['column' => 'coll_id',          'value' => 'letterbox_coll',          'type' => 'string']);
+    array_push($dataValue, ['column' => 'relation',         'value' => 1,                         'type' => 'integer']);
+    array_push($dataValue, ['column' => 'in_signature_book','value' => 'true',                    'type' => 'bool']);
+
+    $allDatas = [
+        "encodedFile" => $aArgs['encodedFile'],
+        "data"        => $dataValue,
+        "collId"      => "letterbox_coll",
+        "table"       => "res_attachments",
+        "fileFormat"  => $aArgs['format'],
+        "status"      => 'TRA'
+    ];
+
+    $opts = [
+        CURLOPT_URL => $GLOBALS['applicationUrl'] . 'rest/res',
+        CURLOPT_HTTPHEADER => [
+            'accept:application/json',
+            'content-type:application/json',
+            'Authorization: Basic ' . base64_encode($GLOBALS['userWS']. ':' .$GLOBALS['passwordWS']),
+        ],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POSTFIELDS => json_encode($allDatas),
+        CURLOPT_POST => true
+    ];
+
+    $curl = curl_init();
+    curl_setopt_array($curl, $opts);
+    $rawResponse = curl_exec($curl);
+
+    return json_decode($rawResponse, true);
+}
+
+function Bt_refusedSignedMail($aArgs = [])
+{
+    if (!empty($aArgs['noteContent'])) {
+        $GLOBALS['db']->query("INSERT INTO notes (identifier, tablename, user_id, date_note, note_text, coll_id) VALUES (?, 'res_letterbox', 'superadmin', CURRENT_TIMESTAMP, ?, 'letterbox_coll')",
+        [$aArgs['resIdMaster'], $aArgs['noteContent']]);
+    }
+    $GLOBALS['db']->query("UPDATE ".$aArgs['tableAttachment']." SET status = 'A_TRA' WHERE res_id = ?", [$aArgs['resIdAttachment']]);
+    $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $aArgs['refusedStatus'] . "' WHERE res_id = ?", [$aArgs['resIdMaster']]);
 }

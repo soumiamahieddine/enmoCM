@@ -117,7 +117,7 @@ class SignatureBookController
         $isVersion = ($data['table'] == 'res_attachments' ? 'false' : 'true');
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
         if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
-            $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
+            $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => ($data['table'] == 'res_attachments'), 'select' => ['res_id_master']]);
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
                 'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
@@ -170,7 +170,7 @@ class SignatureBookController
                 'title'         => $incomingMail['subject'],
                 'category_id'   => $incomingMail['category_id'],
                 'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
-                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$resId}&coll_id=letterbox_coll&display=true&advanced=true"
+                'thumbnailLink' => "rest/res/{$resId}/thumbnail"
             ]
         ];
 
@@ -202,7 +202,7 @@ class SignatureBookController
                 'format'        => $value['format'],
                 'isConverted'   => $isConverted,
                 'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$viewerId}",
-                'thumbnailLink' => "index.php?page=doc_thumb&module=thumbnails&res_id={$value['res_id']}&coll_id=attachments_coll&display=true&advanced=true"
+                'thumbnailLink' => "rest/res/{$value['res_id']}/thumbnail"
             ];
         }
 
@@ -316,8 +316,6 @@ class SignatureBookController
             $attachments[$key]['attachment_type'] = $attachmentTypes[$value['attachment_type']]['label'];
             $attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
             $attachments[$key]['sign'] = $attachmentTypes[$value['attachment_type']]['sign'];
-
-            $attachments[$key]['thumbnailLink'] = "index.php?page=doc_thumb&module=thumbnails&res_id={$realId}&coll_id={$collId}&display=true&advanced=true";
 
             if(!in_array(strtoupper($value['format']), ['PDF', 'JPG', 'JPEG', 'PNG', 'GIF']) ){
                 $isVersion = 'false';
