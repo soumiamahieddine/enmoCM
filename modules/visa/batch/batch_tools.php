@@ -160,12 +160,15 @@ function Bt_createAttachment($aArgs = [])
     array_push($dataValue, ['column' => 'res_id_master',    'value' => $aArgs['res_id_master'],   'type' => 'integer']);
     array_push($dataValue, ['column' => 'title',            'value' => $aArgs['title'],           'type' => 'string']);
     array_push($dataValue, ['column' => 'identifier',       'value' => $aArgs['identifier'],      'type' => 'string']);
-    array_push($dataValue, ['column' => 'type_id',          'value' => $aArgs['type_id'],         'type' => 'integer']);
+    array_push($dataValue, ['column' => 'type_id',          'value' => 1,                         'type' => 'integer']);
     array_push($dataValue, ['column' => 'dest_contact_id',  'value' => $aArgs['dest_contact_id'], 'type' => 'integer']);
     array_push($dataValue, ['column' => 'dest_address_id',  'value' => $aArgs['dest_address_id'], 'type' => 'integer']);
     array_push($dataValue, ['column' => 'dest_user',        'value' => $aArgs['dest_user'],       'type' => 'string']);
     array_push($dataValue, ['column' => 'typist',           'value' => $aArgs['typist'],          'type' => 'string']);
     array_push($dataValue, ['column' => 'attachment_type',  'value' => 'signed_response',         'type' => 'string']);
+    array_push($dataValue, ['column' => 'coll_id',          'value' => 'letterbox_coll',          'type' => 'string']);
+    array_push($dataValue, ['column' => 'relation',         'value' => 1,                         'type' => 'integer']);
+    array_push($dataValue, ['column' => 'in_signature_book','value' => 'true',                    'type' => 'bool']);
 
     $allDatas = [
         "encodedFile" => $aArgs['encodedFile'],
@@ -180,10 +183,10 @@ function Bt_createAttachment($aArgs = [])
         CURLOPT_URL => $GLOBALS['applicationUrl'] . 'rest/res',
         CURLOPT_HTTPHEADER => [
             'accept:application/json',
-            'content-type:application/json'
+            'content-type:application/json',
+            'Authorization: Basic ' . base64_encode($GLOBALS['userWS']. ':' .$GLOBALS['passwordWS']),
         ],
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => 'Authorization: Basic ' . base64_encode($GLOBALS['userWS']. ':' .$GLOBALS['passwordWS']),
         CURLOPT_POSTFIELDS => json_encode($allDatas),
         CURLOPT_POST => true
     ];
@@ -197,10 +200,10 @@ function Bt_createAttachment($aArgs = [])
 
 function Bt_refusedSignedMail($aArgs = [])
 {
-    $GLOBALS['db']->query("UPDATE ".$aArgs['tableAttachment']." SET status = 'A_TRA' WHERE res_id = ?", [$aArgs['resIdAttachment']]);
-    $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $aArgs['refusedStatus'] . "' WHERE res_id = ?", [$aArgs['resIdMaster']]);
     if (!empty($aArgs['noteContent'])) {
         $GLOBALS['db']->query("INSERT INTO notes (identifier, tablename, user_id, date_note, note_text, coll_id) VALUES (?, 'res_letterbox', 'superadmin', CURRENT_TIMESTAMP, ?, 'letterbox_coll')",
         [$aArgs['resIdMaster'], $aArgs['noteContent']]);
     }
+    $GLOBALS['db']->query("UPDATE ".$aArgs['tableAttachment']." SET status = 'A_TRA' WHERE res_id = ?", [$aArgs['resIdAttachment']]);
+    $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $aArgs['refusedStatus'] . "' WHERE res_id = ?", [$aArgs['resIdMaster']]);
 }

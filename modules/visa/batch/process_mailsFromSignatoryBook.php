@@ -267,7 +267,6 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
 foreach ($retrievedMails['noVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update attachment', 'INFO');
     if ($value->status == 'validated') {
-        $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
@@ -280,6 +279,7 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             'format'          => $value->format,
             'encodedFile'     => $value->encodedFile,
         ]);
+        $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
         $GLOBALS['db']->query("UPDATE res_letterbox SET status = '".$validatedStatus."' WHERE res_id = ?", [$value->res_id_master]);
     } elseif ($value->status == 'refused') {
         Bt_refusedSignedMail(['tableAttachment' => 'res_attachments',
