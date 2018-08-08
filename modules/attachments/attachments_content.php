@@ -1179,12 +1179,14 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
 $content .= '<h2>&nbsp;'.$title;
 
 //multicontact
+
 if (!empty($infoAttach->multi_contact)) {
     $content .= ' pour le contact : <select style="background-color: #FFF;border: 1px solid #999;color: #666;text-align: left;" id="selectContactIdRes" onchange="loadSelectedContact()">';
 
     foreach ($infoAttach->multi_contact as $key => $value) {
         $content .= '<option value="'.$value['contact_id'].'#'.$value['address_id'].'#'.$value['format_contact'].'">'.$value['format_contact'].'</option>';
     }
+    $content .= '<option value="mailing">Publipostage</option>';
     $content .= '</select>';
     $content .= '<script>$j("#selectContactIdRes", window.top.document).change();</script>';
 }
@@ -1260,12 +1262,10 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
         $content .= '<option value="">'._CHOOSE_MODEL.'</option>';
 
         $content .= '</select>';
-        if ($mode == 'add') {
-            $content .= ' <input type="button" value="';
-            $content .= _EDIT_MODEL;
-            $content .= '" name="templateOffice_edit[]" id="templateOffice_edit" style="display:none;margin-top: 0" class="button" '
-                .'onclick="showAppletLauncher(this, \''.$_SESSION['doc_id'].'\',\''.$objectTable.'\',\'attachmentVersion\',\'attachment\');$(\'add\').value=\'Edition en cours ...\';editingDoc(this,\''.$_SESSION['user']['UserId'].'\');$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';this.hide();$j(\'#\'+this.id).parent().find(\'[name=templateOffice\\\\[\\\\]]\').css(\'width\',\'206px\');"/>';
-        }
+        $content .= ' <input type="button" value="';
+        $content .= _EDIT_MODEL;
+        $content .= '" name="templateOffice_edit[]" id="templateOffice_edit" style="display:none;margin-top: 0" class="button" '
+            .'onclick="showAppletLauncher(this, \''.$_SESSION['doc_id'].'\',\''.$objectTable.'\',\'attachmentVersion\',\'attachment\');$(\'add\').value=\'Edition en cours ...\';editingDoc(this,\''.$_SESSION['user']['UserId'].'\');$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';this.hide();$j(\'#\'+this.id).parent().find(\'[name=templateOffice\\\\[\\\\]]\').css(\'width\',\'206px\');"/>';
         $content .= '<iframe style="display:none; width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="'.$_SESSION['config']['businessappurl']
             .'index.php?display=true&module=attachments&page=choose_attachment"></iframe>';
 
@@ -1325,7 +1325,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     $content .= "<input type='hidden' name='dataCreationDate' id='dataCreationDate' value='{$dataForDate}' />";
 
     //CONTACT
-    $content .= '<div style="margin-bottom:10px;">';
+    $content .= '<div id="contactDiv" style="margin-bottom:10px;">';
     $content .= '<label>'._DEST_USER_PJ;
     if ($core->test_admin('my_contacts', 'apps', false)) {
         $content .= ' <a href="#" id="create_multi_contact" title="'._CREATE_CONTACT
@@ -1350,7 +1350,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     if ($mode == 'add' && $_GET['cat'] != 'outgoing') {
         $content .= '<p>';
 
-        $content .= '<div style="float: left">';
+        $content .= '<div id="newAttachDiv" style="float: left">';
 
         //ADD ATTACH OTHER ATTACHEMENT
         $content .= '<input type="button" class="button readonly" id="newAttachButton" value="'._NEW_ATTACH_ADDED.'" title="'._NEW_ATTACH_ADDED.'" onclick="addNewAttach();" disabled="disabled"></input>';
