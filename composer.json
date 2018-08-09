@@ -7,6 +7,7 @@
             "Basket\\"            : "src/app/basket/",
             "Contact\\"           : "src/app/contact/",
             "ContentManagement\\" : "src/app/contentManagement/",
+            "Convert\\"           : "src/app/convert/",
             "Docserver\\"         : "src/app/docserver/",
             "Doctype\\"           : "src/app/doctype/",
             "Entity\\"            : "src/app/entity/",
@@ -27,7 +28,6 @@
             "User\\"              : "src/app/user/",
             "VersionUpdate\\"     : "src/app/versionUpdate/",
 
-            "Convert\\"           : "modules/convert/",
             "Sendmail\\"          : "modules/sendmail/"
     	}
     },

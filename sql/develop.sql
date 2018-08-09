@@ -155,11 +155,12 @@ CREATE TABLE adr_letterbox
 WITH (OIDS=FALSE);
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'tnl_path') = 1 THEN
-    INSERT INTO adr_letterbox (res_id, type, docserver_id, path, filename) SELECT res_id, 'TNL', 'TNL_MLB', tnl_path, tnl_filename FROM res_letterbox WHERE tnl_path IS NOT NULL AND tnl_path != 'ERR'
+    INSERT INTO adr_letterbox (res_id, type, docserver_id, path, filename) SELECT res_id, 'TNL', 'TNL_MLB', tnl_path, tnl_filename FROM res_letterbox WHERE tnl_path IS NOT NULL AND tnl_path != 'ERR';
     ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_path;
     ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_filename;
   END IF;
 END$$;
+DELETE FROM parameters WHERE id = 'thumbnailsSize';
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Taille des imagettes', '750x900');
 
 /* Refactoring */

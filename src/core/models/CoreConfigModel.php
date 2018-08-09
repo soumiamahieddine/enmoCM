@@ -92,6 +92,26 @@ class CoreConfigModel
     }
 
     /**
+     * Get the timezone
+     *
+     * @return string
+     */
+    public static function getTimezone()
+    {
+        $timezone = 'Europe/Paris';
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
+
+        if ($loadedXml) {
+            if (!empty((string)$loadedXml->CONFIG->timezone)) {
+                $timezone = (string)$loadedXml->CONFIG->timezone;
+            }
+        }
+
+        return $timezone;
+    }
+
+    /**
      * Get the tmp dir
      *
      * @return string

@@ -149,7 +149,7 @@ foreach (array_keys($data) as $key) {
 $getAttach = '';
 
 $db = new Database();
-$tnlAdr = \Resource\models\AdrModel::getTypedDocumentAdrByResId([
+$tnlAdr = \Convert\models\AdrModel::getTypedDocumentAdrByResId([
     'select'    => [1],
     'resId'     => $s_id,
     'type'      => 'TNL'

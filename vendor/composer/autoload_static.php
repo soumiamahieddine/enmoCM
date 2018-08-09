@@ -302,7 +302,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         ),
         'Convert\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/modules/convert',
+            0 => __DIR__ . '/../..' . '/src/app/convert',
         ),
         'ContentManagement\\' => 
         array (

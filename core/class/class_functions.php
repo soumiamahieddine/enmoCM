@@ -1163,30 +1163,6 @@ class functions
     }
 
     /**
-    * Method to generates private and public keys
-    */
-    public function generatePrivatePublicKey() {
-        $privateKeyPath = $this->getPrivateKeyPath();
-        $publicKeyPath = $this->getPublicKeyPath();
-        if(!file_exists($privateKeyPath)) {
-            $inF = fopen($privateKeyPath,"w");
-            fclose($inF);
-        }
-        if(!file_exists($publicKeyPath)) {
-            $inF = fopen($publicKeyPath,"w");
-            fclose($inF);
-        }
-        $privateKey = openssl_pkey_new(array(
-            'private_key_bits' => 1024,
-            'private_key_type' => OPENSSL_KEYTYPE_RSA,
-        ));
-        $passphrase = "";
-        openssl_pkey_export_to_file($privateKey, $privateKeyPath, $passphrase);
-        $keyDetails = openssl_pkey_get_details($privateKey);
-        file_put_contents($publicKeyPath, $keyDetails['key']);
-    }
-
-    /**
     * Encrypt a text
     * @param $text string to encrypt
     */

@@ -1807,7 +1807,9 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     ]);
 
     $resId = \Resource\models\ResModel::create($data);
-    \Resource\controllers\ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $resId]);
+    if ($catId != 'outgoing') {
+        \Convert\controllers\ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $resId]);
+    }
 
     \History\controllers\HistoryController::add([
         'tableName' => 'res_letterbox',

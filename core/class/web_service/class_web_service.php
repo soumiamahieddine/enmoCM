@@ -161,7 +161,6 @@ class webService {
             require_once('core' . DIRECTORY_SEPARATOR . 'class'
                 . DIRECTORY_SEPARATOR . 'class_security.php');
             $func = new functions();
-            $connexion = new Database();
             if ($func->isEncrypted() == "true") {
                 $_SESSION['user']['UserId'] = $func->decrypt($_SERVER["PHP_AUTH_USER"]);
                 $password = $func->decrypt($_SERVER["PHP_AUTH_PW"]);
