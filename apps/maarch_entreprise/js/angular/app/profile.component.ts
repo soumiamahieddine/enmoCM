@@ -90,26 +90,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         }
     }
 
-    toggleBasket(state:boolean) {
-        let basketsDisable:any = [];
-        this.user.baskets.forEach((elem: any) => {
-            if (this.selectionBaskets.selected.map((e:any) => { return e.basket_id; }).indexOf(elem.basket_id) != -1 && this.selectionBaskets.selected.map((e:any) => { return e.group_id; }).indexOf(elem.group_id) != -1 && elem.allowed != state) {
-                elem.allowed = state;
-                basketsDisable.push({"basketId" : elem.basket_id, "groupSerialId":elem.groupSerialId, "allowed":state});
-            }
-        });
-        if (basketsDisable.length > 0) {
-            this.http.put(this.coreUrl + "rest/users/" + this.user.id + "/baskets", {"baskets" :basketsDisable})
-            .subscribe((data: any) => {
-                this.selectionBaskets.clear();
-                this.notify.success(this.lang.basketsUpdated);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
-        }
-        
-    }
-
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
 
     //Groups contacts

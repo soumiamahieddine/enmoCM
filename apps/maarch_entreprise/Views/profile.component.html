@@ -223,12 +223,6 @@
                                                 <button [matMenuTriggerFor]="menu" mat-icon-button matTooltip="{{ lang.redirectBaskets }}">
                                                         <mat-icon class="fa fa-reply"></mat-icon>
                                                 </button>
-                                                <button color="warn" mat-icon-button matTooltip="{{lang.disableBasket}}" (click)="toggleBasket(false)">
-                                                    <mat-icon class="fa fa-ban"></mat-icon>
-                                                </button>
-                                                <button color="accent" mat-icon-button matTooltip="{{lang.enableBasket}}" (click)="toggleBasket(true)">
-                                                    <mat-icon class="fa fa-check"></mat-icon>
-                                                </button>
                                                 <mat-menu #menu="matMenu">
                                                     <mat-form-field style="padding:10px;width:200px !important;">
                                                         <input (click)="$event.stopPropagation()" type="text" placeholder="{{ lang.users }}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
