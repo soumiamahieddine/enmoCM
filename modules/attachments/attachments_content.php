@@ -308,6 +308,18 @@ if (isset($_POST['add']) && $_POST['add']) {
                                     )
                                 );
 
+                                if ($contactidAttach == 'mailing') {
+                                    $contactsForMailing = \SrcCore\models\DatabaseModel::select([
+                                        'select'    => ['*'],
+                                        'table'     => ['contacts_res'],
+                                        'where'     => ['res_id = ?'],
+                                        'data'      => [$_SESSION['doc_id']]
+                                    ]);
+                                    foreach ($contactsForMailing as $contactForMailing) {
+                                        \Resource\controllers\ResController::duplicate(['resId' => $_SESSION['doc_id'], 'userId' => $_SESSION['user']['UserId']]);
+                                    }
+                                }
+
                                 //SAVE META DATAS IN DB
                                 $id = $resAttach->load_into_db(
                                     RES_ATTACHMENTS_TABLE,

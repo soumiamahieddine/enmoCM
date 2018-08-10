@@ -6,9 +6,7 @@
         <button mat-button (click)="snav.toggle()" *ngIf="!mobileMode">
             <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
         </button>
-        <h1 class="admin-toolbar-title">{{lang.myProfile}}
-            <small [class.hide-for-mobile]="mobileQuery.matches">{{user.firstname}} {{user.lastname}}</small>
-        </h1>
+        <h1 class="admin-toolbar-title">{{lang.myProfile}}</h1>
         <span style="flex: 1 1 auto;"></span>
         <search-home></search-home>
         <menu-top></menu-top>
