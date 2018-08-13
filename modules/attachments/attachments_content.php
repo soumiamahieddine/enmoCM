@@ -315,8 +315,17 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         'where'     => ['res_id = ?'],
                                         'data'      => [$_SESSION['doc_id']]
                                     ]);
-                                    foreach ($contactsForMailing as $contactForMailing) {
-                                        \Resource\controllers\ResController::duplicate(['resId' => $_SESSION['doc_id'], 'userId' => $_SESSION['user']['UserId']]);
+                                    foreach ($contactsForMailing as $key => $contactForMailing) {
+                                        if ($key == 0) {
+
+                                        } else {
+                                            \Resource\controllers\ResController::duplicateForMailing([
+                                                'resId'     => $_SESSION['doc_id'],
+                                                'userId'    => $_SESSION['user']['UserId'],
+                                                'contactId' => $contactForMailing['contact_id'],
+                                                'addressId' => $contactForMailing['address_id']
+                                            ]);
+                                        }
                                     }
                                 }
 

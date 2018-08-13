@@ -20,6 +20,7 @@ use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use Entity\models\ListInstanceModel;
 use Group\controllers\GroupController;
 use Note\models\NoteModel;
 use Group\models\ServiceModel;
@@ -187,10 +188,10 @@ class ResController
         return $response->withJson(['success' => 'success']);
     }
 
-    public static function duplicate(array $aArgs)
+    public static function duplicateForMailing(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'contactId', 'addressId']);
+        ValidatorModel::intVal($aArgs, ['resId', 'contactId', 'addressId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
         if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $aArgs['userId']])) {
@@ -226,7 +227,23 @@ class ResController
 
         $resId = ResModel::create($resource);
         $resourceExt['res_id'] = $resId;
+        $resourceExt['is_multicontacts'] = 'N';
+        $resourceExt['address_id'] = $aArgs['addressId'];
+        if ($resourceExt['category_id'] == 'outgoing') {
+            $resourceExt['dest_contact_id'] = $aArgs['contactId'];
+        } else {
+            $resourceExt['exp_contact_id'] = $aArgs['contactId'];
+        }
         ResModel::createExt($resourceExt);
+
+        $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+        foreach ($listInstances as $listInstance) {
+            unset($listInstance['listinstance_id']);
+            $listInstance['res_id'] = $resId;
+            $listInstance['signatory'] = empty($listInstance['signatory']) ? 'false' : 'true';
+            $listInstance['requested_signature'] = empty($listInstance['requested_signature']) ? 'false' : 'true';
+            ListInstanceModel::create($listInstance);
+        }
 
         return ['resId' => $resId];
     }
