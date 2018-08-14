@@ -217,50 +217,46 @@
         $find_fingerprint = false;
         $find_filesize = false;
         $find_status = false;
-        for ($i=0; $i < count($data);$i++) {
-            if ($data[$i]['column'] == 'format') {
+
+        foreach ($data as $value) {
+            if ($value['column'] == 'format') {
                 $find_format = true;
                 // must be tested in the file_index.php file (module = indexing_searching)
-            } elseif ($data[$i]['column'] == 'typist') {
+            } elseif ($value['column'] == 'typist') {
                 $find_typist = true;
-            } elseif ($data[$i]['column'] == 'creation_date') {
+            } elseif ($value['column'] == 'creation_date') {
                 $find_creation_date = true;
-                if ($data[$i]['value'] <> $db->current_datetime()) {
+                if ($value['value'] <> $db->current_datetime()) {
                     $error .= _CREATION_DATE_ERROR.'<br/>';
                 }
-            } elseif ($data[$i]['column'] == 'docserver_id') {
+            } elseif ($value['column'] == 'docserver_id') {
                 $find_docserver_id =  true;
                 $db = new Database();
-                if (!$db->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", array($data[$i]['value']))) {
+                if (!$db->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", array($value['value']))) {
                     $error .= _DOCSERVER_ID_ERROR.'<br/>';
                 }
-            } elseif ($data[$i]['column'] == 'path') {
+            } elseif ($value['column'] == 'path') {
                 $find_path = true;
-                if (empty($data[$i]['value'])) {
+                if (empty($value['value'])) {
                     $error .= _PATH_ERROR.'<br/>';
                 }
-            } elseif ($data[$i]['column'] == 'filename') {
+            } elseif ($value['column'] == 'filename') {
                 $find_filename = true;
-                //if(!preg_match("/^[0-9]+.([a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?|maarch)$/", $data[$i]['value']))
-                if (!preg_match("/^[\w-.]+.([a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9]?|maarch)$/", $data[$i]['value'])) {
-                    $error .= _FILENAME_ERROR . ' ' . $data[$i]['value'] . '<br/>';
+                if (!preg_match("/^[\w-.]+.([a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9]?|maarch)$/", $value['value'])) {
+                    $error .= _FILENAME_ERROR . ' ' . $value['value'] . '<br/>';
                 }
-            } elseif ($data[$i]['column'] == 'fingerprint') {
+            } elseif ($value['column'] == 'fingerprint') {
                 $find_fingerprint  = true;
-                if (!preg_match("/^[0-9A-Fa-f]+$/", $data[$i]['value'])) {
+                if (!preg_match("/^[0-9A-Fa-f]+$/", $value['value'])) {
                     $error .= _FINGERPRINT_ERROR.'<br/>';
                 }
-            } elseif ($data[$i]['column'] == 'filesize') {
+            } elseif ($value['column'] == 'filesize') {
                 $find_filesize = true;
-                if ($data[$i]['value'] <= 0) {
+                if ($value['value'] <= 0) {
                     $error .= _FILESIZE_ERROR.'<br/>';
                 }
-            } elseif ($data[$i]['column'] == 'status') {
+            } elseif ($value['column'] == 'status') {
                 $find_status = true;
-                /*if( !preg_match("/^[A-Z][A-Z][A-Z][A-Z]*$/", $data[$i]['value']))
-                {
-                    $error .= _STATUS_ERROR.'<br/>';
-                }*/
             }
         }
 

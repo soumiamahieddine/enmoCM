@@ -245,7 +245,7 @@ class ResController
             ListInstanceModel::create($listInstance);
         }
 
-        return ['resId' => $resId];
+        return $resId;
     }
 
     public function getFileContent(Request $request, Response $response, array $aArgs)
