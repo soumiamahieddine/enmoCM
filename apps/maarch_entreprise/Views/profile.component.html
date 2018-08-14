@@ -218,30 +218,47 @@
                                                 <span *ngIf="!selectionBaskets.hasValue()" style="opacity: 0.5;font-style: italic;font-size: 80%;">
                                                     {{lang.selectAll}}
                                                 </span>
+                                                <mat-form-field *ngIf="selectionBaskets.hasValue()">
+                                                    <input matTooltip="{{lang.redirectWhenAbscence}}" matTooltipPosition="above" type="text" placeholder="{{ lang.redirectBaskets }}"
+                                                       matInput [matAutocomplete]="auto" [formControl]="userCtrl">
+                                                    <mat-autocomplete #auto="matAutocomplete">
+                                                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id)">
+                                                            <p mat-line matTooltip="{{ user.otherInfo }}">
+                                                            <span class="col-xm-1">
+                                                                <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
+                                                            </span>
+                                                            <span class="col-xm-11">
+                                                                {{ user.idToDisplay }}
+                                                                <small>{{ user.otherInfo }}</small>
+                                                            </span>
+                                                            </p>
+                                                        </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
                                             </p>
-                                            <p mat-line *ngIf="selectionBaskets.hasValue()" style="margin-top:10px;">
-                                                <button [matMenuTriggerFor]="menu" mat-icon-button matTooltip="{{ lang.redirectBaskets }}">
-                                                        <mat-icon class="fa fa-reply"></mat-icon>
-                                                </button>
-                                                <mat-menu #menu="matMenu">
-                                                    <mat-form-field style="padding:10px;width:200px !important;">
-                                                        <input (click)="$event.stopPropagation()" type="text" placeholder="{{ lang.users }}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
-                                                        <mat-autocomplete #auto="matAutocomplete">
-                                                            <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id)">
-                                                                <p mat-line matTooltip="{{ user.otherInfo }}">
-                                                                    <span class="col-xm-1">
-                                                                        <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
-                                                                    </span>
-                                                                    <span class="col-xm-11">
-                                                                        {{ user.idToDisplay }}
-                                                                        <small>{{ user.otherInfo }}</small>
-                                                                    </span>
-                                                                </p>
-                                                            </mat-option>
-                                                        </mat-autocomplete>
-                                                    </mat-form-field>
-                                                </mat-menu>
-                                            </p>
+                                            <!--<p mat-line *ngIf="selectionBaskets.hasValue()" style="margin-top:10px;">-->
+                                                <!--<button [matMenuTriggerFor]="menu" mat-icon-button matTooltip="{{ lang.redirectBaskets }}">-->
+                                                        <!--<mat-icon class="fa fa-reply"></mat-icon>-->
+                                                <!--</button>-->
+                                                <!--<mat-menu #menu="matMenu">-->
+                                                    <!--<mat-form-field style="padding:10px;width:200px !important;">-->
+                                                        <!--<input (click)="$event.stopPropagation()" type="text" placeholder="{{ lang.users }}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">-->
+                                                        <!--<mat-autocomplete #auto="matAutocomplete">-->
+                                                            <!--<mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id)">-->
+                                                                <!--<p mat-line matTooltip="{{ user.otherInfo }}">-->
+                                                                    <!--<span class="col-xm-1">-->
+                                                                        <!--<mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>-->
+                                                                    <!--</span>-->
+                                                                    <!--<span class="col-xm-11">-->
+                                                                        <!--{{ user.idToDisplay }}-->
+                                                                        <!--<small>{{ user.otherInfo }}</small>-->
+                                                                    <!--</span>-->
+                                                                <!--</p>-->
+                                                            <!--</mat-option>-->
+                                                        <!--</mat-autocomplete>-->
+                                                    <!--</mat-form-field>-->
+                                                <!--</mat-menu>-->
+                                            <!--</p>-->
                                         </mat-list-item>
                                         <mat-divider></mat-divider>
                                         <ng-container *ngFor="let basket of user.baskets;let i = index">
