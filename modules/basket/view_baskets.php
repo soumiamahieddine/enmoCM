@@ -217,7 +217,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
                 <?php
                 $redirectedBaskets = \Basket\models\BasketModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
     for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {
-
+        $redirectedTo = "";
         foreach ($redirectedBaskets as $redirectBasketValue) {
             if ($redirectBasketValue['basket_owner'] == $_SESSION['user']['UserId']) {
                 if ($redirectBasketValue['basket_id'] == $_SESSION['user']['baskets'][$i]['id']) {
@@ -228,8 +228,8 @@ if (count($_SESSION['user']['baskets']) > 0) {
             }
         }
 
-        if(($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y' &&  $_SESSION['user']['baskets'][$i]['abs_basket'] == false) 
-            || $_SESSION['user']['baskets'][$i]['abs_basket'] == true && empty($redirectedTo)) {
+        if((($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y' &&  $_SESSION['user']['baskets'][$i]['abs_basket'] == false)
+            || $_SESSION['user']['baskets'][$i]['abs_basket'] == true) && empty($redirectedTo)) {
         ?>
         <option value="<?php
         if (isset($_SESSION['user']['baskets'][$i]['id'])) {
