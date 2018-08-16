@@ -19,17 +19,19 @@ class DoctypeModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
-        $firstLevel = DatabaseModel::select([
-            'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'    => ['doctypes'],
-            'where'    => ['enabled = ?'],
-            'data'     => ['Y'],
-            'order_by' => ['description asc']
+        $doctypes = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['doctypes'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
-        return $firstLevel;
+        return $doctypes;
     }
 
     public static function getById(array $aArgs)
@@ -37,14 +39,12 @@ class DoctypeModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $aReturn = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'  => ['doctypes'],
             'where'  => ['type_id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
 
         if (empty($aReturn[0])) {
             return [];

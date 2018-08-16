@@ -12,7 +12,6 @@
 namespace Doctype\controllers;
 
 use History\controllers\HistoryController;
-use Doctype\controllers\FirstLevelController;
 use Respect\Validation\Validator;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
@@ -29,7 +28,11 @@ class DoctypeController
 {
     public function get(Request $request, Response $response)
     {
-        $doctypes = DoctypeModel::get();
+        $doctypes = DoctypeModel::get([
+            'where'    => ['enabled = ?'],
+            'data'     => ['Y'],
+            'order_by' => ['description asc']
+        ]);
 
         return $response->withJson(['doctypes' => $doctypes]);
     }
@@ -76,7 +79,12 @@ class DoctypeController
         }
 
         $obj['doctype']      = array_merge($obj['doctype'], $doctypeExt, $template, ['indexes' => $indexes]);
-        $obj['secondLevel']  = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
+        $obj['secondLevel']  = SecondLevelModel::get([
+            'select'    => ['doctypes_second_level_id', 'doctypes_second_level_label'],
+            'where'     => ['enabled = ?'],
+            'data'      => ['Y'],
+            'order_by'  => ['doctypes_second_level_label asc']
+        ]);
         $obj['processModes'] = DoctypeModel::getProcessMode();
         $obj['models']       = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
 
@@ -247,15 +255,14 @@ class DoctypeController
         }
 
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'Id is not a numeric']);
+            return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
         }
 
         $count = ResModel::get([
             'select' => ['count(1)'],
             'where'  => ['type_id = ?'],
-            'data'   => [$aArgs['id']]]);
+            'data'   => [$aArgs['id']]
+        ]);
 
         if ($count[0]['count'] == 0) {
             DoctypeController::deleteAllDoctypeData(['type_id' => $aArgs['id']]);
@@ -263,7 +270,11 @@ class DoctypeController
             $doctypeTree = FirstLevelController::getTreeFunction();
         } else {
             $deleted  = $count[0]['count'];
-            $doctypes = DoctypeModel::get();
+            $doctypes = DoctypeModel::get([
+                'where'    => ['enabled = ?'],
+                'data'     => ['Y'],
+                'order_by' => ['description asc']
+            ]);
             foreach ($doctypes as $key => $value) {
                 if ($value['type_id'] == $aArgs['id']) {
                     $doctypes[$key]['disabled'] = true;

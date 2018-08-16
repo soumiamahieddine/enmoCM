@@ -29,16 +29,22 @@ class FirstLevelController
 {
     public function getTree(Request $request, Response $response)
     {
-        return $response->withJson([
-            'structure' => self::getTreeFunction(),
-        ]);
+        return $response->withJson(['structure' => FirstLevelController::getTreeFunction()]);
     }
 
-    public function getTreeFunction()
+    public static function getTreeFunction()
     {
-        $firstLevels = FirstLevelModel::get();
-        $secondLevels = SecondLevelModel::get();
-        $docTypes = DoctypeModel::get();
+        $firstLevels = FirstLevelModel::get(['where' => ['enabled = ?'], 'data' => ['Y'], 'order_by' => ['doctypes_first_level_id asc']]);
+        $secondLevels = SecondLevelModel::get([
+            'where'    => ['enabled = ?'],
+            'data'     => ['Y'],
+            'order_by' => ['doctypes_second_level_label asc']
+        ]);
+        $docTypes = DoctypeModel::get([
+            'where'    => ['enabled = ?'],
+            'data'     => ['Y'],
+            'order_by' => ['description asc']
+        ]);
 
         $structure = [];
         foreach ($firstLevels as $firstLevelValue) {
@@ -67,13 +73,20 @@ class FirstLevelController
 
     public function getById(Request $request, Response $response, $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'wrong format for id']);
+        if (!Validator::notEmpty()->validate($aArgs['id']) || !Validator::intVal()->validate($aArgs['id'])) {
+            return $response->withStatus(500)->withJson(['errors' => 'wrong format for id']);
         }
 
+        $obj = [];
         $obj['firstLevel'] = FirstLevelModel::getById(['id' => $aArgs['id']]);
+
+        $hasChildren = SecondLevelModel::get([
+            'select' => [1],
+            'where'  => ['doctypes_first_level_id = ?'],
+            'data'   => [$aArgs['id']]
+        ]);
+        $obj['firstLevel']['hasChildren'] = empty($hasChildren) ? false : true;
+
 
         if (!empty($obj)) {
             if ($obj['firstLevel']['enabled'] == 'Y') {
@@ -98,8 +111,18 @@ class FirstLevelController
     public function initDoctypes(Request $request, Response $response)
     {
         $obj['folderTypes'] = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
-        $obj['firstLevel'] = FirstLevelModel::get(['select' => ['doctypes_first_level_id', 'doctypes_first_level_label']]);
-        $obj['secondLevel'] = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
+        $obj['firstLevel'] = FirstLevelModel::get([
+            'select'    => ['doctypes_first_level_id', 'doctypes_first_level_label'],
+            'where'     => ['enabled = ?'],
+            'data'      => ['Y'],
+            'order_by'  => ['doctypes_first_level_id asc']
+        ]);
+        $obj['secondLevel'] = SecondLevelModel::get([
+            'select'    => ['doctypes_second_level_id', 'doctypes_second_level_label'],
+            'where'     => ['enabled = ?'],
+            'data'      => ['Y'],
+            'order_by'  => ['doctypes_second_level_label asc']
+        ]);
         $obj['processModes'] = DoctypeModel::getProcessMode();
         $obj['models'] = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
         $obj['indexes'] = DoctypeIndexesModel::getAllIndexes();
@@ -140,12 +163,10 @@ class FirstLevelController
             'info' => _DOCTYPE_FIRSTLEVEL_ADDED.' : '.$data['doctypes_first_level_label'],
         ]);
 
-        return $response->withJson(
-            [
+        return $response->withJson([
             'firstLevelId' => $firstLevelId,
-            'doctypeTree' => self::getTreeFunction(),
-            ]
-        );
+            'doctypeTree' => FirstLevelController::getTreeFunction()
+        ]);
     }
 
     public function update(Request $request, Response $response, $aArgs)
@@ -161,9 +182,7 @@ class FirstLevelController
         $errors = $this->control($obj, 'update');
 
         if (!empty($errors)) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
         $folderTypeId = $obj['foldertype_id'];
@@ -186,24 +205,20 @@ class FirstLevelController
             'info' => _DOCTYPE_FIRSTLEVEL_UPDATED.' : '.$obj['doctypes_first_level_label'],
         ]);
 
-        return $response->withJson(
-            [
+        return $response->withJson([
             'firstLevelId' => $obj,
-            'doctypeTree' => self::getTreeFunction(),
-            ]
-        );
+            'doctypeTree' => FirstLevelController::getTreeFunction()
+        ]);
     }
 
-    public function delete(Request $request, Response $response, $aArgs)
+    public function delete(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'Id is not a numeric']);
+            return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
         }
 
         FirstLevelModel::update(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
@@ -213,16 +228,16 @@ class FirstLevelController
         $firstLevel = FirstLevelModel::getById(['id' => $aArgs['id']]);
 
         HistoryController::add([
-            'tableName' => 'doctypes_first_level',
-            'recordId' => $aArgs['id'],
-            'eventType' => 'DEL',
-            'eventId' => 'structuredel',
-            'info' => _DOCTYPE_FIRSTLEVEL_DELETED.' : '.$firstLevel['doctypes_first_level_label'],
+            'tableName'     => 'doctypes_first_level',
+            'recordId'      => $aArgs['id'],
+            'eventType'     => 'DEL',
+            'eventId'       => 'structuredel',
+            'info'          => _DOCTYPE_FIRSTLEVEL_DELETED.' : '.$firstLevel['doctypes_first_level_label'],
         ]);
 
         return $response->withJson([
             'firstLevelDeleted' => $firstLevel,
-            'doctypeTree' => self::getTreeFunction(),
+            'doctypeTree' => FirstLevelController::getTreeFunction()
         ]);
     }
 

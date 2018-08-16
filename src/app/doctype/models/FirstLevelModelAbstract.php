@@ -19,20 +19,22 @@ class FirstLevelModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
         $firstLevel = DatabaseModel::select([
-            'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'    => ['doctypes_first_level'],
-            'where'    => ['enabled = ?'],
-            'data'     => ['Y'],
-            'order_by' => ['doctypes_first_level_id asc']
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['doctypes_first_level'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
         return $firstLevel;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -50,19 +52,7 @@ class FirstLevelModelAbstract
             return [];
         }
 
-        $children = DatabaseModel::select(
-            [
-            'select' => ['doctypes_second_level_id'],
-            'table'  => ['doctypes_second_level'],
-            'where'  => ['doctypes_first_level_id = ?'],
-            'data'   => [$aArgs['id']]
-            ]
-        );
-
-        $aReturn = $aReturn[0];
-        $aReturn['hasChildren'] = count($children) > 0 ? true : false;
-       
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function create(array $aArgs)
