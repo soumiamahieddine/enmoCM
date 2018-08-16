@@ -4429,6 +4429,9 @@ if (!defined('_PRINT_TYPIST')) {
 if (!defined('_PRINT_FREE_NOTES')) {
     define('_PRINT_FREE_NOTES', 'ANNOTATIONS LIBRES');
 }
+if (!defined('_PRINT_FURTHER_INFORMATIONS')) {
+    define('_PRINT_FURTHER_INFORMATIONS', 'INFORMATIONS COMPLEMEMENTAIRES');
+}
 if (!defined('_PRINT_COPIES')) {
     define('_PRINT_COPIES', 'COPIES');
 }

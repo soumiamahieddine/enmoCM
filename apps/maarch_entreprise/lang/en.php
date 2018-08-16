@@ -4357,6 +4357,9 @@ if (!defined('_PRINT_TYPIST')) {
 if (!defined('_PRINT_FREE_NOTES')) {
     define('_PRINT_FREE_NOTES', 'FREE NOTES');
 }
+if (!defined('_PRINT_FURTHER_INFORMATIONS')) {
+    define('_PRINT_FURTHER_INFORMATIONS', 'FURTHER INFORMATIONS');
+}
 if (!defined('_PRINT_COPIES')) {
     define('_PRINT_COPIES', 'COPIES');
 }
