@@ -1487,7 +1487,7 @@ function get_value_fields($values, $field)
  * @param $table String Table
  * @param $formValues String Values of the form to load
  *
- * @return false or an array
+ * @return array
  *               $data['result'] : res_id of the new file followed by #
  *               $data['history_msg'] : Log complement (empty by default)
  *               $data['page_result'] : Page to load when action is done and modal closed
@@ -2005,17 +2005,31 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         include_once 'modules'.DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR.'tags_update.php';
     }
 
-    // $_SESSION['indexing'] = array();
     unset($_SESSION['upfile']);
     unset($_SESSION['data']);
     $_SESSION['action_error'] = _NEW_DOC_ADDED;
     $_SESSION['indexation'] = true;
 
-    return array(
+    if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendResourceToExternalApplication'])) {
+
+        $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
+        $select = [];
+        foreach ($config['data'] as $value) {
+            $select[] = $value;
+        }
+
+        $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
+
+        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $document[0]]);
+
+//        \Resource\models\ResModel::update(['set' => ['custom_t1' => $response['publikId']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
+    }
+
+    return [
         'result' => $resId.'#',
         'history_msg' => '',
         'page_result' => $_SESSION['config']['businessappurl']
                          .'index.php?page=details&dir=indexing_searching'
                          .'&coll_id='.$collId.'&id='.$resId,
-    );
+    ];
 }

@@ -127,4 +127,23 @@ class CurlModel
 
         return $curlConfig;
     }
+
+    public static function isEnabled(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['curlCallId']);
+        ValidatorModel::stringType($aArgs, ['curlCallId']);
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/curlCall.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->call as $call) {
+                if ((string)$call->id == $aArgs['curlCallId']) {
+                    if (!empty((string)$call->enabled) && (string)$call->enabled == 'true') {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }

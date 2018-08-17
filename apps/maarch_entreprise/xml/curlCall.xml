@@ -16,4 +16,18 @@
             <value>custom_t1</value>
         </data>
     </call>
+    <call>
+        <id>sendResourceToExternalApplication</id>
+        <enabled>false</enabled>
+        <url></url>
+        <method>POST</method>
+        <data>
+            <key>res_id</key>
+            <value>res_id</value>
+        </data>
+        <data>
+            <key>status</key>
+            <value>status</value>
+        </data>
+    </call>
 </ROOT>
