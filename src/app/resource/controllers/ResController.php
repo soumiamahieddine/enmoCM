@@ -41,7 +41,7 @@ class ResController
 {
     //*****************************************************************************************
     //LOG ONLY LOG FOR DEBUG
-    // $file = fopen('storeResourceLogs.log', a);
+    // $file = fopen('storeResourceLogs.log', 'a');
     // fwrite($file, '[' . date('Y-m-d H:i:s') . '] new request' . PHP_EOL);
     // foreach ($data as $key => $value) {
     //     if ($key <> 'encodedFile') {

@@ -9,12 +9,14 @@ function manage_send($aId)
     $result = '';
 
     foreach ($aId as $resId) {
-        $document = \Resource\models\ResModel::getById(['resId' => $aId[0], 'select' => ['custom_t1']]);
+        $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendData']);
+        $select = [];
+        foreach ($config['rawData'] as $value) {
+            $select[] = $value;
+        }
+        $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$aId[0]]]);
 
-        $bodyParams = [
-            'custom_t1' => $document['custom_t1'],
-        ];
-        \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendData', 'bodyData' => $bodyParams]);
+        \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendData', 'bodyData' => $document[0]]);
 
         $result .= $resId . '#';
     }

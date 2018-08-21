@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
-    <user>super</user>
-    <password>maaarch</password>
+    <user>superadmin</user>
+    <password>maarch</password>
     <call>
         <id>sendFile</id>
         <url></url>
@@ -11,23 +11,60 @@
         <id>sendData</id>
         <url></url>
         <method>PUT</method>
-        <data>
+        <rawData>
             <key>publikId</key>
             <value>custom_t1</value>
-        </data>
+        </rawData>
     </call>
     <call>
         <id>sendResourceToExternalApplication</id>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
         <url></url>
         <method>POST</method>
-        <data>
-            <key>res_id</key>
+        <file>
+            <key>encodedFile</key>
+        </file>
+        <rawData>
+            <key>resId</key>
             <value>res_id</value>
-        </data>
-        <data>
+        </rawData>
+        <rawData>
             <key>status</key>
             <value>status</value>
+        </rawData>
+        <data>
+            <key>collId</key>
+            <value>letterbox_coll</value>
+        </data>
+        <data>
+            <key>table</key>
+            <value>res_letterbox</value>
+        </data>
+        <return>externalId</return>
+    </call>
+    <call>
+        <id>sendAttachmentToExternalApplication</id>
+        <enabled>true</enabled>
+        <url></url>
+        <method>POST</method>
+        <file>
+            <key>encodedFile</key>
+        </file>
+        <rawData>
+            <key>parentId</key>
+            <value>res_id_master</value>
+        </rawData>
+        <rawData>
+            <key>status</key>
+            <value>status</value>
+        </rawData>
+        <data>
+            <key>column</key>
+            <value>aString</value>
+        </data>
+        <data>
+            <key>column2</key>
+            <value>aString2</value>
         </data>
     </call>
 </ROOT>

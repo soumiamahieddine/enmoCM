@@ -2011,18 +2011,32 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     $_SESSION['indexation'] = true;
 
     if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendResourceToExternalApplication'])) {
-
+        $bodyData = [];
         $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
+
         $select = [];
-        foreach ($config['data'] as $value) {
+        foreach ($config['rawData'] as $value) {
             $select[] = $value;
         }
 
         $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
+        if (!empty($document[0])) {
+            $bodyData = $document[0];
+        }
 
-        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $document[0]]);
+        if (!empty($config['data'])) {
+            $bodyData = array_merge($bodyData, $config['data']);
+        }
 
-//        \Resource\models\ResModel::update(['set' => ['custom_t1' => $response['publikId']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
+        if (!empty($config['file'])) {
+            $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
+            $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']);
+            $bodyData[$config['file']] = base64_encode($file);
+        }
+
+        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData]);
+
+        \Resource\models\ResModel::update(['set' => ['external_id' => $response[$config['return']]], 'where' => ['res_id = ?'], 'data' => [$resId]]);
     }
 
     return [

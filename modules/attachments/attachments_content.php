@@ -399,6 +399,32 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         $_SESSION['data'],
                                         $_SESSION['config']['databasetype']
                                     );
+                                    if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendAttachmentToExternalApplication'])) {
+                                        $bodyData = [];
+                                        $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendAttachmentToExternalApplication']);
+
+                                        $select = [];
+                                        foreach ($config['rawData'] as $value) {
+                                            $select[] = $value;
+                                        }
+
+                                        $attachment = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
+                                        if (!empty($attachment[0])) {
+                                            $bodyData = $attachment[0];
+                                        }
+
+                                        if (!empty($config['data'])) {
+                                            $bodyData = array_merge($bodyData, $config['data']);
+                                        }
+
+                                        if (!empty($config['file'])) {
+                                            $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $storeResult['docserver_id'], 'select' => ['path_template']]);
+                                            $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $storeResult['destination_dir']) . $storeResult['file_destination_name']);
+                                            $bodyData[$config['file']] = base64_encode($file);
+                                        }
+
+                                        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendAttachmentToExternalApplication', 'bodyData' => $bodyData]);
+                                    }
                                 }
 
                                 //copie de la version PDF de la pièce si mode de conversion sur le client
