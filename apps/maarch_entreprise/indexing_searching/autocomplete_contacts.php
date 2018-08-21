@@ -95,7 +95,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         $containResult = true;
 
         $arr_contact_info = array($res->firstname, $res->lastname);
-        $contact_icon = "<i class='fa fa-users fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='"._USER."'></i>";
+        $contact_icon = "<i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='"._USER."'></i>";
 
         $contact_info = implode(' ', $arr_contact_info);
 
@@ -201,6 +201,46 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             ++$itRes;
         }
     }
+
+    //Third, contacts groups
+    if ($_REQUEST['multiContact'] == "true") {
+        $contactRequest = "lower(translate(label,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE lower(translate('%".$_REQUEST['Input']."%','ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))";
+        $id = \User\models\UserModel::getByUserId([
+            'userId' => $_SESSION['user']['UserId'],
+            'select' => ['id']
+        ]);
+        $contactsGroups = \Contact\models\ContactGroupModel::get([
+            'where' => [$contactRequest, '(public IS TRUE OR ? = owner)'],
+            'orderBy' => ['label ASC'],
+            'data' => [$id['id']]
+        ]);
+        $nb_total = $nb_total + count($contactsGroups);
+        foreach ($contactsGroups as $contactGroup) {
+            if ($itRes > $maxResult) {
+                break;
+            }
+            $containResult = true;
+
+            $contactIcon = "<i class='fa fa-users fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='" . _USER . "'></i>";
+
+            //Highlight
+            foreach ($keyList as $keyVal) {
+                $contactGroup['label'] = preg_replace_callback(
+                    '/' . $keyVal . '/i',
+                    function ($matches) {
+                        return '<b>' . $matches[0] . '</b>';
+                    },
+                    $contactGroup['label']
+                );
+            }
+            $arrContact[] = "<li id='" . $contactGroup['id'] . ", ' style='font-size:12px;background-color:$color;'>" . $contactIcon . ' '
+                . '<span style="display:table-cell;vertical-align:middle;">' . $contactGroup['label'] . '</span>'
+                . '</li>';
+
+            ++$itRes;
+        }
+    }
+
     if ($containResult) {
         echo '<ul id="autocomplete_contacts_ul">';
         echo implode(array_unique($arrContact));

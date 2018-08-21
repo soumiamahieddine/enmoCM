@@ -431,9 +431,31 @@ switch ($mode) {
                 if (!isset($_SESSION['adresses']['addressid'])) $_SESSION['adresses']['addressid'] = array();
                 //For ADD
                 if ($_REQUEST['for'] == 'add') {
-                    array_push($_SESSION['adresses'][$_REQUEST['field']], $email);
-                    array_push($_SESSION['adresses']['contactid'], $_REQUEST['contactid']);
-                    array_push($_SESSION['adresses']['addressid'], $_REQUEST['addressid']);
+                    if ($_REQUEST['addressid'] == '0' && is_numeric($_REQUEST['contactid'])) {
+                        $listContacts = \Contact\models\ContactGroupModel::getListById([
+                            'id' => $_REQUEST['contactid'],
+                            'select' => ['contact_addresses_id']
+                        ]);
+                        foreach ($listContacts as $contact) {
+                            if (in_array($contact['contact_addresses_id'], $_SESSION['adresses']['addressid'])) {
+                                continue;
+                            }
+                            $contactInfos = \Contact\models\ContactModel::getByAddressId([
+                                'addressId' => $contact['contact_addresses_id'],
+                                'select' => ['contact_id', 'firstname', 'lastname', 'address_num', 'address_street', 'address_postal_code', 'address_town']
+                            ]);
+                            $contactSociety = \Contact\models\ContactModel::getById(['id' => $contactInfos['contact_id'], 'select' => ['society']]);
+                            $contactAddress = implode(' ', [$contactInfos['firstname'], $contactInfos['lastname'].',', $contactInfos['address_num'], $contactInfos['address_street'], $contactInfos['address_postal_code'], $contactInfos['address_town']]);
+                            $email = trim($contactSociety['society'].' - '.$contactAddress);
+                            array_push($_SESSION['adresses'][$_REQUEST['field']], $email);
+                            array_push($_SESSION['adresses']['contactid'], $contactInfos['contact_id']);
+                            array_push($_SESSION['adresses']['addressid'], $contact['contact_addresses_id']);
+                        }
+                    } else {
+                        array_push($_SESSION['adresses'][$_REQUEST['field']], $email);
+                        array_push($_SESSION['adresses']['contactid'], $_REQUEST['contactid']);
+                        array_push($_SESSION['adresses']['addressid'], $_REQUEST['addressid']);
+                    }
                 //For DEL
                 } else if ($_REQUEST['for'] == 'del') {
                     //unset adress in array

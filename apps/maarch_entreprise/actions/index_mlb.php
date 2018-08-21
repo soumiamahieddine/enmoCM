@@ -668,7 +668,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<div id="multiContactList" class="autocomplete" style="left:0px;width:100%;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
     $frmStr .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
         .$_SESSION['config']['businessappurl']
-        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\', \'contactid\', \'addressid\');</script>';
+        .'index.php?display=true&multiContact=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\', \'contactid\', \'addressid\');</script>';
     $frmStr .= ' <input type="button" name="add" value="&nbsp;'._ADD
                     .'&nbsp;" id="valid_multi_contact" class="button" onclick="updateMultiContacts(\''.$path_to_script
                     .'&mode=adress\', \'add\', document.getElementById(\'email\').value, '

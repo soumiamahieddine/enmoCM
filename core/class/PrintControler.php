@@ -101,15 +101,12 @@ class PrintControler extends PrintFunctions
             	$stmt = $db->query($query, $_SESSION['last_select_query_parameters']);
             }
 
-            $b = $stmt;
-            
             $i = 0;
             $this->object_print = new EmptyObject();
             while($line = $stmt->fetchObject()) {
                 $this->object_print->{$i} = $line;
                 $i++;
             }
-            $a = $this->object_print;
 			//var_dump($this->object_print);exit;
         }
         
