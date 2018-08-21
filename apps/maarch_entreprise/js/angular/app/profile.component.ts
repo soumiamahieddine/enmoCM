@@ -74,6 +74,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     selectedSignatureLabel: string = "";
     loading: boolean = false;
     selectedIndex: number = 0;
+    selectedIndexContactsGrp: number = 0;
 
     @ViewChild('snav2') sidenav: MatSidenav;
 
@@ -255,6 +256,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     initGroupsContact() {
         this.contactsListMode = false;
+        this.selectedIndexContactsGrp = 0;
         this.http.get(this.coreUrl + 'rest/contactsGroups')
             .subscribe((data) => {
                 this.contactsGroups = [];
@@ -282,6 +284,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.http.post(this.coreUrl + 'rest/contactsGroups', this.contactsGroup)
             .subscribe((data: any) => {
                 this.initGroupsContact();
+                this.toggleAddGrp();
                 this.notify.success(this.lang.contactsGroupAdded);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -303,6 +306,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + 'rest/contactsGroups/' + contactsGroup.id)
                 .subscribe(() => {
+                    this.contactsListMode = false;
                     var lastElement = this.contactsGroups.length - 1;
                     this.contactsGroups[row] = this.contactsGroups[lastElement];
                     this.contactsGroups[row].position = row;
@@ -332,8 +336,8 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                     this.dataSourceContactsList = new MatTableDataSource(this.contactsGroup.contacts);
                     this.dataSourceContactsList.paginator = this.paginatorContactsList;
                     this.dataSourceContactsList.sort = this.sortContactsList;
+                    this.selectedIndexContactsGrp = 1;
                 }, 0);
-
             });
     }
 
@@ -876,5 +880,19 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     hideActions(basket:any){
         $j('#'+basket.basket_id+'_'+basket.group_id).hide();
+    }
+
+    toggleAddGrp() {
+        this.initGroupsContact();
+        $j('#contactsGroupFormUp').toggle();
+        $j('#contactsGroupList').toggle();
+    }
+    toggleAddContactGrp() {
+        $j('#contactsGroupFormAdd').toggle();
+        //$j('#contactsGroup').toggle();
+    }
+
+    changeTabContactGrp(event:any) {
+        this.selectedIndexContactsGrp = event;
     }
 }
