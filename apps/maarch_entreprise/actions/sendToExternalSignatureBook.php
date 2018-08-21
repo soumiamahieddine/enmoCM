@@ -29,7 +29,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $html .='<div align="center">';
     $html .=' <input type="button" name="validate" id="validate" value="'._VALIDATE.'" class="button" ' .
             'onclick="valid_action_form(\'sendToExternalSB\', \'' . $path_manage_action .
-            '\', \'' . $id_action . '\', \'value\', \'res_letterbox\', \'null\', \'letterbox_coll\', \'' .
+            '\', \'' . $id_action . '\', \'' . $values[0] . '\', \'res_letterbox\', \'null\', \'letterbox_coll\', \'' .
             $mode . '\');" />';
     $html .='<input type="button" name="cancel" id="cancel" class="button" value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
 
