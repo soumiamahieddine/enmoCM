@@ -18,7 +18,7 @@
     </call>
     <call>
         <id>sendResourceToExternalApplication</id>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
         <url></url>
         <method>POST</method>
         <file>
@@ -44,7 +44,7 @@
     </call>
     <call>
         <id>sendAttachmentToExternalApplication</id>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
         <url></url>
         <method>POST</method>
         <file>
@@ -65,6 +65,20 @@
         <data>
             <key>column2</key>
             <value>aString2</value>
+        </data>
+    </call>
+    <call>
+        <id>closeResource</id>
+        <enabled>false</enabled>
+        <url></url>
+        <method>POST</method>
+        <rawData>
+            <key>status</key>
+            <value>status</value>
+        </rawData>
+        <data>
+            <key>message</key>
+            <value>Close</value>
         </data>
     </call>
 </ROOT>

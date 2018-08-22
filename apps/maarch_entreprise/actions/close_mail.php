@@ -24,7 +24,6 @@
 * Open a modal box to confirm a status modification. Used by the core (manage_action.php page).
 *
 * @file
-* @author Claire Figueras <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup apps
@@ -134,6 +133,28 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         # save note
         if ($formValues['note_content_to_users'] != '') {
             \Note\models\NoteModel::create(['identifier' => $res_id, 'tablename' => 'res_letterbox', 'user_id' => $_SESSION['user']['UserId'], 'coll_id' => 'letterbox_coll', 'note_text' => $formValues['note_content_to_users']]);
+        }
+        if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'closeResource'])) {
+            $bodyData = [];
+            $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'closeResource']);
+
+            if (!empty($config['rawData'])) {
+                $select = [];
+                foreach ($config['rawData'] as $value) {
+                    $select[] = $value;
+                }
+
+                $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$res_id]]);
+                if (!empty($document[0])) {
+                    $bodyData = $document[0];
+                }
+            }
+
+            if (!empty($config['data'])) {
+                $bodyData = array_merge($bodyData, $config['data']);
+            }
+
+            \SrcCore\models\CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData]);
         }
     }
 
