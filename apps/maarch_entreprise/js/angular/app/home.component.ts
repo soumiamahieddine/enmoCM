@@ -3,9 +3,10 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
-import { MatDialog, MatSidenav, MatExpansionPanel } from '@angular/material';
+import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource } from '@angular/material';
 
 import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 declare function $j(selector: any): any;
 
@@ -25,13 +26,17 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     lang: any = LANG;
 
     loading: boolean = false;
+    docUrl : string = '';
+    public innerHtml: SafeHtml;
 
     @ViewChild('snav2') sidenav: MatSidenav;
 
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
     homeData: any;
+    dataSource: any;
+    displayedColumns: string[] = ['res_id', 'subject', 'creation_date'];
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer) {
         super(http, ['users']);
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
@@ -64,8 +69,31 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         .subscribe((data: any) => {
             this.homeData = data;
             this.loading = false;
+            setTimeout(() => {
+                this.dataSource = new MatTableDataSource(this.homeData.lastResources);
+            }, 0);
         });
 
+    }
+
+    goTo(row:any){
+        if (this.docUrl == this.coreUrl+'rest/res/'+row.res_id+'/content' && this.sidenav.opened) {
+            this.displayedColumns = ['res_id', 'subject', 'creation_date'];
+            this.sidenav.close();
+        } else {
+            this.displayedColumns = ['res_id', 'subject', 'creation_date'];
+            this.docUrl = this.coreUrl+'rest/res/'+row.res_id+'/content';
+            this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
+                "<object style='height:100%;width:100%;' data='" + this.docUrl + "' type='application/pdf' class='embed-responsive-item'>" +
+                "<div>Le document "+row.res_id+" ne peut pas être chargé</div>" +
+                "</object>");  
+            this.sidenav.open();
+        }
+        //window.open(this.coreUrl+'rest/res/'+row.res_id+'/content');
+    }
+
+    goToDetail(row:any){
+        location.href = "index.php?page=details&dir=indexing_searching&id="+row.res_id;
     }
 
 }

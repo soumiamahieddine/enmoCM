@@ -178,16 +178,18 @@ abstract class ResModelAbstract
 
         $resources = DatabaseModel::select([
             'select'    => $aArgs['select'],
-            'table'     => ['history, res_letterbox, mlb_coll_ext'],
+            'table'     => ['history, res_letterbox, mlb_coll_ext, status, priorities'],
             'where'     => [
                 'history.user_id = ?', 'history.table_name IN (?)',
                 'history.record_id IS NOT NULL', 'history.record_id != ?',
                 'history.event_id != ?', 'history.event_id NOT LIKE ?',
                 'CAST(history.record_id AS INT) = res_letterbox.res_id',
-                'mlb_coll_ext.res_id = res_letterbox.res_id', 'res_letterbox.status != ?'
+                'mlb_coll_ext.res_id = res_letterbox.res_id', 'res_letterbox.status != ?',
+                'res_letterbox.status = status.id',
+                'res_letterbox.priority = priorities.id',
             ],
             'data'      => [$aArgs['userId'], ['res_letterbox', 'res_view_letterbox'], 'none', 'linkup', 'attach%', 'DEL'],
-            'group_by'  => ['res_letterbox.res_id', 'mlb_coll_ext.alt_identifier'],
+            'group_by'  => ['res_letterbox.res_id', 'mlb_coll_ext.alt_identifier', 'mlb_coll_ext.closing_date', 'mlb_coll_ext.process_limit_date', 'status.label_status', 'status.img_filename', 'priorities.color'],
             'order_by'  => ['MAX(history.event_date) DESC'],
             'limit'     => $aArgs['limit']
         ]);

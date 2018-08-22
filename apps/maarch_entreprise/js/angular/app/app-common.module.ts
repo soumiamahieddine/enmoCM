@@ -12,6 +12,8 @@ import { RouterModule }                         from '@angular/router';
 
 /*PLUGINS IMPORTS*/
 import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
+import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe';
+import { FilterListPipe }                       from '../plugins/filterList.pipe';
 
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
@@ -45,7 +47,9 @@ import { BasketHomeComponent }                        from './basket/basket-home
         MenuShortcutComponent,
         SearchHomeComponent,
         BasketHomeComponent,
-        TimeAgoPipe
+        TimeAgoPipe,
+        TimeLimitPipe,
+        FilterListPipe,
     ],
     exports: [
         CommonModule,
@@ -62,7 +66,9 @@ import { BasketHomeComponent }                        from './basket/basket-home
         HttpClientModule,
         RouterModule,
         AppMaterialModule,
-        TimeAgoPipe
+        TimeAgoPipe,
+        TimeLimitPipe,
+        FilterListPipe,
     ]
 })
 export class SharedModule { }
