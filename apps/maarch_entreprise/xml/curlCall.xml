@@ -68,6 +68,29 @@
         </data>
     </call>
     <call>
+        <id>sendContactToExternalApplication</id>
+        <enabled>false</enabled>
+        <url></url>
+        <method>POST</method>
+        <rawData>
+            <key>parentId</key>
+            <value>res_id_master</value>
+        </rawData>
+        <rawData>
+            <key>status</key>
+            <value>status</value>
+        </rawData>
+        <data>
+            <key>column</key>
+            <value>aString</value>
+        </data>
+        <data>
+            <key>column2</key>
+            <value>aString2</value>
+        </data>
+        <return>externalContactId</return>
+    </call>
+    <call>
         <id>closeResource</id>
         <enabled>false</enabled>
         <url></url>
