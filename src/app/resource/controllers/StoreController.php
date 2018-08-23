@@ -17,6 +17,7 @@ namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
 use Contact\models\ContactModel;
+use Convert\controllers\ConvertThumbnailController;
 use Docserver\controllers\DocserverController;
 use Resource\models\ChronoModel;
 use SrcCore\models\ValidatorModel;

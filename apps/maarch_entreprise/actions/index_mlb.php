@@ -668,7 +668,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<div id="multiContactList" class="autocomplete" style="left:0px;width:100%;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
     $frmStr .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
         .$_SESSION['config']['businessappurl']
-        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\', \'contactid\', \'addressid\');</script>';
+        .'index.php?display=true&multiContact=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\', \'contactid\', \'addressid\');</script>';
     $frmStr .= ' <input type="button" name="add" value="&nbsp;'._ADD
                     .'&nbsp;" id="valid_multi_contact" class="button" onclick="updateMultiContacts(\''.$path_to_script
                     .'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
@@ -1487,7 +1487,7 @@ function get_value_fields($values, $field)
  * @param $table String Table
  * @param $formValues String Values of the form to load
  *
- * @return false or an array
+ * @return array
  *               $data['result'] : res_id of the new file followed by #
  *               $data['history_msg'] : Log complement (empty by default)
  *               $data['page_result'] : Page to load when action is done and modal closed
@@ -1807,7 +1807,9 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     ]);
 
     $resId = \Resource\models\ResModel::create($data);
-    \Resource\controllers\ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $resId]);
+    if ($catId != 'outgoing') {
+        \Convert\controllers\ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $resId]);
+    }
 
     \History\controllers\HistoryController::add([
         'tableName' => 'res_letterbox',
@@ -2003,17 +2005,47 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         include_once 'modules'.DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR.'tags_update.php';
     }
 
-    // $_SESSION['indexing'] = array();
     unset($_SESSION['upfile']);
     unset($_SESSION['data']);
     $_SESSION['action_error'] = _NEW_DOC_ADDED;
     $_SESSION['indexation'] = true;
 
-    return array(
+    if ($catId != 'outgoing') {
+        if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendResourceToExternalApplication'])) {
+            $bodyData = [];
+            $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
+
+            $select = [];
+            foreach ($config['rawData'] as $value) {
+                $select[] = $value;
+            }
+
+            $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
+            if (!empty($document[0])) {
+                $bodyData = $document[0];
+            }
+
+            if (!empty($config['data'])) {
+                $bodyData = array_merge($bodyData, $config['data']);
+            }
+
+            if (!empty($config['file'])) {
+                $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
+                $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']);
+                $bodyData[$config['file']] = base64_encode($file);
+            }
+
+            $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData]);
+
+            \Resource\models\ResModel::update(['set' => ['external_id' => $response[$config['return']]], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+        }
+    }
+
+    return [
         'result' => $resId.'#',
         'history_msg' => '',
         'page_result' => $_SESSION['config']['businessappurl']
                          .'index.php?page=details&dir=indexing_searching'
                          .'&coll_id='.$collId.'&id='.$resId,
-    );
+    ];
 }

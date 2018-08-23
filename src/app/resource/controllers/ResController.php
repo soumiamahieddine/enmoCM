@@ -16,11 +16,14 @@ namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
+use Convert\controllers\ConvertThumbnailController;
+use Convert\models\AdrModel;
+use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use Entity\models\ListInstanceModel;
 use Group\controllers\GroupController;
 use Note\models\NoteModel;
 use Group\models\ServiceModel;
-use Resource\models\AdrModel;
 use setasign\Fpdi\TcpdfFpdi;
 use SrcCore\models\CoreConfigModel;
 use Status\models\StatusModel;
@@ -38,7 +41,7 @@ class ResController
 {
     //*****************************************************************************************
     //LOG ONLY LOG FOR DEBUG
-    // $file = fopen('storeResourceLogs.log', a);
+    // $file = fopen('storeResourceLogs.log', 'a');
     // fwrite($file, '[' . date('Y-m-d H:i:s') . '] new request' . PHP_EOL);
     // foreach ($data as $key => $value) {
     //     if ($key <> 'encodedFile') {
@@ -183,6 +186,66 @@ class ResController
         }
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public static function duplicateForMailing(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'contactId', 'addressId']);
+        ValidatorModel::intVal($aArgs, ['resId', 'contactId', 'addressId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $aArgs['userId']])) {
+            return ['errors' => 'Document out of perimeter'];
+        }
+
+        $resource = ResModel::getById(['resId' => $aArgs['resId']]);
+        $resourceExt = ResModel::getExtById(['resId' => $aArgs['resId']]);
+        if (empty($resource) || empty($resourceExt)) {
+            return ['errors' => 'Resource not found'];
+        }
+
+        $usedDocserver = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
+        $pathToDocumentToCopy = $usedDocserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resource['path']) . $resource['filename'];
+
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'DOC', 'collId' => 'letterbox_coll', 'select' => ['path_template', 'docserver_id']]);
+        $pathOnDocserver = DocserverController::createPathOnDocServer(['path' => $docserver['path_template']]);
+        $docinfo = DocserverController::getNextFileNameInDocServer(['pathOnDocserver' => $pathOnDocserver['pathToDocServer']]);
+        $docinfo['fileDestinationName'] .=  '.' . explode('.', $resource['filename'])[1];
+
+        $copyResult = DocserverController::copyOnDocServer([
+            'sourceFilePath'             => $pathToDocumentToCopy,
+            'destinationDir'             => $docinfo['destinationDir'],
+            'fileDestinationName'        => $docinfo['fileDestinationName']
+        ]);
+        if (!empty($copyResult['errors'])) {
+            return ['errors' => 'Resource duplication failed : ' . $copyResult['errors']];
+        }
+
+        $resource['path'] = str_replace(str_replace(DIRECTORY_SEPARATOR, '#', $docserver['path_template']), '', $copyResult['copyOnDocserver']['destinationDir']);
+        $resource['filename'] = $copyResult['copyOnDocserver']['fileDestinationName'];
+        $resource['docserver_id'] = $docserver['docserver_id'];
+
+        $resId = ResModel::create($resource);
+        $resourceExt['res_id'] = $resId;
+        $resourceExt['is_multicontacts'] = 'N';
+        $resourceExt['address_id'] = $aArgs['addressId'];
+        if ($resourceExt['category_id'] == 'outgoing') {
+            $resourceExt['dest_contact_id'] = $aArgs['contactId'];
+        } else {
+            $resourceExt['exp_contact_id'] = $aArgs['contactId'];
+        }
+        ResModel::createExt($resourceExt);
+
+        $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+        foreach ($listInstances as $listInstance) {
+            unset($listInstance['listinstance_id']);
+            $listInstance['res_id'] = $resId;
+            $listInstance['signatory'] = empty($listInstance['signatory']) ? 'false' : 'true';
+            $listInstance['requested_signature'] = empty($listInstance['requested_signature']) ? 'false' : 'true';
+            ListInstanceModel::create($listInstance);
+        }
+
+        return $resId;
     }
 
     public function getFileContent(Request $request, Response $response, array $aArgs)

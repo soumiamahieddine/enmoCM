@@ -155,11 +155,12 @@ CREATE TABLE adr_letterbox
 WITH (OIDS=FALSE);
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'tnl_path') = 1 THEN
-    INSERT INTO adr_letterbox (res_id, type, docserver_id, path, filename) SELECT res_id, 'TNL', 'TNL_MLB', tnl_path, tnl_filename FROM res_letterbox WHERE tnl_path IS NOT NULL AND tnl_path != 'ERR'
+    INSERT INTO adr_letterbox (res_id, type, docserver_id, path, filename) SELECT res_id, 'TNL', 'TNL_MLB', tnl_path, tnl_filename FROM res_letterbox WHERE tnl_path IS NOT NULL AND tnl_path != 'ERR';
     ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_path;
     ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_filename;
   END IF;
 END$$;
+DELETE FROM parameters WHERE id = 'thumbnailsSize';
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Taille des imagettes', '750x900');
 
 /* Refactoring */
@@ -193,6 +194,7 @@ ALTER TABLE users DROP COLUMN IF EXISTS ra_expiration_date;
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS answer_type_bitmask;
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS other_answer_desc;
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS process_notes;
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS sve_identifier;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS publisher;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS publisher;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS publisher;
@@ -278,6 +280,17 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS esign_proof_id;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS esign_proof_content;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS esign_content;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS esign_date;
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext') AND attname = 'sve_start_date') = 1 THEN
+    ALTER TABLE res_letterbox ADD COLUMN sve_start_date TIMESTAMP without time zone;
+    UPDATE res_letterbox set sve_start_date =
+    (
+      SELECT sve_start_date FROM mlb_coll_ext
+      WHERE res_letterbox.res_id = mlb_coll_ext.res_id
+    );
+    ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS sve_start_date;
+  END IF;
+END$$;
 
 
 CREATE OR REPLACE VIEW res_view_letterbox AS
@@ -413,8 +426,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.nature_id,
     mlb.alt_identifier,
     mlb.admission_date,
-    mlb.sve_start_date,
-    mlb.sve_identifier,
     mlb.process_limit_date,
     mlb.recommendation_limit_date,
     mlb.closing_date,
@@ -424,6 +435,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,
+    r.sve_start_date,
     r.subject,
     r.identifier,
     r.title,

@@ -61,6 +61,18 @@ $theme: mat-light-theme($primary, $accent, $warn);
     color: mat-color($accent, 500);
 }
 
+[bgcolor=primary] {
+  background-color: mat-color($primary, 500);
+}
+
+[bgcolor=warn] {
+  background-color: mat-color($warn, 500);
+}
+
+[bgcolor=accent] {
+  background-color: mat-color($accent, 500);
+}
+
 .jstree-proton .jstree-clicked {
     background : mat-color($primary, 100) !important;
 }
@@ -121,7 +133,6 @@ $theme: mat-light-theme($primary, $accent, $warn);
   border-radius: 100px;
   background-color: #fafafa;
   padding: 5px 16px;
-  margin-left: 8px;
   width: 400px;
   max-width: 400px;
   height: 36px;

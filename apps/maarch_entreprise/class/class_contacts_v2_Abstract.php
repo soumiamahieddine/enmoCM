@@ -2229,6 +2229,32 @@ abstract class contacts_v2_Abstract extends Database
                     $hist->add($_SESSION['tablename']['contact_addresses'], $id, 'ADD', 'contact_addresses_add', $msg, $_SESSION['config']['databasetype']);
                 }
 
+                if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendContactToExternalApplication'])) {
+                    $bodyData = [];
+                    $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendContactToExternalApplication']);
+
+                    $select = [];
+                    foreach ($config['rawData'] as $value) {
+                        $select[] = $value;
+                    }
+
+                    $select[] = 'ca_id';
+                    $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
+                    if (count($document) === 1) {
+                        if (!empty($document[0])) {
+                            $bodyData = $document[0];
+                        }
+
+                        if (!empty($config['data'])) {
+                            $bodyData = array_merge($bodyData, $config['data']);
+                        }
+
+                        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendContactToExternalApplication', 'bodyData' => $bodyData]);
+
+                        \Contact\models\ContactModel::updateAddress(['set' => ['external_contact_id' => $response[$config['return']]], 'where' => ['id = ?'], 'data' => [$document[0]['ca_id']]]);
+                    }
+                }
+
                 if ($iframe) {
                     $this->clearcontactinfos();
                 }

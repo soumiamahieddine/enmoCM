@@ -41,15 +41,7 @@ class CurlModel
         }
 
         if ($curlConfig['method'] == 'POST' || $curlConfig['method'] == 'PUT') {
-            if (!empty($curlConfig['data'])) {
-                $data = [];
-                foreach ($curlConfig['data'] as $key => $value) {
-                    $data[$key] = $aArgs['bodyData'][$value];
-                }
-                $opts[CURLOPT_POSTFIELDS] = json_encode($data);
-            } else {
-                $opts[CURLOPT_POSTFIELDS] = json_encode($aArgs['bodyData']);
-            }
+            $opts[CURLOPT_POSTFIELDS] = json_encode($aArgs['bodyData']);
         }
         if ($curlConfig['method'] == 'POST') {
             $opts[CURLOPT_POST] = true;
@@ -115,16 +107,47 @@ class CurlModel
                 if ((string)$call->id == $aArgs['curlCallId']) {
                     $curlConfig['url']      = (string)$call->url;
                     $curlConfig['method']   = strtoupper((string)$call->method);
+                    if (!empty($call->file)) {
+                        $curlConfig['file'] = (string)$call->file->key;
+                    }
                     if (!empty($call->data)) {
                         $curlConfig['data'] = [];
                         foreach ($call->data as $data) {
                             $curlConfig['data'][(string)$data->key] = (string)$data->value;
                         }
                     }
+                    if (!empty($call->rawData)) {
+                        $curlConfig['rawData'] = [];
+                        foreach ($call->rawData as $data) {
+                            $curlConfig['rawData'][(string)$data->key] = (string)$data->value;
+                        }
+                    }
+                    if (!empty($call->return)) {
+                        $curlConfig['return'] = (string)$call->return;
+                    }
                 }
             }
         }
 
         return $curlConfig;
+    }
+
+    public static function isEnabled(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['curlCallId']);
+        ValidatorModel::stringType($aArgs, ['curlCallId']);
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/curlCall.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->call as $call) {
+                if ((string)$call->id == $aArgs['curlCallId']) {
+                    if (!empty((string)$call->enabled) && (string)$call->enabled == 'true') {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

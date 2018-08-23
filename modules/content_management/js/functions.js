@@ -181,7 +181,7 @@ function showAppletLauncher(target, resId, objectTable, objectType, mode) {
             back_date = '';
         }
         var backDateStatus = $j('#'+target.id).parent().parent().find('[name=backDateStatus\\[\\]]').val();
-        if (objectType == 'attachmentVersion' && $('selectContactIdRes').value == 'mailing') {
+        if (objectType == 'attachmentVersion' && $j('#selectContactIdRes').val() == 'mailing') {
             objectType = 'attachmentMailing';
         }
         var path = 'index.php?display=true&module=content_management&page=applet_modal_launcher&uniqueId='+attachNum+'&objectType='+objectType+'&objectId='+templateOffice+'&attachType='+attachment_types+'&objectTable=' + objectTable + '&contactId='+contactidAttach+'&addressId='+addressidAttach+'&chronoAttachment='+chrono+'&titleAttachment='+title+'&backDateStatus='+backDateStatus+'&back_date='+back_date+'&resMaster=' + resId

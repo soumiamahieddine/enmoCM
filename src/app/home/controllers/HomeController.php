@@ -15,6 +15,8 @@
 namespace Home\controllers;
 
 use Basket\models\BasketModel;
+use Group\controllers\ServiceController;
+use Group\models\ServiceModel;
 use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -76,11 +78,18 @@ class HomeController
         }
 
         $lastResources = ResModel::getLastResources([
-            'select'    => ['res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.creation_date', 'mlb_coll_ext.alt_identifier'],
+            'select'    => ['res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.creation_date', 'res_letterbox.destination', 'res_letterbox.dest_user', 'mlb_coll_ext.alt_identifier', 'mlb_coll_ext.closing_date', 'mlb_coll_ext.process_limit_date', 'status.label_status as status_label', 'status.img_filename as status_icon', 'priorities.color as priority_color'],
             'limit'     => 5,
             'userId'    => $GLOBALS['userId']
         ]);
 
-        return $response->withJson(['regroupedBaskets' => $regroupedBaskets, 'assignedBaskets' => $assignedBaskets, 'lastResources' => $lastResources]);
+        $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+
+        return $response->withJson([
+            'regroupedBaskets'  => $regroupedBaskets,
+            'assignedBaskets'   => $assignedBaskets,
+            'lastResources'     => $lastResources,
+            'menu'              => $menu
+        ]);
     }
 }

@@ -57,6 +57,19 @@ abstract class ListInstanceModelAbstract
         return $aListinstance[0];
     }
 
+    public static function create(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['res_id']);
+        ValidatorModel::intVal($aArgs, ['res_id']);
+
+        DatabaseModel::insert([
+            'table'         => 'listinstance',
+            'columnsValues' => $aArgs
+        ]);
+
+        return true;
+    }
+
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);

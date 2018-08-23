@@ -636,5 +636,7 @@ export const LANG_FR = {
     "searchMails"                       : "Rechercher des courriers",
     "noAvailableBasket"                 : "Aucune bannette disponible",
     "othersBaskets"                     : "Autres bannettes",
-
+    "close"                             : "Fermer",
+    "contactGroupCreate"                : "Créer un groupement de contact",
+    "contactLink"                       : "Associer un contact",
 };

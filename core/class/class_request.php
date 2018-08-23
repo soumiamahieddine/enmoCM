@@ -181,17 +181,14 @@ class request extends dbquery
         $field_string = "( ";
         $value_string = "( ";
         $parameters = array();
-        for ($i=0;$i<count($data);$i++) {
-            if (
-                trim(strtoupper($data[$i]['value'])) == "SYSDATE"
-                || trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP"
-            ) {
-                $value_string .= $data[$i]['value'] . ',';
+        foreach ($data as $value) {
+            if (trim(strtoupper($value['value'])) == "SYSDATE" || trim(strtoupper($value['value'])) == "CURRENT_TIMESTAMP") {
+                $value_string .= $value['value'] . ',';
             } else {
                 $value_string .= "?,";
-                $parameters[] = $data[$i]['value'];
+                $parameters[] = $value['value'];
             }
-            $field_string .= $data[$i]['column'].",";
+            $field_string .= $value['column'].",";
         }
         $value_string = substr($value_string, 0, -1);
         $field_string = substr($field_string, 0, -1);

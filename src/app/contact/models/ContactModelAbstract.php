@@ -139,6 +139,21 @@ abstract class ContactModelAbstract
         return $nextSequenceId;
     }
 
+    public static function updateAddress(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table' => 'contact_addresses',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function getFullAddressById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['addressId']);

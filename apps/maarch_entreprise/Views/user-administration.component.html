@@ -163,6 +163,7 @@
                                     <p mat-line *ngIf="selectionBaskets.hasValue()" style="margin-top:10px;">
                                         <button [matMenuTriggerFor]="menu" mat-icon-button matTooltip="{{ lang.redirectBaskets }}">
                                             <mat-icon class="fa fa-reply"></mat-icon>
+                                            <mat-divider [vertical]="true" class="vertical-divider"></mat-divider>
                                         </button>
                                         <button color="warn" mat-icon-button matTooltip="{{lang.disableBasket}}" (click)="toggleBasket(false)">
                                             <mat-icon class="fa fa-ban"></mat-icon>

@@ -18,6 +18,7 @@
         <defaultPage>welcome</defaultPage>
         <exportdirectory/>
         <CookieTime>20</CookieTime> <!-- minutes -->
+        <timezone>Europe/Paris</timezone>
         <userdefaultpassword>maarch</userdefaultpassword> <!-- default user's password -->
         <usePHPIDS>true</usePHPIDS>
     </CONFIG>

@@ -833,7 +833,6 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             if (file_exists($xmlfileCustom)) {
                 $xmlfile = $xmlfileCustom;
             }
-            $fulllist = array();
             $fulllist = $this->getTemplatesDatasources($xmlfile);
             foreach ($fulllist as $ds) {
                 if ($datasourceId == $ds['id']) {
@@ -906,18 +905,23 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         include_once 'apps/maarch_entreprise/tools/tbs/tbs_class_php5.php';
         include_once 'apps/maarch_entreprise/tools/tbs/tbs_plugin_opentbs.php';
 
-        $templateObj = $this->get($templateId);
-        
-        // Get template path from docserver or copy HTML template to temp file 
-        $pathToTemplate = $this->getWorkingCopy($templateObj);
-        
+        if (empty($params['mailing'])) {
+            $templateObj = $this->get($templateId);
+
+            // Get template path from docserver or copy HTML template to temp file
+            $pathToTemplate = $this->getWorkingCopy($templateObj);
+            $datasourceObj = $this->getDatasourceScript($templateObj->template_datasource);
+        } else {
+            $pathToTemplate = $params['pathToAttachment'];
+            $datasourceObj = $this->getDatasourceScript('letterbox_attachment');
+        }
+
         $datasources = $this->getBaseDatasources();
         // Make params array for datasrouce script
         foreach ($params as $paramName => $paramValue) {
             $$paramName = $paramValue;
         }
         //Retrieve script for datasources
-        $datasourceObj = $this->getDatasourceScript($templateObj->template_datasource);
         if ($datasourceObj->script) {
             include $datasourceObj->script;
         }
@@ -925,7 +929,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         // Merge with TBS
         $TBS = new clsTinyButStrong;
         $TBS->NoErr = true;
-        if ($templateObj->template_type == 'OFFICE') {
+        if ($templateObj->template_type == 'OFFICE' || !empty($params['mailing'])) {
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
             $TBS->LoadTemplate($pathToTemplate, OPENTBS_ALREADY_UTF8);
         } else {
@@ -987,7 +991,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
             . '_' . rand() . '.' . $fileExtension;
             $myFile = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
-            if ($templateObj->template_type == 'OFFICE') {
+            if ($templateObj->template_type == 'OFFICE' || !empty($params['mailing'])) {
                 $TBS->Show(OPENTBS_FILE, $myFile);
             } else {
                 $TBS->Show(TBS_NOTHING);

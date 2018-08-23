@@ -12,7 +12,7 @@
  * @author dev@maarch.org
  */
 
-namespace Resource\models;
+namespace Convert\models;
 
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;

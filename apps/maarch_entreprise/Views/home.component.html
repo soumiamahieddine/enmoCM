@@ -12,22 +12,86 @@
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileMode ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileMode ? 'over' : 'side'" [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true"
-            autoFocus="false">
-            <menu-nav *ngIf="mobileMode"></menu-nav>
-            <basket-home *ngIf="homeData && !mobileMode" [homeData]="homeData"></basket-home>
+            autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '400px'}">
+            <basket-home *ngIf="homeData" [homeData]="homeData"></basket-home>
             <mat-divider></mat-divider>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <basket-home *ngIf="homeData && mobileMode && !loading" [homeData]="homeData"></basket-home>
             <mat-card *ngIf="!loading" class="card-app-content">
-                Aucune bannette sélectionnée
+                <mat-tab-group>
+                    <mat-tab label="Mes derniers courriers">
+                        <table mat-table [dataSource]="dataSource" matSort matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;table-layout: fixed;">
+                            <!-- Number Column -->
+                            <ng-container matColumnDef="res_id">
+                                <td mat-cell *matCellDef="let row" style="text-align:center;width:15%;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding: 5px;">
+                                    <div style="overflow: hidden;text-overflow: ellipsis;">
+                                        <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="fm {{row.status_icon}} fm-2x"
+                                            title="{{row.status_label}}"></mat-icon>
+                                    </div>
+                                    <div style="padding-top: 5px;color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
+                                        {{row.alt_identifier}}
+                                    </div>
+
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="subject">
+                                <td mat-cell *matCellDef="let row" style="width:45%;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding: 5px;">
+                                    <div style="overflow: hidden;text-overflow: ellipsis;" title="{{row.subject}}">
+                                        <span class="label" [ngStyle]="{'background': row.priority_color}">{{row.priority_label}}</span>&nbsp;
+                                        <span>{{row.subject}}</span>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="contact_society">
+                                <td mat-cell *matCellDef="let row" style="width:25%;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding: 5px;">
+                                    <div style="overflow: hidden;text-overflow: ellipsis;">
+                                        <i class="fa fa-address-card" color="primary"></i>&nbsp;
+                                        <span *ngIf="row.contact_lastname==''">{{row.contact_society}}</span>
+                                        <span *ngIf="row.contact_society==''">{{row.contact_lastname}}</span> &nbsp;
+                                        <i class="fa fa-arrow-right"></i>&nbsp;
+                                        <i class="fa fa-sitemap" color="primary"></i>&nbsp;
+                                        <span title="{{row.entity_label}}">{{row.destination}}</span>
+                                    </div>
+                                    <div style="padding-top: 5px;color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
+                                        {{row.dest_user}}
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="creation_date">
+                                <td mat-cell *matCellDef="let row" style="text-align: right;width:15%;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding: 5px;">
+                                    <div *ngIf="row.closing_date == null" id="{{row.res_id}}_creation_date" style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;"
+                                        title='{{row.creation_date | date : "le dd/MM/y à HH:mm"}}'>
+                                        <i class="fa fa-calendar" title="date d'enregistrement"></i> {{row.creation_date | timeAgo}}
+                                    </div>
+                                    <div *ngIf="row.closing_date == null" style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;"
+                                        >
+                                        <i class="fa fa-stopwatch" title="date limite de traitement"></i>&nbsp;
+                                        <span [innerHTML]="row.process_limit_date | timeLimit" title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'></span>
+                                    </div>
+                                    <div *ngIf="row.closing_date != null" style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;"
+                                        >
+                                        <i class="fa fa-lock" title="date de clôture"></i>&nbsp;<span title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'>{{row.closing_date | timeAgo}}</span>
+                                    </div>
+                                    <div>
+                                        <button mat-icon-button (click)="$event.stopPropagation();goTo(row);">
+                                            <mat-icon color="primary" class="fa fa-eye"></mat-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToDetail(row);" style="cursor: pointer;"></tr>
+                        </table>
+                    </mat-tab>
+                </mat-tab-group>            
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : true" style="overflow-x:hidden;max-width:500px;"> 
+            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '40%'}">
+            <div *ngIf="innerHtml" [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div>
         </mat-sidenav>
     </mat-sidenav-container>
-    </div>
+</div>

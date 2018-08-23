@@ -1368,6 +1368,7 @@ CREATE TABLE res_letterbox
   departure_date timestamp without time zone,
   department_number_id text,
   barcode text,
+  sve_start_date TIMESTAMP without time zone,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1415,8 +1416,6 @@ CREATE TABLE mlb_coll_ext (
   nature_id character varying(50),
   alt_identifier character varying(255)  default NULL,
   admission_date timestamp without time zone,
-  sve_start_date timestamp without time zone default NULL,
-  sve_identifier character varying(255)  default NULL,
   process_limit_date timestamp without time zone default NULL,
   recommendation_limit_date timestamp without time zone default NULL,
   closing_date timestamp without time zone default NULL,
@@ -1751,8 +1750,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.nature_id,
     mlb.alt_identifier,
     mlb.admission_date,
-    mlb.sve_start_date,
-    mlb.sve_identifier,
     mlb.process_limit_date,
     mlb.recommendation_limit_date,
     mlb.closing_date,
@@ -1762,6 +1759,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,
+    r.sve_start_date,
     r.subject,
     r.identifier,
     r.title,

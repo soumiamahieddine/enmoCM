@@ -356,6 +356,7 @@ if ($stmt->rowCount() == 0) {
     if ($modify_doc) {
         $mode_data = 'form';
     }
+    $_SESSION['features']['further_information'] = [];
     foreach (array_keys($indexes) as $key) {
         $indexes[$key]['opt_index'] = true;
         if ($indexes[$key]['type_field'] == 'select') {
@@ -372,6 +373,7 @@ if ($stmt->rowCount() == 0) {
         } else {
             $indexes[$key]['readonly'] = false;
         }
+        $_SESSION['features']['further_informations'][$indexes[$key]['label']] = $indexes[$key]['value'];
     }
     $data = get_general_data($coll_id, $s_id, $mode_data, $param_data); ?>
     <div class="block">

@@ -100,7 +100,7 @@ class PrintControler extends PrintFunctions
             } else {
             	$stmt = $db->query($query, $_SESSION['last_select_query_parameters']);
             }
-            
+
             $i = 0;
             $this->object_print = new EmptyObject();
             while($line = $stmt->fetchObject()) {
@@ -542,7 +542,25 @@ class PrintControler extends PrintFunctions
 					
 					$pdf->MultiCell(182,5,utf8_decode($this->array_print[$cpt]['free_notes']),1, 'L', false);
 				}
-				
+
+                /**********************************************************************/
+
+                if (!empty($_SESSION['features']['further_informations'])) {
+                    $pdf->SetFont('Arial', 'B', 11);
+
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+
+                    //FURTHER INFORMATION
+                    $pdf->Cell(182,5,utf8_decode(_PRINT_FURTHER_INFORMATIONS),0,1, 'C', false);
+                    $pdf->SetFont('Arial', '', 11);
+                    foreach ($_SESSION['features']['further_informations'] as $key => $value) {
+                        $pdf->MultiCell(182, 5, utf8_decode($key . ' : ' . $value), 1, 'L', false);
+                    }
+                }
+
 				/**********************************************************************/
 				
 				$pdf->SetFont('Arial','B',11);
@@ -555,8 +573,7 @@ class PrintControler extends PrintFunctions
 				//TYPIST
 				$userInfos = $this->getUserInfo($this->array_print[$cpt]['typist']);
 				$pdf->Cell(150,5,utf8_decode(_PRINT_TYPIST . " : " . $userInfos),0,0, 'L', false);
-				
-				/**********************************************************************/
+                /**********************************************************************/
 			}
 			
 			//$pdf->AutoPrint(true);

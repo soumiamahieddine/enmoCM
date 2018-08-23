@@ -609,5 +609,7 @@ export const LANG_EN = {
     "searchMails"                       : "Search mails",
     "noAvailableBasket"                 : "No available basket",
     "othersBaskets"                     : "Others baskets",
-
+    "close"                             : "Close",
+    "contactGroupCreate"                : "Create contact group",
+    "contactLink"                       : "Link contact",
 };

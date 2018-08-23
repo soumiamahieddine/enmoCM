@@ -12,57 +12,44 @@
 namespace Doctype\models;
 
 use SrcCore\models\ValidatorModel;
-use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
 class SecondLevelModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
-        $firstLevel = DatabaseModel::select([
-            'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'    => ['doctypes_second_level'],
-            'where'    => ['enabled = ?'],
-            'data'     => ['Y'],
-            'order_by' => ['doctypes_second_level_label asc']
+        $secondLevel = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['doctypes_second_level'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
-        return $firstLevel;
+        return $secondLevel;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $aReturn = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'  => ['doctypes_second_level'],
             'where'  => ['doctypes_second_level_id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
         
         if (empty($aReturn[0])) {
             return [];
         }
 
-        $children = DatabaseModel::select(
-            [
-            'select' => ['type_id'],
-            'table'  => ['doctypes'],
-            'where'  => ['doctypes_second_level_id = ?'],
-            'data'   => [$aArgs['id']]
-            ]
-        );
-
-        $aReturn = $aReturn[0];
-        $aReturn['hasChildren'] = count($children) > 0 ? true : false;
-       
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function create(array $aArgs)

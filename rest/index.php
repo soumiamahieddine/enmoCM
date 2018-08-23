@@ -16,7 +16,7 @@ require '../vendor/autoload.php';
 
 //Root application position
 chdir('..');
-
+date_default_timezone_set(\SrcCore\models\CoreConfigModel::getTimezone());
 
 $customId = \SrcCore\models\CoreConfigModel::getCustomId();
 $language = \SrcCore\models\CoreConfigModel::getLanguage();

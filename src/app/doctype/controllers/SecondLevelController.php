@@ -11,7 +11,6 @@
 
 namespace Doctype\controllers;
 
-use Doctype\controllers\FirstLevelController;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Doctype\models\FirstLevelModel;
@@ -23,26 +22,38 @@ use Slim\Http\Response;
 
 class SecondLevelController
 {
-    public function getById(Request $request, Response $response, $aArgs)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'wrong format for id']);
+        if (!Validator::notEmpty()->validate($aArgs['id']) || !Validator::intVal()->validate($aArgs['id'])) {
+            return $response->withStatus(500)->withJson(['errors' => 'wrong format for id']);
         }
 
-        $obj['secondLevel'] = SecondLevelModel::getById(['id' => $aArgs['id']]);
+        $doctype = [];
+        $doctype['secondLevel'] = SecondLevelModel::getById(['id' => $aArgs['id']]);
+
+        $hasChildren = DoctypeModel::get([
+            'select' => [1],
+            'where'  => ['doctypes_second_level_id = ?'],
+            'data'   => [$aArgs['id']]
+        ]);
+        $doctype['secondLevel']['hasChildren'] = empty($hasChildren) ? false : true;
         
-        if (!empty($obj['secondLevel'])) {
-            if ($obj['secondLevel']['enabled'] == 'Y') {
-                $obj['secondLevel']['enabled'] = true;
+        if (!empty($doctype['secondLevel'])) {
+            if ($doctype['secondLevel']['enabled'] == 'Y') {
+                $doctype['secondLevel']['enabled'] = true;
             } else {
-                $obj['secondLevel']['enabled'] = false;
+                $doctype['secondLevel']['enabled'] = false;
             }
         }
-  
-        $obj['firstLevel'] = FirstLevelModel::get(['select' => ['doctypes_first_level_id', 'doctypes_first_level_label']]);
-        return $response->withJson($obj);
+
+        $doctype['firstLevel'] = FirstLevelModel::get([
+            'select'    => ['doctypes_first_level_id', 'doctypes_first_level_label'],
+            'where'     => ['enabled = ?'],
+            'data'      => ['Y'],
+            'order_by'  => ['doctypes_first_level_id asc']
+        ]);
+
+        return $response->withJson($doctype);
     }
 
     public function create(Request $request, Response $response)

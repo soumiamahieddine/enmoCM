@@ -139,15 +139,16 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 'format' => $path_parts['extension'],
                                 'tmpFileName' => $_SESSION['upfile'][$numAttach]['fileNameOnTmp'],
                             );
+                            if ($contactidAttach != 'mailing') {
 
-                            //SAVE FILE ON DOCSERVER
-                            $storeResult = array();
-                            $storeResult = $docserverControler->storeResourceOnDocserver(
-                                $_SESSION['collection_id_choice'], $fileInfos
-                            );
-
-                            if ($attachment_types == 'outgoing_mail' && strpos($fileInfos['format'], 'xl') === false && strpos($fileInfos['format'], 'ppt') === false) {
-                                $_SESSION['upfile'][$numAttach]['outgoingMail'] = true;
+                                //SAVE FILE ON DOCSERVER
+                                $storeResult = array();
+                                $storeResult = $docserverControler->storeResourceOnDocserver(
+                                    $_SESSION['collection_id_choice'], $fileInfos
+                                );
+                                if ($attachment_types == 'outgoing_mail' && strpos($fileInfos['format'], 'xl') === false && strpos($fileInfos['format'], 'ppt') === false) {
+                                    $_SESSION['upfile'][$numAttach]['outgoingMail'] = true;
+                                }
                             }
 
                             if (isset($storeResult['error']) && $storeResult['error'] != '') {
@@ -171,14 +172,51 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         'type' => 'string',
                                     )
                                 );
-                                array_push(
-                                    $_SESSION['data'],
-                                    array(
-                                        'column' => 'docserver_id',
-                                        'value' => $storeResult['docserver_id'],
-                                        'type' => 'string',
-                                    )
-                                );
+                                if ($contactidAttach != 'mailing') {
+                                    array_push(
+                                        $_SESSION['data'],
+                                        array(
+                                            'column' => 'docserver_id',
+                                            'value' => $storeResult['docserver_id'],
+                                            'type' => 'string',
+                                        )
+                                    );
+                                    array_push(
+                                        $_SESSION['data'],
+                                        array(
+                                            'column' => 'res_id_master',
+                                            'value' => $_SESSION['doc_id'],
+                                            'type' => 'integer',
+                                        )
+                                    );
+                                    if (isset($contactidAttach) && $contactidAttach != '' && is_numeric($contactidAttach)) {
+                                        array_push(
+                                            $_SESSION['data'],
+                                            array(
+                                                'column' => 'dest_contact_id',
+                                                'value' => $contactidAttach,
+                                                'type' => 'integer',
+                                            )
+                                        );
+                                    } elseif (isset($contactidAttach) && $contactidAttach != '' && !is_numeric($contactidAttach)) {
+                                        $_SESSION['data'][] = [
+                                            'column' => 'dest_user',
+                                            'value' => $contactidAttach,
+                                            'type' => 'string',
+                                        ];
+                                    }
+
+                                    if (isset($addressidAttach) && $addressidAttach != '' && is_numeric($addressidAttach)) {
+                                        array_push(
+                                            $_SESSION['data'],
+                                            array(
+                                                'column' => 'dest_address_id',
+                                                'value' => $addressidAttach,
+                                                'type' => 'integer',
+                                            )
+                                        );
+                                    }
+                                }
                                 array_push(
                                     $_SESSION['data'],
                                     array(
@@ -234,14 +272,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         'type' => 'string',
                                     )
                                 );
-                                array_push(
-                                    $_SESSION['data'],
-                                    array(
-                                        'column' => 'res_id_master',
-                                        'value' => $_SESSION['doc_id'],
-                                        'type' => 'integer',
-                                    )
-                                );
                                 if (isset($back_date) && $back_date != '') {
                                     array_push(
                                         $_SESSION['data'],
@@ -253,33 +283,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                                     );
                                 }
 
-                                if (isset($contactidAttach) && $contactidAttach != '' && is_numeric($contactidAttach)) {
-                                    array_push(
-                                        $_SESSION['data'],
-                                        array(
-                                            'column' => 'dest_contact_id',
-                                            'value' => $contactidAttach,
-                                            'type' => 'integer',
-                                        )
-                                    );
-                                } elseif (isset($contactidAttach) && $contactidAttach != '' && !is_numeric($contactidAttach)) {
-                                    $_SESSION['data'][] = [
-                                        'column' => 'dest_user',
-                                        'value' => $contactidAttach,
-                                        'type' => 'string',
-                                    ];
-                                }
-
-                                if (isset($addressidAttach) && $addressidAttach != '' && is_numeric($addressidAttach)) {
-                                    array_push(
-                                        $_SESSION['data'],
-                                        array(
-                                            'column' => 'dest_address_id',
-                                            'value' => $addressidAttach,
-                                            'type' => 'integer',
-                                        )
-                                    );
-                                }
                                 if (!empty($chrono)) {
                                     array_push(
                                     $_SESSION['data'],
@@ -308,16 +311,121 @@ if (isset($_POST['add']) && $_POST['add']) {
                                     )
                                 );
 
-                                //SAVE META DATAS IN DB
-                                $id = $resAttach->load_into_db(
-                                    RES_ATTACHMENTS_TABLE,
-                                    $storeResult['destination_dir'],
-                                    $storeResult['file_destination_name'],
-                                    $storeResult['path_template'],
-                                    $storeResult['docserver_id'],
-                                    $_SESSION['data'],
-                                    $_SESSION['config']['databasetype']
-                                );
+                                if ($contactidAttach == 'mailing') {
+                                    $contactsForMailing = \SrcCore\models\DatabaseModel::select([
+                                        'select' => ['*'],
+                                        'table' => ['contacts_res'],
+                                        'where' => ['res_id = ?'],
+                                        'data' => [$_SESSION['doc_id']]
+                                    ]);
+                                    foreach ($contactsForMailing as $key => $contactForMailing) {
+                                        if ($key == 0) {
+                                            $resId = $_SESSION['doc_id'];
+                                        } else {
+                                            $resId = \Resource\controllers\ResController::duplicateForMailing([
+                                                'resId'     => $_SESSION['doc_id'],
+                                                'userId'    => $_SESSION['user']['UserId'],
+                                                'contactId' => $contactForMailing['contact_id'],
+                                                'addressId' => $contactForMailing['address_id']
+                                            ]);
+                                        }
+                                        require_once 'modules/templates/class/templates_controler.php';
+                                        $templateCtrl = new templates_controler();
+                                        $pathToAttachmentToCopy = $_SESSION['config']['tmppath'] . $_SESSION['upfile'][$numAttach]['fileNameOnTmp'];
+                                        $params = [
+                                            'res_id' => $resId,
+                                            'coll_id' => 'letterbox_coll',
+                                            'res_view' => 'res_view_attachments',
+                                            'res_table' => 'res_attachments',
+                                            'res_contact_id' => $contactForMailing['contact_id'],
+                                            'res_address_id' => $contactForMailing['address_id'],
+                                            'mailing' => true,
+                                            'pathToAttachment' => $pathToAttachmentToCopy
+                                        ];
+
+                                        $filePathOnTmp = $templateCtrl->merge('notUsed', $params, 'file');
+                                        $filePathOnTmp = str_replace($_SESSION['config']['tmppath'], '', $filePathOnTmp);
+                                        $fileInfos = [
+                                            'tmpDir'        => $_SESSION['config']['tmppath'],
+                                            'size'          => $_SESSION['upfile'][$numAttach]['size'],
+                                            'format'        => $path_parts['extension'],
+                                            'tmpFileName'   => $filePathOnTmp,
+                                        ];
+
+                                        $storeResult = $docserverControler->storeResourceOnDocserver($_SESSION['collection_id_choice'], $fileInfos);
+                                        foreach ($_SESSION['data'] as $dataKey => $dataValue) {
+                                            if (in_array($dataValue['column'], ['docserver_id', 'res_id_master', 'dest_contact_id', 'dest_address_id'])) {
+                                                unset($_SESSION['data'][$dataKey]);
+                                            }
+                                        }
+                                        $_SESSION['data'][] = [
+                                            'column' => 'docserver_id',
+                                            'value' => $storeResult['docserver_id'],
+                                            'type' => 'string'
+                                        ];
+                                        $_SESSION['data'][] = [
+                                            'column' => 'res_id_master',
+                                            'value' => $resId,
+                                            'type' => 'integer'
+                                        ];
+                                        $_SESSION['data'][] = [
+                                            'column' => 'dest_contact_id',
+                                            'value' => $contactForMailing['contact_id'],
+                                            'type' => 'integer'
+                                        ];
+                                        $_SESSION['data'][] = [
+                                            'column' => 'dest_address_id',
+                                            'value' => $contactForMailing['address_id'],
+                                            'type' => 'integer'
+                                        ];
+                                        $id = $resAttach->load_into_db(
+                                            'res_attachments',
+                                            $storeResult['destination_dir'],
+                                            $storeResult['file_destination_name'],
+                                            $storeResult['path_template'],
+                                            $storeResult['docserver_id'],
+                                            $_SESSION['data'],
+                                            $_SESSION['config']['databasetype']
+                                        );
+                                    }
+                                } else {
+                                    //SAVE META DATAS IN DB
+                                    $id = $resAttach->load_into_db(
+                                        RES_ATTACHMENTS_TABLE,
+                                        $storeResult['destination_dir'],
+                                        $storeResult['file_destination_name'],
+                                        $storeResult['path_template'],
+                                        $storeResult['docserver_id'],
+                                        $_SESSION['data'],
+                                        $_SESSION['config']['databasetype']
+                                    );
+                                    if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendAttachmentToExternalApplication'])) {
+                                        $bodyData = [];
+                                        $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendAttachmentToExternalApplication']);
+
+                                        $select = [];
+                                        foreach ($config['rawData'] as $value) {
+                                            $select[] = $value;
+                                        }
+
+                                        $attachment = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
+                                        if (!empty($attachment[0])) {
+                                            $bodyData = $attachment[0];
+                                        }
+
+                                        if (!empty($config['data'])) {
+                                            $bodyData = array_merge($bodyData, $config['data']);
+                                        }
+
+                                        if (!empty($config['file'])) {
+                                            $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $storeResult['docserver_id'], 'select' => ['path_template']]);
+                                            $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $storeResult['destination_dir']) . $storeResult['file_destination_name']);
+                                            $bodyData[$config['file']] = base64_encode($file);
+                                        }
+
+                                        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendAttachmentToExternalApplication', 'bodyData' => $bodyData]);
+                                    }
+                                }
 
                                 //copie de la version PDF de la pièce si mode de conversion sur le client
                                 if ($_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp'] != '' && empty($templateOffice)) {
