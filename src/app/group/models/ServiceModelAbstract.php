@@ -124,17 +124,17 @@ abstract class ServiceModelAbstract
                             $applicationServices[] = [
                                 'name'        => $name,
                                 'comment'     => $comment,
-                                'servicepage' => (string) $value->servicepage,
-                                'style'       => (string) $value->style,
-                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                                'servicepage' => (string)$value->servicepage,
+                                'style'       => (string)$value->style,
+                                'angular'     => empty((string)$value->angular) ? 'false' : (string)$value->angular,
                             ];
                         } else {
                             $applicationServices[$category][] = [
                                 'name'        => $name,
                                 'comment'     => $comment,
-                                'servicepage' => (string) $value->servicepage,
-                                'style'       => (string) $value->style,
-                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                                'servicepage' => (string)$value->servicepage,
+                                'style'       => (string)$value->style,
+                                'angular'     => empty((string)$value->angular) ? 'false' : (string)$value->angular,
                             ];
                         }
                     }
@@ -211,125 +211,6 @@ abstract class ServiceModelAbstract
                                 'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];
                         }
-                    }
-                }
-            }
-        }
-
-        return $modulesServices;
-    }
-
-    public static function getApplicationAdministrationMenuByXML()
-    {
-        $modulesServices = [];
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/menu.xml']);
-        foreach ($loadedXml->MENU as $value) {
-            $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
-
-            $modulesServices['menuList'][] = [
-                'id'      => (string) $value->id,
-                'label'   => $label,
-                'link'    => (string) $value->url,
-                'icon'    => (string) $value->style,
-                'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-            ];
-        }
-
-        $customId = CoreConfigModel::getCustomId();
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-        $xmlfile = simplexml_load_file($path);
-        $modulesServices['applicationName'] = $xmlfile->CONFIG->applicationname;
-        foreach ($xmlfile->MODULES as $mod) {
-            $path = false;
-            $module = (string) $mod->moduleid;
-
-            if (file_exists("custom/{$customId}/modules/{$module}/xml/menu.xml")) {
-                $path = "custom/{$customId}/modules/{$module}/xml/menu.xml";
-            } elseif (file_exists("modules/{$module}/xml/menu.xml")) {
-                $path = "modules/{$module}/xml/menu.xml";
-            }
-            if ($path) {
-                $xmlfile = simplexml_load_file($path);
-                foreach ($xmlfile->MENU as $value) {
-                    $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
-
-                    $modulesServices['menuList'][] = [
-                        'id'        => (string) $value->id,
-                        'label'     => $label,
-                        'link'      => (string) $value->url,
-                        'icon'      => (string) $value->style,
-                        'angular'   => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                    ];
-                }
-            }
-        }
-
-        return $modulesServices;
-    }
-
-    public static function getApplicationAdministrationMenuByUserServices(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userServices']);
-        ValidatorModel::arrayType($aArgs, ['userServices']);
-
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/menu.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/menu.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/menu.xml';
-        }
-
-        $modulesServices = [];
-
-        $xmlfile = simplexml_load_file($path);
-        foreach ($xmlfile->MENU as $value) {
-            if (in_array((string) $value->id, $aArgs['userServices'])) {
-                $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
-
-                $modulesServices['menuList'][] = [
-                    'id'      => (string) $value->id,
-                    'label'   => $label,
-                    'link'    => (string) $value->url,
-                    'icon'    => (string) $value->style,
-                    'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                ];
-            }
-        }
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-        $xmlfile = simplexml_load_file($path);
-        $modulesServices['applicationName'] = $xmlfile->CONFIG->applicationname;
-        foreach ($xmlfile->MODULES as $mod) {
-            $path = false;
-            $module = (string) $mod->moduleid;
-
-            if (file_exists("custom/{$customId}/modules/{$module}/xml/menu.xml")) {
-                $path = "custom/{$customId}/modules/{$module}/xml/menu.xml";
-            } elseif (file_exists("modules/{$module}/xml/menu.xml")) {
-                $path = "modules/{$module}/xml/menu.xml";
-            }
-            if ($path) {
-                $xmlfile = simplexml_load_file($path);
-                foreach ($xmlfile->MENU as $value) {
-                    if (in_array((string) $value->id, $aArgs['userServices'])) {
-                        $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
-
-                        $modulesServices['menuList'][] = [
-                            'id'      => (string) $value->id,
-                            'label'   => $label,
-                            'link'    => (string) $value->url,
-                            'icon'    => (string) $value->style,
-                            'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                        ];
                     }
                 }
             }

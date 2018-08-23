@@ -9,6 +9,7 @@
     <servicetype>menu</servicetype>
     <system_service>false</system_service>
     <enabled>true</enabled>
+    <style>fa fa-cogs</style>
     <angular>true</angular>
   </SERVICE>
   <SERVICE>
@@ -16,27 +17,36 @@
     <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
     <name>_ADV_SEARCH_MLB</name>
     <comment>_ADV_SEARCH_MLB</comment>
+    <servicepage>index.php?page=search_adv&amp;dir=indexing_searching</servicepage>
     <servicetype>menu</servicetype>
     <system_service>false</system_service>
     <enabled>true</enabled>
+    <style>fa fa-search</style>
+    <angular>false</angular>
   </SERVICE>
   <SERVICE>
     <id>index_mlb</id>
     <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
     <name>_INDEXING_MLB</name>
     <comment>_INDEXING_MLB</comment>
+    <servicepage>index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket</servicepage>
     <servicetype>menu</servicetype>
     <system_service>false</system_service>
     <enabled>true</enabled>
+    <style>fa fa-plus</style>
+    <angular>false</angular>
   </SERVICE>
   <SERVICE>
     <id>search_contacts</id>
     <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
     <name>_SEARCH_CONTACTS</name>
     <comment>_SEARCH_CONTACTS</comment>
+    <servicepage>index.php?page=search_contacts&amp;dir=indexing_searching</servicepage>
     <servicetype>menu</servicetype>
     <system_service>false</system_service>
     <enabled>true</enabled>
+    <style>fa fa-search</style>
+    <angular>false</angular>
   </SERVICE>
   <SERVICE>
     <id>admin_users</id>
@@ -199,18 +209,24 @@
     <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
     <name>_MY_CONTACTS_MENU</name>
     <comment>_MY_CONTACTS_MENU</comment>
+    <servicepage>index.php?page=my_contacts&amp;dir=my_contacts&amp;load</servicepage>
     <servicetype>menu</servicetype>
     <system_service>false</system_service>
     <enabled>true</enabled>
+    <style>fa fa-book</style>
+    <angular>false</angular>
   </SERVICE>
   <SERVICE>
     <id>create_contacts</id>
     <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
     <name>_CREATE_CONTACTS</name>
     <comment>_CREATE_CONTACTS</comment>
+    <servicepage>index.php?page=contacts_v2</servicepage>
     <servicetype>menu</servicetype>
     <system_service>false</system_service>
     <enabled>true</enabled>
+    <style>fa fa-users</style>
+    <angular>false</angular>
   </SERVICE>
   <SERVICE>
     <id>update_contacts</id>
