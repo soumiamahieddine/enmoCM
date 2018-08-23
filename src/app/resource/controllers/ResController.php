@@ -16,12 +16,14 @@ namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
+use Basket\models\GroupBasketModel;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\GroupController;
+use Group\models\GroupModel;
 use Note\models\NoteModel;
 use Group\models\ServiceModel;
 use setasign\Fpdi\TcpdfFpdi;
@@ -444,6 +446,51 @@ class ResController
         $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
 
         return $response->withHeader('Content-Type', $mimeType);
+    }
+
+    public function getResourcesByBasket(Request $request, Response $response, array $aArgs)
+    {
+        $data = $request->getQueryParams();
+
+        if (empty($data['offset']) || !is_numeric($data['offset'])) {
+            $data['offset'] = 0;
+        }
+        if (empty($data['limit']) || !is_numeric($data['limit'])) {
+            $data['limit'] = 0;
+        }
+
+        $group = GroupModel::getById(['id' => $aArgs['groupSerialId'], 'select' => ['group_id']]);
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order']]);
+        if (empty($group) || empty($basket)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
+        }
+
+        $groups = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
+        $groupFound = false;
+        foreach ($groups as $value) {
+            if ($value['id'] == $aArgs['groupSerialId']) {
+                $groupFound = true;
+            }
+        }
+        if (!$groupFound) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this user']);
+        }
+
+        $isBasketLinked = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$aArgs['basketId'], $group['group_id']]]);
+        if (empty($isBasketLinked)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this basket']);
+        }
+
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $GLOBALS['userId']]);
+        $resources = ResModel::getOnView([
+            'select'    => ['res_id', 'alt_identifier'],
+            'where'     => [$whereClause],
+            'orderBy'   => ["{$basket['basket_res_order']} DESC"],
+            'offset'    => (int)$data['offset'],
+            'limit'     => (int)$data['limit'],
+        ]);
+
+        return $response->withJson(['resources' => $resources, 'number' => count($resources)]);
     }
 
     public function updateExternalInfos(Request $request, Response $response)
