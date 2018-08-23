@@ -76,7 +76,8 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     selectedIndex: number = 0;
     selectedIndexContactsGrp: number = 0;
 
-    @ViewChild('snav2') sidenav: MatSidenav;
+    @ViewChild('snav2') sidenavRight: MatSidenav;
+    @ViewChild('snav') sidenavLeft: MatSidenav;
 
     //Redirect Baskets
     selectionBaskets = new SelectionModel<Element>(true, []);
@@ -182,26 +183,11 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         });
     }
 
-    prepareProfile() {
-        $j('#inner_content').remove();
-        $j('#inner_content_contact').parent('div').remove(); 
-        $j('#inner_content_contact').remove(); 
-        $j('#menunav').hide();
-        $j('#divList').remove();
-        $j('#magicContactsTable').remove();
-        $j('#manageBasketsOrderTable').remove();
-        $j('#controlParamTechnicTable').remove();
-        $j('#container').width("99%");
-        if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
-            $j('#content h1')[0].remove();
-        }
-    }
-
     initComponents(event: any) {
         this.selectedIndex = event.index;
         if (event.index == 2) {
             if (!this.mobileMode) {
-                this.sidenav.open();
+                this.sidenavRight.open();
             } 
             //if (this.histories.length == 0) {
                 this.http.get(this.coreUrl + 'rest/histories/users/' + this.user.id)
@@ -217,9 +203,9 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                     });
             //}
         } else if(event.index == 1) {
-            this.sidenav.close();
+            this.sidenavRight.close();
         } else if(!this.mobileMode){
-            this.sidenav.open();
+            this.sidenavRight.open();
         }
     }
 
@@ -409,7 +395,9 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     ngOnInit(): void {
-        this.prepareProfile();
+        window['MainHeaderComponent'].refreshTitle(this.lang.myProfile);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;

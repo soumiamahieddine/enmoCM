@@ -9,7 +9,6 @@ import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 import { RouterModule }                         from '@angular/router';
 
-
 /*PLUGINS IMPORTS*/
 import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
 import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe';
@@ -19,6 +18,7 @@ import { FilterListPipe }                       from '../plugins/filterList.pipe
 import { AppMaterialModule }                    from './app-material.module';
 
 /*MENU COMPONENT*/
+import { MainHeaderComponent }                  from './menu/main-header.component';
 import { MenuComponent }                        from './menu/menu.component';
 import { MenuNavComponent }                     from './menu/menu-nav.component';
 import { MenuTopComponent }                     from './menu/menu-top.component';
@@ -41,6 +41,7 @@ import { BasketHomeComponent }                        from './basket/basket-home
         AppMaterialModule
     ],
     declarations: [
+        MainHeaderComponent,
         MenuComponent,
         MenuNavComponent,
         MenuTopComponent,
@@ -53,6 +54,7 @@ import { BasketHomeComponent }                        from './basket/basket-home
     ],
     exports: [
         CommonModule,
+        MainHeaderComponent,
         MenuComponent,
         MenuNavComponent,
         MenuTopComponent,
