@@ -14,7 +14,7 @@ export class FilterListPipe implements PipeTransform {
 	}
 }
 
-@Pipe({
+/*@Pipe({
 	name: 'filterShortcut'
 })
 export class FilterShortcutPipe implements PipeTransform {
@@ -24,4 +24,4 @@ export class FilterShortcutPipe implements PipeTransform {
 		let filter = args.toLocaleLowerCase();
 		return filter ? value.filter((shortcut:any) => shortcut.label.toLocaleLowerCase().indexOf(filter) != -1) : value;
 	}
-}
+}*/
