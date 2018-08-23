@@ -131,9 +131,7 @@ class SecondLevelController
         }
 
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'Id is not a numeric']);
+            return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
         }
 
         SecondLevelModel::update(['doctypes_second_level_id' => $aArgs['id'], 'enabled' => 'N']);

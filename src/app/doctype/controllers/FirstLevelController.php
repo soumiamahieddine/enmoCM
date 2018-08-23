@@ -82,8 +82,8 @@ class FirstLevelController
 
         $hasChildren = SecondLevelModel::get([
             'select' => [1],
-            'where'  => ['doctypes_first_level_id = ?'],
-            'data'   => [$aArgs['id']]
+            'where'  => ['doctypes_first_level_id = ?', 'enabled = ?'],
+            'data'   => [$aArgs['id'], 'Y']
         ]);
         $obj['firstLevel']['hasChildren'] = empty($hasChildren) ? false : true;
 
