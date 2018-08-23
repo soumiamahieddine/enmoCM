@@ -95,10 +95,11 @@ abstract class ServiceModelAbstract
         return $applicationServices;
     }
 
-    public static function getApplicationAdministrationServicesByUserServices(array $aArgs = [])
+    public static function getApplicationServicesByUserServices(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userServices']);
+        ValidatorModel::notEmpty($aArgs, ['userServices', 'type']);
         ValidatorModel::arrayType($aArgs, ['userServices']);
+        ValidatorModel::stringType($aArgs, ['type']);
 
         $xmlfile = ServiceModel::getLoadedXml(['location' => 'apps']);
         $applicationServices = [];
@@ -106,7 +107,7 @@ abstract class ServiceModelAbstract
         if ($xmlfile) {
             $hasHistory = false;
             foreach ($xmlfile->SERVICE as $value) {
-                if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices']))) {
+                if ((string) $value->servicetype == $aArgs['type'] && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices']))) {
                     if ((string)$value->id == 'view_history' || (string)$value->id == 'view_history_batch') {
                         $hasHistory = true;
                     }
@@ -114,18 +115,28 @@ abstract class ServiceModelAbstract
             }
             foreach ($xmlfile->SERVICE as $value) {
                 $historyByPass = (string)$value->id == 'view_history' && $hasHistory;
-                if ($historyByPass || ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices'])))) {
+                if ($historyByPass || ((string) $value->servicetype == $aArgs['type'] && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices'])))) {
                     if ((string)$value->id != 'view_history_batch') {
                         $category = (string) $value->category;
                         $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
-                        $applicationServices[$category][] = [
-                            'name'        => $name,
-                            'comment'     => $comment,
-                            'servicepage' => (string) $value->servicepage,
-                            'style'       => (string) $value->style,
-                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                        ];
+                        if (empty($category)) {
+                            $applicationServices[] = [
+                                'name'        => $name,
+                                'comment'     => $comment,
+                                'servicepage' => (string) $value->servicepage,
+                                'style'       => (string) $value->style,
+                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            ];
+                        } else {
+                            $applicationServices[$category][] = [
+                                'name'        => $name,
+                                'comment'     => $comment,
+                                'servicepage' => (string) $value->servicepage,
+                                'style'       => (string) $value->style,
+                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            ];
+                        }
                     }
                 }
             }
@@ -164,10 +175,11 @@ abstract class ServiceModelAbstract
         return $modulesServices;
     }
 
-    public static function getModulesAdministrationServicesByUserServices(array $aArgs)
+    public static function getModulesServicesByUserServices(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userServices']);
+        ValidatorModel::notEmpty($aArgs, ['userServices', 'type']);
         ValidatorModel::arrayType($aArgs, ['userServices']);
+        ValidatorModel::stringType($aArgs, ['type']);
 
         $modulesServices = [];
 
@@ -178,17 +190,27 @@ abstract class ServiceModelAbstract
 
             if ($xmlModuleFile) {
                 foreach ($xmlModuleFile->SERVICE as $value) {
-                    if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices']))) {
+                    if ((string) $value->servicetype == $aArgs['type'] && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices']))) {
                         $category = (string) $value->category;
                         $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
-                        $modulesServices[$category][] = [
-                            'name'        => $name,
-                            'comment'     => $comment,
-                            'servicepage' => (string) $value->servicepage,
-                            'style'       => (string) $value->style,
-                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                        ];
+                        if (empty($category)) {
+                            $modulesServices[] = [
+                                'name'        => $name,
+                                'comment'     => $comment,
+                                'servicepage' => (string) $value->servicepage,
+                                'style'       => (string) $value->style,
+                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            ];
+                        } else {
+                            $modulesServices[$category][] = [
+                                'name'        => $name,
+                                'comment'     => $comment,
+                                'servicepage' => (string) $value->servicepage,
+                                'style'       => (string) $value->style,
+                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            ];
+                        }
                     }
                 }
             }
@@ -328,8 +350,8 @@ abstract class ServiceModelAbstract
         }
 
         $administration = [];
-        $administrationApplication = ServiceModel::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
-        $administrationModule = ServiceModel::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
+        $administrationApplication = ServiceModel::getApplicationServicesByUserServices(['userServices' => $servicesStoredInDB, 'type' => 'admin']);
+        $administrationModule = ServiceModel::getModulesServicesByUserServices(['userServices' => $servicesStoredInDB, 'type' => 'admin']);
         $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
 
         return $administration;

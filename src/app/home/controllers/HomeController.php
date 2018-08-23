@@ -15,6 +15,8 @@
 namespace Home\controllers;
 
 use Basket\models\BasketModel;
+use Group\controllers\ServiceController;
+use Group\models\ServiceModel;
 use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -81,6 +83,13 @@ class HomeController
             'userId'    => $GLOBALS['userId']
         ]);
 
-        return $response->withJson(['regroupedBaskets' => $regroupedBaskets, 'assignedBaskets' => $assignedBaskets, 'lastResources' => $lastResources]);
+        $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+
+        return $response->withJson([
+            'regroupedBaskets'  => $regroupedBaskets,
+            'assignedBaskets'   => $assignedBaskets,
+            'lastResources'     => $lastResources,
+            'menu'              => $menu
+        ]);
     }
 }
