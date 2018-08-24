@@ -365,7 +365,7 @@ if (file_exists($path)) {
             ?>
             <div id="loadingContent"></div>
             <my-app></my-app>
-            <div id="konami"><img src="img/konami.png"></div>
+            <div id="konami" style="position: absolute; display: none"><img src="img/konami.png"></div>
         </div>
         <p id="footer">
             <?php
