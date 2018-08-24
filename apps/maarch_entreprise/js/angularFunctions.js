@@ -162,18 +162,20 @@ var koNb = 0;
 $j(document).keydown(function (e) {
     if (e.keyCode === koKeys[koNb++]) {
         if (koNb === koKeys.length) {
+            var audio = new Audio('img/konami.mp3');
+            audio.play();
             var konami = $j("#konami");
             konami.css('top', '200px');
             konami.show();
-            var pos = 200;
+            var pos = 100;
             var id = setInterval(frame, 10);
             function frame() {
-                if (pos > 1200) {
+                if (pos > 1400) {
                     clearInterval(id);
                     konami.hide();
                     konami.css('left', '200px');
                 } else {
-                    pos += 10;
+                    pos += 5;
                     konami.css('left', pos + 'px');
                 }
             }
