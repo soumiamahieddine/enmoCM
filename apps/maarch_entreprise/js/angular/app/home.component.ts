@@ -38,6 +38,8 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     dataSource: any;
     displayedColumns: string[] = ['res_id', 'subject', 'creation_date'];
 
+    currentDate : string = "";
+
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer) {
         super(http, ['users']);
         this.mobileMode = angularGlobals.mobileMode;
@@ -52,6 +54,10 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         window['MainHeaderComponent'].setSnav(this.snav);
         window['MainHeaderComponent'].setSnavRight(null);
         this.coreUrl = angularGlobals.coreUrl;
+        let event = new Date();
+        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+        this.currentDate = event.toLocaleDateString('fr-FR', options);
         this.loading = false;
 
         this.http.get(this.coreUrl + "rest/home")
