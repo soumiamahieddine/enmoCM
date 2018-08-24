@@ -156,6 +156,9 @@ $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupControll
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
+//Header
+$app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
+
 //Home
 $app->get('/home', \Home\controllers\HomeController::class . ':get');
 

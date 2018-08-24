@@ -348,7 +348,7 @@ if (file_exists($path)) {
                 <script>
                     var main_info = $j('#main_info');
                     if (main_info != null) {
-                        main_info.css({"display":"table-cell"})
+                        main_info.css({"display":"table-cell"});
                         Element.hide.delay(10, 'main_info');
                     }
                 </script>
@@ -365,6 +365,7 @@ if (file_exists($path)) {
             ?>
             <div id="loadingContent"></div>
             <my-app></my-app>
+            <div id="konami"><img src="img/konami.png"></div>
         </div>
         <p id="footer">
             <?php

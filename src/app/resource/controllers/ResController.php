@@ -482,9 +482,8 @@ class ResController
         }
 
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $GLOBALS['userId']]);
-        $resources = ResModel::getOnView([
-            'select'    => ['res_id', 'alt_identifier'],
-            'where'     => [$whereClause],
+        $resources = ResModel::getForList([
+            'clause'    => $whereClause,
             'orderBy'   => ["{$basket['basket_res_order']} DESC"],
             'offset'    => (int)$data['offset'],
             'limit'     => (int)$data['limit'],
