@@ -174,6 +174,10 @@ table tr:not(.filters) .mat-form-field {
     right: 0;
 }
 
+.admin-is-mobile {
+    top: 56px;
+}
+
 .admin-is-mobile .admin-toolbar {
     position: fixed;
     /* Make sure the toolbar will stay on top of the content as it scrolls past. */

@@ -7,6 +7,7 @@
     <comment>_ADMIN</comment>
     <servicepage>/administration</servicepage>
     <servicetype>menu</servicetype>
+    <shortcut>true</shortcut>
     <system_service>false</system_service>
     <enabled>true</enabled>
     <style>fa fa-cogs</style>
@@ -19,6 +20,7 @@
     <comment>_ADV_SEARCH_MLB</comment>
     <servicepage>index.php?page=search_adv&amp;dir=indexing_searching</servicepage>
     <servicetype>menu</servicetype>
+    <shortcut>true</shortcut>
     <system_service>false</system_service>
     <enabled>true</enabled>
     <style>fa fa-search</style>
@@ -31,6 +33,7 @@
     <comment>_INDEXING_MLB</comment>
     <servicepage>index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket</servicepage>
     <servicetype>menu</servicetype>
+    <shortcut>true</shortcut>
     <system_service>false</system_service>
     <enabled>true</enabled>
     <style>fa fa-plus</style>

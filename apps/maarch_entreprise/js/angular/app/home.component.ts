@@ -50,6 +50,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     ngOnInit(): void {
         window['MainHeaderComponent'].refreshTitle(this.lang.home);
         window['MainHeaderComponent'].setSnav(this.snav);
+        window['MainHeaderComponent'].setSnavRight(null);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = false;
 

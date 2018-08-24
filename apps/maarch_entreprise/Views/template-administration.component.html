@@ -1,9 +1,9 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav-container class="admin-sidenav-container" >
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
+            <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-divider></mat-divider>
             <mat-nav-list *ngIf="!creationMode">
                 <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item *ngIf="!lockFound" (click)="duplicateTemplate()">

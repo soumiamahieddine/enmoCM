@@ -1,9 +1,9 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileMode ? 56 : 0">
+    <mat-sidenav-container class="admin-sidenav-container">
         <mat-sidenav #snav [mode]="mobileMode ? 'over' : 'side'" [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true"
             autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '400px'}">
+            <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-divider></mat-divider>
             <basket-home *ngIf="homeData" [homeData]="homeData"></basket-home>
             <mat-divider></mat-divider>
         </mat-sidenav>
