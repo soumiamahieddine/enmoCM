@@ -148,13 +148,13 @@ abstract class ResModelAbstract
         return true;
     }
 
-    public static function updateExt(array $aArgs)
+    public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'mlb_coll_ext',
+            'table' => 'res_letterbox',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
@@ -163,13 +163,13 @@ abstract class ResModelAbstract
         return true;
     }
 
-    public static function update(array $aArgs)
+    public static function updateExt(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'res_letterbox',
+            'table' => 'mlb_coll_ext',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
