@@ -1,12 +1,4 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-toolbar color="primary" class="admin-toolbar">
-        <button mat-button (click)="snav.toggle()">
-            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
-        </button>
-        <h1 class="admin-toolbar-title">{{lang.administration}} {{lang.reports}}</h1>
-        <span style="flex: 1 1 auto;"></span>
-        <menu-top></menu-top>
-    </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
@@ -69,10 +61,6 @@
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             position='end' [opened]="mobileQuery.matches ? false : false">
-
-            <mat-nav-list>
-                <h3 mat-subheader>Actions</h3>
-            </mat-nav-list>
         </mat-sidenav>
     </mat-sidenav-container>
 </div>

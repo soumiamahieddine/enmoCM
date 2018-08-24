@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -15,11 +16,16 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class NotificationAdministrationComponent implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     coreUrl: string;
 
-    creationMode: boolean;
+    creationMode: boolean; 
     notification: any = {
         diffusionType_label: null
     };
@@ -43,6 +49,10 @@ export class NotificationAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['identifier'] == "undefined") {
+                window['MainHeaderComponent'].refreshTitle(this.lang.notificationCreation);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.creationMode = true;
                 this.http.get(this.coreUrl + 'rest/administration/notifications/new')
                     .subscribe((data: any) => {
@@ -53,6 +63,10 @@ export class NotificationAdministrationComponent implements OnInit {
                         this.notify.error(err.error.errors);
                     });
             } else {
+                window['MainHeaderComponent'].refreshTitle(this.lang.notificationModification);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.creationMode = false;
                 this.http.get(this.coreUrl + 'rest/notifications/' + params['identifier'])
                     .subscribe((data: any) => {

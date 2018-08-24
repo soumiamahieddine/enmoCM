@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
@@ -18,20 +18,27 @@ declare var angularGlobals: any;
 })
 export class UsersAdministrationComponent extends AutoCompletePlugin implements OnInit {
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-    dialogRef                       : MatDialogRef<any>;
+    /*RESPONSIVE*/
+    private _mobileQueryListener            : () => void;
+    mobileQuery                             : MediaQueryList;
 
-    coreUrl                         : string;
-    lang                            : any       = LANG;
-    loading                         : boolean   = false;
+    /*HEADER*/
+    titleHeader                             : string;
+    @ViewChild('snav') public sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight : MatSidenav;
 
-    data                            : any[]     = [];
-    config                          : any       = {};
-    userDestRedirect                : any       = {};
-    userDestRedirectModels          : any[]     = [];
-    quota                           : any       = {};
-    user                            : any       = {};
+    dialogRef                               : MatDialogRef<any>;
+
+    coreUrl                                 : string;
+    lang                                    : any                   = LANG;
+    loading                                 : boolean               = false;
+
+    data                                    : any[]                 = [];
+    config                                  : any                   = {};
+    userDestRedirect                        : any                   = {};
+    userDestRedirectModels                  : any[]                 = [];
+    quota                                   : any                   = {};
+    user                                    : any                   = {};
 
     dataSource          = new MatTableDataSource(this.data);
     displayedColumns    = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
@@ -58,6 +65,10 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 
     ngOnInit(): void {
+        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.users);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(null);
+
         this.coreUrl = angularGlobals.coreUrl;
         this.user = angularGlobals.user;
         this.loading = true;

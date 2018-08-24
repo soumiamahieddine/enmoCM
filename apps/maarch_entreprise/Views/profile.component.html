@@ -441,8 +441,8 @@
                                 </mat-expansion-panel-header>
                                 <mat-tab-group (selectedIndexChange)="changeTabContactGrp($event)" [selectedIndex]="selectedIndexContactsGrp">
                                     <mat-tab label="Liste des groupements">
-                                        <mat-accordion (click)="initGroupsContact();">
-                                            <mat-expansion-panel>
+                                        <mat-accordion>
+                                            <mat-expansion-panel (opened)="initGroupsContact()">
                                                 <mat-expansion-panel-header>
                                                     <mat-panel-title color="primary" style="justify-content: right;">
                                                         <span style="margin-top:5px;">{{lang.contactGroupCreate}}</span>

@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -16,6 +17,11 @@ declare var angularGlobals: any;
 })
 export class PriorityAdministrationComponent implements OnInit {
 
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
 
@@ -51,9 +57,17 @@ export class PriorityAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
+                window['MainHeaderComponent'].refreshTitle(this.lang.priorityCreation);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.creationMode = true;
                 this.loading = false;
             } else {
+                window['MainHeaderComponent'].refreshTitle(this.lang.priorityModification);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.creationMode = false;
                 this.id = params['id'];
                 this.http.get(this.coreUrl + "rest/priorities/" + this.id)

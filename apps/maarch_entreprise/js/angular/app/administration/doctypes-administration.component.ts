@@ -15,6 +15,11 @@ declare var angularGlobals: any;
 })
 
 export class DoctypesAdministrationComponent implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     dialogRef: MatDialogRef<any>;
@@ -42,7 +47,6 @@ export class DoctypesAdministrationComponent implements OnInit {
     dataSource = new MatTableDataSource(this.currentType.indexes);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    @ViewChild('snav2') sidenav: MatSidenav;
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
         $j("link[href='merged_css.php']").remove();
@@ -56,6 +60,10 @@ export class DoctypesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.doctypesAdmin);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
@@ -126,8 +134,8 @@ export class DoctypesAdministrationComponent implements OnInit {
                     $j('#jstree')
                         // listen for event
                         .on('select_node.jstree', (e: any, data: any) => {
-                            if (this.sidenav.opened == false) {
-                                this.sidenav.open();
+                            if (this.sidenavRight.opened == false) {
+                                this.sidenavRight.open();
                             }
                             this.loadDoctype(data, false);
 
@@ -331,8 +339,8 @@ export class DoctypesAdministrationComponent implements OnInit {
                     this.refreshTree();
                     if(this.doctypes[0]){
                         $j('#jstree').jstree('select_node', this.doctypes[0]);
-                    } else if (this.sidenav.opened == true) {
-                        this.sidenav.close();
+                    } else if (this.sidenavRight.opened == true) {
+                        this.sidenavRight.close();
                     }
                     this.notify.success(this.lang.firstLevelDeleted);
                 }, (err) => {
@@ -412,8 +420,8 @@ export class DoctypesAdministrationComponent implements OnInit {
         if(mode == 'doctype'){
             this.currentType  = {};
         }
-        if (this.sidenav.opened == false) {
-            this.sidenav.open();
+        if (this.sidenavRight.opened == false) {
+            this.sidenavRight.open();
         }
         $j('#jstree').jstree('deselect_all');
         this.http.get(this.coreUrl + "rest/administration/doctypes/new")

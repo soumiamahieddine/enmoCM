@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -16,6 +17,10 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class UpdateStatusAdministrationComponent extends AutoCompletePlugin implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
@@ -44,6 +49,10 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     }
 
     ngOnInit(): void {
+        window['MainHeaderComponent'].refreshTitle(this.lang.updateStatus);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(null);
+
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = false;

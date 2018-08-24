@@ -16,6 +16,11 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class NotificationsAdministrationComponent implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     coreUrl: string;
@@ -45,8 +50,6 @@ export class NotificationsAdministrationComponent implements OnInit {
     authorizedNotification :any;
     crontab:any;
 
-    @ViewChild('snav2') sidenav: MatSidenav;
-
     displayedColumns = ['notification_id', 'description', 'is_enabled', 'notifications'];
     dataSource = new MatTableDataSource(this.notifications);
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -69,6 +72,10 @@ export class NotificationsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.notifications);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(null);
+
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
@@ -98,7 +105,7 @@ export class NotificationsAdministrationComponent implements OnInit {
                         this.dataSource.paginator = this.paginator;
                         this.dataSource.sort = this.sort;
                     }, 0);
-                    this.sidenav.close();
+                    this.sidenavRight.close();
                     this.notify.success(this.lang.notificationDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);

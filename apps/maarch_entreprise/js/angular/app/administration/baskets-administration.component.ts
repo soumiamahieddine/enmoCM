@@ -16,6 +16,10 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class BasketsAdministrationComponent implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
@@ -30,8 +34,6 @@ export class BasketsAdministrationComponent implements OnInit {
     displayedColumns    = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
     dataSource          : any;
 
-
-    @ViewChild('snav2') sidenav: MatSidenav;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -52,6 +54,10 @@ export class BasketsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.baskets);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(null);
+
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 

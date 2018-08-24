@@ -270,7 +270,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.http.post(this.coreUrl + 'rest/contactsGroups', this.contactsGroup)
             .subscribe((data: any) => {
                 this.initGroupsContact();
-                this.toggleAddGrp();
+                //this.toggleAddGrp();
                 this.notify.success(this.lang.contactsGroupAdded);
             }, (err) => {
                 this.notify.error(err.error.errors);

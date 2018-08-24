@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -14,7 +15,11 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class SecuritiesAdministrationComponent implements OnInit {
-
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    
     mobileQuery                     : MediaQueryList;
     private _mobileQueryListener    : () => void;
 
@@ -49,6 +54,10 @@ export class SecuritiesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        window['MainHeaderComponent'].refreshTitle(this.lang.securitiesAdministration);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(null);
+
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
 

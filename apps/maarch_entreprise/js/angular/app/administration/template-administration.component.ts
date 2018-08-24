@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 declare var tinymce: any;
@@ -15,6 +16,11 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class TemplateAdministrationComponent implements OnInit {
+
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
@@ -59,6 +65,10 @@ export class TemplateAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
+                window['MainHeaderComponent'].refreshTitle(this.lang.templateCreation);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+
                 this.creationMode = true;
 
                 this.http.get(this.coreUrl + 'rest/administration/templates/new')
@@ -70,6 +80,10 @@ export class TemplateAdministrationComponent implements OnInit {
 
                     });
             } else {
+                window['MainHeaderComponent'].refreshTitle(this.lang.templateModification);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+
                 this.creationMode = false;
                 this.http.get(this.coreUrl + 'rest/templates/' + params['id'] + '/details')
                     .subscribe((data: any) => {

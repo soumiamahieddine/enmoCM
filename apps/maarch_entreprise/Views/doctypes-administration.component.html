@@ -1,17 +1,4 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-toolbar color="primary" class="admin-toolbar">
-        <button mat-button (click)="snav.toggle()">
-            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
-        </button>
-        <h1 class="admin-toolbar-title">{{lang.administration}} {{lang.doctypesAdmin}}
-            <small [class.hide-for-mobile]="mobileQuery.matches">{{doctypes.length}} {{lang.doctypesAdmin}}</small>
-        </h1>
-        <span style="flex: 1 1 auto;"></span>
-        <menu-top></menu-top>
-        <button mat-icon-button (click)="snav2.toggle()">
-            <mat-icon class="fa fa-cog fa-2x"></mat-icon>
-        </button>
-    </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
@@ -59,7 +46,7 @@
                     <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.search}}">
                 </mat-form-field>
                 <div id="jstree"></div>
-
+                <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{doctypes.length}} {{lang.doctypesAdmin}}</div>
             </mat-card>
         </mat-sidenav-content>
 

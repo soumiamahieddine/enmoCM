@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild }  from '@angular/core';
 import { HttpClient }                                       from '@angular/common/http';
 import { MediaMatcher }                                     from '@angular/cdk/layout';
-import { MatPaginator, MatTableDataSource, MatSort }        from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatSidenav }        from '@angular/material';
 import { LANG }                                             from '../translate.component';
 
 declare function $j(selector: any): any;
@@ -13,6 +13,10 @@ declare var angularGlobals: any;
     templateUrl: "../../../../Views/history-administration.component.html"
 })
 export class HistoryAdministrationComponent implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
@@ -75,6 +79,10 @@ export class HistoryAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.history);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(null);
+
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
