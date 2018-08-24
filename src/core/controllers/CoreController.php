@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -32,8 +33,8 @@ class CoreController
         $aInit['applicationMinorVersion'] = CoreConfigModel::getApplicationVersion()['applicationMinorVersion'];
         $aInit['lang'] = CoreConfigModel::getLanguage();
         $aInit['user'] = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
-        $aInit['user']['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
-        $aInit['user']['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+//        $aInit['user']['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
+//        $aInit['user']['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
 
         $aInit['scriptsToinject'] = [];
         $scriptsToInject = [];
@@ -63,6 +64,26 @@ class CoreController
         return $response->withJson($aInit);
     }
 
+    public function getHeader(Request $request, Response $response)
+    {
+        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        $user['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
+        $user['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+
+        if ($GLOBALS['userId'] == 'superadmin') {
+            $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
+            $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
+            $menu = array_merge($menu, $menuModules);
+        } else {
+            $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+        }
+
+        return $response->withJson([
+            'user'  => $user,
+            'menu'  => $menu
+        ]);
+    }
+
     public static function getAdministration(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
@@ -71,8 +92,8 @@ class CoreController
 
         if ($GLOBALS['userId'] == 'superadmin') {
             $administration                    = [];
-            $administrationApplication         = ServiceModel::getApplicationAdministrationServicesByXML();
-            $administrationModule              = ServiceModel::getModulesAdministrationServicesByXML();
+            $administrationApplication         = ServiceModel::getApplicationServicesByXML(['type' => 'admin']);
+            $administrationModule              = ServiceModel::getModulesServicesByXML(['type' => 'admin']);
             $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
         } else {
             $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $GLOBALS['userId']]);

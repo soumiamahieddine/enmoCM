@@ -156,6 +156,9 @@ $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupControll
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
+//Header
+$app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
+
 //Home
 $app->get('/home', \Home\controllers\HomeController::class . ':get');
 
@@ -219,6 +222,8 @@ $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
+$app->get('/resources/groups/{groupSerialId}/baskets/{basketId}', \Resource\controllers\ResController::class . ':getResourcesByBasket');
+
 
 //SignatureBook
 $app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');

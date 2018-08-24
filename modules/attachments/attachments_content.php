@@ -321,6 +321,15 @@ if (isset($_POST['add']) && $_POST['add']) {
                                     foreach ($contactsForMailing as $key => $contactForMailing) {
                                         if ($key == 0) {
                                             $resId = $_SESSION['doc_id'];
+                                            \Resource\models\ResModel::updateExt([
+                                                'set'   => [
+                                                    'is_multicontacts'  => 'N',
+                                                    'address_id'        => $contactForMailing['address_id'],
+                                                    'exp_contact_id'    => $contactForMailing['contact_id']
+                                                ],
+                                                'where' => ['res_id = ?'],
+                                                'data'  => $resId
+                                            ]);
                                         } else {
                                             $resId = \Resource\controllers\ResController::duplicateForMailing([
                                                 'resId'     => $_SESSION['doc_id'],
@@ -388,6 +397,11 @@ if (isset($_POST['add']) && $_POST['add']) {
                                             $_SESSION['config']['databasetype']
                                         );
                                     }
+                                    \SrcCore\models\DatabaseModel::delete([
+                                        'table' => 'contacts_res',
+                                        'where' => ['res_id = ?'],
+                                        'data'  => [$_SESSION['doc_id']]
+                                    ]);
                                 } else {
                                     //SAVE META DATAS IN DB
                                     $id = $resAttach->load_into_db(

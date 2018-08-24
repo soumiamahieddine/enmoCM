@@ -147,7 +147,7 @@ function setSessionForSignatureBook(resId) {
         data: {
             resId     : resId
         },
-        success: function(result){
+        success: function(result) {
         }
     });
 }
@@ -156,3 +156,32 @@ function displayThumbnail(resId)
 {
     $j('#thumb_' + resId).html('<img src="../../rest/res/' + resId + '/thumbnail">');
 }
+
+var koKeys = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+var koNb = 0;
+$j(document).keydown(function (e) {
+    if (e.keyCode === koKeys[koNb++]) {
+        if (koNb === koKeys.length) {
+            var audio = new Audio('img/konami.mp3');
+            audio.play();
+            var konami = $j("#konami");
+            konami.css('top', '200px');
+            konami.show();
+            var pos = 100;
+            var id = setInterval(frame, 10);
+            function frame() {
+                if (pos > 1400) {
+                    clearInterval(id);
+                    konami.hide();
+                    konami.css('left', '200px');
+                } else {
+                    pos += 5;
+                    konami.css('left', pos + 'px');
+                }
+            }
+            koNb = 0;
+        }
+    } else {
+        koNb = 0;
+    }
+});

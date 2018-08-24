@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LANG } from '../translate.component';
+import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -10,10 +11,10 @@ declare const angularGlobals: any;
 
 
 @Component({
-    templateUrl: "../../../../Views/administration.component.html"
+    templateUrl: "../../../../Views/administration.component.html",
 })
 export class AdministrationComponent implements OnInit {
-
+    titleHeader: string;
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
 
@@ -26,6 +27,8 @@ export class AdministrationComponent implements OnInit {
     classementServices              : any[]     = [];
     supervisionServices             : any[]     = [];
 
+    @ViewChild('snav') public sidenavLeft: MatSidenav;
+    @ViewChild('snav2') public sidenavRight: MatSidenav;
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private router: Router) {
         $j("link[href='merged_css.php']").remove();
@@ -34,23 +37,11 @@ export class AdministrationComponent implements OnInit {
         this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
-    prepareAdministration() {
-        $j('#inner_content').remove();
-        $j('#inner_content_contact').parent('div').remove(); 
-        $j('#inner_content_contact').remove(); 
-        $j('#menunav').hide();
-        $j('#divList').remove();
-        $j('#magicContactsTable').remove();
-        $j('#manageBasketsOrderTable').remove();
-        $j('#controlParamTechnicTable').remove();
-        $j('#container').width("99%");
-        if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
-            $j('#content h1')[0].remove();
-        }
-    }
-
     ngOnInit(): void {
-        this.prepareAdministration();
+        window['MainHeaderComponent'].refreshTitle(this.lang.administration);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;

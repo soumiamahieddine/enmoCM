@@ -27,20 +27,14 @@
         </mat-expansion-panel>
     </ng-container>
 
-    <h3 mat-subheader>{{lang.browsing}}</h3>
-    <a mat-list-item href="index.php">
+    <h3 mat-subheader *ngIf="router.url != '/home'">{{lang.browsing}}</h3>
+    <a mat-list-item routerLink="/home" *ngIf="router.url != '/home'">
         <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
         <p mat-line>
             {{lang.home}}
         </p>
     </a>
-    <a mat-list-item routerLink="/administration" *ngIf="router.url != '/administration'">
-        <mat-icon color="primary" mat-list-icon class="fa fa-cogs"></mat-icon>
-        <p mat-line>
-            {{lang.administration}}
-        </p>
-    </a>
-    <a mat-list-item (click)="backClicked()" *ngIf="router.url != '/administration'">
+    <a mat-list-item (click)="backClicked()" *ngIf="router.url != '/administration' && router.url != '/home'">
         <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
         <p mat-line>
             {{lang.back}}

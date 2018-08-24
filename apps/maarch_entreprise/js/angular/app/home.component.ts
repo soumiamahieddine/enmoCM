@@ -29,7 +29,9 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     docUrl : string = '';
     public innerHtml: SafeHtml;
 
-    @ViewChild('snav2') sidenav: MatSidenav;
+    @ViewChild('snav') snav: MatSidenav;
+    @ViewChild('snav2') sidenavRight: MatSidenav;
+    
 
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
     homeData: any;
@@ -45,23 +47,9 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
-    prepareProfile() {
-        $j('#inner_content').remove();
-        $j('#inner_content_contact').parent('div').remove(); 
-        $j('#inner_content_contact').remove(); 
-        $j('#menunav').hide();
-        $j('#divList').remove();
-        $j('#magicContactsTable').remove();
-        $j('#manageBasketsOrderTable').remove();
-        $j('#controlParamTechnicTable').remove();
-        $j('#container').width("99%");
-        if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
-            $j('#content h1')[0].remove();
-        }
-    }
-
     ngOnInit(): void {
-        this.prepareProfile();
+        window['MainHeaderComponent'].refreshTitle(this.lang.home);
+        window['MainHeaderComponent'].setSnav(this.snav);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = false;
 
@@ -77,9 +65,9 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     }
 
     goTo(row:any){
-        if (this.docUrl == this.coreUrl+'rest/res/'+row.res_id+'/content' && this.sidenav.opened) {
+        if (this.docUrl == this.coreUrl+'rest/res/'+row.res_id+'/content' && this.sidenavRight.opened) {
             this.displayedColumns = ['res_id', 'subject', 'creation_date'];
-            this.sidenav.close();
+            this.sidenavRight.close();
         } else {
             this.displayedColumns = ['res_id', 'subject', 'creation_date'];
             this.docUrl = this.coreUrl+'rest/res/'+row.res_id+'/content';
@@ -87,7 +75,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
                 "<object style='height:100%;width:100%;' data='" + this.docUrl + "' type='application/pdf' class='embed-responsive-item'>" +
                 "<div>Le document "+row.res_id+" ne peut pas être chargé</div>" +
                 "</object>");  
-            this.sidenav.open();
+            this.sidenavRight.open();
         }
         //window.open(this.coreUrl+'rest/res/'+row.res_id+'/content');
     }

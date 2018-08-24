@@ -20,9 +20,12 @@
 		<id>reports</id>
 		<name>_REPORTS</name>
 		<comment>_REPORTS_DESC</comment>
+		<servicepage>index.php?page=reports&amp;module=reports</servicepage>
 		<servicetype>menu</servicetype>
 		<system_service>false</system_service>
 		<enabled>true</enabled>
+		<style>fa fa-chart-area</style>
+		<angular>false</angular>
 	</SERVICE>
 	<SERVICE>
 		<id>graphics_reports</id>

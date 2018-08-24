@@ -142,8 +142,11 @@
         <id>entities_print_sep_mlb</id>
         <name>_ENTITIES_PRINT_SEP_MLB</name>
         <comment>_ENTITIES_PRINT_SEP_MLB</comment>
+        <servicepage>index.php?page=print_sep_mlb_form&amp;module=entities</servicepage>
         <servicetype>menu</servicetype>
         <system_service>false</system_service>
         <enabled>true</enabled>
+        <style>fa fa-print</style>
+        <angular>false</angular>
     </SERVICE>
 </root>

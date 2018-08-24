@@ -24,7 +24,7 @@ abstract class ResModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
-        ValidatorModel::intType($aArgs, ['limit']);
+        ValidatorModel::intType($aArgs, ['limit', 'offset']);
 
         $aResources = DatabaseModel::select([
             'select'    => $aArgs['select'],
@@ -32,9 +32,35 @@ abstract class ResModelAbstract
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'offset'    => empty($aArgs['offset']) ? 0 : $aArgs['offset'],
             'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
         
+        return $aResources;
+    }
+
+    public static function getForList(array $aArgs)
+    {
+        ValidatorModel::arrayType($aArgs, ['orderBy']);
+        ValidatorModel::stringType($aArgs, ['clause']);
+        ValidatorModel::intType($aArgs, ['limit', 'offset']);
+
+        $where = ['res_view_letterbox.priority = priorities.id', 'res_view_letterbox.status = status.id'];
+        $where[] = $aArgs['clause'];
+
+        $aResources = DatabaseModel::select([
+            'select'    => [
+                'res_id', 'alt_identifier', 'subject', 'type_label', 'process_limit_date', 'entity_label', 'category_id',
+                'creation_date', 'dest_user', 'priorities.label', 'priorities.color', 'status.img_filename'
+            ],
+            'table'     => ['res_view_letterbox, priorities, status'],
+            'where'     => $where,
+            'data'      => [],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'offset'    => empty($aArgs['offset']) ? 0 : $aArgs['offset'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
         return $aResources;
     }
 
@@ -122,13 +148,13 @@ abstract class ResModelAbstract
         return true;
     }
 
-    public static function updateExt(array $aArgs)
+    public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'mlb_coll_ext',
+            'table' => 'res_letterbox',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
@@ -137,13 +163,13 @@ abstract class ResModelAbstract
         return true;
     }
 
-    public static function update(array $aArgs)
+    public static function updateExt(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'res_letterbox',
+            'table' => 'mlb_coll_ext',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']

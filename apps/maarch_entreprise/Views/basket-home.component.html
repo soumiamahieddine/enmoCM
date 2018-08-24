@@ -10,8 +10,8 @@
         <input matInput placeholder="Filtrer" #listFilter>
     </mat-form-field>
     <ng-container *ngFor="let regroupedBasket of homeData.regroupedBaskets">
-        <h4 *ngIf="regroupedBasket.baskets[0]" class="mat-toolbar mat-primary" style="padding-left:5px">
-            <mat-icon mat-list-icon class="fa fa-users"></mat-icon> {{regroupedBasket.groupDesc}}</h4>
+        <mat-icon *ngIf="regroupedBasket.baskets[0]" color="primary" mat-list-icon class="fa fa-users"></mat-icon> <span *ngIf="regroupedBasket.baskets[0]" color="primary" style="font-weight:bold;">{{regroupedBasket.groupDesc}}</span>
+        <mat-divider *ngIf="regroupedBasket.baskets[0]"></mat-divider>
         <mat-nav-list>
             <ng-container *ngFor="let basket of regroupedBasket.baskets | filterList:listFilter.value">
                 <a mat-list-item [disableRipple]="basket.redirected" [ngStyle]="{'cursor': basket.redirected ? 'not-allowed' : 'pointer'}">
@@ -30,7 +30,8 @@
         </mat-nav-list>
     </ng-container>
     <ng-container *ngIf="homeData.assignedBaskets.length>0">
-        <h4 class="mat-toolbar mat-primary" style="padding-left:5px">{{lang.othersBaskets}}</h4>
+        <span color="primary" style="font-weight:bold;">{{lang.othersBaskets}}</span>
+        <mat-divider></mat-divider>
         <mat-nav-list>
             <a mat-list-item *ngFor="let basket of homeData.assignedBaskets | filterList:listFilter.value">
                 <mat-icon *ngIf="!mobileMode" style="color:#666" mat-list-icon class="fa fa-inbox"></mat-icon>

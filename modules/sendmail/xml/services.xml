@@ -31,13 +31,14 @@
 	    </WHEREAMIUSED>
 	</SERVICE>
 	<SERVICE>
-	   <id>save_numeric_package</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
-	   <name>_SAVE_NUMERIC_PACKAGE</name>
-	   <comment>_SAVE_NUMERIC_PACKAGE</comment>
-	   <servicepage>/saveNumericPackage</servicepage>
-	   <servicetype>menu</servicetype>
-	   <system_service>false</system_service>
-	   <enabled>true</enabled>
-	   <angular>true</angular>
+		<id>save_numeric_package</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
+		<name>_SAVE_NUMERIC_PACKAGE</name>
+		<comment>_SAVE_NUMERIC_PACKAGE</comment>
+		<servicepage>/saveNumericPackage</servicepage>
+		<servicetype>menu</servicetype>
+		<system_service>false</system_service>
+		<enabled>true</enabled>
+		<style>fa fa-file-archive</style>
+		<angular>true</angular>
 	</SERVICE>
 </root>

@@ -1,18 +1,9 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-toolbar color="primary" class="admin-toolbar">
-        <button mat-icon-button (click)="snav.toggle()" *ngIf="mobileMode">
-            <mat-icon class="fa fa-bars fa-2x"></mat-icon>
-        </button>
-        <button mat-button (click)="snav.toggle()" *ngIf="!mobileMode">
-            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
-        </button>
-        <span style="flex: 1 1 auto;"></span>
-        <search-home></search-home>
-        <menu-top [homeData]="homeData"></menu-top>
-    </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileMode ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileMode ? 'over' : 'side'" [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true"
             autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '400px'}">
+            <menu-nav></menu-nav>
+            <mat-divider></mat-divider>
             <basket-home *ngIf="homeData" [homeData]="homeData"></basket-home>
             <mat-divider></mat-divider>
         </mat-sidenav>

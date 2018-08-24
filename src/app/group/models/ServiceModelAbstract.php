@@ -70,24 +70,36 @@ abstract class ServiceModelAbstract
         return $services;
     }
 
-    public static function getApplicationAdministrationServicesByXML()
+    public static function getApplicationServicesByXML(array $aArgs)
     {
+        ValidatorModel::notEmpty($aArgs, ['type']);
+
         $xmlfile = ServiceModel::getLoadedXml(['location' => 'apps']);
         $applicationServices = [];
 
         if ($xmlfile) {
             foreach ($xmlfile->SERVICE as $value) {
-                if ((string)$value->servicetype == 'admin' && (string)$value->enabled === 'true' && (string)$value->id != 'view_history_batch') {
+                if ((string)$value->servicetype == $aArgs['type'] && (string)$value->enabled === 'true' && (string)$value->id != 'view_history_batch') {
                     $category = (string) $value->category;
                     $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                     $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
-                    $applicationServices[$category][] = [
-                        'name'        => $name,
-                        'comment'     => $comment,
-                        'servicepage' => (string) $value->servicepage,
-                        'style'       => (string) $value->style,
-                        'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                    ];
+                    if (empty($category)) {
+                        $applicationServices[] = [
+                            'name'        => $name,
+                            'comment'     => $comment,
+                            'servicepage' => (string) $value->servicepage,
+                            'style'       => (string) $value->style,
+                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                        ];
+                    } else {
+                        $applicationServices[$category][] = [
+                            'name'        => $name,
+                            'comment'     => $comment,
+                            'servicepage' => (string) $value->servicepage,
+                            'style'       => (string) $value->style,
+                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                        ];
+                    }
                 }
             }
         }
@@ -117,24 +129,24 @@ abstract class ServiceModelAbstract
                 $historyByPass = (string)$value->id == 'view_history' && $hasHistory;
                 if ($historyByPass || ((string) $value->servicetype == $aArgs['type'] && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices'])))) {
                     if ((string)$value->id != 'view_history_batch') {
-                        $category = (string) $value->category;
+                        $category = (string)$value->category;
                         $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                         if (empty($category)) {
                             $applicationServices[] = [
                                 'name'        => $name,
                                 'comment'     => $comment,
-                                'servicepage' => (string) $value->servicepage,
-                                'style'       => (string) $value->style,
-                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                                'servicepage' => (string)$value->servicepage,
+                                'style'       => (string)$value->style,
+                                'angular'     => empty((string)$value->angular) ? 'false' : (string)$value->angular,
                             ];
                         } else {
                             $applicationServices[$category][] = [
                                 'name'        => $name,
                                 'comment'     => $comment,
-                                'servicepage' => (string) $value->servicepage,
-                                'style'       => (string) $value->style,
-                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                                'servicepage' => (string)$value->servicepage,
+                                'style'       => (string)$value->style,
+                                'angular'     => empty((string)$value->angular) ? 'false' : (string)$value->angular,
                             ];
                         }
                     }
@@ -145,8 +157,10 @@ abstract class ServiceModelAbstract
         return $applicationServices;
     }
 
-    public static function getModulesAdministrationServicesByXML()
+    public static function getModulesServicesByXML(array $aArgs)
     {
+        ValidatorModel::notEmpty($aArgs, ['type']);
+
         $modulesServices = [];
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
@@ -156,17 +170,27 @@ abstract class ServiceModelAbstract
 
             if ($xmlModuleFile) {
                 foreach ($xmlModuleFile->SERVICE as $value) {
-                    if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true') {
+                    if ((string) $value->servicetype == $aArgs['type'] && (string) $value->enabled === 'true') {
                         $category = (string) $value->category;
                         $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
-                        $modulesServices[$category][] = [
-                            'name'        => $name,
-                            'comment'     => $comment,
-                            'servicepage' => (string) $value->servicepage,
-                            'style'       => (string) $value->style,
-                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                        ];
+                        if (empty($category)) {
+                            $modulesServices[] = [
+                                'name'        => $name,
+                                'comment'     => $comment,
+                                'servicepage' => (string) $value->servicepage,
+                                'style'       => (string) $value->style,
+                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            ];
+                        } else {
+                            $modulesServices[$category][] = [
+                                'name'        => $name,
+                                'comment'     => $comment,
+                                'servicepage' => (string) $value->servicepage,
+                                'style'       => (string) $value->style,
+                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            ];
+                        }
                     }
                 }
             }
@@ -211,125 +235,6 @@ abstract class ServiceModelAbstract
                                 'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];
                         }
-                    }
-                }
-            }
-        }
-
-        return $modulesServices;
-    }
-
-    public static function getApplicationAdministrationMenuByXML()
-    {
-        $modulesServices = [];
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/menu.xml']);
-        foreach ($loadedXml->MENU as $value) {
-            $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
-
-            $modulesServices['menuList'][] = [
-                'id'      => (string) $value->id,
-                'label'   => $label,
-                'link'    => (string) $value->url,
-                'icon'    => (string) $value->style,
-                'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-            ];
-        }
-
-        $customId = CoreConfigModel::getCustomId();
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-        $xmlfile = simplexml_load_file($path);
-        $modulesServices['applicationName'] = $xmlfile->CONFIG->applicationname;
-        foreach ($xmlfile->MODULES as $mod) {
-            $path = false;
-            $module = (string) $mod->moduleid;
-
-            if (file_exists("custom/{$customId}/modules/{$module}/xml/menu.xml")) {
-                $path = "custom/{$customId}/modules/{$module}/xml/menu.xml";
-            } elseif (file_exists("modules/{$module}/xml/menu.xml")) {
-                $path = "modules/{$module}/xml/menu.xml";
-            }
-            if ($path) {
-                $xmlfile = simplexml_load_file($path);
-                foreach ($xmlfile->MENU as $value) {
-                    $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
-
-                    $modulesServices['menuList'][] = [
-                        'id'        => (string) $value->id,
-                        'label'     => $label,
-                        'link'      => (string) $value->url,
-                        'icon'      => (string) $value->style,
-                        'angular'   => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                    ];
-                }
-            }
-        }
-
-        return $modulesServices;
-    }
-
-    public static function getApplicationAdministrationMenuByUserServices(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userServices']);
-        ValidatorModel::arrayType($aArgs, ['userServices']);
-
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/menu.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/menu.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/menu.xml';
-        }
-
-        $modulesServices = [];
-
-        $xmlfile = simplexml_load_file($path);
-        foreach ($xmlfile->MENU as $value) {
-            if (in_array((string) $value->id, $aArgs['userServices'])) {
-                $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
-
-                $modulesServices['menuList'][] = [
-                    'id'      => (string) $value->id,
-                    'label'   => $label,
-                    'link'    => (string) $value->url,
-                    'icon'    => (string) $value->style,
-                    'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                ];
-            }
-        }
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-        $xmlfile = simplexml_load_file($path);
-        $modulesServices['applicationName'] = $xmlfile->CONFIG->applicationname;
-        foreach ($xmlfile->MODULES as $mod) {
-            $path = false;
-            $module = (string) $mod->moduleid;
-
-            if (file_exists("custom/{$customId}/modules/{$module}/xml/menu.xml")) {
-                $path = "custom/{$customId}/modules/{$module}/xml/menu.xml";
-            } elseif (file_exists("modules/{$module}/xml/menu.xml")) {
-                $path = "modules/{$module}/xml/menu.xml";
-            }
-            if ($path) {
-                $xmlfile = simplexml_load_file($path);
-                foreach ($xmlfile->MENU as $value) {
-                    if (in_array((string) $value->id, $aArgs['userServices'])) {
-                        $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
-
-                        $modulesServices['menuList'][] = [
-                            'id'      => (string) $value->id,
-                            'label'   => $label,
-                            'link'    => (string) $value->url,
-                            'icon'    => (string) $value->style,
-                            'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                        ];
                     }
                 }
             }
