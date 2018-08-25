@@ -50,8 +50,8 @@ abstract class ResModelAbstract
 
         $aResources = DatabaseModel::select([
             'select'    => [
-                'res_id', 'alt_identifier', 'subject', 'type_label', 'process_limit_date', 'entity_label', 'category_id',
-                'creation_date', 'dest_user', 'priorities.label', 'priorities.color', 'status.img_filename'
+                'res_id', 'alt_identifier', 'subject', 'type_label as doctype_label', 'process_limit_date', 'closing_date', 'entity_label as entity_destination', 'category_id', 'contact_lastname', 'contact_society',
+                'creation_date', 'dest_user', 'priorities.label as priority_label', 'priorities.color as priority_color', 'status.label_status as status_label', 'status.img_filename as status_icon'
             ],
             'table'     => ['res_view_letterbox, priorities, status'],
             'where'     => $where,

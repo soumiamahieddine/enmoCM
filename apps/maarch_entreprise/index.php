@@ -391,6 +391,8 @@ if (file_exists($path)) {
         ?><script>triggerAngular('#/activate-user')</script><?php
     } elseif ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
         ?><script>triggerAngular('#/administration')</script><?php
+    } elseif (!$_REQUEST['page']) {
+        ?><script>triggerAngular('#/home')</script><?php
     }
     ?>
 </html>

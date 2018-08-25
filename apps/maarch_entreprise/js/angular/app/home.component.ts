@@ -2,11 +2,13 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, QueryList, ViewChildre
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
+import { merge, Observable, of as observableOf} from 'rxjs';
 import { NotificationService } from './notification.service';
-import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 
 import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { startWith, switchMap, map, catchError } from 'rxjs/operators';
 
 declare function $j(selector: any): any;
 

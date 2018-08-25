@@ -11,24 +11,23 @@
             <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <mat-card *ngIf="!loading" class="card-app-content">
+            <mat-card class="card-app-content">
                 <mat-card style="display: flex">
-                    <div *ngIf="!mobileMode"style="text-align:center;flex: 1;background: url(static.php?filename=logo_only.svg);background-size: auto auto;height: 70px;background-size: 100%;background-repeat: no-repeat;background-position: center;">
+                    <div *ngIf="!mobileMode" style="text-align:center;flex: 1;background: url(static.php?filename=logo_only.svg);background-size: auto auto;height: 70px;background-size: 100%;background-repeat: no-repeat;background-position: center;">
                     </div>
                     <div style="flex:10;padding-left: 10px;">
-                        <span [innerHTML]="lang.welcomeInGEC"></span>&nbsp;<b>{{currentDate}}</b>.
+                        <span [innerHTML]="lang.welcomeInGEC"></span>&nbsp;
+                        <b>{{currentDate}}</b>.
                     </div>
                 </mat-card>
 
                 <mat-tab-group>
                     <mat-tab label="Mes derniers courriers">
                         <table mat-table [dataSource]="dataSource" matSort matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;table-layout: fixed;">
-                            <!-- Number Column -->
                             <ng-container matColumnDef="res_id">
                                 <td mat-cell *matCellDef="let row" style="text-align:center;width:15%;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding: 5px;">
                                     <div style="overflow: hidden;text-overflow: ellipsis;">
-                                        <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="fm {{row.status_icon}} fm-2x"
-                                            title="{{row.status_label}}"></mat-icon>
+                                        <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}} {{row.status_icon}} {{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}}-2x" title="{{row.status_label}}"></mat-icon>
                                     </div>
                                     <div style="padding-top: 5px;color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
                                         {{row.alt_identifier}}
@@ -66,14 +65,13 @@
                                         title='{{row.creation_date | date : "le dd/MM/y à HH:mm"}}'>
                                         <i class="fa fa-calendar" title="date d'enregistrement"></i> {{row.creation_date | timeAgo}}
                                     </div>
-                                    <div *ngIf="row.closing_date == null" style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;"
-                                        >
+                                    <div *ngIf="row.closing_date == null" style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
                                         <i class="fa fa-stopwatch" title="date limite de traitement"></i>&nbsp;
                                         <span [innerHTML]="row.process_limit_date | timeLimit" title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'></span>
                                     </div>
-                                    <div *ngIf="row.closing_date != null" style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;"
-                                        >
-                                        <i class="fa fa-lock" title="date de clôture"></i>&nbsp;<span title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'>{{row.closing_date | timeAgo}}</span>
+                                    <div *ngIf="row.closing_date != null" style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
+                                        <i class="fa fa-lock" title="date de clôture"></i>&nbsp;
+                                        <span title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'>{{row.closing_date | timeAgo}}</span>
                                     </div>
                                     <div>
                                         <button mat-icon-button (click)="$event.stopPropagation();goTo(row);">
@@ -85,7 +83,7 @@
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToDetail(row);" style="cursor: pointer;"></tr>
                         </table>
                     </mat-tab>
-                </mat-tab-group>            
+                </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
