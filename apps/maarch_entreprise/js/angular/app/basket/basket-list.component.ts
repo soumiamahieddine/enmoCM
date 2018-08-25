@@ -58,6 +58,10 @@ export class BasketListComponent implements OnInit {
 
         this.loading = false;
 
+        if (this.mobileMode) {
+            this.displayedColumnsBasket = ['res_id', 'subject'];
+        }
+
         this.http.get(this.coreUrl + "rest/home")
         .subscribe((data: any) => {
             this.homeData = data;

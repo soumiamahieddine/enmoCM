@@ -52,6 +52,10 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     }
 
     ngOnInit(): void {
+        if (this.mobileMode) {
+            this.displayedColumns = ['res_id', 'subject'];
+        }
+
         window['MainHeaderComponent'].refreshTitle(this.lang.home);
         window['MainHeaderComponent'].setSnav(this.snav);
         window['MainHeaderComponent'].setSnavRight(null);
@@ -75,10 +79,8 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
 
     goTo(row:any){
         if (this.docUrl == this.coreUrl+'rest/res/'+row.res_id+'/content' && this.sidenavRight.opened) {
-            this.displayedColumns = ['res_id', 'subject', 'creation_date'];
             this.sidenavRight.close();
         } else {
-            this.displayedColumns = ['res_id', 'subject', 'creation_date'];
             this.docUrl = this.coreUrl+'rest/res/'+row.res_id+'/content';
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
                 "<object style='height:100%;width:100%;' data='" + this.docUrl + "' type='application/pdf' class='embed-responsive-item'>" +
@@ -86,7 +88,6 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
                 "</object>");  
             this.sidenavRight.open();
         }
-        //window.open(this.coreUrl+'rest/res/'+row.res_id+'/content');
     }
 
     goToDetail(row:any){
