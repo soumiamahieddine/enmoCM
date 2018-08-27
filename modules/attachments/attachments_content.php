@@ -328,7 +328,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                                                     'exp_contact_id'    => $contactForMailing['contact_id']
                                                 ],
                                                 'where' => ['res_id = ?'],
-                                                'data'  => $resId
+                                                'data'  => [$resId]
                                             ]);
                                         } else {
                                             $resId = \Resource\controllers\ResController::duplicateForMailing([
