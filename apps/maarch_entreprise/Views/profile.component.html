@@ -464,6 +464,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <mat-slide-toggle name="plubic" title="{{lang.public}}" id="plubic" color="primary" [(ngModel)]="contactsGroup.public"
+                                                                    >{{lang.public}}</mat-slide-toggle>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
                                                             <div class="col-sm-12" style="text-align:center;">
                                                                 <button mat-raised-button color="primary" type="submit" [disabled]="!contactsGroupFormUp.form.valid">{{lang.save}}</button>
                                                             </div>
@@ -605,6 +611,12 @@
                                                                 <input matInput [(ngModel)]="contactsGroup.description" required name="description" id="description" title="{{lang.description}}"
                                                                     type="text" placeholder="{{lang.description}}" maxlength="255">
                                                             </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <mat-slide-toggle name="plubic" title="{{lang.public}}" id="plubic" color="primary" [(ngModel)]="contactsGroup.public"
+                                                                >{{lang.public}}</mat-slide-toggle>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
