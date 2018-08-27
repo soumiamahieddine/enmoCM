@@ -437,6 +437,7 @@ switch ($mode) {
                             'select' => ['contact_addresses_id']
                         ]);
                         foreach ($listContacts as $contact) {
+                            $email = '';
                             if (in_array($contact['contact_addresses_id'], $_SESSION['adresses']['addressid'])) {
                                 continue;
                             }
@@ -444,9 +445,15 @@ switch ($mode) {
                                 'addressId' => $contact['contact_addresses_id'],
                                 'select' => ['contact_id', 'firstname', 'lastname', 'address_num', 'address_street', 'address_postal_code', 'address_town']
                             ]);
-                            $contactSociety = \Contact\models\ContactModel::getById(['id' => $contactInfos['contact_id'], 'select' => ['society']]);
-                            $contactAddress = implode(' ', [$contactInfos['firstname'], $contactInfos['lastname'].',', $contactInfos['address_num'], $contactInfos['address_street'], $contactInfos['address_postal_code'], $contactInfos['address_town']]);
-                            $email = trim($contactSociety['society'].' - '.$contactAddress);
+                            $contactSociety = \Contact\models\ContactModel::getById(['id' => $contactInfos['contact_id'], 'select' => ['society','firstname', 'lastname']]);
+                            if (empty($contactSociety['society'])) {
+                                $contactAddress = implode(' ', [$contactInfos['address_num'], $contactInfos['address_street'], $contactInfos['address_postal_code'], $contactInfos['address_town']]);
+                                $email = trim($contactSociety['firstname'].' '.$contactSociety['lastname'].' - '.$contactAddress);
+                            } else {
+                                $contactAddress = implode(' ', [$contactInfos['firstname'], $contactInfos['lastname'].',', $contactInfos['address_num'], $contactInfos['address_street'], $contactInfos['address_postal_code'], $contactInfos['address_town']]);
+                                $email = trim($contactSociety['society'].' - '.$contactAddress);
+                            }
+                            
                             array_push($_SESSION['adresses'][$_REQUEST['field']], $email);
                             array_push($_SESSION['adresses']['contactid'], $contactInfos['contact_id']);
                             array_push($_SESSION['adresses']['addressid'], $contact['contact_addresses_id']);
