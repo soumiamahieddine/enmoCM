@@ -639,4 +639,7 @@ export const LANG_FR = {
     "close"                             : "Fermer",
     "contactGroupCreate"                : "Créer un groupement de contact",
     "contactLink"                       : "Associer un contact",
+    "incoming"                          : "courrier arrivé",
+    "outgoing"                          : "courrier départ",
+    "internal"                          : "courrier interne",
 };

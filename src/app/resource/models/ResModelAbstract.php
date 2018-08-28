@@ -45,15 +45,36 @@ abstract class ResModelAbstract
         ValidatorModel::stringType($aArgs, ['clause']);
         ValidatorModel::intType($aArgs, ['limit', 'offset']);
 
-        $where = ['res_view_letterbox.priority = priorities.id', 'res_view_letterbox.status = status.id'];
+        $where = ['res_view_letterbox.priority = priorities.id', 'res_view_letterbox.status = status.id', 'res_view_letterbox.dest_user = users.user_id'];
         $where[] = $aArgs['clause'];
 
         $aResources = DatabaseModel::select([
             'select'    => [
-                'res_id', 'alt_identifier', 'subject', 'type_label as doctype_label', 'process_limit_date', 'closing_date', 'entity_label as entity_destination', 'category_id', 'contact_lastname', 'contact_society',
-                'creation_date', 'dest_user', 'priorities.label as priority_label', 'priorities.color as priority_color', 'status.label_status as status_label', 'status.img_filename as status_icon'
+                'alt_identifier',
+                'category_id',
+                'case_label',
+                'closing_date',
+                'category_id',
+                'contact_lastname',
+                'contact_society',
+                'creation_date',
+                'entity_label as entity_destination',
+                'folder_name',
+                'priorities.color as priority_color',
+                'priorities.label as priority_label',
+                'process_limit_date',
+                'res_id',
+                'status.img_filename as status_icon',
+                'status.label_status as status_label',
+                'status.id as status_id',
+                'subject',
+                'type_label as doctype_label',
+                'user_lastname',
+                'user_firstname',
+                'users.lastname as user_dest_lastname',
+                'users.firstname as user_dest_firstname',
             ],
-            'table'     => ['res_view_letterbox, priorities, status'],
+            'table'     => ['res_view_letterbox, priorities, status, users'],
             'where'     => $where,
             'data'      => [],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
