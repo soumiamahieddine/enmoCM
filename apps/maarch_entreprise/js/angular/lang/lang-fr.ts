@@ -404,7 +404,7 @@ export const LANG_FR = {
     "redirects"                         : "Redirections",
     "redirectWhenAbscence"              : "Rediriger la bannette à une personne",
     "reinitPassword"                    : "Réinitialiser le mot de passe",
-    "relatedContactNumber"              : "Nombre de contacts associé",
+    "relatedContactNumber"              : "Contact(s) associé(s)",
     "relatedUsers"                      : "Utilisateur(s) associé(s)",
     "relatedBaskets"                    : "Bannette(s) associée(s)",
     "removeUserRedirect"                : "Supprimer la personne (liste de diffusion + modèle de l'entité)",

@@ -42,7 +42,10 @@
                     </ng-container>
                     <ng-container matColumnDef="nbContacts">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.relatedContactNumber}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:1;justify-content:center;"> {{element.nbContacts}} </mat-cell>
+                        <mat-cell *matCellDef="let element" style="flex:1;">
+                            <span *ngIf="element.nbContacts == 0">{{element.nbContacts}}</span> 
+                            <span *ngIf="element.nbContacts > 0" color="primary" style="font-weight:bold;">{{element.nbContacts}}</span> 
+                        </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="public">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.public}}</mat-header-cell>
