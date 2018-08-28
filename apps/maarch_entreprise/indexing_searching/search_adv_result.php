@@ -786,7 +786,7 @@ if (count($_REQUEST['meta']) > 0) {
                 }
             }
             // CONTACTS AUTOCOMPLETE
-            elseif ($tab_id_fields[$j] == 'contact') {
+            elseif ($tab_id_fields[$j] == 'contact' && !empty(trim($_REQUEST['contactid']))) {
                 if (!ctype_digit($_REQUEST['contactid'])) {
                     $json_txt .= " 'contact' : ['".addslashes(trim($_REQUEST['contact']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."']";
                     $contact_id = $_REQUEST['contactid'];

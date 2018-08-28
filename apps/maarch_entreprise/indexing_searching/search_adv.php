@@ -502,7 +502,7 @@ if (isset($_REQUEST['nodetails'])) {
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
                 <i class="fa fa-sync fa-4x" title="<?php echo _CLEAR_SEARCH; ?>"></i>
             </a>
         </td>
@@ -654,7 +654,7 @@ if (isset($_REQUEST['nodetails'])) {
                 <tr>
                     <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT; ?></label>
                         <span style="position:relative;">
-                            <input type="text" name="contact" id="contact" onkeyup="erase_contact_external_id('contactid', 'contactid_external');"/>
+                            <input type="text" name="contact" id="contact" onkeyup="erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');"/>
                             <input type="hidden" name="meta[]" value="contact#contact#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
                             <div id="show_contacts" class="autocomplete autocompleteIndex" style="width:100%;left:0px;top:17px;"></div>
                             <div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div>
@@ -731,7 +731,7 @@ if (isset($_REQUEST['nodetails'])) {
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
              <i class="fa fa-sync fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
             </a>
         </td>
@@ -750,7 +750,7 @@ if (isset($_REQUEST['nodetails'])) {
 <script type="text/javascript">
 load_query(valeurs, loaded_query, 'parameters_tab', '<?php echo $browser_ie; ?>', '<?php echo _ERROR_IE_SEARCH; ?>');
 <?php if (isset($_REQUEST['init_search'])) {
-            ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');erase_contact_external_id('signatory_name', 'ac_signatory_name') <?php
+            ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');erase_contact_external_id('signatory_name', 'ac_signatory_name') <?php
         }?>
 </script>
 
