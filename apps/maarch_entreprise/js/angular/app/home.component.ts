@@ -83,11 +83,24 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         } else {
             this.docUrl = this.coreUrl+'rest/res/'+row.res_id+'/content';
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
-                "<object style='height:100%;width:100%;' data='" + this.docUrl + "' type='application/pdf' class='embed-responsive-item'>" +
+                "<iframe style='height:100%;width:100%;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
+                "</iframe>");  
+                /*"<object style='height:100%;width:100%;' data='" + this.docUrl + "' type='application/pdf' class='embed-responsive-item'>" +
                 "<div>Le document "+row.res_id+" ne peut pas être chargé</div>" +
-                "</object>");  
+                "</object>");*/
             this.sidenavRight.open();
         }
+    }
+
+    viewThumbnail(row:any) {
+        console.log('ok');
+        $j('#viewThumbnail').css({'background':'white url('+this.coreUrl+'rest/res/' + row.res_id + '/thumbnail) no-repeat 100%'});
+        $j('#viewThumbnail').css({'background-size': '100%'});
+        $j('#viewThumbnail').show();
+    }
+
+    closeThumbnail() {
+        $j('#viewThumbnail').hide();
     }
 
     goToDetail(row:any){

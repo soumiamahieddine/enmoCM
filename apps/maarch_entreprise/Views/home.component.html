@@ -12,6 +12,7 @@
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card class="card-app-content">
+                <mat-card id="viewThumbnail" style="display:none;position: absolute;z-index: 2;height: 600px;width: 400px;"></mat-card>
                 <mat-card style="display: flex">
                     <div *ngIf="!mobileMode" style="text-align:center;flex: 1;background: url(static.php?filename=logo_only.svg);background-size: auto auto;height: 70px;background-size: 100%;background-repeat: no-repeat;background-position: center;">
                     </div>
@@ -83,8 +84,8 @@
                                         <span title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'>{{row.closing_date | timeAgo}}</span>
                                     </div>
                                     <div>
-                                        <button mat-icon-button (click)="$event.stopPropagation();goTo(row);">
-                                            <mat-icon color="primary" class="fa fa-eye"></mat-icon>
+                                        <button mat-icon-button (click)="$event.stopPropagation();goTo(row);" (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();">
+                                            <mat-icon color="primary" class="fa fa-eye" ></mat-icon>
                                         </button>
                                     </div>
                                 </td>
