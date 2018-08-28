@@ -336,11 +336,11 @@
 
     <validationRule name="search_adv_result" extends="standardForm" mode="error">
       <parameter name="baskets_clause" type="identifier" />
-      <parameter name="contact_internal_id" type="identifier" />
+      <parameter name="contact" type="string" />
       <parameter name="contactid" type="string" />
-      <parameter name="contactid_external" type="identifier" />
+      <parameter name="addressid" type="string" />
+      <parameter name="withAddress" type="boolean" />
       <parameter name="contact_type" type="identifier" />
-      <parameter name="contactid_internal" type="keyword_id" />
       <parameter name="visa_user" type="string" />
       <parameter name="descriptioncase" type="string" />
       <parameter name="dir" type="identifier" />
@@ -356,7 +356,6 @@
       <parameter name="creation_date_pj_from" type="string" />
       <parameter name="creation_date_pj_to" type="string" />
       <parameter name="attachment_types" type="identifier" />
-      <parameter name="addresses_id" type="identifier" />
       <parameter name="description" type="string" />
       <parameter name="category" type="identifier" />
       <parameter name="confidentiality" type="YN" />

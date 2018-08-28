@@ -1058,9 +1058,9 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
     
     var params = get_contacts_params();
 
-    if (contact_autocompleter && contact_autocompleter.element == $j('#' + input)[0])
+    if (contact_autocompleter && contact_autocompleter.element == $j('#' + input)[0]) {
         contact_autocompleter.options.defaultParams = params;
-    else if(path_script)
+    } else if(path_script) {
         contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
             method:'get',
             paramName:'Input',
@@ -1084,7 +1084,44 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
                 };
             }
         });
-    else return false;
+    } else {
+        return false;
+    }
+}
+
+function launch_autocompleter_contacts_search(path_script, id_text, id_div, cat_id, contact_id, address_id)
+{
+    var input  = id_text || 'contact';
+    var div    = id_div  || 'show_contacts';
+    
+    var params = 'table=contacts';
+
+    if (contact_autocompleter && contact_autocompleter.element == $j('#' + input)[0]) {
+        contact_autocompleter.options.defaultParams = params;
+    } else if(path_script) {
+        contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
+            method:'get',
+            paramName:'Input',
+            parameters: params,
+            minChars: 2,
+            //loading
+            frequency: 0.5, // NOTICE THIS
+             indicator: 'searching_autocomplete', // AND THIS
+             onShow : function(element, update) {
+                Effect.Appear(update,{duration:0});
+            },
+            afterUpdateElement: function (text, li){
+                var all_li = li.id;
+                var res = all_li.split(",");
+                $(contact_id).value = res[0];
+                if (typeof ($(contact_id).onchange) == 'function')
+                    $(contact_id).onchange();
+                    $(address_id).value = res[1];
+            }
+        });
+    } else {
+        return false;
+    }
 }
 
 function launch_autocompleter2_contacts_v2(path_script, id_text, id_div, cat_id, contact_id, address_id, path_script2)
