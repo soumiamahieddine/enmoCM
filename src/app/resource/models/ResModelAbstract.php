@@ -225,18 +225,19 @@ abstract class ResModelAbstract
 
         $resources = DatabaseModel::select([
             'select'    => $aArgs['select'],
-            'table'     => ['history, res_letterbox, mlb_coll_ext, status, priorities'],
+            'table'     => ['history, res_view_letterbox r, status, priorities, users'],
             'where'     => [
                 'history.user_id = ?', 'history.table_name IN (?)',
                 'history.record_id IS NOT NULL', 'history.record_id != ?',
                 'history.event_id != ?', 'history.event_id NOT LIKE ?',
-                'CAST(history.record_id AS INT) = res_letterbox.res_id',
-                'mlb_coll_ext.res_id = res_letterbox.res_id', 'res_letterbox.status != ?',
-                'res_letterbox.status = status.id',
-                'res_letterbox.priority = priorities.id',
+                'CAST(history.record_id AS INT) = r.res_id',
+                'r.res_id = r.res_id', 'r.status != ?',
+                'r.status = status.id',
+                'r.priority = priorities.id',
+                'r.dest_user = users.user_id',
             ],
             'data'      => [$aArgs['userId'], ['res_letterbox', 'res_view_letterbox'], 'none', 'linkup', 'attach%', 'DEL'],
-            'group_by'  => ['res_letterbox.res_id', 'mlb_coll_ext.alt_identifier', 'mlb_coll_ext.closing_date', 'mlb_coll_ext.process_limit_date', 'status.label_status', 'status.img_filename', 'priorities.color'],
+            'group_by'  => ['users.firstname', 'users.lastname', 'r.user_firstname', 'r.user_lastname', 'r.type_label', 'r.subject', 'r.folder_name', 'r.entity_label', 'r.creation_date', 'r.contact_society', 'r.contact_firstname', 'r.contact_lastname', 'r.case_label', 'r.category_id', 'r.res_id', 'r.alt_identifier', 'r.closing_date', 'r.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
             'order_by'  => ['MAX(history.event_date) DESC'],
             'limit'     => $aArgs['limit']
         ]);
