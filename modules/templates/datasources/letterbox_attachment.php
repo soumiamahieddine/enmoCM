@@ -214,6 +214,42 @@ if (!empty($res_id)) {
         ++$i;
     }
 
+    // COPIES LIST
+    // usage in template :
+    // [copies.firstname1] [copies.lastname1] [copies.entity1]
+    // [copies.firstname2] [copies.lastname2] [copies.entity2]
+    // ...
+    // [copies.firstnameN] [copies.lastnameN] [copies.entityN]
+    $stmt = $dbDatasource->query('SELECT * FROM listinstance WHERE res_id = ? AND difflist_type = ? AND item_mode = ? '
+        . 'ORDER BY sequence ASC', [$doc['res_id'], 'entity_id', 'cc']);
+    $datasources['copies'] = [];
+    $i = 1;
+    while ($copies = $stmt->fetchObject()) {
+        $copiesContact = false;
+        $copiesEntity = false;
+        if ($copies->item_type == 'user_id') {
+            
+            $stmt2 = $dbDatasource->query('SELECT * FROM users WHERE user_id = ?', [$copies->item_id]);
+            $copiesContact = $stmt2->fetchObject();
+            $stmt3 = $dbDatasource->query('SELECT en.entity_id, en.entity_label FROM entities en, users_entities ue '
+                . 'WHERE ue.user_id = ? AND primary_entity = ? AND ue.entity_id = en.entity_id', [$copies->item_id, 'Y']);
+            $entity = $stmt3->fetchObject();
+        } elseif ($copies->item_type == 'entity_id') {
+            $stmt3 = $dbDatasource->query('SELECT entity_label FROM entities '
+                . 'WHERE entity_id = ?', [$copies->item_id]);
+            $copiesEntity = $stmt3->fetchObject();
+        }
+        if ($copiesContact) {
+            $datasources['copies'][0]['firstname'.$i] = $copiesContact->firstname;
+            $datasources['copies'][0]['lastname'.$i] = $copiesContact->lastname;
+            $datasources['copies'][0]['entity'.$i] = str_replace($entity->entity_id.': ', '', $entity->entity_label);
+        }
+        if ($copiesEntity) {
+            $datasources['copies'][0]['entity'.$i] = $copiesEntity->entity_label;
+        }
+        ++$i;
+    }
+
     // Transmissions
     $datasources['transmissions'] = [];
     if (isset($_SESSION['transmissionContacts']) && count($_SESSION['transmissionContacts']) > 0) {
