@@ -22,7 +22,7 @@
                         {{basket.basket_name}}<br/><small color="primary">({{lang.redirectedTo}} {{basket.redirectedUser}})</small>
                     </p>
                 </a>
-                <a mat-list-item *ngIf="!basket.redirected" (click)="closePanelLeft();" routerLink="/basketList/{{regroupedBasket.groupSerialId}}/baskets/{{basket.basket_id}}" style="cursor:pointer;" [ngStyle]="{'opacity': basket.resourceNumber==0 ? '0.5' : '1'}">
+                <a mat-list-item *ngIf="!basket.redirected" (click)="closePanelLeft();goTo(basket.basket_id,regroupedBasket.groupId);" style="cursor:pointer;" [ngStyle]="{'opacity': basket.resourceNumber==0 ? '0.5' : '1'}">
                     <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="!mobileMode" mat-list-icon class="fa fa-inbox"></mat-icon>
                     <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                     <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
@@ -30,6 +30,15 @@
                         {{basket.basket_name}}
                     </p>
                 </a>
+                <!-- TODO NEW BASKET LIST-->
+                <!--<a mat-list-item *ngIf="!basket.redirected" (click)="closePanelLeft();" routerLink="/basketList/{{regroupedBasket.groupSerialId}}/baskets/{{basket.basket_id}}" style="cursor:pointer;" [ngStyle]="{'opacity': basket.resourceNumber==0 ? '0.5' : '1'}">
+                    <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="!mobileMode" mat-list-icon class="fa fa-inbox"></mat-icon>
+                    <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
+                    <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
+                    <p mat-line title="{{basket.basket_name}}" [ngStyle]="{'color': basket.color}">
+                        {{basket.basket_name}}
+                    </p>
+                </a>-->
             </ng-container> 
         </mat-nav-list>
     </ng-container>

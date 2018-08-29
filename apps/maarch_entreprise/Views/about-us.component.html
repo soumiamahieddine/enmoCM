@@ -1,5 +1,5 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileMode ? 56 : 0">
+    <mat-sidenav-container autosize class="admin-sidenav-container" [style.marginTop.px]="mobileMode ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileMode ? 'over' : 'side'" [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true"
             autoFocus="false">
             <menu-shortcut></menu-shortcut>
