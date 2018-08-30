@@ -27,7 +27,6 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-
 require_once "core/class/class_security.php";
 require_once 'modules/attachments/attachments_tables.php';
 require_once 'core/core_tables.php';
@@ -126,7 +125,10 @@ if (! empty($_SESSION['error'])) {
         } else {
             $line = $stmt->fetchObject();
 
-            if((!empty($_GET['editingMode']) || !empty($_GET['viewpdf'])) && strpos($line->format, 'xl') === false && strpos($line->format, 'ppt') === false){
+            if((!empty($_GET['editingMode']) || !empty($_GET['viewpdf'])) && strpos($line->format, 'xl') === false && strpos($line->format, 'ppt') === false){  
+                header(
+                    "location: ../../rest/res/".$_REQUEST['res_id_master']."/attachment/".$_GET['id']
+                );
                 $stmtPdf = $db->query(
                     "SELECT docserver_id, path, filename, format, title
                      FROM res_view_attachments

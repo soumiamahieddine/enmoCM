@@ -225,6 +225,8 @@ $app->get('/categories', \Resource\controllers\ResController::class . ':getCateg
 $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
 $app->get('/resources/groups/{groupSerialId}/baskets/{basketId}', \Resource\controllers\ResController::class . ':getResourcesByBasket');
 
+//Attachments
+$app->get('/res/{resIdMaster}/attachment/{resId}', \Attachment\controllers\AttachmentController::class . ':getFileContent');
 
 //SignatureBook
 $app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');
