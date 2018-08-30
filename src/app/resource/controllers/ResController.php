@@ -38,6 +38,7 @@ use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use User\models\UserModel;
 use Docserver\models\ResDocserverModel;
+use Resource\models\ChronoModel;
 
 class ResController
 {
@@ -236,6 +237,7 @@ class ResController
         } else {
             $resourceExt['exp_contact_id'] = $aArgs['contactId'];
         }
+        $resourceExt['alt_identifier'] = ChronoModel::getChrono(['id' => $resourceExt['category_id'], 'entityId' => $resource['destination'], 'typeId' => $resource['type_id']]);
         ResModel::createExt($resourceExt);
 
         $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
