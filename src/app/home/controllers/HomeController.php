@@ -75,6 +75,14 @@ class HomeController
             $assignedBaskets[$key]['resourceNumber'] = BasketModel::getResourceNumberByClause(['userId' => $assignedBasket['user_abs'], 'clause' => $basket['basket_clause']]);
         }
 
+        return $response->withJson([
+            'regroupedBaskets'  => $regroupedBaskets,
+            'assignedBaskets'   => $assignedBaskets,
+        ]);
+    }
+
+    public function getLastRessources(Request $request, Response $response)
+    {
         $lastResources = ResModel::getLastResources([
             'select'    => [
                 'r.alt_identifier',
@@ -106,8 +114,6 @@ class HomeController
         ]);
 
         return $response->withJson([
-            'regroupedBaskets'  => $regroupedBaskets,
-            'assignedBaskets'   => $assignedBaskets,
             'lastResources'     => $lastResources,
         ]);
     }

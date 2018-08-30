@@ -52,10 +52,10 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loading = true;
         if (this.mobileMode) {
             this.displayedColumns = ['res_id', 'subject'];
         }
-
         window['MainHeaderComponent'].refreshTitle(this.lang.home);
         window['MainHeaderComponent'].setSnav(this.snav);
         window['MainHeaderComponent'].setSnavRight(null);
@@ -64,17 +64,21 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
         this.currentDate = event.toLocaleDateString('fr-FR', options);
-        this.loading = false;
 
         this.http.get(this.coreUrl + "rest/home")
         .subscribe((data: any) => {
             this.homeData = data;
-            this.loading = false;
+        });
+    }
+
+    ngAfterViewInit(): void {
+        this.http.get(this.coreUrl + "rest/home/lastRessources")
+        .subscribe((data: any) => {
             setTimeout(() => {
-                this.dataSource = new MatTableDataSource(this.homeData.lastResources);
+                this.dataSource = new MatTableDataSource(data.lastResources);
+                this.loading = false;
             }, 0);
         });
-
     }
 
     goTo(row:any){
@@ -85,15 +89,11 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
                 "<iframe style='height:100%;width:100%;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
                 "</iframe>");  
-                /*"<object style='height:100%;width:100%;' data='" + this.docUrl + "' type='application/pdf' class='embed-responsive-item'>" +
-                "<div>Le document "+row.res_id+" ne peut pas être chargé</div>" +
-                "</object>");*/
             this.sidenavRight.open();
         }
     }
 
     viewThumbnail(row:any) {
-        console.log('ok');
         $j('#viewThumbnail').css({'background':'white url('+this.coreUrl+'rest/res/' + row.res_id + '/thumbnail) no-repeat 100%'});
         $j('#viewThumbnail').css({'background-size': '100%'});
         $j('#viewThumbnail').show();

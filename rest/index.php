@@ -161,6 +161,7 @@ $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
 
 //Home
 $app->get('/home', \Home\controllers\HomeController::class . ':get');
+$app->get('/home/lastRessources', \Home\controllers\HomeController::class . ':getLastRessources');
 
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');

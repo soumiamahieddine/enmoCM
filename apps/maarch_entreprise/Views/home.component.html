@@ -8,9 +8,6 @@
             <mat-divider></mat-divider>
         </mat-sidenav>
         <mat-sidenav-content>
-            <div *ngIf="loading" style="display:flex;height:100%;">
-                <mat-spinner style="margin:auto;"></mat-spinner>
-            </div>
             <mat-card class="card-app-content">
                 <mat-card id="viewThumbnail" style="display:none;position: absolute;z-index: 2;height: 600px;width: 400px;"></mat-card>
                 <mat-card>
@@ -29,8 +26,10 @@
 
                 <mat-tab-group>
                     <mat-tab label="Mes derniers courriers">
-                        <table mat-table [dataSource]="dataSource" matSort matSortActive="res_id" matSortDisableClear matSortDirection="asc"
-                    style="width:100%;table-layout: fixed;">
+                        <div *ngIf="loading" style="display:flex;height:100%;">
+                            <mat-spinner style="margin:auto;"></mat-spinner>
+                        </div>
+                        <table *ngIf="!loading" mat-table [dataSource]="dataSource" matSort matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;table-layout: fixed;">
                     <!-- Number Column -->
                     <ng-container matColumnDef="res_id">
                         <td mat-cell *matCellDef="let row" [ngStyle]="{'width': mobileMode ? '30%' : '10%'}" style="text-align:center;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding: 5px;vertical-align: middle;">
