@@ -363,7 +363,7 @@ if (isset($_POST['add']) && $_POST['add']) {
 
                                         $storeResult = $docserverControler->storeResourceOnDocserver($_SESSION['collection_id_choice'], $fileInfos);
                                         foreach ($_SESSION['data'] as $dataKey => $dataValue) {
-                                            if (in_array($dataValue['column'], ['docserver_id', 'res_id_master', 'dest_contact_id', 'dest_address_id'])) {
+                                            if (in_array($dataValue['column'], ['docserver_id', 'res_id_master', 'dest_contact_id', 'dest_address_id', 'identifier'])) {
                                                 unset($_SESSION['data'][$dataKey]);
                                             }
                                         }
@@ -387,6 +387,13 @@ if (isset($_POST['add']) && $_POST['add']) {
                                             'value' => $contactForMailing['address_id'],
                                             'type' => 'integer'
                                         ];
+
+                                        $_SESSION['data'][] = [
+                                            'column' => 'identifier',
+                                            'value' => $chrono.'-'.chr(ord('A')+$key),
+                                            'type' => 'string'
+                                        ];
+
                                         $id = $resAttach->load_into_db(
                                             'res_attachments',
                                             $storeResult['destination_dir'],
