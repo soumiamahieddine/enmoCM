@@ -121,5 +121,24 @@ class AdrModel
         return true;
     }
 
+    public static function deleteAttachAdr(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
 
+        if ($aArgs['isVersion']) {
+            $table = "adr_attachments_version";
+        } else {
+            $table = "adr_attachments";
+        }
+
+        DatabaseModel::delete([
+            'table' => $table,
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resId']]
+        ]);
+
+        return true;
+    }
 }

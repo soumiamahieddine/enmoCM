@@ -253,7 +253,7 @@ abstract class visa_Abstract extends Database
             return false;
         }
 
-        $resFirstFiles = [];
+        /*$resFirstFiles = [];
 
         while ($res = $stmt->fetchObject()) {
             if (($res->format == 'doc' || $res->format == 'docx' || $res->format == 'odt') && !in_array($res->attachment_type, ['simple_attachment', 'simple_attachment_rp'])) {
@@ -278,7 +278,7 @@ abstract class visa_Abstract extends Database
             $this->errorMessageVisa .= '<br/>&nbsp;&nbsp;';
             $this->errorMessageVisa .= $_SESSION['attachment_types'][$tmpObj->attachment_type].' : ';
             $this->errorMessageVisa .= $tmpObj->title;
-        }
+        }*/
 
         return true;
     }
