@@ -54,10 +54,10 @@ if (empty($docserver)) {
 			$db = new Database();
 			$signatoryUser = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
 			if ($_SESSION['visa']['repSignRel'] > 1) {
-                //$target_table = 'res_version_attachments';
+                $target_table = 'res_version_attachments';
                 $db->query("UPDATE res_version_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?",[$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
             } else {
-                //$target_table = 'res_attachments';
+                $target_table = 'res_attachments';
 				$db->query("UPDATE res_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?",[$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
             }
 			unset($_SESSION['visa']['repSignRel']);
@@ -196,9 +196,14 @@ if (empty($docserver)) {
                 'type' => 'string'
             ];
 
-            if (empty($_REQUEST['id'])) $id_origin = $objectId;
-            else $id_origin = $_REQUEST['id'];
-            if (empty($target_table)) $target_table = "res_attachments";
+            if (empty($_REQUEST['id'])) {
+                $id_origin = $objectId;
+            } else {
+                $id_origin = $_REQUEST['id'];
+            }
+            if (empty($target_table)) {
+                $target_table = "res_attachments";
+            }
             array_push(
                 $_SESSION['data'],
                 array(

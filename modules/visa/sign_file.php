@@ -58,21 +58,21 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
     $tableName = 'res_view_attachments';
     if (isset($_REQUEST['isOutgoing'])) {
         if (isset($_REQUEST['isVersion'])) {
-            $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+            $stmt = $db->query("select relation, res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where attachment_type = ? and res_id_version = ?", ['outgoing_mail', $objectId]);
         } else {
-            $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+            $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where attachment_type = ? and res_id = ?", ['outgoing_mail', $objectId]);
         }
     } else {
         if (isset($_REQUEST['isVersion'])) {
-            $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+            $stmt = $db->query("select relation, res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where attachment_type NOT IN ('converted_pdf','print_folder') and res_id_version = ?", array($objectId));
         } else {
-            $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+            $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
         }
@@ -111,6 +111,8 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
             exit;
         }
 
+        $_SESSION['visa']['repSignRel'] = $line->relation;
+        $_SESSION['visa']['repSignId'] = $attachResId;
         $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment["docserver_id"], 'select' => ['path_template']]);
 
         $fileOnDs = $docserver["path_template"] . $convertedAttachment["path"] . $convertedAttachment["filename"];
@@ -192,12 +194,6 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 
         include 'modules/visa/save_attach_res_from_cm.php';
         $db->query('UPDATE listinstance set signatory = TRUE WHERE listinstance_id = (SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_id = ? AND difflist_type = ? AND process_date is null ORDER BY listinstance_id LIMIT 1)', [$objectResIdMaster, $_SESSION['user']['UserId'], 'VISA_CIRCUIT']);
-        
-        if (isset($_REQUEST['isVersion'])) {
-            $db->query("UPDATE res_version_attachments set status = 'SIGN' WHERE res_id = ?", [$attachResId]);
-        } else {
-            $db->query("UPDATE res_attachments set status = 'SIGN' WHERE res_id = ?", [$attachResId]);
-        }
 
         echo "{\"status\": 0, \"new_id\": $id}";
         exit;

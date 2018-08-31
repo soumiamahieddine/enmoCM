@@ -166,7 +166,7 @@ abstract class AttachmentModelAbstract
         ]);
 
         DatabaseModel::update([
-            'table'     => $aArgs['table'],
+            'table'     => 'res_attachments',
             'set'       => ['status' => 'DEL'],
             'where'     => ['origin = ?', 'status != ?'],
             'data'      => ["{$aArgs['resId']},{$aArgs['table']}", 'DEL']
