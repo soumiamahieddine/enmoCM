@@ -365,3 +365,11 @@ h1.admin-app-name {
     align-items: center;
     justify-content: center;
 }
+
+#searchInput .mat-form-field-infix{
+    width: 100%;
+}
+
+#searchInput .mat-form-field-label {
+    opacity: 0.5;
+}

@@ -90,6 +90,7 @@ class HomeController
                 'r.case_label',
                 'r.closing_date',
                 'r.category_id',
+                'r.contact_firstname',
                 'r.contact_lastname',
                 'r.contact_society',
                 'r.creation_date',

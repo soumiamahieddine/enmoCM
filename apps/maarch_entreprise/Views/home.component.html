@@ -75,10 +75,11 @@
                         <td mat-cell *matCellDef="let row" style="width:25%;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;padding: 5px;vertical-align: middle;">
                             <div style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
                                 <b>De:</b>&nbsp;
-                                <span *ngIf="row.user_firstname">{{row.user_firstname}}</span>&nbsp;
+                                <span *ngIf="row.user_firstname">{{row.user_firstname}}&nbsp;</span>
                                 <span *ngIf="row.user_lastname">{{row.user_lastname}}</span>
                                 <span *ngIf="row.contact_lastname==''">{{row.contact_society}}</span>
-                                <span *ngIf="row.contact_society==''">{{row.contact_lastname}}</span> &nbsp;
+                                <span *ngIf="row.contact_society==''">{{row.contact_firstname}}&nbsp;</span> 
+                                <span *ngIf="row.contact_society==''">{{row.contact_lastname}}</span>
                             </div>
                             <div style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
                                 <b>Pour:</b>&nbsp;
