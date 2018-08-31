@@ -193,9 +193,9 @@ class ResController
 
     public static function duplicateForMailing(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'contactId', 'addressId']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'contactId', 'addressId', 'altIdentifier']);
         ValidatorModel::intVal($aArgs, ['resId', 'contactId', 'addressId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId', 'altIdentifier']);
 
         if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $aArgs['userId']])) {
             return ['errors' => 'Document out of perimeter'];
@@ -234,10 +234,12 @@ class ResController
         $resourceExt['address_id'] = $aArgs['addressId'];
         if ($resourceExt['category_id'] == 'outgoing') {
             $resourceExt['dest_contact_id'] = $aArgs['contactId'];
+            $resourceExt['exp_contact_id'] = null;
         } else {
             $resourceExt['exp_contact_id'] = $aArgs['contactId'];
+            $resourceExt['dest_contact_id'] = null;
         }
-        $resourceExt['alt_identifier'] = ChronoModel::getChrono(['id' => $resourceExt['category_id'], 'entityId' => $resource['destination'], 'typeId' => $resource['type_id']]);
+        $resourceExt['alt_identifier'] = $aArgs['altIdentifier'];
         ResModel::createExt($resourceExt);
 
         $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
