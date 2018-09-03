@@ -57,8 +57,9 @@ class ConvertThumbnailController
         }
 
         $ext = pathinfo($pathToDocument, PATHINFO_EXTENSION);
+        $filename = pathinfo($pathToDocument, PATHINFO_FILENAME);
         $tmpPath = CoreConfigModel::getTmpPath();
-        $fileNameOnTmp = rand() . basename($pathToDocument);
+        $fileNameOnTmp = rand() . $filename;
 
         if (in_array($ext, ['maarch', 'html'])) {
             if ($ext == 'maarch') {
