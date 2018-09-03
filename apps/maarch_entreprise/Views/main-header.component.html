@@ -7,13 +7,10 @@
     </h1>
     <span style="flex: 1 1 auto;"></span>
     <search-home></search-home>
-    <button mat-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" style="min-width: unset" matTooltip="{{lang.shortcut}}">
+    <button mat-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" style="min-width: unset" matTooltip="{{lang.menu}}">
         <mat-icon mat-list-icon class="fa fa-th fa-lg" style="color:white; margin:0px 0px -11px 0px;"></mat-icon>
     </button>
     <mat-menu #applications="matMenu" class="headerMaarchShortcut">
-        <div style="text-align:center;font-size: 20px;font-weight: bolder;opacity: 0.2;">
-            Menu
-        </div>
         <ng-container *ngFor="let shortcut of user.menu">
             <button (click)="gotToMenu(shortcut.servicepage,shortcut.angular);" style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{shortcut.comment}}">
                 <i class="{{shortcut.style}} fa-2x"></i>
