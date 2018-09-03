@@ -105,24 +105,22 @@ abstract class AttachmentModelAbstract
 
     public static function getConvertedPdfById(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
         ValidatorModel::boolType($aArgs, ['isVersion']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
-        $originalAttachment = AttachmentModel::getById([
-            'select'    => ['path', 'filename'],
-            'id'        => $aArgs['id'],
-            'isVersion' => $aArgs['isVersion']
-        ]);
-
-        $PdfFilename = substr($originalAttachment['filename'], 0, strrpos($originalAttachment['filename'], '.')) . '.pdf';
+        if ($aArgs['isVersion']) {
+            $table = "adr_attachments_version";
+        } else {
+            $table = "adr_attachments";
+        }
 
         $attachment = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['res_attachments'],
-            'where'     => ['path = ?', 'filename = ?', 'attachment_type = ?', 'status != ?'],
-            'data'      => [$originalAttachment['path'], $PdfFilename, 'converted_pdf', 'DEL'],
+            'table'     => [$table],
+            'where'     => ['res_id = ?', 'type = ?'],
+            'data'      => [$aArgs['resId'], 'PDF'],
         ]);
 
         if (empty($attachment[0])) {
@@ -168,7 +166,7 @@ abstract class AttachmentModelAbstract
         ]);
 
         DatabaseModel::update([
-            'table'     => $aArgs['table'],
+            'table'     => 'res_attachments',
             'set'       => ['status' => 'DEL'],
             'where'     => ['origin = ?', 'status != ?'],
             'data'      => ["{$aArgs['resId']},{$aArgs['table']}", 'DEL']

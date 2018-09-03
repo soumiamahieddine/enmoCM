@@ -28,16 +28,16 @@
 
 // Loads the required class
 try {
-    require_once ("core/class/class_security.php");
-} catch (Exception $e){
+    require_once("core/class/class_security.php");
+} catch (Exception $e) {
     functions::xecho($e->getMessage()).' // ';
 }
 
 abstract class multicontacts_Abstract extends Database
 {
-    public function updateContactsInputField($ajaxPath, $contactsArray, $inputField, $readOnly=false) 
-	{
-        $content = '<div style="max-height: 600px; overflow-y: scroll">';
+    public function updateContactsInputField($ajaxPath, $contactsArray, $inputField, $readOnly = false)
+    {
+        $content = '<div style="max-height: 350px; overflow-y: auto">';
         //Init with loading div
         $content .= '<div id="loading_'.$inputField.'" style="display:none;"><img src="'
             . $_SESSION['config']['businessappurl']
@@ -47,7 +47,7 @@ abstract class multicontacts_Abstract extends Database
         // $content .=  print_r($adressArray, true);
         //Get info from session array and display tag
         if (isset($contactsArray[$inputField]) && count($contactsArray[$inputField]) > 0) {
-            foreach($contactsArray[$inputField] as $key => $contacts) {
+            foreach ($contactsArray[$inputField] as $key => $contacts) {
                 if (!empty($contacts)) {
                     $content .= '<div style="width:200px;" class="multicontact_element" id="'.$key.'_'.$contacts.'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$contacts.'</div>';
                     if ($readOnly === false) {

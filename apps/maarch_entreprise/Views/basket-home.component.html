@@ -14,18 +14,31 @@
         <mat-divider *ngIf="regroupedBasket.baskets[0]"></mat-divider>
         <mat-nav-list>
             <ng-container *ngFor="let basket of regroupedBasket.baskets | filterList:listFilter.value">
-                <a mat-list-item [disableRipple]="basket.redirected" [ngStyle]="{'cursor': basket.redirected ? 'not-allowed' : 'pointer'}">
-                        <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="!basket.redirected && !mobileMode" mat-list-icon class="fa fa-inbox"></mat-icon>
-                        <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="basket.redirected && !mobileMode" mat-list-icon class="fa fa-share"></mat-icon>
-                        <span *ngIf="basket.resourceNumber==0" class="badge">{{basket.resourceNumber}}</span>
-                    <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge">{{basket.resourceNumber}}</span>
-                    <p mat-line (click)="goTo(basket.basket_id,regroupedBasket.groupId)" *ngIf="!basket.redirected" title="{{basket.basket_name}}" [ngStyle]="{'color': basket.color}">
-                        {{basket.basket_name}}
-                    </p>
-                    <p mat-line *ngIf="basket.redirected" title="{{basket.basket_name}}" [ngStyle]="{'color': basket.color}">
+                <a mat-list-item *ngIf="basket.redirected" disableRipple="true" style="cursor:not-allowed;">
+                    <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="basket.redirected && !mobileMode" mat-list-icon class="fa fa-share"></mat-icon>
+                    <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
+                    <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
+                    <p mat-line title="{{basket.basket_name}}" [ngStyle]="{'color': basket.color}">
                         {{basket.basket_name}}<br/><small color="primary">({{lang.redirectedTo}} {{basket.redirectedUser}})</small>
                     </p>
                 </a>
+                <a mat-list-item *ngIf="!basket.redirected" (click)="closePanelLeft();goTo(basket.basket_id,regroupedBasket.groupId);" style="cursor:pointer;" [ngStyle]="{'opacity': basket.resourceNumber==0 ? '0.5' : '1'}">
+                    <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="!mobileMode" mat-list-icon class="fa fa-inbox"></mat-icon>
+                    <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
+                    <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
+                    <p mat-line title="{{basket.basket_name}}" [ngStyle]="{'color': basket.color}">
+                        {{basket.basket_name}}
+                    </p>
+                </a>
+                <!-- TODO NEW BASKET LIST-->
+                <!--<a mat-list-item *ngIf="!basket.redirected" (click)="closePanelLeft();" routerLink="/basketList/{{regroupedBasket.groupSerialId}}/baskets/{{basket.basket_id}}" style="cursor:pointer;" [ngStyle]="{'opacity': basket.resourceNumber==0 ? '0.5' : '1'}">
+                    <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="!mobileMode" mat-list-icon class="fa fa-inbox"></mat-icon>
+                    <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
+                    <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
+                    <p mat-line title="{{basket.basket_name}}" [ngStyle]="{'color': basket.color}">
+                        {{basket.basket_name}}
+                    </p>
+                </a>-->
             </ng-container> 
         </mat-nav-list>
     </ng-container>
@@ -35,8 +48,8 @@
         <mat-nav-list>
             <a mat-list-item *ngFor="let basket of homeData.assignedBaskets | filterList:listFilter.value">
                 <mat-icon *ngIf="!mobileMode" style="color:#666" mat-list-icon class="fa fa-inbox"></mat-icon>
-                <span *ngIf="basket.resourceNumber==0" class="badge">{{basket.resourceNumber}}</span>
-                <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge">{{basket.resourceNumber}}</span>
+                <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
+                <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                 <p mat-line (click)="goToRedirect(basket.basket_id,basket.basket_owner)" title="{{basket.basket_name}}" style="color:#666">
                     {{basket.basket_name}}<br/><small color="primary">({{basket.userToDisplay}})</small>
                 </p>
@@ -44,47 +57,4 @@
         </mat-nav-list>
     </ng-container>
 </mat-expansion-panel>
-
 <mat-divider></mat-divider>
-<!--<mat-nav-list class="homeBasketList">
-    Nouveau courrier
-    <mat-list>
-        <ng-container *ngFor="let regroupedBasket of homeData.regroupedBaskets">
-            <h4 *ngIf="regroupedBasket.baskets[0]" class="mat-toolbar mat-primary" style="padding-left:5px">
-                <mat-icon mat-list-icon class="fa fa-users"></mat-icon> {{regroupedBasket.groupDesc}}</h4>
-
-            <mat-list-item *ngFor="let basket of regroupedBasket.baskets" [ngStyle]="{'color': basket.color}">
-                <mat-icon mat-list-icon *ngIf="!basket.redirected" class="fa fa-inbox" matBadge="{{basket.resourceNumber}}" matBadgePosition="before"
-                    matBadgeColor="warn" [matBadgeHidden]="basket.resourceNumber==0" matTooltip="{{basket.resourceNumber}}">
-                    <span class="badge">{{basket.resourceNumber}}</span>
-                </mat-icon>
-                <mat-icon mat-list-icon *ngIf="basket.redirected" class="fa fa-share" matBadge="{{basket.resourceNumber}}" matBadgePosition="before"
-                    matBadgeColor="warn" [matBadgeHidden]="basket.resourceNumber==0" matTooltip="{{basket.resourceNumber}}">
-                    <span class="badge">{{basket.resourceNumber}}</span>
-                </mat-icon>
-                <a *ngIf="!basket.redirected" href="index.php?page=view_baskets&module=basket&baskets={{basket.basket_id}}&groupId={{regroupedBasket.groupId}}">
-                    <span mat-line matTooltip="{{basket.basket_desc}}">&nbsp;{{basket.basket_name}}</span>
-                </a>
-                <span *ngIf="basket.redirected" style="cursor:not-allowed">
-                    <span mat-line matTooltip="{{basket.basket_desc}}">&nbsp;{{basket.basket_name}} ({{lang.redirectedTo}} {{basket.redirectedUser}})</span>
-                </span>
-            </mat-list-item>
-            <mat-divider></mat-divider>
-        </ng-container>
-
-        <ng-container *ngIf="homeData.assignedBaskets.length>0">
-            <h4 class="mat-toolbar mat-primary" style="padding-left:5px">{{lang.othersBaskets}}</h4>
-            <mat-list-item *ngFor="let basket of homeData.assignedBaskets" style="color:#666">
-                <mat-icon mat-list-icon class="fa fa-inbox" matBadge="{{basket.resourceNumber}}" matBadgePosition="before" matBadgeColor="warn"
-                    [matBadgeHidden]="basket.resourceNumber==0" matTooltip="{{basket.resourceNumber}}"></mat-icon>
-                <a href="index.php?page=view_baskets&module=basket&baskets={{basket.basket_id}}_{{basket.basket_owner}}&groupId=">
-                    <span mat-line matTooltip="{{basket.basket_desc}} ({{basket.userToDisplay}})">&nbsp;{{basket.basket_name}} ({{basket.userToDisplay}})</span>
-                </a>
-            </mat-list-item>
-        </ng-container>
-
-    </mat-list>
-
-    <h4 *ngIf="homeData.regroupedBaskets.length==0 && homeData.assignedBaskets.length==0">{{lang.noAvailableBasket}}</h4>
-
-</mat-nav-list>-->

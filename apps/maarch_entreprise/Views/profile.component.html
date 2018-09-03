@@ -1,9 +1,9 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileMode ? 56 : 0">
+    <mat-sidenav-container autosize class="admin-sidenav-container">
         <mat-sidenav #snav [mode]="mobileMode ? 'over' : 'side'" [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true"
             autoFocus="false">
+            <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-divider></mat-divider>
             <mat-nav-list>
                 <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item (click)="askRedirectBasket()">
@@ -19,8 +19,6 @@
                     </p>
                 </a>
             </mat-nav-list>
-            <mat-divider></mat-divider>
-            <menu-shortcut></menu-shortcut>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
@@ -439,16 +437,16 @@
                                         {{lang.myContactsGroupsDesc}}
                                     </mat-panel-description>
                                 </mat-expansion-panel-header>
-                                <mat-tab-group (selectedIndexChange)="changeTabContactGrp($event)" [selectedIndex]="selectedIndexContactsGrp">
+                                <mat-tab-group (selectedIndexChange)="changeTabContactGrp($event);createGrpContPan.close();" [selectedIndex]="selectedIndexContactsGrp">
                                     <mat-tab label="Liste des groupements">
-                                        <mat-accordion (click)="initGroupsContact();">
-                                            <mat-expansion-panel>
+                                        <mat-accordion>
+                                            <mat-expansion-panel #createGrpContPan (opened)="initGroupsContact()">
                                                 <mat-expansion-panel-header>
                                                     <mat-panel-title color="primary" style="justify-content: right;">
                                                         <span style="margin-top:5px;">{{lang.contactGroupCreate}}</span>
                                                     </mat-panel-title>
                                                 </mat-expansion-panel-header>
-                                                <form id="contactsGroupFormUp" class="form-horizontal" (ngSubmit)="contactsGroupSubmit()" #contactsGroupFormUp="ngForm">
+                                                <form id="contactsGroupFormUp" class="form-horizontal" (ngSubmit)="contactsGroupSubmit();createGrpContPan.close();" #contactsGroupFormUp="ngForm">
                                                         <div class="form-group">
                                                             <div class="col-sm-12">
                                                                 <mat-form-field>
@@ -463,6 +461,12 @@
                                                                     <input matInput [(ngModel)]="contactsGroup.description" required name="description" id="description" title="{{lang.description}}"
                                                                         type="text" placeholder="{{lang.description}}" maxlength="255">
                                                                 </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <mat-slide-toggle name="plubic" title="{{lang.public}}" id="plubic" color="primary" [(ngModel)]="contactsGroup.public"
+                                                                    >{{lang.public}}</mat-slide-toggle>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -494,6 +498,13 @@
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.description}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let element" style="flex:2;"> {{element.description}} </mat-cell>
                                                 </ng-container>
+                                                <ng-container matColumnDef="nbContacts">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.relatedContactNumber}}</mat-header-cell>
+                                                    <mat-cell *matCellDef="let element" style="flex:1;">
+                                                        <span *ngIf="element.nbContacts == 0">{{element.nbContacts}}</span> 
+                                                        <span *ngIf="element.nbContacts > 0" color="primary" style="font-weight:bold;">{{element.nbContacts}}</span> 
+                                                    </mat-cell>
+                                                </ng-container>
                                                 <ng-container matColumnDef="public">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.public}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">
@@ -522,7 +533,7 @@
                                     </mat-tab>
                                     <mat-tab label="Groupement : {{contactsGroup.label}}" *ngIf="contactsListMode">
                                         <mat-accordion>
-                                            <mat-expansion-panel>
+                                            <mat-expansion-panel #linkContPan>
                                                 <mat-expansion-panel-header>
                                                     <mat-panel-title color="primary" style="justify-content: right;">
                                                         <span style="margin-top:5px;">{{lang.contactLink}}</span>
@@ -607,6 +618,12 @@
                                                                 <input matInput [(ngModel)]="contactsGroup.description" required name="description" id="description" title="{{lang.description}}"
                                                                     type="text" placeholder="{{lang.description}}" maxlength="255">
                                                             </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <mat-slide-toggle name="plubic" title="{{lang.public}}" id="plubic" color="primary" [(ngModel)]="contactsGroup.public"
+                                                                >{{lang.public}}</mat-slide-toggle>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">

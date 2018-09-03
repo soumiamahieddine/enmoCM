@@ -38,6 +38,7 @@ use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use User\models\UserModel;
 use Docserver\models\ResDocserverModel;
+use Resource\models\ChronoModel;
 
 class ResController
 {
@@ -192,9 +193,9 @@ class ResController
 
     public static function duplicateForMailing(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'contactId', 'addressId']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'contactId', 'addressId', 'altIdentifier']);
         ValidatorModel::intVal($aArgs, ['resId', 'contactId', 'addressId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId', 'altIdentifier']);
 
         if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $aArgs['userId']])) {
             return ['errors' => 'Document out of perimeter'];
@@ -233,9 +234,12 @@ class ResController
         $resourceExt['address_id'] = $aArgs['addressId'];
         if ($resourceExt['category_id'] == 'outgoing') {
             $resourceExt['dest_contact_id'] = $aArgs['contactId'];
+            $resourceExt['exp_contact_id'] = null;
         } else {
             $resourceExt['exp_contact_id'] = $aArgs['contactId'];
+            $resourceExt['dest_contact_id'] = null;
         }
+        $resourceExt['alt_identifier'] = $aArgs['altIdentifier'];
         ResModel::createExt($resourceExt);
 
         $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
@@ -488,8 +492,12 @@ class ResController
             'offset'    => (int)$data['offset'],
             'limit'     => (int)$data['limit'],
         ]);
+        $allResources = ResModel::getOnView([
+            'select'    => [1],
+            'where'     => [$whereClause],
+        ]);
 
-        return $response->withJson(['resources' => $resources, 'number' => count($resources)]);
+        return $response->withJson(['resources' => $resources, 'number' => count($allResources)]);
     }
 
     public function updateExternalInfos(Request $request, Response $response)

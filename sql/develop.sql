@@ -163,6 +163,36 @@ END$$;
 DELETE FROM parameters WHERE id = 'thumbnailsSize';
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Taille des imagettes', '750x900');
 
+DROP TABLE IF EXISTS adr_attachments;
+CREATE TABLE adr_attachments
+(
+  id serial NOT NULL,
+  res_id bigint NOT NULL,
+  type character varying(32) NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) NOT NULL,
+  filename character varying(255) NOT NULL,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  CONSTRAINT adr_attachments_pkey PRIMARY KEY (id),
+  CONSTRAINT adr_attachments_unique_key UNIQUE (res_id, type)
+)
+WITH (OIDS=FALSE);
+
+DROP TABLE IF EXISTS adr_attachments_version;
+CREATE TABLE adr_attachments_version
+(
+  id serial NOT NULL,
+  res_id bigint NOT NULL,
+  type character varying(32) NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) NOT NULL,
+  filename character varying(255) NOT NULL,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  CONSTRAINT adr_attachments_version_pkey PRIMARY KEY (id),
+  CONSTRAINT adr_attachments_version_unique_key UNIQUE (res_id, type)
+)
+WITH (OIDS=FALSE);
+
 /* Refactoring */
 DROP VIEW IF EXISTS af_view_customer_target_view;
 DROP VIEW IF EXISTS af_view_customer_view;

@@ -18,7 +18,11 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
-    
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
     dialogRef                       : MatDialogRef<any>;
@@ -42,7 +46,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     displayedColumns    = ['firstname', 'lastname'];
 
 
-    @ViewChild('snav2') sidenav: MatSidenav;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -64,6 +67,10 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     ngOnInit(): void {
+        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.entities);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(null);
+
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
@@ -136,8 +143,8 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     $j('#jstree')
                         // listen for event
                         .on('select_node.jstree', (e: any, data: any) => {
-                            if (this.sidenav.opened == false) {
-                                this.sidenav.open();
+                            if (this.sidenavRight.opened == false) {
+                                this.sidenavRight.open();
                             }
                             if (this.creationMode == true) {
                                 this.currentEntity.parent_entity_id = data.node.id;
@@ -152,7 +159,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 
                         }).on('deselect_node.jstree', (e: any, data: any) => {
 
-                            this.sidenav.close();
+                            this.sidenavRight.close();
 
                         }).on('move_node.jstree', (e: any, data: any) => {
 
@@ -328,7 +335,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 }
             }
         } else {
-            this.sidenav.close();
+            this.sidenavRight.close();
         }
     }
 
@@ -374,7 +381,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                             this.entities = data['entities'];
                             $j('#jstree').jstree(true).settings.core.data = this.entities;
                             $j('#jstree').jstree("refresh");
-                            this.sidenav.close();
+                            this.sidenavRight.close();
                             this.notify.success(this.lang.entityDeleted);
 
                         }, (err) => {
@@ -416,7 +423,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                         this.entities = data['entities'];
                         $j('#jstree').jstree(true).settings.core.data = this.entities;
                         $j('#jstree').jstree("refresh");
-                        this.sidenav.close();
+                        this.sidenavRight.close();
                         this.notify.success(this.lang.entityDeleted);
                     }, (err) => {
                         this.notify.error(err.error.errors);
@@ -440,7 +447,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         } else {
             this.currentEntity = { "entity_type": this.entityTypeList[0].id };
             $j('#jstree').jstree('deselect_all');
-            this.sidenav.open();
+            this.sidenavRight.open();
             /*for (let i = 0; i < this.entities.length; i++) {
                 if (this.entities[i].allowed == true) {
                     $j('#jstree').jstree('select_node', this.entities[i]);

@@ -19,6 +19,10 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class ContactsGroupAdministrationComponent implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
@@ -56,7 +60,6 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         }
     }
 
-    @ViewChild('snav2') sidenav: MatSidenav;
     @ViewChild('paginatorContactList') paginator: MatPaginator;
     //@ViewChild('tableContactList') sortContactList: MatSort;
 
@@ -99,10 +102,18 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
+                window['MainHeaderComponent'].refreshTitle(this.lang.contactGroupCreation);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.creationMode = true;
                 this.contactsGroup.public = false;
                 this.loading = false;
             } else {
+                window['MainHeaderComponent'].refreshTitle(this.lang.contactsGroupModification);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+
                 this.creationMode = false;
 
                 this.http.get(this.coreUrl + 'rest/contactsTypes')

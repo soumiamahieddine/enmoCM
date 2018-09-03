@@ -75,15 +75,46 @@ class HomeController
             $assignedBaskets[$key]['resourceNumber'] = BasketModel::getResourceNumberByClause(['userId' => $assignedBasket['user_abs'], 'clause' => $basket['basket_clause']]);
         }
 
+        return $response->withJson([
+            'regroupedBaskets'  => $regroupedBaskets,
+            'assignedBaskets'   => $assignedBaskets,
+        ]);
+    }
+
+    public function getLastRessources(Request $request, Response $response)
+    {
         $lastResources = ResModel::getLastResources([
-            'select'    => ['res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.creation_date', 'res_letterbox.destination', 'res_letterbox.dest_user', 'mlb_coll_ext.alt_identifier', 'mlb_coll_ext.closing_date', 'mlb_coll_ext.process_limit_date', 'status.label_status as status_label', 'status.img_filename as status_icon', 'priorities.color as priority_color'],
+            'select'    => [
+                'r.alt_identifier',
+                'r.category_id',
+                'r.case_label',
+                'r.closing_date',
+                'r.category_id',
+                'r.contact_firstname',
+                'r.contact_lastname',
+                'r.contact_society',
+                'r.creation_date',
+                'r.entity_label as entity_destination',
+                'r.folder_name',
+                'priorities.color as priority_color',
+                'priorities.label as priority_label',
+                'r.process_limit_date',
+                'r.res_id',
+                'status.img_filename as status_icon',
+                'status.label_status as status_label',
+                'status.id as status_id',
+                'r.subject',
+                'r.type_label as doctype_label',
+                'r.user_lastname',
+                'r.user_firstname',
+                'users.lastname as user_dest_lastname',
+                'users.firstname as user_dest_firstname',
+            ],
             'limit'     => 5,
             'userId'    => $GLOBALS['userId']
         ]);
 
         return $response->withJson([
-            'regroupedBaskets'  => $regroupedBaskets,
-            'assignedBaskets'   => $assignedBaskets,
             'lastResources'     => $lastResources,
         ]);
     }

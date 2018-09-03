@@ -306,15 +306,15 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE adr_attachments
 (
+  id serial NOT NULL,
   res_id bigint NOT NULL,
+  type character varying(32) NOT NULL,
   docserver_id character varying(32) NOT NULL,
-  path character varying(255) DEFAULT NULL::character varying,
-  filename character varying(255) DEFAULT NULL::character varying,
-  offset_doc character varying(255) DEFAULT NULL::character varying,
+  path character varying(255) NOT NULL,
+  filename character varying(255) NOT NULL,
   fingerprint character varying(255) DEFAULT NULL::character varying,
-  adr_priority integer NOT NULL,
-  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
-  CONSTRAINT adr_attachments_pkey PRIMARY KEY (res_id, docserver_id)
+  CONSTRAINT adr_attachments_pkey PRIMARY KEY (id),
+  CONSTRAINT adr_attachments_unique_key UNIQUE (res_id, type)
 )
 WITH (OIDS=FALSE);
 
@@ -1941,15 +1941,15 @@ WITH (
 
 CREATE TABLE adr_attachments_version
 (
+  id serial NOT NULL,
   res_id bigint NOT NULL,
+  type character varying(32) NOT NULL,
   docserver_id character varying(32) NOT NULL,
-  path character varying(255) DEFAULT NULL::character varying,
-  filename character varying(255) DEFAULT NULL::character varying,
-  offset_doc character varying(255) DEFAULT NULL::character varying,
+  path character varying(255) NOT NULL,
+  filename character varying(255) NOT NULL,
   fingerprint character varying(255) DEFAULT NULL::character varying,
-  adr_priority integer NOT NULL,
-  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
-  CONSTRAINT adr_attachments_version_pkey PRIMARY KEY (res_id, docserver_id)
+  CONSTRAINT adr_attachments_version_pkey PRIMARY KEY (id),
+  CONSTRAINT adr_attachments_version_unique_key UNIQUE (res_id, type)
 )
 WITH (OIDS=FALSE);
 

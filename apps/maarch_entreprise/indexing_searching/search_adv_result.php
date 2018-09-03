@@ -785,17 +785,32 @@ if (count($_REQUEST['meta']) > 0) {
                     $json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
                 }
             }
-            // CONTACTS EXTERNAL
-            elseif ($tab_id_fields[$j] == 'contactid' && !empty($_REQUEST['contactid_external']))
-            {
-                $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
-                    $contact_id = $_REQUEST['contactid_external'];
-					$where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactIdExternal and coll_id = '" . $coll_id . "') or ";
+            // CONTACTS AUTOCOMPLETE
+            elseif ($tab_id_fields[$j] == 'contact' && !empty(trim($_REQUEST['contactid']))) {
+                if (!ctype_digit($_REQUEST['contactid'])) {
+                    $json_txt .= " 'contact' : ['".addslashes(trim($_REQUEST['contact']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."']";
+                    $contact_id = $_REQUEST['contactid'];
+                    $where_request .= " ((exp_user_id = :contactid or dest_user_id = :contactid) or ";
+                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactid and coll_id = '" . $coll_id . "'))) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":contactid" => $contact_id));
+                } else if (!empty($_REQUEST['contactid']) && (!empty($_REQUEST['addressid']) && isset($_REQUEST['withAddress']))) {
+
+                    $json_txt .= " 'contact' : ['".addslashes(trim($_REQUEST['contact']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'], 'addressid' : ['".addslashes(trim($_REQUEST['addressid']))."'],";
+                    $contact_id = $_REQUEST['contactid'];
+                    $address_id = $_REQUEST['addressid'];
+                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactid and address_id = :addressid and coll_id = '" . $coll_id . "') or ";
+                    $where_request .= " ((exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') and address_id = '".$address_id."') or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id = ".$contact_id." AND dest_address_id = ".$address_id." AND status NOT IN ('DEL','OBS','TMP')) )) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":contactid" => $contact_id, ":addressid" => $address_id));
+                } else if (!empty($_REQUEST['contactid'])) {
+                    $json_txt .= " 'contact' : ['".addslashes(trim($_REQUEST['contact']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
+                    $contact_id = $_REQUEST['contactid'];
+                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactid and coll_id = '" . $coll_id . "') or ";
                     $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id = ".$contact_id." AND status NOT IN ('DEL','OBS','TMP')) )) and ";
-                    $arrayPDO = array_merge($arrayPDO, array(":contactIdExternal" => $contact_id));
+                    $arrayPDO = array_merge($arrayPDO, array(":contactid" => $contact_id));
+                }
             }
             //recherche sur les contacts externes en fonction de ce que la personne a saisi
-            elseif ($tab_id_fields[$j] == 'contactid' && empty($_REQUEST['contactid_external']) && !empty($_REQUEST['contactid']))
+            /*elseif ($tab_id_fields[$j] == 'contactid' && empty($_REQUEST['contactid_external']) && !empty($_REQUEST['contactid']))
             {
                 $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
                     $contact_id = $_REQUEST['contactid'];
@@ -810,15 +825,6 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request .= " address_id in (select ca_id from view_contacts where lastname ilike :addressId or firstname ilike :addressId ) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":addressId" => "%".$addresses_id."%"));
             }
-            // CONTACTS INTERNAL
-            elseif ($tab_id_fields[$j] == 'contactid_internal' && !empty($_REQUEST['contact_internal_id']))
-            {
-                $json_txt .= " 'contactid_internal' : ['".addslashes(trim($_REQUEST['contactid_internal']))."'], 'contact_internal_id' : ['".addslashes(trim($_REQUEST['contact_internal_id']))."']";
-                    $contact_id = $_REQUEST['contact_internal_id'];
-                    $where_request .= " ((exp_user_id = :contactInternalId or dest_user_id = :contactInternalId) or ";
-                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactInternalId and coll_id = '" . $coll_id . "'))) and ";
-                    $arrayPDO = array_merge($arrayPDO, array(":contactInternalId" => $contact_id));
-            }
             //recherche sur les contacts internes en fonction de ce que la personne a saisi
             elseif ($tab_id_fields[$j] == 'contactid_internal' && empty($_REQUEST['contact_internal_id']) && !empty($_REQUEST['contactid_internal']))
             {
@@ -827,7 +833,7 @@ if (count($_REQUEST['meta']) > 0) {
                     //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
                     $where_request .= " (exp_user_id in (select user_id from users where firstname ilike :contactIdInternal or lastname ilike :contactIdInternal )) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":contactIdInternal" => "%".$contactid_internal."%"));
-            }
+            }*/
             //VISA USER
             elseif ($tab_id_fields[$j] == 'visa_user' && !empty($_REQUEST['ac_visa_user']))
             {

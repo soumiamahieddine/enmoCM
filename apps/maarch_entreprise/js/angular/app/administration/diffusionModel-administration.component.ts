@@ -6,6 +6,7 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -18,7 +19,11 @@ declare const angularGlobals: any;
     providers: [NotificationService]
 })
 export class DiffusionModelAdministrationComponent extends AutoCompletePlugin implements OnInit {
-
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
 
@@ -55,12 +60,20 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
+                window['MainHeaderComponent'].refreshTitle(this.lang.diffusionModelCreation);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+                
                 this.creationMode = true;
                 this.loading = false;
                 this.itemTypeList =[{"id":"VISA_CIRCUIT", "label": this.lang.visa},{"id":"AVIS_CIRCUIT", "label": this.lang.avis}]
                 this.diffusionModel.object_type = 'VISA_CIRCUIT';
                 this.diffusionModel.diffusionList = [];
             } else {
+                window['MainHeaderComponent'].refreshTitle(this.lang.diffusionModelModification);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+
                 this.creationMode = false;
                 this.http.get(this.coreUrl + "rest/listTemplates/" + params['id'])
                     .subscribe((data: any) => {

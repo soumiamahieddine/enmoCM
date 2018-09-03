@@ -45,15 +45,36 @@ abstract class ResModelAbstract
         ValidatorModel::stringType($aArgs, ['clause']);
         ValidatorModel::intType($aArgs, ['limit', 'offset']);
 
-        $where = ['res_view_letterbox.priority = priorities.id', 'res_view_letterbox.status = status.id'];
+        $where = ['res_view_letterbox.priority = priorities.id', 'res_view_letterbox.status = status.id', 'res_view_letterbox.dest_user = users.user_id'];
         $where[] = $aArgs['clause'];
 
         $aResources = DatabaseModel::select([
             'select'    => [
-                'res_id', 'alt_identifier', 'subject', 'type_label', 'process_limit_date', 'entity_label', 'category_id',
-                'creation_date', 'dest_user', 'priorities.label', 'priorities.color', 'status.img_filename'
+                'alt_identifier',
+                'category_id',
+                'case_label',
+                'closing_date',
+                'category_id',
+                'contact_lastname',
+                'contact_society',
+                'creation_date',
+                'entity_label as entity_destination',
+                'folder_name',
+                'priorities.color as priority_color',
+                'priorities.label as priority_label',
+                'process_limit_date',
+                'res_id',
+                'status.img_filename as status_icon',
+                'status.label_status as status_label',
+                'status.id as status_id',
+                'subject',
+                'type_label as doctype_label',
+                'user_lastname',
+                'user_firstname',
+                'users.lastname as user_dest_lastname',
+                'users.firstname as user_dest_firstname',
             ],
-            'table'     => ['res_view_letterbox, priorities, status'],
+            'table'     => ['res_view_letterbox, priorities, status, users'],
             'where'     => $where,
             'data'      => [],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
@@ -204,18 +225,19 @@ abstract class ResModelAbstract
 
         $resources = DatabaseModel::select([
             'select'    => $aArgs['select'],
-            'table'     => ['history, res_letterbox, mlb_coll_ext, status, priorities'],
+            'table'     => ['history, res_view_letterbox r, status, priorities, users'],
             'where'     => [
                 'history.user_id = ?', 'history.table_name IN (?)',
                 'history.record_id IS NOT NULL', 'history.record_id != ?',
                 'history.event_id != ?', 'history.event_id NOT LIKE ?',
-                'CAST(history.record_id AS INT) = res_letterbox.res_id',
-                'mlb_coll_ext.res_id = res_letterbox.res_id', 'res_letterbox.status != ?',
-                'res_letterbox.status = status.id',
-                'res_letterbox.priority = priorities.id',
+                'CAST(history.record_id AS INT) = r.res_id',
+                'r.res_id = r.res_id', 'r.status != ?',
+                'r.status = status.id',
+                'r.priority = priorities.id',
+                'r.dest_user = users.user_id',
             ],
             'data'      => [$aArgs['userId'], ['res_letterbox', 'res_view_letterbox'], 'none', 'linkup', 'attach%', 'DEL'],
-            'group_by'  => ['res_letterbox.res_id', 'mlb_coll_ext.alt_identifier', 'mlb_coll_ext.closing_date', 'mlb_coll_ext.process_limit_date', 'status.label_status', 'status.img_filename', 'priorities.color'],
+            'group_by'  => ['users.firstname', 'users.lastname', 'r.user_firstname', 'r.user_lastname', 'r.type_label', 'r.subject', 'r.folder_name', 'r.entity_label', 'r.creation_date', 'r.contact_society', 'r.contact_firstname', 'r.contact_lastname', 'r.case_label', 'r.category_id', 'r.res_id', 'r.alt_identifier', 'r.closing_date', 'r.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
             'order_by'  => ['MAX(history.event_date) DESC'],
             'limit'     => $aArgs['limit']
         ]);

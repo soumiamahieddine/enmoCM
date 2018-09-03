@@ -96,7 +96,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     //Groups contacts
     contactsGroups: any[] = [];
-    displayedColumnsGroupsList: string[] = ['label', 'description', 'actions'];
+    displayedColumnsGroupsList: string[] = ['label', 'description','nbContacts','public', 'actions'];
     dataSourceGroupsList: any;
     @ViewChild('paginatorGroupsList') paginatorGroupsList: MatPaginator;
     @ViewChild('tableGroupsListSort') sortGroupsList: MatSort;
@@ -270,7 +270,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.http.post(this.coreUrl + 'rest/contactsGroups', this.contactsGroup)
             .subscribe((data: any) => {
                 this.initGroupsContact();
-                this.toggleAddGrp();
+                //this.toggleAddGrp();
                 this.notify.success(this.lang.contactsGroupAdded);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -281,6 +281,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.http.put(this.coreUrl + 'rest/contactsGroups/' + this.contactsGroup.id, this.contactsGroup)
             .subscribe(() => {
                 this.notify.success(this.lang.contactsGroupUpdated);
+                this.initGroupsContact();    
             }, (err) => {
                 this.notify.error(err.error.errors);
             });

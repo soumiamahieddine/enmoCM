@@ -16,9 +16,10 @@ export class MainHeaderComponent implements OnInit {
 
     coreUrl    : string;
     lang       : any       = LANG;
-    user       : any       = {};
+    user       : any       = {firstname : "",lastname : ""};
     mobileMode : boolean   = false;
     titleHeader: string;
+    titleSubHeader: string;
     router :any;
 
     snav : MatSidenav;
@@ -36,11 +37,10 @@ export class MainHeaderComponent implements OnInit {
 
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
-        this.user = angularGlobals.user;
-        this.http.get(this.coreUrl + 'rest/home')
+        this.http.get(this.coreUrl + 'rest/header')
             .subscribe((data: any) => {
+                this.user = data.user;
                 this.user.menu = data.menu;
-                console.log(this.user.menu);
             }, (err) => {
                 console.log(err.error.errors);
             });
@@ -55,7 +55,12 @@ export class MainHeaderComponent implements OnInit {
     }
 
     getSnavRight(snav2:MatSidenav) {
-        this.zone.run(() => this.snav2 = snav2);
+        if (snav2 == null) {
+            $j('#snav2Button').hide();
+        }else {
+            $j('#snav2Button').show();
+            this.zone.run(() => this.snav2 = snav2);
+        }
     }
 
     gotToMenu(link:string, angularMode:string) {

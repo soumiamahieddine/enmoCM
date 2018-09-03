@@ -290,6 +290,17 @@ if (!isset($_REQUEST['display'])) {
             window.chronoExpiration=window.setTimeout('redirect_to_url(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true\')', '<?php echo $_SESSION['config']['cookietime']; ?>'*60*1000);
         });
     </script>
+        <?php
+    if (!empty($_REQUEST['triggerAngular']) && $_REQUEST['triggerAngular'] == 'changePass') {
+        ?><script>triggerAngular('#/password-modification')</script><?php
+    } elseif (!empty($_REQUEST['triggerAngular']) && $_REQUEST['triggerAngular'] == 'activateUser') {
+        ?><script>triggerAngular('#/activate-user')</script><?php
+    } elseif ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
+        ?><script>triggerAngular('#/administration')</script><?php
+    } elseif (!$_REQUEST['page']) {
+        ?><script>triggerAngular('#/home')</script><?php
+    }
+    ?>
 <?php 
 }
 
@@ -384,13 +395,4 @@ if (file_exists($path)) {
     </div>
     </div>
 </body>
-    <?php
-    if (!empty($_REQUEST['triggerAngular']) && $_REQUEST['triggerAngular'] == 'changePass') {
-        ?><script>triggerAngular('#/password-modification')</script><?php
-    } elseif (!empty($_REQUEST['triggerAngular']) && $_REQUEST['triggerAngular'] == 'activateUser') {
-        ?><script>triggerAngular('#/activate-user')</script><?php
-    } elseif ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
-        ?><script>triggerAngular('#/administration')</script><?php
-    }
-    ?>
 </html>

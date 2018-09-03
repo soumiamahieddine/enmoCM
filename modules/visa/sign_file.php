@@ -57,24 +57,22 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
     $objectId = $_REQUEST['id'];
     $tableName = 'res_view_attachments';
     if (isset($_REQUEST['isOutgoing'])) {
-           if (isset($_REQUEST['isVersion'])) {
-                $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
-                    . $tableName
-                    . " where attachment_type = ? and res_id_version = ?", ['outgoing_mail', $objectId]);
-
-            } else {
-                $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
-                    . $tableName
-                    . " where attachment_type = ? and res_id = ?", ['outgoing_mail', $objectId]);
-            }
-	} else {
         if (isset($_REQUEST['isVersion'])) {
-            $stmt = $db->query("select res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+            $stmt = $db->query("select relation, res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+                . $tableName
+                . " where attachment_type = ? and res_id_version = ?", ['outgoing_mail', $objectId]);
+        } else {
+            $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+                . $tableName
+                . " where attachment_type = ? and res_id = ?", ['outgoing_mail', $objectId]);
+        }
+    } else {
+        if (isset($_REQUEST['isVersion'])) {
+            $stmt = $db->query("select relation, res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where attachment_type NOT IN ('converted_pdf','print_folder') and res_id_version = ?", array($objectId));
-
         } else {
-            $stmt = $db->query("select res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+            $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
                 . $tableName
                 . " where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
         }
@@ -83,7 +81,6 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
     if ($stmt->rowCount() < 1) {
         echo '{"status":1, "error" : "'._FILE.' '._UNKNOWN.'"}';
         exit;
-        //$_SESSION['error'] = _FILE . ' ' . _UNKNOWN;
     } else {
         $line = $stmt->fetchObject();
         $_SESSION['visa']['last_resId_signed']['res_id'] = $line->res_id_master;
@@ -95,12 +92,39 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
         $_SESSION['visa']['last_resId_signed']['dest_user'] = $line->dest_user;
 
         if (isset($_REQUEST['isOutgoing']) || $line->attachment_type == 'response_project') {
-	    //Update outgoing date
-	    $date = date("Y-m-d");
-	    $db->query("update res_letterbox SET departure_date = ? where res_id = ?", array($date,$line->res_id_master));
-	}
+            //Update outgoing date
+            $date = date("Y-m-d");
+            $db->query("update res_letterbox SET departure_date = ? where res_id = ?", array($date,$line->res_id_master));
+        }
 
-        include 'modules/visa/retrieve_attachment_from_cm.php';
+        if (isset($_REQUEST['isVersion'])) {
+            $isVersion = true;
+            $attachResId = $line->res_id_version;
+        } else {
+            $isVersion = false;
+            $attachResId = $line->res_id;
+        }
+        $convertedAttachment = \Attachment\models\AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachResId, 'isVersion' => $isVersion]);
+
+        if (empty($convertedAttachment)) {
+            echo "{\"status\":1, \"error\" : \""._ATTACH_PDF_NOT_FOUND . ": {$attachResId}, version : {$isVersion}\"}";
+            exit;
+        }
+
+        $_SESSION['visa']['repSignRel'] = $line->relation;
+        $_SESSION['visa']['repSignId'] = $attachResId;
+        $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment["docserver_id"], 'select' => ['path_template']]);
+
+        $fileOnDs = $docserver["path_template"] . $convertedAttachment["path"] . $convertedAttachment["filename"];
+        $fileOnDs = str_replace('#', DIRECTORY_SEPARATOR, $fileOnDs);
+        $fileExtension = pathinfo($fileOnDs, PATHINFO_EXTENSION);
+        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+            . '_' . rand() . '.' . $fileExtension;
+        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+        if (!copy($fileOnDs, $filePathOnTmp)) {
+            echo "{\"status\":1, \"error\" : \""._FAILED_TO_COPY_ON_TMP . ": {$fileOnDs} {$filePathOnTmp}\"}";
+            exit;
+        }
 
         //ADD CURRENT DATE IN SIGN IMG FILE
         $tmpPathToWantedSignature = $pathToWantedSignature;

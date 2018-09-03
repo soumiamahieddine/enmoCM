@@ -169,7 +169,8 @@ class SignatureBookController
                 'alt_id'        => $incomingMail['alt_identifier'],
                 'title'         => $incomingMail['subject'],
                 'category_id'   => $incomingMail['category_id'],
-                'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
+                //'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
+                'viewerLink'    => "../../rest/res/{$resId}/content",
                 'thumbnailLink' => "rest/res/{$resId}/thumbnail"
             ]
         ];
@@ -320,7 +321,12 @@ class SignatureBookController
             if(!in_array(strtoupper($value['format']), ['PDF', 'JPG', 'JPEG', 'PNG', 'GIF']) ){
                 $isVersion = 'false';
             }
-            $attachments[$key]['viewerLink'] = "index.php?display=true&module=attachments&page=view_attachment&res_id_master={$aArgs['resId']}&id={$viewerId}&isVersion={$isVersion}";
+
+            if ($value['status'] == 'SIGN') {
+                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachment/{$viewerId}";
+            } else {
+                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachment/{$realId}";
+            }
         }
 
         $obsAttachments = AttachmentModel::getOnView([

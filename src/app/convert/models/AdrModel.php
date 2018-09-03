@@ -79,6 +79,34 @@ class AdrModel
         return true;
     }
 
+    public static function createAttachAdr(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'docserverId', 'path', 'filename', 'type']);
+        ValidatorModel::stringType($aArgs, ['docserverId', 'path', 'filename', 'type', 'fingerprint']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
+
+        if ($aArgs['isVersion']) {
+            $table = "adr_attachments_version";
+        } else {
+            $table = "adr_attachments";
+        }
+
+        DatabaseModel::insert([
+            'table'         => $table,
+            'columnsValues' => [
+                'res_id'        => $aArgs['resId'],
+                'type'          => $aArgs['type'],
+                'docserver_id'  => $aArgs['docserverId'],
+                'path'          => $aArgs['path'],
+                'filename'      => $aArgs['filename'],
+                'fingerprint'   => empty($aArgs['fingerprint']) ? null : $aArgs['fingerprint'],
+            ]
+        ]);
+
+        return true;
+    }
+
     public static function deleteDocumentAdr(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['where', 'data']);
@@ -88,6 +116,27 @@ class AdrModel
             'table' => 'adr_letterbox',
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
+    public static function deleteAttachAdr(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
+
+        if ($aArgs['isVersion']) {
+            $table = "adr_attachments_version";
+        } else {
+            $table = "adr_attachments";
+        }
+
+        DatabaseModel::delete([
+            'table' => $table,
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resId']]
         ]);
 
         return true;

@@ -1,19 +1,9 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-toolbar color="primary" class="admin-toolbar">
-        <button mat-button (click)="snav.toggle()">
-            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
-        </button>
-        <h1 class="admin-toolbar-title">{{lang.administration}} {{lang.notifications}}
-            <small [class.hide-for-mobile]="mobileQuery.matches">{{notifications.length}} {{lang.notifications}}</small>
-        </h1>
-        <span style="flex: 1 1 auto;"></span>
-        <menu-top></menu-top>
-    </mat-toolbar>
-    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav-container autosize class="admin-sidenav-container" >
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
+            <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-divider></mat-divider>
             <mat-nav-list>
                 <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item routerLink="/administration/notifications/new">
@@ -75,6 +65,7 @@
                     <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/notifications/{{row.notification_sid}}"
                         style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
                 </mat-table>
+                <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{notifications.length}} {{lang.notifications}}</div>
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"

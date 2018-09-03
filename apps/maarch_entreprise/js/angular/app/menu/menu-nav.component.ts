@@ -29,7 +29,7 @@ export class MenuNavComponent implements OnInit {
         
         this.mobileMode = angularGlobals.mobileMode;      
         this.coreUrl = angularGlobals.coreUrl;
-        this.user = angularGlobals.user;
+        
     }
 
     backClicked() {

@@ -49,7 +49,13 @@ export class AppComponent {
         $j('#magicContactsTable').remove();
         $j('#manageBasketsOrderTable').remove();
         $j('#controlParamTechnicTable').remove();
-        $j('#container').width("100%");
+        $j('#container').css({
+            "width": "100%", 
+            "min-width": "auto"
+        });
+        $j('#content').css({
+            "min-width": "auto"
+        });
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
         }

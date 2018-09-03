@@ -405,10 +405,6 @@ $param['signatory_group'] = $arr_tmp2;
 $arr_tmp2 = array('label' => _VISA_USER_SEARCH_MIN, 'type' => 'input_text', 'param' => array('field_label' => _VISA_USER_SEARCH_MIN, 'other' => $size, 'autocompletion' => true));
 $param['visa_user'] = $arr_tmp2;
 
- //Addresses contact externe
-    $arr_tmp2 = array('label' => _MORAL_CONTACT, 'type' => 'input_text', 'param' => array('field_label' => _MORAL_CONTACT));
-    $param['addresses_id'] = $arr_tmp2;
-
 //contact_type
 $stmt = $conn->query('SELECT id, label  FROM  contact_types order by label asc', array());
 $arr_tmp = array();
@@ -506,7 +502,7 @@ if (isset($_REQUEST['nodetails'])) {
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
                 <i class="fa fa-sync fa-4x" title="<?php echo _CLEAR_SEARCH; ?>"></i>
             </a>
         </td>
@@ -656,31 +652,23 @@ if (isset($_REQUEST['nodetails'])) {
                     <td><em><?php echo _BARCODE_HELP; ?></em></td>
                 </tr>
                 <tr>
-                    <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT_EXTERNAL; ?></label>
-                        <input type="text" name="contactid" id="contactid" onkeyup="erase_contact_external_id('contactid', 'contactid_external');"/>
-                        <input type="hidden" name="meta[]" value="contactid#contactid#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
-                        <div id="contactListByName" class="autocomplete"></div>
+                    <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT; ?></label>
+                        <span style="position:relative;">
+                            <input type="text" name="contact" id="contact" onkeyup="erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');"/>
+                            <input type="hidden" name="meta[]" value="contact#contact#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
+                            <div id="show_contacts" class="autocomplete autocompleteIndex" style="width:100%;left:0px;top:17px;"></div>
+                            <div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div>
+                        </span>
                         <script type="text/javascript">
-                            initList_hidden_input('contactid', 'contactListByName', '<?php 
-                                echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=contacts_v2_list_by_name', 'what', '2', 'contactid_external');
+                            launch_autocompleter_contacts_search('index.php?display=true&dir=indexing_searching&page=autocomplete_contacts','contact', 'show_contacts', '', 'contactid', 'addressid', '');
                         </script>
-                        <input id="contactid_external" name="contactid_external" type="hidden" />
+                        <input id="withAddress" name="withAddress" type="checkbox" value="true"/> recherche avec adresse du contact
+                        <input id="contactid" name="contactid" type="hidden" />
+                        <input id="addressid" name="addressid" type="hidden" />
                     </td>
                     <td><em><?php echo ''; ?></em></td>
                 </tr>
-                <tr>
-                    <td width="70%"><label for="contactid_internal" class="bold"><?php echo _CONTACT_INTERNAL; ?></label>
-                        <input type="text" name="contactid_internal" id="contactid_internal" onkeyup="erase_contact_external_id('contactid_internal', 'contact_internal_id');"/>
-                        <input type="hidden" name="meta[]" value="contactid_internal#contactid_internal#input_text" />
-                        <div id="contactInternalListByName" class="autocomplete"></div>
-                        <script type="text/javascript">
-                            initList_hidden_input('contactid_internal', 'contactInternalListByName', '<?php 
-                                echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=users_list_by_name_search', 'what', '2', 'contact_internal_id');
-                        </script>
-                        <input id="contact_internal_id" name="contact_internal_id" type="hidden" />
-                    </td>
-                    <td><em><?php echo ''; ?></em></td>
-                </tr>
+               
                 <tr>
                     <td width="70%"><label for="signatory_name" class="bold"><?php echo _SIGNATORY_NAME;?></label>
                         <input type="text" name="signatory_name" id="signatory_name" onkeyup="erase_contact_external_id('signatory_name', 'ac_signatory_name');"/>
@@ -743,7 +731,7 @@ if (isset($_REQUEST['nodetails'])) {
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
              <i class="fa fa-sync fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
             </a>
         </td>
@@ -762,7 +750,7 @@ if (isset($_REQUEST['nodetails'])) {
 <script type="text/javascript">
 load_query(valeurs, loaded_query, 'parameters_tab', '<?php echo $browser_ie; ?>', '<?php echo _ERROR_IE_SEARCH; ?>');
 <?php if (isset($_REQUEST['init_search'])) {
-            ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');erase_contact_external_id('signatory_name', 'ac_signatory_name') <?php
+            ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');erase_contact_external_id('signatory_name', 'ac_signatory_name') <?php
         }?>
 </script>
 

@@ -14,7 +14,7 @@ declare const angularGlobals: any;
     templateUrl: "../../../../Views/administration.component.html",
 })
 export class AdministrationComponent implements OnInit {
-    titleHeader: string;
+    titleHeader                     : string;
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
 
@@ -40,7 +40,7 @@ export class AdministrationComponent implements OnInit {
     ngOnInit(): void {
         window['MainHeaderComponent'].refreshTitle(this.lang.administration);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+        window['MainHeaderComponent'].setSnavRight(null);
 
         this.coreUrl = angularGlobals.coreUrl;
 

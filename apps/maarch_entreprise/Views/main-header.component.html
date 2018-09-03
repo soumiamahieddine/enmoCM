@@ -11,7 +11,6 @@
         <mat-icon mat-list-icon class="fa fa-th fa-lg" style="color:white; margin:0px 0px -11px 0px;"></mat-icon>
     </button>
     <mat-menu #applications="matMenu" class="headerMaarchShortcut">
-        <!-- TODO -->
         <div style="text-align:center;font-size: 20px;font-weight: bolder;opacity: 0.2;">
             Menu
         </div>
@@ -55,7 +54,7 @@
             </div>
         </div>
     </mat-menu>
-    <button mat-icon-button (click)="this.snav2.toggle()">
+    <button id="snav2Button" mat-icon-button (click)="this.snav2.toggle()">
         <mat-icon class="fa fa-2x" [ngClass]="[this.snav2 && this.snav2.opened ? 'fa-chevron-right' : 'fa-chevron-left']"></mat-icon>
     </button>
 </mat-toolbar>

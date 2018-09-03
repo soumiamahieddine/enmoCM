@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatSidenav} from '@angular/material';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
@@ -17,6 +17,10 @@ declare const angularGlobals : any;
     providers   : [NotificationService]
 })
 export class GroupAdministrationComponent  extends AutoCompletePlugin implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
@@ -70,9 +74,17 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
+                window['MainHeaderComponent'].refreshTitle(this.lang.groupCreation);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.creationMode = true;
                 this.loading = false;
             } else {
+                window['MainHeaderComponent'].refreshTitle(this.lang.groupModification);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.creationMode = false;
                 this.http.get(this.coreUrl + "rest/groups/" + params['id'] + "/details")
                     .subscribe((data : any) => {

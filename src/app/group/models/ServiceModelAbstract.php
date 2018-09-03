@@ -137,6 +137,7 @@ abstract class ServiceModelAbstract
                                 'name'        => $name,
                                 'comment'     => $comment,
                                 'servicepage' => (string)$value->servicepage,
+                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
                                 'style'       => (string)$value->style,
                                 'angular'     => empty((string)$value->angular) ? 'false' : (string)$value->angular,
                             ];
@@ -145,6 +146,7 @@ abstract class ServiceModelAbstract
                                 'name'        => $name,
                                 'comment'     => $comment,
                                 'servicepage' => (string)$value->servicepage,
+                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
                                 'style'       => (string)$value->style,
                                 'angular'     => empty((string)$value->angular) ? 'false' : (string)$value->angular,
                             ];
@@ -179,6 +181,7 @@ abstract class ServiceModelAbstract
                                 'name'        => $name,
                                 'comment'     => $comment,
                                 'servicepage' => (string) $value->servicepage,
+                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
                                 'style'       => (string) $value->style,
                                 'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];
@@ -187,6 +190,7 @@ abstract class ServiceModelAbstract
                                 'name'        => $name,
                                 'comment'     => $comment,
                                 'servicepage' => (string) $value->servicepage,
+                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
                                 'style'       => (string) $value->style,
                                 'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];
@@ -223,6 +227,7 @@ abstract class ServiceModelAbstract
                                 'name'        => $name,
                                 'comment'     => $comment,
                                 'servicepage' => (string) $value->servicepage,
+                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
                                 'style'       => (string) $value->style,
                                 'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];
@@ -231,6 +236,7 @@ abstract class ServiceModelAbstract
                                 'name'        => $name,
                                 'comment'     => $comment,
                                 'servicepage' => (string) $value->servicepage,
+                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
                                 'style'       => (string) $value->style,
                                 'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];

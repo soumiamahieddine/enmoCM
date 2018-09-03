@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatSidenav} from '@angular/material';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -14,6 +14,11 @@ declare var angularGlobals: any;
 })
 
 export class TemplatesAdministrationComponent implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     coreUrl: string;
@@ -56,6 +61,10 @@ export class TemplatesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.templates);
+        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+        window['MainHeaderComponent'].setSnavRight(null);
+
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;

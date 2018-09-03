@@ -319,23 +319,40 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         'data' => [$_SESSION['doc_id']]
                                     ]);
                                     foreach ($contactsForMailing as $key => $contactForMailing) {
+                                        $chronoPubli = $chrono.'-'.chr(ord('A')+$key);
                                         if ($key == 0) {
                                             $resId = $_SESSION['doc_id'];
-                                            \Resource\models\ResModel::updateExt([
-                                                'set'   => [
-                                                    'is_multicontacts'  => 'N',
-                                                    'address_id'        => $contactForMailing['address_id'],
-                                                    'exp_contact_id'    => $contactForMailing['contact_id']
-                                                ],
-                                                'where' => ['res_id = ?'],
-                                                'data'  => $resId
-                                            ]);
+                                            $resourceExt = \Resource\models\ResModel::getExtById(['select' => ['category_id'],'resId' => $resId]);
+                                            if ($resourceExt['category_id'] == 'outgoing') {
+                                                \Resource\models\ResModel::updateExt([
+                                                    'set'   => [
+                                                        'is_multicontacts'  => 'N',
+                                                        'address_id'        => $contactForMailing['address_id'],
+                                                        'dest_contact_id'    => $contactForMailing['contact_id'],
+                                                        'alt_identifier'    => $chronoPubli
+                                                    ],
+                                                    'where' => ['res_id = ?'],
+                                                    'data'  => [$resId]
+                                                ]);
+                                            } else {
+                                                \Resource\models\ResModel::updateExt([
+                                                    'set'   => [
+                                                        'is_multicontacts'  => 'N',
+                                                        'address_id'        => $contactForMailing['address_id'],
+                                                        'exp_contact_id'    => $contactForMailing['contact_id'],
+                                                        'alt_identifier'    => $chronoPubli
+                                                    ],
+                                                    'where' => ['res_id = ?'],
+                                                    'data'  => [$resId]
+                                                ]);
+                                            }
                                         } else {
                                             $resId = \Resource\controllers\ResController::duplicateForMailing([
                                                 'resId'     => $_SESSION['doc_id'],
                                                 'userId'    => $_SESSION['user']['UserId'],
                                                 'contactId' => $contactForMailing['contact_id'],
-                                                'addressId' => $contactForMailing['address_id']
+                                                'addressId' => $contactForMailing['address_id'],
+                                                'altIdentifier' => $chronoPubli
                                             ]);
                                         }
                                         require_once 'modules/templates/class/templates_controler.php';
@@ -363,7 +380,7 @@ if (isset($_POST['add']) && $_POST['add']) {
 
                                         $storeResult = $docserverControler->storeResourceOnDocserver($_SESSION['collection_id_choice'], $fileInfos);
                                         foreach ($_SESSION['data'] as $dataKey => $dataValue) {
-                                            if (in_array($dataValue['column'], ['docserver_id', 'res_id_master', 'dest_contact_id', 'dest_address_id'])) {
+                                            if (in_array($dataValue['column'], ['docserver_id', 'res_id_master', 'dest_contact_id', 'dest_address_id', 'identifier'])) {
                                                 unset($_SESSION['data'][$dataKey]);
                                             }
                                         }
@@ -387,6 +404,13 @@ if (isset($_POST['add']) && $_POST['add']) {
                                             'value' => $contactForMailing['address_id'],
                                             'type' => 'integer'
                                         ];
+
+                                        $_SESSION['data'][] = [
+                                            'column' => 'identifier',
+                                            'value' => $chronoPubli,
+                                            'type' => 'string'
+                                        ];
+
                                         $id = $resAttach->load_into_db(
                                             'res_attachments',
                                             $storeResult['destination_dir'],
@@ -1018,8 +1042,16 @@ if (isset($_POST['add']) && $_POST['add']) {
         //UPDATE QUERY
         if ((int) $_REQUEST['relation'] == 1) {
             $stmt = $db->query('UPDATE res_attachments SET '.$set_update.' WHERE res_id = :res_id', $arrayPDO);
+            \Convert\models\AdrModel::deleteAttachAdr([
+                'resId'         => $_REQUEST['res_id'],
+                'isVersion'     => false
+            ]);
         } else {
             $stmt = $db->query('UPDATE res_version_attachments SET '.$set_update.' WHERE res_id = :res_id', $arrayPDO);
+            \Convert\models\AdrModel::deleteAttachAdr([
+                'resId'         => $_REQUEST['res_id'],
+                'isVersion'     => false
+            ]);
         }
     }
     //copie de la version PDF de la pièce si mode de conversion sur le client

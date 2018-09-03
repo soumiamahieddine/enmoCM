@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { FormControl, Validators} from '@angular/forms';
+import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -14,7 +15,11 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class StatusAdministrationComponent implements OnInit {
-
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     coreUrl: string;
@@ -59,6 +64,10 @@ export class StatusAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params) => {
             if (typeof params['identifier'] == "undefined") {
+                window['MainHeaderComponent'].refreshTitle(this.lang.statusCreation);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.http.get(this.coreUrl + 'rest/administration/statuses/new')
                     .subscribe((data) => {
                         this.status.img_filename = "fm-letter";
@@ -70,6 +79,10 @@ export class StatusAdministrationComponent implements OnInit {
                     });
                 this.statusIdAvailable = false;
             } else {
+                window['MainHeaderComponent'].refreshTitle(this.lang.statusModification);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.creationMode = false;
                 this.statusIdentifier = params['identifier'];
                 this.getStatusInfos(this.statusIdentifier);

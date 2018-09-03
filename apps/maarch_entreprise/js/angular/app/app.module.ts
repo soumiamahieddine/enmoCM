@@ -11,7 +11,8 @@ import { AdministrationModule }                 from './administration/administr
 
 import { ProfileComponent }                     from './profile.component';
 import { AboutUsComponent }                     from './about-us.component';
-import { HomeComponent }                     from './home.component';
+import { HomeComponent }                        from './home.component';
+import { BasketListComponent }                  from './basket/basket-list.component';
 import { PasswordModificationComponent, InfoChangePasswordModalComponent, }        from './password-modification.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
@@ -28,6 +29,7 @@ import { ActivateUserComponent }                from './activate-user.component'
         ProfileComponent,
         AboutUsComponent,
         HomeComponent,
+        BasketListComponent,
         PasswordModificationComponent,
         SignatureBookComponent,
         SafeUrlPipe,

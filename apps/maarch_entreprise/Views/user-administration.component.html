@@ -1,25 +1,9 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-toolbar color="primary" class="admin-toolbar">
-        <button mat-button (click)="snav.toggle()">
-            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
-        </button>
-        <h1 class="admin-toolbar-title" *ngIf="!creationMode">{{lang.userModification}}
-            <small [class.hide-for-mobile]="mobileQuery.matches">{{user.lastname}} {{user.firstname}}</small>
-        </h1>
-        <h1 class="admin-toolbar-title" *ngIf="creationMode">{{lang.userCreation}}
-            <small [class.hide-for-mobile]="mobileQuery.matches">{{user.lastname}} {{user.firstname}}</small>
-        </h1>
-        <span style="flex: 1 1 auto;"></span>
-        <menu-top></menu-top>
-        <button mat-icon-button (click)="this.sidenav.toggle()" *ngIf="!creationMode">
-            <mat-icon class="fa fa-cog fa-2x"></mat-icon>
-        </button>
-    </mat-toolbar>
-    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav-container autosize class="admin-sidenav-container" >
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
+            <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-divider></mat-divider>
             <mat-nav-list style="width:250px;">
                 <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item *ngIf="user.status != 'ABS' && !creationMode && !loading" (click)="activateAbsence()">
@@ -374,8 +358,8 @@
                 </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav *ngIf="!creationMode" #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
-            fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : true" style="overflow-x:hidden;max-width:500px;">
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56" position='end' [opened]="mobileQuery.matches || creationMode ? false : true" style="overflow-x:hidden;max-width:500px;">
             <mat-list>
                 <h3 mat-subheader>{{lang.groups}}</h3>
                 <mat-list-item *ngFor="let userGroup of user.groups">

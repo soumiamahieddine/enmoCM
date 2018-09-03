@@ -19,6 +19,11 @@ declare const angularGlobals: any;
     providers: [NotificationService]
 })
 export class UserAdministrationComponent extends AutoCompletePlugin implements OnInit {
+    /*HEADER*/
+    titleHeader                              : string;
+    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+
 
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
@@ -55,8 +60,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     displayedColumns    = ['event_date', 'event_type', 'info', 'remote_ip'];
     dataSource          = new MatTableDataSource(this.data);
 
-
-    @ViewChild('snav2') sidenav: MatSidenav;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -96,15 +99,24 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     ngOnInit(): void {
+
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
+                window['MainHeaderComponent'].refreshTitle(this.lang.userCreation);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(null);
+
                 this.creationMode = true;
                 this.loading = false;
             } else {
+                window['MainHeaderComponent'].refreshTitle(this.lang.userModification);
+                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+
                 this.creationMode = false;
                 this.serialId = params['id'];
                 this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/details")

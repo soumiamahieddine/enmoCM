@@ -1,19 +1,9 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-toolbar color="primary" class="admin-toolbar">
-        <button mat-button (click)="snav.toggle()">
-            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
-        </button>
-        <h1 class="admin-toolbar-title">{{lang.docserverCreation}}
-            <small [class.hide-for-mobile]="mobileQuery.matches">{{docserver.docserver_id}}</small>
-        </h1>
-        <span style="flex: 1 1 auto;"></span>
-        <menu-top></menu-top>
-    </mat-toolbar>
-    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav-container autosize class="admin-sidenav-container" >
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true" style="width:300px;">
+            <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-divider></mat-divider>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
