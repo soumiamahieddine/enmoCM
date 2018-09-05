@@ -663,3 +663,13 @@ if (!defined('_UP_ENTITY_ONE_ROW')) {
 if (!defined('_DOWN_ENTITY_ONE_ROW')) {
     define('_DOWN_ENTITY_ONE_ROW', 'Move down the entity for a row');
 }
+
+if (!defined('_TYPE_ID_HISTORY')) {
+    define('_TYPE_ID_HISTORY', "Historic identifier");
+}
+if (!defined('_RES_ID')) {
+    define('_RES_ID', "RES ID");
+}
+if (!defined('_UPDATED_BY_USER')) {
+    define('_UPDATED_BY_USER', "Updated by");
+}

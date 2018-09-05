@@ -685,3 +685,13 @@ if (!defined('_UP_ENTITY_ONE_ROW')) {
 if (!defined('_DOWN_ENTITY_ONE_ROW')) {
     define('_DOWN_ENTITY_ONE_ROW', "Descendre l'entité d'un rang");
 }
+
+if (!defined('_TYPE_ID_HISTORY')) {
+    define('_TYPE_ID_HISTORY', "Identifiant de l'historique");
+}
+if (!defined('_RES_ID')) {
+    define('_RES_ID', "RES ID");
+}
+if (!defined('_UPDATED_BY_USER')) {
+    define('_UPDATED_BY_USER', "Mis à jour par");
+}
