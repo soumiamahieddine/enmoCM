@@ -1,32 +1,19 @@
 <?php
 
-/*
- *   Copyright 2008-2015 Maarch
- *
- *   This file is part of Maarch Framework.
- *
- *   Maarch Framework is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   Maarch Framework is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
- */
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+*
+*/
 
 /**
  * @brief API to manage batchs
  *
  * @file
- * @author Laurent Giovannoni <dev@maarch.org>
+ * @author <dev@maarch.org>
  * @date $date$
  * @version $Revision$
- * @ingroup sendmail
  */
 
 /**
@@ -51,7 +38,8 @@ function Bt_doQuery($dbConn, $queryTxt, $param=array(), $transaction=false)
             $dbConn->query('ROLLBACK');
         }
         Bt_exitBatch(
-            104, 'SQL Query error:' . $queryTxt
+            104,
+            'SQL Query error:' . $queryTxt
         );
     }
     $GLOBALS['logger']->write('SQL query:' . $queryTxt, 'DEBUG');
@@ -201,9 +189,21 @@ function Bt_createAttachment($aArgs = [])
 function Bt_refusedSignedMail($aArgs = [])
 {
     if (!empty($aArgs['noteContent'])) {
-        $GLOBALS['db']->query("INSERT INTO notes (identifier, tablename, user_id, date_note, note_text, coll_id) VALUES (?, 'res_letterbox', 'superadmin', CURRENT_TIMESTAMP, ?, 'letterbox_coll')",
-        [$aArgs['resIdMaster'], $aArgs['noteContent']]);
+        $GLOBALS['db']->query(
+            "INSERT INTO notes (identifier, tablename, user_id, date_note, note_text, coll_id) VALUES (?, 'res_letterbox', 'superadmin', CURRENT_TIMESTAMP, ?, 'letterbox_coll')",
+            [$aArgs['resIdMaster'], $aArgs['noteContent']]
+        );
     }
     $GLOBALS['db']->query("UPDATE ".$aArgs['tableAttachment']." SET status = 'A_TRA' WHERE res_id = ?", [$aArgs['resIdAttachment']]);
+    $GLOBALS['db']->query('UPDATE listinstance SET process_date = NULL WHERE res_id = ? AND difflist_type = ?', [$aArgs['resIdMaster'], 'VISA_CIRCUIT']);
+    
     $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $aArgs['refusedStatus'] . "' WHERE res_id = ?", [$aArgs['resIdMaster']]);
+}
+
+function Bt_getVisaWorkflow($aArgs = [])
+{
+    $req = "SELECT listinstance_id, item_id, process_date, process_comment, requested_signature FROM listinstance WHERE res_id = ? AND difflist_type = 'VISA_CIRCUIT'";
+    $stmt = $GLOBALS['db']->query($req, array($aArgs['resId']));
+
+    return $stmt;
 }
