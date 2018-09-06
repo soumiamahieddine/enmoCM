@@ -456,6 +456,40 @@ abstract class visa_Abstract extends Database
         return $stepDetails;
     }
 
+    public function processVisaWorkflow($aArgs = [])
+    {
+        $message = [];
+        
+        //enables to process the visa if i am not the item_id
+        if ($aArgs['stepDetails']['item_id'] != $_SESSION['user']['UserId']) {
+            $db->query(
+                'UPDATE listinstance SET process_date = CURRENT_TIMESTAMP '
+                .' WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?',
+                array($aArgs['stepDetails']['listinstance_id'], $aArgs['stepDetails']['item_mode'], $aArgs['res_id'], $aArgs['stepDetails']['item_id'], 'VISA_CIRCUIT')
+            );
+
+            $stmt = $db->query('SELECT firstname, lastname, user_id FROM users WHERE user_id IN (?)', array([$_SESSION['user']['UserId'], $aArgs['stepDetails']['item_id']]));
+            foreach ($stmt as $value) {
+                if ($value['user_id'] == $_SESSION['user']['UserId']) {
+                    $user1 = $value['firstname'].' '.$value['lastname'];
+                } else {
+                    $user2 = $value['firstname'].' '.$value['lastname'];
+                }
+            }
+
+            $message[] = ' '._VISA_BY.' '.$user1.' '._INSTEAD_OF.' '.$user2;
+        } else {
+            $db->query(
+                'UPDATE listinstance SET process_date = CURRENT_TIMESTAMP '
+                .' WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?',
+                array($aArgs['stepDetails']['listinstance_id'], $aArgs['stepDetails']['item_mode'], $aArgs['res_id'], $_SESSION['user']['UserId'], 'VISA_CIRCUIT')
+            );
+            $message[] = '';
+        }
+
+        return $message;
+    }
+
     public function myPosVisa($res_id, $coll_id, $listDiffType)
     {
         $db = new Database();

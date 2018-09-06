@@ -183,6 +183,8 @@ function Bt_createAttachment($aArgs = [])
     curl_setopt_array($curl, $opts);
     $rawResponse = curl_exec($curl);
 
+    $GLOBALS['db']->query("UPDATE res_letterbox SET status = ? WHERE res_id = ?", [$aArgs['validatedStatus'], $aArgs['res_id_master']]);
+
     return json_decode($rawResponse, true);
 }
 
@@ -200,9 +202,38 @@ function Bt_refusedSignedMail($aArgs = [])
     $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $aArgs['refusedStatus'] . "' WHERE res_id = ?", [$aArgs['resIdMaster']]);
 }
 
+function Bt_processVisaWorkflow($aArgs = [])
+{
+    $visaWorkflow = Bt_getVisaWorkflow(['resId' => $aArgs['res_id_master']]);
+
+    $nbVisaWorkflow = $visaWorkflow->rowCount();
+    if ($nbVisaWorkflow > 0) {
+        $signatureRequestedFound = false;
+        while ($listInstance = $visaWorkflow->fetchObject()) {
+            $GLOBALS['db']->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE listinstance_id = ?", [$listInstance->listinstance_id]);
+            $nbUserProcess++;
+            // Stop to the first signatory user
+            if ($listInstance->requested_signature) {
+                break;
+            }
+        }
+        if ($nbUserProcess < $nbVisaWorkflow) {
+            // Get the next user in workflow
+            $listInstance = $visaWorkflow->fetchObject();
+            if ($listInstance->requested_signature) {
+                $mailStatus = 'ESIG';
+            } else {
+                $mailStatus = 'EVIS';
+            }
+
+            $GLOBALS['db']->query('UPDATE res_letterbox SET status = ? WHERE res_id = ? ', [$mailStatus, $aArgs['res_id_master']]);
+        }
+    }
+}
+
 function Bt_getVisaWorkflow($aArgs = [])
 {
-    $req = "SELECT listinstance_id, item_id, process_date, process_comment, requested_signature FROM listinstance WHERE res_id = ? AND difflist_type = 'VISA_CIRCUIT'";
+    $req = "SELECT listinstance_id, item_id, requested_signature FROM listinstance WHERE res_id = ? AND difflist_type = 'VISA_CIRCUIT' AND process_date IS NULL ORDER BY listinstance_id ASC";
     $stmt = $GLOBALS['db']->query($req, array($aArgs['resId']));
 
     return $stmt;

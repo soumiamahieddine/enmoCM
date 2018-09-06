@@ -100,7 +100,9 @@ $GLOBALS['logger']->write(
 if (!file_exists($GLOBALS['configFile'])) {
     $GLOBALS['logger']->write(
         'Configuration file ' . $GLOBALS['configFile']
-        . ' does not exist', 'ERROR', 102
+        . ' does not exist',
+        'ERROR',
+        102
     );
     echo "\nConfiguration file " . $GLOBALS['configFile'] . " does not exist ! \nThe batch cannot be launched !\n\n";
     exit(102);
@@ -111,7 +113,9 @@ $xmlconfig = simplexml_load_file($GLOBALS['configFile']);
 if ($xmlconfig == false) {
     $GLOBALS['logger']->write(
         'Error on loading config file:'
-        . $GLOBALS['configFile'], 'ERROR', 103
+        . $GLOBALS['configFile'],
+        'ERROR',
+        103
     );
     exit(103);
 }
@@ -207,7 +211,8 @@ $GLOBALS['lckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR . $GLOBAL
 if (file_exists($GLOBALS['errorLckFile'])) {
     $GLOBALS['logger']->write(
         'Error persists, please solve this before launching a new batch',
-        'ERROR', 13
+        'ERROR',
+        13
     );
     exit(13);
 }
@@ -243,7 +248,6 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
 foreach ($retrievedMails['isVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update version attachment', 'INFO');
     if ($value->status == 'validated') {
-        $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
@@ -252,15 +256,20 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
             'dest_contact_id' => $value->dest_contact_id,
             'dest_address_id' => $value->dest_address_id,
             'dest_user'       => $value->dest_user,
-            'typist'          => $value->typist
+            'typist'          => $value->typist,
+            'validatedStatus' => $validatedStatus
         ]);
-        $GLOBALS['db']->query("UPDATE res_letterbox SET status = '".$validatedStatus."' WHERE res_id = ?", [$value->res_id_master]);
+
+        $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master]);
     } elseif ($value->status == 'refused') {
-        Bt_refusedSignedMail(['tableAttachment' => 'res_version_attachments',
-        'resIdAttachment' => $resId,
-                                'refusedStatus'   => $refusedStatus,
-                                'resIdMaster'     => $value->res_id_master,
-                                'noteContent'     => $value->noteContent]);
+        Bt_refusedSignedMail([
+            'tableAttachment' => 'res_version_attachments',
+            'resIdAttachment' => $resId,
+            'refusedStatus'   => $refusedStatus,
+            'resIdMaster'     => $value->res_id_master,
+            'noteContent'     => $value->noteContent
+        ]);
     }
 }
 
@@ -278,15 +287,19 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             'typist'          => $value->typist,
             'format'          => $value->format,
             'encodedFile'     => $value->encodedFile,
+            'validatedStatus' => $validatedStatus
         ]);
+
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
-        $GLOBALS['db']->query("UPDATE res_letterbox SET status = '".$validatedStatus."' WHERE res_id = ?", [$value->res_id_master]);
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master]);
     } elseif ($value->status == 'refused') {
-        Bt_refusedSignedMail(['tableAttachment' => 'res_attachments',
-                                'resIdAttachment' => $resId,
-                                'refusedStatus'   => $refusedStatus,
-                                'resIdMaster'     => $value->res_id_master,
-                                'noteContent'     => $value->noteContent]);
+        Bt_refusedSignedMail([
+            'tableAttachment' => 'res_attachments',
+            'resIdAttachment' => $resId,
+            'refusedStatus'   => $refusedStatus,
+            'resIdMaster'     => $value->res_id_master,
+            'noteContent'     => $value->noteContent
+        ]);
     }
 }
 
@@ -295,7 +308,9 @@ $nbMailsRetrieved = count($retrievedMails['noVersion']) + count($retrievedMails[
 $GLOBALS['logger']->write($nbMailsRetrieved.' mail(s) retrieved', 'INFO');
 
 Bt_logInDataBase(
-    $nbMailsRetrieved, $err, $nbMailsRetrieved.' mail(s) retrieved'
+    $nbMailsRetrieved,
+    $err,
+    $nbMailsRetrieved.' mail(s) retrieved'
 );
 Bt_updateWorkBatch();
 
