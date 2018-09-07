@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" bootstrap="test/define.php">
+<phpunit colors="true" bootstrap="test/unitTests/define.php">
     <testsuites>
         <testsuite name="Maarch Test Suite">
             <!--directory>test</directory-->
-            <file>test/ActionControllerTest.php</file>
-            <file>test/AutocompleteControllerTest.php</file>
-            <file>test/BasketControllerTest.php</file>
-            <file>test/ContactControllerTest.php</file>
-            <file>test/ContactGroupControllerTest.php</file>
-            <file>test/ContactTypeControllerTest.php</file>
-            <file>test/CoreControllerTest.php</file>
-            <file>test/DocserverControllerTest.php</file>
-            <file>test/DoctypeControllerTest.php</file>
-            <file>test/EntityControllerTest.php</file>
-            <file>test/GroupControllerTest.php</file>
-            <file>test/ListTemplateControllerTest.php</file>
-            <file>test/NotificationControllerTest.php</file>
-            <file>test/NotificationScheduleControllerTest.php</file>
-            <file>test/ParameterControllerTest.php</file>
-            <file>test/PasswordControllerTest.php</file>
-            <file>test/PriorityControllerTest.php</file>
-            <file>test/ReportControllerTest.php</file>
-            <file>test/ResControllerTest.php</file>
-            <file>test/StatusControllerTest.php</file>
-            <file>test/UserControllerTest.php</file>
-            <file>test/VersionUpdateControllerTest.php</file>
-            <file>test/TemplateControllerTest.php</file>
+            <file>test/unitTests/app/action/ActionControllerTest.php</file>
+            <file>test/unitTests/core/AutocompleteControllerTest.php</file>
+            <file>test/unitTests/app/basket/BasketControllerTest.php</file>
+            <file>test/unitTests/app/contact/ContactControllerTest.php</file>
+            <file>test/unitTests/app/contact/ContactGroupControllerTest.php</file>
+            <file>test/unitTests/app/contact/ContactTypeControllerTest.php</file>
+            <file>test/unitTests/core/CoreControllerTest.php</file>
+            <file>test/unitTests/app/docserver/DocserverControllerTest.php</file>
+            <file>test/unitTests/app/doctype/DoctypeControllerTest.php</file>
+            <file>test/unitTests/app/entity/EntityControllerTest.php</file>
+            <file>test/unitTests/app/group/GroupControllerTest.php</file>
+            <file>test/unitTests/app/entity/ListTemplateControllerTest.php</file>
+            <file>test/unitTests/app/notification/NotificationControllerTest.php</file>
+            <file>test/unitTests/app/notification/NotificationScheduleControllerTest.php</file>
+            <file>test/unitTests/app/parameter/ParameterControllerTest.php</file>
+            <file>test/unitTests/core/PasswordControllerTest.php</file>
+            <file>test/unitTests/app/priority/PriorityControllerTest.php</file>
+            <file>test/unitTests/app/report/ReportControllerTest.php</file>
+            <file>test/unitTests/app/resource/ResControllerTest.php</file>
+            <file>test/unitTests/app/status/StatusControllerTest.php</file>
+            <file>test/unitTests/app/user/UserControllerTest.php</file>
+            <file>test/unitTests/app/versionUpdate/VersionUpdateControllerTest.php</file>
+            <file>test/unitTests/app/template/TemplateControllerTest.php</file>
             <!-- The last one should be history -->
-            <file>test/HistoryControllerTest.php</file>
+            <file>test/unitTests/app/history/HistoryControllerTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
@@ -37,8 +37,8 @@
       </whitelist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="test/build/tests-clover.xml"/>
-        <log type="junit"           target="test/build/tests-phpunit.xml" logIncompleteSkipped="false"/>
-        <log type="coverage-html"   target="test/build" lowUpperBound="35" highLowerBound="70"/>
+        <log type="coverage-clover" target="test/unitTests/build/tests-clover.xml"/>
+        <log type="junit"           target="test/unitTests/build/tests-phpunit.xml" logIncompleteSkipped="false"/>
+        <log type="coverage-html"   target="test/unitTests/build" lowUpperBound="35" highLowerBound="70"/>
     </logging>
 </phpunit>
