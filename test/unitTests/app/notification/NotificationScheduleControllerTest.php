@@ -65,7 +65,7 @@ class NotificationScheduleControllerTest extends TestCase
         // CREATE FAIL
         $aArgs = $responseBody->crontab;
 
-        $corePath = dirname(__FILE__, 2).'/';
+        $corePath = dirname(__FILE__, 5).'/';
         $newCrontab = [
             'm' => 12,
             'h' => 23,
@@ -89,7 +89,7 @@ class NotificationScheduleControllerTest extends TestCase
 
         $aArgs = $responseBody->crontab;
 
-        $corePath = dirname(__FILE__, 2).'/';
+        $corePath = dirname(__FILE__, 5).'/';
         $newCrontab = [
             'm' => 12,
             'h' => 23,
@@ -138,7 +138,7 @@ class NotificationScheduleControllerTest extends TestCase
 
         $aArgs = $responseBody->crontab;
 
-        $corePath = dirname(__FILE__, 2).'/';
+        $corePath = dirname(__FILE__, 5).'/';
 
         $aArgs[count($aArgs) - 1] = [
             'm' => 35,
@@ -181,7 +181,7 @@ class NotificationScheduleControllerTest extends TestCase
         $aArgs = $responseBody->crontab;
 
         foreach ($aArgs as $id => $value) {
-            if ($value->cmd == dirname(__FILE__, 2).'/'.'modules/notifications/batch/scripts/notification_testtu.sh') {
+            if ($value->cmd == dirname(__FILE__, 5).'/'.'modules/notifications/batch/scripts/notification_testtu.sh') {
                 $aArgs[$id]->state = 'hidden';
             }
         }
@@ -199,7 +199,7 @@ class NotificationScheduleControllerTest extends TestCase
         $aArgs = $responseBody->crontab;
 
         foreach ($aArgs as $id => $value) {
-            if ($value->cmd == dirname(__FILE__, 2).'/'.'modules/notifications/batch/scripts/notification_testtu.sh') {
+            if ($value->cmd == dirname(__FILE__, 5).'/'.'modules/notifications/batch/scripts/notification_testtu.sh') {
                 $aArgs[$id]->state = 'deleted';
             }
         }
