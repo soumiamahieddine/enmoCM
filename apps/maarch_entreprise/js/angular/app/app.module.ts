@@ -12,7 +12,7 @@ import { AdministrationModule }                 from './administration/administr
 import { ProfileComponent }                     from './profile.component';
 import { AboutUsComponent }                     from './about-us.component';
 import { HomeComponent }                        from './home.component';
-import { BasketListComponent }                  from './basket/basket-list.component';
+import { BasketListComponent, BottomSheetNoteList, BottomSheetAttachmentList, BottomSheetDiffusionList }  from './basket/basket-list.component';
 import { PasswordModificationComponent, InfoChangePasswordModalComponent, }        from './password-modification.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
@@ -37,12 +37,18 @@ import { ActivateUserComponent }                from './activate-user.component'
         CustomSnackbarComponent,
         ConfirmModalComponent,
         InfoChangePasswordModalComponent,
-        ActivateUserComponent
+        ActivateUserComponent,
+        BottomSheetNoteList,
+        BottomSheetAttachmentList,
+        BottomSheetDiffusionList
     ],
     entryComponents: [
         CustomSnackbarComponent,
         ConfirmModalComponent,
-        InfoChangePasswordModalComponent
+        InfoChangePasswordModalComponent,
+        BottomSheetNoteList,
+        BottomSheetAttachmentList,
+        BottomSheetDiffusionList
     ],
     bootstrap: [AppComponent]
 })

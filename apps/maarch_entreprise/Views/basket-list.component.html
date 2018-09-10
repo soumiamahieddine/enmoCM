@@ -74,8 +74,8 @@
                                 &nbsp;
                             </div>
                             <div *ngIf="!mobileMode && (row.folder_name || row.case_label)">
-                                <span *ngIf="row.folder_name" class="label label-default" style="background-color:rgba(0,0,0,0.4);margin-left: 5px;margin-right: 5px;" title="Dossier"><i class="fa fa-folder"></i> {{row.folder_name}}</span>
-                                <span *ngIf="row.case_label" class="label label-default" style="background-color:rgba(0,0,0,0.4);margin-left: 5px;margin-right: 5px;" title="Affaire"><i class="fa fa-suitcase"></i> {{row.case_label}}</span>
+                                <span *ngIf="row.folder_name" class="label label-default" style="background-color:rgba(0,0,0,0.2);margin-left: 5px;margin-right: 5px;" title="Dossier"><i class="fa fa-folder"></i> {{row.folder_name}}</span>
+                                <span *ngIf="row.case_label" class="label label-default" style="background-color:rgba(0,0,0,0.2);margin-left: 5px;margin-right: 5px;" title="Affaire"><i class="fa fa-suitcase"></i> {{row.case_label}}</span>
                             </div>
                             <!--<div>
                                 <button mat-stroked-button color="primary" style="margin:5px;line-height: 20px;width: 150px;overflow: hidden;text-overflow: ellipsis;">réponse du zpfezk zekf opezf</button>
@@ -120,26 +120,32 @@
                                 <i class="fa fa-lock" title="date de clôture"></i>&nbsp;
                                 <span title='{{row.closing_date | date : "le dd/MM/y à HH:mm"}}'>{{row.closing_date | timeAgo}}</span>
                             </div>
-                            <div>
-                                <button mat-icon-button>
+                            <div style="white-space:normal;">
+                                <button mat-icon-button (click)="openAttachSheet(row)">
+                                    <mat-icon color="primary" class="fa fa-paperclip"></mat-icon>
+                                </button>
+                                <button mat-icon-button (click)="openBottomSheet(row)">
                                     <mat-icon color="primary" class="fa fa-sticky-note"></mat-icon>
                                 </button>
                                 <button mat-icon-button (click)="goTo(row);">
                                     <mat-icon color="primary" class="fa fa-eye"></mat-icon>
                                 </button>
-                                <button mat-icon-button>
+                                <button mat-icon-button (click)="openDiffusionSheet(row)">
                                     <mat-icon color="primary" class="fa fa-share-alt"></mat-icon>
+                                </button>
+                                <button mat-icon-button (click)="goToDetail(row);">
+                                    <mat-icon color="primary" class="fa fa-info-circle"></mat-icon>
                                 </button>
                             </div>
                         </td>
                     </ng-container>
 
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;" (click)="test();"></tr>
                 </table>
                 <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{resultsLength}} {{lang.entries}}</div>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+        <mat-sidenav #snav2 mode="over" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '40%'}">
             <div *ngIf="innerHtml" [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div>
         </mat-sidenav>

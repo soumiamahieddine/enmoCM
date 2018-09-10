@@ -643,4 +643,6 @@ export const LANG_FR = {
     "outgoing"                          : "Courrier départ",
     "internal"                          : "Courrier interne",
     "menu"                              : "Menu",
+    "visaUser"                          : "Viseur",
+    "signUser"                          : "Signataire",
 };

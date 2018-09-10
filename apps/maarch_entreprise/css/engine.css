@@ -373,3 +373,7 @@ h1.admin-app-name {
 #searchInput .mat-form-field-label {
     opacity: 0.5;
 }
+
+.note-width-bottom-sheet{
+    width: 400px;
+}

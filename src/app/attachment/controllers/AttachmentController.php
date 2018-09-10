@@ -27,6 +27,18 @@ use Convert\controllers\ConvertPdfController;
 
 class AttachmentController
 {
+    public function getAttachmentsListById(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $attachments = AttachmentModel::getListByResIdMaster(['id' => $aArgs['resId']]);
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+
+        return $response->withJson(['attachments'  => $attachments, 'attachment_types'  => $attachmentTypes]);
+    }
+
     public function setInSignatureBook(Request $request, Response $response, array $aArgs)
     {
         //TODO Controle de droit de modification de cet attachment

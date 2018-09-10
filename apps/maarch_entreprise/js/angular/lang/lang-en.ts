@@ -617,5 +617,7 @@ export const LANG_EN = {
     "outgoing"                          : "Outgoing",
     "internal"                          : "Internal",
     "menu"                              : "Menu",
+    "visaUser"                          : "Visa",
+    "signUser"                          : "Signatory",
 
 };
