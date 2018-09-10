@@ -38,7 +38,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
     homeData: any;
     dataSource: any;
-    displayedColumns: string[] = ['res_id', 'subject', 'contact_society', 'creation_date'];
+    displayedColumns: string[] = ['res_id', 'subject', 'creation_date'];
 
     currentDate : string = "";
 
