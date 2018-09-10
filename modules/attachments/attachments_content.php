@@ -315,7 +315,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                                     $contactsForMailing = \SrcCore\models\DatabaseModel::select([
                                         'select' => ['*'],
                                         'table' => ['contacts_res'],
-                                        'where' => ['res_id = ?'],
+                                        'where' => ['res_id = ?', 'address_id <> 0'],
                                         'data' => [$_SESSION['doc_id']]
                                     ]);
                                     foreach ($contactsForMailing as $key => $contactForMailing) {
@@ -647,6 +647,10 @@ if (isset($_POST['add']) && $_POST['add']) {
                             $new_nb_attach = $stmt->rowCount();
                         }
                         if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'create') {
+                            //reload entire page because chrono number and contact mode change
+                            if ($contactidAttach == 'mailing') {
+                                $js .= "location.reload();";
+                            } else
                             //Redirection vers bannette MyBasket s'il s'agit d'un courrier spontané et que l'utilisateur connecté est le destinataire du courrier
                             if (isset($_SESSION['upfile'][$attachNum]['outgoingMail']) && $_SESSION['upfile'][$attachNum]['outgoingMail'] && $_SESSION['user']['UserId'] == $_SESSION['details']['diff_list']['dest']['users'][0]['user_id']) {
                                 $js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";
@@ -1306,9 +1310,10 @@ if (isset($_REQUEST['id'])) {
     $infoAttach = (object) $ac->initAttachmentInfos($_SESSION['doc_id']);
 
     //On recherche le type de document attaché à ce courrier
-    $stmt = $db->query('SELECT type_id, creation_date FROM res_letterbox WHERE res_id = ?', array($_SESSION['doc_id']));
+    $stmt = $db->query('SELECT r.type_id, r.creation_date, m.category_id FROM res_letterbox r INNER JOIN mlb_coll_ext m ON m.res_id = r.res_id WHERE r.res_id = ?', array($_SESSION['doc_id']));
     $mail_doctype = $stmt->fetchObject();
     $type_id = $mail_doctype->type_id;
+    $category_id = $mail_doctype->category_id;
     $dataForDate = $mail_doctype->creation_date;
     //On recherche le sve_type
     $stmt = $db->query('SELECT * FROM mlb_doctype_ext WHERE type_id = ?', array($type_id));
@@ -1340,7 +1345,9 @@ if (!empty($infoAttach->multi_contact)) {
     foreach ($infoAttach->multi_contact as $key => $value) {
         $content .= '<option value="'.$value['contact_id'].'#'.$value['address_id'].'#'.$value['format_contact'].'">'.$value['format_contact'].'</option>';
     }
-    $content .= '<option value="mailing">Publipostage</option>';
+    if ($category_id == 'outgoing') {
+        $content .= '<option value="mailing">Publipostage</option>';
+    }
     $content .= '</select>';
     $content .= '<script>$j("#selectContactIdRes", window.top.document).change();</script>';
 }

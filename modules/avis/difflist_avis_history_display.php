@@ -51,7 +51,7 @@ $urlParameters = '';
     //Templates
     $defaultTemplate = 'history_list_diff';
     $selectedTemplate = $list->getTemplate();
-    if  (empty($selectedTemplate)) {
+    if (empty($selectedTemplate)) {
         if (!empty($defaultTemplate)) {
             $list->setTemplate($defaultTemplate);
             $selectedTemplate = $list->getTemplate();
@@ -62,7 +62,9 @@ $urlParameters = '';
     
     //For status icon
     $extension_icon = '';
-    if($selectedTemplate <> 'none') $extension_icon = "_big";
+    if ($selectedTemplate <> 'none') {
+        $extension_icon = "_big";
+    }
 
 /************Construction de la requete*******************/
 //Table or view
@@ -72,16 +74,16 @@ $urlParameters = '';
 
 //Fields
     //Documents
-    array_push($select[$view],  "listinstance_history_id", "res_id", "updated_by_user", "updated_date");
+    array_push($select[$view], "listinstance_history_id", "res_id", "updated_by_user", "updated_date");
 
 //Where clause
-    $where_tab = array(); 
+    $where_tab = array();
     $where_tab[] = "res_id = ?";
     $where_tab[] = "coll_id = ?";
-	$arrayPDO = array();
-	
-	if (isset($diffListType)) {
-			$where_tab[] = "listinstance_history_id IN (SELECT DISTINCT listinstance_history_id from listinstance_history_details where difflist_type = '$diffListType')"; 
+    $arrayPDO = array();
+    
+    if (isset($diffListType)) {
+        $where_tab[] = "listinstance_history_id IN (SELECT DISTINCT listinstance_history_id from listinstance_history_details where difflist_type = '$diffListType')";
     }
 
 //From searching comp query
@@ -94,34 +96,34 @@ $urlParameters = '';
     // $_SESSION['save_list']['order'] = $order;
     // $_SESSION['save_list']['order_field'] = $order_field;
 
-    if (!empty($order_field) && !empty($order)) 
+    if (!empty($order_field) && !empty($order)) {
         $orderstr = "order by ".$order_field." ".$order;
-    else  {
+    } else {
         $list->setOrder();
         $list->setOrderField('updated_date');
         $orderstr = "order by updated_date desc";
     }
     
-//URL extra Parameters  
+//URL extra Parameters
     $parameters = '';
     $start = $list->getStart();
-    if (!empty($selectedTemplate)) $parameters .= '&template='.$selectedTemplate;
-    if (!empty($start)) $parameters .= '&start='.$start;
+    if (!empty($selectedTemplate)) {
+        $parameters .= '&template='.$selectedTemplate;
+    }
+    if (!empty($start)) {
+        $parameters .= '&start='.$start;
+    }
     // $_SESSION['save_list']['start'] = $start;
 
 //Query
-    $tab=$request->PDOselect($select,$where_request,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
+    $tab=$request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", $add_security);
     // $request->show();
     
 //Result array
-    for ($i=0;$i<count($tab);$i++)
-    {
-        for ($j=0;$j<count($tab[$i]);$j++)
-        {
-            foreach(array_keys($tab[$i][$j]) as $value)
-            { 
-                if($tab[$i][$j][$value]=="listinstance_history_id")
-                {
+    for ($i=0;$i<count($tab);$i++) {
+        for ($j=0;$j<count($tab[$i]);$j++) {
+            foreach (array_keys($tab[$i][$j]) as $value) {
+                if ($tab[$i][$j][$value]=="listinstance_history_id") {
                     $tab[$i][$j]["label"]=_TYPE_ID_HISTORY;
                     $tab[$i][$j]['value'] = functions::show_string($tab[$i][$j]['value']);
                     $tab[$i][$j]["size"]="15";
@@ -133,8 +135,7 @@ $urlParameters = '';
                     $tab[$i][$j]["order"]="listinstance_history_id";
                 }
 
-                if($tab[$i][$j][$value]=="res_id")
-                {
+                if ($tab[$i][$j][$value]=="res_id") {
                     $tab[$i][$j]["label"]=_RES_ID;
                     $tab[$i][$j]['value'] = functions::show_string($tab[$i][$j]['value']);
                     $tab[$i][$j]["size"]="15";
@@ -146,11 +147,10 @@ $urlParameters = '';
                     $tab[$i][$j]["order"]="res_id";
                 }
 
-                if($tab[$i][$j][$value]=="updated_by_user")
-                {
+                if ($tab[$i][$j][$value]=="updated_by_user") {
                     $tab[$i][$j]["label"]=_UPDATED_BY_USER;
                     $db = new Database();
-                    $stmt = $db->query("SELECT firstname, lastname FROM users WHERE user_id = ?",array($tab[$i][$j]['value']));
+                    $stmt = $db->query("SELECT firstname, lastname FROM users WHERE user_id = ?", array($tab[$i][$j]['value']));
                     $user = $stmt->fetchObject();
                     $tab[$i][$j]['value'] =  ucwords($user->lastname) . " " . functions::show_string(ucfirst($user->firstname));
                     $tab[$i][$j]["size"]="15";
@@ -162,9 +162,8 @@ $urlParameters = '';
                     $tab[$i][$j]["order"]="updated_by_user";
                 }
 
-                if($tab[$i][$j][$value]=="updated_date")
-                {
-                    $tab[$i][$j]["label"]=__UPDATED_DATE;
+                if ($tab[$i][$j][$value]=="updated_date") {
+                    $tab[$i][$j]["label"]=_UPDATED_DATE;
                     $tab[$i][$j]['value'] = $core_tools->format_date_db($tab[$i][$j]['value']);
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
@@ -174,13 +173,12 @@ $urlParameters = '';
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]="updated_date";
                 }
-                
             }
         }
     }
 
 if (count($tab) > 0) {
-/************Construction de la liste*******************/
+    /************Construction de la liste*******************/
     //Clé de la liste
     $listKey = 'listinstance_history_id';
 
@@ -197,7 +195,7 @@ if (count($tab) > 0) {
 
     //Form attributs
     //Standalone form
-    $paramsTab['bool_standaloneForm'] = true;   
+    $paramsTab['bool_standaloneForm'] = true;
 
     //Afficher la liste dans process
     if (isset($return_mode) && $return_mode) {
@@ -211,7 +209,7 @@ if (count($tab) > 0) {
         $frm_str .= _DIFFLIST_NEVER_MODIFIED;
     } else {
         echo '<br/>' . _DIFFLIST_NEVER_MODIFIED;
-    }    
+    }
 }
     
     // $list->debug();

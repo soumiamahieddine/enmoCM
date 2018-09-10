@@ -101,7 +101,7 @@ abstract class avis_controler_Abstract
         $i = 1;
         $lastUserAvis = true;
 
-        if (count($circuit['avis']['users']) == 0) {
+        if (empty($circuit['avis']['users']) || !is_array($circuit['avis']['users']) || count($circuit['avis']['users']) == 0) {
             $str .= '<div id="emptyAvis"><strong><em>'._EMPTY_AVIS_WORKFLOW.'</em></strong></div>';
         } else {
             $str .= '<div id="emptyAvis" style="display:none;"><strong><em>'._EMPTY_AVIS_WORKFLOW.'</em></strong></div>';
@@ -287,7 +287,10 @@ abstract class avis_controler_Abstract
         $diff_list = new diffusion_list();
 
         $diff_list->save_listmodel(
-                $workflow, $typeList, $id_list, $title
+                $workflow,
+            $typeList,
+            $id_list,
+            $title
         );
     }
 
@@ -297,7 +300,12 @@ abstract class avis_controler_Abstract
         $diff_list = new diffusion_list();
 
         $diff_list->save_listinstance(
-                $workflow, $typeList, $coll_id, $res_id, $_SESSION['user']['UserId'], $_SESSION['user']['primaryentity']['id']
+                $workflow,
+            $typeList,
+            $coll_id,
+            $res_id,
+            $_SESSION['user']['UserId'],
+            $_SESSION['user']['primaryentity']['id']
         );
     }
 
@@ -403,8 +411,14 @@ abstract class avis_controler_Abstract
 
                 $hist = new history();
                 $hist->add(
-                        $view, $resId, 'UP', 'resup', _AVIS_UPDATED
-                        ._ON_DOC_NUM.$resId.' '._BY.' '.$_SESSION['user']['UserId'], $_SESSION['config']['databasetype'], 'notes'
+                        $view,
+                    $resId,
+                    'UP',
+                    'resup',
+                    _AVIS_UPDATED
+                        ._ON_DOC_NUM.$resId.' '._BY.' '.$_SESSION['user']['UserId'],
+                    $_SESSION['config']['databasetype'],
+                    'notes'
                 );
             }
         }

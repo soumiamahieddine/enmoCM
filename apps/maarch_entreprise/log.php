@@ -132,115 +132,128 @@ if (!empty($_SESSION['error'])) {
             exit($e->getMessage());
         }
 
+        if (!file_exists($pathtoConfig)) {
+            exit();
+        }
+
+
         $xpLdapConf = new domxpath($ldapConf);
+        $ldapConfig = simplexml_load_file($pathtoConfig);
 
-        foreach ($xpLdapConf->query('/root/config/*') as $cf) {
-            ${$cf->nodeName} = $cf->nodeValue;
-        }
+//        foreach ($xpLdapConf->query('/root/config/*') as $cf) {
+//            ${$cf->nodeName} = $cf->nodeValue;
+//        }
 
-        //On inclus la class LDAP qui correspond à l'annuaire
-        if (strtolower($type_ldap) == 'openldap') {
-            $classLdap = 'class_openLDAP.php';
-        } else {
-            $classLdap = 'class_adLDAP.php';
-        }
-
-        //customized or not
-        if (!@include $_SESSION['config']['corepath'].'/custom/'.$_SESSION['custom_override_id'].'/modules/ldap/class/'.$classLdap) {
-            if (!@include $_SESSION['config']['corepath'].'modules/ldap/class/'.$classLdap) {
-                exit('Impossible de charger class_'.$_SESSION['config']['corepath'].'/modules/ldap/class/'.$classLdap."\n");
+        foreach ($ldapConfig->config->ldap as $ldap) {
+            $_SESSION['error'] = '';
+            foreach ($ldap as $node => $value) {
+                ${$node} = (string)$value;
             }
-        }
 
-        if (!empty($prefix_login)) {
-            $login_admin = $prefix_login.'\\'.$login_admin;
-        }
-
-        if (!empty($suffix_login)) {
-            $login_admin = $login_admin.$suffix_login;
-        }
-
-        //Try to create a new ldap instance
-        try {
+            //On inclus la class LDAP qui correspond à l'annuaire
             if (strtolower($type_ldap) == 'openldap') {
-                $ad = new LDAP($domain, $login_admin, $pass, $ssl, $hostname);
+                $classLdap = 'class_openLDAP.php';
             } else {
-                $ad = new LDAP($domain, $login_admin, $pass, $ssl);
+                $classLdap = 'class_adLDAP.php';
             }
-        } catch (Exception $conFailure) {
-            if (!empty($standardConnect) && $standardConnect == 'true') {
-                $res = $sec->login($login, $password);
-                $_SESSION['user'] = $res['user'];
-                if (empty($res['error'])) {
-                    \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
-                    \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
-                    $user = \User\models\UserModel::getByUserId(['userId' => $login, 'select' => ['id']]);
-                    \User\models\UserModel::updatePassword(['id' => $user['id'], 'password' => $password]);
-                    $core->load_menu($_SESSION['modules']);
-                } else {
-                    $_SESSION['error'] = $res['error'];
+
+            //customized or not
+            if (!@include_once $_SESSION['config']['corepath'] . '/custom/' . $_SESSION['custom_override_id'] . '/modules/ldap/class/' . $classLdap) {
+                if (!@include_once $_SESSION['config']['corepath'] . 'modules/ldap/class/' . $classLdap) {
+                    exit('Impossible de charger class_' . $_SESSION['config']['corepath'] . '/modules/ldap/class/' . $classLdap . "\n");
                 }
-
-                header('location: '.$_SESSION['config']['businessappurl'].$res['url']);
-                exit();
-            } else {
-                echo functions::xssafe($conFailure->getMessage());
-                exit;
             }
-        }
 
-        if ($prefix_login != '') {
-            $loginToAd = $prefix_login.'\\'.$login;
-        } else {
-            $loginToAd = $login;
-        }
+            if (!empty($prefix_login)) {
+                $login_admin = $prefix_login . '\\' . $login_admin;
+            }
 
-        if ($suffix_login != '') {
-            $loginToAd = $loginToAd.$suffix_login;
-        }
+            if (!empty($suffix_login)) {
+                $login_admin = $login_admin . $suffix_login;
+            }
 
-        if ($ad->authenticate($loginToAd, $password)) {
-            //TODO: protect sql injection with PDO
-            require_once 'core/class/class_db_pdo.php';
+            //Try to create a new ldap instance
+            try {
+                if (strtolower($type_ldap) == 'openldap') {
+                    $ad = new LDAP($domain, $login_admin, $pass, $ssl, $hostname);
+                } else {
+                    $ad = new LDAP($domain, $login_admin, $pass, $ssl);
+                }
+            } catch (Exception $conFailure) {
+                if (!empty($standardConnect) && $standardConnect == 'true') {
+                    $res = $sec->login($login, $password);
+                    $_SESSION['user'] = $res['user'];
+                    if (empty($res['error'])) {
+                        \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
+                        \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
+                        $user = \User\models\UserModel::getByUserId(['userId' => $login, 'select' => ['id']]);
+                        \User\models\UserModel::updatePassword(['id' => $user['id'], 'password' => $password]);
+                        $core->load_menu($_SESSION['modules']);
+                    } else {
+                        $_SESSION['error'] = $res['error'];
+                    }
 
-            // Instantiate database.
-            $database = new Database();
-            $stmt = $database->query(
+                    header('location: ' . $_SESSION['config']['businessappurl'] . $res['url']);
+                    continue;
+                } else {
+                    echo functions::xssafe($conFailure->getMessage());
+                    exit;
+                }
+            }
+
+            if ($prefix_login != '') {
+                $loginToAd = $prefix_login . '\\' . $login;
+            } else {
+                $loginToAd = $login;
+            }
+
+            if ($suffix_login != '') {
+                $loginToAd = $loginToAd . $suffix_login;
+            }
+
+            if ($ad->authenticate($loginToAd, $password)) {
+                //TODO: protect sql injection with PDO
+                require_once 'core/class/class_db_pdo.php';
+
+                // Instantiate database.
+                $database = new Database();
+                $stmt = $database->query(
                     'SELECT * FROM users WHERE user_id ILIKE ?',
                     array($login)
                 ); //permet de rechercher les utilisateurs dans le LDAP sans prendre en compte la casse
-            $result = $stmt->fetch();
+                $result = $stmt->fetch();
 
-            if ($result) {
-                $_SESSION['error'] = '';
-                $res = $sec->login($login, $password, 'ldap');
-                $_SESSION['user'] = $res['user'];
-                if ($res['error'] == '') {
-                    \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
+                if ($result) {
+                    $_SESSION['error'] = '';
+                    $res = $sec->login($login, $password, 'ldap');
+                    $_SESSION['user'] = $res['user'];
+                    if ($res['error'] == '') {
+                        \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
+                    } else {
+                        $_SESSION['error'] = $res['error'];
+                    }
+                    $core->load_menu($_SESSION['modules']);
+                    header(
+                        'location: ' . $_SESSION['config']['businessappurl']
+                        . $res['url']
+                    );
+                    exit();
                 } else {
-                    $_SESSION['error'] = $res['error'];
+                    $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
+                    header(
+                        'location: ' . $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&page=login'
+                    );
+                    continue;
                 }
-                $core->load_menu($_SESSION['modules']);
-                header(
-                    'location: '.$_SESSION['config']['businessappurl']
-                    .$res['url']
-                );
-                exit();
             } else {
                 $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
                 header(
-                    'location: '.$_SESSION['config']['businessappurl']
-                    .'index.php?display=true&page=login'
+                    'location: ' . $_SESSION['config']['businessappurl']
+                    . 'index.php?display=true&page=login'
                 );
-                exit;
+                continue;
             }
-        } else {
-            $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
-            header(
-                'location: '.$_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=login'
-            );
-            exit;
         }
     } else {
         $_SESSION['error'] = '';

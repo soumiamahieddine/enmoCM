@@ -69,7 +69,7 @@ $frm_str .= '</div>';
 
 //script
 $curr_visa_wf = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
-if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0) {
+if ((empty($curr_visa_wf['visa']) || !is_array($curr_visa_wf['visa']) || count($curr_visa_wf['visa']) == 0) && (empty($curr_visa_wf['sign']) || !is_array($curr_visa_wf['sign']) || count($curr_visa_wf['sign']) == 0)) {
     $frm_str .= '<script>';
     $frm_str .= '$j("#modelList").val(\''.$destination.'\');$j("#modelList").change();';
     $frm_str .= '</script>';

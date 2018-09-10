@@ -883,5 +883,8 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     changeTabContactGrp(event:any) {
         this.selectedIndexContactsGrp = event;
+        if (event == 0) {
+            this.initGroupsContact();
+        }
     }
 }

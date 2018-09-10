@@ -1,6 +1,6 @@
-<mat-divider>
+<mat-divider *ngIf="homeData.regroupedBaskets.length > 0 || homeData.assignedBaskets.length > 0">
 </mat-divider>
-<mat-expansion-panel expanded style="box-shadow:none;">
+<mat-expansion-panel expanded style="box-shadow:none;" *ngIf="homeData.regroupedBaskets.length > 0 || homeData.assignedBaskets.length > 0">
     <mat-expansion-panel-header>
         <mat-panel-title style="color: rgba(0,0,0,0.54);font-size: 14px;font-weight: 500;">
             {{lang.myBaskets}}
@@ -57,4 +57,4 @@
         </mat-nav-list>
     </ng-container>
 </mat-expansion-panel>
-<mat-divider></mat-divider>
+<mat-divider *ngIf="homeData.regroupedBaskets.length > 0 || homeData.assignedBaskets.length > 0"></mat-divider>

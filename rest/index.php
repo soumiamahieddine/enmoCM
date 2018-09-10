@@ -174,6 +174,9 @@ $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':ge
 
 //Listinstance
 $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
+$app->get('/res/{resId}/listinstance', \Entity\controllers\ListInstanceController::class . ':getListByResId');
+$app->get('/res/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
+$app->get('/res/{resId}/avisCircuit', \Entity\controllers\ListInstanceController::class . ':getAvisCircuitByResId');
 
 //ListTemplates
 $app->get('/listTemplates', \Entity\controllers\ListTemplateController::class . ':get');
@@ -185,6 +188,9 @@ $app->get('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListT
 $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
+
+//Notes
+$app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
@@ -227,6 +233,7 @@ $app->get('/resources/groups/{groupSerialId}/baskets/{basketId}', \Resource\cont
 
 //Attachments
 $app->get('/res/{resIdMaster}/attachment/{resId}', \Attachment\controllers\AttachmentController::class . ':getFileContent');
+$app->get('/res/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getAttachmentsListById');
 
 //SignatureBook
 $app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');

@@ -613,7 +613,11 @@ export const LANG_EN = {
     "close"                             : "Close",
     "contactGroupCreate"                : "Create contact group",
     "contactLink"                       : "Link contact",
-    "incoming"                          : "incoming",
-    "outgoing"                          : "outgoing",
-    "internal"                          : "internal",
+    "incoming"                          : "Incoming",
+    "outgoing"                          : "Outgoing",
+    "internal"                          : "Internal",
+    "menu"                              : "Menu",
+    "visaUser"                          : "Visa",
+    "signUser"                          : "Signatory",
+
 };

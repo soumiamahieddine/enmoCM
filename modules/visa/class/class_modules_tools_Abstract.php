@@ -97,11 +97,32 @@ abstract class visa_Abstract extends Database
         $request = new request();
         $table = $_SESSION['current_basket']['view'];
         $select[$table] = array();
-        array_push($select[$table], 'res_id', 'status', 'category_id as category_img',
-                        'contact_firstname', 'contact_lastname', 'contact_society', 'user_lastname',
-                        'user_firstname', 'priority', 'creation_date', 'admission_date', 'subject',
-                        'process_limit_date', 'entity_label', 'dest_user', 'category_id', 'type_label',
-                        'exp_user_id', 'doc_custom_n1 as count_attachment', 'alt_identifier', 'is_multicontacts', 'locker_user_id', 'locker_time');
+        array_push(
+            $select[$table],
+            'res_id',
+            'status',
+            'category_id as category_img',
+                        'contact_firstname',
+            'contact_lastname',
+            'contact_society',
+            'user_lastname',
+                        'user_firstname',
+            'priority',
+            'creation_date',
+            'admission_date',
+            'subject',
+                        'process_limit_date',
+            'entity_label',
+            'dest_user',
+            'category_id',
+            'type_label',
+                        'exp_user_id',
+            'doc_custom_n1 as count_attachment',
+            'alt_identifier',
+            'is_multicontacts',
+            'locker_user_id',
+            'locker_time'
+        );
 
         $where_tab = array();
 
@@ -135,7 +156,13 @@ abstract class visa_Abstract extends Database
             $orderstr,
             $_SESSION['config']['databasetype'],
             $_SESSION['config']['databasesearchlimit'],
-            false, '', '', '', false, false, 'distinct'
+            false,
+            '',
+            '',
+            '',
+            false,
+            false,
+            'distinct'
         );
 
         $tab_docs = array();
@@ -158,25 +185,31 @@ abstract class visa_Abstract extends Database
         }
 
         $db = new Database();
-        $stmt = $db->query('select docserver_id from res_view_attachments where res_id_master = ?'
+        $stmt = $db->query(
+            'select docserver_id from res_view_attachments where res_id_master = ?'
             ."AND status <> 'DEL' order by res_id desc",
-            array($res_id));
+            array($res_id)
+        );
         while ($res = $stmt->fetchObject()) {
             $docserver_id = $res->docserver_id;
             break;
         }
 
-        $stmt = $db->query('select path_template from '.$_SESSION['tablename']['docservers'].' where docserver_id = ?',
-            array($docserver_id));
+        $stmt = $db->query(
+            'select path_template from '.$_SESSION['tablename']['docservers'].' where docserver_id = ?',
+            array($docserver_id)
+        );
 
         $res = $stmt->fetchObject();
         $docserver_path = $res->path_template;
 
-        $stmt = $db->query('select filename, format, path, title, res_id, res_id_version, attachment_type '
+        $stmt = $db->query(
+            'select filename, format, path, title, res_id, res_id_version, attachment_type '
             ."from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' "
             ."AND status <> 'DEL' and attachment_type NOT IN "
             ."('converted_pdf','print_folder') order by creation_date desc",
-            array($res_id));
+            array($res_id)
+        );
 
         $array_reponses = array();
         $cpt_rep = 0;
@@ -423,6 +456,40 @@ abstract class visa_Abstract extends Database
         return $stepDetails;
     }
 
+    public function processVisaWorkflow($aArgs = [])
+    {
+        $message = [];
+        
+        //enables to process the visa if i am not the item_id
+        if ($aArgs['stepDetails']['item_id'] != $_SESSION['user']['UserId']) {
+            $db->query(
+                'UPDATE listinstance SET process_date = CURRENT_TIMESTAMP '
+                .' WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?',
+                array($aArgs['stepDetails']['listinstance_id'], $aArgs['stepDetails']['item_mode'], $aArgs['res_id'], $aArgs['stepDetails']['item_id'], 'VISA_CIRCUIT')
+            );
+
+            $stmt = $db->query('SELECT firstname, lastname, user_id FROM users WHERE user_id IN (?)', array([$_SESSION['user']['UserId'], $aArgs['stepDetails']['item_id']]));
+            foreach ($stmt as $value) {
+                if ($value['user_id'] == $_SESSION['user']['UserId']) {
+                    $user1 = $value['firstname'].' '.$value['lastname'];
+                } else {
+                    $user2 = $value['firstname'].' '.$value['lastname'];
+                }
+            }
+
+            $message[] = ' '._VISA_BY.' '.$user1.' '._INSTEAD_OF.' '.$user2;
+        } else {
+            $db->query(
+                'UPDATE listinstance SET process_date = CURRENT_TIMESTAMP '
+                .' WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?',
+                array($aArgs['stepDetails']['listinstance_id'], $aArgs['stepDetails']['item_mode'], $aArgs['res_id'], $_SESSION['user']['UserId'], 'VISA_CIRCUIT')
+            );
+            $message[] = '';
+        }
+
+        return $message;
+    }
+
     public function myPosVisa($res_id, $coll_id, $listDiffType)
     {
         $db = new Database();
@@ -627,11 +694,11 @@ abstract class visa_Abstract extends Database
         $i = 1;
         $lastUserVis = true;
 
-        if (count($circuit['visa']['users']) == 0 && $circuit['sign']['users'] == 0) {
+        if ((empty($circuit['visa']['users']) || !is_array($circuit['visa']['users']) || count($circuit['visa']['users']) == 0) && (empty($circuit['sign']['users']) || !is_array($circuit['sign']['users']) || count($circuit['sign']['users']) == 0)) {
             $str .= '<div id="emptyVisa"><strong><em>'._EMPTY_VISA_WORKFLOW.'</em></strong></div>';
         } else {
             $str .= '<div id="emptyVisa" style="display:none;"><strong><em>'._EMPTY_VISA_WORKFLOW.'</em></strong></div>';
-            if (count($circuit['visa']['users']) > 0) {
+            if (!empty($circuit['visa']['users']) && is_array($circuit['visa']['users']) && count($circuit['visa']['users']) > 0) {
                 $isCurrentVisa = false;
                 foreach ($circuit['visa']['users'] as $it => $info_userVis) {
                     if (empty($info_userVis['process_date'])) {
@@ -964,17 +1031,20 @@ abstract class visa_Abstract extends Database
 
             //Have version table
             if ($versionTable != '') {
-                $stmt = $db->query('select res_id from '
+                $stmt = $db->query(
+                    'select res_id from '
                             .$versionTable
                             ." where res_id_master = ? and status <> 'DEL' order by res_id desc",
-                            array($id));
+                            array($id)
+                );
                 $line = $stmt->fetchObject();
                 $lastVersion = $line->res_id;
                 //Have new version
                 if ($lastVersion != '') {
                     $stmt = $db->query(
                         'select res_id, description, subject, title, format, filesize, relation, creation_date, typist from '
-                        .$versionTable." where res_id = ? and status <> 'DEL'", array($lastVersion)
+                        .$versionTable." where res_id = ? and status <> 'DEL'",
+                        array($lastVersion)
                     );
                     // $db->show();
                     //Get infos
@@ -994,7 +1064,8 @@ abstract class visa_Abstract extends Database
                         } else {
                             $typist = '';
                         }
-                        array_push($joinedFiles,
+                        array_push(
+                            $joinedFiles,
                             array('id' => $res->res_id, //ID
                                   'label' => $label, //Label
                                   'format' => $res->format, //Format
@@ -1011,7 +1082,8 @@ abstract class visa_Abstract extends Database
 
             $stmt = $db->query(
                 'select res_id, description, subject, title, format, filesize, relation, creation_date from '
-                .$table." where res_id = ? and status <> 'DEL'", array($id)
+                .$table." where res_id = ? and status <> 'DEL'",
+                array($id)
             );
         } else {
             require_once 'modules/attachments/attachments_tables.php';
@@ -1092,7 +1164,8 @@ abstract class visa_Abstract extends Database
                     ._PRINT_DOCUMENT.'"></i>'
                     .'</a>';
             }
-            array_push($joinedFiles,
+            array_push(
+                $joinedFiles,
                 array('id' => $idFile, //ID
                       'label' => $label, //Label
                       'format' => $res->format, //Format
@@ -1221,8 +1294,11 @@ abstract class visa_Abstract extends Database
                     //Get data
                     $idNote = $user_notes[$i]['id'];
                     //$noteShort = $request->cut_string($user_notes[$i]['label'], 50);
-                    $noteShort = $request->cut_string(str_replace(array("'", "\r", "\n", '"'), array("'", ' ', ' ', '&quot;'),
-                            $user_notes[$i]['label']), 50);
+                    $noteShort = $request->cut_string(str_replace(
+                        array("'", "\r", "\n", '"'),
+                        array("'", ' ', ' ', '&quot;'),
+                            $user_notes[$i]['label']
+                    ), 50);
                     $noteShort = functions::xssafe($noteShort);
                     $note = $user_notes[$i]['label'];
                     $userArray = $users_tools->get_user($user_notes[$i]['author']);
@@ -1310,7 +1386,8 @@ abstract class PdfNotes_Abstract extends FPDI
             $stmt2 = $db2->query(
                 'SELECT n.identifier, n.date_note, n.user_id, n.note_text, u.lastname, '
                 .'u.firstname FROM '.NOTES_TABLE.' n inner join '.USERS_TABLE
-                .' u on n.user_id  = u.user_id WHERE n.id = :Id '.$where, $arrayPDO
+                .' u on n.user_id  = u.user_id WHERE n.id = :Id '.$where,
+                $arrayPDO
             );
 
             if ($stmt2->rowCount() > 0) {
