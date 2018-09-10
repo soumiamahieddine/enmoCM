@@ -79,7 +79,7 @@
                         </td>
                     </ng-container>
 
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToDetail(row);"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToDetail(row);" style="cursor:pointer;"></tr>
                 </table>
                     </mat-tab>
                 </mat-tab-group>
