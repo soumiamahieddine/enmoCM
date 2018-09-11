@@ -221,7 +221,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             }
             $containResult = true;
 
-            $contactIcon = "<i class='fa fa-users fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='" . _USER . "'></i>";
+            $contactIcon = "<i class='fa fa-users fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='" . _VIEW_CONTACTS_GROUPS . "'></i>";
 
             //Highlight
             foreach ($keyList as $keyVal) {
