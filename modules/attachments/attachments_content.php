@@ -474,132 +474,25 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 }
                                 if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp'] != '' && isset($templateOffice)) {
                                     $_SESSION['new_id'] = $id;
-                                    $file = $_SESSION['config']['tmppath'].$_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp'];
-                                    $newfile = $storeResult['path_template'].str_replace('#', '/', $storeResult['destination_dir']).substr($storeResult['file_destination_name'], 0, strrpos($storeResult['file_destination_name'], '.')).'.pdf';
+                                    
+                                    $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
+                                        'collId'            => 'attachments_coll',
+                                        'docserverTypeId'   => 'CONVERT',
+                                        'fileInfos'         => [
+                                            'tmpDir'            => $_SESSION['config']['tmppath'],
+                                            'tmpFileName'       => $_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp']
+                                        ]
+                                    ]);
 
-                                    copy($file, $newfile);
-
-                                    //CREATE METAS DATA FOR CONVERTED PDF
-                                    $_SESSION['data_pdf'] = array();
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'typist',
-                                            'value' => $_SESSION['user']['UserId'],
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'format',
-                                            'value' => 'pdf',
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'docserver_id',
-                                            'value' => $storeResult['docserver_id'],
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'status',
-                                            'value' => 'TRA',
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'offset_doc',
-                                            'value' => ' ',
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'title',
-                                            'value' => $title,
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'attachment_type',
-                                            'value' => 'converted_pdf',
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'coll_id',
-                                            'value' => $_SESSION['collection_id_choice'],
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'res_id_master',
-                                            'value' => $_SESSION['doc_id'],
-                                            'type' => 'integer',
-                                        )
-                                    );
-
-                                    if (isset($_SESSION['upfile'][$numAttach]['outgoingMail']) && $_SESSION['upfile'][$numAttach]['outgoingMail']) {
-                                        array_push(
-                                            $_SESSION['data_pdf'],
-                                            array(
-                                                'column' => 'type_id',
-                                                'value' => 1,
-                                                'type' => 'int',
-                                            )
-                                        );
-                                    } else {
-                                        array_push(
-                                            $_SESSION['data_pdf'],
-                                            array(
-                                                'column' => 'type_id',
-                                                'value' => 0,
-                                                'type' => 'int',
-                                            )
-                                        );
-                                    }
-
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'relation',
-                                            'value' => 1,
-                                            'type' => 'int',
-                                        )
-                                    );
-
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'in_signature_book',
-                                            'value' => 1,
-                                            'type' => 'bool',
-                                        )
-                                    );
-
-                                    $id_up = $resAttach->load_into_db(
-                                        RES_ATTACHMENTS_TABLE,
-                                        $storeResult['destination_dir'],
-                                        substr($storeResult['file_destination_name'], 0, strrpos($storeResult['file_destination_name'], '.')).'.pdf',
-                                        $storeResult['path_template'],
-                                        $storeResult['docserver_id'], $_SESSION['data_pdf'],
-                                        $_SESSION['config']['databasetype']
-                                    );
+                                    $result = \Convert\models\AdrModel::createAttachAdr([
+                                        'resId'         => $id,
+                                        'isVersion'     => false,
+                                        'type'          => 'PDF',
+                                        'docserverId'   => $storeResult['docserver_id'],
+                                        'path'          => $storeResult['destination_dir'],
+                                        'filename'      => $storeResult['file_destination_name'],
+                                        'fingerprint'      => $storeResult['fingerPrint'],
+                                    ]);
 
                                     unset($_SESSION['upfile'][$attachNum]['fileNamePdfOnTmp']);
                                 }
@@ -1054,153 +947,45 @@ if (isset($_POST['add']) && $_POST['add']) {
             $stmt = $db->query('UPDATE res_version_attachments SET '.$set_update.' WHERE res_id = :res_id', $arrayPDO);
             \Convert\models\AdrModel::deleteAttachAdr([
                 'resId'         => $_REQUEST['res_id'],
-                'isVersion'     => false
+                'isVersion'     => true
             ]);
         }
     }
     //copie de la version PDF de la pièce si mode de conversion sur le client
     if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && empty($error) && $_SESSION['upfile'][0]['upAttachment'] != false) {
-        $_SESSION['new_id'] = $id;
-        $file = $_SESSION['config']['tmppath'].$_SESSION['upfile'][0]['fileNamePdfOnTmp'];
-        $newfile = $storeResult['path_template'].str_replace('#', '/', $storeResult['destination_dir']).substr($storeResult['file_destination_name'], 0, strrpos($storeResult['file_destination_name'], '.')).'.pdf';
-
-        copy($file, $newfile);
-
-        //SET META DATAS OF CONVERTED PDF
-        $_SESSION['data_pdf'] = array();
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'typist',
-                'value' => $_SESSION['user']['UserId'],
-                'type' => 'string',
-            )
-        );
-
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'format',
-                'value' => 'pdf',
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'docserver_id',
-                'value' => $storeResult['docserver_id'],
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'status',
-                'value' => 'TRA',
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'offset_doc',
-                'value' => ' ',
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'title',
-                'value' => $title,
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'attachment_type',
-                'value' => 'converted_pdf',
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'coll_id',
-                'value' => $_SESSION['collection_id_choice'],
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'res_id_master',
-                'value' => $_SESSION['doc_id'],
-                'type' => 'integer',
-            )
-        );
-
-        //RETRIEVE OLD CONVERTED PDF
-        $old_pdf_id = $ac->getCorrespondingPdf($_REQUEST['res_id']);
-        if (isset($old_pdf_id) && $old_pdf_id != 0) {
-            $infos_old_pdf = $ac->getAttachmentInfos($old_pdf_id);
-        }
-
-        //DEPRECATED OLD CONVERTED PDF
-        if ((int) $_REQUEST['relation'] == 1) {
-            if (isset($old_pdf_id) && $old_pdf_id != 0 && (!empty($_SESSION['upfile'][0]['fileNamePdfOnTmp']))) {
-                $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($old_pdf_id));
-            }
+        if ($id != null) {
+            $_SESSION['new_id'] = $id;
         } else {
-            if (isset($pdf_id) && $pdf_id != 0 && (!empty($_SESSION['upfile'][0]['fileNamePdfOnTmp']))) {
-                $stmt = $db->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", array($old_pdf_id));
-            }
+            $_SESSION['new_id'] = $_REQUEST['res_id'];
         }
+        
 
-        if ((isset($_SESSION['upfile'][0]['outgoingMail']) && $_SESSION['upfile'][0]['outgoingMail']) || ($infos_old_pdf['type_id'] == 1)) {
-            $type_id = 1;
+        if ((int) $_REQUEST['relation'] == 1 && $is_new_version == false) {
+            $targetCollId = 'attachments_coll';
+            $targetAdrVersion = false;
         } else {
-            $type_id = 0;
+            $targetCollId = 'attachments_version_coll';
+            $targetAdrVersion = true;
         }
 
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'type_id',
-                'value' => $type_id,
-                'type' => 'int',
-            )
-        );
+        $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
+            'collId'            => $targetCollId,
+            'docserverTypeId'   => 'CONVERT',
+            'fileInfos'         => [
+                'tmpDir'            => $_SESSION['config']['tmppath'],
+                'tmpFileName'       => $_SESSION['upfile'][0]['fileNamePdfOnTmp']
+            ]
+        ]);
 
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'relation',
-                'value' => 1,
-                'type' => 'int',
-            )
-        );
-
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'in_signature_book',
-                'value' => 1,
-                'type' => 'bool',
-            )
-        );
-
-        //SAVE META DATAS IN DB
-        $id_up = $resAttach->load_into_db(
-            RES_ATTACHMENTS_TABLE,
-            $storeResult['destination_dir'],
-            substr($storeResult['file_destination_name'], 0, strrpos($storeResult['file_destination_name'], '.')).'.pdf',
-            $storeResult['path_template'],
-            $storeResult['docserver_id'], $_SESSION['data_pdf'],
-            $_SESSION['config']['databasetype']
-        );
+        $result = \Convert\models\AdrModel::createAttachAdr([
+            'resId'         => $_SESSION['new_id'],
+            'isVersion'     => $targetAdrVersion,
+            'type'          => 'PDF',
+            'docserverId'   => $storeResult['docserver_id'],
+            'path'          => $storeResult['destination_dir'],
+            'filename'      => $storeResult['file_destination_name'],
+            'fingerprint'   => $storeResult['fingerPrint'],
+        ]);
     }
 
     if (empty($error)) {
@@ -1617,7 +1402,7 @@ $content .= '</div>';
 
 // ATTACHMENT IFRAME
 if ($mode == 'edit') {
-    $srcAttachment = 'index.php?display=true&module=attachments&page=view_attachment&editingMode=true&res_id_master='.functions::xssafe($_SESSION['doc_id']).'&id='.functions::xssafe($_REQUEST['id']);
+    $srcAttachment = '../../rest/res/'.functions::xssafe($_SESSION['doc_id']).'/attachment/'.$_REQUEST['id'];
     $content .= '<iframe src="'.$srcAttachment.'" name="iframePjDocument_0" id="iframePjDocument_0" scrolling="auto" frameborder="0" style="width:100% !important;height:85vh;display:none" onmouseover="this.focus()"></iframe>';
 }
 

@@ -103,6 +103,32 @@ class AdrModel
                 'fingerprint'   => empty($aArgs['fingerprint']) ? null : $aArgs['fingerprint'],
             ]
         ]);
+        return true;
+    }
+
+    public static function updateAttachAdr(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'path', 'filename', 'type']);
+        ValidatorModel::stringType($aArgs, ['path', 'filename', 'type', 'fingerprint']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
+
+        if ($aArgs['isVersion']) {
+            $table = "adr_attachments_version";
+        } else {
+            $table = "adr_attachments";
+        }
+
+        DatabaseModel::update([
+            'table'     => $table,
+            'set'       => [
+                'path'    => $aArgs['path'],
+                'filename'    => $aArgs['filename'],
+                'fingerprint'    => empty($aArgs['fingerprint']) ? null : $aArgs['fingerprint'],
+            ],
+            'where'     => ['res_id = ?', 'type = ?'],
+            'data'      => [$aArgs['resId'],$aArgs['type']]
+        ]);
 
         return true;
     }
