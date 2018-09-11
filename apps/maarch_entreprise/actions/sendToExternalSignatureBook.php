@@ -49,7 +49,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $result = '';
     $config = getXml();
 
+    require_once "modules/visa/class/class_modules_tools.php";
     $circuit_visa = new visa();
+    $db = new Database();
     $coll_id = $_SESSION['current_basket']['coll_id'];
 
     foreach ($arr_id as $res_id) {
