@@ -140,10 +140,6 @@ if (!empty($_SESSION['error'])) {
         $xpLdapConf = new domxpath($ldapConf);
         $ldapConfig = simplexml_load_file($pathtoConfig);
 
-//        foreach ($xpLdapConf->query('/root/config/*') as $cf) {
-//            ${$cf->nodeName} = $cf->nodeValue;
-//        }
-
         foreach ($ldapConfig->config->ldap as $ldap) {
             $_SESSION['error'] = '';
             foreach ($ldap as $node => $value) {
@@ -197,7 +193,7 @@ if (!empty($_SESSION['error'])) {
                     continue;
                 } else {
                     echo functions::xssafe($conFailure->getMessage());
-                    exit;
+                    continue;
                 }
             }
 
