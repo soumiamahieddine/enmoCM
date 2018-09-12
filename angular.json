@@ -5,16 +5,16 @@
   "projects": {
     "maarchCourrier": {
       "root": "",
-      "sourceRoot": "apps/maarch_entreprise/js/angular",
+      "sourceRoot": "src/frontend",
       "projectType": "application",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist",
-            "index": "apps/maarch_entreprise/js/angular/index.html",
-            "main": "apps/maarch_entreprise/js/angular/main.ts",
-            "tsConfig": "apps/maarch_entreprise/js/angular/tsconfig.app.json",
+            "index": "src/frontend/index.html",
+            "main": "src/frontend/main.ts",
+            "tsConfig": "src/frontend/tsconfig.app.json",
             "styles": [],
             "scripts": [
               "node_modules/hammerjs/hammer.js"
