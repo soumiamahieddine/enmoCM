@@ -128,7 +128,9 @@ if (isset($_FILES) && $_FILES['file']['error'] == 1) {
 <?php 
 if (!empty($_SESSION['upfile'][0]['local_path']) && empty($_SESSION['error'])) {
     //launch auto convert in PDF
-    if (in_array(strtolower($_SESSION['upfile'][0]['format']), array('odt', 'docx', 'doc', 'docm'))) {
+    $_SESSION['upfile'][0]['error'] = 0;
+    $_SESSION['upfile'][0]['tmp_name'] = $_SESSION['upfile'][0]['local_path'];
+    if (in_array(strtolower($_SESSION['upfile'][0]['format']), array('odt', 'docx', 'doc', 'docm')) && $_SESSION['modules_loaded']['attachments']['convertPdf'] == "true") {
         echo "<script>window.parent.$('add').value='Edition en cours ...';window.parent.editingDoc(this,'superadmin');window.parent.$('add').disabled='disabled';window.parent.$('add').style.opacity='0.5';</script>";
         include_once 'modules/content_management/class/class_content_manager_tools.php';
 
@@ -150,11 +152,7 @@ if (!empty($_SESSION['upfile'][0]['local_path']) && empty($_SESSION['error'])) {
         } else {
             $path_appli = implode('/', $path_appli);
         }
-        // require_once 'core/class/class_db_pdo.php';
-        // $database = new Database();
-        // $query = "select template_id from templates where template_type = 'OFFICE' and template_target = 'attachments'";
-        // $stmt = $database->query($query);
-        // $aTemplateId = $stmt->fetchObject()->template_id;
+
         $cookieKey = $_SESSION['sessionName'].'='.$_COOKIE[$_SESSION['sessionName']];
 
         $onlyConvert = 'true';
@@ -171,6 +169,15 @@ if (!empty($_SESSION['upfile'][0]['local_path']) && empty($_SESSION['error'])) {
             $_SESSION['modules_loaded']['attachments']['convertPdf'],
             $onlyConvert
         );
+    } else {
+        echo '<script>if($j("#ongletAttachement #PjDocument_0",window.parent.document).length) {$j("#ongletAttachement #PjDocument_0",window.parent.document).remove();$j("div #iframePjDocument_0",window.parent.document).remove();}</script>';
+        echo '<script>$j("#MainDocument",window.parent.document).after($j("#MainDocument",window.parent.document).clone());</script>';
+        echo '<script>$j("#iframeMainDocument",window.parent.document).after($j("#iframeMainDocument",window.parent.document).clone());</script>';
+        echo '<script>$j("div #iframeMainDocument",window.parent.document).eq(1).attr("id","iframePjDocument_0");</script>';
+        echo '<script>$j("div #iframePjDocument_0",window.parent.document).attr("src","index.php?display=true&dir=indexing_searching&page=file_iframe&num=0&#navpanes=0");</script>';
+        echo '<script>$j("#ongletAttachement #MainDocument",window.parent.document).eq(1).attr("id","PjDocument_0");</script>';
+        echo '<script>$j("#ongletAttachement #PjDocument_0",window.parent.document).html("<span>PJ n°1</span>");</script>';
+        echo '<script>$j("#ongletAttachement #PjDocument_0",window.parent.document).click();</script>';
     }
 }
 ?>

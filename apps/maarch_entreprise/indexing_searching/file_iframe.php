@@ -41,6 +41,8 @@ $is = new indexing_searching_app();
 //REFACTORING
 if (isset($_GET['num'])) {
     $num = $_GET['num'];
+
+    //PJ CONVERTED
     if (!empty($_SESSION['upfile'][$num]['fileNamePdfOnTmp'])) {
         $mimeType = $is->get_mime_type('pdf');
         header('Pragma: public');
@@ -56,12 +58,43 @@ if (isset($_GET['num'])) {
             readfile($loc);
         }
         exit();
-    } elseif (isset($_SESSION['upfile'][$num]['mime'])
-        && !empty($_SESSION['upfile'][$num]['mime'])
-        && isset($_SESSION['upfile'][$num]['format'])
-        && !empty($_SESSION['upfile'][$num]['format'])
+
+    //TMP PJ
+    } elseif (isset($_SESSION['upfile'][$num]['tmp_name'])
+        && !empty($_SESSION['upfile'][$num]['tmp_name'])
         && $_SESSION['upfile'][$num]['error'] != 1
     ) {
+        $tmpFilename = pathinfo($_SESSION['upfile'][$num]['tmp_name']);
+        if ($tmpFilename['extension'] == 'pdf') {
+            $return = [
+                'errors'     => '',
+                'fullFilename'     => $_SESSION['upfile'][$num]['tmp_name'],
+            ];
+        } else {
+            $return = \Convert\controllers\ConvertPdfController::tmpConvert([
+                'fullFilename'     => $_SESSION['upfile'][$num]['tmp_name'],
+            ]);
+        }
+        
+        if (empty($return['errors'])) {
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: public');
+            header('Content-Description: File Transfer');
+            header('Content-Type: '.$mimeType);
+            header(
+                'Content-Disposition: inline; filename='.basename('maarch').'.pdf;'
+            );
+            header('Content-Transfer-Encoding: binary');
+
+            $loc = $return['fullFilename'];
+            readfile($loc);
+            exit();
+        } else {
+            echo '<br/><br/><div class="error">'._PROBLEM_LOADING_FILE_TMP_DIR.'.</div>';
+            exit();
+        }
         $extension = explode('.', $_SESSION['upfile'][$num]['name']);
         $count_level = count($extension) - 1;
         $the_ext = $extension[$count_level];
@@ -86,8 +119,8 @@ if (isset($_GET['num'])) {
             header('Content-Description: File Transfer');
             header('Content-Type: '.$mimeType);
             header(
-            'Content-Disposition: inline; filename='.basename('maarch').'.'
-            .$ext.';'
+                'Content-Disposition: inline; filename='.basename('maarch').'.'
+                .$ext.';'
             );
             header('Content-Transfer-Encoding: binary');
             $ext = strtolower($_SESSION['upfile'][$num]['format']);

@@ -26,6 +26,31 @@ use SrcCore\models\ValidatorModel;
 
 class ConvertPdfController
 {
+    public static function tmpConvert(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['fullFilename']);
+
+        if (!file_exists($aArgs['fullFilename'])) {
+            return ['errors' => '[ConvertPdf] Document '.$aArgs['fullFilename'].' does not exist'];
+        }
+
+        $docInfo = pathinfo($aArgs['fullFilename']);
+
+        $tmpPath = CoreConfigModel::getTmpPath();
+
+
+        $command = "unoconv -f pdf " . escapeshellarg($aArgs['fullFilename']);
+        
+
+        exec('export HOME=/tmp && '.$command, $output, $return);
+
+        if (!file_exists($tmpPath.$docInfo["filename"].'.pdf')) {
+            return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
+        } else {
+            return ['fullFilename' => $tmpPath.$docInfo["filename"].'.pdf'];
+        }
+    }
+
     public static function convert(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['collId', 'resId']);
