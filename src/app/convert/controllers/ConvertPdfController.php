@@ -81,15 +81,24 @@ class ConvertPdfController
             return ['errors' => "[ConvertPdf] {$storeResult['errors']}"];
         }
 
-        AdrModel::createAttachAdr([
-            'resId'         => $aArgs['resId'],
-            'isVersion'     => $aArgs['isVersion'],
-            'type'          => 'PDF',
-            'docserverId'   => $storeResult['docserver_id'],
-            'path'          => $storeResult['destination_dir'],
-            'filename'      => $storeResult['file_destination_name'],
-        ]);
-
+        if ($aArgs['collId'] == 'letterbox_coll') {
+            AdrModel::createDocumentAdr([
+                'resId'         => $aArgs['resId'],
+                'type'          => 'PDF',
+                'docserverId'   => $storeResult['docserver_id'],
+                'path'          => $storeResult['destination_dir'],
+                'filename'      => $storeResult['file_destination_name'],
+            ]);
+        } else {
+            AdrModel::createAttachAdr([
+                'resId'         => $aArgs['resId'],
+                'isVersion'     => $aArgs['isVersion'],
+                'type'          => 'PDF',
+                'docserverId'   => $storeResult['docserver_id'],
+                'path'          => $storeResult['destination_dir'],
+                'filename'      => $storeResult['file_destination_name'],
+            ]);
+        }
         return true;
     }
 }

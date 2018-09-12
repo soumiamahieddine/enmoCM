@@ -38,29 +38,29 @@ $db = new Database();
 
 //requete permettant de rechercher sur les dossiers qui ne sont pas en status del
 $stmt = $db->query(
-	"SELECT folder_id FROM " . $_SESSION['tablename']['fold_folders']
+    "SELECT folder_id FROM " . $_SESSION['tablename']['fold_folders']
     . " WHERE status != 'DEL' and lower(folder_id) like lower(?) order by folder_id",
-	array($_REQUEST['Input'] . '%')
+    array($_REQUEST['Input'] . '%')
 );
 
 $folders = array();
 while ($line = $stmt->fetchObject()) {
-	array_push($folders, $line->folder_id);
+    array_push($folders, $line->folder_id);
 }
 
 echo "<ul>";
 $authViewList = 0;
 foreach ($folders as $folder) {
-	if ($authViewList >= 10) {
-		$flagAuthView = true;
-	}
+    if ($authViewList >= 10) {
+        $flagAuthView = true;
+    }
     if (stripos($folder, $_REQUEST['Input']) === 0) {
         echo "<li>" . $folder . "</li>";
-		if (isset($flagAuthView) && $flagAuthView) {
-			echo "<li>...</li>";
-			break;
-		}
-		$authViewList ++;
+        if (isset($flagAuthView) && $flagAuthView) {
+            echo "<li>...</li>";
+            break;
+        }
+        $authViewList ++;
     }
 }
 echo "</ul>";

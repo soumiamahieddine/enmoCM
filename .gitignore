@@ -7,7 +7,7 @@ apps/maarch_entreprise/xml/log4php.xml
 .phplint.yml
 *.log
 xdelete.sh
-test/build/
+test/unitTests/build/
 apps/maarch_entreprise/js/angular/main.bundle.js
 modules/convert/batch/scripts/launch_fulltext_letterbox.sh
 modules/convert/batch/scripts/launch_convert_letterbox.sh

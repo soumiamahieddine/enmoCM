@@ -2166,9 +2166,11 @@ abstract class lists_Abstract extends Database
         }
 
         //Reserve space for action buttons
-        for ($i = 0; $i < count($this->actionButtons); ++$i) {
-            $column .= '<th width="1%" valign="bottom">&nbsp;</th>';
-            ++$count_td;
+        if (!empty($this->actionButtons)) {
+            for ($i = 0; $i < count($this->actionButtons); ++$i) {
+                $column .= '<th width="1%" valign="bottom">&nbsp;</th>';
+                ++$count_td;
+            }
         }
 
         //Reserve space for details button
@@ -3347,28 +3349,30 @@ abstract class lists_Abstract extends Database
             }
 
             //Show action buttons
-            for ($button = 0; $button < count($this->actionButtons); ++$button) {
-                $actionIsDisabled = $this->_checkDisabledRules($this->actionButtons[$button]['disabledRules'], $resultTheLine);
-                if ($actionIsDisabled) {
-                    $content .= '<td width="1%">&nbsp;</td>';
-                } else {
-                    $content .= '<td width="1%" nowrap><div style="font-size:10px;">';
-                    //Chceck type of action
-                    if (!isset($this->actionButtons[$button]['type']) or $this->actionButtons[$button]['type'] == 'standard') { //Standard icon
-                       $content .= $this->_createActionIcon($resultTheLine, $this->actionButtons[$button], $listKey);
-                    } elseif ($this->actionButtons[$button]['type'] == 'preview') { //View icon
-                        $content .= $this->_createActionIcon($resultTheLine, $this->actionButtons[$button], $listKey);
-                    } elseif ($this->actionButtons[$button]['type'] == 'switch') {  //Switch icon
-                        //Switch rules to be ON
-                        $switchIsOn = $this->_checkDisabledRules($this->actionButtons[$button]['switchRules'], $resultTheLine);
-
-                        if (isset($this->actionButtons[$button]['on']) && $switchIsOn) { //Switch ON
-                            $content .= $this->_createActionIcon($resultTheLine, $this->actionButtons[$button]['on'], $listKey);
-                        } elseif (isset($this->actionButtons[$button]['off'])) { //Switch OFF
-                            $content .= $this->_createActionIcon($resultTheLine, $this->actionButtons[$button]['off'], $listKey);
+            if (!empty($this->actionButtons)) {
+                for ($button = 0; $button < count($this->actionButtons); ++$button) {
+                    $actionIsDisabled = $this->_checkDisabledRules($this->actionButtons[$button]['disabledRules'], $resultTheLine);
+                    if ($actionIsDisabled) {
+                        $content .= '<td width="1%">&nbsp;</td>';
+                    } else {
+                        $content .= '<td width="1%" nowrap><div style="font-size:10px;">';
+                        //Chceck type of action
+                        if (!isset($this->actionButtons[$button]['type']) or $this->actionButtons[$button]['type'] == 'standard') { //Standard icon
+                           $content .= $this->_createActionIcon($resultTheLine, $this->actionButtons[$button], $listKey);
+                        } elseif ($this->actionButtons[$button]['type'] == 'preview') { //View icon
+                            $content .= $this->_createActionIcon($resultTheLine, $this->actionButtons[$button], $listKey);
+                        } elseif ($this->actionButtons[$button]['type'] == 'switch') {  //Switch icon
+                            //Switch rules to be ON
+                            $switchIsOn = $this->_checkDisabledRules($this->actionButtons[$button]['switchRules'], $resultTheLine);
+    
+                            if (isset($this->actionButtons[$button]['on']) && $switchIsOn) { //Switch ON
+                                $content .= $this->_createActionIcon($resultTheLine, $this->actionButtons[$button]['on'], $listKey);
+                            } elseif (isset($this->actionButtons[$button]['off'])) { //Switch OFF
+                                $content .= $this->_createActionIcon($resultTheLine, $this->actionButtons[$button]['off'], $listKey);
+                            }
                         }
+                        $content .= '</div></td>';
                     }
-                    $content .= '</div></td>';
                 }
             }
 

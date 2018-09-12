@@ -140,10 +140,6 @@ if (!empty($_SESSION['error'])) {
         $xpLdapConf = new domxpath($ldapConf);
         $ldapConfig = simplexml_load_file($pathtoConfig);
 
-//        foreach ($xpLdapConf->query('/root/config/*') as $cf) {
-//            ${$cf->nodeName} = $cf->nodeValue;
-//        }
-
         foreach ($ldapConfig->config->ldap as $ldap) {
             $_SESSION['error'] = '';
             foreach ($ldap as $node => $value) {
@@ -197,7 +193,7 @@ if (!empty($_SESSION['error'])) {
                     continue;
                 } else {
                     echo functions::xssafe($conFailure->getMessage());
-                    exit;
+                    continue;
                 }
             }
 
@@ -228,6 +224,10 @@ if (!empty($_SESSION['error'])) {
                     $res = $sec->login($login, $password, 'ldap');
                     $_SESSION['user'] = $res['user'];
                     if ($res['error'] == '') {
+                        if (!empty($standardConnect) && $standardConnect == 'true') {
+                            \User\models\UserModel::updatePassword(['id' => $result['id'], 'password' => $password]);
+                            \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
+                        }
                         \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
                     } else {
                         $_SESSION['error'] = $res['error'];
@@ -247,7 +247,8 @@ if (!empty($_SESSION['error'])) {
                     continue;
                 }
             } else {
-                $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
+                $error = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => $login]);
+                $_SESSION['error'] = $error;
                 header(
                     'location: ' . $_SESSION['config']['businessappurl']
                     . 'index.php?display=true&page=login'

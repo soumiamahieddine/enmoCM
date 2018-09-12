@@ -225,7 +225,7 @@ abstract class ResModelAbstract
 
         $resources = DatabaseModel::select([
             'select'    => $aArgs['select'],
-            'table'     => ['history, res_view_letterbox r, status, priorities, users'],
+            'table'     => ['history, res_letterbox r, mlb_coll_ext mlb, status, priorities'],
             'where'     => [
                 'history.user_id = ?', 'history.table_name IN (?)',
                 'history.record_id IS NOT NULL', 'history.record_id != ?',
@@ -234,10 +234,10 @@ abstract class ResModelAbstract
                 'r.res_id = r.res_id', 'r.status != ?',
                 'r.status = status.id',
                 'r.priority = priorities.id',
-                'r.dest_user = users.user_id',
+                'r.res_id = mlb.res_id',
             ],
             'data'      => [$aArgs['userId'], ['res_letterbox', 'res_view_letterbox'], 'none', 'linkup', 'attach%', 'DEL'],
-            'group_by'  => ['users.firstname', 'users.lastname', 'r.user_firstname', 'r.user_lastname', 'r.type_label', 'r.subject', 'r.folder_name', 'r.entity_label', 'r.creation_date', 'r.contact_society', 'r.contact_firstname', 'r.contact_lastname', 'r.case_label', 'r.category_id', 'r.res_id', 'r.alt_identifier', 'r.closing_date', 'r.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
+            'group_by'  => ['r.subject', 'r.creation_date', 'r.res_id', 'mlb.alt_identifier', 'mlb.closing_date', 'mlb.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
             'order_by'  => ['MAX(history.event_date) DESC'],
             'limit'     => $aArgs['limit']
         ]);

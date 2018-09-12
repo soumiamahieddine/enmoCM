@@ -801,7 +801,7 @@ if ($stmt->rowCount() == 0) {
             } elseif ($data[$key]['field_type'] == 'select') {
                 $inputUrl = $_SESSION['config']['businessappurl'];
                 if ($key == 'type_id') {
-                    $inputAttr = 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype_details\' , \''._DOCTYPE.' '._MISSING.'\');"';
+                    $inputAttr = 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype_details\' , \''._DOCTYPE.' '._MISSING.'\', ' . $s_id . ');"';
                 } elseif ($key == 'priority') {
                     $inputAttr = 'onchange="updateProcessDate(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=update_process_date\', '.$s_id.')"';
                 }
@@ -875,9 +875,14 @@ if ($stmt->rowCount() == 0) {
             } elseif ($data[$key]['field_type'] == 'autocomplete') {
                 if ($key == 'folder' && $core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder', false) == 1)) {
                     $inputValue = $data['folder']['show_value'];
-                    echo "<input type='text' name='folder' id='folder' onblur='' value='{$inputValue}' class='{$disabledClass}' {$disabledAttr}/>";
-                    echo '<div id="show_folder" class="autocomplete"></div>';
-                    echo '<script type="text/javascript">initList(\'folder\', \'show_folder\',\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=autocomplete_folders&mode=folder\',  \'Input\', \'2\');</script>';
+
+                    echo '<div class="typeahead__container" style="width:206px">
+                    	     <div class="typeahead__field">
+                                <input type="text" name="folder" id="folder" value="'.$inputValue.'" class="folderSearch '.$disabledClass.'" '.$disabledAttr.' autocomplete="off" style="font-size: small;"/>
+                    	     </div>
+                         </div>';
+
+                    echo '<script type="text/javascript">loadTypeahead(\'.folderSearch\', \'desc\', true, \'index.php?display=true&module=folder&page=autocomplete_folders&mode=folder\');</script>';
                 } else {
                     $inputValue = $data['folder']['show_value'];
                     echo "<input type='text' name='folder' id='folder' class='readonly' onblur='' value='{$inputValue}' readonly='readonly'/>";

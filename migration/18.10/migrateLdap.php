@@ -39,11 +39,28 @@ foreach ($customs as $custom) {
         }
 
         if (file_exists("custom/{$custom}/modules/ldap/xml/config.xml")) {
-            $configXmlfile = simplexml_load_file("custom/{$custom}/modules/ldap/xml/config.xml");
+            $dom = new DOMDocument();
+            $dom->formatOutput = true;
 
-            $configXmlfile->config->addChild('standardConnect', 'false');
+            $dom->load("custom/{$custom}/modules/ldap/xml/config.xml");
 
-            $res = $configXmlfile->asXML();
+            $config = $dom->getElementsByTagName('config')[0];
+            $saveNodes = [];
+            foreach ($config->childNodes as $node) {
+                $saveNodes[] = $node;
+            }
+
+            while ($config->hasChildNodes()) {
+                $config->removeChild($config->firstChild);
+            }
+
+            $ldap = $dom->createElement('ldap');
+            foreach ($saveNodes as $node) {
+                $ldap->appendChild($node);
+            }
+            $ldap->appendChild($dom->createElement('standardConnect', 'false'));
+            $config->appendChild($ldap);
+            $res = $dom->saveXML($dom, LIBXML_NOEMPTYTAG);
             $fp = @fopen("custom/{$custom}/modules/ldap/xml/config.xml", "w+");
             if ($fp) {
                 fwrite($fp, $res);
