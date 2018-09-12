@@ -6,6 +6,18 @@ $etapes = ['form'];
 
 function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
 {
+    $values_str = '';
+    if (empty($_SESSION['stockCheckbox'])) {
+        for ($i=0; $i<count($values); $i++) {
+            $values_str .= $values[$i].', ';
+        }
+    } else {
+        for ($i=0; $i<count($_SESSION['stockCheckbox']); $i++) {
+            $values_str .= $_SESSION['stockCheckbox'][$i].', ';
+        }
+    }
+    $values_str = preg_replace('/, $/', '', $values_str);
+
     $config = getXml();
 
     $html = '<form name="sendToExternalSB" id="sendToExternalSB" method="post" class="forms" action="#">';
@@ -29,7 +41,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $html .='<div align="center">';
     $html .=' <input type="button" name="validate" id="validate" value="'._VALIDATE.'" class="button" ' .
             'onclick="valid_action_form(\'sendToExternalSB\', \'' . $path_manage_action .
-            '\', \'' . $id_action . '\', \'' . $values[0] . '\', \'res_letterbox\', \'null\', \'letterbox_coll\', \'' .
+            '\', \'' . $id_action . '\', \'' . $values_str . '\', \'res_letterbox\', \'null\', \'letterbox_coll\', \'' .
             $mode . '\');" />';
     $html .='<input type="button" name="cancel" id="cancel" class="button" value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
 
