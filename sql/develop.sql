@@ -516,11 +516,11 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 
 /* Migration converted documents */
 INSERT INTO adr_attachments(res_id, type, docserver_id, path, filename, fingerprint) 
-SELECT r.res_id as real_res_id, 'PDF', 'CONVERT_ATTACH', r2.path as convert_path, r2.filename as convert_filename, r2.fingerprint as convert_fingerprint from res_view_attachments r LEFT JOIN res_view_attachments r2 ON REPLACE( r.filename, RIGHT(r.filename, 4), '' ) = REPLACE( r2.filename, RIGHT(r2.filename, 4), '' ) WHERE r.status not in ('DEL', 'OBS', 'TMP') AND r2.status not in ('DEL', 'OBS', 'TMP') AND r.attachment_type <> 'converted_pdf' AND r2.attachment_type = 'converted_pdf' AND r.res_id <> 0;
+SELECT r.res_id as real_res_id, 'PDF', 'CONVERT_ATTACH', r2.path as convert_path, r2.filename as convert_filename, r2.fingerprint as convert_fingerprint from res_view_attachments r LEFT JOIN res_view_attachments r2 ON REGEXP_REPLACE(r.filename, '\.(.)*$', '') = REGEXP_REPLACE(r2.filename, '\.(.)*$', '') WHERE r.status not in ('DEL', 'OBS', 'TMP') AND r2.status not in ('DEL', 'OBS', 'TMP') AND r.attachment_type <> 'converted_pdf' AND r2.attachment_type = 'converted_pdf' AND r.res_id <> 0;
 
 
 INSERT INTO adr_attachments_version(res_id, type, docserver_id, path, filename, fingerprint) 
-SELECT r.res_id_version as real_res_id, 'PDF', 'CONVERT_ATTACH_VERSION', r2.path as convert_path, r2.filename as convert_filename, r2.fingerprint as convert_fingerprint from res_view_attachments r LEFT JOIN res_view_attachments r2 ON REPLACE( r.filename, RIGHT(r.filename, 4), '' ) = REPLACE( r2.filename, RIGHT(r2.filename, 4), '' ) WHERE r.status not in ('DEL', 'OBS', 'TMP') AND r2.status not in ('DEL', 'OBS', 'TMP') AND r.attachment_type <> 'converted_pdf' AND r2.attachment_type = 'converted_pdf' AND r.res_id_version <> 0;
+SELECT r.res_id_version as real_res_id, 'PDF', 'CONVERT_ATTACH_VERSION', r2.path as convert_path, r2.filename as convert_filename, r2.fingerprint as convert_fingerprint from res_view_attachments r LEFT JOIN res_view_attachments r2 ON REGEXP_REPLACE(r.filename, '\.(.)*$', '') = REGEXP_REPLACE(r2.filename, '\.(.)*$', '') WHERE r.status not in ('DEL', 'OBS', 'TMP') AND r2.status not in ('DEL', 'OBS', 'TMP') AND r.attachment_type <> 'converted_pdf' AND r2.attachment_type = 'converted_pdf' AND r.res_id_version <> 0;
 
 DELETE from res_attachments WHERE attachment_type = 'converted_pdf'
 DELETE from res_version_attachments WHERE attachment_type = 'converted_pdf'
