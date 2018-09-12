@@ -155,6 +155,7 @@ if (isset($_GET['num'])) {
         }
     }
 } else {
+    
     $extension = explode('.', $_SESSION['upfile']['name']);
     $count_level = count($extension) - 1;
     $the_ext = $extension[$count_level];
@@ -215,6 +216,33 @@ if (isset($_GET['num'])) {
         && !empty($_SESSION['upfile']['format'])
         && $_SESSION['upfile']['error'] != 1
     ) {
+        $tmpFilename = pathinfo($_SESSION['upfile']['local_path']);
+        if ($tmpFilename['extension'] != 'pdf') {
+            $return = \Convert\controllers\ConvertPdfController::tmpConvert([
+                'fullFilename'     => $_SESSION['upfile']['local_path'],
+            ]);
+
+            if (empty($return['errors'])) {
+                $mimeType = $is->get_mime_type('pdf');
+                //print_r($_SESSION['upfile']);exit;
+                header('Pragma: public');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                header('Cache-Control: public');
+                header('Content-Description: File Transfer');
+                header('Content-Type: '.$mimeType);
+                header(
+                    'Content-Disposition: inline; filename='.basename('maarch').'.'
+                    .$ext.';'
+                );
+                header('Content-Transfer-Encoding: binary');
+
+                $loc = $return['fullFilename'];
+                readfile($loc);
+
+                exit();
+            }
+        }
         if ($showFile) {
             $mimeType = $is->get_mime_type($_SESSION['upfile']['format']);
             //print_r($_SESSION['upfile']);exit;

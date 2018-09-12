@@ -58,7 +58,12 @@ class ConvertPdfController
         ValidatorModel::intVal($aArgs, ['resId']);
         ValidatorModel::boolType($aArgs, ['isVersion']);
 
-        $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
+        if ($aArgs['collId'] == 'letterbox_coll') {
+            $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename']]);
+        } else {
+            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
+        }
+        
         
         if (empty($resource)) {
             return ['errors' => '[ConvertPdf] Resource does not exist'];
