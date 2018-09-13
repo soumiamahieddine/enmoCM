@@ -1411,7 +1411,7 @@ if ($mode == 'edit') {
 }
 
 // MAIN DOCUMENT IFRAME
-$content .= '<iframe src="index.php?display=true&editingMode=true&dir=indexing_searching&page=view_resource_controler&id='.functions::xssafe($_SESSION['doc_id']).'#view=FitH" name="iframeMainDocument" id="iframeMainDocument" scrolling="auto" frameborder="0" style="width:100% !important;height:85vh;display:none" onmouseover="this.focus()"></iframe>';
+$content .= '<iframe src="../../rest/res/'.functions::xssafe($_SESSION['doc_id']).'/content" name="iframeMainDocument" id="iframeMainDocument" scrolling="auto" frameborder="0" style="width:100% !important;height:85vh;display:none" onmouseover="this.focus()"></iframe>';
 
 $content .= '</div>';
 
