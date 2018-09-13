@@ -224,7 +224,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                 "textcolor"
             ],
             external_plugins: {
-                'bdesk_photo': "../../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
+                'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
             },
             menubar: false,
             toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",
