@@ -316,13 +316,16 @@ class ResController
                 
                 if (!empty($convertedDocument)) {
                     $documentTodisplay = $convertedDocument;
+                    $document['docserver_id'] = $documentTodisplay['docserver_id'];
+                    $document['path'] = $documentTodisplay['path'];
+                    $document['filename'] = $documentTodisplay['filename'];
                 }
             } else {
                 $documentTodisplay = $convertedDocument;
+                $document['docserver_id'] = $documentTodisplay['docserver_id'];
+                $document['path'] = $documentTodisplay['path'];
+                $document['filename'] = $documentTodisplay['filename'];
             }
-            $document['docserver_id'] = $documentTodisplay['docserver_id'];
-            $document['path'] = $documentTodisplay['path'];
-            $document['filename'] = $documentTodisplay['filename'];
         }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template']]);
