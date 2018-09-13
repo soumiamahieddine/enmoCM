@@ -77,6 +77,7 @@ if (isset($_GET['num'])) {
         }
         
         if (empty($return['errors'])) {
+            $_SESSION['upfile'][$num]['fileNamePdfOnTmp'] = $return['fullFilename'];
             header('Pragma: public');
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
