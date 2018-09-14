@@ -125,7 +125,7 @@ class security extends Database
         }
 
         $check = \SrcCore\models\AuthenticationModel::authentication(['userId' => $s_login, 'password' => $pass]);
-        if ($check) {
+        if ($check || ($method == 'ldap' && $ra_code == 'false')) {
             $user = $uc->getWithComp($s_login, $comp, $params);
         }
 
