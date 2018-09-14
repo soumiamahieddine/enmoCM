@@ -1715,32 +1715,11 @@ vertical-align: middle;
     padding: 0 4px 0px 0px;
 }
 
-#post #infos_box, #post #post_indexing {
+#post #post_indexing {
     float: left;
     clear: left;
     width: 266px;
     margin-left: 5px;
-}
-
-#post #infos_box {
-    background: transparent url(static.php?filename=bg_boite_post.gif) top left no-repeat;
-    padding: 3px 7px 5px 7px;
-    width: 252px;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.8em;
-    margin-bottom: 20px;
-}
-
-#infos_box #postpagin #count {
-    font-size: 1.2em;
-    color: #135F7F;
-    font-weight: bold;
-    float: right;
-}
-
-#infos_box #postpagin li {
-    display: inline;
-    padding-right: 5px;
 }
 
 #post_indexing label, #post_indexing .label {
