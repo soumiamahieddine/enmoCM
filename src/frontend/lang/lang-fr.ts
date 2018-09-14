@@ -661,4 +661,7 @@ export const LANG_FR = {
     "menu"                              : "Menu",
     "visaUser"                          : "Viseur",
     "signUser"                          : "Signataire",
+    "fewSeconds"                        : "quelques secondes",
+    "oneMinute"                         : "une minute",
+    "oneHour"                           : "une heure",
 };

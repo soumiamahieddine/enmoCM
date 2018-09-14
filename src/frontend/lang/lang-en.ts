@@ -636,5 +636,8 @@ export const LANG_EN = {
     "menu"                              : "Menu",
     "visaUser"                          : "Visa",
     "signUser"                          : "Signatory",
+    "fewSeconds"                        : "few seconde",
+    "oneMinute"                         : "one minute",
+    "oneHour"                           : "one hour",
 
 };
