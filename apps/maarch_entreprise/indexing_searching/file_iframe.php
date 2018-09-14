@@ -225,6 +225,8 @@ if (isset($_GET['num'])) {
             ]);
 
             if (empty($return['errors'])) {
+                $fileNameBasename = pathinfo($return['fullFilename'], PATHINFO_BASENAME);
+                $_SESSION['upfile']['fileNamePdfOnTmp'] = $fileNameBasename;
                 $mimeType = $is->get_mime_type('pdf');
                 //print_r($_SESSION['upfile']);exit;
                 header('Pragma: public');

@@ -1810,7 +1810,25 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     if ($catId != 'outgoing') {
         \Convert\controllers\ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $resId]);
     }
-
+    //CONVERTED DOC
+    if (!empty($_SESSION['upfile']['fileNamePdfOnTmp'])) {
+        $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
+            'collId'            => 'letterbox_coll',
+            'docserverTypeId'   => 'CONVERT',
+            'fileInfos'         => [
+                'tmpDir'            => $_SESSION['config']['tmppath'],
+                'tmpFileName'       => $_SESSION['upfile']['fileNamePdfOnTmp']
+            ]
+        ]);
+        \Convert\models\AdrModel::createDocumentAdr([
+            'resId'         => $resId,
+            'type'          => 'PDF',
+            'docserverId'   => $storeResult['docserver_id'],
+            'path'          => $storeResult['destination_dir'],
+            'filename'      => $storeResult['file_destination_name'],
+            'fingerprint'   => $storeResult['fingerPrint'],
+        ]);
+    }
     \History\controllers\HistoryController::add([
         'tableName' => 'res_letterbox',
         'recordId'  => $resId,
