@@ -335,6 +335,10 @@ class ResController
 
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
 
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+        
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/features.xml']);
         if ($loadedXml) {
             $watermark = (array)$loadedXml->FEATURES->watermark;

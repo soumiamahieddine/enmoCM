@@ -181,6 +181,10 @@ class AttachmentController
 
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
 
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Attachment not found on docserver']);
+        }
+
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/attachments/xml/config.xml']);
         if ($loadedXml) {
             $watermark = (array)$loadedXml->CONFIG->watermark;
