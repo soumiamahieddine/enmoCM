@@ -23,6 +23,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     mobileQuery: MediaQueryList;
     mobileMode: boolean   = false;
     coreUrl: string;
+    thumbnailUrl: string;
     lang: any = LANG;
 
     loading: boolean = false;
@@ -92,13 +93,14 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     }
 
     viewThumbnail(row:any) {
-        $j('#viewThumbnail').css({'background':'white url('+this.coreUrl+'rest/res/' + row.res_id + '/thumbnail) no-repeat 100%'});
-        $j('#viewThumbnail').css({'background-size': '100%'});
+        this.thumbnailUrl = this.coreUrl+'rest/res/' + row.res_id + '/thumbnail';
         $j('#viewThumbnail').show();
+        $j('#listContent').css({"overflow":"hidden"});
     }
 
     closeThumbnail() {
         $j('#viewThumbnail').hide();
+        $j('#listContent').css({"overflow":"auto"});
     }
 
     goToDetail(row:any){
