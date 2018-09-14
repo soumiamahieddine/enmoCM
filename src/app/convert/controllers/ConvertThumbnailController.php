@@ -30,7 +30,7 @@ class ConvertThumbnailController
         ValidatorModel::notEmpty($aArgs, ['collId', 'resId']);
         ValidatorModel::stringType($aArgs, ['collId']);
         ValidatorModel::intVal($aArgs, ['resId', 'outgoingId']);
-        ValidatorModel::boolType($aArgs, ['isOutgoingVersion']);
+        ValidatorModel::boolType($aArgs, ['isOutgoingVersion','isVersion']);
 
 
         if ($aArgs['collId'] == 'letterbox_coll') {
@@ -41,6 +41,9 @@ class ConvertThumbnailController
                 $resource = AttachmentModel::getById(['id' => $aArgs['outgoingId'], 'isVersion' => $aArgs['isOutgoingVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
                 $convertedDocument =  AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['outgoingId'], 'isVersion' => $aArgs['isOutgoingVersion']]);
             }
+        } else {
+            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
+            $convertedDocument =  AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion']]);
         }
 
         if (empty($resource)) {
@@ -105,13 +108,24 @@ class ConvertThumbnailController
             return ['errors' => "[ConvertThumbnail] {$storeResult['errors']}"];
         }
 
-        AdrModel::createDocumentAdr([
-            'resId'         => $aArgs['resId'],
-            'type'          => 'TNL',
-            'docserverId'   => $storeResult['docserver_id'],
-            'path'          => $storeResult['destination_dir'],
-            'filename'      => $storeResult['file_destination_name'],
-        ]);
+        if ($aArgs['collId'] == 'letterbox_coll') {
+            AdrModel::createDocumentAdr([
+                'resId'         => $aArgs['resId'],
+                'type'          => 'TNL',
+                'docserverId'   => $storeResult['docserver_id'],
+                'path'          => $storeResult['destination_dir'],
+                'filename'      => $storeResult['file_destination_name'],
+            ]);
+        } else {
+            AdrModel::createAttachAdr([
+                'resId'         => $aArgs['resId'],
+                'type'          => 'TNL',
+                'docserverId'   => $storeResult['docserver_id'],
+                'path'          => $storeResult['destination_dir'],
+                'filename'      => $storeResult['file_destination_name'],
+                'isVersion'     => $aArgs['isVersion'],
+            ]);
+        }
 
         return true;
     }
