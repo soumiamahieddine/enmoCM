@@ -10,13 +10,12 @@
         <mat-sidenav-content id="listContent">
             <mat-card class="card-app-content">
                 <mat-card id="viewThumbnail" style="display:none;position: absolute;z-index: 2;"><img src="{{thumbnailUrl}}"/></mat-card>
-                <mat-card>
+                <mat-card *ngIf="homeData.homeMessage">
                     <div style="display: flex">
                         <div *ngIf="!mobileMode" style="text-align:center;flex: 1;background: url(static.php?filename=logo_only.svg);background-size: auto auto;height: 70px;background-size: contain;background-repeat: no-repeat;background-position: center;">
                         </div>
                         <div style="flex:10;padding-left: 10px;">
-                            <span [innerHTML]="lang.welcomeInGEC"></span>&nbsp;
-                            <b>{{currentDate}}</b>.
+                            <span [innerHTML]="homeData.homeMessage"></span>
                         </div>
                     </div>
                     <div style="text-align: right;opacity: 0.5;">
