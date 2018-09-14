@@ -119,7 +119,8 @@ abstract class basket_Abstract extends Database
         if (isset($userData['primarygroup']) && isset($userData['UserId'])) {
             $absBasketsArr = $this->load_basket_abs($userData['UserId']);
             $_SESSION['user']['baskets'] = array_merge(
-               $_SESSION['user']['baskets'], $absBasketsArr
+               $_SESSION['user']['baskets'],
+                $absBasketsArr
             );
         }
     }
@@ -158,16 +159,16 @@ abstract class basket_Abstract extends Database
                     $path = $_SESSION['config']['businessappurl']
                     . 'index.php?page='
                     . $_SESSION['basket_page'][$ind]['NAME'];
-                } else if (strtoupper($mode) == 'FRAME') {
+                } elseif (strtoupper($mode) == 'FRAME') {
                     $path = $_SESSION['config']['businessappurl']
                     . $_SESSION['basket_page'][$ind]['NAME'] . '.php';
-                } else if (strtoupper($mode) == 'INCLUDE') {
+                } elseif (strtoupper($mode) == 'INCLUDE') {
                     $path = 'apps/' . $_SESSION['config']['app_id'] . '/'
                     . $_SESSION['basket_page'][$ind]['NAME'] . '.php';
                 } else {
                     return '';
                 }
-            } else if (strtoupper(
+            } elseif (strtoupper(
                 $_SESSION['basket_page'][$ind]['ORIGIN']
             ) == "MODULE"
             ) { // The page is in a module
@@ -186,14 +187,13 @@ abstract class basket_Abstract extends Database
                         . $_SESSION['basket_page'][$ind]['NAME']
                         . '&module='
                         . $_SESSION['basket_page'][$ind]['MODULE'];
-                    } else if (strtoupper($mode) == 'FRAME') {
+                    } elseif (strtoupper($mode) == 'FRAME') {
                         $path = $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&module='
                         . $_SESSION['basket_page'][$ind]['MODULE']
                         . '&page='
                         . $_SESSION['basket_page'][$ind]['NAME'];
-
-                    } else if (strtoupper($mode) == 'INCLUDE') {
+                    } elseif (strtoupper($mode) == 'INCLUDE') {
                         $path = 'modules' . DIRECTORY_SEPARATOR
                         . $_SESSION['basket_page'][$ind]['MODULE']
                         . DIRECTORY_SEPARATOR
@@ -241,7 +241,7 @@ abstract class basket_Abstract extends Database
         $i = 0;
         foreach ($xmlfile->BASKETPAGE as $basketPage) {
             $desc = (string) $basketPage->LABEL;
-            if (!empty($desc) && defined($desc) && constant($desc) <> NULL) {
+            if (!empty($desc) && defined($desc) && constant($desc) <> null) {
                 $desc = constant($desc);
             }
             $collections = array();
@@ -266,16 +266,20 @@ abstract class basket_Abstract extends Database
      *
      */
     public function load_basket($primaryGroup, $userId)
-    { 
+    {
         $arr = array();
         $db = new Database();
         $stmt = $db->query(
             "SELECT gb.basket_id FROM " . GROUPBASKET_TABLE . " gb, "
-            . BASKET_TABLE . " b WHERE gb.group_id = ? and gb.basket_id = b.basket_id order by b.basket_order, b.basket_name ", array($primaryGroup));
+            . BASKET_TABLE . " b WHERE gb.group_id = ? and gb.basket_id = b.basket_id order by b.basket_order, b.basket_name ",
+            array($primaryGroup)
+        );
         // $db->show();
         while ($res = $stmt->fetchObject()) {
             $tmp = $this->get_baskets_data(
-                $res->basket_id, $userId, $primaryGroup
+                $res->basket_id,
+                $userId,
+                $primaryGroup
             );
             //$this->show_array($tmp);
             array_push($arr, $tmp);
@@ -284,27 +288,33 @@ abstract class basket_Abstract extends Database
     }
 
     public function load_basket_abs($userId)
-    { 
-	$db = new Database();
+    {
+        $db = new Database();
         $arr = array();
         $stmt = $db->query(
             "select system_id, basket_id, user_abs from " . USER_ABS_TABLE
-            . " where new_user = ?",array($userId));
+            . " where new_user = ?",
+            array($userId)
+        );
         //$db->show();
         while ($res = $stmt->fetchObject()) {
             $stmt2 = $db->query(
             "select status from users"
-            . " where user_id = ?",array($res->user_abs));
+            . " where user_id = ?",
+                array($res->user_abs)
+            );
 
             $res2 = $stmt2->fetchObject();
 
-            if($res2->status <> 'DEL'){
-               array_push(
-                    $arr ,
+            if ($res2->status <> 'DEL') {
+                array_push(
+                    $arr,
                     $this->get_abs_baskets_data(
-                        $res->basket_id, $userId, $res->system_id
+                        $res->basket_id,
+                        $userId,
+                        $res->system_id
                     )
-                ); 
+                );
             }
         }
         return $arr;
@@ -328,7 +338,9 @@ abstract class basket_Abstract extends Database
             . "a.action_page from " . ACTIONS_TABLE . " a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
             . "agb.group_id = ? and agb.basket_id = ? and a.enabled = 'Y' and "
-            . "agb.default_action_list ='N'",array($groupId,$basketId));
+            . "agb.default_action_list ='N'",
+            array($groupId,$basketId)
+        );
         require_once('core/class/ActionControler.php');
         $actionControler = new actionControler();
         $secCtrl = new SecurityControler();
@@ -336,9 +348,10 @@ abstract class basket_Abstract extends Database
         while ($res = $stmt->fetchObject()) {
             if ($res->where_clause <> '') {
                 $whereClause = $secCtrl->process_security_where_clause(
-                    $res->where_clause, $userId
+                    $res->where_clause,
+                    $userId
                 );
-                $whereClause = substr($whereClause,-strlen($whereClause)+6); 
+                $whereClause = substr($whereClause, -strlen($whereClause)+6);
             } else {
                 $whereClause = $res->where_clause;
             }
@@ -374,7 +387,9 @@ abstract class basket_Abstract extends Database
             "select agb.id_action from " . ACTIONS_TABLE . " a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action "
             . "and agb.group_id = ? and agb.basket_id = ? and a.enabled = 'Y' "
-            . "and agb.default_action_list ='Y'",array($groupId,$basketId));
+            . "and agb.default_action_list ='Y'",
+            array($groupId,$basketId)
+        );
 
         if ($stmt->rowCount() < 1) {
             return '';
@@ -417,7 +432,7 @@ abstract class basket_Abstract extends Database
             $_SESSION['current_basket']['actions'] = $_SESSION['user']['baskets'][$ind]['actions'];
             $_SESSION['current_basket']['basket_res_order'] = $_SESSION['user']['baskets'][$ind]['basket_res_order'];
             // $_SESSION['current_basket']['redirect_services'] = $_SESSION['user']['baskets'][$ind]['redirect_services'];
-           // $_SESSION['current_basket']['redirect_users'] = $_SESSION['user']['baskets'][$ind]['redirect_users'];
+            // $_SESSION['current_basket']['redirect_users'] = $_SESSION['user']['baskets'][$ind]['redirect_users'];
             $_SESSION['current_basket']['basket_owner'] = $_SESSION['user']['baskets'][$ind]['basket_owner'];
             $_SESSION['current_basket']['abs_basket'] = $_SESSION['user']['baskets'][$ind]['abs_basket'];
             $_SESSION['current_basket']['lock_list'] = $_SESSION['user']['baskets'][$ind]['lock_list'];
@@ -486,7 +501,6 @@ abstract class basket_Abstract extends Database
                     );
                 }
             }
-
         }
 
         $jsonActions = $this->translates_actions_to_json($actions);
@@ -526,25 +540,51 @@ abstract class basket_Abstract extends Database
         $str = '';
         // Displays the list using list_doc method from class_list_shows
         $str .= $list->list_doc(
-            $paramsList['values'], count($paramsList['values']),
-            $paramsList['title'], $paramsList['what'], $paramsList['page_name'],
-            $paramsList['key'], $paramsList['detail_destination'],
-            $paramsList['view_doc'], false, $method, $actionForm , '',
-            $paramsList['bool_details'], $paramsList['bool_order'],
-            $paramsList['bool_frame'], $paramsList['bool_export'], false, false,
-            true, $boolCheckForm, '', $paramsList['module'], false, '', '',
-            $paramsList['css'], $paramsList['comp_link'],
-            $paramsList['link_in_line'], true, $actionsList,
-            $paramsList['hidden_fields'], $jsonActions, $doAction,
+            $paramsList['values'],
+            count($paramsList['values']),
+            $paramsList['title'],
+            $paramsList['what'],
+            $paramsList['page_name'],
+            $paramsList['key'],
+            $paramsList['detail_destination'],
+            $paramsList['view_doc'],
+            false,
+            $method,
+            $actionForm,
+            '',
+            $paramsList['bool_details'],
+            $paramsList['bool_order'],
+            $paramsList['bool_frame'],
+            $paramsList['bool_export'],
+            false,
+            false,
+            true,
+            $boolCheckForm,
+            '',
+            $paramsList['module'],
+            false,
+            '',
+            '',
+            $paramsList['css'],
+            $paramsList['comp_link'],
+            $paramsList['link_in_line'],
+            true,
+            $actionsList,
+            $paramsList['hidden_fields'],
+            $jsonActions,
+            $doAction,
             $_SESSION['current_basket']['default_action'],
-            $paramsList['open_details_popup'], $paramsList['do_actions_arr'],
-            $paramsList['template'], $paramsList['template_list'],
-            $paramsList['actual_template'], true
+            $paramsList['open_details_popup'],
+            $paramsList['do_actions_arr'],
+            $paramsList['template'],
+            $paramsList['template_list'],
+            $paramsList['actual_template'],
+            true
         );
 
         // Displays the text line if needed
         if (count($paramsList['values']) > 0 && ($paramsList['link_in_line']
-        || $doAction )
+        || $doAction)
         ) {
             $str .= "<em>".$lineTxt."</em>";
         }
@@ -603,8 +643,7 @@ abstract class basket_Abstract extends Database
                 $noFilterOnCat = true;
                 if (!empty($_SESSION['current_basket']['actions'][$i]['CATEGORIES'])
                     && is_array($_SESSION['current_basket']['actions'][$i]['CATEGORIES'])
-                    && count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']) > 0)
-                {
+                    && count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']) > 0) {
                     $noFilterOnCat = false;
                 }
                 $categoryIdForActions = '';
@@ -621,8 +660,8 @@ abstract class basket_Abstract extends Database
                 if ($noFilterOnCat || $categoryIdForActions != '') {
                     // If in mode "PAGE_USE", testing the action where clause on the res_id before adding the action
                     if (
-                        strtoupper($mode) == 'PAGE_USE' 
-                        && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y' 
+                        strtoupper($mode) == 'PAGE_USE'
+                        && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
                         && $testWhere && strtoupper($resId) != 'NONE'
                     ) {
                         $where = ' where res_id = ' . $resId;
@@ -633,9 +672,9 @@ abstract class basket_Abstract extends Database
                         if ($stmt->rowCount() > 0) {
                             $arr[] = ['VALUE' => $_SESSION['current_basket']['actions'][$i]['ID'], 'LABEL' => $_SESSION['current_basket']['actions'][$i]['LABEL']];
                         }
-                    } else if (strtoupper($mode) == 'PAGE_USE' && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y') {
+                    } elseif (strtoupper($mode) == 'PAGE_USE' && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y') {
                         $arr[] = ['VALUE' => $_SESSION['current_basket']['actions'][$i]['ID'], 'LABEL' => $_SESSION['current_basket']['actions'][$i]['LABEL']];
-                    } else if (strtoupper($mode) == 'MASS_USE' && $_SESSION['current_basket']['actions'][$i]['MASS_USE'] == 'Y') {
+                    } elseif (strtoupper($mode) == 'MASS_USE' && $_SESSION['current_basket']['actions'][$i]['MASS_USE'] == 'Y') {
                         // If "MASS_USE" adding the actions in the array
                         $arr[] = ['VALUE' => $_SESSION['current_basket']['actions'][$i]['ID'], 'LABEL' => $_SESSION['current_basket']['actions'][$i]['LABEL']];
                     }
@@ -654,13 +693,15 @@ abstract class basket_Abstract extends Database
      * @return array
      */
     public function get_baskets($userId)
-    {   
+    {
         $db = new Database();
         $stmt = $db->query(
             "select b.basket_id, b.basket_name from " . BASKET_TABLE . " b, "
             . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
             . USERGROUPS_TABLE . " u where uc.user_id = ? and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
-            . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id and u.enabled = 'Y' ", [$userId]);
+            . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id and u.enabled = 'Y' ",
+            [$userId]
+        );
 
         $arr = [];
         while ($res = $stmt->fetchObject()) {
@@ -689,7 +730,9 @@ abstract class basket_Abstract extends Database
         $db = new Database();
         $stmt = $db->query(
             "select basket_id, is_virtual, basket_owner from "
-            . USER_ABS_TABLE . " mu where user_abs = ?",array($userId));
+            . USER_ABS_TABLE . " mu where user_abs = ?",
+            array($userId)
+        );
         $arr = array();
         while ($res = $stmt->fetchObject()) {
             $basketId = $res->basket_id;
@@ -697,13 +740,17 @@ abstract class basket_Abstract extends Database
             $isVirtual = $res->is_virtual;
             $stmt2 = $db->query(
                 "select basket_name from " . BASKET_TABLE
-                . " where basket_id = ?",array($basketId));
+                . " where basket_id = ?",
+                array($basketId)
+            );
             $res2 = $stmt2->fetchObject();
             $basketName = $res2->basket_name;
             if ($isVirtual == 'Y' && $basketOwner <> '') {
                 $stmt3 = $db->query(
                     "select firstname, lastname from " . USERS_TABLE
-                    ." where user_id = ?", array($basketOwner));
+                    ." where user_id = ?",
+                    array($basketOwner)
+                );
                 $res2 = $stmt3->fetchObject();
                 $userName = $res2->firstname . ' ' . $res2->lastname;
                 $basketName .= "(".$userName.")";
@@ -741,7 +788,9 @@ abstract class basket_Abstract extends Database
         $stmt = $db->query(
             "select basket_id, coll_id, basket_name, basket_desc, "
             . "basket_clause, is_visible, color, basket_res_order from "
-            . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",array($basketId));
+            . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",
+            array($basketId)
+        );
         $res = $stmt->fetchObject();
         $tab['id'] = $res->basket_id;
         $tab['coll_id'] = $res->coll_id;
@@ -761,26 +810,33 @@ abstract class basket_Abstract extends Database
             $stmt = $db->query(
                 "select group_id from "
                 . $_SESSION['tablename']['usergroup_content']
-                . " where primary_group = 'Y' and user_id = ?",array($userId));
+                . " where primary_group = 'Y' and user_id = ?",
+                array($userId)
+            );
             $res = $stmt->fetchObject();
             $groupId = $res->group_id;
         }
         $stmt = $db->query(
             "select result_page from "
-            . GROUPBASKET_TABLE . " where group_id = ? and basket_id = ?",array($groupId,$basketId));
+            . GROUPBASKET_TABLE . " where group_id = ? and basket_id = ?",
+            array($groupId,$basketId)
+        );
         $res = $stmt->fetchObject();
 
         $basketIdPage = $res->result_page;
         $tab['id_page'] = $basketIdPage;
         // Retrieves the basket url (frame and no_frame modes)
         $basketPathPageNoFrame = $this->retrieve_path_page(
-            $basketIdPage, 'no_frame'
+            $basketIdPage,
+            'no_frame'
         );
         $basketPathPageFrame = $this->retrieve_path_page(
-            $basketIdPage, 'frame'
+            $basketIdPage,
+            'frame'
         );
         $basketPathPageInclude = $this->retrieve_path_page(
-            $basketIdPage, 'include'
+            $basketIdPage,
+            'include'
         );
         $tab['page_no_frame'] = $basketPathPageNoFrame;
         $tab['page_frame'] = $basketPathPageFrame;
@@ -788,17 +844,21 @@ abstract class basket_Abstract extends Database
         // Gets actions of the basket
         // #TODO : make one method to get all actions : merge _getDefaultAction and _getActionsFromGroupbaket
         $tab['default_action'] = $this->_getDefaultAction(
-            $basketId, $groupId
+            $basketId,
+            $groupId
         );
         $tab['actions'] = $this->_getActionsFromGroupbaket(
-            $basketId, $groupId, $userId
+            $basketId,
+            $groupId,
+            $userId
         );
 
         $tab['abs_basket'] = $absBasket;
         $tab['is_virtual'] = $isVirtual;
         $tab['basket_owner'] = $basketOwner;
         $tab['clause'] = $secCtrl->process_security_where_clause(
-            $tab['clause'], $userId
+            $tab['clause'],
+            $userId
         );
         $tab['clause'] = str_replace('where', '', $tab['clause']);
         
@@ -808,7 +868,9 @@ abstract class basket_Abstract extends Database
 
         $db = new Database();
         $stmt = $db->query(
-            "select id, group_desc from usergroups where group_id = ?",array($groupId));
+            "select id, group_desc from usergroups where group_id = ?",
+            array($groupId)
+        );
         $res = $stmt->fetchObject();
         $groupDesc = $res->group_desc;
 
@@ -816,7 +878,7 @@ abstract class basket_Abstract extends Database
         $tab['group_serial_id'] = $res->id;
         $tab['group_desc'] = $groupDesc;
         $tab['is_secondary'] = $isSecondary;
-		
+        
         return $tab;
     }
 
@@ -835,7 +897,9 @@ abstract class basket_Abstract extends Database
         $secCtrl = new SecurityControler();
         $stmt = $db->query(
             "select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_visible"
-            . " from " . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",array($basketId));
+            . " from " . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",
+            array($basketId)
+        );
 
         $res = $stmt->fetchObject();
         $tab['id'] = $res->basket_id;
@@ -849,7 +913,9 @@ abstract class basket_Abstract extends Database
         $tab['is_visible'] = $res->is_visible;
         $stmt = $db->query(
             "select user_abs, is_virtual, basket_owner from " . USER_ABS_TABLE
-            . " where basket_id = ? and new_user = ? and system_id = ?", array($basketId,$userId,$systemId));
+            . " where basket_id = ? and new_user = ? and system_id = ?",
+            array($basketId,$userId,$systemId)
+        );
 
         $absBasket = true;
         $res = $stmt->fetchObject();
@@ -864,7 +930,9 @@ abstract class basket_Abstract extends Database
             $tmpUser = $userAbs;
             $stmt = $db->query(
                 "select firstname, lastname from " . USERS_TABLE
-                . " where user_id = ? ",array($userAbs));
+                . " where user_id = ? ",
+                array($userAbs)
+            );
             $res = $stmt->fetchObject();
             $nameUserAbs = $res->firstname . ' ' . $res->lastname;
             $tab['name'] .= " (" . $nameUserAbs . ")";
@@ -874,7 +942,9 @@ abstract class basket_Abstract extends Database
             $tmpUser = $basketOwner;  /// TO DO : test if basket_owner empty
             $stmt = $db->query(
                 "select firstname, lastname from " . USERS_TABLE
-                ." where user_id = ?",array($basketOwner));
+                ." where user_id = ?",
+                array($basketOwner)
+            );
             $res = $stmt->fetchObject();
             $nameBasketOwner = $res->firstname . ' ' . $res->lastname;
             $tab['name'] .= " (" . $nameBasketOwner . ")";
@@ -888,7 +958,9 @@ abstract class basket_Abstract extends Database
             || (!isset($_SESSION['user']['UserId']))
         ) {
             $stmt = $db->query(
-                "select group_id from usergroup_content where primary_group = 'Y' and user_id = ?",array($tmpUser));
+                "select group_id from usergroup_content where primary_group = 'Y' and user_id = ?",
+                array($tmpUser)
+            );
 
             $groups = [];
             while ($res = $stmt->fetchObject()) {
@@ -907,23 +979,29 @@ abstract class basket_Abstract extends Database
         $tab['id_page'] = $basketIdPage;
         // Retrieves the basket url (frame and no_frame modes)
         $basketPathPageNoFrame = $this->retrieve_path_page(
-            $basketIdPage, 'no_frame'
+            $basketIdPage,
+            'no_frame'
         );
         $basketPathPageFrame = $this->retrieve_path_page(
-            $basketIdPage, 'frame'
+            $basketIdPage,
+            'frame'
         );
         $basketPathPageInclude = $this->retrieve_path_page(
-            $basketIdPage, 'include'
+            $basketIdPage,
+            'include'
         );
         $tab['page_no_frame'] = $basketPathPageNoFrame;
         $tab['page_frame'] = $basketPathPageFrame;
         $tab['page_include'] = $basketPathPageInclude;
         // Gets actions of the basket
         $tab['default_action'] = $this->_getDefaultAction(
-            $basketId, $primaryGroup
+            $basketId,
+            $primaryGroup
         );
         $tab['actions'] = $this->_getActionsFromGroupbaket(
-            $basketId, $primaryGroup, $userId
+            $basketId,
+            $primaryGroup,
+            $userId
         );
 
         $tab['is_virtual'] = $isVirtual;
@@ -931,7 +1009,8 @@ abstract class basket_Abstract extends Database
         $tab['abs_basket'] = $absBasket;
 
         $tab['clause'] = $secCtrl->process_security_where_clause(
-            $tab['clause'], $basketOwner
+            $tab['clause'],
+            $basketOwner
         );
         $tab['clause'] = str_replace('where', '', $tab['clause']);
         
@@ -952,33 +1031,44 @@ abstract class basket_Abstract extends Database
         $db = new Database();
         $stmt = $db->query(
             "delete from " . USER_ABS_TABLE . " where is_virtual = 'Y' "
-            . "and basket_owner = ?",array($userId));
+            . "and basket_owner = ?",
+            array($userId)
+        );
         //Then we search all the virtual baskets assigned to the user
         $stmt = $db->query(
             "select basket_owner, basket_id from " . USER_ABS_TABLE
-            . " where is_virtual='Y' and user_abs = ?",array($userId));
+            . " where is_virtual='Y' and user_abs = ?",
+            array($userId)
+        );
         // and delete this baskets if they were reassigned to someone else
         $i = 0;
         while ($res = $stmt->fetchObject()) {
             $stmt2 = $db->query(
                 "delete from " . USER_ABS_TABLE . " where is_virtual ='Y' "
-                . " and basket_id = ? and basket_owner = ? ",array($res->basket_id,$res->basket_owner));
+                . " and basket_id = ? and basket_owner = ? ",
+                array($res->basket_id,$res->basket_owner)
+            );
             $i ++;
         }
         // then we delete all baskets where the user was the missing user
         $stmt = $db->query(
-            "DELETE  from " . USER_ABS_TABLE . " WHERE user_abs=?",array($userId)
+            "DELETE  from " . USER_ABS_TABLE . " WHERE user_abs=?",
+            array($userId)
         );
         $stmt = $db->query(
-            "update " . USERS_TABLE . " set status = 'OK' where user_id = ?",array($userId));
+            "update " . USERS_TABLE . " set status = 'OK' where user_id = ?",
+            array($userId)
+        );
     }
 
-    public function is_redirect_to_action_basket($basketId, $groupId) 
+    public function is_redirect_to_action_basket($basketId, $groupId)
     {
         $db = new Database();
         $stmt = $db->query(
-                "select result_page from " . GROUPBASKET_TABLE 
-                . " where group_id = ? and basket_id = ?",array($groupId,$basketId));
+                "select result_page from " . GROUPBASKET_TABLE
+                . " where group_id = ? and basket_id = ?",
+            array($groupId,$basketId)
+        );
         $res = $stmt->fetchObject();
 
         $basketIdPage = $res->result_page;
@@ -987,22 +1077,5 @@ abstract class basket_Abstract extends Database
         } else {
             return false;
         }
-    }
-    
-    /**
-     * Return true if the user has a basket in the required collection
-     *
-     * @param  $collId string the collection
-     * @return boolean
-     */
-    public function isUserHasBasketInCollection($collId)
-    {
-        $cpt = count($_SESSION['user']['baskets']);
-        for ($i=0;$i<$cpt;$i++) {
-            if ($_SESSION['user']['baskets'][$i]['coll_id'] == $collId) {
-                return true;
-            }
-        }
-        return false;
     }
 }
