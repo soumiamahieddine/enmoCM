@@ -472,7 +472,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                                     $stmt = $db->query($query);
                                     $templateOffice = $stmt->fetchObject()->template_id;
                                 }
-                                if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp'] != '' && isset($templateOffice)) {
+                                if ($_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp'] != '' && isset($templateOffice)) {
                                     $_SESSION['new_id'] = $id;
                                     
                                     $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
@@ -939,20 +939,24 @@ if (isset($_POST['add']) && $_POST['add']) {
         //UPDATE QUERY
         if ((int) $_REQUEST['relation'] == 1) {
             $stmt = $db->query('UPDATE res_attachments SET '.$set_update.' WHERE res_id = :res_id', $arrayPDO);
-            \Convert\models\AdrModel::deleteAttachAdr([
-                'resId'         => $_REQUEST['res_id'],
-                'isVersion'     => false
-            ]);
+            if ($_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && $_SESSION['upfile'][0]['upAttachment'] != false) {
+                \Convert\models\AdrModel::deleteAttachAdr([
+                    'resId'         => $_REQUEST['res_id'],
+                    'isVersion'     => false
+                ]);
+            }
         } else {
             $stmt = $db->query('UPDATE res_version_attachments SET '.$set_update.' WHERE res_id = :res_id', $arrayPDO);
-            \Convert\models\AdrModel::deleteAttachAdr([
-                'resId'         => $_REQUEST['res_id'],
-                'isVersion'     => true
-            ]);
+            if ($_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && $_SESSION['upfile'][0]['upAttachment'] != false) {
+                \Convert\models\AdrModel::deleteAttachAdr([
+                    'resId'         => $_REQUEST['res_id'],
+                    'isVersion'     => true
+                ]);
+            }
         }
     }
     //copie de la version PDF de la pièce si mode de conversion sur le client
-    if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && empty($error) && $_SESSION['upfile'][0]['upAttachment'] != false) {
+    if ($_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && empty($error) && $_SESSION['upfile'][0]['upAttachment'] != false) {
         if ($id != null) {
             $_SESSION['new_id'] = $id;
         } else {
@@ -1407,7 +1411,7 @@ if ($mode == 'edit') {
 }
 
 // MAIN DOCUMENT IFRAME
-$content .= '<iframe src="index.php?display=true&editingMode=true&dir=indexing_searching&page=view_resource_controler&id='.functions::xssafe($_SESSION['doc_id']).'#view=FitH" name="iframeMainDocument" id="iframeMainDocument" scrolling="auto" frameborder="0" style="width:100% !important;height:85vh;display:none" onmouseover="this.focus()"></iframe>';
+$content .= '<iframe src="../../rest/res/'.functions::xssafe($_SESSION['doc_id']).'/content" name="iframeMainDocument" id="iframeMainDocument" scrolling="auto" frameborder="0" style="width:100% !important;height:85vh;display:none" onmouseover="this.focus()"></iframe>';
 
 $content .= '</div>';
 

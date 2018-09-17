@@ -2595,6 +2595,10 @@ if (!defined('_VIEW_CONTACTS_GROUPS')) {
     define('_VIEW_CONTACTS_GROUPS', 'Groupements de contacts');
 }
 
+if (!defined('_CONTACTS_GROUP')) {
+    define('_CONTACTS_GROUP', 'Groupement de contacts');
+}
+
 if (!defined('_ADDRESSES_LIST')) {
     define('_ADDRESSES_LIST', 'Liste des adresses');
 }

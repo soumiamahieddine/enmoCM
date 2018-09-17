@@ -18,6 +18,7 @@ namespace Resource\controllers;
 use Attachment\models\AttachmentModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertThumbnailController;
+use Convert\controllers\ConvertPdfController;
 use Docserver\controllers\DocserverController;
 use Resource\models\ChronoModel;
 use SrcCore\models\ValidatorModel;
@@ -74,9 +75,18 @@ class StoreController
             $resId = false;
             if ($aArgs['table'] == 'res_letterbox') {
                 $resId = ResModel::create($data);
-                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $resId]);
+                ConvertPdfController::convert([
+                    'resId'     => $resId,
+                    'collId'    => 'letterbox_coll',
+                    'isVersion' => false,
+                ]);
             } elseif ($aArgs['table'] == 'res_attachments') {
                 $resId = AttachmentModel::create($data);
+                ConvertPdfController::convert([
+                    'resId'     => $resId,
+                    'collId'    => 'attachments_coll',
+                    'isVersion' => false,
+                ]);
             }
 
             return $resId;

@@ -1,10 +1,13 @@
 import {Pipe, PipeTransform, NgZone, ChangeDetectorRef, OnDestroy} from "@angular/core";
+import { LANG } from '../app/translate.component';
+
 @Pipe({
 	name:'timeAgo',
 	pure:false
 })
 export class TimeAgoPipe implements PipeTransform, OnDestroy {
 	private timer: number;
+	lang: any = LANG;
 	constructor(private changeDetectorRef: ChangeDetectorRef, private ngZone: NgZone) {}
 	transform(value:string) {
 		this.removeTimer();
@@ -15,18 +18,18 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 		let minuteNumber = ('0' + d.getMinutes()).slice(-2);
 		let now = new Date();
 		let month = [];
-		month[0] = "Jan.";
-		month[1] = "Fév.";
-		month[2] = "Mars";
-		month[3] = "Avr.";
-		month[4] = "Mai";
-		month[5] = "Juin";
-		month[6] = "Juil.";
-		month[7] = "Août";
-		month[8] = "Sept.";
-		month[9] = "Oct.";
-		month[10] = "Nov.";
-		month[11] = "Déc.";
+		month[0] = this.lang.januaryShort;
+		month[1] = this.lang.februaryShort;
+		month[2] = this.lang.marchShort;
+		month[3] = this.lang.aprilShort;
+		month[4] = this.lang.mayShort;
+		month[5] = this.lang.juneShort;
+		month[6] = this.lang.julyShort;
+		month[7] = this.lang.augustShort;
+		month[8] = this.lang.septemberShort;
+		month[9] = this.lang.octoberShort;
+		month[10] = this.lang.novemberShort;
+		month[11] = this.lang.decemberShort;
 		let seconds = Math.round(Math.abs((now.getTime() - d.getTime())/1000));
 		let timeToUpdate = (Number.isNaN(seconds)) ? 1000 : this.getSecondsUntilUpdate(seconds) *1000;
 		this.timer = this.ngZone.runOutsideAngular(() => {
@@ -45,13 +48,13 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 		if (Number.isNaN(seconds)){
 			return '';
 		} else if (seconds <= 45) {
-			return 'quelques secondes';
+			return this.lang.fewSeconds;
 		} else if (seconds <= 90) {
-			return 'une minute';
+			return this.lang.oneMinute;
 		} else if (minutes <= 45) {
-			return minutes + ' minutes';
+			return minutes + ' ' + this.lang.minutes;
 		} else if (minutes <= 90) {
-			return 'une heure';
+			return this.lang.oneHour;
 		} else if (hours <= 22) {
 			return hourNumber+':'+minuteNumber;
 			//return hours + ' heures';

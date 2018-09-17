@@ -127,7 +127,7 @@ export class TemplateAdministrationComponent implements OnInit {
                     "autoresize"
                 ],
                 external_plugins: {
-                    'bdesk_photo': "../../../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
+                    'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
                 },
                 menubar: false,
                 toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",

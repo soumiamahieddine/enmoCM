@@ -221,13 +221,15 @@ if (!empty($_SESSION['error'])) {
 
                 if ($result) {
                     $_SESSION['error'] = '';
-                    $res = $sec->login($login, $password, 'ldap');
+                    if (!empty($standardConnect) && $standardConnect == 'true') {
+                        \User\models\UserModel::updatePassword(['id' => $result['id'], 'password' => $password]);
+                        \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
+                    } else {
+                        $standardConnect = 'false';
+                    }
+                    $res = $sec->login($login, $password, 'ldap', $standardConnect);
                     $_SESSION['user'] = $res['user'];
                     if ($res['error'] == '') {
-                        if (!empty($standardConnect) && $standardConnect == 'true') {
-                            \User\models\UserModel::updatePassword(['id' => $result['id'], 'password' => $password]);
-                            \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
-                        }
                         \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
                     } else {
                         $_SESSION['error'] = $res['error'];

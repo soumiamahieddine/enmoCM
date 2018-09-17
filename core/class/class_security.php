@@ -85,7 +85,7 @@ class security extends Database
      * @param  $s_login  string User login
      * @param  $pass string User password
      */
-    public function login($s_login, $pass, $method = false, $ra_code = false)
+    public function login($s_login, $pass, $method = false, $standardConnect = false)
     {
         $array = array();
         $error = '';
@@ -125,7 +125,7 @@ class security extends Database
         }
 
         $check = \SrcCore\models\AuthenticationModel::authentication(['userId' => $s_login, 'password' => $pass]);
-        if ($check) {
+        if ($check || ($method == 'ldap' && $standardConnect == 'false')) {
             $user = $uc->getWithComp($s_login, $comp, $params);
         }
 

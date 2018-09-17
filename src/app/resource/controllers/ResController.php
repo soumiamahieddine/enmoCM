@@ -39,6 +39,7 @@ use SrcCore\controllers\PreparedClauseController;
 use User\models\UserModel;
 use Docserver\models\ResDocserverModel;
 use Resource\models\ChronoModel;
+use Convert\controllers\ConvertPdfController;
 
 class ResController
 {
@@ -277,14 +278,53 @@ class ResController
                 $attachmentTodisplay = $attachment[0];
                 $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
                 $isVersion = empty($attachmentTodisplay['res_id']);
-
-                $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'id' => $id, 'isVersion' => $isVersion]);
-                if (!empty($convertedAttachment)) {
+                if ($isVersion) {
+                    $collId = "attachments_version_coll";
+                } else {
+                    $collId = "attachments_coll";
+                }
+                $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'isVersion' => $isVersion]);
+                if (empty($convertedAttachment)) {
+                    ConvertPdfController::convert([
+                        'resId'     => $id,
+                        'collId'    => $collId,
+                        'isVersion' => $isVersion,
+                    ]);
+        
+                    $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'isVersion' => $isVersion]);
+                    
+                    if (!empty($convertedAttachment)) {
+                        $attachmentTodisplay = $convertedAttachment;
+                    }
+                } else {
                     $attachmentTodisplay = $convertedAttachment;
                 }
                 $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
                 $document['path'] = $attachmentTodisplay['path'];
                 $document['filename'] = $attachmentTodisplay['filename'];
+            }
+        } else {
+            $convertedDocument = ResModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
+
+            if (empty($convertedDocument)) {
+                ConvertPdfController::convert([
+                    'resId'     => $aArgs['resId'],
+                    'collId'    => 'letterbox_coll',
+                ]);
+    
+                $convertedDocument = ResModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
+                
+                if (!empty($convertedDocument)) {
+                    $documentTodisplay = $convertedDocument;
+                    $document['docserver_id'] = $documentTodisplay['docserver_id'];
+                    $document['path'] = $documentTodisplay['path'];
+                    $document['filename'] = $documentTodisplay['filename'];
+                }
+            } else {
+                $documentTodisplay = $convertedDocument;
+                $document['docserver_id'] = $documentTodisplay['docserver_id'];
+                $document['path'] = $documentTodisplay['path'];
+                $document['filename'] = $documentTodisplay['filename'];
             }
         }
 
@@ -295,6 +335,10 @@ class ResController
 
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
 
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+        
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/features.xml']);
         if ($loadedXml) {
             $watermark = (array)$loadedXml->FEATURES->watermark;

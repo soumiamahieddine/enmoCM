@@ -851,147 +851,149 @@ abstract class visa_Abstract extends Database
             }
 
             //FOR USER SIGN
-            foreach ($circuit['sign']['users'] as $info_userSign) {
-                if (empty($info_userSign['process_date'])) {
-                    if (($lastUserVis == true && $isVisaStep == true)) {
-                        $vised = ' currentVis';
-                        $modif = 'false';
-                        $disabled = '';
-                        $del_vis = '';
-                        $link_vis = 'arrow-right ';
-                        if ($info_userSign['requested_signature'] && $info_userSign['user_id'] != $_SESSION['user']['UserId']) {
-                            $dropZone = '';
-                            $info_vised = '<p style="color:red;">'._SIGN_USER_COU_DESC.' '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'</p>';
-                        } elseif ($info_userSign['requested_signature'] && $info_userSign['user_id'] == $_SESSION['user']['UserId']) {
-                            $dropZone = '';
-                            $info_vised = '<p style="font-weight:normal;">'._SIGN_USER_COU.'</p>';
-                        } elseif (!$info_userSign['requested_signature'] && $info_userSign['user_id'] != $_SESSION['user']['UserId']) {
-                            $dropZone = '';
-                            $info_vised = '<p style="color:red;">'._VISA_USER_COU_DESC.' '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'</p>';
-                        } else {
-                            $dropZone = '';
-                            $info_vised = '<p style="font-weight:normal;">'._VISA_USER_COU.'</p>';
-                        }
-                        if ($core->test_service('modify_visa_in_signatureBook', 'visa', false)) {
-                            $modif = 'true';
-                            $dropZone = '<i class="fa -alt fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
-                            $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
-                        } else {
+            if (!empty($circuit['sign']['users'])) {
+                foreach ($circuit['sign']['users'] as $info_userSign) {
+                    if (empty($info_userSign['process_date'])) {
+                        if (($lastUserVis == true && $isVisaStep == true)) {
+                            $vised = ' currentVis';
                             $modif = 'false';
-                        }
-                        $info_vised .= '<select style="display:none;" id="signRequest_'.$i.'" '.$isAllAttachementSigned;
-                        $info_vised .= ' disabled="disabled" ';
-                        $info_vised .= '>';
-                        $info_vised .= '<option value="false">'._VISA_USER_SEARCH.'</option>';
-
-                        $info_vised .= '<option value="true"';
-                        if (!empty($info_userSign['requested_signature'])) {
-                            $info_vised .= ' selected="selected" ';
-                        }
-                        $info_vised .= '>'._SIGNATORY.'</option>';
-                        $info_vised .= '</select>';
-                    } else {
-                        $dropZone = '<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
-                        $vised = '';
-                        if ($bool_modif == true) {
-                            $modif = 'true';
-                            $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                             $disabled = '';
-                        } else {
-                            $dropZone = '';
-                            $modif = 'false';
                             $del_vis = '';
-                            $disabled = ' disabled="disabled"';
-                        }
-
-                        $info_vised = '<br/><select id="signRequest_'.$i.'" '.$isAllAttachementSigned;
-                        if (!empty($info_userSign['signatory'])) {
-                            $info_vised .= ' disabled="disabled" ';
-                        }
-                        $info_vised .= '>';
-                        $info_vised .= '<option value="false">'._VISA_USER_SEARCH.'</option>';
-
-                        $info_vised .= '<option value="true"';
-                        if (!empty($info_userSign['requested_signature'])) {
-                            $info_vised .= ' selected="selected" ';
-                        }
-                        $info_vised .= '>'._SIGNATORY.'</option>';
-                        $info_vised .= '</select>';
-                        $link_vis = 'hourglass-half';
-                    }
-                } else {
-                    $modif = 'false';
-                    if (preg_match("/\[DEL\]/", $info_userSign['process_comment'])) {
-                        $info_vised = '<br/><select id="signRequest_'.$i.'" '.$isAllAttachementSigned;
-                        if (!empty($info_userSign['signatory'])) {
-                            $info_vised .= ' disabled="disabled" ';
-                        }
-                        $info_vised .= '>';
-                        $info_vised .= '<option value="false">'._VISA_USER_SEARCH.'</option>';
-
-                        $info_vised .= '<option value="true"';
-                        if (!empty($info_userSign['requested_signature'])) {
-                            $info_vised .= ' selected="selected" ';
-                        }
-                        $info_vised .= '>'._SIGNATORY.'</option>';
-                        $info_vised .= '</select>';
-
-                        $link_vis = 'hourglass-half';
-                        $link_vis = 'times';
-                        $vised = ' moved vised';
-                        $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
-                    } else {
-                        $vised = ' vised';
-                        $link_vis = 'check';
-                        if (!empty($info_userVis['signatory'])) {
-                            $info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userSign['process_date'], '', '', true).'</sub>';
-
-                            $info_vised = '<br/><select id="signRequest_'.$i.'" style="width:auto;display:none;" '.$isAllAttachementSigned;
+                            $link_vis = 'arrow-right ';
+                            if ($info_userSign['requested_signature'] && $info_userSign['user_id'] != $_SESSION['user']['UserId']) {
+                                $dropZone = '';
+                                $info_vised = '<p style="color:red;">'._SIGN_USER_COU_DESC.' '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'</p>';
+                            } elseif ($info_userSign['requested_signature'] && $info_userSign['user_id'] == $_SESSION['user']['UserId']) {
+                                $dropZone = '';
+                                $info_vised = '<p style="font-weight:normal;">'._SIGN_USER_COU.'</p>';
+                            } elseif (!$info_userSign['requested_signature'] && $info_userSign['user_id'] != $_SESSION['user']['UserId']) {
+                                $dropZone = '';
+                                $info_vised = '<p style="color:red;">'._VISA_USER_COU_DESC.' '.$info_userSign['firstname'].' '.$info_userSign['lastname'].'</p>';
+                            } else {
+                                $dropZone = '';
+                                $info_vised = '<p style="font-weight:normal;">'._VISA_USER_COU.'</p>';
+                            }
+                            if ($core->test_service('modify_visa_in_signatureBook', 'visa', false)) {
+                                $modif = 'true';
+                                $dropZone = '<i class="fa -alt fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
+                                $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                            } else {
+                                $modif = 'false';
+                            }
+                            $info_vised .= '<select style="display:none;" id="signRequest_'.$i.'" '.$isAllAttachementSigned;
                             $info_vised .= ' disabled="disabled" ';
                             $info_vised .= '>';
                             $info_vised .= '<option value="false">'._VISA_USER_SEARCH.'</option>';
+    
                             $info_vised .= '<option value="true"';
-                            $info_vised .= ' selected="selected" ';
+                            if (!empty($info_userSign['requested_signature'])) {
+                                $info_vised .= ' selected="selected" ';
+                            }
                             $info_vised .= '>'._SIGNATORY.'</option>';
                             $info_vised .= '</select>';
                         } else {
-                            $info_vised = '<br/><sub>visé le : '.functions::format_date_db($info_userSign['process_date'], '', '', true).'</sub>';
-
-                            $info_vised = '<br/><select id="signRequest_'.$i.'" style="width:auto;display:none;" '.$isAllAttachementSigned;
-                            $info_vised .= ' disabled="disabled" ';
+                            $dropZone = '<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
+                            $vised = '';
+                            if ($bool_modif == true) {
+                                $modif = 'true';
+                                $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                                $disabled = '';
+                            } else {
+                                $dropZone = '';
+                                $modif = 'false';
+                                $del_vis = '';
+                                $disabled = ' disabled="disabled"';
+                            }
+    
+                            $info_vised = '<br/><select id="signRequest_'.$i.'" '.$isAllAttachementSigned;
+                            if (!empty($info_userSign['signatory'])) {
+                                $info_vised .= ' disabled="disabled" ';
+                            }
                             $info_vised .= '>';
-                            $info_vised .= '<option value="false" selected="selected">'._VISA_USER_SEARCH.'</option>';
+                            $info_vised .= '<option value="false">'._VISA_USER_SEARCH.'</option>';
+    
                             $info_vised .= '<option value="true"';
+                            if (!empty($info_userSign['requested_signature'])) {
+                                $info_vised .= ' selected="selected" ';
+                            }
                             $info_vised .= '>'._SIGNATORY.'</option>';
                             $info_vised .= '</select>';
+                            $link_vis = 'hourglass-half';
+                        }
+                    } else {
+                        $modif = 'false';
+                        if (preg_match("/\[DEL\]/", $info_userSign['process_comment'])) {
+                            $info_vised = '<br/><select id="signRequest_'.$i.'" '.$isAllAttachementSigned;
+                            if (!empty($info_userSign['signatory'])) {
+                                $info_vised .= ' disabled="disabled" ';
+                            }
+                            $info_vised .= '>';
+                            $info_vised .= '<option value="false">'._VISA_USER_SEARCH.'</option>';
+    
+                            $info_vised .= '<option value="true"';
+                            if (!empty($info_userSign['requested_signature'])) {
+                                $info_vised .= ' selected="selected" ';
+                            }
+                            $info_vised .= '>'._SIGNATORY.'</option>';
+                            $info_vised .= '</select>';
+    
+                            $link_vis = 'hourglass-half';
+                            $link_vis = 'times';
+                            $vised = ' moved vised';
+                            $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                        } else {
+                            $vised = ' vised';
+                            $link_vis = 'check';
+                            if (!empty($info_userVis['signatory'])) {
+                                $info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userSign['process_date'], '', '', true).'</sub>';
+    
+                                $info_vised = '<br/><select id="signRequest_'.$i.'" style="width:auto;display:none;" '.$isAllAttachementSigned;
+                                $info_vised .= ' disabled="disabled" ';
+                                $info_vised .= '>';
+                                $info_vised .= '<option value="false">'._VISA_USER_SEARCH.'</option>';
+                                $info_vised .= '<option value="true"';
+                                $info_vised .= ' selected="selected" ';
+                                $info_vised .= '>'._SIGNATORY.'</option>';
+                                $info_vised .= '</select>';
+                            } else {
+                                $info_vised = '<br/><sub>visé le : '.functions::format_date_db($info_userSign['process_date'], '', '', true).'</sub>';
+    
+                                $info_vised = '<br/><select id="signRequest_'.$i.'" style="width:auto;display:none;" '.$isAllAttachementSigned;
+                                $info_vised .= ' disabled="disabled" ';
+                                $info_vised .= '>';
+                                $info_vised .= '<option value="false" selected="selected">'._VISA_USER_SEARCH.'</option>';
+                                $info_vised .= '<option value="true"';
+                                $info_vised .= '>'._SIGNATORY.'</option>';
+                                $info_vised .= '</select>';
+                            }
                         }
                     }
+                    //VISA USER LINE CIRCUIT
+                    $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
+                    $str .= '<span class="visaUserStatus">';
+                    $str .= '<i class="fa fa-'.$link_vis.'" aria-hidden="true"></i>';
+                    $str .= '</span>';
+                    $str .= '<span class="visaUserInfo">';
+                    $str .= '<sup class="visaUserPos nbResZero">'.$i.'</sup>&nbsp;&nbsp;';
+                    $str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userSign['lastname'].' '.$info_userSign['firstname'].' <sup class="nbRes">'.$info_userSign['entity_id'].'</sup>';
+                    $str .= '&nbsp;&nbsp; <sub><i id="signedUser_'.$i.'" title="au moins un document a été signé par cet utilisateur" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#F99830;';
+                    if (empty($info_userSign['signatory'])) {
+                        $str .= 'visibility:hidden';
+                    }
+                    $str .= '"></i>'.$info_vised;
+                    $str .= '</span>';
+                    $str .= '<span class="visaUserAction">';
+                    $str .= $del_vis;
+                    $str .= '</span>';
+                    $str .= '<span class="visaUserConsigne">';
+                    $str .= '<input class="userId" type="hidden" value="'.$info_userSign['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userSign['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userSign['process_comment'].'"/>';
+                    $str .= '</span>';
+                    $str .= '<span id="dropZone">';
+                    $str .= $dropZone;
+                    $str .= '</span>';
+                    $str .= '</div>';
+                    ++$i;
                 }
-                //VISA USER LINE CIRCUIT
-                $str .= '<div class="droptarget'.$vised.'" id="visa_'.$i.'" draggable="'.$modif.'">';
-                $str .= '<span class="visaUserStatus">';
-                $str .= '<i class="fa fa-'.$link_vis.'" aria-hidden="true"></i>';
-                $str .= '</span>';
-                $str .= '<span class="visaUserInfo">';
-                $str .= '<sup class="visaUserPos nbResZero">'.$i.'</sup>&nbsp;&nbsp;';
-                $str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userSign['lastname'].' '.$info_userSign['firstname'].' <sup class="nbRes">'.$info_userSign['entity_id'].'</sup>';
-                $str .= '&nbsp;&nbsp; <sub><i id="signedUser_'.$i.'" title="au moins un document a été signé par cet utilisateur" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#F99830;';
-                if (empty($info_userSign['signatory'])) {
-                    $str .= 'visibility:hidden';
-                }
-                $str .= '"></i>'.$info_vised;
-                $str .= '</span>';
-                $str .= '<span class="visaUserAction">';
-                $str .= $del_vis;
-                $str .= '</span>';
-                $str .= '<span class="visaUserConsigne">';
-                $str .= '<input class="userId" type="hidden" value="'.$info_userSign['user_id'].'"/><input class="visaDate" type="hidden" value="'.$info_userSign['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userSign['process_comment'].'"/>';
-                $str .= '</span>';
-                $str .= '<span id="dropZone">';
-                $str .= $dropZone;
-                $str .= '</span>';
-                $str .= '</div>';
-                ++$i;
             }
         }
 
@@ -1023,63 +1025,6 @@ abstract class visa_Abstract extends Database
         $joinedFiles = array();
         $db = new Database();
         if ($from_res_attachment === false) {
-            require_once 'core/class/class_security.php';
-            $sec = new security();
-            $versionTable = $sec->retrieve_version_table_from_coll_id(
-                $coll_id
-            );
-
-            //Have version table
-            if ($versionTable != '') {
-                $stmt = $db->query(
-                    'select res_id from '
-                            .$versionTable
-                            ." where res_id_master = ? and status <> 'DEL' order by res_id desc",
-                            array($id)
-                );
-                $line = $stmt->fetchObject();
-                $lastVersion = $line->res_id;
-                //Have new version
-                if ($lastVersion != '') {
-                    $stmt = $db->query(
-                        'select res_id, description, subject, title, format, filesize, relation, creation_date, typist from '
-                        .$versionTable." where res_id = ? and status <> 'DEL'",
-                        array($lastVersion)
-                    );
-                    // $db->show();
-                    //Get infos
-                    while ($res = $stmt->fetchObject()) {
-                        $label = '';
-                        //Tile, or subject or description
-                        if (strlen(trim($res->title)) > 0) {
-                            $label = $res->title;
-                        } elseif (strlen(trim($res->subject)) > 0) {
-                            $label = $res->subject;
-                        } elseif (strlen(trim($res->description)) > 0) {
-                            $label = $res->description;
-                        }
-
-                        if (isset($res->typist) && $res->typist != '') {
-                            $typist = $res->typist;
-                        } else {
-                            $typist = '';
-                        }
-                        array_push(
-                            $joinedFiles,
-                            array('id' => $res->res_id, //ID
-                                  'label' => $label, //Label
-                                  'format' => $res->format, //Format
-                                  'filesize' => $res->filesize, //Filesize
-                                  'creation_date' => $res->creation_date, //creation_date
-                                  'typist' => $typist, //typist
-                                  'is_version' => true, //Have version bool
-                                  'version' => $res->relation, //Version
-                                )
-                        );
-                    }
-                }
-            }
-
             $stmt = $db->query(
                 'select res_id, description, subject, title, format, filesize, relation, creation_date from '
                 .$table." where res_id = ? and status <> 'DEL'",
@@ -1093,7 +1038,7 @@ abstract class visa_Abstract extends Database
                     .RES_ATTACHMENTS_TABLE
                     ." where res_id_master = ? and coll_id = ? and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and status <> 'DEL' order by attachment_type, creation_date",
                     array($id, $coll_id)
-                    );
+                );
             } else {
                 $stmt = $db->query(
                     'select res_id, res_id_version, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from '
@@ -1112,22 +1057,42 @@ abstract class visa_Abstract extends Database
                 $ac = new attachments_controler();
                 if ($res->res_id != 0) {
                     $idFile = $res->res_id;
+                    $isVersion = false;
                 } else {
                     $idFile = $res->res_id_version;
+                    $isVersion = true;
                 }
-                $infos_attach = $ac->getAttachmentInfos($idFile);
-
+                $convertedDocument =  \Attachment\models\AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $idFile, 'isVersion' => $isVersion]);
                 $viewLink = $_SESSION['config']['businessappurl']
-                    .'index.php?display=true&module=attachments&page=view_attachment&res_id_master='
-                    .$id.'&id='.$res->res_id;
-                if (!file_exists($infos_attach['pathfile_pdf'])) {
+                        .'index.php?display=true&module=attachments&page=view_attachment&res_id_master='
+                        .$id.'&id='.$res->res_id;
+                if (!empty($convertedDocument)) {
+                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
+                    $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+                    
+                    
+                    if (!file_exists($pathToDocument)) {
+                        $pdf_exist = false;
+                    }
+                } else {
                     $pdf_exist = false;
                 }
             } else {
-                $viewLink = $_SESSION['config']['businessappurl']
-                    .'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
-                    .$id;
                 $idFile = $res->res_id;
+                $convertedDocument =  \Resource\models\ResModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $idFile]);
+                $viewLink = $_SESSION['config']['businessappurl']
+                        .'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
+                        .$id;
+                if (!empty($convertedDocument)) {
+                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
+                    $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+                    
+                    if (!file_exists($pathToDocument)) {
+                        $pdf_exist = false;
+                    }
+                } else {
+                    $pdf_exist = false;
+                }
             }
             $label = '';
             //Tile, or subject or description
@@ -1151,9 +1116,7 @@ abstract class visa_Abstract extends Database
                 $typist = '';
             }
 
-            if (
-                ($from_res_attachment && $pdf_exist)
-                || strtoupper($res->format) == 'PDF'
+            if (($from_res_attachment && $pdf_exist) || !empty($convertedDocument)
             ) {
                 //nothing
             } else {
@@ -1173,7 +1136,7 @@ abstract class visa_Abstract extends Database
                       'creation_date' => $res->creation_date, //Filesize
                       'attachment_type' => $attachment_type, //attachment_type
                       'typist' => $typist, //attachment_type
-                      'is_version' => false,
+                      'is_version' => $isVersion,
                       'pdf_exist' => $pdf_exist,
                       'version' => '',
                       'viewLink' => $viewLinkHtml,
@@ -1230,8 +1193,7 @@ abstract class visa_Abstract extends Database
                 $contact = $users_tools->get_user($joined_files[$i]['typist']);
                 $dateFormat = explode(' ', $joined_files[$i]['creation_date']);
                 $creation_date = $request->dateformat($dateFormat[0]);
-
-                if ($format == 'pdf') {
+                if ($joined_files[$i]['pdf_exist']) {
                     $check = 'class="check checkPrintFolder" checked="checked"';
                 } else {
                     $check = ' disabled title="'._NO_PDF_FILE.'"';
@@ -1272,10 +1234,17 @@ abstract class visa_Abstract extends Database
                         } else {
                             $check = ' disabled title="'._NO_PDF_FILE.'"';
                         }
-                        $str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname'].' '
+                        if ($joined_files[$i]['is_version'] == true) {
+                            $str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname'].' '
+                                .$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
+                                .$id_doc.'" type="checkbox" name="join_version[]"  value="'.$id_doc.'"  '.$check
+                                .'/>'.$joined_files[$i]['viewLink'].'</td></tr>';
+                        } else {
+                            $str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname'].' '
                                 .$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
                                 .$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
                                 .'/>'.$joined_files[$i]['viewLink'].'</td></tr>';
+                        }
                     }
                 }
             }
@@ -1294,11 +1263,10 @@ abstract class visa_Abstract extends Database
                     //Get data
                     $idNote = $user_notes[$i]['id'];
                     //$noteShort = $request->cut_string($user_notes[$i]['label'], 50);
-                    $noteShort = $request->cut_string(str_replace(
-                        array("'", "\r", "\n", '"'),
-                        array("'", ' ', ' ', '&quot;'),
-                            $user_notes[$i]['label']
-                    ), 50);
+                    $noteShort = $request->cut_string(
+                        str_replace(array("'", "\r", "\n", '"'), array("'", ' ', ' ', '&quot;'), $user_notes[$i]['label']),
+                        50
+                    );
                     $noteShort = functions::xssafe($noteShort);
                     $note = $user_notes[$i]['label'];
                     $userArray = $users_tools->get_user($user_notes[$i]['author']);

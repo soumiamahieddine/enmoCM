@@ -104,7 +104,7 @@ function Bt_history($aArgs = [])
 {
     $query = "INSERT INTO history (table_name, record_id, event_type, "
            . "user_id, event_date, info, id_module, remote_ip, event_id) values(?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)";
-    $arrayPDO = array($aArgs['table_name'], $aArgs['record_id'], 'UP', 'superadmin', $aArgs['info'], 'visa', 'localhost', 'attachup');
+    $arrayPDO = array($aArgs['table_name'], $aArgs['record_id'], $aArgs['event_type'], 'superadmin', $aArgs['info'], 'visa', 'localhost', $aArgs['event_id']);
     $GLOBALS['db']->query($query, $arrayPDO);
 }
 
@@ -213,16 +213,21 @@ function Bt_refusedSignedMail($aArgs = [])
     
     $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $aArgs['refusedStatus'] . "' WHERE res_id = ?", [$aArgs['resIdMaster']]);
 
+    $historyInfo = 'La signature de la pièce jointe '.$aArgs['resIdAttachment'].' ('.$aArgs['tableAttachment'].') a été refusée dans le parapheur externe';
     Bt_history([
         'table_name' => $aArgs['tableAttachment'],
         'record_id'  => $aArgs['resIdAttachment'],
-        'info'       => 'Signature refusée dans le parapheur externe'
+        'info'       => $historyInfo,
+        'event_type' => 'UP',
+        'event_id'   => 'attachup'
     ]);
 
     Bt_history([
         'table_name' => 'res_letterbox',
         'record_id'  => $aArgs['resIdMaster'],
-        'info'       => 'La signature de la pièce jointe '.$aArgs['resIdAttachment'].' ('.$aArgs['tableAttachment'].') a été refusée dans le parapheur externe'
+        'info'       => $historyInfo,
+        'event_type' => 'ACTION#1',
+        'event_id'   => '1'
     ]);
 }
 

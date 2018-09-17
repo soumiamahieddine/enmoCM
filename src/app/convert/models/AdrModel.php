@@ -58,6 +58,34 @@ class AdrModel
         return $adr[0];
     }
 
+    public static function getTypedAttachAdrByResId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'type']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['type']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
+
+        if ($aArgs['isVersion']) {
+            $table = "adr_attachments_version";
+        } else {
+            $table = "adr_attachments";
+        }
+
+        $adr = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => [$table],
+            'where'     => ['res_id = ?', 'type = ?'],
+            'data'      => [$aArgs['resId'], $aArgs['type']]
+        ]);
+
+        if (empty($adr[0])) {
+            return [];
+        }
+
+        return $adr[0];
+    }
+
     public static function createDocumentAdr(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'docserverId', 'path', 'filename', 'type']);

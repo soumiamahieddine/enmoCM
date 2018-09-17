@@ -1,14 +1,18 @@
 <?php
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 
-//FOR ADD NEW ATTACHMENTS
-
-
-
+* @brief   save_attach_res_from_cm
+* @author  dev <dev@maarch.org>
+* @ingroup visa
+*/
 require_once 'modules/attachments/attachments_tables.php';
 
 //new attachment from a template
 if (isset($_SESSION['cm']['resMaster']) && $_SESSION['cm']['resMaster'] <> '') {
-   $objectId = $_SESSION['cm']['resMaster'];
+    $objectId = $_SESSION['cm']['resMaster'];
 }
 
 $_SESSION['cm']['resMaster'] = '';
@@ -16,22 +20,21 @@ $_SESSION['cm']['resMaster'] = '';
 $collId =  $_SESSION['current_basket']['coll_id'];
 
 $docserverControler = new docservers_controler();
-$docserver = $docserverControler->getDocserverToInsert(
-   $collId
-);
+$docserver = $docserverControler->getDocserverToInsert($collId);
 
 if (empty($docserver)) {
     $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
         . _IMG_SIGN_MISSING . '. ' . _MORE_INFOS;
 } else {
     // some checking on docserver size limit
-    if(!is_file($_SESSION['config']['tmppath'] . $tmpFileName)){
+    if (!is_file($_SESSION['config']['tmppath'] . $tmpFileName)) {
         echo "{\"status\":1, \"error\" : \"". _TMP_SIGNED_FILE_FAILED . ': ' ._FILE . ' ' . _ENCRYPTED .' ' . _OR .' ' . _MISSING . ' ' . _OR .' ' . strtolower(NO_PLACE_SIGNATURE) ."\"}";
         exit;
     }
     
     $newSize = $docserverControler->checkSize(
-        $docserver, filesize($_SESSION['config']['tmppath'] . $tmpFileName)
+        $docserver,
+        filesize($_SESSION['config']['tmppath'] . $tmpFileName)
     );
     if ($newSize == 0) {
         $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
@@ -45,24 +48,27 @@ if (empty($docserver)) {
         );
         $storeResult = array();
         $storeResult = $docserverControler->storeResourceOnDocserver(
-            $collId, $fileInfos
+            $collId,
+            $fileInfos
         );
         if (isset($storeResult['error']) && $storeResult['error'] <> '') {
             $_SESSION['error'] = $storeResult['error'];
         } else {
-			require_once "core/class/class_request.php";
-			$db = new Database();
-			$signatoryUser = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
-			if ($_SESSION['visa']['repSignRel'] > 1) {
+            require_once "core/class/class_request.php";
+            $db = new Database();
+            $signatoryUser = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+            if ($_SESSION['visa']['repSignRel'] > 1) {
                 $target_table = 'res_version_attachments';
-                $db->query("UPDATE res_version_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?",[$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
+                $db->query("UPDATE res_version_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?", [$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
             } else {
                 $target_table = 'res_attachments';
-				$db->query("UPDATE res_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?",[$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
+                $db->query("UPDATE res_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?", [$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
             }
-			unset($_SESSION['visa']['repSignRel']);
-			if (isset($_SESSION['visa']['repSignId'])) unset($_SESSION['visa']['repSignId']);
-			
+            unset($_SESSION['visa']['repSignRel']);
+            if (isset($_SESSION['visa']['repSignId'])) {
+                unset($_SESSION['visa']['repSignId']);
+            }
+            
             $resAttach = new resource();
             $_SESSION['data'] = array();
             array_push(
@@ -89,8 +95,10 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
-			
-            if (!isset($statusSign) || empty($statusSign)) $statusSign = 'TRA';
+            
+            if (!isset($statusSign) || empty($statusSign)) {
+                $statusSign = 'TRA';
+            }
             array_push(
                 $_SESSION['data'],
                 array(
@@ -115,7 +123,7 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
-			array_push(
+            array_push(
                 $_SESSION['data'],
                 array(
                     'column' => 'relation',
@@ -140,7 +148,7 @@ if (empty($docserver)) {
                     'type' => 'integer',
                 )
             );
-			
+            
             array_push(
                 $_SESSION['data'],
                 array(
@@ -157,7 +165,7 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
-			array_push(
+            array_push(
                 $_SESSION['data'],
                 array(
                     'column' => 'attachment_type',
@@ -212,26 +220,29 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
-			
-			unset($_SESSION['visa']['last_resId_signed']);
-			
+            
+            unset($_SESSION['visa']['last_resId_signed']);
+            
             $id = $resAttach->load_into_db(
                 RES_ATTACHMENTS_TABLE,
                 $storeResult['destination_dir'],
-                $storeResult['file_destination_name'] ,
+                $storeResult['file_destination_name'],
                 $storeResult['path_template'],
-                $storeResult['docserver_id'], 
+                $storeResult['docserver_id'],
                 $_SESSION['data'],
                 $_SESSION['config']['databasetype']
             );
-			
-			$_SESSION['visa']['last_ans_signed'] = $id;
+            
+            $_SESSION['visa']['last_ans_signed'] = $id;
             if ($id == false) {
                 $_SESSION['error'] = $resAttach->get_error();
-                //echo $resource->get_error();
-                //$resource->show();
-                //exit();
             } else {
+                //PDF convert display
+                \Convert\controllers\ConvertPdfController::convert([
+                    'resId'     => $id,
+                    'collId'    => 'attachments_coll',
+                    'isVersion' => false,
+                ]);
                 if ($_SESSION['history']['attachadd'] == "true") {
                     $hist = new history();
                     $sec = new security();
@@ -239,7 +250,10 @@ if (empty($docserver)) {
                         $collId
                     );
                     $hist->add(
-                        $view, $objectId, 'ADD', 'attachadd',
+                        $view,
+                        $objectId,
+                        'ADD',
+                        'attachadd',
                         ucfirst(_DOC_NUM) . $id . ' '
                         . _NEW_ATTACH_ADDED . ' ' . _TO_MASTER_DOCUMENT
                         . $objectId,
@@ -247,8 +261,11 @@ if (empty($docserver)) {
                         'apps'
                     );
                     $hist->add(
-                        RES_ATTACHMENTS_TABLE, $id, 'ADD','attachadd',
-                        $_SESSION['error'] 
+                        RES_ATTACHMENTS_TABLE,
+                        $id,
+                        'ADD',
+                        'attachadd',
+                        $_SESSION['error']
                         . _NEW_ATTACHMENT,
                         $_SESSION['config']['databasetype'],
                         'attachments'

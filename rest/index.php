@@ -234,6 +234,7 @@ $app->get('/resources/groups/{groupSerialId}/baskets/{basketId}', \Resource\cont
 //Attachments
 $app->get('/res/{resIdMaster}/attachment/{resId}', \Attachment\controllers\AttachmentController::class . ':getFileContent');
 $app->get('/res/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getAttachmentsListById');
+$app->get('/res/{resIdMaster}/attachment/{resId}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 
 //SignatureBook
 $app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');

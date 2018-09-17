@@ -169,7 +169,6 @@ class SignatureBookController
                 'alt_id'        => $incomingMail['alt_identifier'],
                 'title'         => $incomingMail['subject'],
                 'category_id'   => $incomingMail['category_id'],
-                //'viewerLink'    => "index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id={$resId}&collid=letterbox_coll",
                 'viewerLink'    => "../../rest/res/{$resId}/content",
                 'thumbnailLink' => "rest/res/{$resId}/thumbnail"
             ]
@@ -183,18 +182,18 @@ class SignatureBookController
             $realId = 0;
             if ($value['res_id'] == 0) {
                 $realId = $value['res_id_version'];
+                $isVersion = true;
             } elseif ($value['res_id_version'] == 0) {
                 $realId = $value['res_id'];
+                $isVersion = false;
             }
 
-            $viewerId = $realId;
-            $pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
-            $isConverted = false;
-            foreach ($incomingMailAttachments as $tmpKey => $tmpValue) {
-                if ($tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
-                    $viewerId = $tmpValue['res_id'];
-                    $isConverted = true;
-                }
+            $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $value['res_id'], 'isVersion' => $isVersion]);
+
+            if (!empty($convertedAttachment)) {
+                $isConverted = true;
+            } else {
+                $isConverted = false;
             }
 
             $documents[] = [
@@ -202,8 +201,8 @@ class SignatureBookController
                 'title'         => $value['title'],
                 'format'        => $value['format'],
                 'isConverted'   => $isConverted,
-                'viewerLink'    => "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master={$resId}&id={$viewerId}",
-                'thumbnailLink' => "rest/res/{$value['res_id']}/thumbnail"
+                'viewerLink'    => "../../rest/res/{$resId}/attachment/{$value['res_id']}",
+                'thumbnailLink' => "rest/res/{$resId}/attachment/{$value['res_id']}/thumbnail"
             ];
         }
 

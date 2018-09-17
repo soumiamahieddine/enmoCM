@@ -26,6 +26,31 @@ use SrcCore\models\ValidatorModel;
 
 class ConvertPdfController
 {
+    public static function tmpConvert(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['fullFilename']);
+
+        if (!file_exists($aArgs['fullFilename'])) {
+            return ['errors' => '[ConvertPdf] Document '.$aArgs['fullFilename'].' does not exist'];
+        }
+
+        $docInfo = pathinfo($aArgs['fullFilename']);
+
+        $tmpPath = CoreConfigModel::getTmpPath();
+
+
+        $command = "unoconv -f pdf " . escapeshellarg($aArgs['fullFilename']);
+        
+
+        exec('export HOME=/tmp && '.$command, $output, $return);
+
+        if (!file_exists($tmpPath.$docInfo["filename"].'.pdf')) {
+            return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
+        } else {
+            return ['fullFilename' => $tmpPath.$docInfo["filename"].'.pdf'];
+        }
+    }
+
     public static function convert(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['collId', 'resId']);
@@ -33,7 +58,12 @@ class ConvertPdfController
         ValidatorModel::intVal($aArgs, ['resId']);
         ValidatorModel::boolType($aArgs, ['isVersion']);
 
-        $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
+        if ($aArgs['collId'] == 'letterbox_coll') {
+            $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename']]);
+        } else {
+            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
+        }
+        
         
         if (empty($resource)) {
             return ['errors' => '[ConvertPdf] Resource does not exist'];

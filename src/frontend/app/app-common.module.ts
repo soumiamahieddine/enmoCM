@@ -21,7 +21,6 @@ import { AppMaterialModule }                    from './app-material.module';
 import { MainHeaderComponent }                  from './menu/main-header.component';
 import { MenuComponent }                        from './menu/menu.component';
 import { MenuNavComponent }                     from './menu/menu-nav.component';
-import { MenuTopComponent }                     from './menu/menu-top.component';
 import { MenuShortcutComponent }                from './menu/menu-shortcut.component';
 
 /*SEARCH*/
@@ -44,7 +43,6 @@ import { BasketHomeComponent }                        from './basket/basket-home
         MainHeaderComponent,
         MenuComponent,
         MenuNavComponent,
-        MenuTopComponent,
         MenuShortcutComponent,
         SearchHomeComponent,
         BasketHomeComponent,
@@ -57,7 +55,6 @@ import { BasketHomeComponent }                        from './basket/basket-home
         MainHeaderComponent,
         MenuComponent,
         MenuNavComponent,
-        MenuTopComponent,
         MenuShortcutComponent,
         SearchHomeComponent,
         BasketHomeComponent,

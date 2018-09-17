@@ -19,6 +19,7 @@ use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use User\models\UserModel;
+use Parameter\models\ParameterModel;
 
 class HomeController
 {
@@ -27,6 +28,8 @@ class HomeController
         $regroupedBaskets = [];
 
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+        $homeMessage = ParameterModel::getById(['select' => ['param_value_string'], 'id'=> 'homepage_message']);
+        $homeMessage = $homeMessage['param_value_string'];
 
         $redirectedBaskets = BasketModel::getRedirectedBasketsByUserId(['userId' => $GLOBALS['userId']]);
         $groups = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
@@ -78,6 +81,7 @@ class HomeController
         return $response->withJson([
             'regroupedBaskets'  => $regroupedBaskets,
             'assignedBaskets'   => $assignedBaskets,
+            'homeMessage'       => $homeMessage,
         ]);
     }
 

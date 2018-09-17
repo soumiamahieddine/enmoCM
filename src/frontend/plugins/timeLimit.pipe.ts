@@ -1,10 +1,13 @@
 import {Pipe, PipeTransform, NgZone, ChangeDetectorRef, OnDestroy} from "@angular/core";
+import { LANG } from '../app/translate.component';
+
 @Pipe({
 	name:'timeLimit',
 	pure:false
 })
 export class TimeLimitPipe implements PipeTransform, OnDestroy {
 	private timer: number;
+	lang: any = LANG;
 	constructor(private changeDetectorRef: ChangeDetectorRef, private ngZone: NgZone) {}
 	transform(value:string) {
 		this.removeTimer();
@@ -15,18 +18,18 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 		let minuteNumber = ('0' + d.getMinutes()).slice(-2)
 		let now = new Date();
 		let month = new Array();
-		month[0] = "Jan.";
-		month[1] = "Fév.";
-		month[2] = "Mars";
-		month[3] = "Avr.";
-		month[4] = "Mai";
-		month[5] = "Juin";
-		month[6] = "Juil.";
-		month[7] = "Août";
-		month[8] = "Sept.";
-		month[9] = "Oct.";
-		month[10] = "Nov.";
-		month[11] = "Déc.";
+		month[0] = this.lang.januaryShort;
+		month[1] = this.lang.februaryShort;
+		month[2] = this.lang.marchShort;
+		month[3] = this.lang.aprilShort;
+		month[4] = this.lang.mayShort;
+		month[5] = this.lang.juneShort;
+		month[6] = this.lang.julyShort;
+		month[7] = this.lang.augustShort;
+		month[8] = this.lang.septemberShort;
+		month[9] = this.lang.octoberShort;
+		month[10] = this.lang.novemberShort;
+		month[11] = this.lang.decemberShort;
 		let seconds = Math.round(Math.abs((now.getTime() - d.getTime())/1000));
 		let timeToUpdate = (Number.isNaN(seconds)) ? 1000 : this.getSecondsUntilUpdate(seconds) *1000;
 		this.timer = this.ngZone.runOutsideAngular(() => {
@@ -43,14 +46,14 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 		let months = Math.round(Math.abs(days/30.416));
 		let years = Math.round(Math.abs(days/365));
 		if(now > d) {
-			return '<span class="timeDanger" color="warn">dépassée !</span>';
+			return '<span class="timeDanger" color="warn">' + this.lang.outdated + ' !</span>';
 		} else {
 			if (Number.isNaN(seconds)){
 				return '';
 			} else if (days <= 3) {
-				return '<span color="warn">'+days + ' jour(s)'+'</span>';
+				return '<span color="warn">'+ days + ' ' + this.lang.dayS +'</span>';
 			} else if (days <= 7) {
-				return '<span class="timeWarn">'+days + ' jour(s)'+'</span>';
+				return '<span class="timeWarn">'+ days + ' ' + this.lang.dayS +'</span>';
 			} else if (days <= 345) {
 				return '<span color="accent">'+d.getDate()+' '+ month[d.getMonth()]+'</span>';
 			} else if (days <= 545) {

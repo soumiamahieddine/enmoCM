@@ -262,15 +262,21 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
 
         $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master]);
+
+        $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_version_attachments) a été validée dans le parapheur externe';
         Bt_history([
             'table_name' => 'res_version_attachments',
             'record_id'  => $resId,
-            'info'       => 'Signature validée dans le parapheur externe'
+            'info'       => $historyInfo,
+            'event_type' => 'UP',
+            'event_id'   => 'attachup'
         ]);
         Bt_history([
             'table_name' => 'res_letterbox',
             'record_id'  => $value->res_id_master,
-            'info'       => 'La signature de la pièce jointe '.$resId.' (res_version_attachments) a été validée dans le parapheur externe'
+            'info'       => $historyInfo,
+            'event_type' => 'ACTION#1',
+            'event_id'   => '1'
         ]);
     } elseif ($value->status == 'refused') {
         Bt_refusedSignedMail([
@@ -302,15 +308,21 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
 
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master]);
+
+        $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_attachments) a été validée dans le parapheur externe';
         Bt_history([
             'table_name' => 'res_attachments',
             'record_id'  => $resId,
-            'info'       => 'Signature validée dans le parapheur externe'
+            'info'       => $historyInfo,
+            'event_type' => 'UP',
+            'event_id'   => 'attachup'
         ]);
         Bt_history([
             'table_name' => 'res_letterbox',
             'record_id'  => $value->res_id_master,
-            'info'       => 'La signature de la pièce jointe '.$resId.' (res_attachments) a été validée dans le parapheur externe'
+            'info'       => $historyInfo,
+            'event_type' => 'ACTION#1',
+            'event_id'   => '1'
         ]);
     } elseif ($value->status == 'refused') {
         Bt_refusedSignedMail([

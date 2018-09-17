@@ -333,12 +333,6 @@
       <parameter name="value"/>
     </requestDefinition>
 
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="document_list_indexing" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="loadFiveLastMails"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="multiLink" >
       <parameter name="dir" value="indexing_searching"/>
       <parameter name="page" value="multiLink"/>

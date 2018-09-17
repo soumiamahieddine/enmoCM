@@ -14,7 +14,6 @@
 
 namespace Convert\controllers;
 
-
 use Attachment\models\AttachmentModel;
 use Convert\models\AdrModel;
 use Docserver\controllers\DocserverController;
@@ -31,29 +30,42 @@ class ConvertThumbnailController
         ValidatorModel::notEmpty($aArgs, ['collId', 'resId']);
         ValidatorModel::stringType($aArgs, ['collId']);
         ValidatorModel::intVal($aArgs, ['resId', 'outgoingId']);
-        ValidatorModel::boolType($aArgs, ['isOutgoingVersion']);
+        ValidatorModel::boolType($aArgs, ['isOutgoingVersion','isVersion']);
 
 
         if ($aArgs['collId'] == 'letterbox_coll') {
             if (empty($aArgs['outgoingId'])) {
                 $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename']]);
+                $convertedDocument = ResModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
             } else {
                 $resource = AttachmentModel::getById(['id' => $aArgs['outgoingId'], 'isVersion' => $aArgs['isOutgoingVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
+                $convertedDocument =  AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['outgoingId'], 'isVersion' => $aArgs['isOutgoingVersion']]);
             }
+        } else {
+            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
+            $convertedDocument =  AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion']]);
         }
 
         if (empty($resource)) {
             return ['errors' => '[ConvertThumbnail] Resource does not exist'];
         }
 
-        $docserver = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
-        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
-            return ['errors' => '[ConvertThumbnail] Docserver does not exist'];
-        }
+        if (empty($convertedDocument)) {
+            $docserver = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
+            if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+                return ['errors' => '[ConvertThumbnail] Docserver does not exist'];
+            }
 
-        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resource['path']) . $resource['filename'];
-        if (!file_exists($pathToDocument)) {
-            return ['errors' => '[ConvertThumbnail] Document does not exist on docserver'];
+            $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resource['path']) . $resource['filename'];
+            if (!file_exists($pathToDocument)) {
+                return ['errors' => '[ConvertThumbnail] Document does not exist on docserver'];
+            }
+        } else {
+            $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
+            $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+            if (!file_exists($pathToDocument)) {
+                return ['errors' => '[ConvertThumbnail] Document does not exist on docserver'];
+            }
         }
 
         $ext = pathinfo($pathToDocument, PATHINFO_EXTENSION);
@@ -96,13 +108,24 @@ class ConvertThumbnailController
             return ['errors' => "[ConvertThumbnail] {$storeResult['errors']}"];
         }
 
-        AdrModel::createDocumentAdr([
-            'resId'         => $aArgs['resId'],
-            'type'          => 'TNL',
-            'docserverId'   => $storeResult['docserver_id'],
-            'path'          => $storeResult['destination_dir'],
-            'filename'      => $storeResult['file_destination_name'],
-        ]);
+        if ($aArgs['collId'] == 'letterbox_coll') {
+            AdrModel::createDocumentAdr([
+                'resId'         => $aArgs['resId'],
+                'type'          => 'TNL',
+                'docserverId'   => $storeResult['docserver_id'],
+                'path'          => $storeResult['destination_dir'],
+                'filename'      => $storeResult['file_destination_name'],
+            ]);
+        } else {
+            AdrModel::createAttachAdr([
+                'resId'         => $aArgs['resId'],
+                'type'          => 'TNL',
+                'docserverId'   => $storeResult['docserver_id'],
+                'path'          => $storeResult['destination_dir'],
+                'filename'      => $storeResult['file_destination_name'],
+                'isVersion'     => $aArgs['isVersion'],
+            ]);
+        }
 
         return true;
     }
