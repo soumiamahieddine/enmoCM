@@ -42,7 +42,7 @@ class ConvertPdfController
         $command = "unoconv -f pdf " . escapeshellarg($aArgs['fullFilename']);
         
 
-        exec('export HOME=/tmp && '.$command, $output, $return);
+        exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
 
         if (!file_exists($tmpPath.$docInfo["filename"].'.pdf')) {
             return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
@@ -92,7 +92,7 @@ class ConvertPdfController
         $command = "unoconv -f pdf " . escapeshellarg($tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
 
         
-        exec('export HOME=/tmp && '.$command, $output, $return);
+        exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
 
         if (!file_exists($tmpPath.$fileNameOnTmp.'.pdf')) {
             return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
