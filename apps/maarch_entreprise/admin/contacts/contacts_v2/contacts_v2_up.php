@@ -37,9 +37,8 @@ if (!$return) {
 }
 
 if (!$return) {
-    $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN;
-    ?>
-    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+    $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN; ?>
+    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']; ?>index.php';</script>
     <?php
     exit();
 }
@@ -48,24 +47,22 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 
 $func = new functions();
 
-if(isset($_GET['id'])) {
+if (isset($_GET['id'])) {
     $id = addslashes($func->wash($_GET['id'], "alphanum", _CONTACT));
     $_SESSION['contact']['current_contact_id'] = $id;
-}else if ($_SESSION['contact']['current_contact_id'] <> ''){
-	$id = $_SESSION['contact']['current_contact_id'];
+} elseif ($_SESSION['contact']['current_contact_id'] <> '') {
+    $id = $_SESSION['contact']['current_contact_id'];
 } else {
     $id = "";
 }
 
  /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
     $level = $_REQUEST['level'];
 }
 $page_path  = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up';
@@ -78,7 +75,7 @@ if (isset($_REQUEST['fromContactTree'])) {
     $_SESSION['fromContactTree'] = 'yes';
 }
 $contact = new contacts_v2();
-$contact->formcontact("up",$id);
+$contact->formcontact("up", $id);
 
 // GESTION DES ADDRESSES
 echo '<div>';
@@ -99,11 +96,10 @@ if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) 
     $where .= " and ca_id = :selectedObject ";
     $arrayPDO = array_merge($arrayPDO, array(":selectedObject" => $_REQUEST['selectedObject']));
 } elseif (isset($_REQUEST['what2']) && ! empty($_REQUEST['what2'])) {
-
     $what = str_replace("  ", "", $_REQUEST['what2']);
     $what_table = explode(" ", $what);
 
-    foreach($what_table as $key => $what_a){
+    foreach ($what_table as $key => $what_a) {
         if (strlen($what_a) > 2) {
             $sql_lastname[] = " lower(lastname) LIKE lower(:what_".$key.")";
             $sql_firstname[] = " lower(firstname) LIKE lower(:what_".$key.")";
@@ -134,7 +130,11 @@ $orderstr = $list->define_order($order, $field);
 
 $request = new request;
 $tab = $request->PDOselect(
-    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
+    $select,
+    $where,
+    $arrayPDO,
+    $orderstr,
+    $_SESSION['config']['databasetype']
 );
 for ($i = 0; $i < count($tab); $i ++) {
     for ($j = 0; $j < count($tab[$i]); $j ++) {
@@ -151,7 +151,7 @@ for ($i = 0; $i < count($tab); $i ++) {
             }
             if ($tab[$i][$j][$value] == "contact_id") {
                 $tab[$i][$j]["contact_id"]  = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]       = _CONTACT_ID;
+                $tab[$i][$j]["label"]       = _ID;
                 $tab[$i][$j]["size"]        = "30";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"]       = "left";
@@ -184,8 +184,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["order"]       = 'departement';
             }
 
-            if($tab[$i][$j][$value]=="lastname")
-            {
+            if ($tab[$i][$j][$value]=="lastname") {
                 $tab[$i][$j]['value']       =$request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["lastname"]    =$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]       =_LASTNAME;
@@ -200,8 +199,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 }
                 $tab[$i][$j]["order"]= "lastname";
             }
-            if($tab[$i][$j][$value]=="firstname")
-            {
+            if ($tab[$i][$j][$value]=="firstname") {
                 $tab[$i][$j]["firstname"]   = $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["label"]       =_FIRSTNAME;
                 $tab[$i][$j]["size"]        ="15";
@@ -215,8 +213,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 }
                 $tab[$i][$j]["order"]= "firstname";
             }
-            if($tab[$i][$j][$value]=="function")
-            {
+            if ($tab[$i][$j][$value]=="function") {
                 $tab[$i][$j]['value']       =$request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["function"]    =$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]       =_FUNCTION;
@@ -231,13 +228,11 @@ for ($i = 0; $i < count($tab); $i ++) {
                 }
                 $tab[$i][$j]["order"]= "function";
             }
-            if($tab[$i][$j][$value]=="address_num")
-            {
+            if ($tab[$i][$j][$value]=="address_num") {
                 $address_num = $tab[$i][$j]['value'];
                 $tab[$i][$j]["show"]=false;
             }
-            if($tab[$i][$j][$value]=="address_street")
-            {
+            if ($tab[$i][$j][$value]=="address_street") {
                 $tab[$i][$j]['value']          = $address_num . " " . $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["address_street"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]          = _ADDRESS;
@@ -252,8 +247,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 }
                 $tab[$i][$j]["order"]= "address_street";
             }
-            if($tab[$i][$j][$value]=="address_postal_code")
-            {
+            if ($tab[$i][$j][$value]=="address_postal_code") {
                 $tab[$i][$j]['value']               =$request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["address_postal_code"] =$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]               =_POSTAL_CODE;
@@ -261,7 +255,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["label_align"]         ="left";
                 $tab[$i][$j]["align"]               ="left";
                 $tab[$i][$j]["valign"]              ="bottom";
-               if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
+                if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
                     $tab[$i][$j]["show"]=false;
                 } else {
                     $tab[$i][$j]["show"]=true;
@@ -269,8 +263,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["order"]= "address_postal_code";
             }
 
-            if($tab[$i][$j][$value]=="address_town")
-            {
+            if ($tab[$i][$j][$value]=="address_town") {
                 $tab[$i][$j]["address_town"] = $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["label"]        =_TOWN;
                 $tab[$i][$j]["size"]         ="15";
@@ -280,8 +273,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["show"]         =true;
                 $tab[$i][$j]["order"]        = "address_town";
             }
-            if($tab[$i][$j][$value]=="phone")
-            {
+            if ($tab[$i][$j][$value]=="phone") {
                 $tab[$i][$j]['value']       =$request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["phone"]       =$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]       =_PHONE;
@@ -292,8 +284,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["show"]        =true;
                 $tab[$i][$j]["order"]       = "phone";
             }
-            if($tab[$i][$j][$value]=="email")
-            {
+            if ($tab[$i][$j][$value]=="email") {
                 $tab[$i][$j]["email"]       = $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["label"]       =_MAIL;
                 $tab[$i][$j]["size"]        ="15";
@@ -303,8 +294,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["show"]        =true;
                 $tab[$i][$j]["order"]       = "email";
             }
-            if($tab[$i][$j][$value]=="enabled")
-            {
+            if ($tab[$i][$j][$value]=="enabled") {
                 $tab[$i][$j]["enabled"]     = $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]       =_STATUS;
                 $tab[$i][$j]["size"]        ="5";

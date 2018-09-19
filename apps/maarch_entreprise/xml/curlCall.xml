@@ -2,6 +2,8 @@
 <ROOT>
     <user>superadmin</user>
     <password>maarch</password>
+    <apiKey></apiKey>
+    <appName></appName>
     <call>
         <id>sendFile</id>
         <url></url>
@@ -70,25 +72,34 @@
     <call>
         <id>sendContactToExternalApplication</id>
         <enabled>false</enabled>
-        <url></url>
+        <url>url</url>
         <method>POST</method>
+        <sendInObject>citoyen</sendInObject>
         <rawData>
-            <key>parentId</key>
-            <value>res_id_master</value>
+            <key>street</key>
+            <value>address_street</value>
         </rawData>
         <rawData>
-            <key>status</key>
-            <value>status</value>
+            <key>ZC</key>
+            <value>address_postal_code</value>
+        </rawData>
+        <rawData>
+            <key>city</key>
+            <value>address_town</value>
+        </rawData>
+        <rawData>
+            <key>usualName</key>
+            <value>contact_lastname</value>
+        </rawData>
+        <rawData>
+            <key>firstname</key>
+            <value>contact_firstname</value>
         </rawData>
         <data>
-            <key>column</key>
-            <value>aString</value>
+            <key>cityId</key>
+            <value>1</value>
         </data>
-        <data>
-            <key>column2</key>
-            <value>aString2</value>
-        </data>
-        <return>externalContactId</return>
+        <return>id</return>
     </call>
     <call>
         <id>closeResource</id>

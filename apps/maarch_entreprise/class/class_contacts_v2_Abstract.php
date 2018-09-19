@@ -2242,14 +2242,24 @@ abstract class contacts_v2_Abstract extends Database
                     $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
                     if (count($document) === 1) {
                         if (!empty($document[0])) {
-                            $bodyData = $document[0];
+                            foreach ($config['rawData'] as $key => $value) {
+                                $bodyData[$key] = $document[0][$value];
+                            }
                         }
 
                         if (!empty($config['data'])) {
                             $bodyData = array_merge($bodyData, $config['data']);
                         }
 
-                        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendContactToExternalApplication', 'bodyData' => $bodyData]);
+                        $multipleObject = false;
+                        if (!empty($config['objectName'])) {
+                            $tmpBodyData = $bodyData;
+                            $bodyData = [];
+                            $bodyData[$config['objectName']] = $tmpBodyData;
+                            $multipleObject = true;
+                        }
+
+                        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendContactToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject]);
 
                         \Contact\models\ContactModel::updateAddress(['set' => ['external_contact_id' => $response[$config['return']]], 'where' => ['id = ?'], 'data' => [$document[0]['ca_id']]]);
                     }
