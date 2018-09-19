@@ -14,10 +14,11 @@
 
 namespace SignatureBook\controllers;
 
+use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
-use Action\models\ActionModel;
 use Contact\models\ContactModel;
+use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
 use Group\models\ServiceModel;
@@ -188,9 +189,9 @@ class SignatureBookController
                 $isVersion = false;
             }
 
-            $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $value['res_id'], 'isVersion' => $isVersion]);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $value['res_id'], 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
 
-            if (!empty($convertedAttachment)) {
+            if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
             } else {
                 $isConverted = false;

@@ -273,7 +273,7 @@ if (isset($_REQUEST['notes']) && count($_REQUEST['notes']) > 0) {
 //$date = $request->current_datetime();
 $list_path_folder =  array();
 if ($res_master_attached == 'Y') {
-    $convertedDocument =  \Resource\models\ResModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => (int)$_REQUEST['join_file'][0]]);
+    $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => (int)$_REQUEST['join_file'][0], 'collId' => 'attachments_coll', 'isVersion' => false]);
     $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
     $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
     
@@ -281,7 +281,7 @@ if ($res_master_attached == 'Y') {
 }
 if (isset($_REQUEST['join_attachment']) && count($_REQUEST['join_attachment']) > 0) {
     foreach ($_REQUEST['join_attachment'] as $id_attach) {
-        $convertedDocument =  \Attachment\models\AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id_attach, 'isVersion' => false]);
+        $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id_attach, 'collId' => 'attachments_coll', 'isVersion' => false]);
         $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
                 
@@ -290,7 +290,7 @@ if (isset($_REQUEST['join_attachment']) && count($_REQUEST['join_attachment']) >
 }
 if (isset($_REQUEST['join_version']) && count($_REQUEST['join_version']) > 0) {
     foreach ($_REQUEST['join_version'] as $id_attach) {
-        $convertedDocument =  \Attachment\models\AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id_attach, 'isVersion' => true]);
+        $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id_attach, 'collId' => 'attachments_coll', 'isVersion' => true]);
         $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
                 

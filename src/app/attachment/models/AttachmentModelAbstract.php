@@ -120,33 +120,6 @@ abstract class AttachmentModelAbstract
         return true;
     }
 
-    public static function getConvertedPdfById(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
-        ValidatorModel::arrayType($aArgs, ['select']);
-
-        if ($aArgs['isVersion']) {
-            $table = "adr_attachments_version";
-        } else {
-            $table = "adr_attachments";
-        }
-
-        $attachment = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
-            'where'     => ['res_id = ?', 'type = ?'],
-            'data'      => [$aArgs['resId'], 'PDF'],
-        ]);
-
-        if (empty($attachment[0])) {
-            return [];
-        }
-
-        return $attachment[0];
-    }
-
     public static function getAttachmentsTypesByXML()
     {
         $attachmentTypes = [];

@@ -104,9 +104,8 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
             $isVersion = false;
             $attachResId = $line->res_id;
         }
-        $convertedAttachment = \Attachment\models\AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachResId, 'isVersion' => $isVersion]);
-
-        if (empty($convertedAttachment)) {
+        $convertedAttachment =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachResId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+        if (!empty($convertedAttachment['errors'])) {
             echo "{\"status\":1, \"error\" : \""._ATTACH_PDF_NOT_FOUND . ": {$attachResId}, version : {$isVersion}\"}";
             exit;
         }

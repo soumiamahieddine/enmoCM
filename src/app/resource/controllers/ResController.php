@@ -17,29 +17,29 @@ namespace Resource\controllers;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
+use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use Docserver\models\ResDocserverModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\GroupController;
 use Group\models\GroupModel;
-use Note\models\NoteModel;
 use Group\models\ServiceModel;
-use setasign\Fpdi\TcpdfFpdi;
-use SrcCore\models\CoreConfigModel;
-use Status\models\StatusModel;
-use SrcCore\models\ValidatorModel;
 use History\controllers\HistoryController;
+use Note\models\NoteModel;
+use Resource\models\ChronoModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
+use setasign\Fpdi\TcpdfFpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\CoreConfigModel;
+use SrcCore\models\ValidatorModel;
+use Status\models\StatusModel;
 use User\models\UserModel;
-use Docserver\models\ResDocserverModel;
-use Resource\models\ChronoModel;
-use Convert\controllers\ConvertPdfController;
 
 class ResController
 {
@@ -283,44 +283,18 @@ class ResController
                 } else {
                     $collId = "attachments_coll";
                 }
-                $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'isVersion' => $isVersion]);
-                if (empty($convertedAttachment)) {
-                    ConvertPdfController::convert([
-                        'resId'     => $id,
-                        'collId'    => $collId,
-                        'isVersion' => $isVersion,
-                    ]);
-        
-                    $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'isVersion' => $isVersion]);
-                    
-                    if (!empty($convertedAttachment)) {
-                        $attachmentTodisplay = $convertedAttachment;
-                    }
-                } else {
-                    $attachmentTodisplay = $convertedAttachment;
+                $convertedDocument = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
+                if (empty($convertedDocument['errors'])) {
+                    $attachmentTodisplay = $convertedDocument;
                 }
                 $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
                 $document['path'] = $attachmentTodisplay['path'];
                 $document['filename'] = $attachmentTodisplay['filename'];
             }
         } else {
-            $convertedDocument = ResModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
 
-            if (empty($convertedDocument)) {
-                ConvertPdfController::convert([
-                    'resId'     => $aArgs['resId'],
-                    'collId'    => 'letterbox_coll',
-                ]);
-    
-                $convertedDocument = ResModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
-                
-                if (!empty($convertedDocument)) {
-                    $documentTodisplay = $convertedDocument;
-                    $document['docserver_id'] = $documentTodisplay['docserver_id'];
-                    $document['path'] = $documentTodisplay['path'];
-                    $document['filename'] = $documentTodisplay['filename'];
-                }
-            } else {
+            if (empty($convertedDocument['errors'])) {
                 $documentTodisplay = $convertedDocument;
                 $document['docserver_id'] = $documentTodisplay['docserver_id'];
                 $document['path'] = $documentTodisplay['path'];

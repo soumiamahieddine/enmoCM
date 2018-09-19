@@ -433,24 +433,4 @@ abstract class ResModelAbstract
 
         return $natures;
     }
-
-    public static function getConvertedPdfById(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::arrayType($aArgs, ['select']);
-
-        $document = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['adr_letterbox'],
-            'where'     => ['res_id = ?', 'type = ?'],
-            'data'      => [$aArgs['resId'], 'PDF'],
-        ]);
-
-        if (empty($document[0])) {
-            return [];
-        }
-
-        return $document[0];
-    }
 }
