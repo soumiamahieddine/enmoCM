@@ -273,7 +273,7 @@ if (isset($_REQUEST['notes']) && count($_REQUEST['notes']) > 0) {
 //$date = $request->current_datetime();
 $list_path_folder =  array();
 if ($res_master_attached == 'Y') {
-    $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => (int)$_REQUEST['join_file'][0], 'collId' => 'attachments_coll', 'isVersion' => false]);
+    $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => (int)$_REQUEST['join_file'][0], 'collId' => 'letterbox_coll', 'isVersion' => false]);
     $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
     $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
     
