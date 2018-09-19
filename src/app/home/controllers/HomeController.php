@@ -29,7 +29,7 @@ class HomeController
 
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
         $homeMessage = ParameterModel::getById(['select' => ['param_value_string'], 'id'=> 'homepage_message']);
-        $homeMessage = $homeMessage['param_value_string'];
+        $homeMessage = trim($homeMessage['param_value_string']);
 
         $redirectedBaskets = BasketModel::getRedirectedBasketsByUserId(['userId' => $GLOBALS['userId']]);
         $groups = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);

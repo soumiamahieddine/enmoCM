@@ -36,6 +36,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
 
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
     homeData: any;
+    homeMessage: string;
     dataSource: any;
     displayedColumns: string[] = ['res_id', 'subject', 'creation_date'];
 
@@ -67,6 +68,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         this.http.get(this.coreUrl + "rest/home")
         .subscribe((data: any) => {
             this.homeData = data;
+            this.homeMessage = data['homeMessage']
         });
     }
 
