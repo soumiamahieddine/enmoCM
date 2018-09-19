@@ -183,12 +183,11 @@ abstract class AttachmentModelAbstract
 
     public static function setInSignatureBook(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'isVersion']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['isVersion']);
-        ValidatorModel::boolType($aArgs, ['inSignatureBook']);
+        ValidatorModel::boolType($aArgs, ['inSignatureBook', 'isVersion']);
 
-        if ($aArgs['isVersion'] == 'true') {
+        if ($aArgs['isVersion'] == true) {
             $table = 'res_version_attachments';
         } else {
             $table = 'res_attachments';

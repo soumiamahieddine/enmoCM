@@ -47,6 +47,9 @@ class AttachmentController
 
         $data = $request->getParams();
 
+        $data['isVersion'] = filter_var($data['isVersion'], FILTER_VALIDATE_BOOLEAN);
+
+        var_dump($data['isVersion']);
         $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $data['isVersion']]);
 
         if (empty($attachment)) {
