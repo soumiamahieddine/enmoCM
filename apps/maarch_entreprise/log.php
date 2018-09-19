@@ -177,14 +177,18 @@ if (!empty($_SESSION['error'])) {
                 }
             } catch (Exception $conFailure) {
                 if (!empty($standardConnect) && $standardConnect == 'true') {
-                    $res = $sec->login($login, $password);
+                    $res = $sec->login($login, $password, 'ldap', $standardConnect);
                     $_SESSION['user'] = $res['user'];
                     if (empty($res['error'])) {
                         \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
                         \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
                         $user = \User\models\UserModel::getByUserId(['userId' => $login, 'select' => ['id']]);
-                        \User\models\UserModel::updatePassword(['id' => $user['id'], 'password' => $password]);
                         $core->load_menu($_SESSION['modules']);
+                        header(
+                            'location: ' . $_SESSION['config']['businessappurl']
+                            . $res['url']
+                        );
+                        exit();
                     } else {
                         $_SESSION['error'] = $res['error'];
                     }
@@ -211,6 +215,7 @@ if (!empty($_SESSION['error'])) {
                 //TODO: protect sql injection with PDO
                 require_once 'core/class/class_db_pdo.php';
 
+                \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
                 // Instantiate database.
                 $database = new Database();
                 $stmt = $database->query(
@@ -223,9 +228,6 @@ if (!empty($_SESSION['error'])) {
                     $_SESSION['error'] = '';
                     if (!empty($standardConnect) && $standardConnect == 'true') {
                         \User\models\UserModel::updatePassword(['id' => $result['id'], 'password' => $password]);
-                        \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
-                    } else {
-                        $standardConnect = 'false';
                     }
                     $res = $sec->login($login, $password, 'ldap', $standardConnect);
                     $_SESSION['user'] = $res['user'];
@@ -249,7 +251,7 @@ if (!empty($_SESSION['error'])) {
                     continue;
                 }
             } else {
-                $error = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => $login]);
+                $error = _BAD_LOGIN_OR_PSW;
                 $_SESSION['error'] = $error;
                 header(
                     'location: ' . $_SESSION['config']['businessappurl']
@@ -258,6 +260,12 @@ if (!empty($_SESSION['error'])) {
                 continue;
             }
         }
+        $error = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => $login]);
+        $_SESSION['error'] = $error;
+        header(
+            'location: ' . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&page=login'
+        );
     } else {
         $_SESSION['error'] = '';
         $res = $sec->login($login, $password);

@@ -85,7 +85,7 @@ class security extends Database
      * @param  $s_login  string User login
      * @param  $pass string User password
      */
-    public function login($s_login, $pass, $method = false, $standardConnect = false)
+    public function login($s_login, $pass, $method = false, $standardConnect = 'false')
     {
         $array = array();
         $error = '';
@@ -255,7 +255,11 @@ class security extends Database
                 );
             }
         } else {
-            $error = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => $s_login]);
+            if ($standardConnect == 'false') {
+                $error = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => $s_login]);
+            } else {
+                $error = _BAD_LOGIN_OR_PSW;
+            }
 
             return [
                 'user'  => $array,
