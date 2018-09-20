@@ -164,102 +164,90 @@
                 <?php echo _DATABASE_INFOS;?>
             </h2>
         </div>
-        <div class="contentBlock" id="database">
-            <p>
-                <h6>
-                    <?php echo _DATABASE_EXP;?>
-                </h6>
-                <form>
-                    <table>
-                        <tr>
-                            <td>
-                                <?php echo _DATABASESERVER;?>
-                            </td>
-                            <td>
-                                :
-                            </td>
-                            <td>
-                                <input type="text" id="databaseserver" name="databaseserver" value="localhost"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php echo _DATABASESERVERPORT;?>
-                            </td>
-                            <td>
-                                :
-                            </td>
-                            <td>
-                                <input type="text" id="databaseserverport" name="databaseserverport" value="5432"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php echo _DATABASEUSER;?>
-                            </td>
-                            <td>
-                                :
-                            </td>
-                            <td>
-                                <input type="text" id="databaseuser" name="databaseuser" value="postgres"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php echo _DATABASEPASSWORD;?>
-                            </td>
-                            <td>
-                                :
-                            </td>
-                            <td>
-                                <input type="password" id="databasepassword" name="databasepassword"/>
-                            </td>
-                        </tr>
-                        <tr style="display: none;">
-                            <td>
-                                <?php echo _DATABASETYPE;?>
-                            </td>
-                            <td>
-                                :
-                            </td>
-                            <td>
-                                <input type="hidden" id="databasetype" name="databasetype" value="POSTGRESQL"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <input
-                                  type="button"
-                                  name="Submit"  value="<?php echo _SUBMIT;?>"
-                                  onClick="
-                                    checkDatabaseInfo(
-                                      $('#databaseserver').val(),
-                                      $('#databaseserverport').val(),
-                                      $('#databaseuser').val(),
-                                      $('#databasepassword').val(),
-                                      $('#databasetype').val(),
-                                      'testConnect'
-                                    );
-                                  "
-                                />
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-                <br />
-                <div id="ajaxReturn_testConnect_ko"></div>
-                <div align="center">
-                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
-                </div>
-            </p>
-        </div>
+	<div class="contentBlock" id="database">
+	    <p>
+		<h6>
+		    <?php echo _DATABASE_EXP;?>
+		</h6>
+		<form>
+		    <table>
+			<tr>
+			    <td>
+			        <?php echo _DATABASESERVER;?>
+			    </td>
+			    <td>
+			        :
+			    </td>
+			    <td>
+			        <input type="text" id="databaseserver" name="databaseserver" value="localhost" />
+			    </td>
+			</tr>
+			<tr>
+			    <td>
+			        <?php echo _DATABASESERVERPORT;?>
+			    </td>
+			    <td>
+			        :
+			    </td>
+			    <td>
+			        <input type="text" id="databaseserverport" name="databaseserverport" value="5432" />
+			    </td>
+			</tr>
+			<tr>
+			    <td>
+			        <?php echo _DATABASEUSER;?>
+			    </td>
+			    <td>
+			        :
+			    </td>
+			    <td>
+			        <input type="text" id="databaseuser" name="databaseuser" value="postgres" />
+			    </td>
+			</tr>
+			<tr>
+			    <td>
+			        <?php echo _DATABASEPASSWORD;?>
+			    </td>
+			    <td>
+			        :
+			    </td>
+			    <td>
+			        <input type="password" id="databasepassword" name="databasepassword" />
+			    </td>
+			</tr>
+			<tr style="display: none;">
+			    <td>
+			        <?php echo _DATABASETYPE;?>
+			    </td>
+			    <td>
+			        :
+			    </td>
+			    <td>
+			        <input type="hidden" id="databasetype" name="databasetype" value="POSTGRESQL" />
+			    </td>
+			</tr>
+			<tr>
+			    <td>&nbsp;</td>
+			    <td>&nbsp;</td>
+			    <td>&nbsp;</td>
+			</tr>
+			<tr>
+			    <td></td>
+			    <td></td>
+			    <td>
+			        <input type="button" name="Submit" value="<?php echo _SUBMIT;?>"
+			            onClick="checkDatabaseInfo( $('#databaseserver').val(), $('#databaseserverport').val(), $('#databaseuser').val(), $('#databasepassword').val(), $('#databasetype').val(),'testConnect');" />
+			    </td>
+			</tr>
+		    </table>
+		</form>
+		<br />
+		<div id="ajaxReturn_testConnect_ko"></div>
+		<div align="center">
+		    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);" />
+		</div>
+	    </p>
+	</div>
     </div>
 </div>
 <div class="ajaxReturn_createDB">
@@ -297,7 +285,8 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <input type="button" onclick="$('.wait').css('display','block');checkCreateDB($('#databasename').val(), 'createdatabase');" value="<?php echo _CREATE_DATABASE;?>" />
+                                <input type="button" onclick="$('.wait').css('display','block');checkCreateDB($('#databasename').val(), 'createdatabase');"
+                                    value="<?php echo _CREATE_DATABASE;?>" />
                             </td>
                         </tr>
                     </table>
@@ -305,7 +294,7 @@
                 <br />
                 <div id="ajaxReturn_createDB_ko"></div>
                 <div align="center">
-                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);" />
                 </div>
             </p>
         </div>
@@ -335,7 +324,9 @@
                             </td>
                             <td>
                                 <select onChange="checkDataDB($(this).val());" id="dataFilename">
-                                    <option value="default"><?php echo _CHOOSE;?></option>
+                                    <option value="default">
+                                        <?php echo _CHOOSE;?>
+                                    </option>
                                     <?php
                                         for ($i=0; $i<count($listSql);$i++) {
                                             echo '<option ';
@@ -364,7 +355,9 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <input type="button" onclick="$('.wait').css('display','block');checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="<?php echo _LOAD_DATA;?>" style="display: none;" id="okDatas"/>
+                                <input type="button" onclick="$('.wait').css('display','block');checkLoadDatas($('#dataFilename').val(), 'loadDatas');"
+                                    value="<?php echo _LOAD_DATA;?>" style="display: none;"
+                                    id="okDatas" />
                             </td>
                             <td></td>
                         </tr>
@@ -373,7 +366,7 @@
                 <br />
                 <div id="ajaxReturn_loadDatas_ko"></div>
                 <div align="center">
-                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);" />
                 </div>
             </p>
         </div>

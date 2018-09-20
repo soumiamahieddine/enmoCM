@@ -186,7 +186,7 @@ if (file_exists($filename)) {
                 <img src="../apps/maarch_entreprise/img/bodylogin.jpg" width="30%" height="30%" />
             </div>
         </p>
-        <link href="../css/image-picker.css" rel="stylesheet" type="text/css">
+        <link href="css/image-picker.css" rel="stylesheet" type="text/css">
         <div class="container">
             <?php echo _LOGIN_PICTURE_FROM_DATA;?>
             <select id="selectImgPicker" name="selectImgPicker" class="image-picker" onchange="uploadFromImagePicker();">

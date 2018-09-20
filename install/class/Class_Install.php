@@ -125,9 +125,9 @@ class Install extends functions
         if (!$this->isPhpRequirements('gd')) {
             return false;
         }
-        if (!$this->isPhpRequirements('imagick')) {
-            return false;
-        }
+        // if (!$this->isPhpRequirements('imagick')) {
+        //     return false;
+        // }
         /*if (!$this->isPhpRequirements('ghostscript')) {
             return false;
         }*/
@@ -1829,11 +1829,13 @@ class Install extends functions
         for ($i = 0; $i < count($this->docservers); ++$i) {
             if (!is_dir(
                 $docserverPath.DIRECTORY_SEPARATOR
-                    .$this->docservers[$i][1])
+                    .$this->docservers[$i][1]
+            )
             ) {
                 if (!mkdir(
                     $docserverPath.DIRECTORY_SEPARATOR
-                        .$this->docservers[$i][1])
+                        .$this->docservers[$i][1]
+                )
                 ) {
                     return false;
                 }
@@ -1843,11 +1845,13 @@ class Install extends functions
         //create indexes dir
         if (!is_dir(
             $docserverPath.DIRECTORY_SEPARATOR
-                .'indexes')
+                .'indexes'
+        )
         ) {
             if (!mkdir(
                 $docserverPath.DIRECTORY_SEPARATOR
-                    .'indexes')
+                    .'indexes'
+            )
             ) {
                 return false;
             }
@@ -1855,11 +1859,13 @@ class Install extends functions
         //create indexes dir for letterbox collection
         if (!is_dir(
             $docserverPath.DIRECTORY_SEPARATOR
-                .'indexes'.DIRECTORY_SEPARATOR.'letterbox_coll')
+                .'indexes'.DIRECTORY_SEPARATOR.'letterbox_coll'
+        )
         ) {
             if (!mkdir(
                 $docserverPath.DIRECTORY_SEPARATOR
-                    .'indexes'.DIRECTORY_SEPARATOR.'letterbox_coll')
+                    .'indexes'.DIRECTORY_SEPARATOR.'letterbox_coll'
+            )
             ) {
                 return false;
             }
@@ -1929,7 +1935,7 @@ class Install extends functions
                                 return false;
                             }
                         } elseif ($file != '..' && $file != '.' && !is_link($dir2copy.$file)) {
-                            if (count($excludeExt > 0) && is_array($excludeExt)) {
+                            if (is_array($excludeExt) && count($excludeExt)>0) {
                                 $copyIt = true;
                                 foreach ($excludeExt as $key => $value) {
                                     if (strtolower($value) == strtolower(pathinfo($dir2copy.$file, PATHINFO_EXTENSION))) {
@@ -1949,7 +1955,7 @@ class Install extends functions
                                 return false;
                             }
                         } elseif ($file != '..' && $file != '.') {
-                            if (count($excludeExt > 0) && is_array($excludeExt)) {
+                            if (is_array($excludeExt) && count($excludeExt) > 0) {
                                 $copyIt = true;
                                 foreach ($excludeExt as $key => $value) {
                                     if (strtolower($value) == strtolower(pathinfo($dir2copy.$file, PATHINFO_EXTENSION))) {
