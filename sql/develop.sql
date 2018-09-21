@@ -524,4 +524,4 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 
 
 DELETE FROM parameters WHERE id = 'homepage_message';
-INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la banière sur la page d''acceuil, laisser vide pour supprimer la banière.', 'Bienvenue dans votre <b>G</b>estion <b>E</b>lectronique du <b>C</b>ourrier.');
+INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', 'Bienvenue dans votre <b>G</b>estion <b>E</b>lectronique du <b>C</b>ourrier.');
