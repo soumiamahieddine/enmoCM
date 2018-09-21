@@ -144,6 +144,10 @@ if (!defined('_MUST_FIX')) {
     define('_MUST_FIX', 'Vous devez corriger les erreurs avant de continuer');
 }
 
+if (!defined('_CHOOSE_DATASET_TO_IMPORT')) {
+    define('_CHOOSE_DATASET_TO_IMPORT', 'Choisissez un jeu de données à importer');
+}
+
 //DOCSERVERS
 if (!defined('_DOCSERVERS')) {
     define('_DOCSERVERS', 'Zones de stockage');

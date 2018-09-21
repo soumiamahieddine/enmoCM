@@ -135,7 +135,7 @@ function setAttachmentInSignatureBook(id, isVersion) {
                 window.parent.angularSignatureBookComponent.componentAfterAttach("left");
             }
         }, error: function(err) {
-            alert("Une erreur s'est produite");
+            alert("Une erreur s'est produite : " + err.responseJSON.exception[0].message);
         }
     });
 }

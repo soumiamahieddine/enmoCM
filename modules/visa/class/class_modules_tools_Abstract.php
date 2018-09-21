@@ -1062,11 +1062,12 @@ abstract class visa_Abstract extends Database
                     $idFile = $res->res_id_version;
                     $isVersion = true;
                 }
-                $convertedDocument =  \Attachment\models\AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $idFile, 'isVersion' => $isVersion]);
+                $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $idFile, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
                 $viewLink = $_SESSION['config']['businessappurl']
                         .'index.php?display=true&module=attachments&page=view_attachment&res_id_master='
                         .$id.'&id='.$res->res_id;
-                if (!empty($convertedDocument)) {
+                
+                if (empty($convertedDocument['errors'])) {
                     $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
                     $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
                     
@@ -1079,11 +1080,11 @@ abstract class visa_Abstract extends Database
                 }
             } else {
                 $idFile = $res->res_id;
-                $convertedDocument =  \Resource\models\ResModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $idFile]);
+                $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $idFile, 'collId' => 'letterbox_coll', 'isVersion' => $isVersion]);
                 $viewLink = $_SESSION['config']['businessappurl']
                         .'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
                         .$id;
-                if (!empty($convertedDocument)) {
+                if (empty($convertedDocument['errors'])) {
                     $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
                     $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
                     
@@ -1116,7 +1117,7 @@ abstract class visa_Abstract extends Database
                 $typist = '';
             }
 
-            if (($from_res_attachment && $pdf_exist) || !empty($convertedDocument)
+            if (($from_res_attachment && $pdf_exist) || empty($convertedDocument['errors'])
             ) {
                 //nothing
             } else {

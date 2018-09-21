@@ -42,7 +42,7 @@ class ConvertPdfController
         $command = "unoconv -f pdf " . escapeshellarg($aArgs['fullFilename']);
         
 
-        exec('export HOME=/tmp && '.$command, $output, $return);
+        exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
 
         if (!file_exists($tmpPath.$docInfo["filename"].'.pdf')) {
             return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
@@ -92,7 +92,7 @@ class ConvertPdfController
         $command = "unoconv -f pdf " . escapeshellarg($tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
 
         
-        exec('export HOME=/tmp && '.$command, $output, $return);
+        exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
 
         if (!file_exists($tmpPath.$fileNameOnTmp.'.pdf')) {
             return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
@@ -129,6 +129,31 @@ class ConvertPdfController
                 'filename'      => $storeResult['file_destination_name'],
             ]);
         }
-        return true;
+        return ['docserver_id' => $storeResult['docserver_id'], 'path' => $storeResult['destination_dir'], 'filename' => $storeResult['file_destination_name']];
+    }
+
+    public static function getConvertedPdfById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'collId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $convertedDocument = AdrModel::getConvertedDocumentById([
+            'select' => ['docserver_id','path', 'filename'],
+            'resId' => $aArgs['resId'],
+            'collId' => $aArgs['collId'],
+            'type' => 'PDF',
+            'isVersion' => $aArgs['isVersion']
+        ]);
+        
+        if (empty($convertedDocument)) {
+            $convertedDocument = ConvertPdfController::convert([
+                'resId'     => $aArgs['resId'],
+                'collId'    => $aArgs['collId'],
+                'isVersion' => $aArgs['isVersion'],
+            ]);
+        }
+        return $convertedDocument;
     }
 }

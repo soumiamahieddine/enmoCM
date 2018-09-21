@@ -75,18 +75,8 @@ class StoreController
             $resId = false;
             if ($aArgs['table'] == 'res_letterbox') {
                 $resId = ResModel::create($data);
-                ConvertPdfController::convert([
-                    'resId'     => $resId,
-                    'collId'    => 'letterbox_coll',
-                    'isVersion' => false,
-                ]);
             } elseif ($aArgs['table'] == 'res_attachments') {
                 $resId = AttachmentModel::create($data);
-                ConvertPdfController::convert([
-                    'resId'     => $resId,
-                    'collId'    => 'attachments_coll',
-                    'isVersion' => false,
-                ]);
             }
 
             return $resId;

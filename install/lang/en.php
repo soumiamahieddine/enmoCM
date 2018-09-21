@@ -181,6 +181,10 @@ if (!defined('_MUST_FIX')) {
     define('_MUST_FIX', 'You must fix errors before continuing');
 }
 
+if (!defined('_CHOOSE_DATASET_TO_IMPORT')) {
+    define('_CHOOSE_DATASET_TO_IMPORT', 'Choose dataset to import');
+}
+
 //DOCSERVERS
 if (!defined('_DOCSERVERS')) {
     define('_DOCSERVERS', 'Docservers');

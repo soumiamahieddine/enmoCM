@@ -190,28 +190,10 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <input type="button" id="ajaxReturn_testConnect_button" onClick="$('.wait').css('display','block');envoiMailTestSmtp( 'testSmtp','test',
-                                                                                                                $('#smtpHost').val(),
-                                                                                                                $('#smtpType').val(),
-                                                                                                                $('#smtpPort').val(),
-                                                                                                                $('#smtpUser').val(),
-                                                                                                                $('#smtpPassword').val(),
-                                                                                                                $('#smtpAuth').val(),
-                                                                                                                $('#smtpMailTo').val(),
-                                                                                                                $('#smtpDomains').val(),
-                                                                                                                $('#smtpMailFrom').val())"; value="<?php echo _VERIF_SMTP;?>"/>
+                            <input type="button" id="ajaxReturn_testConnect_button" onClick="$('.wait').css('display','block');envoiMailTestSmtp( 'testSmtp','test', $('#smtpHost').val(), $('#smtpType').val(), $('#smtpPort').val(), $('#smtpUser').val(), $('#smtpPassword').val(), $('#smtpAuth').val(), $('#smtpMailTo').val(), $('#smtpDomains').val(), $('#smtpMailFrom').val());" value="<?php echo _VERIF_SMTP;?>"/>
                         </td>
     <td>
-        <input type="button" id="ajaxReturn_testConnect_button" onClick="$('.wait').css('display','block');envoiMailTestSmtp( 'testSmtp','add',
-                                                                                            $('#smtpHost').val(),
-                                                                                            $('#smtpType').val(),
-                                                                                            $('#smtpPort').val(),
-                                                                                            $('#smtpUser').val(),
-                                                                                            $('#smtpPassword').val(),
-                                                                                            $('#smtpAuth').val(),
-                                                                                            $('#smtpMailTo').val(),
-                                                                                            $('#smtpDomains').val(),
-                                                                                            $('#smtpMailFrom').val())"; value="<?php echo _ADD_INFO_SMTP;?>"/>
+        <input type="button" id="ajaxReturn_testConnect_button" onClick="$('.wait').css('display','block');envoiMailTestSmtp( 'testSmtp','add', $('#smtpHost').val(), $('#smtpType').val(), $('#smtpPort').val(), $('#smtpUser').val(), $('#smtpPassword').val(), $('#smtpAuth').val(), $('#smtpMailTo').val(), $('#smtpDomains').val(), $('#smtpMailFrom').val());" value="<?php echo _ADD_INFO_SMTP;?>"/>
     </td>
                     </tr>
                 </table>

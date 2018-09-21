@@ -39,17 +39,17 @@ Permet de vérifier si il existe des pièces jointes ou des notes pour le courri
 require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
 $db = new Database();
 $stmt = $db->query("SELECT count(res_id_master) FROM res_attachments WHERE res_id_master = ?", array($_POST['values']));
-$nbAttachments = $stmt->fetchObject(); 
-$nbAttachments = json_decode(json_encode($nbAttachments), True);
+$nbAttachments = $stmt->fetchObject();
+$nbAttachments = json_decode(json_encode($nbAttachments), true);
 
 $stmt = $db->query("SELECT count(identifier) FROM notes WHERE identifier = ?", array($_POST['values']));
 $nbNotes = $stmt->fetchObject();
-$nbNotes = json_decode(json_encode($nbNotes), True);
+$nbNotes = json_decode(json_encode($nbNotes), true);
 
-if($nbAttachments['count'] == 0 && $nbNotes == 0){
- 	$confirm = false;
-}elseif($nbAttachments['count'] != 0 || $nbNotes['count'] != 0){
-	$confirm = true;	
+if ($nbAttachments['count'] == 0 && $nbNotes == 0) {
+    $confirm = false;
+} elseif ($nbAttachments['count'] != 0 || $nbNotes['count'] != 0) {
+    $confirm = true;
 }
 
 /**
@@ -60,19 +60,17 @@ if($nbAttachments['count'] == 0 && $nbNotes == 0){
 
 function manage_close($arr_id, $history, $id_action, $label_action, $status)
 {
-	$result = '';
-	require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
-	require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
-	$sec = new security();
-	$db = new Database();
+    $result = '';
+    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
+    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
+    $sec = new security();
+    $db = new Database();
 
-	$ind_coll = $sec->get_ind_collection($_POST['coll_id']);
-	$ext_table = $_SESSION['collections'][$ind_coll]['extensions'][0];
-	for($i=0; $i<count($arr_id );$i++)
-	{
-		$result .= $arr_id[$i].'#';
-		$db->query("UPDATE ".$ext_table. " SET closing_date = CURRENT_TIMESTAMP WHERE res_id = ?", array($arr_id[$i]));
-
-	}
-	return array('result' => $result, 'history_msg' => '');
- }
+    $ind_coll = $sec->get_ind_collection($_POST['coll_id']);
+    $ext_table = $_SESSION['collections'][$ind_coll]['extensions'][0];
+    for ($i=0; $i<count($arr_id); $i++) {
+        $result .= $arr_id[$i].'#';
+        $db->query("UPDATE ".$ext_table. " SET closing_date = CURRENT_TIMESTAMP WHERE res_id = ?", array($arr_id[$i]));
+    }
+    return array('result' => $result, 'history_msg' => '');
+}

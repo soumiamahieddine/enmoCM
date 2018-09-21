@@ -37,6 +37,7 @@ $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $upFileOK = false;
 $_SESSION['with_file'] = false;
+$_SESSION['upfile']['fileNamePdfOnTmp'] = '';
 ?>
     <body>
     <?php

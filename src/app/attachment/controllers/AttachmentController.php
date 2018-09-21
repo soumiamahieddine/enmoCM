@@ -15,17 +15,17 @@
 namespace Attachment\controllers;
 
 use Attachment\models\AttachmentModel;
+use Convert\controllers\ConvertPdfController;
+use Convert\controllers\ConvertThumbnailController;
+use Convert\models\AdrModel;
+use Docserver\models\DocserverModel;
+use History\controllers\HistoryController;
+use Resource\controllers\ResController;
+use Respect\Validation\Validator;
+use setasign\Fpdi\TcpdfFpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Respect\Validation\Validator;
-use Resource\controllers\ResController;
-use Docserver\models\DocserverModel;
 use SrcCore\models\CoreConfigModel;
-use setasign\Fpdi\TcpdfFpdi;
-use History\controllers\HistoryController;
-use Convert\controllers\ConvertPdfController;
-use Convert\models\AdrModel;
-use Convert\controllers\ConvertThumbnailController;
 
 class AttachmentController
 {
@@ -47,6 +47,9 @@ class AttachmentController
 
         $data = $request->getParams();
 
+        $data['isVersion'] = filter_var($data['isVersion'], FILTER_VALIDATE_BOOLEAN);
+
+        var_dump($data['isVersion']);
         $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $data['isVersion']]);
 
         if (empty($attachment)) {
@@ -154,20 +157,8 @@ class AttachmentController
             $collId = "attachments_coll";
         }
 
-        $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'isVersion' => $isVersion]);
-        if (empty($convertedAttachment)) {
-            ConvertPdfController::convert([
-                'resId'     => $id,
-                'collId'    => $collId,
-                'isVersion' => $isVersion,
-            ]);
-
-            $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'isVersion' => $isVersion]);
-            
-            if (!empty($convertedAttachment)) {
-                $attachmentTodisplay = $convertedAttachment;
-            }
-        } else {
+        $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+        if (empty($convertedAttachment['errors'])) {
             $attachmentTodisplay = $convertedAttachment;
         }
         $document['docserver_id'] = $attachmentTodisplay['docserver_id'];

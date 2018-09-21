@@ -25,18 +25,23 @@
     <div class="contentBlock" id="prerequisites">
         <p>
             <h6>
-                <div id="titleLink"><?php echo _PREREQUISITES_EXP;?></div>
-                <br/>
-                <img src="img/green_light.png" width="10px"/><?php echo _ACTIVATED;?>
-                <img src="img/orange_light.png"  width="10px"/><?php echo _OPTIONNAL;?>
-                <img src="img/red_light.png"  width="10px"/><?php echo _NOT_ACTIVATED;?>
+                <div id="titleLink">
+                    <?php echo _PREREQUISITES_EXP;?>
+                </div>
+                <br />
+                <img src="img/green_light.png" width="10px" />
+                <?php echo _ACTIVATED;?>
+                <img src="img/orange_light.png" width="10px" />
+                <?php echo _OPTIONNAL;?>
+                <img src="img/red_light.png" width="10px" />
+                <?php echo _NOT_ACTIVATED;?>
 
             </h6>
             <table>
                 <tr>
                     <td colspan="2">
                         <h2>
-                           <?php echo _GENERAL;?>
+                            <?php echo _GENERAL;?>
                         </h2>
                     </td>
                 </tr>
@@ -141,7 +146,8 @@
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpRequirements(
                                 'gettext'
-                            ), true
+                            ),
+                            true
                         );?>
                     </td>
                     <td>
@@ -153,7 +159,8 @@
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpRequirements(
                                 'xmlrpc'
-                            ), true
+                            ),
+                            true
                         );?>
                     </td>
                     <td>
@@ -184,33 +191,36 @@
                         <?php echo _ZIP_LIB;?>
                     </td>
                 </tr>
-                <!--<tr>
+                <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpRequirements(
                                 'imagick'
-                            ), false
+                            ),
+                            true
                         );?>
                     </td>
                     <td>
                         <?php echo _IMAGICK;?>
                     </td>
-                </tr>-->
-                
-                <?php if (DIRECTORY_SEPARATOR != '/') { ?>
-                    <tr>
-                        <td class="voyantPrerequisites">
-                            <?php echo $Class_Install->checkPrerequisites(
+                </tr>
+
+                <?php if (DIRECTORY_SEPARATOR != '/') {
+                            ?>
+                <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
                                 $Class_Install->isPhpRequirements(
                                     'fileinfo'
                                 )
-                            );?>
-                        </td>
-                        <td>
-                            <?php echo _FILEINFO;?>
-                        </td>
-                    </tr>
-                <?php } ?>
+                            ); ?>
+                    </td>
+                    <td>
+                        <?php echo _FILEINFO; ?>
+                    </td>
+                </tr>
+                <?php
+                        } ?>
                 <tr>
                     <td>&nbsp;
                     </td>
@@ -239,17 +249,17 @@
                 </tr>
                 <!--tr>
                     <td class="voyantPrerequisites">
-                        <?php 
+                        <?php
                         // echo $Class_Install->checkPrerequisites(
                         //     $Class_Install->isPearRequirements(
                         //         'MIME/Type.php'
                         //     )
                         // );
                         ?>
-                    </td>
-                    <td>
-                        <?php //echo _MIMETYPE;?>
-                    </td>
+                </td>
+                <td>
+                    <?php //echo _MIMETYPE;?>
+                </td>
                 </tr-->
                 <tr>
                     <td class="voyantPrerequisites">
@@ -295,8 +305,9 @@
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
-                            $Class_Install->isIniErrorRepportingRequirements()
-                            , true);?>
+                            $Class_Install->isIniErrorRepportingRequirements(),
+                            true
+                        );?>
                     </td>
                     <td>
                         <?php echo _ERROR_REPORTING;?>

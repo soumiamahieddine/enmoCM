@@ -21,7 +21,7 @@ class CurlModel
         ValidatorModel::notEmpty($aArgs, ['curlCallId']);
         ValidatorModel::stringType($aArgs, ['curlCallId']);
         ValidatorModel::arrayType($aArgs, ['bodyData']);
-        ValidatorModel::boolType($aArgs, ['noAuth']);
+        ValidatorModel::boolType($aArgs, ['noAuth', 'multipleObject']);
 
         $curlConfig = CurlModel::getConfigByCallId(['curlCallId' => $aArgs['curlCallId']]);
         if (empty($curlConfig)) {
@@ -30,20 +30,33 @@ class CurlModel
 
         $opts = [
             CURLOPT_URL => $curlConfig['url'],
-            CURLOPT_HTTPHEADER => [
-                'accept:application/json',
-                'content-type:application/json'
-            ],
             CURLOPT_RETURNTRANSFER => true,
         ];
-        if (empty($aArgs['noAuth'])) {
+
+        if (empty($aArgs['multipleObject'])) {
+            $opts[CURLOPT_HTTPHEADER][] = 'accept:application/json';
+            $opts[CURLOPT_HTTPHEADER][] = 'content-type:application/json';
+        }
+
+        if (empty($aArgs['noAuth']) && !empty($curlConfig['user']) && !empty($curlConfig['password'])) {
             $opts[CURLOPT_HTTPHEADER][] = 'Authorization: Basic ' . base64_encode($curlConfig['user']. ':' .$curlConfig['password']);
+        } else {
+            $opts[CURLOPT_HTTPHEADER][] = 'Api-Key: ' . $curlConfig['apiKey'];
+            $opts[CURLOPT_HTTPHEADER][] = 'appName: ' . $curlConfig['appName'];
         }
 
         if ($curlConfig['method'] == 'POST' || $curlConfig['method'] == 'PUT') {
-            $opts[CURLOPT_POSTFIELDS] = json_encode($aArgs['bodyData']);
+            if (is_array($aArgs['bodyData']) && !empty($aArgs['bodyData']) && $aArgs['multipleObject']) {
+                $bodyData = [];
+                foreach ($aArgs['bodyData'] as $key => $value) {
+                    $bodyData[$key] = json_encode($value);
+                }
+            } else {
+                $bodyData = json_encode($aArgs['bodyData']);
+            }
+            $opts[CURLOPT_POSTFIELDS] = $bodyData;
         }
-        if ($curlConfig['method'] == 'POST') {
+        if ($curlConfig['method'] == 'POST' && empty($aArgs['multipleObject'])) {
             $opts[CURLOPT_POST] = true;
         } elseif ($curlConfig['method'] == 'PUT' || $curlConfig['method'] == 'DELETE') {
             $opts[CURLOPT_CUSTOMREQUEST] = $curlConfig['method'];
@@ -52,6 +65,7 @@ class CurlModel
         $curl = curl_init();
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
+        curl_close($curl);
 
         return json_decode($rawResponse, true);
     }
@@ -89,6 +103,15 @@ class CurlModel
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
 
+        // preg_match_all('/^date:\s*([^;]*)/mi', $rawResponse, $matches);
+        // $cookies = array();
+        // foreach ($matches[1] as $item) {
+        //     parse_str($item, $cookie);
+        //     $cookies = array_merge($cookies, $cookie);
+        // }
+        // var_dump($cookies);
+        // exit;
+
         return ['response' => simplexml_load_string($rawResponse), 'infos' => curl_getinfo($curl)];
     }
 
@@ -103,10 +126,15 @@ class CurlModel
         if ($loadedXml) {
             $curlConfig['user']     = (string)$loadedXml->user;
             $curlConfig['password'] = (string)$loadedXml->password;
+            $curlConfig['apiKey']   = (string)$loadedXml->apiKey;
+            $curlConfig['appName']  = (string)$loadedXml->appName;
             foreach ($loadedXml->call as $call) {
                 if ((string)$call->id == $aArgs['curlCallId']) {
                     $curlConfig['url']      = (string)$call->url;
                     $curlConfig['method']   = strtoupper((string)$call->method);
+                    if (!empty($call->sendInObject)) {
+                        $curlConfig['objectName'] = (string)$call->sendInObject;
+                    }
                     if (!empty($call->file)) {
                         $curlConfig['file'] = (string)$call->file->key;
                     }

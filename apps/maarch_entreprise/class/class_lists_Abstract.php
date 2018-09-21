@@ -1617,9 +1617,9 @@ abstract class lists_Abstract extends Database
             $return .= 'checked ';
         }
 
-        $isVersion = false;
+        $isVersion = 'false';
         if ($resultTheLine[1]['value'] > 1) {
-            $isVersion = true;
+            $isVersion = 'true';
         }
         $return .= 'onclick="setAttachmentInSignatureBook('.$resultTheLine[0]['value'].', '.$isVersion.');"/>Intégrer au parapheur';
 

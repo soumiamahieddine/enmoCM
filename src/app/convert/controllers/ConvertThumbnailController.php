@@ -36,14 +36,32 @@ class ConvertThumbnailController
         if ($aArgs['collId'] == 'letterbox_coll') {
             if (empty($aArgs['outgoingId'])) {
                 $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename']]);
-                $convertedDocument = ResModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
+                $convertedDocument = AdrModel::getConvertedDocumentById([
+                    'select' => ['docserver_id','path', 'filename'],
+                    'resId' => $aArgs['resId'],
+                    'collId' => $aArgs['collId'],
+                    'type' => 'PDF',
+                    'isVersion' => false
+                ]);
             } else {
                 $resource = AttachmentModel::getById(['id' => $aArgs['outgoingId'], 'isVersion' => $aArgs['isOutgoingVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
-                $convertedDocument =  AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['outgoingId'], 'isVersion' => $aArgs['isOutgoingVersion']]);
+                $convertedDocument = AdrModel::getConvertedDocumentById([
+                    'select' => ['docserver_id','path', 'filename'],
+                    'resId' => $aArgs['resId'],
+                    'collId' => $aArgs['collId'],
+                    'type' => 'PDF',
+                    'isVersion' => $aArgs['isOutgoingVersion']
+                ]);
             }
         } else {
             $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
-            $convertedDocument =  AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion']]);
+            $convertedDocument = AdrModel::getConvertedDocumentById([
+                'select' => ['docserver_id','path', 'filename'],
+                'resId' => $aArgs['resId'],
+                'collId' => $aArgs['collId'],
+                'type' => 'PDF',
+                'isVersion' => $aArgs['isVersion']
+            ]);
         }
 
         if (empty($resource)) {
