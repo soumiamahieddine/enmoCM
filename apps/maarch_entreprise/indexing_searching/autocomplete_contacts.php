@@ -13,20 +13,20 @@
 require_once 'core/class/class_request.php';
 
 $req = new request();
-$db = new Database();
+$db  = new Database();
 
 if (empty($_REQUEST['table'])) {
     exit();
 }
-$table = $_REQUEST['table'];
+$table                        = $_REQUEST['table'];
 $_SESSION['is_multi_contact'] = 'OK';
-$color = 'LightYellow';
-$multi_sessions_address_id = $_SESSION['adresses']['addressid'];
-$user_ids = array();
-$address_ids = array();
+$color                        = 'LightYellow';
+$multi_sessions_address_id    = $_SESSION['adresses']['addressid'];
+$user_ids                     = array();
+$address_ids                  = array();
 
 if ($_SESSION['is_multi_contact'] == 'OK') {
-    if (count($multi_sessions_address_id) > 0) {
+    if (is_array($multi_sessions_address_id) && count($multi_sessions_address_id) > 0) {
         for ($imulti = 0; $imulti <= count($multi_sessions_address_id); ++$imulti) {
             if (is_numeric($multi_sessions_address_id[$imulti])) {
                 array_push($address_ids, $multi_sessions_address_id[$imulti]);
@@ -82,12 +82,12 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     // First, internal user
     $contactRequest = "lower(translate(firstname || ' ' || lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE lower(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))";
 
-    $query = 'SELECT * FROM users WHERE '.$contactRequest.$request_user;
-    $arrayPDO = array('%'.$_REQUEST['Input'].'%');
-    $stmt = $db->query($query, $arrayPDO);
-    $nb_total = $nb_total + $stmt->rowCount();
+    $query         = 'SELECT * FROM users WHERE '.$contactRequest.$request_user;
+    $arrayPDO      = array('%'.$_REQUEST['Input'].'%');
+    $stmt          = $db->query($query, $arrayPDO);
+    $nb_total      = $nb_total + $stmt->rowCount();
     $aAlreadyCatch = [];
-    $itRes = 0;
+    $itRes         = 0;
     while ($res = $stmt->fetchObject()) {
         if ($itRes > $maxResult) {
             break;
@@ -124,11 +124,11 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         $columnSql = str_replace('#', "|| ' ' ||", $column);
 
         $contactRequest = 'lower(translate('.$columnSql.",'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE lower(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))";
-        $orderStr = ' ORDER by '.$columnSql.' ASC';
-        $query = 'SELECT * FROM view_contacts WHERE '.$contactRequest.$request_contact.$orderStr;
-        $arrayPDO = array('%'.$_REQUEST['Input'].'%');
-        $stmt = $db->query($query, $arrayPDO);
-        $nb_total = $nb_total + $stmt->rowCount();
+        $orderStr      = ' ORDER by '.$columnSql.' ASC';
+        $query         = 'SELECT * FROM view_contacts WHERE '.$contactRequest.$request_contact.$orderStr;
+        $arrayPDO      = array('%'.$_REQUEST['Input'].'%');
+        $stmt          = $db->query($query, $arrayPDO);
+        $nb_total      = $nb_total + $stmt->rowCount();
         $aAlreadyCatch = [];
         while ($res = $stmt->fetchObject()) {
             if ($itRes > $maxResult) {
@@ -171,8 +171,8 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                 .'bsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
             $contact_info = utf8_decode($contact_info);
             $contact_info = utf8_encode(strtr($contact_info, utf8_decode($a), $b));
-            $address = utf8_decode($address);
-            $address = utf8_encode(strtr($address, utf8_decode($a), $b));
+            $address      = utf8_decode($address);
+            $address      = utf8_encode(strtr($address, utf8_decode($a), $b));
 
             foreach ($keyList as $keyVal) {
                 $keyVal = utf8_decode($keyVal);

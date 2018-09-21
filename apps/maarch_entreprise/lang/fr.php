@@ -2389,6 +2389,9 @@ if (!defined('_SEARCH_DIRECTORY')) {
 if (!defined('_EXTERNAL_CONTACT_ID')) {
     define('_EXTERNAL_CONTACT_ID', 'Identifiant contact externe');
 }
+if (!defined('_CONTACT_ID')) {
+    define('_CONTACT_ID', 'ID Contact');
+}
 if (!defined('_INDIVIDUAL')) {
     define('_INDIVIDUAL', 'Particulier');
 }

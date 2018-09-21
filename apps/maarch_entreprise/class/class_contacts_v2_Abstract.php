@@ -899,20 +899,18 @@ abstract class contacts_v2_Abstract extends Database
                 if ($iframe) {
                     ?>
             <input type="button" class="button" name="cancel" value="<?php echo _CANCEL; ?>"
-                <?php if ($_SESSION[ 'info_contact_popup']=='true') {
+                <?php if ($_SESSION['info_contact_popup']=='true') {
                         ?> onclick="self.close();"
             <?php
 
                     } elseif ($_SESSION['AttachmentContact'] == '1') {
                         ?>
-            onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div_attach'));new Effect.BlindUp(parent.document.getElementById('info_contact_div_attach'));simpleAjax('
-            <?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=unsetAttachmentContact');return false;"
+            onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div_attach'));new Effect.BlindUp(parent.document.getElementById('info_contact_div_attach'));simpleAjax('<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=unsetAttachmentContact');return false;"
             <?php
 
                     } else {
                         ?>
-            onclick="new Effect.BlindUp(parent.document.getElementById('show_tab'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return
-            false;"
+            onclick="new Effect.BlindUp(parent.document.getElementById('show_tab'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;"
             <?php
 
                     } ?>
