@@ -44,9 +44,12 @@ export class BasketAdministrationComponent implements OnInit {
 
     displayedColumns        = ['label_action', 'actions'];
     orderColumns            = ['alt_identifier', 'creation_date', 'process_limit_date', 'res_id', 'priority'];
+    orderByColumns          = ['asc', 'desc'];
     langVarName             = [this.lang.chrono, this.lang.creationDate, this.lang.processLimitDate, this.lang.id, this.lang.priority];
+    langOrderName           = [this.lang.ascending, this.lang.descending];
     orderColumnsSelected    : string[] = [];
     selection               : string[] = [];
+    orderBy                 : string[] = [];
     columnsFormControl      : FormControl = new FormControl();
     dataSource              : any;
 
@@ -182,8 +185,11 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        if(this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0){
-            this.basket.basket_res_order = this.orderColumnsSelected.join(',')
+        if(this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0) {
+            for (let i = 0; i < this.orderColumnsSelected.length; i++) {
+                this.orderColumnsSelected[i] = this.orderColumnsSelected[i] + ' ' + this.orderBy[i];
+            }
+            this.basket.basket_res_order = this.orderColumnsSelected.join(', ')
         } else {
             this.basket.basket_res_order = '';
         }        
@@ -206,7 +212,7 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    removeColumn(column: string){
+    removeColumn(column: string) {
         var index = this.orderColumnsSelected.indexOf(column);
         if (index >= 0) {
             this.orderColumnsSelected.splice(index, 1);
