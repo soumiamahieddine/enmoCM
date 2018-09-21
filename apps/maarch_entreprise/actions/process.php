@@ -301,7 +301,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
                     $frm_str .= '<input type="hidden" id="identifierDetailFrame" value="" />';
                     $frm_str .= '</div>';
 
-                    $frm_str .= '<input type="text" value="'.$nbContacts.' '._CONTACTS.'" readonly="readonly" class="readonly" size="40" style="cursor: pointer; border:none;" title="'._SHOW_MULTI_CONTACT.'" alt="'.SHOW_MULTI_CONTACT.'"';
+                    $frm_str .= '<input type="text" value="'.$nbContacts.' '._CONTACTS.'" readonly="readonly" class="readonly" size="40" style="cursor: pointer; border:none;" title="'._SHOW_MULTI_CONTACT.'" alt="'._SHOW_MULTI_CONTACT.'"';
                     $frm_str .= 'onClick = "previsualiseAdminRead(event, '.$frameContacts.');"';
                     $frm_str .= '/>';
                 } else {
