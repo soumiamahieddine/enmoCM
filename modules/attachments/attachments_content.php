@@ -285,12 +285,12 @@ if (isset($_POST['add']) && $_POST['add']) {
 
                                 if (!empty($chrono)) {
                                     array_push(
-                                    $_SESSION['data'],
-                                    array(
-                                        'column' => 'identifier',
-                                        'value' => $chrono,
-                                        'type' => 'string',
-                                    )
+                                        $_SESSION['data'],
+                                        array(
+                                            'column' => 'identifier',
+                                            'value' => $chrono,
+                                            'type' => 'string',
+                                        )
                                     );
                                 }
                                 array_push(
@@ -312,120 +312,55 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 );
 
                                 if ($contactidAttach == 'mailing') {
-                                    $contactsForMailing = \SrcCore\models\DatabaseModel::select([
-                                        'select' => ['*'],
-                                        'table' => ['contacts_res'],
-                                        'where' => ['res_id = ?', 'address_id <> 0'],
-                                        'data' => [$_SESSION['doc_id']]
-                                    ]);
-                                    foreach ($contactsForMailing as $key => $contactForMailing) {
-                                        $chronoPubli = $chrono.'-'.chr(ord('A')+$key);
-                                        if ($key == 0) {
-                                            $resId = $_SESSION['doc_id'];
-                                            $resourceExt = \Resource\models\ResModel::getExtById(['select' => ['category_id'],'resId' => $resId]);
-                                            if ($resourceExt['category_id'] == 'outgoing') {
-                                                \Resource\models\ResModel::updateExt([
-                                                    'set'   => [
-                                                        'is_multicontacts'  => 'N',
-                                                        'address_id'        => $contactForMailing['address_id'],
-                                                        'dest_contact_id'    => $contactForMailing['contact_id'],
-                                                        'alt_identifier'    => $chronoPubli
-                                                    ],
-                                                    'where' => ['res_id = ?'],
-                                                    'data'  => [$resId]
-                                                ]);
-                                            } else {
-                                                \Resource\models\ResModel::updateExt([
-                                                    'set'   => [
-                                                        'is_multicontacts'  => 'N',
-                                                        'address_id'        => $contactForMailing['address_id'],
-                                                        'exp_contact_id'    => $contactForMailing['contact_id'],
-                                                        'alt_identifier'    => $chronoPubli
-                                                    ],
-                                                    'where' => ['res_id = ?'],
-                                                    'data'  => [$resId]
-                                                ]);
-                                            }
-                                        } else {
-                                            $resId = \Resource\controllers\ResController::duplicateForMailing([
-                                                'resId'     => $_SESSION['doc_id'],
-                                                'userId'    => $_SESSION['user']['UserId'],
-                                                'contactId' => $contactForMailing['contact_id'],
-                                                'addressId' => $contactForMailing['address_id'],
-                                                'altIdentifier' => $chronoPubli
-                                            ]);
+                                    $fileInfos = [
+                                        'tmpDir'        => $_SESSION['config']['tmppath'],
+                                        'size'          => $_SESSION['upfile'][$numAttach]['size'],
+                                        'format'        => $path_parts['extension'],
+                                        'tmpFileName'   => $_SESSION['upfile'][$numAttach]['fileNameOnTmp'],
+                                    ];
+
+                                    $storeResult = $docserverControler->storeResourceOnDocserver($_SESSION['collection_id_choice'], $fileInfos);
+
+                                    foreach ($_SESSION['data'] as $dataKey => $dataValue) {
+                                        if (in_array($dataValue['column'], ['status'])) {
+                                            unset($_SESSION['data'][$dataKey]);
                                         }
-                                        require_once 'modules/templates/class/templates_controler.php';
-                                        $templateCtrl = new templates_controler();
-                                        $pathToAttachmentToCopy = $_SESSION['config']['tmppath'] . $_SESSION['upfile'][$numAttach]['fileNameOnTmp'];
-                                        $params = [
-                                            'res_id' => $resId,
-                                            'coll_id' => 'letterbox_coll',
-                                            'res_view' => 'res_view_attachments',
-                                            'res_table' => 'res_attachments',
-                                            'res_contact_id' => $contactForMailing['contact_id'],
-                                            'res_address_id' => $contactForMailing['address_id'],
-                                            'mailing' => true,
-                                            'pathToAttachment' => $pathToAttachmentToCopy
-                                        ];
-
-                                        $filePathOnTmp = $templateCtrl->merge('notUsed', $params, 'file');
-                                        $filePathOnTmp = str_replace($_SESSION['config']['tmppath'], '', $filePathOnTmp);
-                                        $fileInfos = [
-                                            'tmpDir'        => $_SESSION['config']['tmppath'],
-                                            'size'          => $_SESSION['upfile'][$numAttach]['size'],
-                                            'format'        => $path_parts['extension'],
-                                            'tmpFileName'   => $filePathOnTmp,
-                                        ];
-
-                                        $storeResult = $docserverControler->storeResourceOnDocserver($_SESSION['collection_id_choice'], $fileInfos);
-                                        foreach ($_SESSION['data'] as $dataKey => $dataValue) {
-                                            if (in_array($dataValue['column'], ['docserver_id', 'res_id_master', 'dest_contact_id', 'dest_address_id', 'identifier'])) {
-                                                unset($_SESSION['data'][$dataKey]);
-                                            }
-                                        }
-                                        $_SESSION['data'][] = [
-                                            'column' => 'docserver_id',
-                                            'value' => $storeResult['docserver_id'],
-                                            'type' => 'string'
-                                        ];
-                                        $_SESSION['data'][] = [
-                                            'column' => 'res_id_master',
-                                            'value' => $resId,
-                                            'type' => 'integer'
-                                        ];
-                                        $_SESSION['data'][] = [
-                                            'column' => 'dest_contact_id',
-                                            'value' => $contactForMailing['contact_id'],
-                                            'type' => 'integer'
-                                        ];
-                                        $_SESSION['data'][] = [
-                                            'column' => 'dest_address_id',
-                                            'value' => $contactForMailing['address_id'],
-                                            'type' => 'integer'
-                                        ];
-
-                                        $_SESSION['data'][] = [
-                                            'column' => 'identifier',
-                                            'value' => $chronoPubli,
-                                            'type' => 'string'
-                                        ];
-
-                                        $id = $resAttach->load_into_db(
-                                            'res_attachments',
-                                            $storeResult['destination_dir'],
-                                            $storeResult['file_destination_name'],
-                                            $storeResult['path_template'],
-                                            $storeResult['docserver_id'],
-                                            $_SESSION['data'],
-                                            $_SESSION['config']['databasetype']
-                                        );
                                     }
-                                    \SrcCore\models\DatabaseModel::delete([
-                                        'table' => 'contacts_res',
-                                        'where' => ['res_id = ?'],
-                                        'data'  => [$_SESSION['doc_id']]
-                                    ]);
+                                    $_SESSION['data'][] = [
+                                        'column' => 'status',
+                                        'value' => 'SEND_MASS',
+                                        'type' => 'string'
+                                    ];
+                                    $_SESSION['data'][] = [
+                                        'column' => 'docserver_id',
+                                        'value' => $storeResult['docserver_id'],
+                                        'type' => 'string'
+                                    ];
+                                    $_SESSION['data'][] = [
+                                        'column' => 'res_id_master',
+                                        'value' => $_SESSION['doc_id'],
+                                        'type' => 'integer'
+                                    ];
+                                    $_SESSION['data'][] = [
+                                        'column' => 'dest_contact_id',
+                                        'value' => null,
+                                        'type' => 'integer'
+                                    ];
+                                    $_SESSION['data'][] = [
+                                        'column' => 'dest_address_id',
+                                        'value' => null,
+                                        'type' => 'integer'
+                                    ];
+
+                                    $id = $resAttach->load_into_db(
+                                        'res_attachments',
+                                        $storeResult['destination_dir'],
+                                        $storeResult['file_destination_name'],
+                                        $storeResult['path_template'],
+                                        $storeResult['docserver_id'],
+                                        $_SESSION['data'],
+                                        $_SESSION['config']['databasetype']
+                                    );
                                 } else {
                                     //SAVE META DATAS IN DB
                                     $id = $resAttach->load_into_db(
@@ -540,10 +475,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                             $new_nb_attach = $stmt->rowCount();
                         }
                         if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'create') {
-                            //reload entire page because chrono number and contact mode change
-                            if ($contactidAttach == 'mailing') {
-                                $js .= "location.reload();";
-                            } else
                             //Redirection vers bannette MyBasket s'il s'agit d'un courrier spontané et que l'utilisateur connecté est le destinataire du courrier
                             if (isset($_SESSION['upfile'][$attachNum]['outgoingMail']) && $_SESSION['upfile'][$attachNum]['outgoingMail'] && $_SESSION['user']['UserId'] == $_SESSION['details']['diff_list']['dest']['users'][0]['user_id']) {
                                 $js .= "window.parent.top.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resid=".$_SESSION['doc_id']."&directLinkToAction';";

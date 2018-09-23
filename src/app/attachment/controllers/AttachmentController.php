@@ -26,6 +26,9 @@ use setasign\Fpdi\TcpdfFpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use Resource\controllers\StoreController;
+use Template\controllers\TemplateController;
+use SrcCore\models\DatabaseModel;
 
 class AttachmentController
 {
@@ -49,7 +52,6 @@ class AttachmentController
 
         $data['isVersion'] = filter_var($data['isVersion'], FILTER_VALIDATE_BOOLEAN);
 
-        var_dump($data['isVersion']);
         $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $data['isVersion']]);
 
         if (empty($attachment)) {
@@ -265,5 +267,135 @@ class AttachmentController
         ]);
 
         return $response->withHeader('Content-Type', $mimeType);
+    }
+
+    public function generateAttachForMailing(array $aArgs)
+    {
+        $attachments = AttachmentModel::getOnView([
+            'select' => ['*'],
+            'where' => ['res_id_master = ?', 'status = ?'],
+            'data' => [$aArgs['resIdMaster'],'SEND_MASS']
+        ]);
+
+        $contactsForMailing = DatabaseModel::select([
+            'select' => ['*'],
+            'table' => ['contacts_res'],
+            'where' => ['res_id = ?', 'address_id <> 0'],
+            'data' => [$aArgs['resIdMaster']]
+        ]);
+
+        if (!empty($attachments[0])) {
+            $tmpPath = CoreConfigModel::getTmpPath();
+
+            foreach ($attachments as $keyAttach => $attachment) {
+                if ($attachment['res_id_version'] <> 0) {
+                    $resId = $attachment['res_id_version'];
+                    $table = 'res_version_attachments';
+                } else {
+                    $resId = $attachment['res_id'];
+                    $table = 'res_attachments';
+                }
+
+                $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'DOC', 'collId' => 'letterbox_coll', 'select' => ['path_template']]);
+                $pathToAttachmentToCopy = $docserver['path_template'] . str_replace('#', '/', $attachment['path']) . $attachment['filename'];
+
+                foreach ($contactsForMailing as $keyContact => $contactForMailing) {
+                    $chronoPubli = $attachment['identifier'].'-'.chr(ord('A')+$keyContact);
+
+
+                    $dataValue = [];
+                    array_push($dataValue, [
+                        'column' => 'coll_id',
+                        'value' => 'letterbox_coll',
+                        'type' => 'string'
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'res_id_master',
+                        'value' => $aArgs['resIdMaster'],
+                        'type' => 'integer'
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'attachment_type',
+                        'value' => $attachment['attachment_type'],
+                        'type' => 'string'
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'identifier',
+                        'value' => $chronoPubli,
+                        'type' => 'string'
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'title',
+                        'value' => $attachment['title'],
+                        'type' => 'string'
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'type_id',
+                        'value' => $attachment['type_id'],
+                        'type' => 'integer'
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'format',
+                        'value' => $attachment['format'],
+                        'type' => 'string'
+                    
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'typist',
+                        'value' => $attachment['typist'],
+                        'type' => 'string'
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'relation',
+                        'value' => $attachment['relation'],
+                        'type' => 'integer'
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'dest_contact_id',
+                        'value' => $contactForMailing['contact_id'],
+                        'type' => 'integer'
+                    ]);
+                    array_push($dataValue, [
+                        'column' => 'dest_address_id',
+                        'value' => $contactForMailing['address_id'],
+                        'type' => 'integer'
+                    ]);
+
+                    $params = [
+                        'res_id' => $aArgs['resIdMaster'],
+                        'coll_id' => 'letterbox_coll',
+                        'res_view' => 'res_view_attachments',
+                        'res_table' => 'res_attachments',
+                        'res_contact_id' => $contactForMailing['contact_id'],
+                        'res_address_id' => $contactForMailing['address_id'],
+                        'pathToAttachment' => $pathToAttachmentToCopy
+                    ];
+
+                    $filePathOnTmp = TemplateController::mergeDatasource($params);
+
+                    $allDatas = [
+                        "encodedFile" => base64_encode(file_get_contents($filePathOnTmp)),
+                        "data"        => $dataValue,
+                        "collId"      => "letterbox_coll",
+                        "table"       => "res_attachments",
+                        "fileFormat"  => $attachment['format'],
+                        "status"      => 'A_TRA'
+                    ];
+
+                    StoreController::storeResource($allDatas);
+
+                    AttachmentModel::update([
+                        'table'     => $table,
+                        'set'       => [
+                            'status'  => 'DEL',
+                        ],
+                        'where'     => ['res_id = ?'],
+                        'data'      => [$resId]
+                    ]);
+                }
+            }
+        }
+
+        return ['success' => 'success'];
     }
 }

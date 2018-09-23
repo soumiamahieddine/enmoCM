@@ -360,4 +360,83 @@ class TemplateController
 
         return $check;
     }
+    public static function mergeDatasource(array $aArgs)
+    {
+        include_once 'apps/maarch_entreprise/tools/tbs/tbs_class_php5.php';
+        include_once 'apps/maarch_entreprise/tools/tbs/tbs_plugin_opentbs.php';
+
+        $pathToTemplate = $aArgs['pathToAttachment'];
+        $pathToTemplateInfo = pathinfo($pathToTemplate);
+        $datasources = TemplateController::getDatas(["id" => 'letterbox_attachment', 'resId' => $aArgs['res_id'], 'contactId' => (int)$aArgs['res_contact_id'], 'addressId' => (int)$aArgs['res_address_id']]);
+    
+
+        // Merge with TBS
+        $TBS = new \clsTinyButStrong;
+        $TBS->NoErr = true;
+
+        //LOAD PLUGIN FOR ODT/DOCX DOCUMENT
+        $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
+        $TBS->LoadTemplate($pathToTemplate, OPENTBS_ALREADY_UTF8);
+
+        
+        foreach ($datasources as $name => $datasource) {
+            if (!is_array($datasource)) {
+                $TBS->MergeField($name, $datasource);
+            } else {
+                $TBS->MergeBlock($name, 'array', $datasource);
+            }
+        }
+
+        
+        if ($pathToTemplateInfo['extension'] == 'odt') {
+            $TBS->LoadTemplate('#styles.xml');
+        } elseif ($pathToTemplateInfo['extension'] == 'docx') {
+            $TBS->LoadTemplate('#word/header1.xml');
+        }
+        foreach ($datasources as $name => $datasource) {
+            if (!is_array($datasource)) {
+                $TBS->MergeField($name, $datasource);
+            } else {
+                $TBS->MergeBlock($name, 'array', $datasource);
+            }
+        }
+
+        if ($pathToTemplateInfo['extension'] == 'docx') {
+            $TBS->LoadTemplate('#word/footer1.xml');
+            foreach ($datasources as $name => $datasource) {
+                if (!is_array($datasource)) {
+                    $TBS->MergeField($name, $datasource);
+                } else {
+                    $TBS->MergeBlock($name, 'array', $datasource);
+                }
+            }
+        }
+
+        $fileNameOnTmp = 'tmp_file_' . $GLOBALS['userId'] . '_' . rand() . '.' . $pathToTemplateInfo['extension'];
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $myFile = $tmpPath . $fileNameOnTmp;
+
+        $TBS->Show(OPENTBS_FILE, $myFile);
+
+        return $myFile;
+    }
+
+    private static function getDatas(array $aArgs)
+    {
+        //TO DO
+        ValidatorModel::notEmpty($aArgs, ['id']);
+
+        $res_id = $aArgs['resId'];
+        $datasources['datetime'][0]['date'] = date('d-m-Y');
+        $datasources['datetime'][0]['time'] = date('H:i:s.u');
+        $datasources['datetime'][0]['timestamp'] = time();
+
+        $datasourceScript = TemplateModel::getDatasourceById(["id" => $aArgs['id']]);
+        $res_contact_id = $aArgs['contactId'];
+        $res_address_id = $aArgs['addressId'];
+
+        include $datasourceScript['script'];
+
+        return $datasources;
+    }
 }

@@ -48,13 +48,25 @@ if ($objectType == 'templateStyle') {
             $filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
             $templateObj = $templateCtrl->get($objectId);
             $_SESSION['cm']['templateStyle'] = $templateObj->template_style;
-        } elseif ($objectType == 'template' || $objectType == 'attachmentMailing') {
+        } elseif ($objectType == 'template') {
             $filePathOnTmp = $templateCtrl->copyTemplateOnTmp($objectId);
             if ($filePathOnTmp == '') {
                 $result = array('ERROR' => _FAILED_TO_COPY_ON_TMP 
                     . ':' . $objectId . ' ' . $filePathOnTmp);
                 createXML('ERROR', $result);
             }
+        } else if ($objectType == 'attachmentMailing') {
+            $params = array(
+                'res_id' => $_SESSION['cm']['resMaster'],
+                'coll_id' => $_SESSION['cm']['collId'],
+                'res_view' => $res_view,
+                'res_table' => $objectTable,
+                'chronoAttachment' => $_SESSION['cm']['chronoAttachment'],
+                'mailing' => true,
+                );
+            $filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
+            $templateObj = $templateCtrl->get($objectId);
+            $_SESSION['cm']['templateStyle'] = $templateObj->template_style;
         }
         $fileExtension = $func->extractFileExt($filePathOnTmp);
     }
