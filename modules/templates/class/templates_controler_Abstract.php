@@ -898,24 +898,19 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
     * @param string $outputType : save to 'file', retrieve 'content'
     * @return merged content or path to file
     */
-    public function merge($templateId, $params=array(), $outputType) 
+    public function merge($templateId, $params = array(), $outputType)
     {
         include_once 'core/class/class_functions.php';
         include_once 'modules/templates/templates_tables_definition.php';
         include_once 'apps/maarch_entreprise/tools/tbs/tbs_class_php5.php';
         include_once 'apps/maarch_entreprise/tools/tbs/tbs_plugin_opentbs.php';
 
-        if (empty($params['mailing'])) {
-            $templateObj = $this->get($templateId);
+        $templateObj = $this->get($templateId);
 
-            // Get template path from docserver or copy HTML template to temp file
-            $pathToTemplate = $this->getWorkingCopy($templateObj);
-            $datasourceObj = $this->getDatasourceScript($templateObj->template_datasource);
-        } else {
-            $pathToTemplate = $params['pathToAttachment'];
-            $datasourceObj = $this->getDatasourceScript('letterbox_attachment');
-        }
-
+        // Get template path from docserver or copy HTML template to temp file
+        $pathToTemplate = $this->getWorkingCopy($templateObj);
+        $datasourceObj = $this->getDatasourceScript($templateObj->template_datasource);
+ 
         $datasources = $this->getBaseDatasources();
         // Make params array for datasrouce script
         foreach ($params as $paramName => $paramValue) {
@@ -929,7 +924,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         // Merge with TBS
         $TBS = new clsTinyButStrong;
         $TBS->NoErr = true;
-        if ($templateObj->template_type == 'OFFICE' || !empty($params['mailing'])) {
+        if ($templateObj->template_type == 'OFFICE') {
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
             $TBS->LoadTemplate($pathToTemplate, OPENTBS_ALREADY_UTF8);
         } else {
@@ -991,7 +986,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
             . '_' . rand() . '.' . $fileExtension;
             $myFile = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
-            if ($templateObj->template_type == 'OFFICE' || !empty($params['mailing'])) {
+            if ($templateObj->template_type == 'OFFICE') {
                 $TBS->Show(OPENTBS_FILE, $myFile);
             } else {
                 $TBS->Show(TBS_NOTHING);

@@ -459,7 +459,7 @@ abstract class visa_Abstract extends Database
     public function processVisaWorkflow($aArgs = [])
     {
         $message = [];
-        
+        $db = new Database();
         //enables to process the visa if i am not the item_id
         if ($aArgs['stepDetails']['item_id'] != $_SESSION['user']['UserId']) {
             $db->query(
@@ -614,6 +614,9 @@ abstract class visa_Abstract extends Database
         // If there is only one step in the visa workflow, we set status to ESIG
         if ($resListDiffVisa->requested_signature) {
             $mailStatus = 'ESIG';
+            \Attachment\controllers\AttachmentController::generateAttachForMailing([
+                'resIdMaster' => $res_id,
+            ]);
         } else {
             $mailStatus = 'EVIS';
         }
