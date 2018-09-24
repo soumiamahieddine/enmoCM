@@ -1,8 +1,15 @@
 <?php
 
 $confirm = true;
+$warnMsg = '';
 
 $etapes = ['form'];
+
+$isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id']]);
+
+if ($isMailingAttach != false) {
+    $warnMsg = $isMailingAttach['nbContacts'] . " " . _RESPONSES_WILL_BE_GENERATED;
+}
 
 function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
 {
@@ -67,6 +74,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $coll_id = $_SESSION['current_basket']['coll_id'];
 
     foreach ($arr_id as $res_id) {
+        \Attachment\controllers\AttachmentController::generateAttachForMailing([ 'resIdMaster' => $res_id]);
+        
         if (!empty($config)) {
             if ($config['id'] == 'ixbus') {
                 include_once 'modules/visa/class/IxbusController.php';
