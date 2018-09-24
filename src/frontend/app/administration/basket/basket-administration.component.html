@@ -61,16 +61,20 @@
                                 </div>                                        
                                 <div class="col-md-6 col-xs-6 text-center">
                                     <mat-chip-list [(ngModel)]="orderColumnsSelected" name="basket_res_order_chips" #chipList>
-                                        <div class="row" *ngFor="let column of orderColumnsSelected">
-                                            <mat-chip color="primary" [removable]="true" (removed)="removeColumn(column)">  
-                                                    <span class="badge badge-pill badge-dark">{{orderColumnsSelected.indexOf(column)+1}}</span> &nbsp;{{langVarName[orderColumns.indexOf(column)]}}
-                                                    <mat-icon matChipRemove class="fa fa-times-circle"></mat-icon>
-                                            </mat-chip>
-                                            <mat-form-field>
-                                                <mat-select placeholder="{{lang.orderBy}}" value="{{orderByColumns[0]}}" [(ngModel)]="orderBy[orderColumnsSelected.indexOf(column)]" name="order_by_select" required>
-                                                    <mat-option *ngFor="let order of orderByColumns" [value]="order">{{langOrderName[orderByColumns.indexOf(order)]}}</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
+                                        <div style="width: 100%" class="row" *ngFor="let column of orderColumnsSelected">
+                                            <div style="text-align: left" class="col-md-6 col-xs-6">
+                                                <mat-chip color="primary" [removable]="true" (removed)="removeColumn(column)">  
+                                                        <span class="badge badge-pill badge-dark">{{orderColumnsSelected.indexOf(column)+1}}</span> &nbsp;{{langVarName[orderColumns.indexOf(column)]}}
+                                                        <mat-icon matChipRemove class="fa fa-times-circle"></mat-icon>
+                                                </mat-chip>
+                                            </div>
+                                            <div class="col-md-6 col-xs-6">
+                                                <mat-form-field>
+                                                    <mat-select placeholder="{{lang.orderBy}}" value="{{orderByColumns[0]}}" [(ngModel)]="orderBy[orderColumnsSelected.indexOf(column)]" name="order_by_select" required>
+                                                        <mat-option *ngFor="let order of orderByColumns" [value]="order">{{langOrderName[orderByColumns.indexOf(order)]}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
                                         </div>
                                     </mat-chip-list>
                                 </div>
