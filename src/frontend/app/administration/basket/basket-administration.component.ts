@@ -110,7 +110,15 @@ export class BasketAdministrationComponent implements OnInit {
                         else{
                             
                             //this.basket.basket_res_order = this.basket.basket_res_order.substring(0,this.basket.basket_res_order.indexOf(" DESC"));
-                            this.orderColumnsSelected = this.basket.basket_res_order.split(',');
+                            var orderByColumnsSelected = this.basket.basket_res_order.split(', ');
+                            for (let i = 0; i < orderByColumnsSelected.length; i++) {
+                                var value = orderByColumnsSelected[i].split(' ');
+                                this.orderColumnsSelected[i] = value[0];
+                                if (value[1] != '' && value[1] != null) {
+                                    this.orderBy[i] = value[1];
+                                }
+                            }
+                            // this.orderColumnsSelected = this.basket.basket_res_order.split(', ');
 
                             this.columnsFormControl.setValue(this.orderColumnsSelected);
                             this.selection = this.orderColumnsSelected;
