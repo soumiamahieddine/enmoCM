@@ -367,7 +367,7 @@ class TemplateController
 
         $pathToTemplate = $aArgs['pathToAttachment'];
         $pathToTemplateInfo = pathinfo($pathToTemplate);
-        $datasources = TemplateController::getDatas(["id" => 'letterbox_attachment', 'resId' => $aArgs['res_id'], 'contactId' => (int)$aArgs['res_contact_id'], 'addressId' => (int)$aArgs['res_address_id']]);
+        $datasources = TemplateController::getDatas(["id" => 'letterbox_attachment', 'resId' => $aArgs['res_id'], 'contactId' => (int)$aArgs['res_contact_id'], 'addressId' => (int)$aArgs['res_address_id'], 'chronoAttachment' => $aArgs['chronoAttachment']]);
     
 
         // Merge with TBS
@@ -434,6 +434,7 @@ class TemplateController
         $datasourceScript = TemplateModel::getDatasourceById(["id" => $aArgs['id']]);
         $res_contact_id = $aArgs['contactId'];
         $res_address_id = $aArgs['addressId'];
+        $chronoAttachment = $aArgs['chronoAttachment'];
 
         include $datasourceScript['script'];
 

@@ -144,9 +144,12 @@ if (!empty($res_id)) {
     }
 
     // Attachments
-    $datasources['attachments'] = array();
-    $myAttachment['chrono'] = $chronoAttachment;
 
+    if (empty($params['mailing'])) {
+        $datasources['attachments'] = array();
+        $myAttachment['chrono'] = $chronoAttachment;
+    }
+    
     //thirds
     $stmt = $dbDatasource->query('SELECT * FROM contacts_res WHERE res_id = ? AND mode = ? ', [$doc['res_id'], 'third']);
     $datasources['thirds'] = [];
@@ -346,22 +349,24 @@ if (!empty($res_id)) {
     }
 }
 
-$img_file_name = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].time().rand().'_barcode_attachment.png';
+if (empty($params['mailing'])) {
+    $img_file_name = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].time().rand().'_barcode_attachment.png';
 
-require_once 'apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php';
-$objCode = new pi_barcode();
-
-$objCode->setCode($chronoAttachment);
-$objCode->setType('C128');
-$objCode->setSize(30, 50);
-
-$objCode->setText($chronoAttachment);
-
-$objCode->hideCodeType();
-
-$objCode->setFiletype('PNG');
-
-$objCode->writeBarcodeFile($img_file_name);
-
-$myAttachment['chronoBarCode'] = $img_file_name;
-$datasources['attachments'][] = $myAttachment;
+    require_once 'apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php';
+    $objCode = new pi_barcode();
+    
+    $objCode->setCode($chronoAttachment);
+    $objCode->setType('C128');
+    $objCode->setSize(30, 50);
+    
+    $objCode->setText($chronoAttachment);
+    
+    $objCode->hideCodeType();
+    
+    $objCode->setFiletype('PNG');
+    
+    $objCode->writeBarcodeFile($img_file_name);
+    
+    $myAttachment['chronoBarCode'] = $img_file_name;
+    $datasources['attachments'][] = $myAttachment;
+}

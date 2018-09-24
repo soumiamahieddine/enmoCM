@@ -301,7 +301,7 @@ class AttachmentController
                 $pathToAttachmentToCopy = $docserver['path_template'] . str_replace('#', '/', $attachment['path']) . $attachment['filename'];
 
                 foreach ($contactsForMailing as $keyContact => $contactForMailing) {
-                    $chronoPubli = $attachment['identifier'].'-'.chr(ord('A')+$keyContact);
+                    $chronoPubli = $attachment['identifier'].'-'.($keyContact+1);
 
 
                     $dataValue = [];
@@ -369,7 +369,8 @@ class AttachmentController
                         'res_table' => 'res_attachments',
                         'res_contact_id' => $contactForMailing['contact_id'],
                         'res_address_id' => $contactForMailing['address_id'],
-                        'pathToAttachment' => $pathToAttachmentToCopy
+                        'pathToAttachment' => $pathToAttachmentToCopy,
+                        'chronoAttachment' => $chronoPubli,
                     ];
 
                     $filePathOnTmp = TemplateController::mergeDatasource($params);
@@ -419,7 +420,7 @@ class AttachmentController
         }
 
         $return['nbContacts'] = ResModel::getNbContactsByResId(["resId" => $aArgs['resIdMaster']]);
-        
+
         return $return;
     }
 }
