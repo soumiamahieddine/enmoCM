@@ -29,6 +29,7 @@ use SrcCore\models\CoreConfigModel;
 use Resource\controllers\StoreController;
 use Template\controllers\TemplateController;
 use SrcCore\models\DatabaseModel;
+use Resource\models\ResModel;
 
 class AttachmentController
 {
@@ -395,7 +396,30 @@ class AttachmentController
                 }
             }
         }
-
         return ['success' => 'success'];
+    }
+
+    public function isMailingAttach(array $aArgs)
+    {
+        //TODO REMOVE SESSION AFTER V2
+        if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => $aArgs['resIdMaster'], 'userId' => $_SESSION['user']['UserId']])) {
+            return ['errors' => 'Document out of perimeter'];
+        }
+
+        $attachments = AttachmentModel::getOnView([
+            'select' => ['res_id'],
+            'where' => ['res_id_master = ?', 'status = ?'],
+            'data' => [$aArgs['resIdMaster'],'SEND_MASS']
+        ]);
+
+        $return['nbAttach'] = count($attachments);
+
+        if ($return['nbAttach'] == 0) {
+            return false;
+        }
+
+        $return['nbContacts'] = ResModel::getNbContactsByResId(["resId" => $aArgs['resIdMaster']]);
+        
+        return $return;
     }
 }

@@ -263,3 +263,7 @@ if (!defined('_USE_DATE_IN_SIGNBLOCK_DESC')) {
 if (!defined('_SELECT_MESSAGE_MODEL_IXBUS')) {
     define('_SELECT_MESSAGE_MODEL_IXBUS', "Choose a circuit");
 }
+
+if (!defined('_RESPONSES_WILL_BE_GENERATED')) {
+    define('_RESPONSES_WILL_BE_GENERATED', "answer(s) will be generated.");
+}
