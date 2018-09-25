@@ -204,3 +204,16 @@ if(!defined('_PLEASE_GENERATE_CHRONO_NUMBER'))
     define ('_PLEASE_GENERATE_CHRONO_NUMBER','Please, generate a new chrono number');
 if(!defined('_CHOOSE_CHRONO_NUMBER'))
     define('_CHOOSE_CHRONO_NUMBER','Please choose a chrono number');
+
+if (!defined('_MAILING_INFO_1')) {
+    define('_MAILING_INFO_1', '<b>Mailing is enabled</b> : ');
+}
+if (!defined('_MAILING_INFO_2')) {
+    define('_MAILING_INFO_2', 'A  <b>master</b> attachment will be created without <b>contacts</b> and <b>chrono</b> merge fields.');
+}
+if (!defined('_MAILING_INFO_3')) {
+    define('_MAILING_INFO_3', 'Attachments will be generated <b>AFTER</b> validation by <b>visa users</b> in visa circuit.');
+}
+if (!defined('_MAILING_INFO_4')) {
+    define('_MAILING_INFO_4', '<b>1</b> attachment will be generated <b>each contact</b> linked to document.');
+}

@@ -1097,6 +1097,7 @@ $content .= '</h2>';
 //BEGIN FORM
 $content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:35%;float:left;margin-left:-5px;background-color:#F2F2F2">';
 $content .= '<div class="transmissionDiv" id="addAttach1">';
+    $content .= '<div id="mailingInfo" style="display:none;background: #F8BB30;border-radius: 5px;padding: 10px;">'._MAILING_INFO_1.'<ul style="padding-left: 30px;"><li style="list-style: initial;padding: 5px;">'._MAILING_INFO_2.'</li><li style="list-style: initial;padding: 5px;">'._MAILING_INFO_3.'</li><li style="list-style: initial;padding: 5px;">'._MAILING_INFO_4.'</li></div>';
     $content .= '<hr style="width:85%;margin-left:0px">';
     $content .= '<input type="hidden" id="category_id" value="outgoing"/>';
 
