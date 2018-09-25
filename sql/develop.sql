@@ -519,6 +519,9 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 DELETE FROM status WHERE id = 'FRZ';
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FRZ', 'PJ gelée', 'Y', 'fa-pause', 'apps', 'Y', 'Y');
 
+DELETE FROM status WHERE id = 'SEND_MASS';
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SEND_MASS', 'Pour publipostage', 'Y', 'fa-mail-bulk', 'apps', 'Y', 'Y');
+
 DELETE FROM status WHERE id = 'SIGN';
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SIGN', 'PJ signée', 'Y', 'fa-check', 'apps', 'Y', 'Y');
 

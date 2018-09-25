@@ -361,6 +361,10 @@ class AttachmentController
                         'value' => $contactForMailing['address_id'],
                         'type' => 'integer'
                     ]);
+                    array_push($dataValue, [
+                        'column' => 'in_signature_book',
+                        'value' => 'true',
+                    ]);
 
                     $params = [
                         'res_id' => $aArgs['resIdMaster'],
