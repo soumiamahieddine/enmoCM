@@ -103,16 +103,16 @@ class CurlModel
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
 
-        // preg_match_all('/^date:\s*([^;]*)/mi', $rawResponse, $matches);
-        // $cookies = array();
-        // foreach ($matches[1] as $item) {
-        //     parse_str($item, $cookie);
-        //     $cookies = array_merge($cookies, $cookie);
-        // }
-        // var_dump($cookies);
-        // exit;
+        $cookies = array();
+        if (!empty($aArgs['options'][CURLOPT_HEADER])) {
+            preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $rawResponse, $matches);
+            foreach ($matches[1] as $item) {
+                parse_str($item, $cookie);
+                $cookies = array_merge($cookies, $cookie);
+            }
+        }
 
-        return ['response' => simplexml_load_string($rawResponse), 'infos' => curl_getinfo($curl)];
+        return ['response' => simplexml_load_string($rawResponse), 'infos' => curl_getinfo($curl), 'cookies' => $cookies];
     }
 
     public static function getConfigByCallId(array $aArgs)

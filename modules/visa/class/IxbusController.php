@@ -52,19 +52,23 @@ class IxbusController
         $data = \SrcCore\models\CurlModel::execSOAP([
             'xmlPostString' => $xmlPostString,
             'url'           => 'http://parapheur.orleans.fr/parapheurws/service.asmx',
-            'soapAction'    => 'http://www.srci.fr/CreateSession'
+            'soapAction'    => 'http://www.srci.fr/CreateSession',
+            'options'       => [CURLOPT_HEADER => 1]
         ]);
 
-        $response = $data['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->CreateSessionResponse;
+        $cookie = '';
+        foreach ($data['cookies'] as $key => $value) {
+            $cookie = $key . '=' . $value . ';';
+        }
 
-        return $response;
+        return $cookie;
     }
 
     public static function getInitializeDatas($config)
     {
         $sessionId = IxbusController::createSession($config);
-        $rawResponse['natures'] = IxbusController::getNature(['config' => $config, 'sessionId' => $sessionId]);
-        $rawResponse['usersList'] = IxbusController::getUsersList(['config' => $config, 'sessionId' => $sessionId]);
+        $rawResponse['natures']       = IxbusController::getNature(['config' => $config, 'sessionId' => $sessionId]);
+        $rawResponse['usersList']     = IxbusController::getUsersList(['config' => $config, 'sessionId' => $sessionId]);
         $rawResponse['messagesModel'] = IxbusController::getMessagesModel(['config' => $config, 'sessionId' => $sessionId]);
 
         return $rawResponse;
@@ -102,7 +106,7 @@ class IxbusController
         $rawResponse = curl_exec($curl);
 
         $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetNaturesAvecDroitsCreerResponse;
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetNaturesAvecDroitsCreerResponse->GetNaturesAvecDroitsCreerResult;
 
         return $response;
     }
@@ -139,7 +143,7 @@ class IxbusController
         $rawResponse = curl_exec($curl);
 
         $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetListeUtilisateursDroitCreerResponse;
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetListeUtilisateursDroitCreerResponse->GetListeUtilisateursDroitCreerResult;
 
         return $response;
     }
@@ -150,10 +154,10 @@ class IxbusController
         <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
           <soap:Body>
             <GetMessagesModel xmlns="http://www.srci.fr">
-              <utilisateurID>123</utilisateurID>
+              <utilisateurID>8</utilisateurID>
               <organisationID>'.$aArgs['config']['data']['organizationId'].'</organisationID>
-              <serviceID>123</serviceID>
-              <typeMessage>Test</typeMessage>
+              <serviceID>-1</serviceID>
+              <typeMessage>Production</typeMessage>
             </GetMessagesModel>
           </soap:Body>
         </soap:Envelope>';
@@ -179,7 +183,7 @@ class IxbusController
         $rawResponse = curl_exec($curl);
 
         $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessagesModelResponse;
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessagesModelResponse->GetMessagesModelResult;
 
         return $response;
     }
@@ -216,7 +220,7 @@ class IxbusController
         $rawResponse = curl_exec($curl);
 
         $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessageNatureResponse;
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessageNatureResponse->GetMessageNatureResult;
 
         return $response;
     }
