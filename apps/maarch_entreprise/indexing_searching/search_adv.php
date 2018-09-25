@@ -88,15 +88,18 @@ if ($mode == 'normal') {
     $core_tools->load_header('', true, false);
     $core_tools->load_js();
     $time = $core_tools->get_session_time_expire();
-    $_SESSION['stockCheckbox'] = ''; ?><body>
+    $_SESSION['stockCheckbox'] = ''; ?>
+
+<body>
     <div id="container" style="height:auto;">
 
-            <div class="error" id="main_error">
-                <?php functions::xecho($_SESSION['error']); ?>
-            </div>
-            <div class="info" id="main_info">
-                <?php functions::xecho($_SESSION['info']); ?>
-            </div><?php
+        <div class="error" id="main_error">
+            <?php functions::xecho($_SESSION['error']); ?>
+        </div>
+        <div class="info" id="main_info">
+            <?php functions::xecho($_SESSION['info']); ?>
+        </div>
+        <?php
 }
 
 // load saved queries for the current user in an array
@@ -323,7 +326,7 @@ $param['reference_number'] = $arr_tmp2;
 include("apps/maarch_entreprise/department_list.php");
 
 $arr_tmp = array();
-foreach($depts as $key => $value){
+foreach ($depts as $key => $value) {
     array_push($arr_tmp, array('VALUE' => $key, 'LABEL' => $key . " - " . $value));
 }
 
@@ -333,6 +336,18 @@ $param['department_number_mu'] = array('label' => _DEPARTMENT_NUMBER, 'type' => 
 // GED Number
 $arr_tmp2 = array('label' => _N_GED, 'type' => 'input_text', 'param' => array('field_label' => _N_GED, 'other' => $size));
 $param['numged'] = $arr_tmp2;
+
+// Num Case
+$arr_tmp2 = array('label' => _CASE_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _CASE_NUMBER, 'other' => $size));
+$param['numcase'] = $arr_tmp2;
+
+// Label Case
+$arr_tmp2 = array('label' => _CASE_LABEL, 'type' => 'input_text', 'param' => array('field_label' => _CASE_LABEL, 'other' => $size));
+$param['labelcase'] = $arr_tmp2;
+
+// Description Case
+$arr_tmp2 = array('label' => _CASE_DESCRIPTION, 'type' => 'input_text', 'param' => array('field_label' => _CASE_DESCRIPTION, 'other' => $size));
+$param['descriptioncase'] = $arr_tmp2;
 
 //status
 $status = $status_obj->get_searchable_status();
@@ -570,57 +585,9 @@ if (isset($_REQUEST['nodetails'])) {
                     </p>
                 </td>
             </tr>
-            <tr><td colspan="2"><hr/></td></tr>
+            <tr><td colspan="2">&nbsp;</td></tr>
             <?php
-            }
-            if ($core_tools->is_module_loaded('cases') == true) {
-                ?>
-             <tr>
-                <td colspan="2" ></td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="block">
-                    <h2><?php echo _CASE_INFO; ?></h2>
-                    <table border="0" width="100%" class="content">
-
-                        <tr>
-                            <td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER; ?>:</label>
-                                <input type="text" name="numcase" id="numcase" <?php functions::xecho($size); ?>  />
-                                <input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
-                            </td>
-                            <td><em><?php echo _CASE_NUMBER_HELP; ?></em></td>
-                            <td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td width="70%"><label for="labelcase" class="bold" ><?php echo _CASE_LABEL; ?>:</label>
-                                <input type="text" name="labelcase" id="labelcase" <?php functions::xecho($size); ?>  />
-                                <input type="hidden" name="meta[]" value="labelcase#labelcase#input_text" />
-                            </td>
-                            <td><em><?php echo _CASE_LABEL_HELP; ?></em></td>
-                            <td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td width="70%"><label for="descriptioncase" class="bold" ><?php echo _CASE_DESCRIPTION; ?>:</label>
-                                <input type="text" name="descriptioncase" id="descriptioncase" <?php functions::xecho($size); ?>  />
-                                <input type="hidden" name="meta[]" value="descriptioncase#descriptioncase#input_text" />
-                            </td>
-                            <td><em><?php echo _CASE_DESCRIPTION_HELP; ?></em></td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </table>
-                    </div>
-                </td>
-                <td>
-                    <p align="center">
-                    </p>
-                </td>
-            </tr>
-        <?php
             }    ?>
-
-
-
 
     <tr>
         <td colspan="2" ></td>
@@ -711,7 +678,7 @@ if (isset($_REQUEST['nodetails'])) {
     <tr>
         <td><span class="green_asterisk"><i class="fa fa-star" style="vertical-align:50%"></i></span><?php echo _SEARCH_INDICATION; ?></td>
     </tr>
-    <tr><td colspan="2"><hr/></td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
 <tr>
 <td >
 <div class="block">
