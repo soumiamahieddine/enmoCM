@@ -417,3 +417,11 @@ if (!defined('_SELECT_MESSAGE_MODEL_IXBUS')) {
 if (!defined('_RESPONSES_WILL_BE_GENERATED')) {
     define('_RESPONSES_WILL_BE_GENERATED', "réponse(s) seront générée(s).");
 }
+
+if (!defined('_GENERATE_PDF')) {
+    define('_GENERATE_PDF', "Générer la version PDF");
+}
+
+if (!defined('_CONVERSION_FAILED')) {
+    define('_CONVERSION_FAILED', "Échec de la conversion !");
+}

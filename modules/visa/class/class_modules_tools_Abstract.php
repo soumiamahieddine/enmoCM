@@ -1065,12 +1065,12 @@ abstract class visa_Abstract extends Database
                     $idFile = $res->res_id_version;
                     $isVersion = true;
                 }
-                $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $idFile, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+                $convertedDocument =  \Convert\models\AdrModel::getConvertedDocumentById(['select' => ['docserver_id', 'path', 'filename'], 'type' => 'PDF', 'resId' => $idFile, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
                 $viewLink = $_SESSION['config']['businessappurl']
                         .'index.php?display=true&module=attachments&page=view_attachment&res_id_master='
                         .$id.'&id='.$res->res_id;
                 
-                if (empty($convertedDocument['errors'])) {
+                if (!empty($convertedDocument)) {
                     $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
                     $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
                     
@@ -1083,11 +1083,11 @@ abstract class visa_Abstract extends Database
                 }
             } else {
                 $idFile = $res->res_id;
-                $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $idFile, 'collId' => 'letterbox_coll', 'isVersion' => $isVersion]);
+                $convertedDocument =  \Convert\models\AdrModel::getConvertedDocumentById(['select' => ['docserver_id', 'path', 'filename'], 'type' => 'PDF', 'resId' => $idFile, 'collId' => 'letterbox_coll', 'isVersion' => $isVersion]);
                 $viewLink = $_SESSION['config']['businessappurl']
                         .'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
                         .$id;
-                if (empty($convertedDocument['errors'])) {
+                if (!empty($convertedDocument)) {
                     $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
                     $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
                     
@@ -1120,16 +1120,15 @@ abstract class visa_Abstract extends Database
                 $typist = '';
             }
 
-            if (($from_res_attachment && $pdf_exist) || empty($convertedDocument['errors'])
-            ) {
-                //nothing
-            } else {
-                $viewLinkHtml = '<a title="'._PRINT_DOCUMENT
-                      .'" target="_blank" '
-                    .'href="'.$viewLink.'">'
-                    .'<i class="fa fa-print fa-2x" title="'
-                    ._PRINT_DOCUMENT.'"></i>'
+            if ($pdf_exist == false) {
+                $isVersionString = ($isVersion) ? 'true' : 'false';
+                $collIdConv = ($from_res_attachment) ? 'attachments_coll' : 'leterbox_coll';
+                
+                $viewLinkHtml = '<a id="gen_'.$idFile.'" style="cursor:pointer;" title="'._GENERATE_PDF .'" target="_blank" onclick="generatePdf(\''.$idFile.'\',\''.$collIdConv.'\',\''.$isVersionString.'\')">'
+                    .'<i id="spinner_'.$idFile.'" class="fa fa-sync-alt fa-2x" title="'._GENERATE_PDF.'"></i>'
                     .'</a>';
+            } else {
+                $viewLinkHtml = '';
             }
             array_push(
                 $joinedFiles,
