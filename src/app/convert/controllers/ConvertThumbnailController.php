@@ -32,7 +32,6 @@ class ConvertThumbnailController
         ValidatorModel::intVal($aArgs, ['resId', 'outgoingId']);
         ValidatorModel::boolType($aArgs, ['isOutgoingVersion','isVersion']);
 
-
         if ($aArgs['collId'] == 'letterbox_coll') {
             if (empty($aArgs['outgoingId'])) {
                 $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename']]);
@@ -47,8 +46,8 @@ class ConvertThumbnailController
                 $resource = AttachmentModel::getById(['id' => $aArgs['outgoingId'], 'isVersion' => $aArgs['isOutgoingVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
                 $convertedDocument = AdrModel::getConvertedDocumentById([
                     'select' => ['docserver_id','path', 'filename'],
-                    'resId' => $aArgs['resId'],
-                    'collId' => $aArgs['collId'],
+                    'resId' => $aArgs['outgoingId'],
+                    'collId' => 'attachments_coll',
                     'type' => 'PDF',
                     'isVersion' => $aArgs['isOutgoingVersion']
                 ]);
@@ -107,10 +106,10 @@ class ConvertThumbnailController
             $command = "convert -thumbnail {$size} -background white -alpha remove "
                 . escapeshellarg($pathToDocument) . '[0] ' . escapeshellarg("{$tmpPath}{$fileNameOnTmp}.png");
         }
-        exec($command, $output, $return);
+        exec($command.' 2>&1', $output, $return);
 
         if ($return !== 0) {
-            return ['errors' => "[ConvertThumbnail] {$output}"];
+            return ['errors' => "[ConvertThumbnail] ".implode(" ", $output)];
         }
 
         $storeResult = DocserverController::storeResourceOnDocServer([
