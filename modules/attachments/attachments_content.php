@@ -551,7 +551,7 @@ if (isset($_POST['add']) && $_POST['add']) {
         $is_new_version = true;
 
         //RETRIEVE PREVIOUS ATTACHMENT
-        $stmt = $db->query('SELECT res_id, res_id_version, attachment_type, identifier, relation, attachment_id_master 
+        $stmt = $db->query('SELECT res_id, res_id_version, attachment_type, identifier, relation, attachment_id_master, status 
                             FROM res_view_attachments
                             WHERE '.$column_res.' = ? and res_id_master = ?
                             ORDER BY relation desc', array($_REQUEST['res_id'], $_SESSION['doc_id']));
@@ -612,7 +612,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $_SESSION['data'],
                     array(
                         'column' => 'status',
-                        'value' => 'A_TRA',
+                        'value' => $previous_attachment->status,
                         'type' => 'string',
                     )
                 );
@@ -811,7 +811,7 @@ if (isset($_POST['add']) && $_POST['add']) {
         //IF FILE IS EDITED
         if ($_SESSION['upfile'][0]['upAttachment'] != false) {
             //RETRIEVE CURRENT ATTACHMENT FILE
-            $stmt = $db->query('SELECT fingerprint, docserver_id FROM res_view_attachments WHERE '.$column_res." = ? and res_id_master = ? and status <> 'OBS'", array($_REQUEST['res_id'], $_SESSION['doc_id']));
+            $stmt = $db->query('SELECT fingerprint, docserver_id, status FROM res_view_attachments WHERE '.$column_res." = ? and res_id_master = ? and status <> 'OBS'", array($_REQUEST['res_id'], $_SESSION['doc_id']));
             $res = $stmt->fetchObject();
 
             require_once 'core/class/docserver_types_controler.php';
@@ -826,7 +826,6 @@ if (isset($_POST['add']) && $_POST['add']) {
 
             //SAVE NEW ATTACHMENT FILE (IF <> HASH)
             if ($OriginalHash != $NewHash) {
-                //$_SESSION['upfile'][0]['upAttachment'] = false;
                 $path_parts = pathinfo($_SESSION['upfile'][0]['fileNameOnTmp']);
                 $fileInfos = array(
                     'tmpDir' => $_SESSION['config']['tmppath'],
@@ -876,7 +875,7 @@ if (isset($_POST['add']) && $_POST['add']) {
         if (!empty($_REQUEST['effectiveDateStatus'])) {
             $set_update .= ', status = :effectiveStatus';
             $arrayPDO = array_merge($arrayPDO, array(':effectiveStatus' => $_REQUEST['effectiveDateStatus'][0]));
-        } else {
+        } else if ($res->status == 'TMP') {
             $set_update .= ", status = 'A_TRA'";
         }
         $arrayPDO = array_merge($arrayPDO, array(':res_id' => $_REQUEST['res_id']));
@@ -1095,7 +1094,12 @@ $content .= '</h2>';
 //BEGIN FORM
 $content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:35%;float:left;margin-left:-5px;background-color:#F2F2F2">';
 $content .= '<div class="transmissionDiv" id="addAttach1">';
-    $content .= '<div id="mailingInfo" style="display:none;background: #F8BB30;border-radius: 5px;padding: 10px;">'._MAILING_INFO_1.'<ul style="padding-left: 30px;"><li style="list-style: initial;padding: 5px;">'._MAILING_INFO_2.'</li><li style="list-style: initial;padding: 5px;">'._MAILING_INFO_3.'</li><li style="list-style: initial;padding: 5px;">'._MAILING_INFO_4.'</li></div>';
+
+    if ($infoAttach->status != 'SEND_MASS') {
+        $hideMailing = 'display:none;';
+    }
+
+    $content .= '<div id="mailingInfo" style="'.$hideMailing.'background: #F8BB30;border-radius: 5px;padding: 10px;">'._MAILING_INFO_1.'<ul style="padding-left: 30px;"><li style="list-style: initial;padding: 5px;">'._MAILING_INFO_2.'</li><li style="list-style: initial;padding: 5px;">'._MAILING_INFO_3.'</li><li style="list-style: initial;padding: 5px;">'._MAILING_INFO_4.'</li></div>';
     $content .= '<hr style="width:85%;margin-left:0px">';
     $content .= '<input type="hidden" id="category_id" value="outgoing"/>';
 
@@ -1225,27 +1229,30 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     $content .= "<input type='hidden' name='dataCreationDate' id='dataCreationDate' value='{$dataForDate}' />";
 
     //CONTACT
-    $content .= '<div id="contactDiv" style="margin-bottom:10px;">';
-    $content .= '<label>'._DEST_USER_PJ;
-    if ($core->test_admin('my_contacts', 'apps', false)) {
-        $content .= ' <a href="#" id="create_multi_contact" title="'._CREATE_CONTACT
-                .'" onclick="new Effect.toggle(\'create_contact_div_attach\', '
-                .'\'blind\', {delay:0.2});return false;" '
-                .'style="display:inline;" ><i class="fa fa-pencil-alt fa-lg" title="'._CREATE_CONTACT.'"></i></a>';
-    }
-    $content .= '</label>';
-    $content .= '<span style="position:relative;"><input type="text" name="contact_attach[]" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" onchange="saveContactToSession(this);" value="';
-    $content .= $infoAttach->contact_show;
-    $content .= '"/><div id="show_contacts_attach" class="autocomplete autocompleteIndex" style="width: 100%;left: 0px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;width: 100%;left: 0px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
-    $content .= '<a href="#" id="contact_card_attach" name="contact_card_attach" title="'._CONTACT_CARD.'" onclick="showContactInfo(this,document.getElementById(\'contactidAttach\'),document.getElementById(\'addressidAttach\'));" style=""> <i class="fa fa-book fa-lg"></i></a>';
-    $content .= '</div>';
-    $content .= "<input type='hidden' id='contactidAttach' name='contactidAttach[]' value='{$infoAttach->contact_id}' />";
-    $content .= "<input type='hidden' id='addressidAttach' name='addressidAttach[]' value='{$infoAttach->address_id}' />";
+    if ($infoAttach->status != 'SEND_MASS') {
+        $content .= '<div id="contactDiv" style="margin-bottom:10px;">';
+        $content .= '<label>'._DEST_USER_PJ;
+        if ($core->test_admin('my_contacts', 'apps', false)) {
+            $content .= ' <a href="#" id="create_multi_contact" title="'._CREATE_CONTACT
+                    .'" onclick="new Effect.toggle(\'create_contact_div_attach\', '
+                    .'\'blind\', {delay:0.2});return false;" '
+                    .'style="display:inline;" ><i class="fa fa-pencil-alt fa-lg" title="'._CREATE_CONTACT.'"></i></a>';
+        }
+        $content .= '</label>';
+        $content .= '<span style="position:relative;"><input type="text" name="contact_attach[]" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" onchange="saveContactToSession(this);" value="';
+        $content .= $infoAttach->contact_show;
+        $content .= '"/><div id="show_contacts_attach" class="autocomplete autocompleteIndex" style="width: 100%;left: 0px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;width: 100%;left: 0px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
+        $content .= '<a href="#" id="contact_card_attach" name="contact_card_attach" title="'._CONTACT_CARD.'" onclick="showContactInfo(this,document.getElementById(\'contactidAttach\'),document.getElementById(\'addressidAttach\'));" style=""> <i class="fa fa-book fa-lg"></i></a>';
+        $content .= '</div>';
+        $content .= "<input type='hidden' id='contactidAttach' name='contactidAttach[]' value='{$infoAttach->contact_id}' />";
+        $content .= "<input type='hidden' id='addressidAttach' name='addressidAttach[]' value='{$infoAttach->address_id}' />";
 
-    $canCreateContact = $core->test_admin('my_contacts', 'apps', false);
-    if (!$canCreateContact) {
-        $canCreateContact = 0;
+        $canCreateContact = $core->test_admin('my_contacts', 'apps', false);
+        if (!$canCreateContact) {
+            $canCreateContact = 0;
+        }
     }
+    
 
     if ($mode == 'add' && $_GET['cat'] != 'outgoing') {
         $content .= '<p>';
