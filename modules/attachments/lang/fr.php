@@ -297,6 +297,5 @@ if (!defined('_MAILING_INFO_3')) {
     define('_MAILING_INFO_3', 'Les attachements seront générés <b>APRÈS</b> validation des <b>viseurs</b> du vircuit de visa.');
 }
 if (!defined('_MAILING_INFO_4')) {
-    define('_MAILING_INFO_4', '<b>1</b> attachement sera généré <b>par contact</b> associé au courrier.');
+    define('_MAILING_INFO_4', '<b>Un</b> attachement sera généré <b>par contact</b> associé au courrier.');
 }
-

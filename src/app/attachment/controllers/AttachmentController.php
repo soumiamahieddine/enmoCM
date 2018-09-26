@@ -367,6 +367,7 @@ class AttachmentController
                     ]);
 
                     $params = [
+                        'userId' => $_SESSION['user']['UserId'],
                         'res_id' => $aArgs['resIdMaster'],
                         'coll_id' => 'letterbox_coll',
                         'res_view' => 'res_view_attachments',
@@ -407,7 +408,7 @@ class AttachmentController
     public function isMailingAttach(array $aArgs)
     {
         //TODO REMOVE SESSION AFTER V2
-        if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => $aArgs['resIdMaster'], 'userId' => $_SESSION['user']['UserId']])) {
+        if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => $aArgs['resIdMaster'], 'userId' => $aArgs['userId']])) {
             return ['errors' => 'Document out of perimeter'];
         }
 

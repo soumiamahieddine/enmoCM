@@ -16,7 +16,7 @@ $confirm = true;
 $warnMsg = '';
 
 $error_visa_workflow_signature_book = false;
-$isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id']]);
+$isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id'], "userId" => $_SESSION['user']['UserId']]);
 
 if ($visa->isAllAttachementSigned($_SESSION['doc_id']) == 'noAttachment') {
     $error_visa_workflow_signature_book = true;

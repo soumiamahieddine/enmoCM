@@ -7,7 +7,7 @@ $warnMsg    = '';
 
 $etapes = ['form'];
 
-$isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id']]);
+$isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id'], "userId" => $_SESSION['user']['UserId']]);
 
 if ($isMailingAttach != false) {
     $warnMsg = $isMailingAttach['nbContacts'] . " " . _RESPONSES_WILL_BE_GENERATED;

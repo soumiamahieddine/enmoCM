@@ -412,7 +412,7 @@ class TemplateController
             }
         }
 
-        $fileNameOnTmp = 'tmp_file_' . $GLOBALS['userId'] . '_' . rand() . '.' . $pathToTemplateInfo['extension'];
+        $fileNameOnTmp = 'tmp_file_' . $aArgs['userId'] . '_' . rand() . '.' . $pathToTemplateInfo['extension'];
         $tmpPath = CoreConfigModel::getTmpPath();
         $myFile = $tmpPath . $fileNameOnTmp;
 
