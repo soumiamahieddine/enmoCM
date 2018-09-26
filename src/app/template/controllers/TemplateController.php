@@ -423,7 +423,6 @@ class TemplateController
 
     private static function getDatas(array $aArgs)
     {
-        //TO DO
         ValidatorModel::notEmpty($aArgs, ['id']);
 
         $res_id = $aArgs['resId'];

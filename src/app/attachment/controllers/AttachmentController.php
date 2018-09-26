@@ -407,7 +407,6 @@ class AttachmentController
 
     public function isMailingAttach(array $aArgs)
     {
-        //TODO REMOVE SESSION AFTER V2
         if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => $aArgs['resIdMaster'], 'userId' => $aArgs['userId']])) {
             return ['errors' => 'Document out of perimeter'];
         }
