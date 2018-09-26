@@ -162,6 +162,30 @@ abstract class TemplateModelAbstract
         return $datasources;
     }
 
+    public static function getDatasourceById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+
+        $datasources = [];
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/templates/xml/datasources.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->datasource as $value) {
+                $value = (array)$value;
+                if ($value['id'] == $aArgs['id']) {
+                    $datasource = [
+                        'id'        => (string)$value['id'],
+                        'label'     => (string)$value['label'],
+                        'script'    => (string)$value['script'],
+                        'target'    => (string)$value['target'],
+                    ];
+                }
+            }
+        }
+
+        return $datasource;
+    }
+
     public static function getModels()
     {
         $customId = CoreConfigModel::getCustomId();

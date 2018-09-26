@@ -22,9 +22,8 @@ require_once 'modules/entities/class/class_manage_entities.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php';
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR ."class".DIRECTORY_SEPARATOR."class_lists.php";
 
-function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
+function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
 {
-
     $ent = new entity();
     $entity_ctrl = new EntityControler();
     $services = array();
@@ -40,24 +39,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     
     preg_match("'^ ,'", $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'], $out);
-    if (count($out[0]) == 1) {
+    if (is_array($out[0]) && count($out[0]) == 1) {
         $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'] = substr($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'], 2, strlen($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']));
     }
     if (!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'])) {
-
         $stmt = $db->query("select entity_id, entity_label from ".ENT_ENTITIES." where entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'].") and enabled= 'Y' order by entity_label");
         while ($res = $stmt->fetchObject()) {
-
             array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->entity_label)));
             array_push($servicesCompare, $res->entity_id);
         }
     }
     $users = array();
-    if (!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['users_entities']) ) {
-
+    if (!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['users_entities'])) {
         $stmt = $db->query("select distinct ue.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['users_entities'].") and u.user_id = ue.user_id and (u.status = 'OK' or u.status = 'ABS') and enabled = 'Y' order by u.lastname asc");
         while ($res = $stmt->fetchObject()) {
-
             array_push($users, array( 'ID' => $res->user_id, 'NOM' => functions::show_string($res->lastname), "PRENOM" => functions::show_string($res->firstname)));
         }
     }
@@ -70,25 +65,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $values_str = '';
     if (empty($_SESSION['stockCheckbox'])) {
-
         for ($i=0; $i < count($values);$i++) {
-
             if (_ID_TO_DISPLAY == 'res_id') {
                 $values_str .= $values[$i].', ';
-
-            } else if (_ID_TO_DISPLAY == 'chrono_number') {
+            } elseif (_ID_TO_DISPLAY == 'chrono_number') {
                 $values_str      .= $values[$i].', ';
                 $chrono_number   = $cr7->get_chrono_number($values[$i], 'res_view_letterbox');
                 $values_str_chrn .= $chrono_number.', ';
             }
         }
-    } else { 
-
+    } else {
         for ($i=0; $i < count($_SESSION['stockCheckbox']);$i++) {
             if (_ID_TO_DISPLAY == 'res_id') {
                 $values_str .= $_SESSION['stockCheckbox'][$i].', ';
-
-            } else if (_ID_TO_DISPLAY == 'chrono_number') {
+            } elseif (_ID_TO_DISPLAY == 'chrono_number') {
                 $values_str .= $_SESSION['stockCheckbox'][$i].', ';
 
                 $chrono_number = $cr7->get_chrono_number($_SESSION['stockCheckbox'][$i], 'res_view_letterbox');
@@ -101,7 +91,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     if (_ID_TO_DISPLAY == 'res_id') {
         $frm_str .= $values_str;
-    } else if (_ID_TO_DISPLAY == 'chrono_number') {
+    } elseif (_ID_TO_DISPLAY == 'chrono_number') {
         $values_str_chrn = preg_replace('/, $/', '', $values_str_chrn);
         $frm_str .= $values_str_chrn;
     }
@@ -111,7 +101,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $templates = array();
 
     if (!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'])) {
-      
         $EntitiesIdExclusion = array();
         $entities            = $entity_ctrl->getAllEntities();
         $countEntities       = count($entities);
@@ -124,7 +113,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         
         $allEntitiesTree = array();
         $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
-            $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
+            $allEntitiesTree,
+            'all',
+            '',
+            $EntitiesIdExclusion,
+            'all'
         );
         //Collection
         if (isset($_REQUEST['coll_id']) && ! empty($_REQUEST['coll_id'])) {
@@ -135,7 +128,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             //retrieve the process entity of document
             $aResId = explode(", ", $values_str);
             $stmt = $db->query(
-                "SELECT destination FROM " . $table . " WHERE res_id in (?)", array($aResId)
+                "SELECT destination FROM " . $table . " WHERE res_id in (?)",
+                array($aResId)
             );
             $resultDest = $stmt->fetchObject();
             $destination = $resultDest->destination;
@@ -144,7 +138,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $templates = $templatesControler->getAllTemplatesForProcess($destination);
         } else {
             $templates = $templatesControler->getAllTemplatesForSelect();
-        } 
+        }
         $frm_str .='<br/><b>'._REDIRECT_NOTE.':</b><br/>';
         $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
                     . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
@@ -182,8 +176,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 if ($allEntitiesTree[$cptEntities]['DISABLED']) {
                     $frm_str .= ' disabled="disabled" class="disabled_entity"';
                 }
-                $frm_str .=  '>' 
-                    .  $ent->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
+                $frm_str .=  '>'
+                    .  $ent->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL'])
                     . '</option>';
             }
         }
@@ -197,7 +191,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .='</div>';
     }
     if (!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['users_entities'])) {
-
         $frm_str .='<hr />';
         $frm_str .='<div id="form3">';
         $frm_str .= '<form name="frm_redirect_user" id="frm_redirect_user" method="post" class="forms" action="#">';
@@ -224,29 +217,27 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='<hr />';
 
     $frm_str .='<div align="center">';
-            $frm_str .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
+    $frm_str .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
     $frm_str .='</div>';
     return addslashes($frm_str);
 }
 
-function check_form($form_id,$values)
+function check_form($form_id, $values)
 {
     if ($form_id == 'frm_redirect_dep') {
         $dep = get_value_fields($values, 'department');
         if ($dep == '') {
             $_SESSION['action_error'] = _MUST_CHOOSE_DEP;
             return false;
-        } else if (empty($_SESSION['redirect']['diff_list']['dest']['users'][0]) || ! isset($_SESSION['redirect']['diff_list']['dest']['users'][0])) {
-                
+        } elseif (empty($_SESSION['redirect']['diff_list']['dest']['users'][0]) || ! isset($_SESSION['redirect']['diff_list']['dest']['users'][0])) {
             $_SESSION['action_error'] = _DEST . " " . _MANDATORY;
             return false;
         } else {
             return true;
         }
-    } else if ($form_id == 'frm_redirect_user') {
+    } elseif ($form_id == 'frm_redirect_user') {
         $user = get_value_fields($values, 'user');
         if ($user == '') {
-
             $_SESSION['action_error'] = _MUST_CHOOSE_USER;
             return false;
         } else {
@@ -258,43 +249,44 @@ function check_form($form_id,$values)
     }
 }
 
-function manage_form($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table, $values_form )
+function manage_form($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table, $values_form)
 {
     /*
         Redirect to dep:
         $values_form = array (size=3)
-          0 => 
+          0 =>
             array (size=2)
               'ID' => string 'chosen_action' (length=13)
               'VALUE' => string 'end_action' (length=10)
-          1 => 
+          1 =>
             array (size=2)
               'ID' => string 'department' (length=10)
               'VALUE' => string 'DGA' (length=3)
-          2 => 
+          2 =>
             array (size=2)
               'ID' => string 'redirect_dep' (length=12)
               'VALUE' => string 'Rediriger' (length=9)
-        
+
         Redirect to user:
         $values_form = array (size=3)
-          0 => 
+          0 =>
             array (size=2)
               'ID' => string 'chosen_action' (length=13)
               'VALUE' => string 'end_action' (length=10)
-          1 => 
+          1 =>
             array (size=2)
               'ID' => string 'user' (length=4)
               'VALUE' => string 'aackermann' (length=10)
-          2 => 
+          2 =>
             array (size=2)
               'ID' => string 'redirect_user' (length=13)
               'VALUE' => string 'Rediriger' (length=9)
-    
+
     */
     
-    if(empty($values_form) || count($arr_id) < 1) 
+    if (empty($values_form) || count($arr_id) < 1) {
         return false;
+    }
     
     include_once 'modules/entities/class/class_manage_listdiff.php';
     $diffList = new diffusion_list();
@@ -321,7 +313,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             . "FROM " . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
             . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
             . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
-            . " e.enabled = 'Y' and ue.primary_entity='Y' and u.user_id = ?", array($userId)
+            . " e.enabled = 'Y' and ue.primary_entity='Y' and u.user_id = ?",
+            array($userId)
         );
         $user = $stmt->fetchObject();
         
@@ -338,7 +331,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             'difflist_type' => 'entity_id'
         );
         $message = ' (' . _REDIRECT_TO_USER_OK . ': ' . $userId . ')';
-
     } elseif (isset($formValues['redirect_dep'])) {
         // 2 : Redirect to departement (+ dest user)
         //   - listinstance has laready been loaded when selecting entity
@@ -349,15 +341,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $list = $stmt->fetchObject();
         $entity_label = $list->entity_label;
         $message = " (" . _REDIRECT_TO_DEP_OK . ": " . $entity_label . ')';
-
     }
     
     // 1 + 2 :
     //   - update dest_user
     //   - move former dest user to copy if requested
-    //   - finally save listinstance 
+    //   - finally save listinstance
     for ($i=0; $i<count($arr_id); $i++) {
-
         $new_difflist = $_SESSION['redirect']['diff_list'];
 
         // Fix lorsque l'on redirige vers une entité qui n'a pas de liste de diffusion par défaut
@@ -379,7 +369,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
                 $stmt = $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)", array($res_id,$table,$userIdTypist,$content_note,$coll_id)
+                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",
+                    array($res_id,$table,$userIdTypist,$content_note,$coll_id)
                 );
             }
             
@@ -387,8 +378,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             // If new dest was in other roles, get number of views
             $stmt = $db->query(
                 "select viewed"
-                . " from " . $_SESSION['tablename']['ent_listinstance'] 
-                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_id = ?", array($coll_id,$res_id,$new_dest)
+                . " from " . $_SESSION['tablename']['ent_listinstance']
+                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_id = ?",
+                array($coll_id,$res_id,$new_dest)
             );
             $res = $stmt->fetchObject();
             $viewed = $res->viewed;
@@ -407,10 +399,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 
                 $stmt = $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)", array($res_id, $table, $userIdTypist, $content_note, $coll_id)
+                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",
+                    array($res_id, $table, $userIdTypist, $content_note, $coll_id)
                 );
             }
-            $stmt = $db->query("update ".$table." set destination = ? where res_id = ?", array($entityId, $res_id)); 
+            $stmt = $db->query("update ".$table." set destination = ? where res_id = ?", array($entityId, $res_id));
         }
 
         // Si on redirige en masse plusieurs courriers, on récupère automatiquement les roles persistent
@@ -423,8 +416,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             // Get old dest
             $stmt = $db->query(
                 "select * "
-                . " from " . $_SESSION['tablename']['ent_listinstance'] 
-                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'", array($coll_id, $res_id)
+                . " from " . $_SESSION['tablename']['ent_listinstance']
+                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",
+                array($coll_id, $res_id)
             );
 
             $old_dest = $stmt->fetchObject();
@@ -436,9 +430,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     for ($ci=0; $ci<count($new_difflist['copy']['users']);$ci++) {
                     
                         // If in copies before, add number of views as dest to number of views as copy
-    			if ($new_difflist['copy']['users'][$ci]['user_id'] == $old_dest->item_id) {
+                        if ($new_difflist['copy']['users'][$ci]['user_id'] == $old_dest->item_id) {
                             $found = true;
-                            $new_difflist['copy']['users'][$ci]['viewed'] = 
+                            $new_difflist['copy']['users'][$ci]['viewed'] =
                                 $new_difflist['copy']['users'][$ci]['viewed'] + (integer)$old_dest->viewed;
                             break;
                         }
@@ -448,13 +442,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     $tab=array();
                     for ($ci=0; $ci<count($new_difflist['copy']['users']);$ci++) {
                         if ($new_difflist['copy']['users'][$ci]['user_id'] != $new_dest) {
-                        array_push(
-                            $tab, 
+                            array_push(
+                            $tab,
                             array(
-    					'user_id' => $new_difflist['copy']['users'][$ci]['user_id'], 
-    					'viewed' => (integer)$new_difflist['copy']['users'][$ci]['viewed'],
-    					'visible' => 'Y',
-    					'difflist_type' => $new_difflist['copy']['users'][$ci]['viewed']
+                        'user_id' => $new_difflist['copy']['users'][$ci]['user_id'],
+                        'viewed' => (integer)$new_difflist['copy']['users'][$ci]['viewed'],
+                        'visible' => 'Y',
+                        'difflist_type' => $new_difflist['copy']['users'][$ci]['viewed']
                             )
                         );
                         }
@@ -469,9 +463,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 
                 if (!$found) {
                     array_push(
-                        $new_difflist['copy']['users'], 
+                        $new_difflist['copy']['users'],
                         array(
-                        'user_id'       => $old_dest->item_id, 
+                        'user_id'       => $old_dest->item_id,
                         'viewed'        => (integer)$old_dest->viewed,
                         'visible'       => 'Y',
                         'difflist_type' => $new_difflist['difflist_type']
@@ -483,16 +477,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
         // Save listinstance
         $diffList->save_listinstance(
-            $new_difflist, 
+            $new_difflist,
             $new_difflist['difflist_type'],
-            $coll_id, 
-            $res_id, 
+            $coll_id,
+            $res_id,
             $_SESSION['user']['UserId'],
             $_SESSION['user']['primaryentity']['id']
-        );           
+        );
     }
     
-    // Pb with action chain : main action page is saved after this. 
+    // Pb with action chain : main action page is saved after this.
     //   if process, $_SESSION['process']['diff_list'] will override this one
     $_SESSION['ListDiffFromRedirect'] = true;
     $_SESSION['process']['diff_list'] = $new_difflist;
@@ -504,7 +498,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $arr_list = '';
 
     for ($j=0; $j<count($values_form); $j++) {
-
         $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id=?";
         $stmt = $db->query($queryEntityLabel, array($values_form[$j]['VALUE']));
         while ($entityLabel = $stmt->fetchObject()) {
@@ -513,11 +506,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $msg = _TO." : ".$zeEntityLabel." (".$values_form[$j]['VALUE'].")";
         if ($values_form[$j]['ID'] == "department") {
             for ($i=0; $i < count($arr_id); $i++) {
-
                 $arr_list .= $arr_id[$i].'#';
                 $stmt = $db->query("update ".$table." set destination = ? where res_id = ?", array($values_form[$j]['VALUE'],$arr_id[$i]));
                 if (isset($_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']) && !empty($_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id'])) {
-
                     $stmt = $db->query("update ".$table." set dest_user = ? where res_id = ?", array($_SESSION['redirect']['diff_list']['dest']['user_id'],$arr_id[$i]));
                 }
                 $newDestViewed = 0;
@@ -526,25 +517,20 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 //$db->show();
                 $res = $stmt->fetchObject();
                 if ($res->viewed <> "") {
-
                     $_SESSION['redirect']['diff_list']['dest']['users'][0]['viewed'] = $res->viewed;
                     $newDestViewed = $res->viewed;
                 }
                 if ($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
-
                     $lastDestViewed = 0;
                     // Récupère le nombre de fois où l'ancien destinataire principal a vu le document
                     $stmt = $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'", array($coll_id,$arr_id[$i]));
  
                     $res = $stmt->fetchObject();
                     if ($res->viewed <> "") {
-
                         $lastDestViewed = $res->viewed;
                     }
                     for ($cptCopy=0;$cptCopy<count($_SESSION['redirect']['diff_list']['copy']['users']);$cptCopy++) {
-
                         if ($_SESSION['redirect']['diff_list']['copy']['users'][$cptCopy]['user_id'] == $_SESSION['user']['UserId']) {
-
                             $_SESSION['redirect']['diff_list']['copy']['users'][$cptCopy]['viewed'] = $lastDestViewed;
                         }
                     }
@@ -557,9 +543,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $_SESSION['action_error'] = _REDIRECT_TO_DEP_OK;
 
             return array('result' => $arr_list, 'history_msg' => $msg );
-        
         } elseif ($values_form[$j]['ID'] == "user") {
-            
             for ($i=0;$i<count($arr_id);$i++) {
                 // Update listinstance
                 $difflist['dest'] = array();
@@ -574,7 +558,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $res = $stmt->fetchObject();
                 $newDestViewed = 0;
                 if ($res->viewed <> "") {
-
                     $difflist['dest']['users'][0]['viewed'] = $res->viewed;
                     $newDestViewed = $res->viewed;
                 }
@@ -584,14 +567,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $res = $stmt->fetchObject();
                 $lastDestViewed = 0;
                 if ($res->viewed <> "") {
-
                     $lastDestViewed = $res->viewed;
                 }
                 // Update dest_user in res table
                 $stmt = $db->query("update ".$table." set dest_user = ? where res_id = ?", array($values_form[$j]['VALUE'],$arr_id[$i]));
                 $list->set_main_dest($values_form[$j]['VALUE'], $coll_id, $arr_id[$i], 'DOC', 'user_id', $newDestViewed);
                 if ($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
-
                     array_push($difflist['copy']['users'], array('user_id' => $_SESSION['user']['UserId'], 'lastname' => $_SESSION['user']['LastName'], 'firstname' => $_SESSION['user']['FirstName'], 'entity_id' => $_SESSION['user']['primaryentity']['id'], 'viewed' => $lastDestViewed));
                 }
                 $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[$i], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true);
@@ -614,13 +595,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 function get_value_fields($values, $field)
 {
     for ($i=0; $i<count($values);$i++) {
-
         if ($values[$i]['ID'] == $field) {
-
             return  $values[$i]['VALUE'];
         }
     }
     return false;
 }
-
-?>

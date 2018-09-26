@@ -3516,18 +3516,14 @@ table.listing  {
 /*** NEW WF ***/
 
 .multicontactInput {
-    /*-moz-appearance: textfield;
-    -webkit-appearance: textfield;
-    background-color: white;
-    background-color: -moz-field;
-    border: 1px solid darkgray;
-    box-shadow: 1px 1px 1px 0 lightgray inset;  */
     font: -moz-field;
     font: -webkit-small-control;
     margin-top: 2px;
     padding: 2px 2px;
     width: 225px;
-    min-height: 13px;    
+    min-height: 13px;   
+    overflow: auto;
+    height: 150px; 
 }
 
 .largerList{

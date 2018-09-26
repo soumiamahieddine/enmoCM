@@ -639,5 +639,7 @@ export const LANG_EN = {
     "fewSeconds"                        : "few seconde",
     "oneMinute"                         : "one minute",
     "oneHour"                           : "one hour",
-
+    "ascending"                         : "Ascending",
+    "descending"                        : "Descending",
+    "orderBy"                           : "Ordering",
 };

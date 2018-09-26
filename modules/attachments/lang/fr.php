@@ -287,3 +287,16 @@ if (!defined('_PLEASE_GENERATE_CHRONO_NUMBER')) {
 if (!defined('_CHOOSE_CHRONO_NUMBER')) {
     define('_CHOOSE_CHRONO_NUMBER', 'Merci de choisir un numéro de chrono');
 }
+if (!defined('_MAILING_INFO_1')) {
+    define('_MAILING_INFO_1', '<b>Publipostage activé</b> : ');
+}
+if (!defined('_MAILING_INFO_2')) {
+    define('_MAILING_INFO_2', 'Un attachement <b>maître</b> sera créé sans les champs de fusion <b>contacts</b> et <b>chrono</b>.');
+}
+if (!defined('_MAILING_INFO_3')) {
+    define('_MAILING_INFO_3', 'Les attachements seront générés <b>APRÈS</b> validation des <b>viseurs</b> du vircuit de visa.');
+}
+if (!defined('_MAILING_INFO_4')) {
+    define('_MAILING_INFO_4', '<b>1</b> attachement sera généré <b>par contact</b> associé au courrier.');
+}
+

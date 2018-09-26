@@ -315,7 +315,11 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
         }
         elseif( $_POST['req'] == 'first_request' && $confirm == true)
         {
-            echo "{status : 2, confirm_content : '".addslashes(_ACTION_CONFIRM." ".functions::xssafe($label_action))."', validate : '"._VALIDATE."', cancel : '"._CANCEL."', label_action : '".addslashes(functions::xssafe($label_action))."', 'action_status' : '".functions::xssafe($status)."'}";
+            if (!empty($warnMsg)) {
+                echo "{status : 2, confirm_content : '".addslashes("<p style='font-size: 12px;text-align: center;color: white;background: #F99830;padding: 5px;margin: -10px -10px 20px -10px;'><i class='fa fa-exclamation-triangle'></i> ".$warnMsg."<p>"._ACTION_CONFIRM." ".functions::xssafe($label_action))."', validate : '"._VALIDATE."', cancel : '"._CANCEL."', label_action : '".addslashes(functions::xssafe($label_action))."', 'action_status' : '".functions::xssafe($status)."'}";
+            } else {
+                echo "{status : 2, confirm_content : '".addslashes(_ACTION_CONFIRM." ".functions::xssafe($label_action))."', validate : '"._VALIDATE."', cancel : '"._CANCEL."', label_action : '".addslashes(functions::xssafe($label_action))."', 'action_status' : '".functions::xssafe($status)."'}";
+            }
             exit();
         }
         elseif( $_POST['req'] == 'first_request' && $confirm == false && $action_page == 'close_mail_with_attachment')

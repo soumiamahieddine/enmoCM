@@ -263,3 +263,31 @@ if (!defined('_USE_DATE_IN_SIGNBLOCK_DESC')) {
 if (!defined('_SELECT_MESSAGE_MODEL_IXBUS')) {
     define('_SELECT_MESSAGE_MODEL_IXBUS', "Choose a circuit");
 }
+
+if (!defined('_RESPONSES_WILL_BE_GENERATED')) {
+    define('_RESPONSES_WILL_BE_GENERATED', "answer(s) will be generated.");
+}
+
+if (!defined('_GENERATE_PDF')) {
+    define('_GENERATE_PDF', "Generate PDF version");
+}
+
+if (!defined('_CONVERSION_FAILED')) {
+    define('_CONVERSION_FAILED', "Conversion failed !");
+}
+
+if (!defined('_NATURE_IXBUS')) {
+    define('_NATURE_IXBUS', "Document nature");
+}
+
+if (!defined('_WORKFLOW_MODEL_IXBUS')) {
+    define('_WORKFLOW_MODEL_IXBUS', "Workflow model");
+}
+
+if (!defined('_ID_IXBUS')) {
+    define('_ID_IXBUS', "Identifiant IxBus");
+}
+
+if (!defined('_PASSWORD_IXBUS')) {
+    define('_PASSWORD_IXBUS', "Password IxBus");
+}

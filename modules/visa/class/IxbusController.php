@@ -19,19 +19,29 @@ class IxbusController
     {
         $initializeDatas = IxbusController::getInitializeDatas($config);
 
-        $html .= '<select id="nature"><option value="val1">Valeur 1</option><option value="val2">Valeur 2</option><option value="val3">Valeur 3</option></select>';
-
-        $initializeDatas['messagesModel'] = ['12' => 'modele courrier', '34' => 'DRH'];
-
-        $html .= '<select name="messageModel" id="messageModel">';
-        $html .= '<option value="">' . _SELECT_MESSAGE_MODEL_IXBUS . '</option>';
-        foreach ($initializeDatas['messagesModel'] as $key => $value) {
-            $html .= '<option value="';
-            $html .= $key;
-            $html .= '">';
-            $html .= $value;
+        $html .= '<label for="nature">' . _NATURE_IXBUS . '</label><select name="nature" id="nature">';
+        if (!empty($initializeDatas['natures']->Classeur)) {
+            foreach ($initializeDatas['natures']->Classeur as $value) {
+                $html .= '<option value="';
+                $html .= $value->Identifiant;
+                $html .= '">';
+                $html .= $value->Libelle;
+            }
         }
-        $html .= '</select><br />';
+        $html .= '</select><br /><br />';
+
+        // $initializeDatas['messagesModel'] = ['12' => 'modele courrier', '34' => 'DRH'];
+
+        $html .= '<label for="messageModel">' . _WORKFLOW_MODEL_IXBUS . '</label><select name="messageModel" id="messageModel">';
+        // foreach ($initializeDatas['messagesModel'] as $key => $value) {
+        //     $html .= '<option value="';
+        //     $html .= $key;
+        //     $html .= '">';
+        //     $html .= $value;
+        // }
+        $html .= '</select><br /><br />';
+        $html .= '<label for="loginIxbus">'._ID_IXBUS.'</label><input name="loginIxbus" id="loginIxbus"/><br /><br />';
+        $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input name="passwordIxbus" id="passwordIxbus"/><br /><br />';
 
         return $html;
     }
@@ -51,21 +61,39 @@ class IxbusController
 
         $data = \SrcCore\models\CurlModel::execSOAP([
             'xmlPostString' => $xmlPostString,
-            'url'           => 'http://parapheur.orleans.fr/parapheurws/service.asmx',
-            'soapAction'    => 'http://www.srci.fr/CreateSession'
+            'url'           => $config['data']['url'] . '/parapheurws/service.asmx',
+            'soapAction'    => 'http://www.srci.fr/CreateSession',
+            'options'       => [CURLOPT_HEADER => 1]
         ]);
 
-        $response = $data['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->CreateSessionResponse;
+        $cookie = '';
+        foreach ($data['cookies'] as $key => $value) {
+            $cookie = $key . '=' . $value . ';';
+        }
 
-        return $response;
+        return $cookie;
     }
 
     public static function getInitializeDatas($config)
     {
         $sessionId = IxbusController::createSession($config);
-        $rawResponse['natures'] = IxbusController::getNature(['config' => $config, 'sessionId' => $sessionId]);
-        $rawResponse['usersList'] = IxbusController::getUsersList(['config' => $config, 'sessionId' => $sessionId]);
-        $rawResponse['messagesModel'] = IxbusController::getMessagesModel(['config' => $config, 'sessionId' => $sessionId]);
+        $rawResponse['natures']       = IxbusController::getNature(['config' => $config, 'sessionId' => $sessionId]);
+        // $rawResponse['usersList']     = IxbusController::getUsersList(['config' => $config, 'sessionId' => $sessionId]);
+        $messagesModels = IxbusController::getMessagesModel(['config' => $config, 'sessionId' => $sessionId]);
+
+        $rawResponse['messagesModel'] = [];
+        if (!empty($rawResponse['natures']->Classeur)) {
+            foreach ($rawResponse['natures']->Classeur as $nature) {
+                foreach ($messagesModels->Message as $message) {
+                    if ($message->Nature == $nature->Libelle) {
+                        $messageModel = IxbusController::getMessageNature(['messageId' => $message->Identifiant, 'sessionId' => $sessionId]);
+                        if ($messageModel->IdentifiantClasseur == $nature->Identifiant) {
+                            $rawResponse['messagesModel'][$nature->Identifiant][] = $messageModel;
+                        }
+                    }
+                }
+            }
+        }
 
         return $rawResponse;
     }
@@ -82,7 +110,7 @@ class IxbusController
                         </soap:Envelope>';
 
         $opts = [
-        CURLOPT_URL => 'http://parapheur.orleans.fr/parapheurws/service.asmx',
+        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
         CURLOPT_HTTPHEADER => [
         'content-type:text/xml;charset=\"utf-8\"',
         'accept:text/xml',
@@ -102,7 +130,7 @@ class IxbusController
         $rawResponse = curl_exec($curl);
 
         $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetNaturesAvecDroitsCreerResponse;
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetNaturesAvecDroitsCreerResponse->GetNaturesAvecDroitsCreerResult;
 
         return $response;
     }
@@ -119,7 +147,7 @@ class IxbusController
                         </soap:Envelope>';
 
         $opts = [
-        CURLOPT_URL => 'http://parapheur.orleans.fr/parapheurws/service.asmx',
+        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
         CURLOPT_HTTPHEADER => [
         'content-type:text/xml;charset=\"utf-8\"',
         'accept:text/xml',
@@ -139,7 +167,7 @@ class IxbusController
         $rawResponse = curl_exec($curl);
 
         $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetListeUtilisateursDroitCreerResponse;
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetListeUtilisateursDroitCreerResponse->GetListeUtilisateursDroitCreerResult;
 
         return $response;
     }
@@ -150,16 +178,16 @@ class IxbusController
         <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
           <soap:Body>
             <GetMessagesModel xmlns="http://www.srci.fr">
-              <utilisateurID>123</utilisateurID>
+              <utilisateurID>8</utilisateurID>
               <organisationID>'.$aArgs['config']['data']['organizationId'].'</organisationID>
-              <serviceID>123</serviceID>
-              <typeMessage>Test</typeMessage>
+              <serviceID>-1</serviceID>
+              <typeMessage>Production</typeMessage>
             </GetMessagesModel>
           </soap:Body>
         </soap:Envelope>';
 
         $opts = [
-        CURLOPT_URL => 'http://parapheur.orleans.fr/parapheurws/service.asmx',
+        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
         CURLOPT_HTTPHEADER => [
         'content-type:text/xml;charset=\"utf-8\"',
         'accept:text/xml',
@@ -179,7 +207,7 @@ class IxbusController
         $rawResponse = curl_exec($curl);
 
         $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessagesModelResponse;
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessagesModelResponse->GetMessagesModelResult;
 
         return $response;
     }
@@ -190,13 +218,13 @@ class IxbusController
         <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
           <soap:Body>
             <GetMessageNature xmlns="http://www.srci.fr">
-              <messageID>123</messageID>
+              <messageID>'.$aArgs['messageId'].'</messageID>
             </GetMessageNature>
           </soap:Body>
         </soap:Envelope>';
 
         $opts = [
-        CURLOPT_URL => 'http://parapheur.orleans.fr/parapheurws/service.asmx',
+        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
         CURLOPT_HTTPHEADER => [
         'content-type:text/xml;charset=\"utf-8\"',
         'accept:text/xml',
@@ -216,13 +244,52 @@ class IxbusController
         $rawResponse = curl_exec($curl);
 
         $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessageNatureResponse;
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessageNatureResponse->GetMessageNatureResult;
+
+        return $response;
+    }
+    
+    public static function getInfoUtilisateur($aArgs)
+    {
+        $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+            <getUtilisateur xmlns="http://www.srci.fr">
+              <NomUtilisateur>' . $aArgs['login'] . '</NomUtilisateur>
+              <MotdePasse>' . $aArgs['password'] . '</MotdePasse>
+            </getUtilisateur>
+          </soap:Body>
+        </soap:Envelope>';
+
+        $opts = [
+        CURLOPT_URL => $aArgs['config']['data']['url'] . '/ixbuswebws/Utilisateur.asmx',
+        CURLOPT_HTTPHEADER => [
+        'content-type:text/xml;charset=\"utf-8\"',
+        'accept:text/xml',
+        "Cache-Control: no-cache",
+        "Pragma: no-cache",
+        "Content-length: ".strlen($xmlPostString),
+        "SOAPAction: \"http://www.srci.fr/getUtilisateur\""
+        ],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS  => $xmlPostString
+        ];
+
+        $curl = curl_init();
+        curl_setopt_array($curl, $opts);
+        $rawResponse = curl_exec($curl);
+
+        $data = simplexml_load_string($rawResponse);
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->getUtilisateurResponse->getUtilisateurResult;
 
         return $response;
     }
 
     public static function sendDatas($aArgs)
     {
+        $userInfo = IxbusController::getInfoUtilisateur(['config' => $aArgs['config'], 'login' => $aArgs['loginIxbus'], 'password' => $aArgs['passwordIxbus']]);
+
         $attachments = \Attachment\models\AttachmentModel::getOnView([
             'select'    => [
                 'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
@@ -235,63 +302,64 @@ class IxbusController
         ]);
 
         $attachmentToFreeze = [];
+        $opts = [
+            CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/3.21/MessagerieImprimante.asmx',
+            CURLOPT_HTTPHEADER => [
+                'content-type:text/xml;charset=\"utf-8\"',
+                'accept:text/xml',
+                "Cache-Control: no-cache",
+                "Pragma: no-cache",
+                "Content-length: ".strlen($xmlPostString),
+                "Cookie:".$aArgs['sessionId'],
+                "SOAPAction: \"http://www.srci.fr/Transmettre\""
+            ],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS  => $xmlPostString
+        ];
         foreach ($attachments as $value) {
+            $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <Transmettre xmlns="http://www.srci.fr">
+                  <NomUtilisateur>'.$aArgs['config']['data']['userId'].'</NomUtilisateur>
+                  <MotdePasse>'.$aArgs['config']['data']['password'].'</MotdePasse>
+                  <IdentifiantOrganisation>'.$aArgs['config']['data']['organizationId'].'</IdentifiantOrganisation>
+                  <attach>
+                    <Document>
+                      <Attachment>
+                        <Name>string</Name>
+                        <Content>base64Binary</Content>
+                        <Size>int</Size>
+                      </Attachment>
+                      <Attachment>
+                        <Name>string</Name>
+                        <Content>base64Binary</Content>
+                        <Size>int</Size>
+                      </Attachment>
+                    </Document>
+                    <Description>xml</Description>
+                  </attach>
+                  <NomDossier>'. $value['title'] .'</NomDossier>
+                  <DateLimite>dateTime</DateLimite>
+                  <MessageModele>'. $aArgs['messageModel'] .'</MessageModele>
+                  <IdClasseur>'. $aArgs['idClasseur'] .'</IdClasseur>
+                  <Responsable>'. $userInfo->Identifiant .'</Responsable>
+                </Transmettre>
+              </soap:Body>
+            </soap:Envelope>';
+    
+            $curl = curl_init();
+            curl_setopt_array($curl, $opts);
+            $rawResponse = curl_exec($curl);
+    
+            // $data = simplexml_load_string($rawResponse);
+            // $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->TransmettreResponse;
+
             $attachmentToFreeze[] = $value['res_id'];
         }
 
-        $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
-        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-          <soap:Body>
-            <Transmettre xmlns="http://www.srci.fr">
-              <NomUtilisateur>'.$config['data']['userId'].'</NomUtilisateur>
-              <MotdePasse>'.$config['data']['password'].'</MotdePasse>
-              <IdentifiantOrganisation>'.$config['data']['organizationId'].'</IdentifiantOrganisation>
-              <attach>
-                <Document>
-                  <Attachment>
-                    <Name>string</Name>
-                    <Content>base64Binary</Content>
-                    <Size>int</Size>
-                  </Attachment>
-                  <Attachment>
-                    <Name>string</Name>
-                    <Content>base64Binary</Content>
-                    <Size>int</Size>
-                  </Attachment>
-                </Document>
-                <Description>xml</Description>
-              </attach>
-              <NomDossier>string</NomDossier>
-              <DateLimite>dateTime</DateLimite>
-              <MessageModele>int</MessageModele>
-              <IdClasseur>int</IdClasseur>
-              <Responsable>int</Responsable>
-            </Transmettre>
-          </soap:Body>
-        </soap:Envelope>';
-
-        $opts = [
-        CURLOPT_URL => 'http://parapheur.orleans.fr/parapheurws/3.21/MessagerieImprimante.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/Transmettre\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->TransmettreResponse;
+        
 
         return $attachmentToFreeze;
     }

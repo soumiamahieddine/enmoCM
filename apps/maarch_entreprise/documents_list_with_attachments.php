@@ -155,9 +155,9 @@ if (!empty($order_field) && !empty($order)) {
             $list->setOrderField($arr_order[0]);
         }
         if ($_SESSION['current_basket']['basket_res_order'] == 'alt_identifier') {
-            $orderstr = 'order by order_alphanum(alt_identifier)'.' desc';
+            $orderstr = 'order by order_alphanum(alt_identifier)';
         } else {
-            $orderstr = 'order by '.$_SESSION['current_basket']['basket_res_order'].' desc';
+            $orderstr = 'order by '.$_SESSION['current_basket']['basket_res_order'];
         }
         $_SESSION['last_order_basket'] = $orderstr;
     } else {

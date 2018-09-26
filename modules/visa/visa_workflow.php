@@ -13,12 +13,17 @@
 require_once 'modules/visa/class/class_modules_tools.php';
 $visa = new visa();
 $confirm = true;
+$warnMsg = '';
 
 $error_visa_workflow_signature_book = false;
+$isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id']]);
+
 if ($visa->isAllAttachementSigned($_SESSION['doc_id']) == 'noAttachment') {
     $error_visa_workflow_signature_book = true;
 } elseif ($visa->currentUserSignRequired($_SESSION['doc_id']) == 'true') {
-    $label_action .= ' ('._NO_USER_SIGNED_DOC.')';
+    $warnMsg = _NO_USER_SIGNED_DOC;
+} else if ($isMailingAttach != false) {
+    $warnMsg = $isMailingAttach['nbContacts'] . " " . _RESPONSES_WILL_BE_GENERATED;
 }
 
 $etapes = ['empty_error'];

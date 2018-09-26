@@ -215,7 +215,6 @@ if (!empty($_SESSION['error'])) {
                 //TODO: protect sql injection with PDO
                 require_once 'core/class/class_db_pdo.php';
 
-                \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
                 // Instantiate database.
                 $database = new Database();
                 $stmt = $database->query(
@@ -223,6 +222,20 @@ if (!empty($_SESSION['error'])) {
                     array($login)
                 ); //permet de rechercher les utilisateurs dans le LDAP sans prendre en compte la casse
                 $result = $stmt->fetch();
+
+                if (!empty($result['locked_until'])) {
+                    $lockedDate = new \DateTime($result['locked_until']);
+                    $currentDate = new \DateTime();
+                    if ($currentDate < $lockedDate) {
+                        $_SESSION['error'] = _ACCOUNT_LOCKED_UNTIL . " {$lockedDate->format('d/m/Y H:i')}";
+                        header(
+                            'location: ' . $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&page=login'
+                        );
+                        exit;
+                    }
+                }
+                \Core\Models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
 
                 if ($result) {
                     $_SESSION['error'] = '';

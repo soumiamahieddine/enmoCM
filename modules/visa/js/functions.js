@@ -380,3 +380,31 @@ function selectAllPrintFolder() {
         $j('.checkPrintFolder').prop('checked', false);
     }
 }
+
+function generatePdf(resId, collId, isVersion) {
+    $j("#spinner_"+resId).addClass( "fa-spin" );
+    $j.ajax({
+        url: '?display=true&module=visa&page=generatePdf',
+        type : 'POST',
+        dataType : 'json',
+        data: {
+            res_id : resId,
+            coll_id : collId,
+            is_version : isVersion,
+
+        },
+        success: function(result) {
+            if (result.status == "0") {
+                parent.document.getElementById('uniqueDetailsIframe').contentWindow.location.reload();
+            } else {
+                $j("#spinner_"+resId).removeClass( "fa-spin" );
+                $j("#spinner_"+resId).removeClass( "fa-sync-alt" );
+                $j("#spinner_"+resId).addClass( "fa-exclamation-triangle" );
+                $j("#spinner_"+resId).css({"cursor":"initial"})
+                $j("#spinner_"+resId).prop('title', result.error_txt);
+                $j("#gen_"+resId).prop("onclick", null).off("click");
+                alert(result.error_txt);
+            }
+        }
+    });
+}

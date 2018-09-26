@@ -253,7 +253,11 @@ function loadSelectedContact() {
         $j("#contactDiv").hide();
         $j("#newAttachDiv").hide();
         $j('#contactidAttach').val('mailing');
+        $j('#mailingInfo').slideToggle("slow");
     } else {
+        if ($j('#mailingInfo').is(':visible')) {
+            $j('#mailingInfo').slideToggle("slow");
+        }
         $j("#contactDiv").show();
         $j("#newAttachDiv").show();
         var value = ContactAndAddress.split("#");

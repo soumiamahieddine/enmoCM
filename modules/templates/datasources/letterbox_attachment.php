@@ -73,61 +73,63 @@ if (!empty($res_id)) {
     $stmt = $dbDatasource->query('SELECT * FROM contacts_res WHERE res_id = ? AND contact_id = ? ', array($doc['res_id'], $res_contact_id));
     $datasources['res_letterbox_contact'][] = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($datasources['res_letterbox_contact'][0]['contact_id'] != '') {
-        // $datasources['contact'] = array();
-        $attachNum = $_SESSION['attachmentInfo']['attachNum'];
-        $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ', array($_SESSION['attachmentInfo'][$attachNum]['contactId'], $_SESSION['attachmentInfo'][$attachNum]['addressId']));
-        $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-        $myContact['postal_address'] = \Contact\controllers\ContactController::formatContactAddressAfnor($myContact);
-        $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-        $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
-        $datasources['contact'][] = $myContact;
-
-        // single Contact
-    } elseif (isset($res_contact_id) && isset($res_address_id) && is_numeric($res_contact_id)) {
-        $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ', array($res_contact_id, $res_address_id));
-        $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-        $myContact['postal_address'] = \Contact\controllers\ContactController::formatContactAddressAfnor($myContact);
-        $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-        $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
-        $datasources['contact'][] = $myContact;
-    } elseif (!empty($res_contact_id) && !is_numeric($res_contact_id)) {
-        $stmt = $dbDatasource->query('SELECT firstname, lastname, user_id, mail, phone, initials FROM users WHERE user_id = ?', [$res_contact_id]);
-        $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-        $datasources['contact'][] = $myContact;
-    } else {
-        $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($datasources['res_letterbox'][0]['contact_id'], $datasources['res_letterbox'][0]['address_id']));
-        $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-        $myContact['postal_address'] = \Contact\controllers\ContactController::formatContactAddressAfnor($myContact);
-        $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-        $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
-        $datasources['contact'][] = $myContact;
-    }
-
-    if (isset($datasources['contact'][0]['title']) && $datasources['contact'][0]['title'] == '') {
-        $datasources['contact'][0]['title'] = $datasources['contact'][0]['contact_title'];
-    } else {
-        $datasources['contact'][0]['contact_title'] = $datasources['contact'][0]['title'];
-    }
-    if (isset($datasources['contact'][0]['firstname']) && $datasources['contact'][0]['firstname'] == '') {
-        $datasources['contact'][0]['firstname'] = $datasources['contact'][0]['contact_firstname'];
-    } else {
-        $datasources['contact'][0]['contact_firstname'] = $datasources['contact'][0]['firstname'];
-    }
-    if (isset($datasources['contact'][0]['lastname']) && $datasources['contact'][0]['lastname'] == '') {
-        $datasources['contact'][0]['lastname'] = $datasources['contact'][0]['contact_lastname'];
-    } else {
-        $datasources['contact'][0]['contact_lastname'] = $datasources['contact'][0]['lastname'];
-    }
-    if (isset($datasources['contact'][0]['function']) && $datasources['contact'][0]['function'] == '') {
-        $datasources['contact'][0]['function'] = $datasources['contact'][0]['contact_function'];
-    } else {
-        $datasources['contact'][0]['contact_function'] = $datasources['contact'][0]['function'];
-    }
-    if (isset($datasources['contact'][0]['other_data']) && $datasources['contact'][0]['other_data'] == '') {
-        $datasources['contact'][0]['other_data'] = $datasources['contact'][0]['contact_other_data'];
-    } else {
-        $datasources['contact'][0]['contact_other_data'] = $datasources['contact'][0]['other_data'];
+    if (empty($params['mailing'])) {
+        if ($datasources['res_letterbox_contact'][0]['contact_id'] != '' && $_SESSION['attachmentInfo'][$_SESSION['attachmentInfo']['attachNum']]['contactId'] != '') {
+            // $datasources['contact'] = array();
+            $attachNum = $_SESSION['attachmentInfo']['attachNum'];
+            $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ', array($_SESSION['attachmentInfo'][$attachNum]['contactId'], $_SESSION['attachmentInfo'][$attachNum]['addressId']));
+            $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+            $myContact['postal_address'] = \Contact\controllers\ContactController::formatContactAddressAfnor($myContact);
+            $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+            $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
+            $datasources['contact'][] = $myContact;
+    
+            // single Contact
+        } elseif (isset($res_contact_id) && isset($res_address_id) && is_numeric($res_contact_id)) {
+            $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ', array($res_contact_id, $res_address_id));
+            $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+            $myContact['postal_address'] = \Contact\controllers\ContactController::formatContactAddressAfnor($myContact);
+            $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+            $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
+            $datasources['contact'][] = $myContact;
+        } elseif (!empty($res_contact_id) && !is_numeric($res_contact_id)) {
+            $stmt = $dbDatasource->query('SELECT firstname, lastname, user_id, mail, phone, initials FROM users WHERE user_id = ?', [$res_contact_id]);
+            $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+            $datasources['contact'][] = $myContact;
+        } else {
+            $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($datasources['res_letterbox'][0]['contact_id'], $datasources['res_letterbox'][0]['address_id']));
+            $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+            $myContact['postal_address'] = \Contact\controllers\ContactController::formatContactAddressAfnor($myContact);
+            $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+            $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
+            $datasources['contact'][] = $myContact;
+        }
+    
+        if (isset($datasources['contact'][0]['title']) && $datasources['contact'][0]['title'] == '') {
+            $datasources['contact'][0]['title'] = $datasources['contact'][0]['contact_title'];
+        } else {
+            $datasources['contact'][0]['contact_title'] = $datasources['contact'][0]['title'];
+        }
+        if (isset($datasources['contact'][0]['firstname']) && $datasources['contact'][0]['firstname'] == '') {
+            $datasources['contact'][0]['firstname'] = $datasources['contact'][0]['contact_firstname'];
+        } else {
+            $datasources['contact'][0]['contact_firstname'] = $datasources['contact'][0]['firstname'];
+        }
+        if (isset($datasources['contact'][0]['lastname']) && $datasources['contact'][0]['lastname'] == '') {
+            $datasources['contact'][0]['lastname'] = $datasources['contact'][0]['contact_lastname'];
+        } else {
+            $datasources['contact'][0]['contact_lastname'] = $datasources['contact'][0]['lastname'];
+        }
+        if (isset($datasources['contact'][0]['function']) && $datasources['contact'][0]['function'] == '') {
+            $datasources['contact'][0]['function'] = $datasources['contact'][0]['contact_function'];
+        } else {
+            $datasources['contact'][0]['contact_function'] = $datasources['contact'][0]['function'];
+        }
+        if (isset($datasources['contact'][0]['other_data']) && $datasources['contact'][0]['other_data'] == '') {
+            $datasources['contact'][0]['other_data'] = $datasources['contact'][0]['contact_other_data'];
+        } else {
+            $datasources['contact'][0]['contact_other_data'] = $datasources['contact'][0]['other_data'];
+        }
     }
 
     // Notes
@@ -142,9 +144,12 @@ if (!empty($res_id)) {
     }
 
     // Attachments
-    $datasources['attachments'] = array();
-    $myAttachment['chrono'] = $chronoAttachment;
 
+    if (empty($params['mailing'])) {
+        $datasources['attachments'] = array();
+        $myAttachment['chrono'] = $chronoAttachment;
+    }
+    
     //thirds
     $stmt = $dbDatasource->query('SELECT * FROM contacts_res WHERE res_id = ? AND mode = ? ', [$doc['res_id'], 'third']);
     $datasources['thirds'] = [];
@@ -344,22 +349,24 @@ if (!empty($res_id)) {
     }
 }
 
-$img_file_name = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].time().rand().'_barcode_attachment.png';
+if (empty($params['mailing'])) {
+    $img_file_name = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].time().rand().'_barcode_attachment.png';
 
-require_once 'apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php';
-$objCode = new pi_barcode();
-
-$objCode->setCode($chronoAttachment);
-$objCode->setType('C128');
-$objCode->setSize(30, 50);
-
-$objCode->setText($chronoAttachment);
-
-$objCode->hideCodeType();
-
-$objCode->setFiletype('PNG');
-
-$objCode->writeBarcodeFile($img_file_name);
-
-$myAttachment['chronoBarCode'] = $img_file_name;
-$datasources['attachments'][] = $myAttachment;
+    require_once 'apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php';
+    $objCode = new pi_barcode();
+    
+    $objCode->setCode($chronoAttachment);
+    $objCode->setType('C128');
+    $objCode->setSize(30, 50);
+    
+    $objCode->setText($chronoAttachment);
+    
+    $objCode->hideCodeType();
+    
+    $objCode->setFiletype('PNG');
+    
+    $objCode->writeBarcodeFile($img_file_name);
+    
+    $myAttachment['chronoBarCode'] = $img_file_name;
+    $datasources['attachments'][] = $myAttachment;
+}

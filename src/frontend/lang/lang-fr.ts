@@ -664,4 +664,7 @@ export const LANG_FR = {
     "fewSeconds"                        : "quelques secondes",
     "oneMinute"                         : "une minute",
     "oneHour"                           : "une heure",
+    "ascending"                         : "Ascendant",
+    "descending"                        : "Descendant",
+    "orderBy"                           : "Ordre",
 };

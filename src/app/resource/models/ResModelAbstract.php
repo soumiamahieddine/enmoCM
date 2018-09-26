@@ -433,4 +433,18 @@ abstract class ResModelAbstract
 
         return $natures;
     }
+
+    public static function getNbContactsByResId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        $aResources = DatabaseModel::select([
+            'select'    => ['count(1) as nb_contacts'],
+            'table'     => ['contacts_res'],
+            'where'     => ['res_id = ?', 'mode = ?'],
+            'data'      => [$aArgs['resId'], 'multi']
+        ]);
+        return $aResources[0]['nb_contacts'];
+    }
 }

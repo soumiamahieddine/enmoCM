@@ -44,9 +44,12 @@ export class BasketAdministrationComponent implements OnInit {
 
     displayedColumns        = ['label_action', 'actions'];
     orderColumns            = ['alt_identifier', 'creation_date', 'process_limit_date', 'res_id', 'priority'];
+    orderByColumns          = ['asc', 'desc'];
     langVarName             = [this.lang.chrono, this.lang.creationDate, this.lang.processLimitDate, this.lang.id, this.lang.priority];
+    langOrderName           = [this.lang.ascending, this.lang.descending];
     orderColumnsSelected    : string[] = [];
     selection               : string[] = [];
+    orderBy                 : string[] = [];
     columnsFormControl      : FormControl = new FormControl();
     dataSource              : any;
 
@@ -107,7 +110,15 @@ export class BasketAdministrationComponent implements OnInit {
                         else{
                             
                             //this.basket.basket_res_order = this.basket.basket_res_order.substring(0,this.basket.basket_res_order.indexOf(" DESC"));
-                            this.orderColumnsSelected = this.basket.basket_res_order.split(',');
+                            var orderByColumnsSelected = this.basket.basket_res_order.split(', ');
+                            for (let i = 0; i < orderByColumnsSelected.length; i++) {
+                                var value = orderByColumnsSelected[i].split(' ');
+                                this.orderColumnsSelected[i] = value[0];
+                                if (value[1] != '' && value[1] != null) {
+                                    this.orderBy[i] = value[1];
+                                }
+                            }
+                            // this.orderColumnsSelected = this.basket.basket_res_order.split(', ');
 
                             this.columnsFormControl.setValue(this.orderColumnsSelected);
                             this.selection = this.orderColumnsSelected;
@@ -182,8 +193,11 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        if(this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0){
-            this.basket.basket_res_order = this.orderColumnsSelected.join(',')
+        if(this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0) {
+            for (let i = 0; i < this.orderColumnsSelected.length; i++) {
+                this.orderColumnsSelected[i] = this.orderColumnsSelected[i] + ' ' + this.orderBy[i];
+            }
+            this.basket.basket_res_order = this.orderColumnsSelected.join(', ')
         } else {
             this.basket.basket_res_order = '';
         }        
@@ -206,7 +220,7 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    removeColumn(column: string){
+    removeColumn(column: string) {
         var index = this.orderColumnsSelected.indexOf(column);
         if (index >= 0) {
             this.orderColumnsSelected.splice(index, 1);

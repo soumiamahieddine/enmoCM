@@ -1,11 +1,21 @@
 <?php
 
-$confirm = true;
+$confirm    = true;
+$frm_width  = '400px';
+$frm_height = 'auto';
+$warnMsg    = '';
 
 $etapes = ['form'];
 
+$isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id']]);
+
+if ($isMailingAttach != false) {
+    $warnMsg = $isMailingAttach['nbContacts'] . " " . _RESPONSES_WILL_BE_GENERATED;
+}
+
 function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
 {
+    $db = new Database();
     $values_str = '';
     if (empty($_SESSION['stockCheckbox'])) {
         for ($i=0; $i<count($values); $i++) {
@@ -20,7 +30,16 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     $config = getXml();
 
-    $html = '<form name="sendToExternalSB" id="sendToExternalSB" method="post" class="forms" action="#">';
+    $labelAction = '';
+    if ($id_action <> '') {
+        $stmt = $db->query("SELECT label_action FROM actions WHERE id = ?", array($id_action));
+        $resAction = $stmt->fetchObject();
+        $labelAction = functions::show_string($resAction->label_action);
+    }
+
+    $html = '<h2 class="title">' . $labelAction . '</h2>';
+
+    $html .= '<form name="sendToExternalSB" id="sendToExternalSB" method="post" class="forms" action="#">';
     $html .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
     if (!empty($config)) {
         if ($config['id'] == 'ixbus') {
@@ -42,7 +61,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $html .=' <input type="button" name="validate" id="validate" value="'._VALIDATE.'" class="button" ' .
             'onclick="valid_action_form(\'sendToExternalSB\', \'' . $path_manage_action .
             '\', \'' . $id_action . '\', \'' . $values_str . '\', \'res_letterbox\', \'null\', \'letterbox_coll\', \'' .
-            $mode . '\');" />';
+            $mode . '\');" />&nbsp;';
     $html .='<input type="button" name="cancel" id="cancel" class="button" value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
 
     $html .='</div>';
@@ -67,10 +86,17 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $coll_id = $_SESSION['current_basket']['coll_id'];
 
     foreach ($arr_id as $res_id) {
+        \Attachment\controllers\AttachmentController::generateAttachForMailing(['resIdMaster' => $res_id]);
+        
         if (!empty($config)) {
             if ($config['id'] == 'ixbus') {
                 include_once 'modules/visa/class/IxbusController.php';
-                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);
+
+                $loginIxbus         = get_value_fields($values_form, 'loginIxbus');
+                $passwordIxbus      = get_value_fields($values_form, 'passwordIxbus');
+                $nature             = get_value_fields($values_form, 'nature');
+                $messageModel       = get_value_fields($values_form, 'messageModel');
+                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $res_id, 'loginIxbus' => $loginIxbus, 'passwordIxbus' => $passwordIxbus, 'idClasseur' => $nature, 'messageModel' => $messageModel]);
             } elseif ($config['id'] == 'iParapheur') {
                 include_once 'modules/visa/class/IParapheurController.php';
                 $attachmentToFreeze = IParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);
@@ -111,7 +137,7 @@ function getXml()
     if (file_exists($path)) {
         $loadedXml = simplexml_load_file($path);
         if ($loadedXml) {
-            $config['id']               = (string)$loadedXml->signatoryBookEnabled;
+            $config['id'] = (string)$loadedXml->signatoryBookEnabled;
             foreach ($loadedXml->signatoryBook as $value) {
                 if ($value->id == $config['id']) {
                     $config['data'] = (array)$value;
@@ -121,4 +147,21 @@ function getXml()
     }
 
     return $config;
+}
+
+ /**
+ * Get the value of a given field in the values returned by the form
+ *
+ * @param $values Array Values of the form to check
+ * @param $field String the field
+ * @return String the value, false if the field is not found
+ **/
+function get_value_fields($values, $field)
+{
+    for ($i=0; $i<count($values);$i++) {
+        if ($values[$i]['ID'] == $field) {
+            return  $values[$i]['VALUE'];
+        }
+    }
+    return false;
 }
