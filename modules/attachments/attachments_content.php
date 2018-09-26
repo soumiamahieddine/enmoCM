@@ -1085,9 +1085,7 @@ if (!empty($infoAttach->multi_contact)) {
     foreach ($infoAttach->multi_contact as $key => $value) {
         $content .= '<option value="'.$value['contact_id'].'#'.$value['address_id'].'#'.$value['format_contact'].'">'.$value['format_contact'].'</option>';
     }
-    if ($category_id == 'outgoing') {
         $content .= '<option value="mailing">Publipostage</option>';
-    }
     $content .= '</select>';
     $content .= '<script>$j("#selectContactIdRes", window.top.document).change();</script>';
 }
