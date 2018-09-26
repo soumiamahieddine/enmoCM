@@ -103,16 +103,19 @@ class CurlModel
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
 
+        $infos = curl_getinfo($curl);
+
         $cookies = array();
         if (!empty($aArgs['options'][CURLOPT_HEADER])) {
             preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $rawResponse, $matches);
             foreach ($matches[1] as $item) {
-                parse_str($item, $cookie);
-                $cookies = array_merge($cookies, $cookie);
+                $cookie = explode("=", $item);
+                $cookies = array_merge($cookies, [$cookie[0] => $cookie[1]]);
             }
+            $rawResponse = substr($rawResponse, $infos['header_size']);
         }
 
-        return ['response' => simplexml_load_string($rawResponse), 'infos' => curl_getinfo($curl), 'cookies' => $cookies];
+        return ['response' => simplexml_load_string($rawResponse), 'infos' => $infos, 'cookies' => $cookies];
     }
 
     public static function getConfigByCallId(array $aArgs)

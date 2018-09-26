@@ -425,3 +425,19 @@ if (!defined('_GENERATE_PDF')) {
 if (!defined('_CONVERSION_FAILED')) {
     define('_CONVERSION_FAILED', "Échec de la conversion !");
 }
+
+if (!defined('_NATURE_IXBUS')) {
+    define('_NATURE_IXBUS', "Nature du document");
+}
+
+if (!defined('_WORKFLOW_MODEL_IXBUS')) {
+    define('_WORKFLOW_MODEL_IXBUS', "Modèle de circuit visa");
+}
+
+if (!defined('_ID_IXBUS')) {
+    define('_ID_IXBUS', "Identifiant IxBus");
+}
+
+if (!defined('_PASSWORD_IXBUS')) {
+    define('_PASSWORD_IXBUS', "Mot de passe IxBus");
+}

@@ -275,3 +275,19 @@ if (!defined('_GENERATE_PDF')) {
 if (!defined('_CONVERSION_FAILED')) {
     define('_CONVERSION_FAILED', "Conversion failed !");
 }
+
+if (!defined('_NATURE_IXBUS')) {
+    define('_NATURE_IXBUS', "Document nature");
+}
+
+if (!defined('_WORKFLOW_MODEL_IXBUS')) {
+    define('_WORKFLOW_MODEL_IXBUS', "Workflow model");
+}
+
+if (!defined('_ID_IXBUS')) {
+    define('_ID_IXBUS', "Identifiant IxBus");
+}
+
+if (!defined('_PASSWORD_IXBUS')) {
+    define('_PASSWORD_IXBUS', "Password IxBus");
+}
