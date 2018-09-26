@@ -3522,8 +3522,9 @@ table.listing  {
     padding: 2px 2px;
     width: 225px;
     min-height: 13px;   
-    overflow: auto;
-    height: 150px; 
+    height: 150px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .largerList{
