@@ -513,17 +513,30 @@ CREATE VIEW res_view_attachments AS
 DELETE FROM status WHERE id = 'A_TRA';
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('A_TRA', 'PJ à traiter', 'Y', 'fa-question', 'apps', 'Y', 'Y');
 
+DELETE FROM status_images WHERE image_name = 'fa-question';
+INSERT INTO status_images (image_name) VALUES ('fa-question');
+
 DELETE FROM status WHERE id = 'TRA';
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('TRA', 'PJ traitée', 'Y', 'fa-check', 'apps', 'Y', 'Y');
+
+DELETE FROM status_images WHERE image_name = 'fa-check';
+INSERT INTO status_images (image_name) VALUES ('fa-check');
 
 DELETE FROM status WHERE id = 'FRZ';
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FRZ', 'PJ gelée', 'Y', 'fa-pause', 'apps', 'Y', 'Y');
 
+DELETE FROM status_images WHERE image_name = 'fa-pause';
+INSERT INTO status_images (image_name) VALUES ('fa-pause');
+
 DELETE FROM status WHERE id = 'SEND_MASS';
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SEND_MASS', 'Pour publipostage', 'Y', 'fa-mail-bulk', 'apps', 'Y', 'Y');
 
+DELETE FROM status_images WHERE image_name = 'fa-mail-bulk';
+INSERT INTO status_images (image_name) VALUES ('fa-mail-bulk');
+
 DELETE FROM status WHERE id = 'SIGN';
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SIGN', 'PJ signée', 'Y', 'fa-check', 'apps', 'Y', 'Y');
+
 
 
 DELETE FROM parameters WHERE id = 'homepage_message';

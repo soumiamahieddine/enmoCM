@@ -16,7 +16,6 @@
                             <mat-form-field>
                                 <input matInput [formControl]="statusId" [(ngModel)]="status.id" *ngIf="creationMode" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}" (blur)="isAvailable()" 
                                     type="text" pattern="^[\w.-]*$" required>
-                                <!-- <i *ngIf="creationMode" class="fa fa-circle" aria-hidden="true" [ngStyle]="{'color': statusIdAvailable ? 'green' : 'red'}"></i> -->
                                 <input matInput [(ngModel)]="status.id" *ngIf="!creationMode" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}" 
                                     required disabled>
                                 <mat-error *ngIf="statusId.invalid">{{getErrorMessage()}}</mat-error>
@@ -47,13 +46,13 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-1" style="text-align:right;">
-                            <mat-icon class="fm {{status.img_filename}} fm-2x" aria-hidden="true" color="primary"></mat-icon>
+                            <mat-icon [ngClass]="[status.img_filename.indexOf('fm') == 0 ? 'fm fm-2x' : 'fa fa-2x']" class="{{status.img_filename}}" aria-hidden="true" color="primary"></mat-icon>
                         </div>
                         <div class="col-sm-11">
                             <mat-form-field>
                                 <mat-select [(ngModel)]="status.img_filename" placeholder="{{lang.imgRelated}}" id="status" name="status" required>
                                     <mat-option *ngFor="let image of statusImages" [value]="image.image_name">
-                                        <i [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}} fa-2x" color="primary"></i> {{image.image_name}}
+                                        <i [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}}" color="primary"></i> {{image.image_name}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
