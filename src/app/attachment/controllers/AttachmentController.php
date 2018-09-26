@@ -274,8 +274,8 @@ class AttachmentController
     {
         $attachments = AttachmentModel::getOnView([
             'select' => ['*'],
-            'where' => ['res_id_master = ?', 'status = ?'],
-            'data' => [$aArgs['resIdMaster'],'SEND_MASS']
+            'where' => ['res_id_master = ?', 'status = ?', 'in_signature_book = ?'],
+            'data' => [$aArgs['resIdMaster'], 'SEND_MASS', true]
         ]);
 
         $contactsForMailing = DatabaseModel::select([
