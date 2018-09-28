@@ -33,6 +33,38 @@ use Resource\models\ResModel;
 
 class AttachmentController
 {
+    public function create(Request $request, Response $response)
+    {
+        $data = $request->getParams();
+
+        $check = Validator::notEmpty()->validate($data['encodedFile']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['fileFormat']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['status']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['collId']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['table']);
+        $check = $check && Validator::arrayType()->notEmpty()->validate($data['data']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $resId = StoreController::storeResource($data);
+
+        if (empty($resId) || !empty($resId['errors'])) {
+            return $response->withStatus(500)->withJson(['errors' => '[AttachmentController create] ' . $resId['errors']]);
+        }
+
+        HistoryController::add([
+            'tableName' => 'res_attachments',
+            'recordId'  => $resId,
+            'eventType' => 'ADD',
+            'info'      => _DOC_ADDED,
+            'moduleId'  => 'attachment',
+            'eventId'   => 'attachmentadd',
+        ]);
+
+        return $response->withJson(['resId' => $resId]);
+    }
+
     public function getAttachmentsListById(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
@@ -84,7 +116,6 @@ class AttachmentController
         }
 
         $attachmentTodisplay = $attachment[0];
-        $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
         $isVersion = empty($attachmentTodisplay['res_id']);
         if ($isVersion) {
             $collId = "attachments_version_coll";
@@ -100,7 +131,7 @@ class AttachmentController
         ]);
 
         if (empty($tnlAdr)) {
-            $result = ConvertThumbnailController::convert(['collId' => $collId, 'resId' => $aArgs['resId'], 'isVersion' => $isVersion]);
+            ConvertThumbnailController::convert(['collId' => $collId, 'resId' => $aArgs['resId'], 'isVersion' => $isVersion]);
             
             $tnlAdr = AdrModel::getTypedAttachAdrByResId([
                 'select'    => ['docserver_id', 'path', 'filename'],
@@ -154,11 +185,6 @@ class AttachmentController
         $attachmentTodisplay = $attachment[0];
         $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
         $isVersion = empty($attachmentTodisplay['res_id']);
-        if ($isVersion) {
-            $collId = "attachments_version_coll";
-        } else {
-            $collId = "attachments_coll";
-        }
 
         $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
         if (empty($convertedAttachment['errors'])) {
@@ -273,21 +299,19 @@ class AttachmentController
     public function generateAttachForMailing(array $aArgs)
     {
         $attachments = AttachmentModel::getOnView([
-            'select' => ['*'],
-            'where' => ['res_id_master = ?', 'status = ?', 'in_signature_book = ?'],
-            'data' => [$aArgs['resIdMaster'], 'SEND_MASS', true]
+            'select'    => ['*'],
+            'where'     => ['res_id_master = ?', 'status = ?', 'in_signature_book = ?'],
+            'data'      => [$aArgs['resIdMaster'], 'SEND_MASS', true]
         ]);
 
         $contactsForMailing = DatabaseModel::select([
-            'select' => ['*'],
-            'table' => ['contacts_res'],
-            'where' => ['res_id = ?', 'address_id <> 0'],
-            'data' => [$aArgs['resIdMaster']]
+            'select'    => ['*'],
+            'table'     => ['contacts_res'],
+            'where'     => ['res_id = ?', 'address_id <> 0'],
+            'data'      => [$aArgs['resIdMaster']]
         ]);
 
         if (!empty($attachments[0])) {
-            $tmpPath = CoreConfigModel::getTmpPath();
-
             foreach ($attachments as $keyAttach => $attachment) {
                 if ($attachment['res_id_version'] <> 0) {
                     $resId = $attachment['res_id_version'];
@@ -303,13 +327,13 @@ class AttachmentController
                 foreach ($contactsForMailing as $keyContact => $contactForMailing) {
                     $chronoPubli = $attachment['identifier'].'-'.($keyContact+1);
 
-
                     $dataValue = [];
-                    array_push($dataValue, [
-                        'column' => 'coll_id',
-                        'value' => 'letterbox_coll',
-                        'type' => 'string'
-                    ]);
+
+                    $dataValue[] = [
+                        'column'    => 'coll_id',
+                        'value'     => 'letterbox_coll',
+                        'type'      => 'string'
+                    ];
                     array_push($dataValue, [
                         'column' => 'res_id_master',
                         'value' => $aArgs['resIdMaster'],
@@ -402,6 +426,7 @@ class AttachmentController
                 }
             }
         }
+
         return ['success' => 'success'];
     }
 

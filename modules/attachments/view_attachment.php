@@ -127,7 +127,7 @@ if (! empty($_SESSION['error'])) {
 
             if((!empty($_GET['editingMode']) || !empty($_GET['viewpdf'])) && strpos($line->format, 'xl') === false && strpos($line->format, 'ppt') === false){  
                 header(
-                    "location: ../../rest/res/".$_REQUEST['res_id_master']."/attachment/".$_GET['id']
+                    "location: ../../rest/res/".$_REQUEST['res_id_master']."/attachments/".$_GET['id']."/content"
                 );
                 $stmtPdf = $db->query(
                     "SELECT docserver_id, path, filename, format, title

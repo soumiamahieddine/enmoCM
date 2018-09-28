@@ -1363,7 +1363,7 @@ $content .= '</div>';
 
 // ATTACHMENT IFRAME
 if ($mode == 'edit') {
-    $srcAttachment = '../../rest/res/'.functions::xssafe($_SESSION['doc_id']).'/attachment/'.$_REQUEST['id'];
+    $srcAttachment = '../../rest/res/'.functions::xssafe($_SESSION['doc_id']).'/attachments/'.$_REQUEST['id'] . '/content';
     $content .= '<iframe src="'.$srcAttachment.'" name="iframePjDocument_0" id="iframePjDocument_0" scrolling="auto" frameborder="0" style="width:100% !important;height:85vh;display:none" onmouseover="this.focus()"></iframe>';
 }
 
