@@ -154,10 +154,21 @@ if (!empty($order_field) && !empty($order)) {
             $list->setOrder();
             $list->setOrderField($arr_order[0]);
         }
-        if ($_SESSION['current_basket']['basket_res_order'] == 'alt_identifier') {
-            $orderstr = 'order by order_alphanum(alt_identifier)';
+        $basket_res_order = explode(' ', $_SESSION['current_basket']['basket_res_order']);
+        if ($basket_res_order[0] == 'alt_identifier') {
+            $orderstr = 'order by order_alphanum(alt_identifier) ';
+            if (empty($basket_res_order[1])) {
+                $orderstr .= 'desc';
+            } else {
+                $orderstr .= $basket_res_order[1];
+            }
         } else {
-            $orderstr = 'order by '.$_SESSION['current_basket']['basket_res_order'];
+            $orderstr = 'order by '.$_SESSION['current_basket']['basket_res_order'].' ';
+            if (empty($basket_res_order[1])) {
+                $orderstr .= 'desc';
+            } else {
+                $orderstr .= $basket_res_order[1];
+            }
         }
         $_SESSION['last_order_basket'] = $orderstr;
     } else {
