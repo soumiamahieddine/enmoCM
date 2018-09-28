@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, Inject, ViewChild, ElementRef } f
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav} from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
@@ -27,6 +27,7 @@ export class BasketAdministrationComponent implements OnInit {
     dialogRef                       : MatDialogRef<any>;
 
     selectedIndex                   : number    = 0;
+    numberOrderColumnsSelected      : number    = 0;
 
     coreUrl                         : string;
     lang                            : any       = LANG;
@@ -50,7 +51,8 @@ export class BasketAdministrationComponent implements OnInit {
     orderColumnsSelected    : string[] = [];
     selection               : string[] = [];
     orderBy                 : string[] = [];
-    columnsFormControl      : FormControl = new FormControl();
+    columnsFormControl      : FormControl[] = [];
+    orderFormControl        : FormControl[] = [];
     dataSource              : any;
 
 
@@ -104,25 +106,28 @@ export class BasketAdministrationComponent implements OnInit {
                         this.basket.clause = data.basket.basket_clause;
                         this.basket.isSearchBasket = data.basket.is_visible != "Y";
                         this.basket.flagNotif = data.basket.flag_notif == "Y";
-                        if(this.basket.basket_res_order == '' || this.basket.basket_res_order == null){                            
+                        if (this.basket.basket_res_order == '' || this.basket.basket_res_order == null) {
                             this.orderColumnsSelected = [];
+                            this.orderBy = [];
                         }
-                        else{
-                            
-                            //this.basket.basket_res_order = this.basket.basket_res_order.substring(0,this.basket.basket_res_order.indexOf(" DESC"));
+                        else {
                             var orderByColumnsSelected = this.basket.basket_res_order.split(', ');
                             for (let i = 0; i < orderByColumnsSelected.length; i++) {
                                 var value = orderByColumnsSelected[i].split(' ');
                                 this.orderColumnsSelected[i] = value[0];
-                                if (value[1] != '' && value[1] != null) {
+                                if (value[1]) {
                                     this.orderBy[i] = value[1];
+                                } else {
+                                    this.orderBy[i] = 'desc';
                                 }
+                                this.columnsFormControl.push(new FormControl());
+                                this.orderFormControl.push(new FormControl());
+                                this.columnsFormControl[i].setValue(this.orderColumnsSelected[i]);
+                                this.orderFormControl[i].setValue(this.orderBy[i]);
                             }
-                            // this.orderColumnsSelected = this.basket.basket_res_order.split(', ');
-
-                            this.columnsFormControl.setValue(this.orderColumnsSelected);
                             this.selection = this.orderColumnsSelected;
                         }
+                        this.numberOrderColumnsSelected = this.orderColumnsSelected.length - 1;
                         
                         this.http.get(this.coreUrl + "rest/baskets/" + this.id + "/groups")
                             .subscribe((data: any) => {
@@ -193,7 +198,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        if(this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0) {
+        if (this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0) {
             for (let i = 0; i < this.orderColumnsSelected.length; i++) {
                 this.orderColumnsSelected[i] = this.orderColumnsSelected[i] + ' ' + this.orderBy[i];
             }
@@ -220,23 +225,32 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    removeColumn(column: string) {
-        var index = this.orderColumnsSelected.indexOf(column);
-        if (index >= 0) {
-            this.orderColumnsSelected.splice(index, 1);
-        }
-        this.columnsFormControl.setValue(this.orderColumnsSelected);
-    }
-
-    onOrderChange(column:any, state: boolean){
-        if (state) {
+    onOrderChange(column: any, form: string, index: number) {
+        if (form == 'column') {
+            if (this.orderColumnsSelected[index]) {
+                this.orderColumnsSelected[index] = column;
+            } else {
             this.orderColumnsSelected.push(column);
+            }
         } else {
-            var index = this.orderColumnsSelected.indexOf(column);
-            if (index >= 0) {
-                this.orderColumnsSelected.splice(index, 1);
+            if (this.orderBy[index]) {
+                this.orderBy[index] = column;
+            } else {
+                this.orderBy.push(column);
             }
         }
+    }
+
+    addLine() {
+        this.orderColumnsSelected.push('coucou');
+        this.orderBy.push('coucou');
+        this.numberOrderColumnsSelected += 1;
+    }
+
+    removeLine(index: number) {
+        this.orderColumnsSelected.splice(index, 1);
+        this.orderBy.splice(index, 1);
+        this.numberOrderColumnsSelected -= 1;
     }
 
     initAction(groupIndex: number) {
@@ -340,14 +354,14 @@ export class BasketAdministrationComponent implements OnInit {
 })
 export class BasketAdministrationSettingsModalComponent extends AutoCompletePlugin {
 
-    lang                : any   = LANG;
-    allEntities         : any[] = [];
-    statuses            : any;
-    selectedStatuses    : any[] = [];
-    statusCtrl          = new FormControl();
+    lang: any = LANG;
+    allEntities: any[] = [];
+    statuses: any;
+    selectedStatuses: any[] = [];
+    statusCtrl = new FormControl();
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
-        super(http, ['users','statuses']);
+        super(http, ['users', 'statuses']);
     }
 
     @ViewChild('statusInput') statusInput: ElementRef;
@@ -427,7 +441,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                 this.statuses = response.statuses;
                 response.statuses.forEach((status: any) => {
                     if (this.data.action.statuses.indexOf(status.id) > -1) {
-                        this.selectedStatuses[this.data.action.statuses.indexOf(status.id)]= {idToDisplay:status.label_status,id:status.id};
+                        this.selectedStatuses[this.data.action.statuses.indexOf(status.id)] = { idToDisplay: status.label_status, id: status.id };
                     }
                 });
             });            
@@ -447,7 +461,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                 isIn = true;
             }
         });
-        if(!isIn) {
+        if (!isIn) {
             this.selectedStatuses.push(status);
             this.statusCtrl.setValue(null);
             this.statusInput.nativeElement.value = '';
@@ -592,10 +606,10 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
 })
 export class BasketAdministrationGroupListModalComponent {
 
-    coreUrl         : string;
-    lang            : any       = LANG;
-    actionAll       : any       = [];
-    newBasketGroup  : any       = {};
+    coreUrl: string;
+    lang: any = LANG;
+    actionAll: any = [];
+    newBasketGroup: any = {};
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationGroupListModalComponent>) {
     }
@@ -629,8 +643,8 @@ export class BasketAdministrationGroupListModalComponent {
         });
     }
 
-    validateForm(group:any) {
-        if(this.data.linkedGroups.length == 0) {
+    validateForm(group: any) {
+        if (this.data.linkedGroups.length == 0) {
             this.newBasketGroup.result_page = 'list_with_attachments';
             this.actionAll[0].used_in_action_page = true;
             this.actionAll[0].default_action_list = true;
@@ -638,7 +652,7 @@ export class BasketAdministrationGroupListModalComponent {
             this.actionAll[0].checked = true;
             this.newBasketGroup.groupActions = this.actionAll;
         } else {
-            this.newBasketGroup = JSON.parse(JSON.stringify(this.data.linkedGroups[this.data.linkedGroups.length-1]));
+            this.newBasketGroup = JSON.parse(JSON.stringify(this.data.linkedGroups[this.data.linkedGroups.length - 1]));
         }
         this.newBasketGroup.group_id = group.group_id;
         this.newBasketGroup.group_desc = group.group_desc;
