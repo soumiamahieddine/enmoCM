@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, NgZone, ViewChild  } from '@angular/core';
-import { LANG } from '../translate.component';
-import { MatSidenav } from '@angular/material';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { LANG }                 from '../translate.component';
+import { MatSidenav }           from '@angular/material';
+import { HttpClient }           from '@angular/common/http';
+import { Router }               from '@angular/router';
+import { ShortcutMenuService }  from '../../service/shortcut-menu.service';
+
 
 declare function $j(selector: any) : any;
 declare var angularGlobals : any;
@@ -10,22 +12,22 @@ declare var angularGlobals : any;
 
 @Component({
     selector    : "main-header",
-    templateUrl : "main-header.component.html",
+    templateUrl : "main-header.component.html"
 })
 export class MainHeaderComponent implements OnInit {
 
-    coreUrl    : string;
-    lang       : any       = LANG;
-    user       : any       = {firstname : "",lastname : ""};
-    mobileMode : boolean   = false;
-    titleHeader: string;
-    titleSubHeader: string;
-    router :any;
+    coreUrl         : string;
+    lang            : any       = LANG;
+    user            : any       = {firstname : "",lastname : ""};
+    mobileMode      : boolean   = false;
+    titleHeader     : string;
+    router          : any;
 
-    snav : MatSidenav;
-    snav2 : MatSidenav;
+    snav            : MatSidenav;
+    snav2           : MatSidenav;
 
-    constructor(public http: HttpClient, private zone: NgZone, private _router: Router) {
+
+    constructor(public http: HttpClient, private zone: NgZone, private _router: Router, private shortcut: ShortcutMenuService) {
         this.router = _router;
         this.mobileMode = angularGlobals.mobileMode;
         window['MainHeaderComponent'] = {
@@ -41,6 +43,9 @@ export class MainHeaderComponent implements OnInit {
             .subscribe((data: any) => {
                 this.user = data.user;
                 this.user.menu = data.menu;
+
+                this.shortcut.shortcutsData.user = data.user;
+                this.shortcut.shortcutsData.menu = data.menu;
             }, (err) => {
                 console.log(err.error.errors);
             });

@@ -108,5 +108,4 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     goToDetail(row:any){
         location.href = "index.php?page=details&dir=indexing_searching&id="+row.res_id;
     }
-
 }
