@@ -311,22 +311,46 @@ while ($state <> 'END') {
                     if (!empty($email->res_version_att_id_list)) {
                         $attachments = explode(',', $email->res_version_att_id_list);
                         foreach ($attachments as $attachment_id) {
+                            if (strpos($attachment_id, '#') !== false) {
+                                $isConvertedPdf = true;
+                                $attachment_id = explode('#', $attachment_id)[0];
+                            } else {
+                                $isConvertedPdf = false;
+                            }
+
+                            $attachmentDatas = \Attachment\models\AttachmentModel::getOnView([
+                                'select'    =>  ['title', 'docserver_id', 'path', 'filename'],
+                                'where'     =>  ["res_id_version = ?"],
+                                'data'      =>  [$attachment_id]
+                            ]);
+                            $attachmentDatas = $attachmentDatas[0];
+
                             $GLOBALS['logger']->write("set attachment version on res attachment : " . $attachment_id, 'INFO');
-                            $attachmentFile = $sendmail_tools->getAttachment(
-                                $email->coll_id,
-                                $email->res_id,
-                                $attachment_id,
-                                true
-                            );
-                            if (is_file($attachmentFile['file_path'])) {
+                            if ($isConvertedPdf == true) {
+                                $convertedDocument =  \Convert\models\AdrModel::getConvertedDocumentById([
+                                    'select' => ['docserver_id', 'path', 'filename'],
+                                    'resId' => $attachment_id,
+                                    'type' => 'PDF',
+                                    'collId' => 'attachments_version_coll',
+                                    'isVersion' => true
+                                ]);
+                                $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
+                                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+                            } else {
+                                $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $attachmentDatas['docserver_id'], 'select' => ['path_template']]);
+                                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachmentDatas['path']) . $attachmentDatas['filename'];
+                            }
+                            
+                            if (is_file($pathToDocument)) {
+                                $pathToDocumentInfo = pathinfo($pathToDocument);
                                 //Filename
-                                $attachmentFilename = $sendmail_tools->createFilename($attachmentFile['label'], $attachmentFile['ext']);
-                                $GLOBALS['logger']->write("set attachment version filename : " . $attachmentFilename, 'INFO');
+                                $attachmentFilename = $sendmail_tools->createFilename($attachmentDatas['title'], $pathToDocumentInfo['extension']);
+                                $GLOBALS['logger']->write("set attachment version  filename : " . $attachmentFilename, 'INFO');
 
                                 //File content
-                                $file_content = $GLOBALS['mailer']->getFile($attachmentFile['file_path']);
+                                $file_content = $GLOBALS['mailer']->getFile($pathToDocument);
                                 //Add file
-                                $GLOBALS['mailer']->addAttachment($file_content, $attachmentFilename, $attachmentFile['mime_type']);
+                                $GLOBALS['mailer']->addAttachment($file_content, $attachmentFilename, mime_content_type($pathToDocument));
                             }
                         }
                     }
