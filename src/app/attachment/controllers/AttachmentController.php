@@ -391,7 +391,7 @@ class AttachmentController
                     ]);
 
                     $params = [
-                        'userId' => $_SESSION['user']['UserId'],
+                        'userId' => $aArgs['userId'],
                         'res_id' => $aArgs['resIdMaster'],
                         'coll_id' => 'letterbox_coll',
                         'res_view' => 'res_view_attachments',
