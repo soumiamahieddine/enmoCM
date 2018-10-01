@@ -139,60 +139,15 @@ abstract class SendmailAbstract extends Database
             return false;
     }
 
-    public function getJoinedFiles($coll_id, $table, $id, $from_res_attachment=false)
+    public function getJoinedFiles($coll_id, $table, $id, $from_res_attachment = false)
     {
         $joinedFiles = array();
         $db = new Database();
         if ($from_res_attachment === false) {
-            include_once 'core/class/class_security.php';
-            $sec = new security();
-            $versionTable = $sec->retrieve_version_table_from_coll_id(
-                $coll_id
-            );
-
-            //Have version table
-            if ($versionTable <> '') {
-                $stmt = $db->query(
-                    "select res_id from "
-                    . $versionTable . " where res_id_master = ? and status <> 'DEL' order by res_id desc", array($id)
-                );
-                $line = $stmt->fetchObject();
-                $lastVersion = $line->res_id;
-                //Have new version
-                if ($lastVersion <> '') {
-                    $stmt = $db->query(
-                        "select res_id, description, subject, title, format, filesize, relation from "
-                        . $versionTable . " where res_id = ? and status <> 'DEL'", array($lastVersion)
-                    );
-                    // $db->show();
-                    //Get infos
-                    while ($res = $stmt->fetchObject()) {
-                        $label = '';
-                        //Tile, or subject or description
-                        if (strlen(trim($res->title)) > 0)
-                            $label = $res->title;
-                        elseif (strlen(trim($res->subject)) > 0)
-                            $label = $res->subject;
-                        elseif (strlen(trim($res->description)) > 0)
-                            $label = $res->description;
-
-                        array_push(
-                            $joinedFiles,
-                            array('id'       => $res->res_id, //ID
-                                'label'      => $this->show_string($label), //Label
-                                'format'     => $res->format, //Format
-                                'filesize'   => $res->filesize, //Filesize
-                                'is_version' => true, //Have version bool
-                                'version'    => $res->relation //Version
-                            )
-                        );
-                    }
-                }
-            }
-
             $stmt = $db->query(
                 "select res_id, description, subject, title, format, filesize, relation from "
-                . $table . " where res_id = ? and status <> 'DEL'", array($id )
+                . $table . " where res_id = ? and status <> 'DEL'",
+                array($id)
             );
         } else {
             include_once 'modules/attachments/attachments_tables.php';
@@ -204,49 +159,74 @@ abstract class SendmailAbstract extends Database
         }
 
         while ($res = $stmt->fetchObject()) {
-
-            //check converted_pdf
-            $pathConvert     = $res->path;
-            $realFilename    = explode('.', $res->filename);
-            $filenameConvert = $realFilename[0].'.pdf';
-
-            $stmt2 = $db->query(
-                "SELECT rva.res_id
-                FROM res_view_attachments rva  WHERE rva.path = ? and rva.filename = ? and rva.attachment_type = 'converted_pdf'",
-                array($pathConvert, $filenameConvert)
-            );
-            $converted = $stmt2->fetchObject();
+            $pdf_exist = true;
+            if ($from_res_attachment) {
+                require_once 'modules/attachments/class/attachments_controler.php';
+                $ac = new attachments_controler();
+                if ($res->res_id != 0) {
+                    $idFile = $res->res_id;
+                    $isVersion = false;
+                } else {
+                    $idFile = $res->res_id_version;
+                    $isVersion = true;
+                }
+                $convertedDocument =  \Convert\models\AdrModel::getConvertedDocumentById(['select' => ['docserver_id', 'path', 'filename'], 'type' => 'PDF', 'resId' => $idFile, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+                $viewLink = $_SESSION['config']['businessappurl']
+                        .'index.php?display=true&module=attachments&page=view_attachment&res_id_master='
+                        .$id.'&id='.$res->res_id;
+                
+                if (!empty($convertedDocument)) {
+                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
+                    $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+                    
+                    
+                    if (!file_exists($pathToDocument)) {
+                        $pdf_exist = false;
+                    }
+                } else {
+                    $pdf_exist = false;
+                }
+            } else {
+                $idFile = $res->res_id;
+                $convertedDocument =  \Convert\models\AdrModel::getConvertedDocumentById(['select' => ['docserver_id', 'path', 'filename'], 'type' => 'PDF', 'resId' => $idFile, 'collId' => 'letterbox_coll', 'isVersion' => $isVersion]);
+                $viewLink = $_SESSION['config']['businessappurl']
+                        .'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
+                        .$id;
+                if (!empty($convertedDocument)) {
+                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
+                    $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+                    
+                    if (!file_exists($pathToDocument)) {
+                        $pdf_exist = false;
+                    }
+                } else {
+                    $pdf_exist = false;
+                }
+            }
             $label = '';
             //Tile, or subject or description
-            if (strlen(trim($res->title)) > 0)
+            if (strlen(trim($res->title)) > 0) {
                 $label = $res->title;
-            elseif (strlen(trim($res->subject)) > 0)
+            } elseif (strlen(trim($res->subject)) > 0) {
                 $label = $res->subject;
-            elseif (strlen(trim($res->description)) > 0)
+            } elseif (strlen(trim($res->description)) > 0) {
                 $label = $res->description;
-
-            if(!empty($res->res_id)) {
-                $id        = $res->res_id;
-                $isVersion = false;
-            } else {
-                $id        = $res->res_id_version;
-                $isVersion = true;
             }
 
             array_push(
                 $joinedFiles,
-                array('id'            => $id, //ID
+                array('id'            => $idFile, //ID
                     'label'           => $this->show_string($label), //Label
                     'format'          => $res->format, //Format
                     'filesize'        => $res->filesize, //Filesize
                     'is_version'      => $isVersion,
+                    'pdf_exist'       => $pdf_exist,
                     'version'         => '',
                     'attachment_type' => $res->attachment_type,
                     'identifier'      => $res->identifier,
                     'society'         => $res->society,
                     'firstname'       => $res->firstname,
                     'lastname'        => $res->lastname,
-                    'converted_pdf'   => $converted->res_id
                 )
             );
         }

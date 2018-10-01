@@ -232,9 +232,10 @@ $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures'
 $app->get('/resources/groups/{groupSerialId}/baskets/{basketId}', \Resource\controllers\ResController::class . ':getResourcesByBasket');
 
 //Attachments
-$app->get('/res/{resIdMaster}/attachment/{resId}', \Attachment\controllers\AttachmentController::class . ':getFileContent');
+$app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
 $app->get('/res/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getAttachmentsListById');
-$app->get('/res/{resIdMaster}/attachment/{resId}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
+$app->get('/res/{resIdMaster}/attachments/{resId}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
+$app->get('/res/{resIdMaster}/attachments/{resId}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 
 //SignatureBook
 $app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');

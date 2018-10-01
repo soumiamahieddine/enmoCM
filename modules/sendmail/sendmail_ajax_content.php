@@ -52,7 +52,6 @@ $is                        = new indexing_searching_app();
 $users_tools               = new class_users();
 $sendmail_tools            = new sendmail();
 
-
 if ($_SESSION['features']['send_to_contact_with_mandatory_attachment'] == true && !isset($_REQUEST['join_attachment']) && $_REQUEST['action'] == 'send_to_contact_with_mandatory_attachment') {
     $error = $request->wash_html(_PLEASE_CHOOSE_AN_ATTACHMENT, 'NONE');
     $status = 1;

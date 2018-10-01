@@ -19,7 +19,6 @@ use Attachment\models\AttachmentModel;
 use Convert\models\AdrModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
-use Parameter\models\ParameterModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
@@ -63,8 +62,7 @@ class ConvertPdfController
         } else {
             $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
         }
-        
-        
+
         if (empty($resource)) {
             return ['errors' => '[ConvertPdf] Resource does not exist'];
         }
@@ -83,7 +81,6 @@ class ConvertPdfController
 
         $docInfo = pathinfo($pathToDocument);
 
-        $ext = pathinfo($pathToDocument, PATHINFO_EXTENSION);
         $tmpPath = CoreConfigModel::getTmpPath();
         $fileNameOnTmp = rand() . $docInfo["filename"];
 
@@ -129,6 +126,7 @@ class ConvertPdfController
                 'filename'      => $storeResult['file_destination_name'],
             ]);
         }
+
         return ['docserver_id' => $storeResult['docserver_id'], 'path' => $storeResult['destination_dir'], 'filename' => $storeResult['file_destination_name']];
     }
 
@@ -140,10 +138,10 @@ class ConvertPdfController
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $convertedDocument = AdrModel::getConvertedDocumentById([
-            'select' => ['docserver_id','path', 'filename'],
-            'resId' => $aArgs['resId'],
-            'collId' => $aArgs['collId'],
-            'type' => 'PDF',
+            'select'    => ['docserver_id','path', 'filename'],
+            'resId'     => $aArgs['resId'],
+            'collId'    => $aArgs['collId'],
+            'type'      => 'PDF',
             'isVersion' => $aArgs['isVersion']
         ]);
         
@@ -154,6 +152,7 @@ class ConvertPdfController
                 'isVersion' => $aArgs['isVersion'],
             ]);
         }
+
         return $convertedDocument;
     }
 }

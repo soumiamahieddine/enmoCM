@@ -202,8 +202,8 @@ class SignatureBookController
                 'title'         => $value['title'],
                 'format'        => $value['format'],
                 'isConverted'   => $isConverted,
-                'viewerLink'    => "../../rest/res/{$resId}/attachment/{$value['res_id']}",
-                'thumbnailLink' => "rest/res/{$resId}/attachment/{$value['res_id']}/thumbnail"
+                'viewerLink'    => "../../rest/res/{$resId}/attachments/{$value['res_id']}/content",
+                'thumbnailLink' => "rest/res/{$resId}/attachments/{$value['res_id']}/thumbnail"
             ];
         }
 
@@ -323,9 +323,9 @@ class SignatureBookController
             }
 
             if ($value['status'] == 'SIGN') {
-                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachment/{$viewerId}";
+                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachments/{$viewerId}/content";
             } else {
-                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachment/{$realId}";
+                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachments/{$realId}/content";
             }
         }
 

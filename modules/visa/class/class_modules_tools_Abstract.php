@@ -616,6 +616,7 @@ abstract class visa_Abstract extends Database
             $mailStatus = 'ESIG';
             \Attachment\controllers\AttachmentController::generateAttachForMailing([
                 'resIdMaster' => $res_id,
+                'userId' => $_SESSION['user']['UserId']
             ]);
         } else {
             $mailStatus = 'EVIS';

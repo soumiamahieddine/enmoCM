@@ -34,7 +34,7 @@ export class StatusAdministrationComponent implements OnInit {
         label_status: null,
         can_be_searched: null,
         can_be_modified: null,
-        img_filename: null
+        img_filename: 'fm-letter'
     };
     statusImages: any = "";
 

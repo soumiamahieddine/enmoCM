@@ -12,6 +12,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 
 declare const angularGlobals: any;
 declare function $j(selector: any): any;
+
 @Component({
     selector: 'my-app',
     template: `<main-header></main-header><router-outlet></router-outlet>`,
@@ -22,7 +23,6 @@ declare function $j(selector: any): any;
         '../css/engine.css',
         '../css/jstree-custom.min.css', //treejs module
         '../../../node_modules/ng2-dnd/bundles/style.css'
-
     ],
     viewProviders: [MatIconRegistry],
     providers: [
@@ -30,6 +30,7 @@ declare function $j(selector: any): any;
     ],
 })
 export class AppComponent {
+
     constructor(iconReg: MatIconRegistry, sanitizer: DomSanitizer) {
 
         iconReg.addSvgIcon('maarchLogo', sanitizer.bypassSecurityTrustResourceUrl('static.php?filename=logo_white.svg')).addSvgIcon('maarchLogoOnly', sanitizer.bypassSecurityTrustResourceUrl('img/logo_only_white.svg'));

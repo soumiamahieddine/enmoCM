@@ -420,7 +420,6 @@ if ($mode == 'add') {
                 //Get data
                 $id = $attachment_files[$i]['id'];
                 $isVersion = $attachment_files[$i]['is_version'];
-                $id_converted = $attachment_files[$i]['converted_pdf'];
                 $description = $attachment_files[$i]['label'];
                 if (strlen($description) > 73) {
                     $description = substr($description, 0, 70);
@@ -457,7 +456,7 @@ if ($mode == 'add') {
                 }
                 $content .= '/></th>';
 
-                if (!$id_converted) {
+                if (!$attachment_files[$i]['pdf_exist']) {
                     $content .= '<td style="cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;"';
                     $content .= ' onclick="clickAttachmentsInput('.$i.')" ';
                 } else {
@@ -465,10 +464,10 @@ if ($mode == 'add') {
                 }
 
                 $content .= '><span style="font-size: 10px;color: rgb(22, 173, 235);">'.$attachment_type.'</span> <span style="font-size: 10px;color: grey;">('.$att_type.' - '.$filesize.')</span><br/><strong>'.$description.'</strong>';
-                if ($id_converted) {
-                    $content .= ' (<input style="margin: 0px" title="envoyer la version PDF" type="checkbox" id="join_attachment_'.$id_converted.'" name="join_attachment[]"'
+                if ($attachment_files[$i]['pdf_exist'] && $format != 'pdf') {
+                    $content .= ' (<input style="margin: 0px" title="envoyer la version PDF" type="checkbox" id="join_attachment_'.$i.'" name="'.$inputName.'"'
                     .' class="check" value="'
-                    .$id_converted.'" />version pdf)';
+                    .$id.'#PDF" />version pdf)';
                 }
                 $content .= '<br/>';
                 if ($chrono != '') {

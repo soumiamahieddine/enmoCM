@@ -51,7 +51,35 @@
                                 <mat-icon style="cursor:pointer;" color="primary" matSuffix class="fa fa-info-circle" matTooltip="{{lang.keywordHelper}}"
                                     (click)="snav2.toggle()"></mat-icon>
                             </mat-form-field>
-                            <div class="row">
+                            <div id="listOrder">
+                                <div class="row" id="itemOrder" *ngFor="let columnOrder of orderColumnsSelected; index as i">
+                                    <div class="col-md-5 col-xs-5 text-center">
+                                        <mat-form-field >
+                                            <mat-select #columnPrio placeholder="{{lang.defaultSort}}" [formControl]="columnsFormControl[i]" name="basket_res_order" required>
+                                                <mat-option #columnTargeted *ngFor="let column of orderColumns" (click)="onOrderChange(column, 'column', i)" [value] ="column">{{langVarName[orderColumns.indexOf(column)]}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-5 col-xs-5 text-center">
+                                        <mat-form-field>
+                                            <mat-select #columnOrder placeholder="{{lang.orderBy}}" [formControl]="orderFormControl[i]" name="order_by_select" required>
+                                                <mat-option #orderTargeted *ngFor="let order of orderByColumns" (click)="onOrderChange(order, 'order', i)" [value]="order">{{langOrderName[orderByColumns.indexOf(order)]}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-1 col-xs-1 text-center">
+                                        <button mat-button type="button" *ngIf="numberOrderColumnsSelected > 0" (click)="removeLine(i)">
+                                            <mat-icon class='fa fa-minus-square fa-2x'></mat-icon>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1 col-xs-1 text-center">
+                                        <button mat-button type="button" *ngIf="numberOrderColumnsSelected < 1" (click)="addLine()">
+                                            <mat-icon class='fa fa-plus-square fa-2x'></mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="row">
                                 <div class="col-md-6 col-xs-6 text-center">
                                     <mat-form-field >
                                         <mat-select #columnPrio placeholder="{{lang.defaultSort}}" [formControl]="columnsFormControl" name="basket_res_order" multiple required>
@@ -78,7 +106,7 @@
                                         </div>
                                     </mat-chip-list>
                                 </div>
-                            </div>               
+                            </div>                -->
                             <div class="col-md-6 col-xs-6 text-center">
                                 <mat-slide-toggle [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.3'}" color="primary" matTooltip="{{lang.isSearchBasket}}" name="isSearchBasket" [(ngModel)]="basket.isSearchBasket">
                                     &nbsp;

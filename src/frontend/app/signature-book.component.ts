@@ -456,7 +456,7 @@ export class SignatureBookComponent implements OnInit {
 
         this.http.put(this.coreUrl + 'rest/signatureBook/' + resId + '/unsign', {'table' : collId})
             .subscribe(() => {
-                this.rightViewerLink = "../../rest/res/" + this.resId + "/attachment/" + resId;
+                this.rightViewerLink = "../../rest/res/" + this.resId + "/attachments/" + resId + "/content";
                 this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                 this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
                 this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;

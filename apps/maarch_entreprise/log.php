@@ -235,7 +235,7 @@ if (!empty($_SESSION['error'])) {
                         exit;
                     }
                 }
-                \Core\Models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
+                \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
 
                 if ($result) {
                     $_SESSION['error'] = '';

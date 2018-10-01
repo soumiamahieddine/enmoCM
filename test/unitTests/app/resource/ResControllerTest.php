@@ -138,6 +138,42 @@ class ResControllerTest extends TestCase
         $this->assertSame('Bad Request', $responseBody->errors);
     }
 
+    public function testGetFileContent()
+    {
+        $resController = new \Resource\controllers\ResController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $resController->getFileContent($request, new \Slim\Http\Response(), ['resId' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(null, $responseBody);
+
+        $response     = $resController->getFileContent($request, new \Slim\Http\Response(), ['resId' => -2]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Document does not exist', $responseBody->errors);
+    }
+
+    public function testGetThumbnailContent()
+    {
+        $resController = new \Resource\controllers\ResController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $resController->getThumbnailContent($request, new \Slim\Http\Response(), ['resId' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(null, $responseBody);
+
+        $response     = $resController->getThumbnailContent($request, new \Slim\Http\Response(), ['resId' => -2]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(null, $responseBody);
+    }
+
     public function testUpdateStatus()
     {
         $resController = new \Resource\controllers\ResController();
@@ -189,7 +225,7 @@ class ResControllerTest extends TestCase
         //  UPDATE STATUS
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        
+
         //ALL OK
         $aArgs = [
                 'externalInfos' => [
@@ -205,11 +241,11 @@ class ResControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
-        
+
         $responseBody = json_decode((string) $response->getBody());
 
         $this->assertSame('success', $responseBody->success);
-        
+
         // EXTERNAL INFOS EMPTY AND RES ID IS NOT INTEGER
         $aArgs = [
             'externalInfos' => [
@@ -226,7 +262,7 @@ class ResControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
-        
+
         $responseBody = json_decode((string) $response->getBody());
 
         $this->assertSame('Bad Request: invalid res_id', $responseBody->errors);
@@ -246,7 +282,7 @@ class ResControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
-        
+
         $responseBody = json_decode((string) $response->getBody());
 
         $this->assertSame(_DOCUMENT_NOT_FOUND, $responseBody->errors);
@@ -266,11 +302,11 @@ class ResControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
-        
+
         $responseBody = json_decode((string) $response->getBody());
 
         $this->assertSame('Bad Request', $responseBody->errors);
-        
+
         //MISSING EXTERNAL INFOS
         $aArgs = [
             'externalInfos' => null,
@@ -280,7 +316,7 @@ class ResControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
-        
+
         $responseBody = json_decode((string) $response->getBody());
 
         $this->assertSame('Bad Request', $responseBody->errors);

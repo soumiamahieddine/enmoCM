@@ -412,7 +412,7 @@ class TemplateController
             }
         }
 
-        $fileNameOnTmp = 'tmp_file_' . $GLOBALS['userId'] . '_' . rand() . '.' . $pathToTemplateInfo['extension'];
+        $fileNameOnTmp = 'tmp_file_' . $aArgs['userId'] . '_' . rand() . '.' . $pathToTemplateInfo['extension'];
         $tmpPath = CoreConfigModel::getTmpPath();
         $myFile = $tmpPath . $fileNameOnTmp;
 
@@ -423,7 +423,6 @@ class TemplateController
 
     private static function getDatas(array $aArgs)
     {
-        //TO DO
         ValidatorModel::notEmpty($aArgs, ['id']);
 
         $res_id = $aArgs['resId'];

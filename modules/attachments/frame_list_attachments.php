@@ -361,13 +361,15 @@ if (isset($_REQUEST['load'])) {
                 if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'status') {
                     $stmt = $db->query("SELECT id, label_status, img_filename FROM status WHERE id = ?", array($attachArr[$i][$j]['value']));
                     $res = $stmt->fetchObject();
+                    $img_class = substr($res->img_filename, 0, 2);
+
                     $attachArr[$i][$j]['value_bis'] = $attachArr[$i][$j]['value'];
                     if ($is_tmp == true) {
                         $attachArr[$i][$j]['value'] = '<span style="color:#135F7F;">'.functions::protect_string_db($res->label_status).'</span>';
                     } else if ($res->id == 'TRA' || $res->id == 'SIGN') {
-                        $attachArr[$i][$j]['value'] = '<span style="color:green;"><i title="'.$res->label_status.'" style="font-size:20px;" class="fa fa-2x '.functions::protect_string_db($res->img_filename).'"></i><br/>'.$res->label_status.'</span>';
+                        $attachArr[$i][$j]['value'] = '<span style="color:green;"><i title="'.$res->label_status.'" style="font-size:20px;" class="'.$img_class.' '.$img_class.'-2x '.functions::protect_string_db($res->img_filename).'"></i><br/>'.$res->label_status.'</span>';
                     } else {
-                        $attachArr[$i][$j]['value'] = '<i title="'.$res->label_status.'" style="font-size:20px;" class="fa fa-2x '.functions::protect_string_db($res->img_filename).'"></i><br/>'.$res->label_status;
+                        $attachArr[$i][$j]['value'] = '<i title="'.$res->label_status.'" style="font-size:20px;" class="'.$img_class.' '.$img_class.'-2x '.functions::protect_string_db($res->img_filename).'"></i><br/>'.$res->label_status;
                     }
                     $attachArr[$i][$j]['status'] = $attachArr[$i][$j]['value'];
                     $attachArr[$i][$j]['label'] = _STATUS;

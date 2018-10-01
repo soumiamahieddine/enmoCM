@@ -1143,6 +1143,12 @@ INSERT INTO status_images (image_name) VALUES ('fm-letter-outgoing');
 INSERT INTO status_images (image_name) VALUES ('fm-letter-internal');
 INSERT INTO status_images (image_name) VALUES ('fm-file-fingerprint');
 INSERT INTO status_images (image_name) VALUES ('fm-classification-plan-l1');
+INSERT INTO status_images (image_name) VALUES ('fa-question');
+INSERT INTO status_images (image_name) VALUES ('fa-check');
+INSERT INTO status_images (image_name) VALUES ('fa-pause');
+INSERT INTO status_images (image_name) VALUES ('fa-mail-bulk');
+
+
 ------------
 --PARAMETERS
 ------------
