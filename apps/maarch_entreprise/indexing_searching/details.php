@@ -760,7 +760,7 @@ if ($stmt->rowCount() == 0) {
                     }
 
                     echo '<div name="to" id="to" class="multicontactInput">';
-
+                    echo '<div style="max-height: 350px;overflow-x: hidden;overflow-y: auto">';
                     $nbContacts = count($data[$key]['multi']['contact_id']);
                     if ($nbContacts > 0) {
                         for ($icontacts = 0; $icontacts < $nbContacts; ++$icontacts) {
@@ -784,6 +784,7 @@ if ($stmt->rowCount() == 0) {
                             }
                         }
                     }
+                    echo '</div>';
                     echo '</div>';
                     echo "<input type='hidden' name='contactid' id='contactid' value='' title='' alt='' size='40' />";
                     echo "<input type='hidden' name='addressid' id='addressid' value='' title='' alt='' size='40' />";

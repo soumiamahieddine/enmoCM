@@ -3521,10 +3521,8 @@ table.listing  {
     margin-top: 2px;
     padding: 2px 2px;
     width: 225px;
-    min-height: 13px;   
-    height: 150px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    min-height: 13px;
+    overflow: hidden;
 }
 
 .largerList{
