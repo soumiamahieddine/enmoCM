@@ -48,11 +48,7 @@ export class BasketAdministrationComponent implements OnInit {
     orderByColumns          = ['asc', 'desc'];
     langVarName             = [this.lang.chrono, this.lang.creationDate, this.lang.processLimitDate, this.lang.id, this.lang.priority];
     langOrderName           = [this.lang.ascending, this.lang.descending];
-    orderColumnsSelected    : string[] = [];
-    selection               : string[] = [];
-    orderBy                 : string[] = [];
-    columnsFormControl      : FormControl[] = [];
-    orderFormControl        : FormControl[] = [];
+    orderColumnsSelected    : any[] = [{"column":"res_id", "order":"asc"}];
     dataSource              : any;
 
 
@@ -90,6 +86,7 @@ export class BasketAdministrationComponent implements OnInit {
                 this.basketIdAvailable = false;
                 this.loading = false;
             } else {
+                this.orderColumnsSelected = [];
                 window['MainHeaderComponent'].refreshTitle(this.lang.basketModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
@@ -108,24 +105,16 @@ export class BasketAdministrationComponent implements OnInit {
                         this.basket.flagNotif = data.basket.flag_notif == "Y";
                         if (this.basket.basket_res_order == '' || this.basket.basket_res_order == null) {
                             this.orderColumnsSelected = [];
-                            this.orderBy = [];
                         }
                         else {
-                            var orderByColumnsSelected = this.basket.basket_res_order.split(', ');
-                            for (let i = 0; i < orderByColumnsSelected.length; i++) {
-                                var value = orderByColumnsSelected[i].split(' ');
-                                this.orderColumnsSelected[i] = value[0];
-                                if (value[1]) {
-                                    this.orderBy[i] = value[1];
-                                } else {
-                                    this.orderBy[i] = 'desc';
+                            var tmpOrderByColumnsSelected = this.basket.basket_res_order.split(', ');
+                            for (let i = 0; i < tmpOrderByColumnsSelected.length; i++) {
+                                var value = tmpOrderByColumnsSelected[i].split(' ');
+                                if (!value[1]) {
+                                    value[1] = 'desc';
                                 }
-                                this.columnsFormControl.push(new FormControl());
-                                this.orderFormControl.push(new FormControl());
-                                this.columnsFormControl[i].setValue(this.orderColumnsSelected[i]);
-                                this.orderFormControl[i].setValue(this.orderBy[i]);
+                                this.orderColumnsSelected.push({"column":value[0],"order":value[1]});
                             }
-                            this.selection = this.orderColumnsSelected;
                         }
                         this.numberOrderColumnsSelected = this.orderColumnsSelected.length - 1;
                         
@@ -199,10 +188,11 @@ export class BasketAdministrationComponent implements OnInit {
 
     onSubmit() {
         if (this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0) {
+            let tmpBasketResOrder = [];
             for (let i = 0; i < this.orderColumnsSelected.length; i++) {
-                this.orderColumnsSelected[i] = this.orderColumnsSelected[i] + ' ' + this.orderBy[i];
+                tmpBasketResOrder[i] = this.orderColumnsSelected[i].column + ' ' + this.orderColumnsSelected[i].order;
             }
-            this.basket.basket_res_order = this.orderColumnsSelected.join(', ')
+            this.basket.basket_res_order = tmpBasketResOrder.join(', ')
         } else {
             this.basket.basket_res_order = '';
         }        
@@ -225,32 +215,12 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    onOrderChange(column: any, form: string, index: number) {
-        if (form == 'column') {
-            if (this.orderColumnsSelected[index]) {
-                this.orderColumnsSelected[index] = column;
-            } else {
-            this.orderColumnsSelected.push(column);
-            }
-        } else {
-            if (this.orderBy[index]) {
-                this.orderBy[index] = column;
-            } else {
-                this.orderBy.push(column);
-            }
-        }
-    }
-
     addLine() {
-        this.orderColumnsSelected.push('coucou');
-        this.orderBy.push('coucou');
-        this.numberOrderColumnsSelected += 1;
+        this.orderColumnsSelected.push(JSON.parse(JSON.stringify(this.orderColumnsSelected[0])));
     }
 
     removeLine(index: number) {
         this.orderColumnsSelected.splice(index, 1);
-        this.orderBy.splice(index, 1);
-        this.numberOrderColumnsSelected -= 1;
     }
 
     initAction(groupIndex: number) {
