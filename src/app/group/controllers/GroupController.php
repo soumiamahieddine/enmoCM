@@ -137,7 +137,13 @@ class GroupController
 
         $group['security']          = GroupModel::getSecurityByGroupId(['groupId' => $group['group_id']]);
         $group['services']          = GroupModel::getAllServicesByGroupId(['groupId' => $group['group_id']]);
-        $group['users']             = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname']]);
+        $tmpUsers                   = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
+        $group['users']             = [];
+        foreach ($tmpUsers as $tmpUser) {
+            if ($tmpUser['status'] != 'DEL') {
+                $group['users'][] = array_slice($tmpUser, 0, 4, true);
+            }
+        }
         $group['baskets']           = GroupBasketModel::getBasketsByGroupId(['select' => ['baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc'], 'groupId' => $group['group_id']]);
         $group['canAdminUsers']     = ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
         $group['canAdminBaskets']   = ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin']);
