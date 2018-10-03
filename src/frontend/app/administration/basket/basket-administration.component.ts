@@ -473,7 +473,6 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
             });
         });
 
-
         $j('#jstree').jstree({
             "checkbox": {
                 "three_state": false //no cascade selection
@@ -489,14 +488,14 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
         });
         $j('#jstree')
             // listen for event
-            .on('select_node.jstree', (data: any) => {
+            .on('select_node.jstree', (e: any, data: any) => {
                 if (data.node.original.keyword) {
                     this.data.action.redirects.push({ action_id: this.data.action.id, entity_id: '', keyword: data.node.id, redirect_mode: 'ENTITY' })
                 } else {
                     this.data.action.redirects.push({ action_id: this.data.action.id, entity_id: data.node.id, keyword: '', redirect_mode: 'ENTITY' })
                 }
 
-            }).on('deselect_node.jstree', (data: any) => {
+            }).on('deselect_node.jstree', (e: any, data: any) => {
                 this.data.action.redirects.forEach((redirect: any) => {
                     if (data.node.original.keyword) {
                         if (redirect.keyword == data.node.original.keyword) {
@@ -550,14 +549,14 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
         });
         $j('#jstree2')
             // listen for event
-            .on('select_node.jstree', (data: any) => {
+            .on('select_node.jstree', (e: any, data: any) => {
                 if (data.node.original.keyword) {
                     this.data.action.redirects.push({ action_id: this.data.action.id, entity_id: '', keyword: data.node.id, redirect_mode: 'USERS' })
                 } else {
                     this.data.action.redirects.push({ action_id: this.data.action.id, entity_id: data.node.id, keyword: '', redirect_mode: 'USERS' })
                 }
 
-            }).on('deselect_node.jstree', (data: any) => {
+            }).on('deselect_node.jstree', (e: any, data: any) => {
                 this.data.action.redirects.forEach((redirect: any) => {
                     if (data.node.original.keyword) {
                         if (redirect.keyword == data.node.original.keyword) {

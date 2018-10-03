@@ -65,7 +65,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     }
     $values_str = '';
     if (empty($_SESSION['stockCheckbox'])) {
-        for ($i=0; $i < count($values);$i++) {
+        for ($i=0; $i<count($values); $i++) {
             if (_ID_TO_DISPLAY == 'res_id') {
                 $values_str .= $values[$i].', ';
             } elseif (_ID_TO_DISPLAY == 'chrono_number') {
@@ -75,7 +75,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             }
         }
     } else {
-        for ($i=0; $i < count($_SESSION['stockCheckbox']);$i++) {
+        for ($i=0; $i<count($_SESSION['stockCheckbox']); $i++) {
             if (_ID_TO_DISPLAY == 'res_id') {
                 $values_str .= $_SESSION['stockCheckbox'][$i].', ';
             } elseif (_ID_TO_DISPLAY == 'chrono_number') {
@@ -105,7 +105,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $entities            = $entity_ctrl->getAllEntities();
         $countEntities       = count($entities);
 
-        for ($cptAllEnt = 0;$cptAllEnt<$countEntities;$cptAllEnt++) {
+        for ($cptAllEnt=0; $cptAllEnt<$countEntities; $cptAllEnt++) {
             if (!is_integer(array_search($entities[$cptAllEnt]->__get('entity_id'), $servicesCompare))) {
                 array_push($EntitiesIdExclusion, $entities[$cptAllEnt]->__get('entity_id'));
             }
@@ -145,7 +145,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
                     . '&module=templates&page=templates_ajax_content_for_notes\');document.getElementById(\'notes\').focus();">';
         $frm_str .= '<option value="">' . _SELECT_NOTE_TEMPLATE . '</option>';
-        for ($i=0;$i<count($templates);$i++) {
+        for ($i=0; $i<count($templates); $i++) {
             if ($templates[$i]['TYPE'] == 'TXT' && ($templates[$i]['TARGET'] == 'notes' || $templates[$i]['TARGET'] == '')) {
                 $frm_str .= '<option value="';
                 $frm_str .= $templates[$i]['ID'];
@@ -167,7 +167,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $frm_str .= '<select name="department" id="department" data-placeholder="'._CHOOSE_DEPARTMENT.'" onchange="change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\', \'diff_list_div_redirect\', \'redirect\');" style="float:left;">';
         $frm_str .='<option value=""></option>';
         $countAllEntities = count($allEntitiesTree);
-        for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
+        for ($cptEntities = 0; $cptEntities<$countAllEntities; $cptEntities++) {
             if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
                 $frm_str .= '<option data-object_type="entity_id" value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
                 if ($allEntitiesTree[$cptEntities]['ID'] == $_SESSION['user']['primaryentity']['id']) {
@@ -406,10 +406,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $stmt = $db->query("update ".$table." set destination = ? where res_id = ?", array($entityId, $res_id));
         }
 
-        // Si on redirige en masse plusieurs courriers, on récupère automatiquement les roles persistent
-        if (count($arr_id) > 1) {
-            $new_difflist = $diffList->list_difflist_roles_to_keep($res_id, $coll_id, $new_difflist['difflist_type'], $new_difflist);
-        }
+        $new_difflist = $diffList->list_difflist_roles_to_keep($res_id, $coll_id, $new_difflist['difflist_type'], $new_difflist);
         
         // If feature activated, put old dest in copy
         if ($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
@@ -427,7 +424,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 // try to find old dest in copies already
                 $found = false;
                 if (isset($new_difflist['copy']['users'])) {
-                    for ($ci=0; $ci<count($new_difflist['copy']['users']);$ci++) {
+                    for ($ci=0; $ci<count($new_difflist['copy']['users']); $ci++) {
                     
                         // If in copies before, add number of views as dest to number of views as copy
                         if ($new_difflist['copy']['users'][$ci]['user_id'] == $old_dest->item_id) {
@@ -440,7 +437,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 
                     //re-built session without dest in copy
                     $tab=array();
-                    for ($ci=0; $ci<count($new_difflist['copy']['users']);$ci++) {
+                    for ($ci=0; $ci<count($new_difflist['copy']['users']); $ci++) {
                         if ($new_difflist['copy']['users'][$ci]['user_id'] != $new_dest) {
                             array_push(
                             $tab,
