@@ -85,6 +85,145 @@ class ContactControllerTest extends TestCase
         $this->assertSame('Y', $contact['enabled']);
     }
 
+    public function testCreateAddress()
+    {
+        $contactController = new \Contact\controllers\ContactController();
+
+        //  CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            "contactPurposeId"  => 2,
+            "email"             => "office@group.com",
+            "phone"             => "+33120212223",
+            "addressNum"        => "14",
+            "addressStreet"     => "Avenue du Pérou",
+            "addressZip"        => "75016",
+            "addressTown"       => "Paris",
+            "addressCountry"    => "France"
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $contactController->createAddress($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('int', $responseBody->addressId);
+
+        $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => $responseBody->addressId]);
+
+        $this->assertInternalType('array', $contact);
+        $this->assertSame($responseBody->addressId, $contact['id']);
+        $this->assertSame(self::$id, $contact['contact_id']);
+        $this->assertSame(2, $contact['contact_purpose_id']);
+        $this->assertSame(null, $contact['firstname']);
+        $this->assertSame(null, $contact['lastname']);
+        $this->assertSame('office@group.com', $contact['email']);
+        $this->assertSame('14', $contact['address_num']);
+        $this->assertSame('Avenue du Pérou', $contact['address_street']);
+        $this->assertSame('75016', $contact['address_postal_code']);
+        $this->assertSame('Paris', $contact['address_town']);
+        $this->assertSame('France', $contact['address_country']);
+        $this->assertSame('+33120212223', $contact['phone']);
+        $this->assertSame('superadmin', $contact['user_id']);
+        $this->assertSame('SUPERADMIN', $contact['entity_id']);
+        $this->assertSame('Y', $contact['enabled']);
+
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'contact_addresses',
+            'where' => ['id = ?'],
+            'data'  => [$responseBody->addressId]
+        ]);
+
+        //  READ
+        $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => $responseBody->addressId]);
+        $this->assertInternalType('array', $contact);
+        $this->assertEmpty($contact);
+    }
+
+    public function testUpdate()
+    {
+        $contactController = new \Contact\controllers\ContactController();
+
+        //  CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'firstname'         => 'Guy',
+            'lastname'          => 'Gardner',
+            'title'             => 'title2',
+            'function'          => '2nd member',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $contactController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        //  READ
+        $contact = \Contact\models\ContactModel::getById(['id' => self::$id]);
+
+        $this->assertInternalType('array', $contact);
+        $this->assertSame(self::$id, $contact['contact_id']);
+        $this->assertSame(106, $contact['contact_type']);
+        $this->assertSame('Green Lantern Corps', $contact['society']);
+        $this->assertSame('GLC', $contact['society_short']);
+        $this->assertSame('Guy', $contact['firstname']);
+        $this->assertSame('Gardner', $contact['lastname']);
+        $this->assertSame('title2', $contact['title']);
+        $this->assertSame('2nd member', $contact['function']);
+        $this->assertSame('superadmin', $contact['user_id']);
+        $this->assertSame('SUPERADMIN', $contact['entity_id']);
+        $this->assertSame('Y', $contact['enabled']);
+    }
+
+    public function testUpdateAddress()
+    {
+        $contactController = new \Contact\controllers\ContactController();
+
+        //  CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            "contact_purpose_id"    => 2,
+            "email"                 => "updatedemail@mail.com",
+            "phone"                 => "+66",
+            "address_num"           => "23",
+            "address_street"        => "Rue des GL",
+            "address_postal_code"   => "75000",
+            "address_town"          => "Paris",
+            "address_country"       => "France"
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $contactController->updateAddress($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'addressId' => self::$addressId]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => self::$addressId]);
+
+        $this->assertInternalType('array', $contact);
+        $this->assertSame(self::$addressId, $contact['id']);
+        $this->assertSame(self::$id, $contact['contact_id']);
+        $this->assertSame(2, $contact['contact_purpose_id']);
+        $this->assertSame(null, $contact['firstname']);
+        $this->assertSame(null, $contact['lastname']);
+        $this->assertSame('updatedemail@mail.com', $contact['email']);
+        $this->assertSame('23', $contact['address_num']);
+        $this->assertSame('Rue des GL', $contact['address_street']);
+        $this->assertSame('75000', $contact['address_postal_code']);
+        $this->assertSame('Paris', $contact['address_town']);
+        $this->assertSame('France', $contact['address_country']);
+        $this->assertSame('+66', $contact['phone']);
+        $this->assertSame('superadmin', $contact['user_id']);
+        $this->assertSame('SUPERADMIN', $contact['entity_id']);
+        $this->assertSame('Y', $contact['enabled']);
+    }
+
     public function testGetContactCommunicationByContactId()
     {
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
