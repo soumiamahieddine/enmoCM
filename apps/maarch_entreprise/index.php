@@ -1,146 +1,47 @@
 <?php
 /**
- * Copyright Maarch since 2008 under licence GPLv3.
- * See LICENCE.txt file at the root folder for more details.
- * This file is part of Maarch software.
- *
- */
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 
-/****************************************************************************/
-/*                                                                          */
-/*                                                                          */
-/*               THIS PAGE CAN NOT BE OVERWRITTEN IN A CUSTOM               */
-/*                                                                          */
-/*                                                                          */
-/* **************************************************************************/
-
-/**
-* @brief Maarch index page : every php page is loaded with this page
-*
-* @file
-* @author <dev@maarch.org>
+* @brief   index (THIS PAGE CAN NOT BE OVERWRITTEN IN A CUSTOM)
+* @author  dev <dev@maarch.org>
 * @ingroup apps
 */
-include_once '../../core/class/class_functions.php';
-include_once '../../core/class/class_db_pdo.php';
-include_once '../../core/init.php';
 
-if ($_SESSION['config']['usePHPIDS'] == 'true') {
-    include 'apps/maarch_entreprise/phpids_control.php';
-}
-
-if (isset($_SESSION['config']['corepath'])) {
-    require_once 'core/class/class_functions.php';
-    require_once 'core/class/class_db.php';
-    require_once 'core/class/class_core_tools.php';
-    $core = new core_tools();
-    if (! isset($_SESSION['custom_override_id'])
-        || empty($_SESSION['custom_override_id'])
-    ) {
-        $_SESSION['custom_override_id'] = $core->get_custom_id();
-        if (! empty($_SESSION['custom_override_id'])) {
-            $path = $_SESSION['config']['corepath'] . 'custom/'
-                  . $_SESSION['custom_override_id'] . '/';
-            set_include_path(
-                $path . '/' . $_SESSION['config']['corepath']
-            );
-        }
-    }
-} else {
-    require_once '../../core/class/class_functions.php';
-    require_once '../../core/class/class_db.php';
-    require_once '../../core/class/class_core_tools.php';
-    $core = new core_tools();
-    $_SESSION['custom_override_id'] = $core->get_custom_id();
-    chdir('../..');
-    if (! empty($_SESSION['custom_override_id'])) {
-        $path = $_SESSION['config']['corepath'] . 'custom/'
-              . $_SESSION['custom_override_id'] . '/';
-        set_include_path(
-            $path . '/' . $_SESSION['config']['corepath']
-        );
-    }
-}
-
-$core->load_lang();
-
+/**
+ * [PROCESS REQUEST]
+ */
 if (isset($_REQUEST['dir']) && !empty($_REQUEST['dir'])) {
     $_REQUEST['dir'] = str_replace("\\", "", $_REQUEST['dir']);
     $_REQUEST['dir'] = str_replace("/", "", $_REQUEST['dir']);
     $_REQUEST['dir'] = str_replace("..", "", $_REQUEST['dir']);
 }
 
-include 'apps/maarch_entreprise/tools/maarchIVS/MaarchIVS.php';
-$started = MaarchIVS::start(__DIR__ . '/xml/IVS/requests_definitions.xml', 'xml');
-$valid = MaarchIVS::run('silent');
-if (!$valid) {
-    $validOutpout = MaarchIVS::debug();
-    $cptValid = count($validOutpout['validationErrors']);
-    $error = '';
-    for ($cptV=0;$cptV<=count($cptValid);$cptV++) {
-        $message = $validOutpout['validationErrors'][$cptV]->message;
-        if ($message == "Length id below the minimal length") {
-            $message = _IVS_LENGTH_ID_BELOW_MIN_LENGTH;
-        } elseif ($message == "Length exceeds the maximal length") {
-            $message = _IVS_LENGTH_EXCEEDS_MAX_LENGTH;
-        } elseif ($message == "Length is not allowed") {
-            $message = _IVS_LENGTH_NOT_ALLOWED;
-        } elseif ($message == "Value is not allowed") {
-            $message = _IVS_VALUE_NOT_ALLOWED;
-        } elseif ($message == "Format is not allowed") {
-            $message = _IVS_FORMAT_NOT_ALLOWED;
-        } elseif ($message == "Value is below the minimal value") {
-            $message = _IVS_VALUE_BELOW_MIN_VALUE;
-        } elseif ($message == "Value exceeds the maximal value") {
-            $message = _IVS_LENGTH_EXCEEDS_MAX_LENGTH;
-        } elseif ($message == "Too many digits") {
-            $message = _IVS_TOO_MANY_DIGITS;
-        } elseif ($message == "Too many decimal digits") {
-            $message = _IVS_TOO_MANY_DECIMAL_DIGITS;
-        }
-        $error .= $message . PHP_EOL;
-        $error .= $validOutpout['validationErrors'][$cptV]->parameter . PHP_EOL;
-        $error .= $validOutpout['validationErrors'][$cptV]->value . PHP_EOL;
-    }
-    foreach ($_REQUEST as $name => $value) {
-        if (is_string($value) && strpos($value, "<") !== false) {
-            $value = preg_replace('/(<\/?script[^>]*>|<\?php|<\?[\s|\n|\r])/i', "", $value);
-            $_REQUEST[$name] = $value;
-            if (isset($_GET[$name]) && $_GET[$name] <> '') {
-                $_GET[$name] = $value;
-            }
-            if (isset($_POST[$name]) && $_POST[$name] <> '') {
-                $_POST[$name] = $value;
-            }
-        }
-        $value = str_replace("\\", "", $value);
-        $value = str_replace("/", "", $value);
-        $value = str_replace("..", "", $value);
-        $_REQUEST[$name] = $value;
-        if (isset($_GET[$name]) && $_GET[$name] <> '') {
-            $_GET[$name] = $value;
-        }
-        if (isset($_POST[$name]) && $_POST[$name] <> '') {
-            $_POST[$name] = $value;
-        }
-    }
-    //process error for ajax request
-    if (
-        array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER)
-        && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
-    ) {
-        echo $error;
-        exit;
-    } else {
-        //process error for standard request
-        $_SESSION['error'] = $error;
-    }
-} else {
-    //Request is valid
+//Ozwillo
+if (!empty($_REQUEST['code']) && !empty($_REQUEST['state'])) {
+    $_SESSION['ozwillo']['code'] = $_REQUEST['code'];
+    $_SESSION['ozwillo']['state'] = $_REQUEST['state'];
 }
 
-if (
-    isset($_SESSION['user']['UserId'])
+//reset orders in previous basket list
+if (empty($_SESSION['current_basket'])) {
+    $_SESSION['save_list']['start'] = "";
+    $_SESSION['save_list']['lines'] = "";
+    $_SESSION['save_list']['order'] = "";
+    $_SESSION['save_list']['order_field'] = "";
+    $_SESSION['save_list']['template'] = "";
+}
+
+// Useless ???
+if (isset($_GET['show'])) {
+    $show = $_GET['show'];
+} else {
+    $show = 'true';
+}
+
+// Useless ???
+if (isset($_SESSION['user']['UserId'])
     && isset($_GET['page'])
     && !empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login'
     && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout'
@@ -153,246 +54,335 @@ if (
     );
 }
 
-//Ozwillo
-if (!empty($_REQUEST['code']) && !empty($_REQUEST['state'])) {
-    $_SESSION['ozwillo']['code'] = $_REQUEST['code'];
-    $_SESSION['ozwillo']['state'] = $_REQUEST['state'];
-}
+/**
+ * [Includes]
+ */
+if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
+    //V1
+    include_once '../../core/class/class_functions.php';
+    include_once '../../core/class/class_db_pdo.php';
+    include_once '../../core/init.php';
+    include 'apps/maarch_entreprise/tools/maarchIVS/MaarchIVS.php';
 
-if (
-    !isset($_SESSION['user']['UserId'])
-    && $_REQUEST['page'] <> 'login'
-    && $_REQUEST['page'] <> 'log'
-) {
-    $_SESSION['HTTP_REFERER'] = Url::requestUri();
-    if (trim($_SERVER['argv'][0]) <> '') {
-        header('location: reopen.php?' . $_SERVER['argv'][0]);
-    } else {
-        header('location: reopen.php');
+    if ($_SESSION['config']['usePHPIDS'] == 'true') {
+        include 'apps/maarch_entreprise/phpids_control.php';
     }
-    exit();
-}
 
-if (isset($_REQUEST['display'])) {
-    $core->insert_page();
-    exit();
-}
-
-if (empty($_REQUEST['triggerAngular'])) {
-    if ($_REQUEST['page'] != 'login' && $_REQUEST['page'] != 'log' && $_REQUEST['page'] != 'logout' && !empty($_SESSION['user']['UserId'])) {
-        $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
-
-        if ($user['status'] == 'ABS') {
-            header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=activateUser');
-            exit();
+    //SET custom path
+    if (isset($_SESSION['config']['corepath'])) {
+        require_once 'core/class/class_db.php';
+        require_once 'core/class/class_core_tools.php';
+        $core = new core_tools();
+        if (! isset($_SESSION['custom_override_id'])
+            || empty($_SESSION['custom_override_id'])
+        ) {
+            $_SESSION['custom_override_id'] = $core->get_custom_id();
+            if (! empty($_SESSION['custom_override_id'])) {
+                $path = $_SESSION['config']['corepath'] . 'custom/'
+                      . $_SESSION['custom_override_id'] . '/';
+                set_include_path(
+                    $path . '/' . $_SESSION['config']['corepath']
+                );
+            }
         }
+    } else {
+        require_once '../../core/class/class_db.php';
+        require_once '../../core/class/class_core_tools.php';
+        $core = new core_tools();
+        $_SESSION['custom_override_id'] = $core->get_custom_id();
+        chdir('../..');
+        if (! empty($_SESSION['custom_override_id'])) {
+            $path = $_SESSION['config']['corepath'] . 'custom/'
+                  . $_SESSION['custom_override_id'] . '/';
+            set_include_path(
+                $path . '/' . $_SESSION['config']['corepath']
+            );
+        }
+    }
+} else {
+    //V2
+    require_once '../../vendor/autoload.php';
+}
 
-        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
-        if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
-            $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
-            if ($user['change_password'] == 'Y') {
-                header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
-                exit();
-            } elseif (!empty($passwordRules['renewal'])) {
-                $currentDate = new \DateTime();
-                $lastModificationDate = new \DateTime($user['password_modification_date']);
-                $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
-
-                if ($currentDate > $lastModificationDate) {
-                    header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
-                    exit();
+if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
+    //V1
+    $started = MaarchIVS::start(__DIR__ . '/xml/IVS/requests_definitions.xml', 'xml');
+    $valid = MaarchIVS::run('silent');
+    if (!$valid) {
+        $validOutpout = MaarchIVS::debug();
+        $cptValid = count($validOutpout['validationErrors']);
+        $error = '';
+        for ($cptV=0; $cptV<=count($cptValid); $cptV++) {
+            $message = $validOutpout['validationErrors'][$cptV]->message;
+            if ($message == "Length id below the minimal length") {
+                $message = _IVS_LENGTH_ID_BELOW_MIN_LENGTH;
+            } elseif ($message == "Length exceeds the maximal length") {
+                $message = _IVS_LENGTH_EXCEEDS_MAX_LENGTH;
+            } elseif ($message == "Length is not allowed") {
+                $message = _IVS_LENGTH_NOT_ALLOWED;
+            } elseif ($message == "Value is not allowed") {
+                $message = _IVS_VALUE_NOT_ALLOWED;
+            } elseif ($message == "Format is not allowed") {
+                $message = _IVS_FORMAT_NOT_ALLOWED;
+            } elseif ($message == "Value is below the minimal value") {
+                $message = _IVS_VALUE_BELOW_MIN_VALUE;
+            } elseif ($message == "Value exceeds the maximal value") {
+                $message = _IVS_LENGTH_EXCEEDS_MAX_LENGTH;
+            } elseif ($message == "Too many digits") {
+                $message = _IVS_TOO_MANY_DIGITS;
+            } elseif ($message == "Too many decimal digits") {
+                $message = _IVS_TOO_MANY_DECIMAL_DIGITS;
+            }
+            $error .= $message . PHP_EOL;
+            $error .= $validOutpout['validationErrors'][$cptV]->parameter . PHP_EOL;
+            $error .= $validOutpout['validationErrors'][$cptV]->value . PHP_EOL;
+        }
+        foreach ($_REQUEST as $name => $value) {
+            if (is_string($value) && strpos($value, "<") !== false) {
+                $value = preg_replace('/(<\/?script[^>]*>|<\?php|<\?[\s|\n|\r])/i', "", $value);
+                $_REQUEST[$name] = $value;
+                if (isset($_GET[$name]) && $_GET[$name] <> '') {
+                    $_GET[$name] = $value;
                 }
+                if (isset($_POST[$name]) && $_POST[$name] <> '') {
+                    $_POST[$name] = $value;
+                }
+            }
+            $value = str_replace("\\", "", $value);
+            $value = str_replace("/", "", $value);
+            $value = str_replace("..", "", $value);
+            $_REQUEST[$name] = $value;
+            if (isset($_GET[$name]) && $_GET[$name] <> '') {
+                $_GET[$name] = $value;
+            }
+            if (isset($_POST[$name]) && $_POST[$name] <> '') {
+                $_POST[$name] = $value;
+            }
+        }
+        //process error for ajax request
+        if (array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER)
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+        ) {
+            echo $error;
+            exit;
+        } else {
+            //process error for standard request
+            $_SESSION['error'] = $error;
+        }
+    }
+    if (!isset($_SESSION['user']['UserId'])
+        && $_REQUEST['page'] <> 'login'
+        && $_REQUEST['page'] <> 'log'
+    ) {
+        $_SESSION['HTTP_REFERER'] = Url::requestUri();
+        if (trim($_SERVER['argv'][0]) <> '') {
+            header('location: reopen.php?' . $_SERVER['argv'][0]);
+        } else {
+            header('location: reopen.php');
+        }
+        exit();
+    }
+
+    //INSERT PART OF PAGE
+    if (isset($_REQUEST['display'])) {
+        $core->insert_page();
+        exit();
+    } else {
+        // RESET SESSION TIME
+        ?>
+        <script>
+            var element = document;
+            element.addEventListener('click', function() {
+                window.clearTimeout(window.chronoExpiration);
+                window.chronoExpiration=window.setTimeout('redirect_to_url(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true\')', '<?php echo $_SESSION['config']['cookietime']; ?>'*60*1000);
+            });
+        </script>
+        <?php
+    }
+
+    //DISPLAY FULL PAGE
+    $core->start_page_stat();
+    $core->configPosition();
+    if (isset($_SESSION['HTTP_REFERER'])) {
+        $url = $_SESSION['HTTP_REFERER'];
+        unset($_SESSION['HTTP_REFERER']);
+        header('location: '.$url);
+    }
+
+    $core->load_lang();
+    $core->load_html();
+    $core->load_header();
+    $time = $core->get_session_time_expire();
+
+    /**
+     * [New Authentication System]
+     */
+    $cookie = \SrcCore\models\AuthenticationModel::getCookieAuth();
+    if (!empty($cookie) && \SrcCore\models\AuthenticationModel::cookieAuthentication($cookie)) {
+        \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
+    } else {
+        header('location: index.php?display=true&page=logout&logout=true');
+    }
+    if (isset($_GET['body_loaded'])) {
+        $urlLogout = $_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&logout=true';
+        echo '<body style="background:#f2f2f2;" onload="session_expirate(\''.$time.'\',\''.$urlLogout.'\');" id="maarch_body">';
+        echo "<div id='maarch_content' style='display:block;'>";
+    } else {
+        echo '<body style="background: url(\'static.php?filename=loading_big.gif\') no-repeat fixed center;" onload="$j(\'#maarch_body\').css(\'background\',\'f2f2f2\');$j(\'#maarch_body\').css(\'backgroundImage\',\'\');$j(\'#maarch_body\').css(\'backgroundUrl\', \'\');$j(\'#maarch_content\').css(\'display\',\'block\');session_expirate(\''.$time.'\',\''.$urlLogout.'\');" id="maarch_body">';
+        echo "<div id='maarch_content' style='display:none;'>";
+    }
+
+    //GET COOKIE CLIENT SIDE
+    if (empty($_SESSION['clientSideCookies'])) { ?>
+        <script type="text/javascript">
+            var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"]; ?>' + 'index.php?display=true&page=setProxyCookies';
+            $j.ajax(
+            {
+                url: path_manage_script,
+                type:'POST',
+                dataType:'json',
+                data: {
+                    cookies : document.cookie
+                },
+                success: function(answer)
+                {
+
+                }
+            });
+        </script>
+    <?php
+    }
+
+    $path = $_SESSION['config']['corepath'] . 'custom/'
+      . $_SESSION['custom_override_id'] . '/apps/maarch_entreprise/template/header.html';
+
+    //Display header
+    if (file_exists($path)) {
+        include_once('custom/' . $_SESSION['custom_override_id']
+            . '/apps/maarch_entreprise/template/header.html');
+    } else {
+        include_once('apps/maarch_entreprise/template/header.html');
+    }
+
+    echo '<div id="container">';
+    echo '<div id="content">';
+    echo '<div class="error" id="main_error" onclick="this.hide();"></div>';
+
+    if (isset($_SESSION['error'])) {
+        echo '<div class="error" id="main_error_popup" onclick="this.hide();">';
+        echo functions::xssafe($_SESSION['error']);
+        echo '</div>';
+    }
+
+    if (isset($_SESSION['info'])) {
+        echo '<div class="info" id="main_info" onclick="this.hide();">';
+        echo functions::xssafe($_SESSION['info']);
+        echo '</div>';
+    }
+
+    if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
+        ?>
+        <script>
+            var main_error = $j('#main_error_popup');
+            if (main_error != null) {
+                main_error.css({"display":"table-cell"})
+                Element.hide.delay(10, 'main_error_popup');
+            }
+        </script>
+    <?php
+    }
+
+    if (isset($_SESSION['info']) && $_SESSION['info'] <> '') {
+        ?>
+        <script>
+            var main_info = $j('#main_info');
+            if (main_info != null) {
+                main_info.css({"display":"table-cell"});
+                Element.hide.delay(10, 'main_info');
+            }
+        </script>
+        <?php
+    }
+    //THESAURUS
+    echo '<div id="return_previsualise_thes" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: fixed; top: 0; left: 0; z-index: 99999; color: #4f4b47; text-shadow: -1px -1px 0px rgba(255,255,255,0.2);background:#FFF18F;border-radius:5px;overflow:auto;">\';<input type="hidden" id="identifierDetailFrame" value="" /></div>';
+    
+    //SECRET CODE
+    echo '<div id="konami" style="position: absolute; display: none"><img src="img/konami.png"></div>';
+
+    $core->insert_page();
+
+    echo '<my-app></my-app>';
+
+    //FOOTER
+    echo '<p id="footer">';
+    if (isset($_SESSION['config']['showfooter']) && $_SESSION['config']['showfooter'] == 'true') {
+        $core->load_footer();
+    }
+    echo '</p>';
+
+    $_SESSION['error'] = '';
+    $_SESSION['info'] = '';
+
+    $core->view_debug();
+
+    echo '</div>';
+    echo '</div>';
+    echo '</body>';
+    echo '</html>';
+    exit();
+} else {
+    //V2
+    ?>
+    <link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" media="screen" />
+    <link rel="stylesheet" href="css/font-awesome-maarch/css/font-maarch.css" media="screen" />
+    <script src='../../node_modules/jquery/dist/jquery.min.js'></script>
+    <script src='../../node_modules/core-js/client/shim.js'></script>
+    <script src='../../node_modules/zone.js/dist/zone.min.js'></script>
+    <script src='../../node_modules/bootstrap/dist/js/bootstrap.min.js'></script>
+    <script src='../../node_modules/chart.js/Chart.min.js'></script>
+    <script src='../../node_modules/tinymce/tinymce.min.js'></script>
+    <script src='../../node_modules/jquery.nicescroll/jquery.nicescroll.min.js'></script>
+    <script src='../../node_modules/tooltipster/dist/js/tooltipster.bundle.min.js'></script>
+    <script src='../../node_modules/jquery-typeahead/dist/jquery.typeahead.min.js'></script> 
+    <script src='../../node_modules/chosen-js/chosen.jquery.min.js'></script>
+    <script src='../../node_modules/jstree-bootstrap-theme/dist/jstree.js'></script>
+    <script src='js/angularFunctions.js'></script>
+    <?php
+    $cookie = \SrcCore\models\AuthenticationModel::getCookieAuth();
+    chdir('../..');
+    $user = \User\models\UserModel::getByUserId(['userId' => $cookie['userId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
+
+    //HTML CONTENT OF ANGULAR
+    echo '<div id="loadingAngularContent" style="color:#666"></div>';
+    echo '<my-app></my-app>';
+
+    if ($user['status'] == 'ABS') {
+        $_REQUEST['triggerAngular'] = 'activateUser';
+    }
+    $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
+    if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
+        $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
+        if ($user['change_password'] == 'Y') {
+            $_REQUEST['triggerAngular'] = 'changePass';
+        } elseif (!empty($passwordRules['renewal'])) {
+            $currentDate = new \DateTime();
+            $lastModificationDate = new \DateTime($user['password_modification_date']);
+            $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
+
+            if ($currentDate > $lastModificationDate) {
+                $_REQUEST['triggerAngular'] = 'changePass';
             }
         }
     }
-}
 
-if (isset($_GET['show'])) {
-    $show = $_GET['show'];    
-} else {
-    $show = 'true';
-}
-
-$core->start_page_stat();
-$core->configPosition();
-if (isset($_SESSION['HTTP_REFERER'])) {
-    $url = $_SESSION['HTTP_REFERER'];
-    unset($_SESSION['HTTP_REFERER']);
-    header('location: '.$url);
-}
-
-$core->load_html();
-$core->load_header();
-$time = $core->get_session_time_expire();
-
-//reset orders in previous basket list
-if (empty($_SESSION['current_basket'])) {
-    $_SESSION['save_list']['start'] = "";
-    $_SESSION['save_list']['lines'] = "";
-    $_SESSION['save_list']['order'] = "";
-    $_SESSION['save_list']['order_field'] = "";
-    $_SESSION['save_list']['template'] = "";
-}
-
-$cookie = \SrcCore\models\AuthenticationModel::getCookieAuth(); // New Authentication System
-if (!empty($cookie) && \SrcCore\models\AuthenticationModel::cookieAuthentication($cookie)) {
-    \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
-} else {
-    header('location: index.php?display=true&page=logout&logout=true');
-}
-
-if (isset($_GET['body_loaded'])) {
-    ?>
-<body style="background:#f2f2f2;" onload="session_expirate(<?php echo $time; ?>, '<?php 
-    echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
-    <div id ="maarch_content" style="display:block;">
-<?php
-
-} else {
-    ?>
-<body style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$j('#maarch_body').css('background','f2f2f2');$j('#maarch_body').css('backgroundImage','');$j('#maarch_body').css('backgroundUrl', '');$j('#maarch_content').css('display','block');session_expirate(<?php echo $time; ?>, '<?php
-    echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
-    <div id ="maarch_content" style="display:none;">
-<?php
-
-}
-    //do it only once
-    if (empty($_SESSION['clientSideCookies'])) {
-        ?>
-        <script type="text/javascript">
-
-                var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"]; ?>' + 'index.php?display=true&page=setProxyCookies';
-
-                $j.ajax(
-                {
-                    url: path_manage_script,
-                    type:'POST',
-                    dataType:'json',
-                    data: {
-                        cookies : document.cookie
-                    },
-                    success: function(answer)
-                    {
-
-                    }
-                });
-        </script>
-        <?php
-
-    }
-
-if (!isset($_REQUEST['display'])) {
-    ?>
-    <script>
-        var element = document;
-        element.addEventListener('click', function() {
-            window.clearTimeout(window.chronoExpiration);
-            window.chronoExpiration=window.setTimeout('redirect_to_url(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true\')', '<?php echo $_SESSION['config']['cookietime']; ?>'*60*1000);
-        });
-    </script>
-        <?php
+    //INIT ANGULAR MODE
     if (!empty($_REQUEST['triggerAngular']) && $_REQUEST['triggerAngular'] == 'changePass') {
         ?><script>triggerAngular('#/password-modification')</script><?php
     } elseif (!empty($_REQUEST['triggerAngular']) && $_REQUEST['triggerAngular'] == 'activateUser') {
         ?><script>triggerAngular('#/activate-user')</script><?php
-    } elseif ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
+    } elseif ($cookie['userId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
         ?><script>triggerAngular('#/administration')</script><?php
     } elseif (!$_REQUEST['page']) {
         ?><script>triggerAngular('#/home')</script><?php
     }
-    ?>
-<?php 
 }
-
-$path = $_SESSION['config']['corepath'] . 'custom/'
-      . $_SESSION['custom_override_id'] . '/apps/maarch_entreprise/template/header.html';
-
-if (file_exists($path)) {
-    include_once('custom/' . $_SESSION['custom_override_id']
-        . '/apps/maarch_entreprise/template/header.html');
-} else {
-    include_once('apps/maarch_entreprise/template/header.html');
-}
-?>
-
-    <div id="container">
-        <div id="content">
-            <div class="error" id="main_error" onclick="this.hide();"></div>
-            <?php
-            if (isset($_SESSION['error'])) {
-                ?>
-                <div class="error" id="main_error_popup" onclick="this.hide();">
-                    <?php
-                    echo functions::xssafe($_SESSION['error']); ?>
-                </div>
-                <?php
-
-            }
-
-            if (isset($_SESSION['info'])) {
-                ?>
-                <div class="info" id="main_info" onclick="this.hide();">
-                    <?php
-                    echo functions::xssafe($_SESSION['info']); ?>
-                </div>
-                <?php
-
-            }
-            ?>
-
-            <?php
-            if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
-                ?>
-                <script>
-                    var main_error = $j('#main_error_popup');
-                    if (main_error != null) {
-                        main_error.css({"display":"table-cell"})
-                        Element.hide.delay(10, 'main_error_popup');
-                    }
-                </script>
-                <?php
-
-            }
-
-            if (isset($_SESSION['info']) && $_SESSION['info'] <> '') {
-                ?>
-                <script>
-                    var main_info = $j('#main_info');
-                    if (main_info != null) {
-                        main_info.css({"display":"table-cell"});
-                        Element.hide.delay(10, 'main_info');
-                    }
-                </script>
-                <?php
-
-            }
-
-            echo '<div id="return_previsualise_thes" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: fixed; top: 0; left: 0; z-index: 99999; color: #4f4b47; text-shadow: -1px -1px 0px rgba(255,255,255,0.2);background:#FFF18F;border-radius:5px;overflow:auto;">\';<input type="hidden" id="identifierDetailFrame" value="" /></div>';
-
-
-            if (empty($_REQUEST['triggerAngular'])) {
-                $core->insert_page();
-            }
-            ?>
-            <div id="loadingContent"></div>
-            <my-app></my-app>
-            <div id="konami" style="position: absolute; display: none"><img src="img/konami.png"></div>
-        </div>
-        <p id="footer">
-            <?php
-            if (isset($_SESSION['config']['showfooter'])
-                && $_SESSION['config']['showfooter'] == 'true'
-            ) {
-                $core->load_footer();
-            }
-            ?>
-        </p>
-        <?php
-        $_SESSION['error'] = '';
-        $_SESSION['info'] = '';
-        $core->view_debug();
-        ?>
-    </div>
-    </div>
-</body>
-</html>

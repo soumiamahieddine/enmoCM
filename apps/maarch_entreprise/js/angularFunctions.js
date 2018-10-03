@@ -1,3 +1,4 @@
+var $j = jQuery.noConflict();
 var angularGlobals = {};
 var alreadyLoaded = false;
 function triggerAngular(locationToGo) {
@@ -8,15 +9,13 @@ function triggerAngular(locationToGo) {
         success: function(answer) {
             angularGlobals = answer;
 
-            if ($j('#inner_content').length > 0) {
-                $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
-            } else {
-                $j('#loadingContent').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
-            }
-
             if (!alreadyLoaded) {
                 var head = document.getElementsByTagName('head')[0];
-
+                if ($j('#inner_content').length > 0) {
+                    $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
+                } else {
+                    $j('#loadingAngularContent').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
+                }
                 answer['scriptsToinject'].forEach(function(element, i) {
                     var script = document.createElement('script');
                     script.type = 'text/javascript';
@@ -115,12 +114,12 @@ var disablePrototypeJS = function (method, pluginsToDisable) {
     });
 };
 
-if (Prototype.BrowserFeatures.ElementExtensions) {
+/*if (Prototype.BrowserFeatures.ElementExtensions) {
     //FIX PROTOTYPE CONFLICT
     var pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover','tab'];
     disablePrototypeJS('show', pluginsToDisable);
     disablePrototypeJS('hide', pluginsToDisable);
-}
+}*/
 
 function setAttachmentInSignatureBook(id, isVersion) {
     $j.ajax({

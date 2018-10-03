@@ -7,8 +7,8 @@
     </h1>
     <span style="flex: 1 1 auto;"></span>
     <search-home></search-home>
-    <button mat-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" style="min-width: unset; margin-left: 10px" matTooltip="{{lang.menu}}">
-        <mat-icon mat-list-icon class="fa fa-th fa-lg" style="color:white; margin:0px 0px -11px 0px;"></mat-icon>
+    <button mat-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" style="min-width:0px;width:65px;height: 40px;margin-left: 10px" matTooltip="{{lang.menu}}">
+        <mat-icon mat-list-icon class="fa fa-th" style="font-size:16px;color:white;height:auto;"></mat-icon>
     </button>
     <mat-menu #applications="matMenu" class="headerMaarchShortcut">
         <ng-container *ngFor="let shortcut of user.menu">

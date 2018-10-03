@@ -41,6 +41,7 @@ export class AppComponent {
         } 
 
         /*REMOVE AFTER FULL MAARCH V2*/
+        $j('#loadingAngularContent').remove();
         $j('#header').remove();
         $j('#inner_content').remove();
         $j('#inner_content_contact').parent('div').remove(); 
