@@ -137,13 +137,7 @@ class EntityController
             }
         }
 
-        $tmpUsers = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.id','users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
-        $entity['users'] = [];
-        foreach ($tmpUsers as $tmpUser) {
-            if ($tmpUser['status'] != 'DEL') {
-                $entity['users'][] = array_slice($tmpUser, 0, 4, true);
-            }
-        }
+        $entity['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.id','users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
         $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
         $entity['hasChildren'] = count($children) > 0;
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
