@@ -92,6 +92,21 @@ abstract class ContactModelAbstract
         return $nextSequenceId;
     }
 
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table' => 'contacts_v2',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function createAddress(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['contactId', 'contactPurposeId', 'userId', 'entityId', 'isPrivate', 'email']);
@@ -99,7 +114,7 @@ abstract class ContactModelAbstract
         ValidatorModel::stringType($aArgs, [
             'departement', 'addressFirstname', 'addressLastname', 'addressTitle', 'addressFunction', 'occupancy', 'addressNum', 'addressStreet', 'addressComplement',
             'addressTown', 'addressZip', 'addressCountry', 'phone', 'email', 'website', 'salutationHeader', 'salutationFooter', 'addressOtherData',
-            'userId', 'entityId', 'isPrivate'
+            'userId', 'entityId', 'isPrivate', 'external_contact_id'
         ]);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contact_addresses_id_seq']);
@@ -130,9 +145,9 @@ abstract class ContactModelAbstract
                 'other_data'            => $aArgs['otherData'],
                 'user_id'               => $aArgs['userId'],
                 'entity_id'             => $aArgs['entityId'],
+                'external_contact_id'   => $aArgs['external_contact_id'],
                 'is_private'            => $aArgs['isPrivate'],
                 'enabled'               => 'Y'
-
             ]
         ]);
 

@@ -79,7 +79,7 @@ class ResController
 
         $mandatoryColumns = [];
         if ($data['table'] == 'res_letterbox') {
-            array_push($mandatoryColumns, 'type_id');
+            $mandatoryColumns[] = 'type_id';
         }
 
         foreach ($data['data'] as $value) {

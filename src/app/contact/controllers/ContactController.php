@@ -15,6 +15,7 @@
 namespace Contact\controllers;
 
 use Contact\models\ContactModel;
+use Group\models\ServiceModel;
 use SrcCore\models\CoreConfigModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -25,6 +26,13 @@ class ContactController
 {
     public function create(Request $request, Response $response)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
+            !ServiceModel::hasService(['id' => 'my_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
+            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
+            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $data = $request->getParams();
 
         $check = Validator::notEmpty()->validate($data['firstname']);
@@ -74,6 +82,98 @@ class ContactController
         }
 
         return $response->withJson(['contactId' => $contactId, 'addressId' => $addressId]);
+    }
+
+    public function createAddress(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
+            !ServiceModel::hasService(['id' => 'my_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
+            !ServiceModel::hasService(['id' => 'update_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
+            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
+            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $contact = ContactModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        if (empty($contact)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::intVal()->notEmpty()->validate($data['contactPurposeId']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['email']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if (empty($data['userId'])) {
+            $data['userId'] = 'superadmin';
+        }
+        if (empty($data['entityId'])) {
+            $data['entityId'] = 'SUPERADMIN';
+        }
+        $data['addressFirstname'] = $data['firstname'];
+        $data['addressLastname'] = $data['lastname'];
+        $data['addressTitle'] = $data['title'];
+        $data['addressFunction'] = $data['function'];
+        unset($data['firstname'], $data['lastname'], $data['title'], $data['function']);
+
+        if (empty($data['isPrivate'])) {
+            $data['isPrivate'] = 'N';
+        } elseif ($data['isPrivate'] != 'N') {
+            $data['isPrivate'] = 'Y';
+        }
+
+        $data['contactId'] = $aArgs['id'];
+        $addressId = ContactModel::createAddress($data);
+
+        return $response->withJson(['addressId' => $addressId]);
+    }
+
+    public function update(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
+            !ServiceModel::hasService(['id' => 'update_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
+            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
+            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $contact = ContactModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        if (empty($contact)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
+        }
+
+        $data = $request->getParams();
+        unset($data['contact_id'], $data['user_id']);
+
+        ContactModel::update(['set' => $data, 'where' => ['contact_id = ?'], 'data' => [$aArgs['id']]]);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    public function updateAddress(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
+            !ServiceModel::hasService(['id' => 'update_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
+            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
+            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $contact = ContactModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        $address = ContactModel::getByAddressId(['addressId' => $aArgs['addressId'], 'select' => [1]]);
+        if (empty($contact) || empty($address)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contact or address do not exist']);
+        }
+
+        $data = $request->getParams();
+        unset($data['contact_id'], $data['id'], $data['user_id']);
+
+        ContactModel::updateAddress(['set' => $data, 'where' => ['contact_id = ?', 'id = ?'], 'data' => [$aArgs['id'], $aArgs['addressId']]]);
+
+        return $response->withJson(['success' => 'success']);
     }
 
     public function getCommunicationByContactId(Request $request, Response $response, array $aArgs)
