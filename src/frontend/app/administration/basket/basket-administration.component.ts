@@ -27,7 +27,6 @@ export class BasketAdministrationComponent implements OnInit {
     dialogRef                       : MatDialogRef<any>;
 
     selectedIndex                   : number    = 0;
-    numberOrderColumnsSelected      : number    = 0;
 
     coreUrl                         : string;
     lang                            : any       = LANG;
@@ -36,6 +35,7 @@ export class BasketAdministrationComponent implements OnInit {
     config                          : any       = {};
     id                              : string;
     basket                          : any       = {};
+    basketClone                     : any       = {};
     basketGroups                    : any[]     = [];
     allGroups                       : any[]     = [];
     basketIdAvailable               : boolean;
@@ -116,8 +116,9 @@ export class BasketAdministrationComponent implements OnInit {
                                 this.orderColumnsSelected.push({"column":value[0],"order":value[1]});
                             }
                         }
-                        this.numberOrderColumnsSelected = this.orderColumnsSelected.length - 1;
-                        
+
+                        this.basketClone = JSON.parse(JSON.stringify(this.basket));
+
                         this.http.get(this.coreUrl + "rest/baskets/" + this.id + "/groups")
                             .subscribe((data: any) => {
                                 this.allGroups = data.allGroups;
@@ -298,6 +299,31 @@ export class BasketAdministrationComponent implements OnInit {
         this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
             .subscribe(() => {
                 this.notify.success(this.lang.actionsGroupBasketUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+    }
+
+    toggleIsSearchBasket(basket: any) {
+        basket.isSearchBasket = !basket.isSearchBasket
+        this.basketClone.isSearchBasket = basket.isSearchBasket;
+
+        console.log(this.basketClone);
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id, this.basketClone)
+            .subscribe(() => {
+                this.notify.success(this.lang.basketUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+    }
+
+    toggleFlagNotif(basket: any) {
+        basket.flagNotif = !basket.flagNotif;
+        this.basketClone.flagNotif = basket.flagNotif;
+
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id, this.basketClone)
+            .subscribe(() => {
+                this.notify.success(this.lang.basketUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });

@@ -12,6 +12,23 @@
                         {{lang.linkGroup}}
                     </p>
                 </a>
+                <mat-divider></mat-divider>
+                <a mat-list-item disableRipple="true" matTooltip="{{lang.isSearchBasketInfo}}">
+                    <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
+                        <mat-slide-toggle [checked]="basket.isSearchBasket" color="primary" (click)="toggleIsSearchBasket(basket);false"></mat-slide-toggle>
+                    </mat-icon>
+                    <p mat-line [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.3'}" (click)="toggleIsSearchBasket(basket);false">
+                        Bannette de recherche
+                    </p>
+                </a>
+                <a mat-list-item disableRipple="true" matTooltip="{{lang.basketNotification}}">
+                    <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
+                        <mat-slide-toggle [checked]="basket.flagNotif" color="primary" (click)="toggleFlagNotif(basket);false"></mat-slide-toggle>
+                    </mat-icon>
+                    <p mat-line [ngStyle]="{'opacity': basket.flagNotif ? '' : '0.3'}" (click)="toggleFlagNotif(basket);false">
+                        {{lang.activateNotification}}
+                    </p>
+                </a>
             </mat-nav-list>
             <mat-divider></mat-divider>
         </mat-sidenav>
@@ -66,7 +83,7 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-md-1 col-xs-1 text-left">
+                                    <div class="col-md-2 col-xs-2 text-left">
                                         <button [disabled]="orderColumnsSelected.length==1" color="warn" mat-icon-button type="button" (click)="removeLine(i)">
                                             <mat-icon class='fa fa-minus-square fa-2x'></mat-icon>
                                         </button>
@@ -75,18 +92,6 @@
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 col-xs-6 text-center">
-                                <mat-slide-toggle [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.3'}" color="primary" matTooltip="{{lang.isSearchBasket}}" name="isSearchBasket" [(ngModel)]="basket.isSearchBasket">
-                                    &nbsp;
-                                    <mat-icon color="primary" style="width: auto;" class="fa fa-search fa-2x"></mat-icon>
-                                </mat-slide-toggle>
-                            </div>
-                            <div class="col-md-6 col-xs-6 text-center">
-                                <mat-slide-toggle [ngStyle]="{'opacity': basket.flagNotif ? '' : '0.3'}" color="primary" matTooltip="{{lang.basketNotification}}" name="flagNotif" [(ngModel)]="basket.flagNotif">
-                                    &nbsp;
-                                    <mat-icon style="width: auto;" class="fa fa-bell fa-2x"></mat-icon>
-                                </mat-slide-toggle>
                             </div>
                             <div class="col-md-12 text-center" style="padding:10px;">
                                 <button class="enableAtionBottomCenterSmarpthone" mat-raised-button [disabled]="!basketForm.form.valid || orderColumnsSelected.length == 0" color="primary">{{lang.save}}</button>
