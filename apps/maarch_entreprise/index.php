@@ -208,10 +208,10 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
         unset($_SESSION['HTTP_REFERER']);
         header('location: '.$url);
     }
-
     $core->load_lang();
     $core->load_html();
     $core->load_header();
+    echo '<my-app></my-app>';
     $time = $core->get_session_time_expire();
 
     /**
@@ -310,8 +310,6 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     echo '<div id="konami" style="position: absolute; display: none"><img src="img/konami.png"></div>';
 
     $core->insert_page();
-
-    echo '<my-app></my-app>';
 
     //FOOTER
     echo '<p id="footer">';
