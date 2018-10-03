@@ -351,7 +351,7 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     $user = \User\models\UserModel::getByUserId(['userId' => $cookie['userId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
 
     //HTML CONTENT OF ANGULAR
-    echo '<div id="loadingAngularContent" style="color:#666"></div>';
+    echo '<div id="loadingAngularContent" style="color: #666;height: 100%;padding: 0;margin: 0;display: flex;align-items: center;justify-content: center;"></div>';
     echo '<my-app></my-app>';
 
     if ($user['status'] == 'ABS') {

@@ -11,10 +11,10 @@ function triggerAngular(locationToGo) {
 
             if (!alreadyLoaded) {
                 var head = document.getElementsByTagName('head')[0];
-                if ($j('#inner_content').length > 0) {
-                    $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
+                if ($j('#maarch_content').length > 0) {
+                    $j('#maarch_content').html('<div style="color: #666;height: 100%;padding: 0;margin: 0;display: flex;align-items: center;justify-content: center;"><div style="opacity:0.5;display: flex;justify-content: center;padding: 5px;height: 20px;margin: 10px;line-height: 20px;font-weight: bold;font-size: 2em;text-align: center;"><div class="lds-ring"><div></div><div></div><div></div><div></div></div><div style=\'font-family: Roboto,"Helvetica Neue",sans-serif;\'>Chargement en cours ...</div></div></div>');
                 } else {
-                    $j('#loadingAngularContent').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
+                    $j('#loadingAngularContent').html('<div style="opacity:0.5;display: flex;justify-content: center;padding: 5px;height: 20px;margin: 10px;line-height: 20px;font-weight: bold;font-size: 2em;text-align: center;"><div class="lds-ring"><div></div><div></div><div></div><div></div></div><div style=\'font-family: Roboto,"Helvetica Neue",sans-serif;\'>Chargement en cours ...</div></div>');
                 }
                 answer['scriptsToinject'].forEach(function(element, i) {
                     var script = document.createElement('script');
