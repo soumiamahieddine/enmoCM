@@ -308,7 +308,6 @@ export class BasketAdministrationComponent implements OnInit {
         basket.isSearchBasket = !basket.isSearchBasket
         this.basketClone.isSearchBasket = basket.isSearchBasket;
 
-        console.log(this.basketClone);
         this.http.put(this.coreUrl + "rest/baskets/" + this.id, this.basketClone)
             .subscribe(() => {
                 this.notify.success(this.lang.basketUpdated);
