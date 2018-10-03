@@ -135,7 +135,7 @@ CREATE TABLE parameters
 (
   id character varying(255) NOT NULL,
   description TEXT,
-  param_value_string character varying(255) DEFAULT NULL::character varying,
+  param_value_string TEXT DEFAULT NULL::character varying,
   param_value_int integer,
   param_value_date timestamp without time zone,
   CONSTRAINT parameters_pkey PRIMARY KEY (id)
