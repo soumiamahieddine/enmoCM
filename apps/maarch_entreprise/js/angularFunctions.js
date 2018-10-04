@@ -4,6 +4,9 @@ var alreadyLoaded = false;
 function triggerAngular(locationToGo) {
     var myApp = $j('<my-app style="height: 100%;display:none;"></my-app>');
     myApp.appendTo('body');
+    $j('body').removeAttr("id");
+    $j('body').removeAttr("style");
+    $j('body').removeAttr("onload");
     $j.ajax({
         url      : '../../rest/initialize',
         type     : 'GET',

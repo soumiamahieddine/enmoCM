@@ -211,7 +211,6 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     $core->load_lang();
     $core->load_html();
     $core->load_header();
-    $time = $core->get_session_time_expire();
 
     /**
      * [New Authentication System]
@@ -222,12 +221,19 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     } else {
         header('location: index.php?display=true&page=logout&logout=true');
     }
+
+    /**
+     * [Initialize session expiration]
+     */
+    $time = $core->get_session_time_expire();
+    $urlLogout = $_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&logout=true';
+    echo "<script>session_expirate('{$time}','{$urlLogout}');</script>";
+
     if (isset($_GET['body_loaded'])) {
-        $urlLogout = $_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&logout=true';
-        echo '<body style="background:#f2f2f2;" onload="session_expirate(\''.$time.'\',\''.$urlLogout.'\');" id="maarch_body">';
+        echo '<body style="background:#f2f2f2;" id="maarch_body">';
         echo "<div id='maarch_content' style='display:block;'>";
     } else {
-        echo '<body style="background: url(\'static.php?filename=loading_big.gif\') no-repeat fixed center;" onload="$j(\'#maarch_body\').css(\'background\',\'f2f2f2\');$j(\'#maarch_body\').css(\'backgroundImage\',\'\');$j(\'#maarch_body\').css(\'backgroundUrl\', \'\');$j(\'#maarch_content\').css(\'display\',\'block\');session_expirate(\''.$time.'\',\''.$urlLogout.'\');" id="maarch_body">';
+        echo '<body style="background: url(\'static.php?filename=loading_big.gif\') no-repeat fixed center;" onload="$j(\'#maarch_body\').css(\'background\',\'f2f2f2\');$j(\'#maarch_body\').css(\'backgroundImage\',\'\');$j(\'#maarch_body\').css(\'backgroundUrl\', \'\');$j(\'#maarch_content\').css(\'display\',\'block\');" id="maarch_body">';
         echo "<div id='maarch_content' style='display:none;'>";
     }
 
