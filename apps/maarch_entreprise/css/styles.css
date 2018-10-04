@@ -1263,7 +1263,7 @@ th.ref {
     padding-right: 10px;
     text-align: left;
     min-height: 400px;
-    height: 80%;
+    height: auto;
 }
 
 #head {

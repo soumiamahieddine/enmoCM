@@ -318,10 +318,10 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     $_SESSION['error'] = '';
     $_SESSION['info'] = '';
 
+    echo '</div>';
+    echo '</div>';
+    
     $core->view_debug();
-
-    echo '</div>';
-    echo '</div>';
     echo '</body>';
     echo '</html>';
     exit();
@@ -344,6 +344,9 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     <script src='js/angularFunctions.js'></script>
     <?php
     $cookie = \SrcCore\models\AuthenticationModel::getCookieAuth();
+    if (empty($cookie)) {
+        header('location: index.php?display=true&page=logout&logout=true');
+    }
     chdir('../..');
     $user = \User\models\UserModel::getByUserId(['userId' => $cookie['userId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
 
