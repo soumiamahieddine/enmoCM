@@ -141,7 +141,7 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
 
     $where = "res_id = ? and difflist_type = ? AND process_date IS NOT NULL";
     $order = "ORDER BY process_date DESC";
-    $query = $db->limit_select(0, 1, 'listinstance_id', 'listinstance', $where, '', '', $order);
+    $query = $db->limit_select(0, 1, 'listinstance_id, requested_signature', 'listinstance', $where, '', '', $order);
 
     $stmt = $db->query($query,[$res_id, 'VISA_CIRCUIT']);
 
@@ -151,7 +151,11 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
         $listInstance = $stmt->fetchObject();
         $db->query('UPDATE listinstance SET process_date = NULL WHERE res_id = ? AND difflist_type = ? AND listinstance_id = ?',
             [$res_id, 'VISA_CIRCUIT', $listInstance->listinstance_id]);
-        $newStatus = 'AREVVI';
+        if ($listInstance->requested_signature) {
+            $newStatus = 'ESIG';
+        } else {
+            $newStatus = 'EVIS';
+        }
     }
 
     $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", [$newStatus, $res_id]);
