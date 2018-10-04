@@ -12,7 +12,7 @@ function show_templates(show)
     }
 }
 
-function select_template(path_to_script, attachment_type)
+function select_template(path_to_script, attachment_type, mode)
 {
     
     if ($j('#'+attachment_type.id).val() != '') {
@@ -23,13 +23,15 @@ function select_template(path_to_script, attachment_type)
         $j('#formAttachment .transmissionDiv #newAttachButton').prop("disabled",true);
         $j('#formAttachment .transmissionDiv #newAttachButton').addClass("readonly");
     }
-    if ($j('#'+attachment_type.id+' option:selected').attr("width_delay") != '' && $j('#'+attachment_type.id+' option:selected').attr("width_delay") != undefined) {
-        var delay = $j('#'+attachment_type.id+' option:selected').attr("width_delay");
-        var delay_date = defineBackDate(delay);
-        $j('#'+attachment_type.id).parent().parent().find('[name=back_date\\[\\]]').val(delay_date);
+    if (typeof mode == "undefined" || mode == "add") {
+        if ($j('#'+attachment_type.id+' option:selected').attr("width_delay") != '' && $j('#'+attachment_type.id+' option:selected').attr("width_delay") != undefined) {
+            var delay = $j('#'+attachment_type.id+' option:selected').attr("width_delay");
+            var delay_date = defineBackDate(delay);
+            $j('#'+attachment_type.id).parent().parent().find('[name=back_date\\[\\]]').val(delay_date);
 
-    } else {
-        $j('#'+attachment_type.id).parent().parent().find('[name=back_date\\[\\]]').val("");
+        } else {
+            $j('#'+attachment_type.id).parent().parent().find('[name=back_date\\[\\]]').val("");
+        }
     }
 
     if ($j('#'+attachment_type.id+' option:selected').val() == "transmission") {
