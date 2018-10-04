@@ -2,6 +2,8 @@ var $j = jQuery.noConflict();
 var angularGlobals = {};
 var alreadyLoaded = false;
 function triggerAngular(locationToGo) {
+    var myApp = $j('<my-app style="height: 100%;display:none;"></my-app>');
+    myApp.appendTo('body');
     $j.ajax({
         url      : '../../rest/initialize',
         type     : 'GET',
@@ -11,11 +13,10 @@ function triggerAngular(locationToGo) {
 
             if (!alreadyLoaded) {
                 var head = document.getElementsByTagName('head')[0];
-                if ($j('#maarch_content').length > 0) {
-                    $j('#maarch_content').html('<div style="color: #666;height: 100%;padding: 0;margin: 0;display: flex;align-items: center;justify-content: center;"><div style="opacity:0.5;display: flex;justify-content: center;padding: 5px;height: 20px;margin: 10px;line-height: 20px;font-weight: bold;font-size: 2em;text-align: center;"><div class="lds-ring"><div></div><div></div><div></div><div></div></div><div style=\'font-family: Roboto,"Helvetica Neue",sans-serif;\'>Chargement en cours ...</div></div></div>');
-                } else {
-                    $j('#loadingAngularContent').html('<div style="opacity:0.5;display: flex;justify-content: center;padding: 5px;height: 20px;margin: 10px;line-height: 20px;font-weight: bold;font-size: 2em;text-align: center;"><div class="lds-ring"><div></div><div></div><div></div><div></div></div><div style=\'font-family: Roboto,"Helvetica Neue",sans-serif;\'>Chargement en cours ...</div></div>');
-                }
+                $j('#maarch_content').remove();
+                var loading = $j('<div id="loadingAngularContent" style="color: #666;height: 100%;padding: 0;margin: 0;display: flex;align-items: center;justify-content: center;"><div style="opacity:0.5;display: flex;justify-content: center;padding: 5px;height: 20px;margin: 10px;line-height: 20px;font-weight: bold;font-size: 2em;text-align: center;"><div class="lds-ring"><div></div><div></div><div></div><div></div></div><div style=\'font-family: Roboto,"Helvetica Neue",sans-serif;\'>Chargement en cours ...</div></div></div>');
+                loading.appendTo('body');
+
                 answer['scriptsToinject'].forEach(function(element, i) {
                     var script = document.createElement('script');
                     script.type = 'text/javascript';

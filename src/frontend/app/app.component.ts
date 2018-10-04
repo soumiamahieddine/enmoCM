@@ -41,6 +41,7 @@ export class AppComponent {
         } 
 
         /*REMOVE AFTER FULL MAARCH V2*/
+        $j('my-app').css({"display":"block"});
         $j('#maarch_content').remove();
         $j('#loadingAngularContent').remove();
         $j('#header').remove();

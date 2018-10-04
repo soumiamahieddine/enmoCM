@@ -211,7 +211,6 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     $core->load_lang();
     $core->load_html();
     $core->load_header();
-    echo '<my-app style="display: block;height: 100%;"></my-app>';
     $time = $core->get_session_time_expire();
 
     /**
@@ -351,8 +350,7 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     $user = \User\models\UserModel::getByUserId(['userId' => $cookie['userId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
 
     //HTML CONTENT OF ANGULAR
-    echo '<div id="loadingAngularContent" style="color: #666;height: 100%;padding: 0;margin: 0;display: flex;align-items: center;justify-content: center;"></div>';
-    echo '<my-app style="display: block;height: 100%;"></my-app>';
+    echo '<body></body>';
 
     if ($user['status'] == 'ABS') {
         $_REQUEST['triggerAngular'] = 'activateUser';
