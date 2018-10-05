@@ -140,6 +140,7 @@ if (!empty($order_field) && !empty($order)) {
     } else {
         $orderstr = 'order by '.$order_field.' '.$order;
     }
+    $orderstr = 'order by '.str_replace('alt_identifier', 'order_alphanum(alt_identifier)', $_SESSION['current_basket']['basket_res_order']);
     $_SESSION['last_order_basket'] = $orderstr;
 } elseif (!empty($_SESSION['save_list']['order']) && !empty($_SESSION['save_list']['order_field'])) {
     $orderstr = 'order by '.str_replace('alt_identifier', 'order_alphanum(alt_identifier)', $_SESSION['current_basket']['basket_res_order']);
