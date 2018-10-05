@@ -3,7 +3,7 @@
         <div><p id="ariane"></p></div>
         <div style="display:flex;padding-left: 20px;padding-right: 20px;height:100%;">
             <a href="index.php">
-                <div style="background: url(static.php?filename=logo_white.svg) #135F7F;background-size: 80%;background-position: center;background-repeat: no-repeat;width: 140px;height: 100%;">
+                <div style="background: url(static.php?filename=logo_white.svg) #135F7F;background-size: 80%;background-position-y: 26px;background-repeat: no-repeat;width: 140px;height: 100%;">
                 </div>
             </a>
             <div style="justify-content: flex-end;display: flex;width: 100%;color: white;align-items: center;">
@@ -70,6 +70,11 @@
                             ?>
                         </ul>
                         <div class="header_menu_blank">&nbsp;</div>
+                        <div class="footer_menu">
+                            <a href="index.php?display=true&page=logout&logout=true" style="cursor: pointer;color:white;float:left;"><?php echo _LOGOUT;?></a>
+                            <a onclick="triggerAngular('#/profile')" style="cursor: pointer;color:white;float:right;"><?php echo _MY_INFO;?></a>
+                            <div style="clear:both;"></div>
+                        </div>
                     </div>
                 </span>
             </div>
