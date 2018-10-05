@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use Basket\models\GroupBasketModel;
 use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use Slim\Http\Request;
@@ -33,8 +34,6 @@ class CoreController
         $aInit['applicationMinorVersion'] = CoreConfigModel::getApplicationVersion()['applicationMinorVersion'];
         $aInit['lang'] = CoreConfigModel::getLanguage();
         $aInit['user'] = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
-//        $aInit['user']['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
-//        $aInit['user']['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
 
         $aInit['scriptsToinject'] = [];
         $scriptsToInject = [];
@@ -69,6 +68,7 @@ class CoreController
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+        $user['indexingGroups'] = [];
 
         if ($GLOBALS['userId'] == 'superadmin') {
             $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
@@ -76,6 +76,15 @@ class CoreController
             $menu = array_merge($menu, $menuModules);
         } else {
             $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+            foreach ($menu as $value) {
+                if ($value['name'] == _INDEXING_MLB) {
+                    foreach ($user['groups'] as $group) {
+                        if (GroupBasketModel::hasBasketByGroupId(['groupId' => $group['group_id'], 'basketId' => 'IndexingBasket'])) {
+                            $user['indexingGroups'][] = ['groupId' => $group['group_id'], 'label' => $group['group_desc']];
+                        }
+                    }
+                }
+            }
         }
 
         return $response->withJson([
