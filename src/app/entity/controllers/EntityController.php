@@ -98,7 +98,7 @@ class EntityController
             if ($listTemplate['object_type'] == 'entity_id' && !empty($listTemplate['item_id'])) {
                 $entity['listTemplate']['id'] = $listTemplate['id'];
                 if ($listTemplate['item_type'] == 'user_id') {
-                    $statusUser = UserModel::getByUserId(['select' => ['status'], 'userId' => $listTemplate['item_id']]);
+                    $statusUser = UserModel::getByUserId(['select' => ['status', 'firstname', 'lastname'], 'userId' => $listTemplate['item_id']]);
                     if ($statusUser['status'] != 'DEL') {
                         $entity['listTemplate'][$listTemplate['item_mode']][] = [
                             'item_type'             => $listTemplate['item_type'],
@@ -106,7 +106,7 @@ class EntityController
                             'sequence'              => $listTemplate['sequence'],
                             'title'                 => $listTemplate['title'],
                             'description'           => $listTemplate['description'],
-                            'labelToDisplay'        => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
+                            'labelToDisplay'        => $statusUser['firstname']. ' ' .$statusUser['lastname'],
                             'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
                         ];
                     }
