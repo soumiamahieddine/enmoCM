@@ -3677,13 +3677,15 @@ abstract class lists_Abstract extends Database
                 //Build the list
                 (!empty($this->params['listCss'])) ? $listCss = 'class="'.$this->params['listCss'].'"' : $listCss = '';
                 $grid .= $B_form.$B_height.'<table cellspacing="0" border="0" cellpadding="0" align="center" '
-                        .$listCss.'>'.$gridContent.'</table>'.$E_height.$E_form.$bottomToolbar;
+                        .$listCss.' style="width:100%;">'.$gridContent.'</table>'.$E_height.$E_form.$bottomToolbar;
             }
 
             //Process instructions
             if ($this->params['bool_actionOnLineClick'] === true) {
                 $grid .= '<em>'.$parameters['processInstructions'].'</em>';
             }
+        } else {
+            $grid .= '<div style ="text-align: center;font-size: 16px;padding: 20px;font-weight: bold;opacity: 0.5;">'._NO_RESULTS.'</div>';
         }
 
         //Show the list
