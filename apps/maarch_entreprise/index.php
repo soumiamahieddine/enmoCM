@@ -182,7 +182,7 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
         }
         exit();
     }
-
+    $core->load_lang();
     //INSERT PART OF PAGE
     if (isset($_REQUEST['display'])) {
         $core->insert_page();
@@ -208,7 +208,6 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
         unset($_SESSION['HTTP_REFERER']);
         header('location: '.$url);
     }
-    $core->load_lang();
     $core->load_html();
     $core->load_header();
 
