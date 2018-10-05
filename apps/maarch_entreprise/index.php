@@ -272,17 +272,15 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     echo '<div id="content">';
     echo '<div class="error" id="main_error" onclick="this.hide();"></div>';
 
-    if (isset($_SESSION['error'])) {
-        echo '<div class="error" id="main_error_popup" onclick="this.hide();">';
-        echo functions::xssafe($_SESSION['error']);
-        echo '</div>';
-    }
+    echo '<div class="error" id="main_error_popup" onclick="this.hide();">';
+    echo functions::xssafe($_SESSION['error']);
+    echo '</div>';
 
-    if (isset($_SESSION['info'])) {
-        echo '<div class="info" id="main_info" onclick="this.hide();">';
-        echo functions::xssafe($_SESSION['info']);
-        echo '</div>';
-    }
+
+    echo '<div class="info" id="main_info" onclick="this.hide();">';
+    echo functions::xssafe($_SESSION['info']);
+    echo '</div>';
+
 
     if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
         ?>
