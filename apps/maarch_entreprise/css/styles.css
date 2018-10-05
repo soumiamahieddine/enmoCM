@@ -1401,7 +1401,7 @@ th.ref {
     cursor: pointer;
 }
 
-#menunav {
+.menunav {
     overflow: hidden;
     width: 260px;
     background: #F2F2F2;
@@ -1411,29 +1411,28 @@ th.ref {
     z-index: 10;
     margin: 0px;
     border: 2px solid #135F7F;
-    top: 28px;
-    border-bottom: none;
+    top: 45px;
     border-top: solid 3px #135F7F;
 }
 
-#menunav li {
+.menunav li {
     padding-left: 3px;
     margin-bottom: 5px;
 }
 
-#menunav li a {
+.menunav li a {
     padding-right: 3px;
     color: #135F7F;
     display: block;
     position: relative;
 }
 
-#menunav li span {
+.menunav li span {
     display: block;
     padding-left: 3px;
 }
 
-#menunav li span span {
+.menunav li span span {
     background: transparent bottom left no-repeat;
     /*padding: 6px 10px 5px 30px;*/
     display: inline;
@@ -1441,42 +1440,42 @@ th.ref {
     margin: 0px;
 }
 
-#menunav li.on {
+.menunav li.on {
     padding-left: 3px;
 }
 
-#menunav li.on a {
+.menunav li.on a {
     color: white;
     text-decoration: none;
 }
 
-#menunav li.on span {
+.menunav li.on span {
     background: #135F7F;
 }
 
-#menunav li ol {
+.menunav li ol {
     font-size: .9em;
 }
 
-#menunav li ol {
+.menunav li ol {
     display: none;
 }
 
-#menunav ol li {
+.menunav ol li {
     padding-bottom: 2px;
     margin-bottom: 0;
 }
 
-#menunav ol li, #menunav ol li a, #menunav ol li a span span, #menunav ol li a span, #menunav li.on ol li, #menunav li.on ol li a, #menunav li.on ol li a span, #menunav li.on ol li a span span {
+.menunav ol li, .menunav ol li a, .menunav ol li a span span, .menunav ol li a span, .menunav li.on ol li, .menunav li.on ol li a, .menunav li.on ol li a span, .menunav li.on ol li a span span {
     background-image: none;
 }
 
-#menunav li ol li a, #menunav li.on ol li a {
+.menunav li ol li a, .menunav li.on ol li a {
     color: #135F7F;
     display: inline;
 }
 
-#menunav li ol li a:hover {
+.menunav li ol li a:hover {
     text-decoration: underline;
 }
 
@@ -1486,11 +1485,12 @@ th.ref {
 #ariane {
     color: White;
     position: absolute;
-    left: 15px;
-    top: 0px;
+    position: absolute;
+    margin: 0px;
+    left: 170px;
+    top: 5px;
     font-size: 0.9em;
     height: 18px;
-    margin-top: 10px;
 }
 
 
@@ -1525,8 +1525,9 @@ th.ref {
 }
 
 #content h1 {
-    color: #135F7F;
-    /*font-style: italic;*/
+    display: flex;
+    align-items: center;
+    color: white;
     font-weight: bold;
     font-size: 1.3em;
     text-align: left;
@@ -1535,9 +1536,12 @@ th.ref {
     position: absolute;
     padding: 0px;
     top: 38px;
-    left: 280px;
-    /*width: 80%;*/
+    left: 200px;
     width: auto;
+}
+#content h1 i {
+    padding-right: 5px; 
+
 }
 #nav h1 {
     color: #135F7F;
@@ -3730,4 +3734,12 @@ width:auto;
 .iconDoc:hover span img {
     height:auto;
     width:auto;
+}
+
+.maarchToolButton {
+    padding: 10px;
+}
+.maarchToolButton:hover {
+    transition: background-color 0.5s ease;
+    background-color: rgba(0,0,0,.12); 
 }

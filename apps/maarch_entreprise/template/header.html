@@ -1,63 +1,79 @@
-    <div id="header">
-        <div id="nav">
-            <div id="header_username" style="position:absolute;text-align:center;left:45%;font-size: 1.3em;top: 6px;color: white; font-size:14px; line-height: 1; font-family:Verdana,Geneva,Arial,Helvetica,sans-serif">
-            <?php                         
-                $strUserInfos = $_SESSION['user']['FirstName']." ".$_SESSION['user']['LastName'];
-                $userGroups = \User\models\UserModel::getGroupsByUserId(['userId'=> $_SESSION['user']['UserId']]);
-                   
-                if(!empty($userGroups)){
-                    if(count($userGroups)>=2){
-                        $strGroupList=" ";
-                        for($i=0;$i<count($userGroups);$i++){
-                            if($i==count($userGroups)-1){
-                                $strGroupList.=$userGroups[$i]['group_desc'];
-                            } else {
-                                $strGroupList.=$userGroups[$i]['group_desc']."<br><br>";
-                            }                                
-                        }
-                        $strUserInfos .= ' <div id="header_usergroups"  class="header_usergroups" title="'.$strGroupList.'" style="display:inline-block;">('.count($userGroups).' groupes)</div>';
-                    }else{
-                        $strUserInfos .= ' ('.$userGroups[0]['group_desc'].')';
-                    }
-                }
-                echo $strUserInfos; ?>
-            </div>
-            <script>
-                $j(".header_usergroups").tooltipster({
-                    delay: 0,
-                    contentAsHTML: true
-                });
-            </script>
-            <div id="menu" onmouseover="ShowHideMenu('menunav','on');" onmouseout="ShowHideMenu('menunav','off');" class="off">
-                <p>
-                    <span style="background:url(static.php?filename=logo_only_white.svg);background-position: 20px -4px;background-size:25%;background-repeat: no-repeat;height: 30px;font-weight: bold;width: 85px;display: block;font-size: 23px;padding-left: 65px;top: 38px;color: #ffffff;">
-                        <?php echo _MENU; ?>
-                    </span>
-                </p>
-                <div id="menunav" style="display: none;">
-                    <div class="header_menu_blank">&nbsp;</div>
-                    <ul>
-                        <?php
-                            //here we building the maarch menu
-                            $core->build_menu($_SESSION['menu']);
-                        ?>
-                    </ul>
-                    <div class="header_menu_blank">&nbsp;</div>
-                    <div class="footer_menu">
-                        <span style="color:white;float:left;">
-                            <?php echo $_SESSION['config']['applicationname']; ?>
-                        </span>
-                        <a onclick="triggerAngular('#/about-us')" style="cursor: pointer;color:white;float:right;"><?php echo _MAARCH_CREDITS ;?></a>
-                        <div style="clear:both;"></div>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <p id="ariane"></p>
-            </div>
-            <p id="gauchemenu"></p>
+<div id="header">
+    <div id="nav">
+        <div><p id="ariane"></p></div>
+        <div style="display:flex;padding-left: 20px;padding-right: 20px;height:100%;">
             <a href="index.php">
-                <p id="logo"></p>
+                <div style="background: url(static.php?filename=logo_white.svg) #135F7F;background-size: 80%;background-position: center;background-repeat: no-repeat;width: 140px;height: 100%;">
+                </div>
             </a>
+            <div style="justify-content: flex-end;display: flex;width: 100%;color: white;align-items: center;">
+                <span class="maarchToolButton" style="padding-left:10px;padding-right:10px;position: relative;">
+                    <i class="fa fa-th fa-2x" style="cursor:pointer;font-size: 16px;" onclick="$j('#menunav').slideToggle('fast');event.stopPropagation();" title="Menu"></i>
+                    <div id="menunav" class="menunav" style="left: -225px;display:none;">
+                        <div class="footer_menu">
+                            <span style="color:white;float:left;">
+                                MENU
+                            </span>
+                            
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="header_menu_blank">&nbsp;</div>
+                        <ul>
+                            <?php
+                                //here we building the maarch menu
+                                $core->build_menu($_SESSION['menu']);
+                            ?>
+                        </ul>
+                        <div class="header_menu_blank">&nbsp;</div>
+                        <div class="footer_menu">
+                            <span style="color:white;float:left;">
+                                <?php echo $_SESSION['config']['applicationname']; ?>
+                            </span>
+                            <a onclick="triggerAngular('#/about-us')" style="cursor: pointer;color:white;float:right;"><?php echo _MAARCH_CREDITS ;?></a>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    <script>
+                        $j(window).click(function(event) {
+                            if ($j('#menunav').css('display') != 'none') {
+                                $j('#menunav').slideToggle('fast');
+                            }
+                            if ($j('#profilenav').css('display') != 'none') {
+                                $j('#profilenav').slideToggle('fast');
+                            }
+                        });
+                    </script>
+                </span>
+                <span class="maarchToolButton" style="padding-left:10px;padding-right:10px;font-size: 14px;text-align: center;display: flex;align-items: center;position: relative;cursor:pointer;" onclick="$j('#profilenav').slideToggle('fast');event.stopPropagation();" title="Mes groupes">
+                    <?php                         
+                    $strUserInfos = '<i class="fa fa-user fa-2x" style="padding-right:5px;"></i> ' . $_SESSION['user']['FirstName'][0].". ".$_SESSION['user']['LastName'];
+                    echo $strUserInfos; ?>
+                    <div id="profilenav" class="menunav" style="left: -155px;display:none;">
+                        <div class="footer_menu">
+                            <span style="color:white;float:left;">
+                                Groupes
+                            </span>
+                            
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="header_menu_blank">&nbsp;</div>
+                        <ul style="color:#666;"> 
+                            <?php
+                            $userGroups = \User\models\UserModel::getGroupsByUserId(['userId'=> $_SESSION['user']['UserId']]);
+                       
+                            if(!empty($userGroups)){
+                                for($i=0;$i<count($userGroups);$i++){
+                                    $strGrpInfos .= '<li>'.$userGroups[$i]['group_desc'].'</li>';                              
+                                }
+                            }
+                            echo $strGrpInfos;
+                            ?>
+                        </ul>
+                        <div class="header_menu_blank">&nbsp;</div>
+                    </div>
+                </span>
+            </div>
         </div>
+        
     </div>
+</div>
