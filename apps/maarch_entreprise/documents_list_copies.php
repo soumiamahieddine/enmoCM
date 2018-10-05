@@ -142,11 +142,7 @@ if (!empty($order_field) && !empty($order)) {
     }
     $_SESSION['last_order_basket'] = $orderstr;
 } elseif (!empty($_SESSION['save_list']['order']) && !empty($_SESSION['save_list']['order_field'])) {
-    if ($_SESSION['save_list']['order_field'] == 'alt_identifier') {
-        $orderstr = 'order by order_alphanum(alt_identifier)'.' '.$_SESSION['save_list']['order'];
-    } else {
-        $orderstr = 'order by '.$_SESSION['save_list']['order_field'].' '.$_SESSION['save_list']['order'];
-    }
+    $orderstr = 'order by '.str_replace('alt_identifier', 'order_alphanum(alt_identifier)', $_SESSION['current_basket']['basket_res_order']);
     $_SESSION['last_order_basket'] = $orderstr;
 } else {
     if (!empty($_SESSION['current_basket']['basket_res_order'])) {
