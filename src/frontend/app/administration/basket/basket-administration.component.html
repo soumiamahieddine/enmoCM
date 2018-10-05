@@ -15,15 +15,15 @@
                 <mat-divider></mat-divider>
                 <a mat-list-item disableRipple="true" matTooltip="{{lang.isSearchBasketInfo}}">
                     <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
-                        <mat-slide-toggle [checked]="basket.isSearchBasket" color="primary" (click)="toggleIsSearchBasket(basket);false"></mat-slide-toggle>
+                        <mat-slide-toggle [checked]="basket.isSearchBasket" color="primary" (change)="toggleIsSearchBasket(basket);false"></mat-slide-toggle>
                     </mat-icon>
                     <p mat-line [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.3'}" (click)="toggleIsSearchBasket(basket);false">
-                        Bannette de recherche
+                        {{lang.isSearchBasket}}
                     </p>
                 </a>
                 <a mat-list-item disableRipple="true" matTooltip="{{lang.basketNotification}}">
                     <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
-                        <mat-slide-toggle [checked]="basket.flagNotif" color="primary" (click)="toggleFlagNotif(basket);false"></mat-slide-toggle>
+                        <mat-slide-toggle [checked]="basket.flagNotif" color="primary" (change)="toggleFlagNotif(basket);false"></mat-slide-toggle>
                     </mat-icon>
                     <p mat-line [ngStyle]="{'opacity': basket.flagNotif ? '' : '0.3'}" (click)="toggleFlagNotif(basket);false">
                         {{lang.activateNotification}}
