@@ -151,10 +151,14 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
         $listInstance = $stmt->fetchObject();
         $db->query('UPDATE listinstance SET process_date = NULL WHERE res_id = ? AND difflist_type = ? AND listinstance_id = ?',
             [$res_id, 'VISA_CIRCUIT', $listInstance->listinstance_id]);
-        if ($listInstance->requested_signature) {
-            $newStatus = 'ESIG';
+        if ($status == '_NOSTATUS_') {
+            if ($listInstance->requested_signature) {
+                $newStatus = 'ESIG';
+            } else {
+                $newStatus = 'EVIS';
+            }
         } else {
-            $newStatus = 'EVIS';
+            $newStatus = $status;
         }
     }
 
