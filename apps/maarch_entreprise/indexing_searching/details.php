@@ -403,25 +403,153 @@ if ($stmt->rowCount() == 0) {
     <?php
     //CONSTRUCT TABS
     echo '<div class="whole-panel">';
+    echo '<div style="display:flex;justify-content: flex-end;">';
 
-    //DETAILS TAB
-    if ($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
-        $style = 'padding-right: 0px;';
-        $styleBadge = 'visibility:hidden;"';
-    } else {
-        $style = 'padding-right: 15px;';
-        $styleBadge = 'display:none;"';
+    //LINKS TAB
+    $Links = '';
+    $pathScriptTab = $_SESSION['config']['businessappurl'].'index.php?display=true&page=show_links_tab';
+    $Links .= '<div id="links_tab" class="fa fa-link DetailsTabFunc" title="'._LINK_TAB.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'links_tab\',true);"> <sup id="links_tab_badge"></sup>';
+    $Links .= '</div>';
+
+    //LOAD TOOLBAR BADGE
+    $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&page=load_toolbar_links&resId='.$s_id.'&collId='.$coll_id;
+    $Links .= '<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
+    echo $Links;
+        
+
+    //SENDMAILS TAB
+    if ($core->test_service('sendmail', 'sendmail', false) === true) {
+        $sendmail = '';
+        $pathScriptTab = $_SESSION['config']['businessappurl'].'index.php?display=true&module=sendmail&page=sendmail&identifier='.$s_id.'&origin=document&coll_id='.$coll_id.'&load&size=medium';
+
+        $sendmail .= '<div id="sendmail_tab" class="fa fa-envelope DetailsTabFunc" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'sendmail_tab\',true);"> <sup id="sendmail_tab_badge"></sup>';
+        $sendmail .= '</div>';
+
+        //LOAD TOOLBAR BADGE
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=sendmail&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
+        $sendmail .= '<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
+
+        echo $sendmail;
     }
-    echo "<div class='fa fa-info-circle detailsTab DetailsTabFunc TabSelected' id='DetailstachometerTab' style='font-size:2em;padding-left: 15px;{$style}' title='"._PROPERTIES."' onclick=\"tabClicked('DetailstachometerTab',false);\">";
-    echo "<sup><span style='font-size: 10px;{$styleBadge}' class='nbResZero'>0</span></sup>";
-    echo '</div>';
 
-    //TECHNICAL INFO TAB
-    if ($viewTechnicalInfos) {
-        $technicalInfo_frame = '';
-        $pathScriptTab = $_SESSION['config']['businessappurl'].'index.php?display=true&page=show_technicalInfo_tab';
-        $technicalInfo_frame .= '<div class="fa fa-cogs DetailsTabFunc" id="DetailsCogdTab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCogdTab\',true);"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></div>';
-        echo $technicalInfo_frame;
+    //CASES TAB
+    if ($core->is_module_loaded('cases') == true) {
+        $case_frame = '';
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+            .'index.php?display=true&page=show_case_tab&module=cases&collId='.$coll_id.'&resId='.$s_id;
+        $case_frame .= '<div id="cases_tab" class="fa fa-suitcase DetailsTabFunc" title="'._CASE.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'cases_tab\',true);"> <sup id="cases_tab_badge"></sup>';
+        $case_frame .= '</div>';
+
+        //LOAD TOOLBAR BADGE
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
+        $case_frame .= '<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
+
+        echo $case_frame;
+    }
+
+    //NOTES TAB
+    if ($core->is_module_loaded('notes')) {
+        $note = '';
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+                .'index.php?display=true&module=notes&page=notes&identifier='
+                .$s_id.'&origin=document&coll_id='.$coll_id.'&load&size=full';
+        $note .= '<div id="notes_tab" class="fa fa-pencil-alt DetailsTabFunc" title="'._NOTES.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'notes_tab\',true);"> <sup id="notes_tab_badge"></sup>';
+        $note .= '</div>';
+
+        //LOAD TOOLBAR BADGE
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=load_toolbar_notes&resId='.$s_id.'&collId='.$coll_id;
+        $note .= '<script>loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');</script>';
+
+        echo $note;
+    }
+
+    //HISTORY TAB
+    if ($viewDocHistory) {
+        $history_frame = '';
+
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+                .'index.php?display=true&page=show_history_tab&resId='
+                .$s_id.'&collId='.$coll_id;
+        $history_frame .= '<div class="fa fa-history DetailsTabFunc" id="DetailsLineChartTab" title="'._DOC_HISTORY.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsLineChartTab\',true);"></div>';
+        echo $history_frame;
+    }
+
+    //RESPONSES TAB
+    if ($core->is_module_loaded('attachments')) {
+        $responses_frame = '';
+        $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp';
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+                    .'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
+                    .$s_id.'&collId='.$coll_id.$extraParam;
+        $responses_frame .= '<div id="responses_tab" class="fa fa-reply DetailsTabFunc" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'responses_tab\',true);"> <sup id="responses_tab_badge"></sup></div>';
+
+        //LOAD TOOLBAR BADGE
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=load_toolbar_attachments&responses&resId='.$s_id.'&collId='.$coll_id;
+        $responses_frame .= '<script>loadToolbarBadge(\'responses_tab\',\''.$toolbarBagde_script.'\');</script>';
+
+        echo $responses_frame;
+    }
+
+    //ATTACHMENTS TAB
+    if ($core->is_module_loaded('attachments')) {
+        $attachments_frame = '';
+        $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp';
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+                .'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='
+                .$s_id.'&collId='.$coll_id.'&fromDetail=attachments'.$extraParam;
+        $attachments_frame .= '<div class="fa fa-paperclip DetailsTabFunc" id="attachments_tab" title="'._ATTACHMENTS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'attachments_tab\',true);"> <sup id="attachments_tab_badge"></sup>';
+        $attachments_frame .= '</div>';
+
+        //LOAD TOOLBAR BADGE
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=load_toolbar_attachments&resId='.$s_id.'&collId='.$coll_id;
+        $attachments_frame .= '<script>loadToolbarBadge(\'attachments_tab\',\''.$toolbarBagde_script.'\');</script>';
+
+        echo $attachments_frame;
+    }
+
+    //AVIS TAB
+    if ($core->is_module_loaded('avis')) {
+        $avis_frame = '';
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+                .'index.php?display=true&page=show_avis_tab&module=avis&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
+        $avis_frame .= '<div id="avis_tab" class="fa fa-comment-alt DetailsTabFunc" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'avis_tab\',true);"> <sup id="avis_tab_badge"></sup>';
+        $avis_frame .= '</div>';
+        $avis_frame .= '<div id="page_circuit_avis" style="overflow-x: hidden;"></div>';
+
+        //LOAD TOOLBAR BADGE
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=avis&page=load_toolbar_avis&resId='.$s_id.'&collId='.$coll_id;
+        $avis_frame .= '<script>loadToolbarBadge(\'avis_tab\',\''.$toolbarBagde_script.'\');</script>';
+
+        echo $avis_frame;
+    }
+
+    //VISA TAB
+    if ($core->is_module_loaded('visa')) {
+        $visa_frame = '';
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+                .'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
+        $visa_frame .= '<div id="visa_tab" class="fa fa-list-ol DetailsTabFunc" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'visa_tab\',true);"> <sup id="visa_tab_badge"></sup>';
+        $visa_frame .= '</div>';
+
+        //LOAD TOOLBAR BADGE
+        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=load_toolbar_visa&resId='.$s_id.'&collId='.$coll_id;
+        $visa_frame .= '<script>loadToolbarBadge(\'visa_tab\',\''.$toolbarBagde_script.'\');</script>';
+
+        echo $visa_frame;
+    }
+
+    //PRINT FOLDER TAB
+    if ($core->test_service('print_folder_doc', 'visa', false)) {
+        $printFolder_frame = '';
+        require_once 'modules'.DIRECTORY_SEPARATOR.'visa'.DIRECTORY_SEPARATOR
+                .'class'.DIRECTORY_SEPARATOR
+                .'class_modules_tools.php';
+
+        $pathScriptTab = $_SESSION['config']['businessappurl']
+                .'index.php?display=true&page=show_printFolder_tab&module=visa&resId='
+                .$s_id.'&collId='.$coll_id.'&table='.$table;
+        $printFolder_frame .= '<div class="fa fa-print DetailsTabFunc" id="DetailsPrintTab" title="'._PRINTFOLDER.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsPrintTab\',true);"></div>';
+        echo $printFolder_frame;
     }
 
     //DIFF LIST TAB
@@ -444,179 +572,22 @@ if ($stmt->rowCount() == 0) {
         $pathScriptTab = $_SESSION['config']['businessappurl']
                 .'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;
 
-        $diffList_frame .= '<div class="fa fa-share-alt DetailsTabFunc" id="DetailsGearTab" style="display:block !important;font-size:2em;padding-left: 15px;';
-        if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
-            $diffList_frame .= 'padding-right: 0px;height: 29px;';
-        } else {
-            $diffList_frame .= 'padding-right: 15px;height: auto;';
-        }
-        $diffList_frame .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsGearTab\',true);"><sup><span style="font-size: 10px;';
-        $diffList_frame .= $styleBadge.' class="nbResZero">0</span></sup></div>';
-
+        $diffList_frame .= '<div class="fa fa-share-alt DetailsTabFunc" id="DetailsGearTab" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsGearTab\',true);"></div>';
         echo $diffList_frame;
     }
 
-    //PRINT FOLDER TAB
-    if ($core->test_service('print_folder_doc', 'visa', false)) {
-        $printFolder_frame = '';
-        require_once 'modules'.DIRECTORY_SEPARATOR.'visa'.DIRECTORY_SEPARATOR
-                .'class'.DIRECTORY_SEPARATOR
-                .'class_modules_tools.php';
-
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=show_printFolder_tab&module=visa&resId='
-                .$s_id.'&collId='.$coll_id.'&table='.$table;
-        $printFolder_frame .= '<div class="fa fa-print DetailsTabFunc" id="DetailsPrintTab" style="font-size:2em;padding-left: 15px;';
-        if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
-            $printFolder_frame .= 'padding-right: 0px;';
-        } else {
-            $printFolder_frame .= 'padding-right: 15px;';
-        }
-        $printFolder_frame .= '" title="'._PRINTFOLDER.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsPrintTab\',true);"> <sup><span style="font-size: 10px;';
-        $printFolder_frame .= $styleBadge.'class="nbResZero">0</span></sup></div>';
-        echo $printFolder_frame;
+    //TECHNICAL INFO TAB
+    if ($viewTechnicalInfos) {
+        $technicalInfo_frame = '';
+        $pathScriptTab = $_SESSION['config']['businessappurl'].'index.php?display=true&page=show_technicalInfo_tab';
+        $technicalInfo_frame .= '<div class="fa fa-cogs DetailsTabFunc" id="DetailsCogdTab" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCogdTab\',true);"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></div>';
+        echo $technicalInfo_frame;
     }
 
-    //VISA TAB
-    if ($core->is_module_loaded('visa')) {
-        $visa_frame = '';
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
-        $visa_frame .= '<div id="visa_tab" class="fa fa-list-ol DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'visa_tab\',true);"> <sup id="visa_tab_badge"></sup>';
-        $visa_frame .= '</div>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=load_toolbar_visa&resId='.$s_id.'&collId='.$coll_id;
-        $visa_frame .= '<script>loadToolbarBadge(\'visa_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-        echo $visa_frame;
-    }
-
-    //AVIS TAB
-    if ($core->is_module_loaded('avis')) {
-        $avis_frame = '';
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=show_avis_tab&module=avis&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
-        $avis_frame .= '<div id="avis_tab" class="fa fa-comment-alt DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'avis_tab\',true);"> <sup id="avis_tab_badge"></sup>';
-        $avis_frame .= '</div>';
-        $avis_frame .= '<div id="page_circuit_avis" style="overflow-x: hidden;"></div>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=avis&page=load_toolbar_avis&resId='.$s_id.'&collId='.$coll_id;
-        $avis_frame .= '<script>loadToolbarBadge(\'avis_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-        echo $avis_frame;
-    }
-
-    //ATTACHMENTS TAB
-    if ($core->is_module_loaded('attachments')) {
-        $attachments_frame = '';
-        $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp';
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='
-                .$s_id.'&collId='.$coll_id.'&fromDetail=attachments'.$extraParam;
-        $attachments_frame .= '<div class="fa fa-paperclip DetailsTabFunc" id="attachments_tab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._ATTACHMENTS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'attachments_tab\',true);"> <sup id="attachments_tab_badge"></sup>';
-        $attachments_frame .= '</div>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=load_toolbar_attachments&resId='.$s_id.'&collId='.$coll_id;
-        $attachments_frame .= '<script>loadToolbarBadge(\'attachments_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-        echo $attachments_frame;
-    }
-
-    //RESPONSES TAB
-    if ($core->is_module_loaded('attachments')) {
-        $responses_frame = '';
-        $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp';
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                    .'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
-                    .$s_id.'&collId='.$coll_id.$extraParam;
-        $responses_frame .= '<div id="responses_tab" class="fa fa-reply DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'responses_tab\',true);"> <sup id="responses_tab_badge"></sup>';
-        $responses_frame .= '</div>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=load_toolbar_attachments&responses&resId='.$s_id.'&collId='.$coll_id;
-        $responses_frame .= '<script>loadToolbarBadge(\'responses_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-        echo $responses_frame;
-    }
-
-    //HISTORY TAB
-    if ($viewDocHistory) {
-        $history_frame = '';
-
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=show_history_tab&resId='
-                .$s_id.'&collId='.$coll_id;
-        $history_frame .= '<div class="fa fa-history DetailsTabFunc" id="DetailsLineChartTab" style="font-size:2em;padding-left: 15px;';
-        if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
-            $history_frame .= 'padding-right: 0px;';
-        } else {
-            $history_frame .= 'padding-right: 15px;';
-        }
-        $history_frame .= '" title="'._DOC_HISTORY.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsLineChartTab\',true);"> <sup><span style="font-size: 10px;';
-        $history_frame .= $styleBadge.' class="nbResZero">0</span></sup>';
-        $history_frame .= '</div>';
-        echo $history_frame;
-    }
-
-    //NOTES TAB
-    if ($core->is_module_loaded('notes')) {
-        $note = '';
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?display=true&module=notes&page=notes&identifier='
-                .$s_id.'&origin=document&coll_id='.$coll_id.'&load&size=full';
-        $note .= '<div id="notes_tab" class="fa fa-pencil-alt DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._NOTES.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'notes_tab\',true);"> <sup id="notes_tab_badge"></sup>';
-        $note .= '</div>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=load_toolbar_notes&resId='.$s_id.'&collId='.$coll_id;
-        $note .= '<script>loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-        echo $note;
-    }
-
-    //CASES TAB
-    if ($core->is_module_loaded('cases') == true) {
-        $case_frame = '';
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-            .'index.php?display=true&page=show_case_tab&module=cases&collId='.$coll_id.'&resId='.$s_id;
-        $case_frame .= '<div id="cases_tab" class="fa fa-suitcase DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._CASE.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'cases_tab\',true);"> <sup id="cases_tab_badge"></sup>';
-        $case_frame .= '</div>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
-        $case_frame .= '<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-        echo $case_frame;
-    }
-
-    //SENDMAILS TAB
-    if ($core->test_service('sendmail', 'sendmail', false) === true) {
-        $sendmail = '';
-        $pathScriptTab = $_SESSION['config']['businessappurl'].'index.php?display=true&module=sendmail&page=sendmail&identifier='.$s_id.'&origin=document&coll_id='.$coll_id.'&load&size=medium';
-
-        $sendmail .= '<div id="sendmail_tab" class="fa fa-envelope DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'sendmail_tab\',true);"> <sup id="sendmail_tab_badge"></sup>';
-        $sendmail .= '</div>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=sendmail&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
-        $sendmail .= '<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-        echo $sendmail;
-    }
-
-    //LINKS TAB
-    $Links = '';
-    $pathScriptTab = $_SESSION['config']['businessappurl'].'index.php?display=true&page=show_links_tab';
-    $Links .= '<div id="links_tab" class="fa fa-link DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._LINK_TAB.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'links_tab\',true);"> <sup id="links_tab_badge"></sup>';
-    $Links .= '</div>';
-
-    //LOAD TOOLBAR BADGE
-    $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&page=load_toolbar_links&resId='.$s_id.'&collId='.$coll_id;
-    $Links .= '<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
-    echo $Links; ?>
+    //DETAILS TAB
+    echo "<div class='fa fa-info-circle detailsTab DetailsTabFunc TabSelected' id='DetailstachometerTab' style='font-size: 2em;padding-left: 15px;padding-right: 15px;padding-top: 5px;' title='"._PROPERTIES."' onclick=\"tabClicked('DetailstachometerTab',false);\"></div>";
+    echo '</div>';
+    ?>
 
     <div class="detailsDisplayDiv" id = "home-panel">         
         <br/>

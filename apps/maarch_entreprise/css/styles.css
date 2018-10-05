@@ -3664,11 +3664,13 @@ width:auto;
     border-bottom: 0;
     cursor: pointer;
     display: inline;
-    float: right;
     margin: 2px 0 0 -1px;
     padding: 2px 5px;
     position: relative;
-    font-size: 14px;
+    font-size: 2em;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
 }
 
 .detailsTab {
