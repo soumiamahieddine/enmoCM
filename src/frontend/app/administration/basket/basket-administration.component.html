@@ -12,6 +12,23 @@
                         {{lang.linkGroup}}
                     </p>
                 </a>
+                <mat-divider></mat-divider>
+                <a mat-list-item disableRipple="true" matTooltip="{{lang.isSearchBasketInfo}}">
+                    <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
+                        <mat-slide-toggle [checked]="basket.isSearchBasket" color="primary" (change)="toggleIsSearchBasket(basket);false"></mat-slide-toggle>
+                    </mat-icon>
+                    <p mat-line [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.3'}" (click)="toggleIsSearchBasket(basket);false">
+                        {{lang.isSearchBasket}}
+                    </p>
+                </a>
+                <a mat-list-item disableRipple="true" matTooltip="{{lang.basketNotification}}">
+                    <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
+                        <mat-slide-toggle [checked]="basket.flagNotif" color="primary" (change)="toggleFlagNotif(basket);false"></mat-slide-toggle>
+                    </mat-icon>
+                    <p mat-line [ngStyle]="{'opacity': basket.flagNotif ? '' : '0.3'}" (click)="toggleFlagNotif(basket);false">
+                        {{lang.activateNotification}}
+                    </p>
+                </a>
             </mat-nav-list>
             <mat-divider></mat-divider>
         </mat-sidenav>
@@ -26,7 +43,6 @@
                             <mat-form-field>
                                 <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.id" (blur)="isAvailable()"
                                     maxlength="32" pattern="^[\w.-]*$" required>
-                                <!-- <i *ngIf="creationMode" class="fa fa-circle" aria-hidden="true" [ngStyle]="{'color': basketIdAvailable ? 'green' : 'red'}"></i> -->
                                 <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="basket.id"
                                     required disabled>
                             </mat-form-field>
@@ -52,72 +68,30 @@
                                     (click)="snav2.toggle()"></mat-icon>
                             </mat-form-field>
                             <div id="listOrder">
-                                <div class="row" id="itemOrder" *ngFor="let columnOrder of orderColumnsSelected; index as i">
+                                <div class="row" *ngFor="let columnOrder of orderColumnsSelected;let i = index">
                                     <div class="col-md-5 col-xs-5 text-center">
                                         <mat-form-field >
-                                            <mat-select #columnPrio placeholder="{{lang.defaultSort}}" [formControl]="columnsFormControl[i]" name="basket_res_order" required>
-                                                <mat-option #columnTargeted *ngFor="let column of orderColumns" (click)="onOrderChange(column, 'column', i)" [value] ="column">{{langVarName[orderColumns.indexOf(column)]}}</mat-option>
+                                            <mat-select placeholder="{{lang.defaultSort}} {{i+1}}" [(ngModel)]="orderColumnsSelected[i].column" name="basket_res_order{{i}}" required>
+                                                <mat-option *ngFor="let column of orderColumns" [value]="column">{{langVarName[orderColumns.indexOf(column)]}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-md-5 col-xs-5 text-center">
                                         <mat-form-field>
-                                            <mat-select #columnOrder placeholder="{{lang.orderBy}}" [formControl]="orderFormControl[i]" name="order_by_select" required>
-                                                <mat-option #orderTargeted *ngFor="let order of orderByColumns" (click)="onOrderChange(order, 'order', i)" [value]="order">{{langOrderName[orderByColumns.indexOf(order)]}}</mat-option>
+                                            <mat-select placeholder="{{lang.orderBy}}" [(ngModel)]="columnOrder.order" name="order_by_select{{i}}" required>
+                                                <mat-option *ngFor="let order of orderByColumns" [value]="order">{{langOrderName[orderByColumns.indexOf(order)]}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-md-1 col-xs-1 text-center">
-                                        <button mat-button type="button" *ngIf="numberOrderColumnsSelected > 0" (click)="removeLine(i)">
+                                    <div class="col-md-2 col-xs-2 text-left">
+                                        <button [disabled]="orderColumnsSelected.length==1" color="warn" mat-icon-button type="button" (click)="removeLine(i)">
                                             <mat-icon class='fa fa-minus-square fa-2x'></mat-icon>
                                         </button>
-                                    </div>
-                                    <div class="col-md-1 col-xs-1 text-center">
-                                        <button mat-button type="button" *ngIf="numberOrderColumnsSelected < 1" (click)="addLine()">
+                                        <button *ngIf="orderColumnsSelected.length==(i+1)" [disabled]="orderColumnsSelected.length==2" color="primary" mat-icon-button type="button" (click)="addLine()">
                                             <mat-icon class='fa fa-plus-square fa-2x'></mat-icon>
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- <div class="row">
-                                <div class="col-md-6 col-xs-6 text-center">
-                                    <mat-form-field >
-                                        <mat-select #columnPrio placeholder="{{lang.defaultSort}}" [formControl]="columnsFormControl" name="basket_res_order" multiple required>
-                                                <mat-option #columnTargeted *ngFor="let column of orderColumns" (click)="onOrderChange(column,columnTargeted.selected)" [value] ="column" [disabled]="columnPrio.selected.length == 2 && !columnTargeted.selected" >{{langVarName[orderColumns.indexOf(column)]}}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>                                        
-                                <div class="col-md-6 col-xs-6 text-center">
-                                    <mat-chip-list [(ngModel)]="orderColumnsSelected" name="basket_res_order_chips" #chipList>
-                                        <div style="width: 100%" class="row" *ngFor="let column of orderColumnsSelected">
-                                            <div style="text-align: left" class="col-md-6 col-xs-6">
-                                                <mat-chip color="primary" [removable]="true" (removed)="removeColumn(column)">  
-                                                        <span class="badge badge-pill badge-dark">{{orderColumnsSelected.indexOf(column)+1}}</span> &nbsp;{{langVarName[orderColumns.indexOf(column)]}}
-                                                        <mat-icon matChipRemove class="fa fa-times-circle"></mat-icon>
-                                                </mat-chip>
-                                            </div>
-                                            <div class="col-md-6 col-xs-6">
-                                                <mat-form-field>
-                                                    <mat-select placeholder="{{lang.orderBy}}" value="{{orderByColumns[0]}}" [(ngModel)]="orderBy[orderColumnsSelected.indexOf(column)]" name="order_by_select" required>
-                                                        <mat-option *ngFor="let order of orderByColumns" [value]="order">{{langOrderName[orderByColumns.indexOf(order)]}}</mat-option>
-                                                    </mat-select>
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-                                    </mat-chip-list>
-                                </div>
-                            </div>                -->
-                            <div class="col-md-6 col-xs-6 text-center">
-                                <mat-slide-toggle [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.3'}" color="primary" matTooltip="{{lang.isSearchBasket}}" name="isSearchBasket" [(ngModel)]="basket.isSearchBasket">
-                                    &nbsp;
-                                    <mat-icon color="primary" style="width: auto;" class="fa fa-search fa-2x"></mat-icon>
-                                </mat-slide-toggle>
-                            </div>
-                            <div class="col-md-6 col-xs-6 text-center">
-                                <mat-slide-toggle [ngStyle]="{'opacity': basket.flagNotif ? '' : '0.3'}" color="primary" matTooltip="{{lang.basketNotification}}" name="flagNotif" [(ngModel)]="basket.flagNotif">
-                                    &nbsp;
-                                    <mat-icon style="width: auto;" class="fa fa-bell fa-2x"></mat-icon>
-                                </mat-slide-toggle>
                             </div>
                             <div class="col-md-12 text-center" style="padding:10px;">
                                 <button class="enableAtionBottomCenterSmarpthone" mat-raised-button [disabled]="!basketForm.form.valid || orderColumnsSelected.length == 0" color="primary">{{lang.save}}</button>

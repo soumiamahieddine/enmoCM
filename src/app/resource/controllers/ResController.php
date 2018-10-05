@@ -77,7 +77,11 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $mandatoryColumns = ['type_id'];
+        $mandatoryColumns = [];
+        if ($data['table'] == 'res_letterbox') {
+            $mandatoryColumns[] = 'type_id';
+        }
+
         foreach ($data['data'] as $value) {
             foreach ($mandatoryColumns as $columnKey => $column) {
                 if ($column == $value['column'] && !empty($value['value'])) {

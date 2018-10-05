@@ -92,6 +92,9 @@ $app->get('/batchHistories', \History\controllers\BatchHistoryController::class 
 
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
+$app->put('/contacts/{id}', \Contact\controllers\ContactController::class . ':update');
+$app->post('/contacts/{id}/addresses', \Contact\controllers\ContactController::class . ':createAddress');
+$app->put('/contacts/{id}/addresses/{addressId}', \Contact\controllers\ContactController::class . ':updateAddress');
 $app->get('/contacts/{contactId}/communication', \Contact\controllers\ContactController::class . ':getCommunicationByContactId');
 $app->get('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':get');
 $app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':create');

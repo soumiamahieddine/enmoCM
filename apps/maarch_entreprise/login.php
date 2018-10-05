@@ -107,9 +107,9 @@ if (
     file_exists('custom/' . $_SESSION['custom_override_id'] . '/apps/maarch_entreprise/img/bodylogin.jpg')
 
 ) {
-    echo "<body id='bodyloginCustom0' onload=\"session_expirate({$time}, '{$_SESSION['config']['coreurl']}');\">";
+    echo "<body id='bodyloginCustom0'>";
 } else {
-    echo "<body id='bodylogin' onload=\"session_expirate({$time}, '{$_SESSION['config']['coreurl']}');\">";
+    echo "<body id='bodylogin'>";
 }
 
 echo '<div id="bodyloginCustom">';

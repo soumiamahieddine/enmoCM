@@ -1263,7 +1263,7 @@ th.ref {
     padding-right: 10px;
     text-align: left;
     min-height: 400px;
-    height: 80%;
+    height: auto;
 }
 
 #head {
@@ -3521,10 +3521,8 @@ table.listing  {
     margin-top: 2px;
     padding: 2px 2px;
     width: 225px;
-    min-height: 13px;   
-    height: 150px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    min-height: 13px;
+    overflow: hidden;
 }
 
 .largerList{

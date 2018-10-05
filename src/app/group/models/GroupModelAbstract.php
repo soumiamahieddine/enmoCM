@@ -184,8 +184,8 @@ abstract class GroupModelAbstract
         $aUsers = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroup_content, users'],
-            'where'     => ['group_id = ?', 'usergroup_content.user_id = users.user_id'],
-            'data'      => [$aArgs['groupId']]
+            'where'     => ['group_id = ?', 'usergroup_content.user_id = users.user_id', 'users.status != ?'],
+            'data'      => [$aArgs['groupId'], 'DEL']
         ]);
 
         return $aUsers;

@@ -25,7 +25,6 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Template\models\TemplateAssociationModel;
-use Template\models\TemplateModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
 
@@ -99,15 +98,18 @@ class EntityController
             if ($listTemplate['object_type'] == 'entity_id' && !empty($listTemplate['item_id'])) {
                 $entity['listTemplate']['id'] = $listTemplate['id'];
                 if ($listTemplate['item_type'] == 'user_id') {
-                    $entity['listTemplate'][$listTemplate['item_mode']][] = [
-                        'item_type'             => $listTemplate['item_type'],
-                        'item_id'               => $listTemplate['item_id'],
-                        'sequence'              => $listTemplate['sequence'],
-                        'title'                 => $listTemplate['title'],
-                        'description'           => $listTemplate['description'],
-                        'labelToDisplay'        => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
-                        'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
-                    ];
+                    $statusUser = UserModel::getByUserId(['select' => ['status'], 'userId' => $listTemplate['item_id']]);
+                    if ($statusUser['status'] != 'DEL') {
+                        $entity['listTemplate'][$listTemplate['item_mode']][] = [
+                            'item_type'             => $listTemplate['item_type'],
+                            'item_id'               => $listTemplate['item_id'],
+                            'sequence'              => $listTemplate['sequence'],
+                            'title'                 => $listTemplate['title'],
+                            'description'           => $listTemplate['description'],
+                            'labelToDisplay'        => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
+                            'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
+                        ];
+                    }
                 } elseif ($listTemplate['item_type'] == 'entity_id') {
                     $entity['listTemplate'][$listTemplate['item_mode']][] = [
                         'item_type'             => $listTemplate['item_type'],
@@ -135,7 +137,7 @@ class EntityController
             }
         }
 
-        $entity['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.id','users.user_id', 'users.firstname', 'users.lastname']]);
+        $entity['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.id','users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
         $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
         $entity['hasChildren'] = count($children) > 0;
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);

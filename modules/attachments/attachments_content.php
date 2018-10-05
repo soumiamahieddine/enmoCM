@@ -637,7 +637,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $_SESSION['data'],
                 array(
                     'column' => 'attachment_type',
-                    'value' => $previous_attachment->attachment_type,
+                    'value' => $_REQUEST['attachment_types'][0],
                     'type' => 'string',
                 )
             );
@@ -787,6 +787,10 @@ if (isset($_POST['add']) && $_POST['add']) {
         //CREATE SQL UPDATE
         $set_update = ' title = :title';
         $arrayPDO = array_merge($arrayPDO, array(':title' => $title));
+        if (!empty($_REQUEST['attachment_types'][0])) {
+            $set_update .= ", attachment_type = :attachmentType";
+            $arrayPDO = array_merge($arrayPDO, array(':attachmentType' => $_REQUEST['attachment_types'][0]));
+        }
         if (isset($_REQUEST['back_date'][0]) && $_REQUEST['back_date'][0] != '') {
             $set_update .= ", validation_date = '".$req->format_date_db($_REQUEST['back_date'][0])."'";
         } else {
@@ -1049,6 +1053,7 @@ if (isset($_REQUEST['id'])) {
     $infoAttach = (object) $ac->initAttachmentInfos($_SESSION['doc_id']);
 
     //On recherche le type de document attaché à ce courrier
+}
     $stmt = $db->query('SELECT r.type_id, r.creation_date, m.category_id FROM res_letterbox r INNER JOIN mlb_coll_ext m ON m.res_id = r.res_id WHERE r.res_id = ?', array($_SESSION['doc_id']));
     $mail_doctype = $stmt->fetchObject();
     $type_id = $mail_doctype->type_id;
@@ -1065,7 +1070,6 @@ if (isset($_REQUEST['id'])) {
             $attachments_types_for_process[$key] = $_SESSION['attachment_types'][$key];
         }
     }
-}
 
 //BEGIN FORM ATTACHMENT
 //INITIALIZE
@@ -1140,7 +1144,30 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
         }
         $content .= '</select>&nbsp;<span class="red_asterisk" id="attachment_types_mandatory"><i class="fa fa-star"></i></span>';
     } else {
-        $content .= '<input type="text" name="attachment_types_show[]" id="attachment_types_show" value="'.$_SESSION['attachment_types'][$infoAttach->attachment_type].'" disabled class="readonly"/>';
+        $content .= '<select name="attachment_types[]" id="attachment_types" onchange="affiche_chrono(this);select_template(\''.$_SESSION['config']['businessappurl']
+            .'index.php?display=true&module=templates&page=select_templates\', this, \'edit\');"/>';
+        $content .= '<option value="">'._CHOOSE_ATTACHMENT_TYPE.'</option>';
+        foreach (array_keys($attachments_types_for_process) as $attachmentType) {
+            if (empty($_SESSION['attachment_types_get_chrono'][$attachmentType][0])) {
+                $_SESSION['attachment_types_get_chrono'][$attachmentType] = '';
+            }
+            if (empty($_SESSION['attachment_types_with_delay'][$attachmentType][0])) {
+                $_SESSION['attachment_types_with_delay'][$attachmentType] = '';
+            }
+            if ($_SESSION['attachment_types_show'][$attachmentType] == 'true') {
+                $content .= '<option value="'.$attachmentType.'" width_delay="'.$_SESSION['attachment_types_with_delay'][$attachmentType].'" with_chrono = "'.$_SESSION['attachment_types_with_chrono'][$attachmentType].'" get_chrono = "'.$_SESSION['attachment_types_get_chrono'][$attachmentType].'"';
+
+                if ($_SESSION['attachment_types'][$attachmentType] == $_SESSION['attachment_types'][$infoAttach->attachment_type]) {
+                    $content .= ' selected = "selected"';
+                }
+                $content .= '>';
+                $content .= $_SESSION['attachment_types'][$attachmentType];
+                $content .= '</option>';
+            }
+        }
+        $content .= '</select>&nbsp;<span class="red_asterisk" id="attachment_types_mandatory"><i class="fa fa-star"></i></span>';
+
+//        $content .= '<input type="text" name="attachment_types_show[]" id="attachment_types_show" value="'.$_SESSION['attachment_types'][$infoAttach->attachment_type].'" disabled class="readonly"/>';
         $content .= '<input type="hidden" name="attachment_types[]" id="attachment_types" value="'.$infoAttach->attachment_type.'" readonly class="readonly"/>';
     }
     $content .= '</p>';

@@ -37,7 +37,7 @@ abstract class multicontacts_Abstract extends Database
 {
     public function updateContactsInputField($ajaxPath, $contactsArray, $inputField, $readOnly = false)
     {
-        $content = '<div style="max-height: 350px; overflow-y: auto">';
+        $content = '<div style="max-height: 350px;overflow-x: hidden;overflow-y: auto">';
         //Init with loading div
         $content .= '<div id="loading_'.$inputField.'" style="display:none;"><img src="'
             . $_SESSION['config']['businessappurl']
