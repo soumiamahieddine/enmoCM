@@ -736,7 +736,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $_SESSION['data'],
                 array(
                     'column' => 'identifier',
-                    'value' => $previous_attachment->identifier,
+                    'value' => $_REQUEST['chrono'][0],
                     'type' => 'string',
                 )
             );
@@ -790,6 +790,10 @@ if (isset($_POST['add']) && $_POST['add']) {
         if (!empty($_REQUEST['attachment_types'][0])) {
             $set_update .= ", attachment_type = :attachmentType";
             $arrayPDO = array_merge($arrayPDO, array(':attachmentType' => $_REQUEST['attachment_types'][0]));
+        }
+        if (!empty($_REQUEST['chrono'][0])) {
+            $set_update .= ", identifier = :identifier";
+            $arrayPDO = array_merge($arrayPDO, array(':identifier' => $_REQUEST['chrono'][0]));
         }
         if (isset($_REQUEST['back_date'][0]) && $_REQUEST['back_date'][0] != '') {
             $set_update .= ", validation_date = '".$req->format_date_db($_REQUEST['back_date'][0])."'";
