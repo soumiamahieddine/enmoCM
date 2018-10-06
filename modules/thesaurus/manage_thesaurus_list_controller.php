@@ -267,15 +267,20 @@ function display_list() {
     }
 
     $orderstr = $list->define_order($order, $field);
+
+    if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+        $parameters .= '&start='.$_REQUEST['start'];
+    } else {
+        $_REQUEST['start'] = 0;
+    }
+
     $request = new request();
     $tab = $request->PDOselect(
         $select, $where, $where_what, $orderstr, $_SESSION['config']['databasetype'], 
-        "default", false, "", "", "", true, false, true
+        "default", false, "", "", "", true, false, true, $_REQUEST['start']
     );
 
-    $nb_tes = $thesaurus->countThesaurus();
-    //$request->show();
-    //var_dump($tab);
+
     for ($i=0;$i<count($tab);$i++) {
         foreach ($tab[$i] as &$item) {
             switch ($item['column']) {
@@ -334,7 +339,7 @@ function display_list() {
         'page_name_val'       => '',
         'page_name_ban'       => '',
         'label_add'           => _ADD_THESAURUS,
-        'title'               => _THESAURUS_LIST . ' : ' . $nb_tes . ' (' . $i . ' ' . _DISPLAYED . ')',
+        'title'               => _THESAURUS_LIST . ' : ' . $_SESSION['save_list']['full_count'],
         'autoCompletionArray' => array(
                                      'list_script_url'  =>
                                         $_SESSION['config']['businessappurl']

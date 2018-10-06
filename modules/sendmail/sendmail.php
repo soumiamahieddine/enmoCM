@@ -87,6 +87,8 @@ if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
 }
 if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
     $parameters .= '&start='.$_REQUEST['start'];
+} else {
+    $_REQUEST['start'] = 0;
 }
 
  if (isset($_REQUEST['load'])) {
@@ -162,8 +164,8 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
      //Request
      $tab = $request->PDOselect(
             $select, $where, array(), $orderstr,
-            $_SESSION['config']['databasetype'], '500', true, EMAILS_TABLE, USERS_TABLE,
-            'user_id'
+            $_SESSION['config']['databasetype'], 'default', true, EMAILS_TABLE, USERS_TABLE,
+            'user_id', true, false, false, $_REQUEST['start']
         );
      // $request->show();
 
@@ -325,8 +327,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
                 .'&origin='.$origin.'&display=true'.$parameters;                            //Parametres d'url supplementaires
         $paramsTab['filters'] = array();                                                     //Filtres
         $paramsTab['listHeight'] = '100%';                                                  //Hauteur de la liste
-        // $paramsTab['bool_showSmallToolbar'] = true;                                         //Mini barre d'outils
-        // $paramsTab['linesToShow'] = 15;                                                     //Nombre de ligne a afficher
+        $paramsTab['start'] = $_REQUEST['start'];
         $paramsTab['listCss'] = $css;                                                       //CSS
         $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
 

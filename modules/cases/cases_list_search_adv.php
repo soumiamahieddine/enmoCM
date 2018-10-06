@@ -1,35 +1,15 @@
 <?php
-/*
-*
-*    Copyright 2008,2012 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 /**
- * @brief   Displays document list in baskets
- *
- * @file
- *
- * @author Yves Christian Kpakpo <dev@maarch.org>
- * @date $date$
- *
- * @version $Revision$
- * @ingroup basket
- */
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+*
+* @brief   cases_list_search_adv
+*
+* @author  dev <dev@maarch.org>
+* @ingroup cases
+*/
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php';
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_status.php';
@@ -42,20 +22,25 @@ $core_tools = new core_tools();
 $request = new request();
 $list = new lists();
 
+//URL extra Parameters
+$parameters = '';
+$start = $list->getStart();
+$parameters .= '&start='.$start;
+
 //Templates
-    $defaultTemplate = 'cases_list_search_adv';
-    $selectedTemplate = $list->getTemplate();
-    if (empty($selectedTemplate)) {
-        if (!empty($defaultTemplate)) {
-            $list->setTemplate($defaultTemplate);
-            $selectedTemplate = $list->getTemplate();
-        }
+$defaultTemplate = 'cases_list_search_adv';
+$selectedTemplate = $list->getTemplate();
+if (empty($selectedTemplate)) {
+    if (!empty($defaultTemplate)) {
+        $list->setTemplate($defaultTemplate);
+        $selectedTemplate = $list->getTemplate();
     }
-    $template_list = array();
-    array_push($template_list, 'documents_list_search_adv');
-    if ($core_tools->is_module_loaded('cases')) {
-        array_push($template_list, 'cases_list_search_adv');
-    }
+}
+$template_list = array();
+array_push($template_list, 'documents_list_search_adv');
+if ($core_tools->is_module_loaded('cases')) {
+    array_push($template_list, 'cases_list_search_adv');
+}
 
 //Create sql request
  $_SESSION['collection_id_choice'] = 'letterbox_coll';
@@ -110,7 +95,7 @@ $arrayPDO = array();
         $add_security = true;
     }
 
-//Order
+    //Order
     $order = $order_field = '';
     $order = $list->getOrder();
     $order_field = $list->getOrderField();
@@ -123,7 +108,7 @@ $arrayPDO = array();
     }
 
 //Query
-    $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', $add_security, false, true);
+    $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', $add_security, false, true, $start);
     //$request->show();
 //Result
     for ($i = 0; $i < count($tab); ++$i) {
@@ -212,7 +197,7 @@ if (count($tab) > 0) {
     //Initialiser le tableau de param�tres
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                                  //Desactivation du mode return (vs echo)
-    $paramsTab['pageTitle'] = _RESULTS.' : '.count($tab).' '._FOUND_CASE;                  //Titre de la page
+    $paramsTab['pageTitle'] = _RESULTS.' : '.$_SESSION['save_list']['full_count'].' '._FOUND_CASE;                  //Titre de la page
     $paramsTab['pagePicto'] = 'search';
     $paramsTab['bool_sortColumn'] = true;                                                   //Affichage Tri
     $paramsTab['defaultTemplate'] = 'cases_list_search_adv';
@@ -221,6 +206,7 @@ if (count($tab) > 0) {
         $paramsTab['templates'] = $template_list;
     }                              //Default template
     $paramsTab['bool_showTemplateDefaultList'] = true;                                      //Default list (no template)
+    $paramsTab['start'] = $start;
     $paramsTab['tools'] = array();                                                          //Icones dans la barre d'outils
     $export = array(
             'script' => "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",

@@ -643,10 +643,8 @@ abstract class list_show_with_template_Abstract extends list_show
         $this->the_link = $link;
         $nb_show = $_SESSION['config']['nblinetoshow'];
         $nb_pages = ceil($nb_total / $nb_show);
-        $end = $start + $nb_show;
-        if ($end > $nb_total) {
-            $end = $nb_total;
-        }
+        $end = count($result);
+
         if ($show_big_title) {
             $list_title .= '<h1>';
             if (!empty($picto_path)) {
@@ -766,7 +764,7 @@ abstract class list_show_with_template_Abstract extends list_show
             }
         }
         $content_list = '';
-        for ($theline = $start; $theline < $end; ++$theline) {
+        for ($theline = 0; $theline < $end; ++$theline) {
             $true_content = $content;
             preg_match_all('/##(.*?)##/', $true_content, $out);
             for ($i = 0; $i < count($out[0]); ++$i) {

@@ -121,9 +121,14 @@ array_pop($select['view_contacts']);
 
 $orderstr = $list->define_order($order, $field);
 
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+    $parameters .= '&start='.$_REQUEST['start'];
+} else {
+    $_REQUEST['start'] = 0;
+}
 $request = new request();
 $tab = $request->PDOselect(
-    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
+    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', true, false, false, $_REQUEST['start']
 );
 // $request->show();
 
@@ -270,10 +275,10 @@ $autoCompletionArray['list_script_url'] = $_SESSION['config']['businessappurl']
 $autoCompletionArray['number_to_begin'] = 1;
 $autoCompletionArray['searchBoxAutoCompletionUpdate'] = true;
 
-$title = _ADDRESSES_LIST.' : '.$i.' '._ADDRESSES;
+$title = _ADDRESSES_LIST.' : '.$_SESSION['save_list']['full_count'].' '._ADDRESSES;
 
 $list->admin_list(
-    $tab, $i, $title,
+    $tab, $_SESSION['save_list']['full_count'], $title,
     'contact_id', 'contact_addresses_list', 'contact_addresses',
     'id', true, $pageNameUp, $pageNameVal, $pageNameBan,
     $pageNameDel, $pageNameAdd, $addLabel, false, false, _ALL_CONTACT_ADDRESSES,

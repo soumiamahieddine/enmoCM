@@ -25,12 +25,14 @@ if (!empty($_REQUEST['code']) && !empty($_REQUEST['state'])) {
 }
 
 //reset orders in previous basket list
+
 if (empty($_SESSION['current_basket'])) {
-    $_SESSION['save_list']['start'] = "";
+    $_SESSION['save_list']['start'] = 0;
     $_SESSION['save_list']['lines'] = "";
     $_SESSION['save_list']['order'] = "";
     $_SESSION['save_list']['order_field'] = "";
     $_SESSION['save_list']['template'] = "";
+    $_SESSION['save_list']['full_count'] = 0;
 }
 
 // Useless ???

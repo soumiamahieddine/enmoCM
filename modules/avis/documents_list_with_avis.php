@@ -44,9 +44,8 @@ if (!empty($what)) {
 if (!empty($selectedTemplate)) {
     $parameters .= '&template='.$selectedTemplate;
 }
-if (!empty($start)) {
-    $parameters .= '&start='.$start;
-}
+
+$parameters .= '&start='.$start;
 $_SESSION['save_list']['start'] = $start;
 
 //Keep some parameters
@@ -150,10 +149,9 @@ if (!empty($order_field) && !empty($order)) {
     $orderstr = 'order by modification_date desc';
     $_SESSION['last_order_basket'] = $orderstr;
 }
-
 //Request
-$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, '', '', '', false, false, 'distinct');
-// $request->show(); exit;
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', false, false, 'distinct', $_SESSION['save_list']['start']);
+
 //Templates
 $defaultTemplate = 'documents_list_with_avis';
 $selectedTemplate = $list->getTemplate();
@@ -499,7 +497,7 @@ $listKey = 'res_id';
 
 //Initialiser le tableau de parametres
 $paramsTab = array();
-$paramsTab['pageTitle'] = _RESULTS.' : '.count($tab).' '._FOUND_DOCS;              //Titre de la page
+$paramsTab['pageTitle'] = _RESULTS.' : '.$_SESSION['save_list']['full_count'].' '._FOUND_DOCS;              //Titre de la page
 $paramsTab['listCss'] = 'listing largerList spec';                                  //css
 $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
@@ -513,6 +511,7 @@ if (count($template_list) > 0) {                                                
     $paramsTab['templates'] = $template_list;
 }
 $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
+$paramsTab['start'] = $_SESSION['save_list']['start'];
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
 //Fileplan
@@ -575,7 +574,6 @@ if ($core_tools->test_service('print_doc_details_from_list', 'apps', false)) {
 //Afficher la liste
 $status = 0;
 $content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
-// $debug = $list->debug(false);
 
 $content .= '<script>$j(\'#container\').attr(\'style\', \'width: 90%; min-width: 1000px;\');$j(\'#content\').attr(\'style\', \'width: auto; min-width: 1000px;\');';
 $content .= '$j(\'#inner_content\').attr(\'style\', \'width: auto; min-width: 1000px;\');</script>';

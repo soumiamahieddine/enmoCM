@@ -69,9 +69,8 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
         if (!empty($order_field) && !empty($order)) {
             $parameters .= '&order='.$order.'&order_field='.$order_field;
         }
-        if (!empty($start)) {
-            $parameters .= '&start='.$start;
-        }
+        $parameters .= '&start='.$start;
+        
 
         //Order
         $order = $order_field = '';
@@ -218,7 +217,8 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
                         if ($tab[$i][$j][$value] == 'status') {
                             $res_status = $status_obj->get_status_data($tab[$i][$j]['value'], $extension_icon);
                             $statusCmp = $tab[$i][$j]['value'];
-                            $tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
+                            $img_class = substr($res_status['IMG_SRC'], 0, 2);
+                            $tab[$i][$j]['value'] = '<i '.$style." class = '".$img_class.' '.$res_status['IMG_SRC'].' '.$img_class."-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
                             $tab[$i][$j]['label'] = _STATUS;
                             $tab[$i][$j]['size'] = '4';
                             $tab[$i][$j]['label_align'] = 'left';
@@ -283,12 +283,13 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
                 // $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
                 $paramsTab['urlParameters'] = 'id='.$_REQUEST['id'].'&display=true';                //Parametres d'url supplementaires
                 $paramsTab['listHeight'] = '380px';                                                 //Hauteur de la liste
-                $paramsTab['linesToShow'] = 10;                                                     //Nombre de ligne a afficher
+                $paramsTab['start'] = 0;
                 $paramsTab['bool_changeLinesToShow'] = false;                                       //Modifier le nombre de ligne a afficher
                 $paramsTab['listCss'] = 'listingsmall';                                             //CSS
                 $paramsTab['divListId'] = 'list_doc';                                               //Id du Div de retour ajax
                 $paramsTab['bool_checkBox'] = true;                                                 //Case a cocher
-                $paramsTab['bool_standaloneForm'] = true;                                           //Formulaire
+                $paramsTab['bool_standaloneForm'] = true;                                           //Formulaire  
+                                                        
                 $paramsTab['disabledRules'] = "@@right_doc@@ == 'false' || "
                     .(int) $change_fileplan.' == 0';                           						//Veroullage de ligne(heckbox ou radio button)
 

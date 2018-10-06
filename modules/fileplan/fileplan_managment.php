@@ -242,13 +242,12 @@ if (empty($fileplan_id)) {
         if (!empty($what)) {
             $parameters .= '&what='.$what;
         }
-        if (!empty($start)) {
-            $parameters .= '&start='.$start;
-        }
+
+        $parameters .= '&start='.$start;
 
         //Request
 
-        $tab = $request->PDOselect($select, $where, $array_what, $orderstr, $_SESSION['config']['databasetype']);
+        $tab = $request->PDOselect($select, $where, $array_what, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, false, $start);
 
         //Result array
         for ($i = 0; $i < count($tab); ++$i) {
@@ -324,7 +323,7 @@ if (empty($fileplan_id)) {
         $paramsTab = array();
         $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
         $paramsTab['pageTitle'] = _FILEPLAN_SHORT.' : '
-            .count($tab).' '._FILEPLAN_POSITIONS;              								//Titre de la page
+            .$_SESSION['save_list']['full_count'].' '._FILEPLAN_POSITIONS;              								//Titre de la page
         $paramsTab['pagePicto'] = 'copy';               	//Image (pictogramme) de la page
         $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
         $paramsTab['bool_showSearchTools'] = true;                                          //Affiche le filtre alphabetique et le champ de recherche
@@ -332,7 +331,7 @@ if (empty($fileplan_id)) {
             .'index.php?display=true&module=fileplan&page='
             .'positions_list_autocompletion&fileplan_id='.$fileplan_id;   					//Script pour l'autocompletion
         $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
-        $paramsTab['linesToShow'] = 15;                                                     //Nombre de lignes a afficher (parametre de config.xml par defaut)
+        $paramsTab['start'] = $start;
         $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
         $paramsTab['addButtonLabel'] = _NEW_POSITION;                                       //Libellé du bouton Nouveau
         $paramsTab['addButtonScript'] = "showFileplanForm('"

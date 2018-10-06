@@ -130,7 +130,11 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 }
 
 $orderstr = $list->define_order($order, $field);
-
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+    $parameters .= '&start='.$_REQUEST['start'];
+} else {
+    $_REQUEST['start'] = 0;
+}
 //EXPORT DE LA LISTE
 $select2[$_SESSION['tablename']['contacts_v2']] = array();
 array_push($select2[$_SESSION['tablename']['contacts_v2']], 'contact_id as "'._ID.'"','is_corporate_person as "'._IS_CORPORATE_PERSON.'"', 'contact_type as "'._CONTACT_TYPE.'"','lastname as "'._LASTNAME . '"', 'firstname as "'._FIRSTNAME . '"', 'society as "'._STRUCTURE_ORGANISM . '"');
@@ -145,7 +149,7 @@ $_SESSION['export_admin_list']['where'] = $where;
 $_SESSION['export_admin_list']['aPDO'] = $arrayPDO;
 $_SESSION['export_admin_list']['order'] = $orderstr;
 
-$tab=$request->PDOselect($select,$where,$arrayPDO, $orderstr,$_SESSION['config']['databasetype']);
+$tab=$request->PDOselect($select,$where,$arrayPDO, $orderstr,$_SESSION['config']['databasetype'], 'default', false, '', '', '', true, false, false, $_REQUEST['start']);
 
 for ($i=0;$i<count($tab);$i++)
 {
@@ -261,13 +265,13 @@ if ($admin->test_admin('admin_contacts', 'apps', false)) {
 $page_name_add = "contacts_v2_add";
 $label_add = _CONTACT_ADDITION;
 $_SESSION['m_admin']['init'] = true;
-$title = _CONTACTS_LIST." : ".$i." "._CONTACTS;
+$title = _CONTACTS_LIST." : ".$_SESSION['save_list']['full_count']." "._CONTACTS;
 $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=contacts_v2_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 $autoCompletionArray["searchBoxAutoCompletionUpdate"] = true;
 
-$list->admin_list($tab, $i, $title, 'contact_id','contacts_v2','contacts_v2','contact_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_CONTACTS, _CONTACT, 'users', false, true, true, true, $what, true, $autoCompletionArray, false, true);
+$list->admin_list($tab, $_SESSION['save_list']['full_count'], $title, 'contact_id','contacts_v2','contacts_v2','contact_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_CONTACTS, _CONTACT, 'users', false, true, true, true, $what, true, $autoCompletionArray, false, true);
 $_SESSION['m_admin']['contacts'] = array();
 $_SESSION['m_admin']['contacts']['id'] = "";
 $_SESSION['m_admin']['contacts']['title'] = "";

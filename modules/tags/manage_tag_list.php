@@ -14,7 +14,7 @@ if ($mode == 'list') {
     $list = new list_show();
     $list->admin_list(
         $tagslist['tab'],
-        count($tagslist['tab']),
+        $_SESSION['save_list']['full_count'],
         $tagslist['title'],
         'tag_label',
         'manage_tag_list_controller&mode=list',

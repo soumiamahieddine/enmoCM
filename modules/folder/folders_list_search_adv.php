@@ -15,9 +15,7 @@ $func = new functions();
 $list = new lists();
 
 $_SESSION['error_page'] = '';
-if ($_GET['start'] != null) {
-    $_SESSION['save_list']['start'] = $_GET['start'];
-}
+
 if ($_GET['lines'] != null) {
     $_SESSION['save_list']['lines'] = $_GET['lines'];
 }
@@ -63,8 +61,16 @@ if ($_GET['order_field'] != null) {
         $orderstr = 'order by folder_name asc';
     }
 
+    if (isset($_REQUEST['start'])) {
+        $start = $_REQUEST['start'];
+        $_SESSION['save_list']['start'] = $start;
+    } else if (empty($_SESSION['save_list']['start']) && !isset($_REQUEST['start'])){
+        $start = $list->getStart();
+        $_SESSION['save_list']['start'] = $start;
+    }
+
 //Query
-    $tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
+    $tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, false, $_SESSION['save_list']['start']);
     // $request->show();
 //Result Array
     if (count($tab) > 0) {
@@ -167,10 +173,11 @@ if ($_GET['order_field'] != null) {
         //Initialiser le tableau de param�tres
         $paramsTab = array();
         $paramsTab['bool_modeReturn'] = false;                                          //Desactivation du mode return (vs echo)
-        $paramsTab['pageTitle'] = _RESULTS.' : '.count($tab).' '._FOUND_FOLDER;        //Titre de la page
+        $paramsTab['pageTitle'] = _RESULTS.' : '.$_SESSION['save_list']['full_count'].' '._FOUND_FOLDER;        //Titre de la page
         $paramsTab['bool_sortColumn'] = true;                                           //Affichage Tri
         $paramsTab['pagePicto'] = 'search';                                      //Image de la page
         $paramsTab['tools'] = array();                                                  //Icones dans la barre d'outils
+        $paramsTab['start'] = $_SESSION['save_list']['start'];
         $export = array(
             'script' => "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
             'icon' => 'cloud-download-alt',

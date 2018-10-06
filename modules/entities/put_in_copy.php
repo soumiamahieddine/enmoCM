@@ -27,7 +27,7 @@ function get_form_txt(
 
     $diff_list = new diffusion_list();
     $_SESSION['process']['diff_list'] = $diff_list->get_listinstance($values_str);
-    $frm_str .= '<div id="diff_list_div_from_action">';
+    $frm_str .= '<div id="diff_list_div">';
         $frm_str .= '<div>';
             if (count($_SESSION['process']['diff_list']['copy']['users']) == 0 && count($_SESSION['process']['diff_list']['copy']['entities']) == 0) {
                 $frm_str .= _NO_COPY;

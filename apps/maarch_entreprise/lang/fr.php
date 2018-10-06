@@ -5182,3 +5182,6 @@ if (!defined('_CHRONO_NUMBER_HELP')) {
 if (!defined('_BARCODE_HELP')) {
     define('_BARCODE_HELP', "Exemple : ABC000004");
 }
+if (!defined('_PROCESS_IN_PROGRESS')) {
+    define('_PROCESS_IN_PROGRESS', "Traitement en cours");
+}

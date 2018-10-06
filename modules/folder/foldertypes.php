@@ -48,8 +48,14 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 
 $orderstr = $list->define_order($order, $field);
 
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+    $parameters .= '&start='.$_REQUEST['start'];
+} else {
+    $_REQUEST['start'] = 0;
+}
+
 $request= new request;
-$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', true, false, false, $_REQUEST['start']);
 
 for($i=0;$i<count($tab);$i++)
 {
@@ -98,10 +104,10 @@ $_SESSION['m_admin']['foldertype']['desc'] = "";
 $_SESSION['m_admin']['foldertype']['comment'] = "";
 $_SESSION['m_admin']['foldertype']['doctypes'] = array();
 $_SESSION['m_admin']['load_doctypes'] = true;
-$title = _FOLDERTYPES_LIST." : ".$i." "._TYPES;
+$title = _FOLDERTYPES_LIST." : ".$_SESSION['save_list']['full_count']." "._TYPES;
 $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=foldertype_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
-$list->admin_list($tab, $i, $title, 'foldertype_id','foldertypes','folder','foldertype_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_FOLDERTYPES, _FOLDERTYPE, 'briefcase', true, true, false, true, "", true, $autoCompletionArray);
+$list->admin_list($tab, $_SESSION['save_list']['full_count'], $title, 'foldertype_id','foldertypes','folder','foldertype_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_FOLDERTYPES, _FOLDERTYPE, 'briefcase', true, true, false, true, "", true, $autoCompletionArray);
 ?>

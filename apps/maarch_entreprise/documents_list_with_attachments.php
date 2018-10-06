@@ -35,6 +35,7 @@ require_once 'apps/'.$_SESSION['config']['app_id'].'/definition_mail_categories.
  //URL extra Parameters
     $parameters = '';
     $start = $list->getStart();
+
     if (!empty($order_field) && !empty($order)) {
         $parameters .= '&order='.$order.'&order_field='.$order_field;
     }
@@ -44,9 +45,8 @@ require_once 'apps/'.$_SESSION['config']['app_id'].'/definition_mail_categories.
     if (!empty($selectedTemplate)) {
         $parameters .= '&template='.$selectedTemplate;
     }
-    if (!empty($start)) {
-        $parameters .= '&start='.$start;
-    }
+
+    $parameters .= '&start='.$start;
     $_SESSION['save_list']['start'] = $start;
 
 //Keep some parameters
@@ -162,7 +162,7 @@ if (!empty($order_field) && !empty($order)) {
 }
 
 //Request
-$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, '', '', '', false, false, 'distinct');
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', false, false, 'distinct', $_SESSION['save_list']['start']);
 
 $_SESSION['current_basket']['last_query'] = array();
 $_SESSION['current_basket']['last_query']['select'] = $select;
@@ -499,7 +499,7 @@ $listKey = 'res_id';
 
 //Initialiser le tableau de parametres
 $paramsTab = array();
-$paramsTab['pageTitle'] = _RESULTS.' : '.count($tab).' '._FOUND_DOCS;   //Titre de la page
+$paramsTab['pageTitle'] = _RESULTS.' : '.$_SESSION['save_list']['full_count'].' '._FOUND_DOCS;   //Titre de la page
 $paramsTab['listCss'] = 'listing largerList spec';                     //css
 $paramsTab['bool_sortColumn'] = true;                                          //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                         //Affichage du titre en grand
@@ -507,6 +507,7 @@ $paramsTab['bool_showIconDocument'] = true;                                     
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
 $paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id']   //Parametres d'url supplementaires
                                              .$urlParameters;
+$paramsTab['start'] = $_REQUEST['start'];
 $paramsTab['filters'] = array(                                         //Filtres
                                                 'entity',
                                                 'entity_subentities',
@@ -522,6 +523,7 @@ if (count($template_list) > 0) {                                                
 
 $paramsTab['bool_showTemplateDefaultList'] = true;                                          //Default list (no template)
 $paramsTab['defaultTemplate'] = $defaultTemplate;                              //Default template
+$paramsTab['start'] = $_SESSION['save_list']['start'];
 $paramsTab['tools'] = array();                                       //Icones dans la barre d'outils
 
 //Fileplan

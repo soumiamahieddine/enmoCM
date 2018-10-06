@@ -44,9 +44,7 @@ require_once 'apps/'.$_SESSION['config']['app_id'].'/definition_mail_categories.
     if (!empty($selectedTemplate)) {
         $parameters .= '&template='.$selectedTemplate;
     }
-    if (!empty($start)) {
-        $parameters .= '&start='.$start;
-    }
+    $parameters .= '&start='.$start;
     $_SESSION['save_list']['start'] = $start;
 
 //Keep some parameters
@@ -166,7 +164,7 @@ if (!empty($order_field) && !empty($order)) {
 }
 
 //Request
-$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, '', '', '', false, false, 'distinct');
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', false, false, 'distinct', $_SESSION['save_list']['start']);
 // $request->show(); exit;
 //Templates
 $defaultTemplate = 'documents_list_with_signatory';
@@ -539,7 +537,7 @@ $listKey = 'res_id';
 
 //Initialiser le tableau de param�tres
 $paramsTab = array();
-$paramsTab['pageTitle'] = _RESULTS.' : '.count($tab).' '._FOUND_DOCS;              //Titre de la page
+$paramsTab['pageTitle'] = _RESULTS.' : '.$_SESSION['save_list']['full_count'].' '._FOUND_DOCS;              //Titre de la page
 $paramsTab['listCss'] = 'listing largerList spec';                                  //css
 $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
@@ -553,6 +551,7 @@ if (count($template_list) > 0) {                                                
     $paramsTab['templates'] = $template_list;
 }
 $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
+$paramsTab['start'] = $_SESSION['save_list']['start'];
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
 //Fileplan

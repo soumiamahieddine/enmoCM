@@ -215,10 +215,7 @@ class list_show_Abstract extends functions
 
             $nb_show = $_SESSION['config']['nblinetoshow'];
             $nb_pages = ceil($nb_total / $nb_show);
-            $end = $start + $nb_show;
-            if ($end > $nb_total) {
-                $end = $nb_total;
-            }
+            $end = count($result);
 
             if ($actual_template != '') {
                 $link .= '&amp;template='.$actual_template;
@@ -409,7 +406,7 @@ class list_show_Abstract extends functions
             $str .= ' <tbody>';
             $color = '';
 
-            for ($theline = $start; $theline < $end; ++$theline) {
+            for ($theline = 0; $theline < $end; ++$theline) {
                 if ($color == ' class="col"') {
                     $color = '';
                 } else {
@@ -456,7 +453,6 @@ class list_show_Abstract extends functions
                     $str .= ' </div>';
                     $str .= ' </td>';
                 }
-
                 for ($count_column = 0; $count_column < count($listcolumn); ++$count_column) {
                     if (isset($result[$theline][$count_column]['show'])
                         && $result[$theline][$count_column]['show'] == true
@@ -758,11 +754,9 @@ class list_show_Abstract extends functions
 
         $func = new functions();
         $param_comp = '';
-        if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
-            $start = strip_tags($_REQUEST['start']);
-        } else {
-            $start = 0;
-        }
+  
+        $start = $_REQUEST['start'];
+      
         $param_comp .= '&amp;start='.$start;
         if ($name == 'structures' || $name == 'subfolders' || $name == 'types' || $name == 'contact_types' || $name == 'contact_purposes' || $name == 'contacts_v2' || $name == 'contacts_v2_up' || $name == 'contact_addresses_list') {
             $link = $_SESSION['config']['businessappurl'].'index.php?page='.$name;
@@ -801,12 +795,12 @@ class list_show_Abstract extends functions
         $param_comp .= '&amp;what='.$what;
         // define the defaults values
         $nb_show = $_SESSION['config']['nblinetoshow'];
+        $current_page = ceil($start / $nb_show)+1;
         $nb_pages = ceil($nb_total / $nb_show);
-        $end = $start + $nb_show;
-        if ($end > $nb_total) {
-            $end = $nb_total;
-        }
 
+        if ($nb_pages > 500) {
+            $nb_pages = 500;
+        }
         if (!empty($what)) {
             $link .= '&amp;what='.$what;
         }
@@ -827,7 +821,7 @@ class list_show_Abstract extends functions
                 $page_name = $i + 1;
 
                 $the_line = $i + 1;
-                if ($start == $next_start) {
+                if ($current_page == $the_line) {
                     $page_list1 .= '<option value="'.$next_start.'" selected="selected">'.$the_line.'</option>';
                     $page_list2 .= '<option value="'.$next_start.'"  selected="selected">'.$the_line.'</option>';
                 } else {
@@ -1001,7 +995,7 @@ class list_show_Abstract extends functions
         <tbody>
         <?php
         $color = '';
-        for ($theline = $start; $theline < $end; ++$theline) {
+        for ($theline = 0; $theline < count($result); ++$theline) {
             // background color
             if ($color == ' class="col"') {
                 $color = '';

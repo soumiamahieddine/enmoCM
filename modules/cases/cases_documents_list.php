@@ -27,7 +27,6 @@
 * @version $Revision$
 * @ingroup cases_documents_list.php
 */
-
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
@@ -36,13 +35,8 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
 
-include_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
-
 $status_obj = new manage_status();
 $core_tools = new core_tools();
-$core_tools->test_user();
-$core_tools->load_lang();
-$core_tools->load_html();
 $core_tools->load_header('', true, false);
 $sec = new security();
 $status_obj = new manage_status();
@@ -71,77 +65,31 @@ for ($i=0; $i<count($status);$i++) {
 }
 if ($status_str <> '') {
     $status_str = preg_replace('/,$/', '', $status_str);
-    $where_request.= "  status not in (".$status_str.") ";
+    $excludeStatusClause = "status not in (".$status_str.")";
     
 } else {
-    $where_request .= " 1=1 ";
+    $excludeStatusClause = " 1=1 ";
 }
 //$where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 
-$where_request .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);
-$where_request .= " and (";
+$caseIdClause = $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);
 
-$j=0;
-$basketClause = false;
 if (count($_SESSION['user']['baskets']) > 0) {
-    while($j<=count($_SESSION['user']['baskets'])) {
-        //controle for basket that has empty whereclause ' '
-        $basketClauseReplace = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j]['clause']);
-
-        if($basketClauseReplace <> "") {
-            $where_request .= "(" . $_SESSION['user']['baskets'][$j]['clause'] . ")";
-            $basketClause = true;
-
-            $basketClauseReplace1 = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j+1]['clause']);
-
-            $jplus = $j + 1;
-            $normalBasketsRemaining = false;
-            while ($_SESSION['user']['baskets'][$jplus]) {
-                $normalBasketsRemaining = true;
-                break;
+	$arrClause = [];
+	foreach ($_SESSION['user']['baskets'] as $basket) {
+		if(!empty(trim($basket['clause']))) {
+			$arrClause[] = $basket['clause'];
             }
-            if ($j + 1 < count($_SESSION['user']['baskets']) && $basketClauseReplace1 != "" && $normalBasketsRemaining) {
-                $where_request .= " or ";
             }
-        } else if ($j > 0) {
-            $where_request .= " or ";
+	$userBasketsClause = '('.implode(') OR (',$arrClause).')';
+
         }
-        $j++;
-    }
-}
 
 if ($_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where'] <> '') {
-    
-	if ($basketClause) {
-		$where_request .= " or ";
-	}
-    $where_request .= $_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where']." ";
+    $userSecurityClause = $_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where'];
 }
 
-$where_request .= " )";
-
-if($where_clause <> '')
-{
-		//$where_clause .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);
-}
-
-/*if(!empty($where_request))
-{
-	if($_SESSION['searching']['where_clause_bis'] <> "")
-	{
-		$where_clause = "((".$where_clause.") or (".$_SESSION['searching']['where_clause_bis']."))";
-	}
-	$where_request = '('.$where_request.') and ('.$where_clause.')';
-}
-else
-{
-	if($_SESSION['searching']['where_clause_bis'] <> "")
-	{
-		$where_clause = "((".$where_clause.") or (".$_SESSION['searching']['where_clause_bis']."))";
-	}
-	$where_request = $where_clause;
-}
-*/
+$where_request = '('.$excludeStatusClause.$caseIdClause.') AND ('. $userBasketsClause .' OR '.$userSecurityClause.')';
 
 $where_request = str_replace("()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
@@ -158,12 +106,13 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 {
 	$field = trim($_REQUEST['order_field']);
 }
-
 $orderstr = $list->define_order($order, $field);
-
+$start = 0;
+ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+     $start = trim($_REQUEST['start']);
+ }
 $request = new request();
-$tab=$request->PDOselect($select,$where_request,$where_what,$orderstr,$_SESSION['config']['databasetype'],"default",false,"","","",false,false,false);
-//$request->show();
+$tab=$request->PDOselect($select,$where_request,$where_what,$orderstr,$_SESSION['config']['databasetype'],"default",false,"","","",false,false,false, $start);
 $_SESSION['error_page'] = '';
 
 //build the tab with right format for list_doc function
@@ -204,7 +153,8 @@ if (count($tab) > 0)
 				{
 					$tab[$i][$j]["label"]=_STATUS;
 					$res_status = $status_obj->get_status_data($tab[$i][$j]['value']);
-					$tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
+					$img_class = substr($res_status['IMG_SRC'], 0, 2);
+					$tab[$i][$j]['value'] = '<i '.$style." class = '".$img_class.' '.$res_status['IMG_SRC'].' '.$img_class."-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
 					$tab[$i][$j]["size"]="5";
 					$tab[$i][$j]["label_align"]="left";
 					$tab[$i][$j]["align"]="left";
@@ -282,8 +232,6 @@ if (count($tab) > 0)
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=false;
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$my_imgcat = get_img_cat($tab[$i][$j]['value']);
-					$tab[$i][$j]['value'] = $my_imgcat;
 					$tab[$i][$j]["value"] = $tab[$i][$j]['value'];
 					$tab[$i][$j]["order"]="category_id";
 				}
@@ -333,8 +281,7 @@ if (count($tab) > 0)
 
 
 $details = 'details';
-	$list->list_doc($tab,$i,'','res_id','cases_documents_list','res_id',$details.'&dir=indexing_searching',true,false,'','','',true,true,true, false,false,false,true,false,'', 'cases',false,'','','listing2 smallfont ', '', false, false, null, '', '{}', false, '', true, '', false);
+	$list->list_doc($tab, $_SESSION['save_list']['full_count'],_RESULTS.' : '.$_SESSION['save_list']['full_count'].' '._FOUND_DOCS,'res_id','cases_documents_list','res_id',$details.'&dir=indexing_searching',true,false,'','','',true,true,true, false,false,false,true,false,'', 'cases',false,'','','listing2 smallfont ', '', false, false, null, '', '{}', false, '', true, '', false);
 }
-$core_tools->load_js();
 ?>
 </body>

@@ -48,7 +48,6 @@ if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&order='.$_REQUEST['order'];
 if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters .= '&order_field='.$_REQUEST['order_field'];
 if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
-if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
 
 if (isset($_REQUEST['load'])) {
     $core_tools->load_lang();
@@ -122,12 +121,20 @@ if (isset($_REQUEST['load'])) {
         $list->setOrderField('date_note');
         $orderstr = "order by date_note desc";
     }
+
+    if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+        $parameters .= '&start='.$_REQUEST['start'];
+        $start = $_REQUEST['start'];
+    } else {
+        $start = $list->getStart();
+        $parameters .= '&start='.$start;
+    }
     
     //Request
     $tabNotes=$request->PDOselect(
         $select, $where, $arrayPDO, $orderstr,
-        $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
-        "user_id"
+        $_SESSION['config']['databasetype'], "default", true, NOTES_TABLE, USERS_TABLE,
+        "user_id", true, false, false, $start
     );
         
     //LGI UPDATE
@@ -277,8 +284,7 @@ if (isset($_REQUEST['load'])) {
             ."&origin=".$origin.'&display=true'.$parameters;                            //Parametres d'url supplementaires
     $paramsTab['filters'] = array();                                                   //Filtres    
     $paramsTab['listHeight'] = '100%';                                                 //Hauteur de la liste
-    // $paramsTab['bool_showSmallToolbar'] = true;                                         //Mini barre d'outils
-    // $paramsTab['linesToShow'] = 15;                                                     //Nombre de ligne a afficher
+    $paramsTab['start'] = $start;
     $paramsTab['listCss'] = $css;                                                       //CSS
     $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
         

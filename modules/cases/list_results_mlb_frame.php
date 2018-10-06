@@ -190,7 +190,7 @@ if (($_REQUEST['template'] == 'group_case') && ($core_tools->is_module_loaded('c
     $where .= 'cases.case_closing_date is null and ';
 
     $request = new request();
-    $tab = $request->PDOselect($select, $where.$where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', true, false, true);
+    $tab = $request->PDOselect($select, $where.$where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', true, false, true, $start);
 } else {
     $request = new request();
     $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
@@ -415,11 +415,11 @@ if (count($tab) > 0) {
         }
     } ?>
 
-    <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php echo _SEARCH_RESULTS.' - '.count($tab).' '._FOUND_DOC; ?></h4></p>
+    <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php echo _SEARCH_RESULTS.' - '.$_SESSION['save_list']['full_count'].' '._FOUND_DOC; ?></h4></p>
         <div id="inner_content">
             <?php
             $details = 'details';
-    $list->list_doc($tab, $i, '', 'res_id', 'list_results_mlb_frame&module=cases&searched_item='.$_GET['searched_item'].'&searched_value='.$_GET['searched_value'], 'res_id', $details.'&dir=indexing_searching', true, true, 'post', $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=execute_attachement&searched_item='.$_GET['searched_item'].'&searched_value='.$_GET['searched_value'], _LINK_TO_CASE, false, true, true, false, false, false, true, true, '', '', false, '', '', 'listing spec', '', false, false, null, '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="cases" /><input type="hidden" name="page" value="execute_attachement" />', '{}', true, '', true, array(), true, $template_list, $template_to_use, false, true);
+    $list->list_doc($tab, $_SESSION['save_list']['full_count'], '', 'res_id', 'list_results_mlb_frame&module=cases&searched_item='.$_GET['searched_item'].'&searched_value='.$_GET['searched_value'], 'res_id', $details.'&dir=indexing_searching', true, true, 'post', $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=execute_attachement&searched_item='.$_GET['searched_item'].'&searched_value='.$_GET['searched_value'], _LINK_TO_CASE, false, true, true, false, false, false, true, true, '', '', false, '', '', 'listing spec', '', false, false, null, '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="cases" /><input type="hidden" name="page" value="execute_attachement" />', '{}', true, '', true, array(), true, $template_list, $template_to_use, false, true);
     echo "<p align='center'><a href=\"".$_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item='.functions::xssafe($_GET['searched_item']).'&searched_value='.functions::xssafe($_GET['searched_value']).'">'._MAKE_NEW_SEARCH.'</a></strong></div></p>'; ?>
         </div>
         <?php
