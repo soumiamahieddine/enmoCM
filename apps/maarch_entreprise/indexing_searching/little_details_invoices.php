@@ -250,7 +250,7 @@ if (!empty($_SESSION['error'])) {
                     </h3>
                 </p>
             </div>
-            <div class="desc block_light admin" id="desc3" style="display:none">
+            <div class="desc block_light admin" id="desc3" style="display:none;width:100%;">
                 <div class="ref-unit">
                     <?php echo _MENU.' : '; ?>
                     <a href="<?php
