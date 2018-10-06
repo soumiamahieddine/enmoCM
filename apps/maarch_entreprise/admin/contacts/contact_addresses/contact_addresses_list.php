@@ -126,9 +126,14 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
 } else {
     $_REQUEST['start'] = 0;
 }
+if (isset($_REQUEST['lines'])) {
+    $limit = $_REQUEST['lines'];
+} else {
+    $limit = 'default';
+}
 $request = new request();
 $tab = $request->PDOselect(
-    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', true, false, false, $_REQUEST['start']
+    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', true, false, false, $_REQUEST['start']
 );
 // $request->show();
 

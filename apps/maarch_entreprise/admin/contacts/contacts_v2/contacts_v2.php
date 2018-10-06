@@ -149,7 +149,12 @@ $_SESSION['export_admin_list']['where'] = $where;
 $_SESSION['export_admin_list']['aPDO'] = $arrayPDO;
 $_SESSION['export_admin_list']['order'] = $orderstr;
 
-$tab=$request->PDOselect($select,$where,$arrayPDO, $orderstr,$_SESSION['config']['databasetype'], 'default', false, '', '', '', true, false, false, $_REQUEST['start']);
+if (isset($_REQUEST['lines'])) {
+    $limit = $_REQUEST['lines'];
+} else {
+    $limit = 'default';
+}
+$tab=$request->PDOselect($select,$where,$arrayPDO, $orderstr,$_SESSION['config']['databasetype'], $limit, false, '', '', '', true, false, false, $_REQUEST['start']);
 
 for ($i=0;$i<count($tab);$i++)
 {

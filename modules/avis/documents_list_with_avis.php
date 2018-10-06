@@ -149,8 +149,13 @@ if (!empty($order_field) && !empty($order)) {
     $orderstr = 'order by modification_date desc';
     $_SESSION['last_order_basket'] = $orderstr;
 }
+if (isset($_REQUEST['lines'])) {
+    $limit = $_REQUEST['lines'];
+} else {
+    $limit = 'default';
+}
 //Request
-$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', false, false, 'distinct', $_SESSION['save_list']['start']);
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', false, false, 'distinct', $_SESSION['save_list']['start']);
 
 //Templates
 $defaultTemplate = 'documents_list_with_avis';

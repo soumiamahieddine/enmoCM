@@ -337,9 +337,13 @@ if ($mode == 'normal') {
         $_SESSION['fromContactCheck'] = 'ok';
         $where_request .= $_SESSION['where_from_contact_check'];
     }
-
+    if (isset($_REQUEST['lines'])) {
+        $limit = $_REQUEST['lines'];
+    } else {
+        $limit = 'default';
+    }
 //Query
-    $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', $add_security, false, false, $_SESSION['save_list']['start']);
+    $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', $add_security, false, false, $_SESSION['save_list']['start']);
     // $request->show();
 //Result array
     $tabI = count($tab);

@@ -161,8 +161,14 @@ if (!empty($order_field) && !empty($order)) {
     }
 }
 
+if (isset($_REQUEST['lines'])) {
+    $limit = $_REQUEST['lines'];
+} else {
+    $limit = 'default';
+}
+
 //Request
-$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', false, false, 'distinct', $_SESSION['save_list']['start']);
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', false, false, 'distinct', $_SESSION['save_list']['start']);
 
 $_SESSION['current_basket']['last_query'] = array();
 $_SESSION['current_basket']['last_query']['select'] = $select;

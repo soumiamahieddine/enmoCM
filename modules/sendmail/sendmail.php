@@ -161,10 +161,17 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
          $orderstr = 'order by creation_date desc';
      }
 
+    if (isset($_REQUEST['lines'])) {
+        $limit = $_REQUEST['lines'];
+    } else {
+        $limit = 'default';
+    }
+
+    
      //Request
      $tab = $request->PDOselect(
             $select, $where, array(), $orderstr,
-            $_SESSION['config']['databasetype'], 'default', true, EMAILS_TABLE, USERS_TABLE,
+            $_SESSION['config']['databasetype'], $limit, true, EMAILS_TABLE, USERS_TABLE,
             'user_id', true, false, false, $_REQUEST['start']
         );
      // $request->show();

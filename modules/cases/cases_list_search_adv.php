@@ -106,9 +106,14 @@ $arrayPDO = array();
         $list->setOrderField('case_label');
         $orderstr = 'order by '.$_SESSION['tablename']['cases'].'.case_label asc';
     }
-
+    
+    if (isset($_REQUEST['lines'])) {
+        $limit = $_REQUEST['lines'];
+    } else {
+        $limit = 'default';
+    }
 //Query
-    $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', $add_security, false, true, $start);
+    $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', $add_security, false, true, $start);
     //$request->show();
 //Result
     for ($i = 0; $i < count($tab); ++$i) {

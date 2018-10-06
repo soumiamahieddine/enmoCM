@@ -55,7 +55,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
 }
 
 $request= new request;
-$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', true, false, false, $_REQUEST['start']);
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', true, false, false, $_REQUEST['start']);
 
 for($i=0;$i<count($tab);$i++)
 {

@@ -7,8 +7,8 @@
                 </div>
             </a>
             <div style="justify-content: flex-end;display: flex;width: 100%;color: white;align-items: center;">
-                <span class="maarchToolButton" style="padding-left:10px;padding-right:10px;position: relative;">
-                    <i class="fa fa-th fa-2x" style="cursor:pointer;font-size: 16px;" onclick="$j('#menunav').slideToggle('fast');event.stopPropagation();" title="Menu"></i>
+                <span class="maarchToolButton" style="cursor:pointer;padding:15px;position: relative;" onclick="$j('#menunav').slideToggle('fast');event.stopPropagation();" title="Menu">
+                    <i class="fa fa-th fa-2x" style="font-size: 16px;"></i>
                     <div id="menunav" class="menunav" style="left: -225px;display:none;">
                         <div class="footer_menu">
                             <span style="color:white;float:left;">
@@ -48,7 +48,7 @@
                     <?php                         
                     $strUserInfos = '<i class="fa fa-user fa-2x" style="padding-right:5px;"></i> ' . $_SESSION['user']['FirstName'][0].". ".$_SESSION['user']['LastName'];
                     echo $strUserInfos; ?>
-                    <div id="profilenav" class="menunav" style="left: -155px;display:none;">
+                    <div id="profilenav" class="menunav" style="left: -135px;display:none;">
                         <div class="footer_menu">
                             <span style="color:white;float:left;">
                                 Groupes

@@ -2342,8 +2342,8 @@ abstract class lists_Abstract extends Database
         }
 
         //Number of pages
-        $current_page = ceil($this->start / $this->params['linesToShow'])+1;
-        $nb_pages = ceil($this->countResult / $this->params['linesToShow']);
+        $current_page = ceil($this->start / $nbLines+1);
+        $nb_pages = ceil($this->countResult / $nbLines);
 
         if ($nb_pages > 500) {
             $nb_pages = 500;
@@ -2680,8 +2680,8 @@ abstract class lists_Abstract extends Database
             }
         }
 
-        $this->start = $start;
-        $this->end = $end;
+        //$this->start = $start;
+        //$this->end = $end;
 
         return $bottomToolbar;
     }
@@ -2806,8 +2806,8 @@ abstract class lists_Abstract extends Database
             $toolbar .= '</tr></table>';
         }
 
-        $this->start = $start;
-        $this->end = $end;
+        //$this->start = $start;
+        //$this->end = $end;
 
         return $toolbar;
     }
@@ -3235,7 +3235,7 @@ abstract class lists_Abstract extends Database
         $content = $lineCss = '';
 
         $content .= '<tbody>';
-
+        
         //Loop into the set of records
         for ($theLine = 0; $theLine < $this->end; ++$theLine) {
             //Init

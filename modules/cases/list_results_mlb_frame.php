@@ -190,7 +190,7 @@ if (($_REQUEST['template'] == 'group_case') && ($core_tools->is_module_loaded('c
     $where .= 'cases.case_closing_date is null and ';
 
     $request = new request();
-    $tab = $request->PDOselect($select, $where.$where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', true, false, true, $start);
+    $tab = $request->PDOselect($select, $where.$where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', true, false, true, $start);
 } else {
     $request = new request();
     $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']);
