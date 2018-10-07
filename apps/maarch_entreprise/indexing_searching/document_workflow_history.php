@@ -98,34 +98,69 @@ if (isset($_REQUEST['load'])) {
         $list->setOrderField('event_date');
         $orderstr = "order by event_date desc";
     }
+    if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+        $parameters .= '&start='.$_REQUEST['start'];
+        $start = $_REQUEST['start'];
+    } else {
+        $start = $list->getStart();
+        $parameters .= '&start='.$start;
+    }
     
-    //Query
-    if ((empty($table)|| !$table) && (!empty($view) && $view <> false)) {
-        $whereTableOrView = "h.table_name= '" . $view. "'";
-    } elseif ((empty($view) || !$view) && (!empty($table)&& $table <> false)) {
-        $whereTableOrView = "h.table_name= '" . $table. "'";
-    } elseif (!empty($view) && !empty($table)&& $view <> false && $table <> false) {
-        $whereTableOrView = "(h.table_name= '" . $table . "' OR h.table_name = '" . $view . "')";
+    //select
+    $select['history'] = array();
+    $select['users'] = array();
+
+    array_push(
+        $select['history'],
+        'event_date',
+        'info',
+        'info'
+    );
+    array_push(
+        $select['users'],
+        'user_id',
+        'lastname',
+        'firstname'
+    );
+
+    //From filters
+    $whereTab = [];
+    $filterClause = $list->getFilters();
+    if (!empty($filterClause)) $whereTab[] = $filterClause;
+
+    //Where tablename or view
+    if ((empty($table) || !$table) && (!empty($view) && $view <> false)) {
+        $whereTab[] = "history.table_name= '" . $view . "'";
+    } elseif ((empty($view) || !$view) && (!empty($table) && $table <> false)) {
+        $whereTab[] = "history.table_name= '" . $table . "'";
+    } elseif (!empty($view) && !empty($table) && $view <> false && $table <> false) {
+        $whereTab[] = "(history.table_name= '" . $table . "' OR history.table_name = '" . $view . "')";
     }
-        
-    $stmt = $db->query("SELECT h.event_date, ".$_SESSION['tablename']['users'].".user_id, "
-            .$_SESSION['tablename']['users'].".firstname, ".$_SESSION['tablename']['users']
-            .".lastname, h.info FROM " .$_SESSION['tablename']['history']
-            ." h, ".$_SESSION['tablename']['users'] ." WHERE "
-            .$whereTableOrView." and h.record_id = ? and h.user_id = ".$_SESSION['tablename']['users']
-            .".user_id".$where." and event_id NOT LIKE '^[0-9]+$' and event_type like 'ACTION#%' ".$orderstr, array($id));
-    // $request->show();
-        
-    $tab=array();
-    while ($line = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $temp= array();
-        foreach (array_keys($line) as $resval) {
-            if (!is_int($resval)) {
-                array_push($temp, array('column'=>$resval,'value'=>$line[$resval]));
-            }
-        }
-        array_push($tab, $temp);
-    }
+
+    //Where query
+    $whereTab[] = "history.record_id = ? and history.user_id = users.user_id and event_id NOT LIKE '^[0-9]+$' and event_type like 'ACTION#%'";
+
+    //Build Where
+    $where = implode(' AND ', $whereTab);
+
+    $arrayPDO = [$id];
+
+    $tab = $request->PDOselect(
+        $select,
+        $where,
+        $arrayPDO,
+        $orderstr,
+        $_SESSION['config']['databasetype'],
+        'default',
+        false,
+        '',
+        '',
+        '',
+        false,
+        false,
+        false,
+        $start
+    );
 
     //Result Array
     for ($i=0; $i<count($tab); $i++) {
@@ -179,16 +214,15 @@ if (isset($_REQUEST['load'])) {
     }
 
     //List
-    $listKey = 'id';                                                            //Cl� de la liste
-    $paramsTab = array();                                                       //Initialiser le tableau de param�tres
+    $listKey = 'id';                                                            //Clee de la liste
+    $paramsTab = array();                                                       //Initialiser le tableau de parametres
     $paramsTab['bool_sortColumn'] = true;                                       //Affichage Tri
     $paramsTab['pageTitle'] ='';                                                //Titre de la page
     $paramsTab['bool_bigPageTitle'] = false;                                    //Affichage du titre en grand
     $paramsTab['urlParameters'] = 'dir=indexing_searching&id='
         .$id.'&display=true'.$parameters;                                       //Parametres d'url supplementaires
     $paramsTab['listHeight'] = '100%';                                          //Hauteur de la liste
-    // $paramsTab['bool_showSmallToolbar'] = true;                              //Mini barre d'outils
-    // $paramsTab['linesToShow'] = $linesToShow;                                //Nombre de ligne a afficher
+    $paramsTab['start'] = $start;
 
     //Output
     $status = 0;
