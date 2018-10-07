@@ -165,6 +165,8 @@ class request extends dbquery
         }
         if (count($result) == 0 && $catch_error) {
             return true;
+        } else if (count($result) == 0) {
+            $_SESSION['save_list']['full_count'] = 0;
         }
         return $result;
     }
