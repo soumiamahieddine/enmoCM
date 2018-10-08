@@ -27,11 +27,12 @@ import { HistoryAdministrationComponent }               from './history/history-
 import { UpdateStatusAdministrationComponent }          from './updateStatus/update-status-administration.component';
 import { ContactsGroupsAdministrationComponent }        from './contact/contacts-groups-administration.component';
 import { ContactsGroupAdministrationComponent }         from './contact/contacts-group-administration.component';
+import { ContactsFillingAdministrationComponent }       from './contact/contacts-filling-administration.component';
 import { VersionsUpdateAdministrationComponent }        from './versionUpdate/versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docserver/docservers-administration.component';
-import { DocserverAdministrationComponent }            from './docserver/docserver-administration.component';
-import { TemplatesAdministrationComponent }            from './template/templates-administration.component';
-import { TemplateAdministrationComponent }            from './template/template-administration.component';
+import { DocserverAdministrationComponent }             from './docserver/docserver-administration.component';
+import { TemplatesAdministrationComponent }             from './template/templates-administration.component';
+import { TemplateAdministrationComponent }              from './template/template-administration.component';
 import { SecuritiesAdministrationComponent }            from './security/securities-administration.component';
 
 @NgModule({
@@ -73,6 +74,7 @@ import { SecuritiesAdministrationComponent }            from './security/securit
             { path: 'administration/contacts-groups', component: ContactsGroupsAdministrationComponent },
             { path: 'administration/contacts-groups/new', component: ContactsGroupAdministrationComponent },
             { path: 'administration/contacts-groups/:id', component: ContactsGroupAdministrationComponent },
+            { path: 'administration/contacts-filling', component: ContactsFillingAdministrationComponent },
             { path: 'administration/versions-update', component: VersionsUpdateAdministrationComponent },
             { path: 'administration/docservers', component: DocserversAdministrationComponent },
             { path: 'administration/docservers/new', component: DocserverAdministrationComponent },

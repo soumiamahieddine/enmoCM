@@ -14,6 +14,7 @@
 
 namespace Contact\controllers;
 
+use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Group\models\ServiceModel;
 use SrcCore\models\CoreConfigModel;
@@ -183,6 +184,37 @@ class ContactController
         ]);
 
         return $response->withJson([$contact]);
+    }
+
+    public function getFilling(Request $request, Response $response)
+    {
+        $contactsFilling = ContactFillingModel::get();
+        $contactsFilling['rating_columns'] = json_decode($contactsFilling['rating_columns']);
+
+        return $response->withJson(['contactsFilling' => $contactsFilling]);
+    }
+
+    public function updateFilling(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+        $check = Validator::boolType()->notEmpty()->validate($data['enable']);
+        $check = $check && Validator::arrayType()->notEmpty()->validate($data['rating_columns']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['first_threshold']) && $data['first_threshold'] > 0 && $data['first_threshold'] < 99;
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['second_threshold']) && $data['second_threshold'] > 1 && $data['second_threshold'] < 100;
+        $check = $check && $data['first_threshold'] < $data['second_threshold'];
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $data['rating_columns'] = json_encode($data['rating_columns']);
+
+        ContactFillingModel::update($data);
+
+        return $response->withJson(['success' => 'success']);
     }
 
     public static function formatContactAddressAfnor(array $aArgs)

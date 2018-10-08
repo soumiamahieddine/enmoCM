@@ -2130,3 +2130,13 @@ CREATE TABLE password_history
 )
 WITH (OIDS=FALSE);
 
+CREATE TABLE contacts_filling
+(
+  id serial NOT NULL,
+  enable boolean NOT NULL,
+  rating_columns text NOT NULL,
+  first_threshold int NOT NULL,
+  second_threshold int NOT NULL,
+  CONSTRAINT contacts_filling_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);

@@ -537,9 +537,20 @@ INSERT INTO status_images (image_name) VALUES ('fa-mail-bulk');
 DELETE FROM status WHERE id = 'SIGN';
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SIGN', 'PJ signée', 'Y', 'fa-check', 'apps', 'Y', 'Y');
 
-
-
 DELETE FROM parameters WHERE id = 'homepage_message';
 INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', 'Bienvenue dans votre <b>G</b>estion <b>E</b>lectronique du <b>C</b>ourrier.');
 
 ALTER TABLE parameters ALTER COLUMN param_value_string TYPE TEXT;
+
+DROP TABLE IF EXISTS contacts_filling;
+CREATE TABLE contacts_filling
+(
+  id serial NOT NULL,
+  enable boolean NOT NULL,
+  rating_columns text NOT NULL,
+  first_threshold int NOT NULL,
+  second_threshold int NOT NULL,
+  CONSTRAINT contacts_filling_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_threshold) VALUES (FALSE, '{}', 33, 66);
