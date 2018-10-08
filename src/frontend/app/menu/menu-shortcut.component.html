@@ -30,17 +30,13 @@
 <mat-nav-list>
     <h3 mat-subheader>{{lang.shortcut}}</h3>
     <div class="button-row" style="padding-left: 10px;padding-right: 10px;display: flex;width: 250px;">
-        <span style="flex:1;text-align: left;padding: 5px;">
-            <button color="primary" mat-icon-button (click)="gotToMenu('/home','true');" matTooltip="{{lang.home}}">
-                <mat-icon class="fa fa-home" style="height:auto;"></mat-icon>
-            </button>
-        </span>
         <ng-container *ngFor="let shortcut of shortcut.shortcutsData.menu">
-            <span style="flex:1;text-align: left;padding: 5px;" *ngIf="shortcut.shortcut == 'true'">
-                <button color="primary" mat-icon-button (click)="gotToMenu(shortcut.servicepage, shortcut.angular);" matTooltip="{{shortcut.name}}">
+            <span style="flex:1;text-align: left;padding: 5px;" *ngIf="(shortcut.id == 'index_mlb' && speedDialFabButtons.length<=1) || (shortcut.id != 'index_mlb' && shortcut.shortcut == 'true')">
+                <button color="primary" mat-icon-button (click)="gotToMenu(shortcut);" matTooltip="{{shortcut.name}}">
                     <mat-icon class="fa {{shortcut.style}}" style="height:auto;"></mat-icon>
                 </button>
             </span>
+            <speed-dial-fab matTooltip="{{shortcut.name}}" mainIcon="fa fa-file-medical" *ngIf="shortcut.id=='index_mlb' && shortcut.shortcut == 'true' && speedDialFabButtons.length>1" style="flex:1;display: inline-block;margin-top:5px;" class="speed-dial-container" (fabClick)="onSpeedDialFabClicked($event, shortcut)" [buttons]="speedDialFabButtons"></speed-dial-fab>
         </ng-container>
     </div>
 </mat-nav-list>

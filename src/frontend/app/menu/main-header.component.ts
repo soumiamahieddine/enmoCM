@@ -1,8 +1,9 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { LANG }                 from '../translate.component';
-import { MatSidenav }           from '@angular/material';
+import { MatSidenav, MatDialog, MatDialogRef }           from '@angular/material';
 import { HttpClient }           from '@angular/common/http';
 import { Router }               from '@angular/router';
+import { IndexingGroupModalComponent }  from './menu-shortcut.component';
 import { ShortcutMenuService }  from '../../service/shortcut-menu.service';
 
 
@@ -20,6 +21,8 @@ export class MainHeaderComponent implements OnInit {
     lang            : any       = LANG;
     user            : any       = {firstname : "",lastname : ""};
     mobileMode      : boolean   = false;
+    dialogRef   : MatDialogRef<any>;
+    config      : any       = {};
     titleHeader     : string;
     router          : any;
 
@@ -27,7 +30,7 @@ export class MainHeaderComponent implements OnInit {
     snav2           : MatSidenav;
 
 
-    constructor(public http: HttpClient, private zone: NgZone, private _router: Router, private shortcut: ShortcutMenuService) {
+    constructor(public http: HttpClient, private zone: NgZone, private _router: Router, private shortcut: ShortcutMenuService, public dialog: MatDialog) {
         this.router = _router;
         this.mobileMode = angularGlobals.mobileMode;
         window['MainHeaderComponent'] = {
@@ -45,7 +48,16 @@ export class MainHeaderComponent implements OnInit {
                 this.user.menu = data.menu;
 
                 this.shortcut.shortcutsData.user = data.user;
+                data.menu.unshift({
+                    "name" : this.lang.home,
+                    "comment" : this.lang.home,
+                    "servicepage" : "/home",
+                    "shortcut" : "true",
+                    "style" : "fa fa-home",
+                    "angular" : "true"
+                });
                 this.shortcut.shortcutsData.menu = data.menu;
+
             }, (err) => {
                 console.log(err.error.errors);
             });
@@ -68,11 +80,14 @@ export class MainHeaderComponent implements OnInit {
         }
     }
 
-    gotToMenu(link:string, angularMode:string) {
-        if (angularMode == 'true') {
-            this.router.navigate([link]);
-        } else{
-            location.href = link;
+    gotToMenu(shortcut:any) {
+        if (shortcut.id == 'index_mlb' && this.shortcut.shortcutsData.user.indexingGroups.length > 1) {
+            this.config = { data: { indexingGroups:this.shortcut.shortcutsData.user.indexingGroups, link:shortcut.servicepage } };
+            this.dialogRef = this.dialog.open(IndexingGroupModalComponent, this.config);
+        } else if (shortcut.angular == 'true') {
+            this.router.navigate([shortcut.servicepage]);
+        } else {
+            location.href = shortcut.servicepage;
         }
     }
 }
