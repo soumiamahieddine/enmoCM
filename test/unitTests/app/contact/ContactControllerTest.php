@@ -139,6 +139,16 @@ class ContactControllerTest extends TestCase
         $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => $responseBody->addressId]);
         $this->assertInternalType('array', $contact);
         $this->assertEmpty($contact);
+
+        $aArgs = [
+            "contactPurposeId"  => 2
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $contactController->createAddress($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
     }
 
     public function testUpdate()
@@ -177,6 +187,19 @@ class ContactControllerTest extends TestCase
         $this->assertSame('superadmin', $contact['user_id']);
         $this->assertSame('SUPERADMIN', $contact['entity_id']);
         $this->assertSame('Y', $contact['enabled']);
+
+        $aArgs = [
+            'firstname'         => 'Guy',
+            'lastname'          => 'Gardner',
+            'title'             => 'title2',
+            'function'          => '2nd member',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $contactController->update($fullRequest, new \Slim\Http\Response(), ['id' => -1]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Contact does not exist', $responseBody->errors);
     }
 
     public function testUpdateAddress()
@@ -222,6 +245,24 @@ class ContactControllerTest extends TestCase
         $this->assertSame('superadmin', $contact['user_id']);
         $this->assertSame('SUPERADMIN', $contact['entity_id']);
         $this->assertSame('Y', $contact['enabled']);
+
+
+        $aArgs = [
+            "contact_purpose_id"    => 2,
+            "email"                 => "updatedemail@mail.com",
+            "phone"                 => "+66",
+            "address_num"           => "23",
+            "address_street"        => "Rue des GL",
+            "address_postal_code"   => "75000",
+            "address_town"          => "Paris",
+            "address_country"       => "France"
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $contactController->updateAddress($fullRequest, new \Slim\Http\Response(), ['id' => -1, 'addressId' => self::$addressId]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Contact or address do not exist', $responseBody->errors);
     }
 
     public function testGetContactCommunicationByContactId()
