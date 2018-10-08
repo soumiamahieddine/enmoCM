@@ -77,7 +77,7 @@ class CoreController
         } else {
             $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
             foreach ($menu as $value) {
-                if ($value['name'] == _INDEXING_MLB) {
+                if ($value['id'] == 'index_mlb') {
                     foreach ($user['groups'] as $group) {
                         if (GroupBasketModel::hasBasketByGroupId(['groupId' => $group['group_id'], 'basketId' => 'IndexingBasket'])) {
                             $user['indexingGroups'][] = ['groupId' => $group['group_id'], 'label' => $group['group_desc']];

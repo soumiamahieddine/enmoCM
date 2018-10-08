@@ -85,21 +85,23 @@ abstract class ServiceModelAbstract
                     $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                     if (empty($category)) {
                         $applicationServices[] = [
-                            'name'        => $name,
-                            'comment'     => $comment,
-                            'servicepage' => (string) $value->servicepage,
-                            'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
-                            'style'       => (string) $value->style,
-                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            'id'            => (string)$value->id,
+                            'name'          => $name,
+                            'comment'       => $comment,
+                            'servicepage'   => (string) $value->servicepage,
+                            'shortcut'      => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
+                            'style'         => (string) $value->style,
+                            'angular'       => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                         ];
                     } else {
                         $applicationServices[$category][] = [
-                            'name'        => $name,
-                            'comment'     => $comment,
-                            'servicepage' => (string) $value->servicepage,
-                            'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
-                            'style'       => (string) $value->style,
-                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            'id'            => (string)$value->id,
+                            'name'          => $name,
+                            'comment'       => $comment,
+                            'servicepage'   => (string) $value->servicepage,
+                            'shortcut'      => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
+                            'style'         => (string) $value->style,
+                            'angular'       => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                         ];
                     }
                 }
@@ -136,21 +138,23 @@ abstract class ServiceModelAbstract
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                         if (empty($category)) {
                             $applicationServices[] = [
-                                'name'        => $name,
-                                'comment'     => $comment,
-                                'servicepage' => (string)$value->servicepage,
-                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
-                                'style'       => (string)$value->style,
-                                'angular'     => empty((string)$value->angular) ? 'false' : (string)$value->angular,
+                                'id'            => (string)$value->id,
+                                'name'          => $name,
+                                'comment'       => $comment,
+                                'servicepage'   => (string)$value->servicepage,
+                                'shortcut'      => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
+                                'style'         => (string)$value->style,
+                                'angular'       => empty((string)$value->angular) ? 'false' : (string)$value->angular,
                             ];
                         } else {
                             $applicationServices[$category][] = [
-                                'name'        => $name,
-                                'comment'     => $comment,
-                                'servicepage' => (string)$value->servicepage,
-                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
-                                'style'       => (string)$value->style,
-                                'angular'     => empty((string)$value->angular) ? 'false' : (string)$value->angular,
+                                'id'            => (string)$value->id,
+                                'name'          => $name,
+                                'comment'       => $comment,
+                                'servicepage'   => (string)$value->servicepage,
+                                'shortcut'      => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
+                                'style'         => (string)$value->style,
+                                'angular'       => empty((string)$value->angular) ? 'false' : (string)$value->angular,
                             ];
                         }
                     }
@@ -180,21 +184,23 @@ abstract class ServiceModelAbstract
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                         if (empty($category)) {
                             $modulesServices[] = [
-                                'name'        => $name,
-                                'comment'     => $comment,
-                                'servicepage' => (string) $value->servicepage,
-                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
-                                'style'       => (string) $value->style,
-                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                                'id'            => (string)$value->id,
+                                'name'          => $name,
+                                'comment'       => $comment,
+                                'servicepage'   => (string) $value->servicepage,
+                                'shortcut'      => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
+                                'style'         => (string) $value->style,
+                                'angular'       => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];
                         } else {
                             $modulesServices[$category][] = [
-                                'name'        => $name,
-                                'comment'     => $comment,
-                                'servicepage' => (string) $value->servicepage,
-                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
-                                'style'       => (string) $value->style,
-                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                                'id'            => (string)$value->id,
+                                'name'          => $name,
+                                'comment'       => $comment,
+                                'servicepage'   => (string) $value->servicepage,
+                                'shortcut'      => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
+                                'style'         => (string) $value->style,
+                                'angular'       => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];
                         }
                     }
@@ -226,21 +232,23 @@ abstract class ServiceModelAbstract
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                         if (empty($category)) {
                             $modulesServices[] = [
-                                'name'        => $name,
-                                'comment'     => $comment,
-                                'servicepage' => (string) $value->servicepage,
-                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
-                                'style'       => (string) $value->style,
-                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                                'id'            => (string)$value->id,
+                                'name'          => $name,
+                                'comment'       => $comment,
+                                'servicepage'   => (string) $value->servicepage,
+                                'shortcut'      => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
+                                'style'         => (string) $value->style,
+                                'angular'       => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];
                         } else {
                             $modulesServices[$category][] = [
-                                'name'        => $name,
-                                'comment'     => $comment,
-                                'servicepage' => (string) $value->servicepage,
-                                'shortcut'     => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
-                                'style'       => (string) $value->style,
-                                'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                                'id'            => (string)$value->id,
+                                'name'          => $name,
+                                'comment'       => $comment,
+                                'servicepage'   => (string) $value->servicepage,
+                                'shortcut'      => empty((string)$value->shortcut) ? 'false' : (string)$value->shortcut,
+                                'style'         => (string) $value->style,
+                                'angular'       => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                             ];
                         }
                     }
