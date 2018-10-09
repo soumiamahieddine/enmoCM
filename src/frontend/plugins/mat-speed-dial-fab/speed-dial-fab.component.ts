@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ElementRef } from '@angular/core';
 
 import { speedDialFabAnimations } from './speed-dial-fab.animations';
 
@@ -30,7 +30,7 @@ export class SpeedDialFabComponent {
   buttons:any = [];
   fabTogglerState = 'inactive';
 
-  constructor() { }
+  constructor(private elementRef:ElementRef) { }
 
   private showItems() {
     this.fabTogglerState = 'active';
@@ -40,10 +40,20 @@ export class SpeedDialFabComponent {
   private hideItems() {
     this.fabTogglerState = 'inactive';
     this.buttons = [];
+    this.elementRef.nativeElement.querySelector('#toto').removeEventListener('mouseleave', this.mouseLeave.bind(this));
   }
 
   public onToggleFab() {
     this.buttons.length ? this.hideItems() : this.showItems();
+  }
+
+  public bindLeaveEvent(elem:any) {
+    this.elementRef.nativeElement.querySelector('#toto').addEventListener('mouseleave', this.mouseLeave.bind(this));
+  }
+  
+
+  mouseLeave(event:any) {
+    this.hideItems();
   }
 
   public onClickFab(btn: {icon: string}) {

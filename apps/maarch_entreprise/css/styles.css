@@ -1416,8 +1416,7 @@ th.ref {
 }
 
 .menunav li {
-    padding-left: 3px;
-    margin-bottom: 5px;
+    padding: 5px;
 }
 
 .menunav li a {
@@ -1449,7 +1448,7 @@ th.ref {
     text-decoration: none;
 }
 
-.menunav li.on span {
+.menunav li.on {
     background: #135F7F;
 }
 
@@ -2823,8 +2822,8 @@ font-size: 14px;
 }
 
 .footer_menu a{
+    padding-left: 5px;
     padding-right: 10px;
-    padding-top: 2px;
 }
 
 .header_menu_blank{

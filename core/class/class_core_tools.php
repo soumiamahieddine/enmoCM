@@ -490,8 +490,12 @@ class core_tools extends functions
         for ($i = 0; $i < count($menu); ++$i) {
             if ($menu[$i]['show'] == true) {
                 if ($menu[$i]['angular'] == 'true') {
-                    echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(\'#'.$menu[$i]['url'].'\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;">';
-                    echo "<i class='{$menu[$i]['style']} fa-2x'></i></span><span>{$menu[$i]['libconst']}</span></span></a></li>";
+                    echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">';
+                    echo '<a style="display:flex;align-items:center;" onClick="triggerAngular(\'#'.$menu[$i]['url'].'\')">';
+                    echo "<i style='width:40px;text-align:center;' class='{$menu[$i]['style']} fa-2x'></i>";
+                    echo '<span>';
+                    echo trim($menu[$i]['libconst']);
+                    echo '</span></span></a></li>';
                 } else {
                     $tmp = $menu[$i]['url'];
 
@@ -500,29 +504,40 @@ class core_tools extends functions
                     } else {
                         $tmp .= '&reinit=true';
                     }
-                    $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes?>
-                    <li onmouseover="this.className='on';" onmouseout="this.className='';">
-                    <a href="#" onclick="window.open('<?php echo $tmp; ?>', '<?php
+                    $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes
+                    echo "<li onmouseover=\"this.className='on';\" onmouseout=\"this.className='';\">";
+                    echo '<a style="display:flex;align-items:center;" href="#" ';
+                    if ($menu[$i]['id'] == 'index_mlb') {
+                        echo 'onclick="checkMultiIndexingGroup(\''.$tmp.'\');">';
+                    } else {
+                        echo 'onclick="window.open(\''.$tmp.'\',\'';
                         if (isset($menu[$i]['target']) && $menu[$i]['target'] != '') {
                             echo $menu[$i]['target'];
                         } else {
                             echo '_self';
-                        } ?>');"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="<?php
-                            echo $menu[$i]['style'].' fa-2x'; ?>"></i></span><span><?php
-                            echo trim($menu[$i]['libconst']); ?></span></span></a></li>
-                    <?php
+                        }
+                        echo '\');">';
+                    }
+                    echo '<i style="width:40px;text-align:center;" class="'.$menu[$i]['style'].' fa-2x"></i>';
+                    echo '<span>';
+                    echo trim($menu[$i]['libconst']);
+                    echo '</span></span></a></li>';
                 }
             }
         }
 
         // Menu items always displayed
         if ($myProfil) {
-            echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(\'#/profile\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
+            echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">';
+            echo '<a style="display:flex;align-items:center;" onClick="triggerAngular(\'#/profile\')">';
+            echo '<i style="width:40px;text-align:center;" class="fa fa-user fa-2x"></i>';
+            echo '<span>'._MY_INFO.'</span></a></li>';
         }
         if ($logout) {
-            echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-        <a href="'.$_SESSION['config']['businessappurl']
-            .'index.php?display=true&amp;page=logout&amp;logout=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-power-off fa-2x"></i></span><span>'._LOGOUT.'</span></span></a></li>';
+            echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">';
+            echo '<a style="display:flex;align-items:center;" href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;page=logout&amp;logout=true">';
+            echo '<i style="width:40px;text-align:center;" class="fa fa-power-off fa-2x"></i>';
+            echo '<span>'._LOGOUT.'</span></a></li>';
         }
     }
 

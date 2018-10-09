@@ -8,10 +8,11 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        margin-top: 45px;
+        padding-top: 45px;
         position: absolute;
         width: 250px;
         left: 0px;
+        min-height: 50px;
 
         button {
             margin-top: 17px;
