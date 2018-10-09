@@ -697,7 +697,19 @@ if ($stmt->rowCount() == 0) {
                 if (in_array($key, ['exp_contact_id', 'dest_contact_id', 'exp_user_id', 'dest_user_id'])) {
                     unset($_SESSION['adresses']);
 
-                    echo "<textarea name='contact' id='contact' rows='3' class='{$disabledClass}' {$disabledAttr}/>{$inputValue}</textarea>";
+                    $rate = [];
+                    if ($key == 'exp_contact_id') {
+                        if (!empty($data[$key]['address_value'])) {
+                            $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['address_value']]]);
+                            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                        }
+                    }
+
+                    echo "<textarea name='contact' id='contact' rows='3' class='{$disabledClass}' {$disabledAttr}";
+                    if (!empty($rate['color'])) {
+                        echo ' style="background-color:'.$rate['color'].'" ';
+                    }
+                    echo "/>{$inputValue}</textarea>";
 
                     $inputValue = $data[$key]['value'];
                     $inputAddressValue = $data[$key]['address_value'];

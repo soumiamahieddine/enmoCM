@@ -1081,7 +1081,8 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
                 parent.$(address_id).value = res[1];
                 if (path_script2 && res[1]) {
                     getDepartment(path_script2, res[1]);
-                };
+                }
+                $j("#" + input).css('background-color', li.getStyle('background-color'));
             }
         });
     } else {
@@ -1765,7 +1766,7 @@ function check_date_exp(path_manage_script, path_link){
             },
             onSuccess: function(answer){
                 if(answer.responseText == "success"){
-                    document.getElementById('contact').style.backgroundColor='#ffffff';
+                    // document.getElementById('contact').style.backgroundColor='#ffffff';
                     document.getElementById('contact_check').style.display='none';
                     document.getElementById('contactcheck').value = answer.responseText;
                 } else {

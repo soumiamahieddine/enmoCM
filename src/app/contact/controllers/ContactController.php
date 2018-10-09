@@ -22,6 +22,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\TextFormatModel;
+use SrcCore\models\ValidatorModel;
 
 class ContactController
 {
@@ -215,6 +216,36 @@ class ContactController
         ContactFillingModel::update($data);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public static function getFillingRate(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['contact']);
+        ValidatorModel::arrayType($aArgs, ['contact']);
+
+        $contactsFilling = ContactFillingModel::get();
+        $contactsFilling['rating_columns'] = json_decode($contactsFilling['rating_columns']);
+
+        if ($contactsFilling['enable'] && !empty($contactsFilling['rating_columns'])) {
+            $percent = 0;
+            foreach ($contactsFilling['rating_columns'] as $ratingColumn) {
+                if (!empty($aArgs['contact'][$ratingColumn])) {
+                    $percent++;
+                }
+            }
+            $percent = $percent * 100 / count($contactsFilling['rating_columns']);
+            if ($percent <= $contactsFilling['first_threshold']) {
+                $color = '#f87474';
+            } elseif ($percent <= $contactsFilling['second_threshold']) {
+                $color = '#f6cd81';
+            } else {
+                $color = '#ccffcc';
+            }
+
+            return ['rate' => $percent, 'color' => $color];
+        }
+
+        return [];
     }
 
     public static function formatContactAddressAfnor(array $aArgs)

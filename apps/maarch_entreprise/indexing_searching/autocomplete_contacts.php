@@ -193,6 +193,13 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                     $address
                 );
             }
+            $color                        = 'LightYellow';
+
+            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$res]);
+            if (!empty($rate)) {
+                $color = $rate['color'];
+            }
+
             $arrContact[] = "<li id='".$res->contact_id.','.$res->ca_id."' style='font-size:12px;background-color:$color;'>".$contact_icon.' '
             .'<span style="display:table-cell;vertical-align:middle;">'.$contact_info.'</span>'
             .'<div style="font-size:9px;font-style:italic;"> - '.$address.'</div>'

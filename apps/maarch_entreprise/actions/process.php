@@ -305,10 +305,19 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
                     $frm_str .= 'onClick = "previsualiseAdminRead(event, '.$frameContacts.');"';
                     $frm_str .= '/>';
                 } else {
+                    $rate = [];
+                    if ($key == 'exp_contact_id') {
+                        if (!empty($data[$key]['address_value'])) {
+                            $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['address_value']]]);
+                            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                        }
+                    }
                     $frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
-                        .'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
-                        .$data[$key]['show_value']
-                        .'</textarea>';
+                        .'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;';
+                    if (!empty($rate['color'])) {
+                        $frm_str .= 'background-color:'.$rate['color'];
+                    }
+                    $frm_str .= '">' . $data[$key]['show_value'] .'</textarea>';
                 }
             } elseif ($data[$key]['field_type'] == 'radio') {
                 for ($k = 0; $k < count($data[$key]['radio']); ++$k) {

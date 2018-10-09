@@ -702,10 +702,19 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     $frm_str .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
 
+    if (!empty($data['addressId'])) {
+        $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data['addressId']]]);
+        $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+    }
+
     $frm_str .= '<span style="position:relative;"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\',\''.$path_check_date_link.'\');}"';
     if (isset($data['contact']) && !empty($data['contact'])) {
         $frm_str .= ' value="'.$data['contact'].'" ';
     }
+    if (!empty($rate['color'])) {
+        $frm_str .= ' style="background-color:'.$rate['color'].'" ';
+    }
+
     $frm_str .= ' /><div id="show_contacts" class="autocomplete autocompleteIndex" style="width:100%;left:0px;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span></td>';
     $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frm_str .= '</tr>';
