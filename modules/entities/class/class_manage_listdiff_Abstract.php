@@ -466,7 +466,9 @@ abstract class diffusion_list_Abstract extends functions
                 }
                 //Modification du dest_user dans la table res_letterbox
                 if ($role_id == 'dest' && $collId == 'letterbox_coll') {
-                    $stmt = $db->query('update res_letterbox set dest_user = ? where res_id = ?', array($userId, $resId));
+                    $stmt = $db->query("SELECT object_id FROM listmodels WHERE item_id = ?", [$userId]);
+                    $resEntityId = $stmt->fetch();
+                    $stmt = $db->query('update res_letterbox set dest_user = ?, destination = ? where res_id = ?', array($userId, $resEntityId['object_id'], $resId));
                 }
 
                 if ($processDate != '') {
