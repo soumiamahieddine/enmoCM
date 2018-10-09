@@ -143,7 +143,7 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
     $resListModel = $stmt->fetch();
     if (!empty($resListModel)) {
         $db->query("UPDATE listinstance SET item_id = ?, item_type = ? WHERE res_id = ? AND item_mode = 'dest'", [$resListModel['item_id'], $resListModel['item_type'], $res_id]);
-        $db->query("UPDATE res_letterbox SET dest_user = ? WHERE res_id = ?", [$resListModel['item_id'], $res_id]);
+        $db->query("UPDATE res_letterbox SET dest_user = ?, destination = ? WHERE res_id = ?", [$resListModel['item_id'], $resInitiator['initiator'], $res_id]);
     }
 
     return array('result' => $res_id . '#', 'history_msg' => $label_action);
