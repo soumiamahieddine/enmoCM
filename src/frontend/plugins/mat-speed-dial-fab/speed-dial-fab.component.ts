@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Input, Output, ElementRef } from '@angular/core';
 
 import { speedDialFabAnimations } from './speed-dial-fab.animations';
-
+declare function $j(selector: any): any;
 export interface FabButton {
   icon: string,
   tooltip: string
 }
 
 export enum SpeedDialFabPosition {
-    Top = 'top',
-    Bottom = 'bottom',
-    Left = 'left',
-    Right = 'right'
+  Top = 'top',
+  Bottom = 'bottom',
+  Left = 'left',
+  Right = 'right'
 }
 
 @Component({
@@ -27,36 +27,38 @@ export class SpeedDialFabComponent {
   @Input("mainIcon") mainIcon: String;
   @Output('fabClick') fabClick = new EventEmitter();
 
-  buttons:any = [];
+  buttons: any = [];
   fabTogglerState = 'inactive';
 
-  constructor(private elementRef:ElementRef) { }
+  constructor(private elementRef: ElementRef) { }
 
   private showItems() {
-    this.fabTogglerState = 'active';
-    this.buttons = this.fabButtons;
+      if($j('.speedDial').length == 0) {
+        this.fabTogglerState = 'active';
+        this.buttons = this.fabButtons;
+      }
   }
 
   private hideItems() {
     this.fabTogglerState = 'inactive';
     this.buttons = [];
-    this.elementRef.nativeElement.querySelector('#toto').removeEventListener('mouseleave', this.mouseLeave.bind(this));
+    this.elementRef.nativeElement.querySelector('#fab-container-buttons').removeEventListener('mouseleave', this.mouseLeave.bind(this));
   }
 
   public onToggleFab() {
     this.buttons.length ? this.hideItems() : this.showItems();
   }
 
-  public bindLeaveEvent(elem:any) {
-    this.elementRef.nativeElement.querySelector('#toto').addEventListener('mouseleave', this.mouseLeave.bind(this));
+  public bindLeaveEvent(elem: any) {
+    this.elementRef.nativeElement.querySelector('#fab-container-buttons').addEventListener('mouseleave', this.mouseLeave.bind(this));
   }
-  
 
-  mouseLeave(event:any) {
+
+  mouseLeave(event: any) {
     this.hideItems();
   }
 
-  public onClickFab(btn: {icon: string}) {
+  public onClickFab(btn: { icon: string }) {
     this.hideItems();
     this.fabClick.emit(btn);
   }
