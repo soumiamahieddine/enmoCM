@@ -461,7 +461,9 @@ CREATE TABLE entities
   ldap_id character varying(255),
   archival_agency character varying(255),
   archival_agreement character varying(255),
-  CONSTRAINT entities_pkey PRIMARY KEY (entity_id)
+  folder_import character varying(64),
+  CONSTRAINT entities_pkey PRIMARY KEY (entity_id),
+  CONSTRAINT entities_folder_import_unique_key UNIQUE (folder_import)
 )
 WITH (OIDS=FALSE);
 

@@ -554,3 +554,6 @@ CREATE TABLE contacts_filling
 )
 WITH (OIDS=FALSE);
 INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_threshold) VALUES (FALSE, '{}', 33, 66);
+
+ALTER TABLE entities ADD COLUMN folder_import character varying(64);
+ALTER TABLE entities ADD UNIQUE (folder_import);
