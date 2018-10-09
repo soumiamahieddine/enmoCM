@@ -319,4 +319,57 @@ class ContactControllerTest extends TestCase
         $this->assertInternalType('array', $availableReferential);
         $this->assertNotEmpty($availableReferential);
     }
+
+    public function testGetFilling()
+    {
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $contactController = new \Contact\controllers\ContactController();
+        $response          = $contactController->getFilling($request, new \Slim\Http\Response());
+        $responseBody      = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', (array)$responseBody->contactsFilling);
+    }
+
+    public function testUpdateFilling()
+    {
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            "enable"            => true,
+            "rating_columns"    => ["society", "function"],
+            "first_threshold"   => 22,
+            "second_threshold"  => 85
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $contactController = new \Contact\controllers\ContactController();
+        $response          = $contactController->updateFilling($fullRequest, new \Slim\Http\Response());
+        $responseBody      = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        $response          = $contactController->getFilling($request, new \Slim\Http\Response());
+        $responseBody      = json_decode((string)$response->getBody());
+
+        $this->assertSame(true, $responseBody->contactsFilling->enable);
+        $this->assertSame(22, $responseBody->contactsFilling->first_threshold);
+        $this->assertSame(85, $responseBody->contactsFilling->second_threshold);
+        $this->assertSame('society', $responseBody->contactsFilling->rating_columns[0]);
+        $this->assertSame('function', $responseBody->contactsFilling->rating_columns[1]);
+
+        $aArgs = [
+            "enable"            => true,
+            "first_threshold"   => 22,
+            "second_threshold"  => 85
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response          = $contactController->updateFilling($fullRequest, new \Slim\Http\Response());
+        $responseBody      = json_decode((string)$response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+    }
 }
