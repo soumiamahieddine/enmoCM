@@ -137,43 +137,14 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
     $res_id = $arr_id[0];
 
     $db->query('UPDATE listinstance SET process_date = NULL WHERE res_id = ? AND difflist_type = ?', [$res_id, 'VISA_CIRCUIT']);
-    $stmt = $db->query("SELECT coll_id, res_id, listinstance_type, added_by_user, added_by_entity, visible, viewed, difflist_type FROM listinstance WHERE res_id = ? AND item_mode = 'dest'", [$res_id]);
-    $resListinstance = $stmt->fetch();
     $stmt = $db->query('SELECT initiator FROM res_letterbox WHERE res_id = ?', [$res_id]);
     $resInitiator = $stmt->fetch();
-    $stmt = $db->query('SELECT item_id, item_type, item_mode FROM listmodels WHERE object_id = ?', [$resInitiator['initiator']]);
-    $resListModels = $stmt->fetchAll();
-    if (!empty($resListModels)) {
-        $db->query("DELETE FROM listinstance WHERE res_id = ? AND (item_mode = 'dest' OR item_mode = 'cc')", [$res_id]);
-        if ($status == '_NOSTATUS_') {
-            $newStatus = 'NEW';
-        } else {
-            $newStatus = $status;
-        }
-        $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", [$newStatus, $res_id]);
-        foreach ($resListModels as $resListModel) {
-            $db->query('INSERT INTO listinstance (
-                    coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user,
-                    added_by_entity, visible, viewed, difflist_type, signatory, requested_signature
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-                    $resListinstance['coll_id'],
-                    $resListinstance['res_id'],
-                    $resListinstance['listinstance_type'],
-                    0,
-                    $resListModel['item_id'],
-                    $resListModel['item_type'],
-                    $resListModel['item_mode'],
-                    $resListinstance['added_by_user'],
-                    $resListinstance['added_by_entity'],
-                    $resListinstance['visible'],
-                    $resListinstance['viewed'],
-                    $resListinstance['difflist_type'],
-                    'false',
-                    'false'
-                ]);
-        }
+    $stmt = $db->query("SELECT item_id, item_type FROM listmodels WHERE object_id = ? and item_mode = 'dest'", [$resInitiator['initiator']]);
+    $resListModel = $stmt->fetch();
+    if (!empty($resListModel)) {
+        $db->query("UPDATE listinstance SET item_id = ?, item_type = ? WHERE res_id = ? AND item_mode = 'dest'", [$resListModel['item_id'], $resListModel['item_type'], $res_id]);
+        $db->query("UPDATE res_letterbox SET dest_user = ? WHERE res_id = ?", [$resListModel['item_id'], $res_id]);
     }
 
     return array('result' => $res_id . '#', 'history_msg' => $label_action);
 }
-
