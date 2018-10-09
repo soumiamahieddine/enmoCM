@@ -104,7 +104,8 @@ if (isset($_REQUEST['load'])) {
     //Where clause
     $where_tab = array();
     //
-    $where_tab[] = " identifier = ? ";
+    $where_tab[] = "identifier = ?";
+    $where_tab[] = "notes.id in (select notes.id from notes left join note_entities on notes.id = note_entities.note_id where item_id IS NULL OR item_id = '".$_SESSION['user']['primaryentity']['id']."' or notes.user_id = '".$_SESSION['user']['UserId']."')";
     $arrayPDO = array($identifier);
 
     //Build where
@@ -136,47 +137,6 @@ if (isset($_REQUEST['load'])) {
         $_SESSION['config']['databasetype'], "default", true, NOTES_TABLE, USERS_TABLE,
         "user_id", true, false, false, $start
     );
-        
-    //LGI UPDATE
-    $arrayToUnset = array();
-
-    for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
-        for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
-            foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
-                if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
-                    $tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-                    $tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
-                    $tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
-                    $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-                    $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-                    $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-                    $tabNotes[$indNotes1][$indNotes2]["show"] = true;
-                    $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
-                                               
-                    if (!$notes_tools->isUserNote(
-                        $tabNotes[$indNotes1][$indNotes2]['value'], 
-                        $_SESSION['user']['UserId'], 
-                        $_SESSION['user']['primaryentity']['id']
-                    )
-                    ) {
-                        //unset($tabNotes[$indNotes1]);
-                        //echo 'sort ' . $indNotes1 . '<br>';
-                        array_push($arrayToUnset, $indNotes1);
-                    } else {
-                        //echo 'garde ' . $indNotes1 . '<br>';
-                    }
-                }
-            }
-        }
-    }
-
-    //var_dump($tabNotes);
-
-    for ($cptUnset=0;$cptUnset<count($arrayToUnset);$cptUnset++ ) {
-        unset($tabNotes[$arrayToUnset[$cptUnset]]);
-    }
-    // array_multisort($tabNotes, SORT_DESC);
-    $tabNotes = array_merge($tabNotes);
         
     // $request->show_array($tabNotes);
     for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {

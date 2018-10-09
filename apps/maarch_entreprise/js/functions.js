@@ -2632,7 +2632,7 @@ function loadList(path, inDiv, modeReturn, init) {
     if (typeof (modeReturn) === 'undefined') {
         var modeReturn = false;
     }
-    if (typeof (init) === 'undefined') {
+    if (typeof (init) === 'undefined' && window.top.$('main_error') != null) {
         window.top.$('main_error').innerHTML = '';
         window.top.$('main_info').innerHTML = '';
     }

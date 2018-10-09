@@ -43,7 +43,18 @@ function validNotesForm(path, form_id) {
                     window.parent.angularSignatureBookComponent.componentAfterNotes();
                 }
                 destroyModal('form_notes');
-                eval(response.exec_js);
+                var modInfo = $j('<div class="info" id="main_info" onclick="this.remove();">'+response.msg_result+'</div>');
+                modInfo.appendTo('body');
+                modInfo.css({'display' : 'table-cell'});
+                setTimeout(function() {
+                    modInfo.remove();
+                }, 5000);
+
+                if(parent.$j('.contentShow iframe').length){
+                    parent.$j('.contentShow iframe')[0].contentWindow.location.reload(true);
+                } else {
+                    eval(response.exec_js);
+                }
             } else {
                 alert(response.error);
             }

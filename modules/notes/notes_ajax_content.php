@@ -315,8 +315,8 @@ switch ($mode) {
                 }
                 
                 //Reload and show message
-                $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_ADDED."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
-
+                $js =  $list_origin;
+                $msgResult = _NOTES_ADDED;
                 //Count notes
                 $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&origin=parent&resId='.$identifier.'&collId='.$collId;
                 $js .='loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');';
@@ -502,7 +502,8 @@ switch ($mode) {
                     }
                     
                     //Reload and show message
-                    $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTE_UPDATED."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
+                    $js =  $list_origin;
+                    $msgResult = _NOTE_UPDATED;
                 }
             }
         } else {
@@ -543,8 +544,9 @@ switch ($mode) {
             }
             
             //Reload and show message
-            $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_DELETED."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
-            
+            $js =  $list_origin;
+            $msgResult = _NOTES_DELETED;
+
             //Count notes
             $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&origin=parent&resId='.$identifier.'&collId='.$collId;
             $js .='loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');';
@@ -552,7 +554,7 @@ switch ($mode) {
     break;
 }
 
-echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
+echo "{status : " . $status . ", msg_result : '" . $msgResult . "', content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();
 ?>
 
