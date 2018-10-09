@@ -599,7 +599,7 @@ abstract class visa_Abstract extends Database
         return '';
     }
 
-    public function setStatusVisa($res_id, $coll_id)
+    public function setStatusVisa($res_id, $coll_id, $inDetails = false)
     {
         $curr_visa_wf = $this->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
 
@@ -614,10 +614,12 @@ abstract class visa_Abstract extends Database
         // If there is only one step in the visa workflow, we set status to ESIG
         if ($resListDiffVisa->requested_signature) {
             $mailStatus = 'ESIG';
-            \Attachment\controllers\AttachmentController::generateAttachForMailing([
-                'resIdMaster' => $res_id,
-                'userId' => $_SESSION['user']['UserId']
-            ]);
+            if ($inDetails == false) {
+                \Attachment\controllers\AttachmentController::generateAttachForMailing([
+                    'resIdMaster' => $res_id,
+                    'userId' => $_SESSION['user']['UserId']
+                ]);
+            }
         } else {
             $mailStatus = 'EVIS';
         }

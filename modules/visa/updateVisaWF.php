@@ -60,7 +60,7 @@ $db   = new Database();
 $stmt = $db->query("SELECT status FROM res_letterbox WHERE res_id = ?", array($res_id));
 $res  = $stmt->fetchObject();
 if ($res->status == 'EVIS' || $res->status == 'ESIG') {
-    $visa->setStatusVisa($res_id, $coll_id);
+    $visa->setStatusVisa($res_id, $coll_id, true);
 }
 
 //LOAD TOOLBAR BADGE
