@@ -3825,3 +3825,15 @@ function checkMultiIndexingGroup(url) {
         }
     });
 }
+
+function writeLocationBar(path,label,level) {
+    if ($j('#ariane a:last').length == 0) {
+        var home = $j('<a href="'+path+'">'+label+'</a>');
+        home.appendTo('#ariane');
+    } else {
+        var elem = $j('<a href="'+path+'&level='+level+'">'+label+'</a>');
+        elem.insertAfter('#ariane a:last');
+        var separator = $j('<span> > </span>');
+        separator.insertBefore(elem);
+    }    
+}
