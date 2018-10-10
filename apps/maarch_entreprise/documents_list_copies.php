@@ -129,7 +129,7 @@ $where = implode(' and ', $where_tab);
 //Order
 
 $order = $order_field = '';
-$arr_order = explode(',', $_SESSION['current_basket']['basket_res_order']);
+$arr_order = explode(', ', $_SESSION['current_basket']['basket_res_order']);
 if (count($arr_order) == 1) {
     $order = $list->getOrder();
     $order_field = $list->getOrderField();
@@ -140,10 +140,13 @@ if (!empty($order_field) && !empty($order)) {
     } else {
         $orderstr = 'order by '.$order_field.' '.$order;
     }
-    $orderstr = 'order by '.str_replace('alt_identifier', 'order_alphanum(alt_identifier)', $_SESSION['current_basket']['basket_res_order']);
     $_SESSION['last_order_basket'] = $orderstr;
 } elseif (!empty($_SESSION['save_list']['order']) && !empty($_SESSION['save_list']['order_field'])) {
-    $orderstr = 'order by '.str_replace('alt_identifier', 'order_alphanum(alt_identifier)', $_SESSION['current_basket']['basket_res_order']);
+    if ($_SESSION['save_list']['order_field'] == 'alt_identifier') {
+        $orderstr = 'order by order_alphanum(alt_identifier)'.' '.$_SESSION['save_list']['order'];
+    } else {
+        $orderstr = 'order by '.$_SESSION['save_list']['order_field'].' '.$_SESSION['save_list']['order'];
+    }
     $_SESSION['last_order_basket'] = $orderstr;
 } else {
     if (!empty($_SESSION['current_basket']['basket_res_order'])) {
@@ -152,7 +155,7 @@ if (!empty($order_field) && !empty($order)) {
             $list->setOrderField($arr_order[0]);
         }
         $orderstr = 'order by '.str_replace('alt_identifier', 'order_alphanum(alt_identifier)', $_SESSION['current_basket']['basket_res_order']);
-        $_SESSION['last_order_basket'] = $orderstr;
+        $_SESSION['last_order_basket'] = $_SESSION['current_basket']['basket_res_order'];
     } else {
         $list->setOrder();
         $list->setOrderField('res_id');
