@@ -669,4 +669,6 @@ export const LANG_FR = {
     "descending"                        : "Descendant",
     "orderBy"                           : "Ordre",
     "indexingWithProfile"               : "Enregistrer un document avec le profil",
+    "contactsFillingAdministration"     : "Complétude des informations contacts",
+    "criteria"                          : "Critère",
 };

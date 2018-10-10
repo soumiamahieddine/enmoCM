@@ -1,7 +1,7 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+    <mat-sidenav-container autosize class="admin-sidenav-container">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
         </mat-sidenav>
@@ -10,6 +10,49 @@
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
+                <div class="row">
+                    <div class="col-md-4 col-xs-4">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>1er palier</mat-card-title>
+                            </mat-card-header>
+                            <mat-slider [(ngModel)]="contactsFilling.first_threshold" style="width:100%" color="primary"
+                                max="100" min="0" step="1" thumbLabel="true"></mat-slider>
+                            <input disabled matInput type="color" name="color" value="{{fillingColor.first_threshold}}">
+                        </mat-card>
+                    </div>
+                    <div class="col-md-4 col-xs-4">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>2e palier</mat-card-title>
+                            </mat-card-header>
+                            <mat-slider [(ngModel)]="contactsFilling.second_threshold" style="width:100%" color="primary"
+                                max="100" [min]="contactsFilling.first_threshold" step="1" thumbLabel="true"></mat-slider>
+                            <input disabled matInput type="color" name="color" value="{{fillingColor.second_threshold}}">
+                        </mat-card>
+                    </div>
+                    <div class="col-md-4 col-xs-4">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title>3e palier</mat-card-title>
+                            </mat-card-header>
+                            <mat-slider style="width:100%" color="primary" max="100" min="100" step="1" thumbLabel="true"></mat-slider>
+                            <input disabled matInput type="color" name="color" value="{{fillingColor.third_threshold}}">
+                        </mat-card>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-12 col-xs-12">
+                        <mat-card>
+                            <mat-card-title>Critères de complétude</mat-card-title>
+                            <div class="row" *ngFor="let fillingColumnSelected of fillingColumnsSelected;let i = index">
+                                <div class="col-md-3 col-xs-3" *ngFor="let fillingColumn of fillingColumns" style="padding-bottom: 5px;">
+                                    <mat-slide-toggle color="primary" name="{{fillingColumn}}" (change)="addCriteria($event,fillingColumn)">{{fillingColumn}}</mat-slide-toggle>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div>
             </mat-card>
         </mat-sidenav-content>
     </mat-sidenav-container>
