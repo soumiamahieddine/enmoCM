@@ -3816,7 +3816,7 @@ function checkMultiIndexingGroup(url) {
                 answer.user.indexingGroups.each(function (group, key) {
                     link += '<li style="padding:5px;"><a href="'+url+'&groupId='+group.groupId+'">'+group.label+'</a></li>';
                 });  
-                var modal = $j('<div id="indexingGroupSelect" class="modal" style="position: fixed;left: 50%;transform: translate(-50%, -50%);top: 25%;"><h2>Choisissez un groupe d\'indexation :</h2><ul style="text-align:left;font-size: 24px;">'+link+'</ul><div style="display: flex;justify-content: center;"><input style="width:50px;" class="button" value="Annuler" onclick="$j(\'#indexingGroupSelect\').remove();$j(\'#maarch_content\').css({opacity:1})"/></div></div>');
+                var modal = $j('<div id="indexingGroupSelect" class="modal" style="position: fixed;left: 50%;transform: translate(-50%, -50%);top: 25%;"><h2>Profil d\'indexation :</h2><ul style="text-align:left;font-size: 24px;">'+link+'</ul><div style="display: flex;justify-content: center;"><input style="width: 70px;text-align: center;" class="button" value="Annuler" onclick="$j(\'#indexingGroupSelect\').remove();$j(\'#maarch_content\').css({opacity:1})"/></div></div>');
                 modal.appendTo('body');
                 $j('#maarch_content').css({opacity:0.2});
             } else {
