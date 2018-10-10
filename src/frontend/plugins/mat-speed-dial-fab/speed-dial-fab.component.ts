@@ -32,7 +32,7 @@ export class SpeedDialFabComponent {
 
   constructor(private elementRef: ElementRef) { }
 
-  private showItems() {
+  public showItems() {
       if($j('.speedDial').length == 0) {
         this.fabTogglerState = 'active';
         this.buttons = this.fabButtons;
@@ -49,7 +49,7 @@ export class SpeedDialFabComponent {
     this.buttons.length ? this.hideItems() : this.showItems();
   }
 
-  public bindLeaveEvent(elem: any) {
+  public bindLeaveEvent() {
     this.elementRef.nativeElement.querySelector('#fab-container-buttons').addEventListener('mouseleave', this.mouseLeave.bind(this));
   }
 
