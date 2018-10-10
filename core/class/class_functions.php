@@ -403,216 +403,47 @@ class functions
     */
     public function manage_location_bar($path = '', $label = '', $id_page = '', $init = true, $level = '')
     {
-        //Fix un little php bug
-        if(strpos($label,"&rsquo;")!== false)
-        {
-            $label = str_replace("&rsquo;" , "\'", $label);
-        }
-
-        $_SESSION['location_bar']['level1']['path'] = "index.php?reinit=true";
-        $_SESSION['location_bar']['level1']['label'] = 'Accueil';
-        $_SESSION['location_bar']['level1']['id'] = "welcome";
-
-        if(!empty($level))
-        {
-            if($level == 1)
-            {
-                $_SESSION['location_bar']['level2']['path'] = "";
-                $_SESSION['location_bar']['level2']['label'] = "";
-                $_SESSION['location_bar']['level2']['id'] = "" ;
-
-                $_SESSION['location_bar']['level3']['path'] = "";
-                $_SESSION['location_bar']['level3']['label'] = "";
-                $_SESSION['location_bar']['level3']['id'] = "" ;
-
-                $_SESSION['location_bar']['level4']['path'] = "";
-                $_SESSION['location_bar']['level4']['label'] = "";
-                $_SESSION['location_bar']['level4']['id'] = "" ;
-            }
-            elseif($level == 2)
-            {
-                $_SESSION['location_bar']['level3']['path'] = "";
-                $_SESSION['location_bar']['level3']['label'] = "";
-                $_SESSION['location_bar']['level3']['id'] = "" ;
-
-                $_SESSION['location_bar']['level4']['path'] = "";
-                $_SESSION['location_bar']['level4']['label'] = "";
-                $_SESSION['location_bar']['level4']['id'] = "" ;
-            }
-            elseif($level == 3)
-            {
-                $_SESSION['location_bar']['level4']['path'] = "";
-                $_SESSION['location_bar']['level4']['label'] = "";
-                $_SESSION['location_bar']['level4']['id'] = "" ;
-            }
-        }
-        else
-        {
-
-            if(isset($_SESSION['location_bar']['level1']['id']) && trim($id_page) == trim($_SESSION['location_bar']['level1']['id']))
-            {
-                $_SESSION['location_bar']['level2']['path'] = "";
-                $_SESSION['location_bar']['level2']['label'] = "";
-                $_SESSION['location_bar']['level2']['id'] = "" ;
-
-                $_SESSION['location_bar']['level3']['path'] = "";
-                $_SESSION['location_bar']['level3']['label'] = "";
-                $_SESSION['location_bar']['level3']['id'] = "" ;
-
-                $_SESSION['location_bar']['level4']['path'] = "";
-                $_SESSION['location_bar']['level4']['label'] = "";
-                $_SESSION['location_bar']['level4']['id'] = "" ;
-            }
-            elseif( isset($_SESSION['location_bar']['level2']['id']) && trim($id_page) == trim($_SESSION['location_bar']['level2']['id']))
-            {
-                $_SESSION['location_bar']['level3']['path'] = "";
-                $_SESSION['location_bar']['level3']['label'] = "";
-                $_SESSION['location_bar']['level3']['id'] = "" ;
-
-                $_SESSION['location_bar']['level4']['path'] = "";
-                $_SESSION['location_bar']['level4']['label'] = "";
-                $_SESSION['location_bar']['level4']['id'] = "" ;
-            }
-            elseif(isset($_SESSION['location_bar']['level3']['id']) && trim($id_page) == trim($_SESSION['location_bar']['level3']['id']))
-            {
-                $_SESSION['location_bar']['level4']['path'] = "";
-                $_SESSION['location_bar']['level4']['label'] = "";
-                $_SESSION['location_bar']['level4']['id'] = "" ;
-            }
-            elseif($init || empty($_SESSION['location_bar']['level2']['id']))
-            {
-                $_SESSION['location_bar']['level2']['path'] = $path;
-                $_SESSION['location_bar']['level2']['path'] .= "&level=2";
-                $_SESSION['location_bar']['level2']['label'] = $this->wash_html($label);
-                $_SESSION['location_bar']['level2']['id'] = $id_page ;
-
-                $_SESSION['location_bar']['level3']['path'] = "";
-                $_SESSION['location_bar']['level3']['label'] = "";
-                $_SESSION['location_bar']['level3']['id'] = "" ;
-
-                $_SESSION['location_bar']['level4']['path'] = "";
-                $_SESSION['location_bar']['level4']['label'] = "";
-                $_SESSION['location_bar']['level4']['id'] = "" ;
-            }
-            else
-            {
-                if(empty($_SESSION['location_bar']['level3']['path']))
-                {
-                    $_SESSION['location_bar']['level3']['path'] = $path."&level=3";
-                    $_SESSION['location_bar']['level3']['label'] = $this->wash_html($label);
-                    $_SESSION['location_bar']['level3']['id'] = $id_page ;
-
-                    $_SESSION['location_bar']['level4']['path'] = "";
-                    $_SESSION['location_bar']['level4']['label'] = "";
-                    $_SESSION['location_bar']['level4']['id'] = "" ;
-                }
-                else
-                {
-                    $_SESSION['location_bar']['level4']['path'] = $path."&level=4";
-                    $_SESSION['location_bar']['level4']['label'] = $this->wash_html($label);
-                    $_SESSION['location_bar']['level4']['id'] = $id_page ;
+        //INIT LOCATION BAR
+        if (empty($_SESSION['location_bar_label'])) {
+            $_SESSION['location_bar_label'][0] = "Accueil";
+            $_SESSION['location_bar_path'][0] = 'index.php?reinit=true';
+        } if (!empty($level)) {
+            //IF USER CLICKED ON LOCATION BAR
+            $arrLocationLabel = [];
+            $arrLocationPath = [];
+            foreach($_SESSION['location_bar_label'] as $key => $value) {
+                $arrLocationLabel[] = $_SESSION['location_bar_label'][$key];
+                $arrLocationPath[] = $_SESSION['location_bar_path'][$key];
+                if($key == $level) {
+                    break;
                 }
             }
+            $_SESSION['location_bar_label'] = $arrLocationLabel;
+            $_SESSION['location_bar_path'] = $arrLocationPath;
+        } else if (count($_SESSION['location_bar_label'])==4 && $_SESSION['location_bar_label'][count($_SESSION['location_bar_label'])-1] != $label) {
+            //ERASE BEGIN OF LOCATION BAR IF TOO MUCH ITEMS
+            array_shift($_SESSION['location_bar_label']);
+            array_shift($_SESSION['location_bar_path']);
+
+            $_SESSION['location_bar_label'][0] = "Accueil";
+            $_SESSION['location_bar_path'][0] = 'index.php?reinit=true';
+
         }
-        $this->where_am_i();
+        
+        //ADD NEW LOCATION
+        if ($_SESSION['location_bar_label'][count($_SESSION['location_bar_label'])-1] != $label) {
+            $_SESSION['location_bar_label'][] = $label;
+            $_SESSION['location_bar_path'][] = $path;
+        }
+
+        //WRITE LOCATION BAR
+        foreach($_SESSION['location_bar_label'] as $key => $value) {
+            ?><script  type="text/javascript">
+                writeLocationBar('<?php echo $_SESSION['location_bar_path'][$key]; ?>','<?php echo $value; ?>','<?php echo $key; ?>');
+            </script><?php   
+        }
     }
 
-    /**
-    * Uses javascript to rewrite the location bar
-    *
-    */
-    private function where_am_i()
-    {
-        if(empty($_SESSION['location_bar']['level2']['path']))
-        {
-        ?><script  type="text/javascript">
-            var bar = window.document.getElementById('ariane');
-            if(bar != null)
-            {
-                var link1 = document.createElement("a");
-                link1.href='<?php echo($_SESSION['location_bar']['level1']['path']);?>';
-                var label1 = document.createTextNode("<?php functions::xecho($_SESSION['location_bar']['level1']['label']);?>");
-                link1.appendChild(label1);
-                bar.appendChild(link1);
-            }
-        </script><?php
-        }
-        else
-        {
-            if(empty($_SESSION['location_bar']['level3']['path']))
-            {
-                ?><script  type="text/javascript">
-                    var bar = window.document.getElementById('ariane');
-                    if(bar != null)
-                    {
-                        var link1 = document.createElement("a");
-                        link1.href='<?php echo($_SESSION['location_bar']['level1']['path']);?>';
-                        var label1 = document.createTextNode("<?php functions::xecho($_SESSION['location_bar']['level1']['label']);?>");
-                        link1.appendChild(label1);
-                        bar.appendChild(link1);
-                        var text1 = document.createTextNode(" > <?php functions::xecho($_SESSION['location_bar']['level2']['label']);?>");
-                        bar.appendChild(text1);
-                    }
-                </script><?php
-            }
-            else
-            {
-                if(empty($_SESSION['location_bar']['level4']['path']))
-                {
-                    ?><script type="text/javascript">
-                        var bar = window.document.getElementById('ariane');
-                        if(bar != null)
-                        {
-                            var link1 = document.createElement("a");
-                            link1.href='<?php echo($_SESSION['location_bar']['level1']['path']);?>';
-                            var label1 = document.createTextNode("<?php functions::xecho($_SESSION['location_bar']['level1']['label']);?>");
-                            link1.appendChild(label1);
-                            bar.appendChild(link1);
-                            var text1 = document.createTextNode(" > ");
-                            bar.appendChild(text1);
-                            var link2 = document.createElement("a");
-                            link2.href='<?php echo($_SESSION['location_bar']['level2']['path']);?>';
-                            var label2 = document.createTextNode("<?php functions::xecho($_SESSION['location_bar']['level2']['label']);?>");
-                            link2.appendChild(label2);
-                            bar.appendChild(link2);
-                            var text2 = document.createTextNode(" > <?php echo $_SESSION['location_bar']['level3']['label'];?>");
-                            bar.appendChild(text2);
-                        }
-                    </script><?php
-                }
-                else
-                {
-                    ?><script  type="text/javascript">
-                        var bar = window.document.getElementById('ariane');
-                        if(bar != null)
-                        {
-                            var link1 = document.createElement("a");
-                            link1.href='<?php echo($_SESSION['location_bar']['level1']['path']);?>';
-                            var label1 = document.createTextNode("<?php functions::xecho($_SESSION['location_bar']['level1']['label']);?>");
-                            link1.appendChild(label1);
-                            bar.appendChild(link1);
-                            var text1 = document.createTextNode(" > ");
-                            bar.appendChild(text1);
-                            var link2 = document.createElement("a");
-                            link2.href='<?php echo($_SESSION['location_bar']['level2']['path']);?>';
-                            var label2 = document.createTextNode("<?php functions::xecho($_SESSION['location_bar']['level2']['label']);?>");
-                            link2.appendChild(label2);
-                            bar.appendChild(link2);
-                            var text2 = document.createTextNode(" > ");
-                            bar.appendChild(text2);
-                            var link3 = document.createElement("a");
-                            link3.href='<?php echo($_SESSION['location_bar']['level3']['path']);?>';
-                            var label3 = document.createTextNode("<?php functions::xecho($_SESSION['location_bar']['level3']['label']);?>");
-                            link3.appendChild(label3);
-                            bar.appendChild(link3);
-                            var text3 = document.createTextNode(" > <?php echo $_SESSION['location_bar']['level4']['label'];?>");
-                            bar.appendChild(text3);
-                        }
-                    </script><?php
-                }
-            }
-        }
-    }
 
     /**
     * For debug, displays an array in a more readable way

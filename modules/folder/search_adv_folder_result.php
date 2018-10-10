@@ -226,7 +226,7 @@ if($_SESSION['save_list']['fromDetail'] == "true") {
         $_SESSION['save_list']['fromDetail'] = "false";
         $_SESSION['save_list']['url'] = $urlParameters;
     }
-    $_SESSION['save_list']['start'] = "";
+    $_SESSION['save_list']['start'] = 0;
     $_SESSION['save_list']['lines'] = "";
     $_SESSION['save_list']['order'] = "";
     $_SESSION['save_list']['order_field'] = "";

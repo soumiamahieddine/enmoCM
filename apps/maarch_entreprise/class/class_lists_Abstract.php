@@ -151,7 +151,11 @@ abstract class lists_Abstract extends Database
     {
         $this->order = $_REQUEST['order'];
         $this->orderField = $_REQUEST['order_field'];
-        $this->start = $_REQUEST['start'];
+        if ($_REQUEST['start']) {
+            $this->start = $_REQUEST['start'];
+        } else {
+            $this->start = 0;
+        }
         $this->whatSearch = $_REQUEST['what'];
         $this->_manageFilters();
         if (isset($_REQUEST['template'])) {
@@ -1864,7 +1868,7 @@ abstract class lists_Abstract extends Database
 
             $rowsContent = '';
             //Loop into the set of records
-            for ($theLine = $this->start; $theLine < $this->end; ++$theLine) {
+            for ($theLine = 0; $theLine < $this->end; ++$theLine) {
                 //Check if line is disable
                 $lineIsDisabled = $this->_checkDisabledRules($this->params['disabledRules'], $resultArray[$theLine]);
 
@@ -2328,8 +2332,7 @@ abstract class lists_Abstract extends Database
         $start = $end = 0;
 
         //Loading image
-        $loading = '<div id="loading" style="display:none;">'
-                    .'<i class="fa fa-spinner fa-2x" style="vertical-align: middle;" title="loading..."></i></div>';
+        $loading = '<div id="loading" style="display:none;" title ="'._PROCESS_IN_PROGRESS.'""></div>';
 
         //Lines to show
         $nbLines = $this->params['linesToShow'];
@@ -2339,16 +2342,21 @@ abstract class lists_Abstract extends Database
         }
 
         //Number of pages
-        $nb_pages = ceil($this->countResult / $this->params['linesToShow']);
+        $current_page = ceil($this->start / $nbLines+1);
+        $nb_pages = ceil($this->countResult / $nbLines);
+
+        if ($nb_pages > 500) {
+            $nb_pages = 500;
+        }
         // $debug .='NB total '.$this->countResult.' / NB show: '.$this->params['linesToShow'].' / Pages: '.$nb_pages.' /';
 
         if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
             $start = strip_tags($_REQUEST['start']);
         }
-        $end = $start + $this->params['linesToShow'];
+        /*$end = $start + $this->params['linesToShow'];
         if ($end > $this->countResult) {
             $end = $this->countResult;
-        }
+        }*/
 
         //Get list of tools (icon and link)
         $tools = $this->_getTools($resultFirstRow, $this->countResult);
@@ -2411,7 +2419,7 @@ abstract class lists_Abstract extends Database
             $lastpage = 0;
             for ($i = 0; $i != $nb_pages; ++$i) {
                 $the_line = $i + 1;
-                if ($start == $next_start) {
+                if ($current_page == $the_line) {
                     $pageDropdownList .= '<option value="'.$next_start.'" selected="selected">'.($i + 1).'</option>';
                 } else {
                     $pageDropdownList .= '<option value="'.$next_start.'">'.($i + 1).'</option>';
@@ -2426,15 +2434,15 @@ abstract class lists_Abstract extends Database
             $previous = '&nbsp;';
             $next = '';
             //Previous
-            if ($start > 0) {
-                $start_prev = $start - $this->params['linesToShow'];
+            if ($current_page > 1) {
+                $start_prev = $this->start - $this->params['linesToShow'];
                 $previous = '<a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='.$start_prev
                     .'\', \''.$this->divListId.'\', '.$this->modeReturn
                     .');"><i class="fa fa-backward" title="'._PREVIOUS.'"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
             }
             //Next link
-            if ($start != $lastpage) {
+            if ($current_page != $nb_pages) {
                 $start_next = $start + $this->params['linesToShow'];
                 $next = ' <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='
@@ -2501,8 +2509,8 @@ abstract class lists_Abstract extends Database
             }
         }
 
-        $this->start = $start;
-        $this->end = $end;
+        //$this->start = $start;
+        //$this->end = $end;
 
         return $toolbar;
     }
@@ -2672,8 +2680,8 @@ abstract class lists_Abstract extends Database
             }
         }
 
-        $this->start = $start;
-        $this->end = $end;
+        //$this->start = $start;
+        //$this->end = $end;
 
         return $bottomToolbar;
     }
@@ -2798,8 +2806,8 @@ abstract class lists_Abstract extends Database
             $toolbar .= '</tr></table>';
         }
 
-        $this->start = $start;
-        $this->end = $end;
+        //$this->start = $start;
+        //$this->end = $end;
 
         return $toolbar;
     }
@@ -3227,9 +3235,9 @@ abstract class lists_Abstract extends Database
         $content = $lineCss = '';
 
         $content .= '<tbody>';
-
+        
         //Loop into the set of records
-        for ($theLine = $this->start; $theLine < $this->end; ++$theLine) {
+        for ($theLine = 0; $theLine < $this->end; ++$theLine) {
             //Init
             $href = '';
             $resultTheLine = array();
@@ -3537,7 +3545,9 @@ abstract class lists_Abstract extends Database
 
         $this->countResult = 0;
         if (!empty($resultArray) && is_array($resultArray)) {
-            $this->countResult = count($resultArray);
+            $this->countResult = $_SESSION['save_list']['full_count'];
+            $this->start = $parameters['start'];
+            $this->end = count($resultArray);
         }
         if (count($currentBasket) > 0) {
             $this->currentBasket = $currentBasket;
@@ -3662,7 +3672,7 @@ abstract class lists_Abstract extends Database
             if (!empty($this->template) && $this->template != 'none') {
                 //Build the grid from template
                 $gridContent .= $this->_buildTemplate($_SESSION['html_templates'][$this->template]['PATH'], $resultArray, $listKey, $parameters);
-
+                
                 //Build the list
                 $grid .= $B_form.$B_height.$gridContent.$E_height.$E_form;
 
@@ -3670,22 +3680,23 @@ abstract class lists_Abstract extends Database
             } else {
                 //Header
                 $gridContent .= $this->_createHeader($resultArray[0], $listColumn, $showColumn, $sortColumn);
-
+                
                 //Content
                 $gridContent .= $this->_createContent($resultArray, $listColumn, $listKey);
 
                 //Build the list
                 (!empty($this->params['listCss'])) ? $listCss = 'class="'.$this->params['listCss'].'"' : $listCss = '';
                 $grid .= $B_form.$B_height.'<table cellspacing="0" border="0" cellpadding="0" align="center" '
-                        .$listCss.'>'.$gridContent.'</table>'.$E_height.$E_form.$bottomToolbar;
+                        .$listCss.' style="width:100%;">'.$gridContent.'</table>'.$E_height.$E_form.$bottomToolbar;
             }
 
             //Process instructions
             if ($this->params['bool_actionOnLineClick'] === true) {
                 $grid .= '<em>'.$parameters['processInstructions'].'</em>';
             }
+        } else {
+            $grid .= '<div style ="text-align: center;font-size: 16px;padding: 20px;font-weight: bold;opacity: 0.5;">'._NO_RESULTS.'</div>';
         }
-
         //Show the list
         if ($this->params['bool_modeReturn'] === true) {
             return $this->_parse($grid);
@@ -3721,7 +3732,7 @@ abstract class lists_Abstract extends Database
 
         //Show loading image?
         if ($showLoading === true) {
-            $loading = '<i class="fa fa-spinner fa-2x"></i>';
+            $loading = '<div style="padding:10px;justify-content: center;display: flex;align-items: center;font-size: 24px;font-weight: bold;opacity: 0.5;"><div class="lds-ring" style="position:initial;margin-top: 0;"><div></div><div></div><div></div><div></div></div><div>'._PROCESS_IN_PROGRESS.'</div></div>';
         }
 
         //Content div

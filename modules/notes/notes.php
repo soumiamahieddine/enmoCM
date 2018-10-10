@@ -48,7 +48,6 @@ if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&order='.$_REQUEST['order'];
 if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters .= '&order_field='.$_REQUEST['order_field'];
 if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
-if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
 
 if (isset($_REQUEST['load'])) {
     $core_tools->load_lang();
@@ -105,7 +104,8 @@ if (isset($_REQUEST['load'])) {
     //Where clause
     $where_tab = array();
     //
-    $where_tab[] = " identifier = ? ";
+    $where_tab[] = "identifier = ?";
+    $where_tab[] = "notes.id in (select notes.id from notes left join note_entities on notes.id = note_entities.note_id where item_id IS NULL OR item_id = '".$_SESSION['user']['primaryentity']['id']."' or notes.user_id = '".$_SESSION['user']['UserId']."')";
     $arrayPDO = array($identifier);
 
     //Build where
@@ -122,54 +122,21 @@ if (isset($_REQUEST['load'])) {
         $list->setOrderField('date_note');
         $orderstr = "order by date_note desc";
     }
+
+    if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+        $parameters .= '&start='.$_REQUEST['start'];
+        $start = $_REQUEST['start'];
+    } else {
+        $start = $list->getStart();
+        $parameters .= '&start='.$start;
+    }
     
     //Request
     $tabNotes=$request->PDOselect(
         $select, $where, $arrayPDO, $orderstr,
-        $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
-        "user_id"
+        $_SESSION['config']['databasetype'], "default", true, NOTES_TABLE, USERS_TABLE,
+        "user_id", true, false, false, $start
     );
-        
-    //LGI UPDATE
-    $arrayToUnset = array();
-
-    for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
-        for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
-            foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
-                if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
-                    $tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-                    $tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
-                    $tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
-                    $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-                    $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-                    $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-                    $tabNotes[$indNotes1][$indNotes2]["show"] = true;
-                    $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
-                                               
-                    if (!$notes_tools->isUserNote(
-                        $tabNotes[$indNotes1][$indNotes2]['value'], 
-                        $_SESSION['user']['UserId'], 
-                        $_SESSION['user']['primaryentity']['id']
-                    )
-                    ) {
-                        //unset($tabNotes[$indNotes1]);
-                        //echo 'sort ' . $indNotes1 . '<br>';
-                        array_push($arrayToUnset, $indNotes1);
-                    } else {
-                        //echo 'garde ' . $indNotes1 . '<br>';
-                    }
-                }
-            }
-        }
-    }
-
-    //var_dump($tabNotes);
-
-    for ($cptUnset=0;$cptUnset<count($arrayToUnset);$cptUnset++ ) {
-        unset($tabNotes[$arrayToUnset[$cptUnset]]);
-    }
-    // array_multisort($tabNotes, SORT_DESC);
-    $tabNotes = array_merge($tabNotes);
         
     // $request->show_array($tabNotes);
     for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
@@ -277,8 +244,7 @@ if (isset($_REQUEST['load'])) {
             ."&origin=".$origin.'&display=true'.$parameters;                            //Parametres d'url supplementaires
     $paramsTab['filters'] = array();                                                   //Filtres    
     $paramsTab['listHeight'] = '100%';                                                 //Hauteur de la liste
-    // $paramsTab['bool_showSmallToolbar'] = true;                                         //Mini barre d'outils
-    // $paramsTab['linesToShow'] = 15;                                                     //Nombre de ligne a afficher
+    $paramsTab['start'] = $start;
     $paramsTab['listCss'] = $css;                                                       //CSS
     $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
         

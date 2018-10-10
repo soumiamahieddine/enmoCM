@@ -110,9 +110,12 @@ else
 $docs_limitation .= $docs_library[0];
 $docs_limitation .= ' ) ';
 
+$start = 0;
+ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+     $start = trim($_REQUEST['start']);
+ }
 
-
-$tabNotes=$request->PDOselect($select,$where_request.$docs_limitation,$where_what,"order by ".$view.".res_id",$_SESSION['config']['databasetype'], "500", false );
+$tabNotes=$request->PDOselect($select,$where_request.$docs_limitation,$where_what,"order by ".$view.".res_id",$_SESSION['config']['databasetype'], "500", false,"","","",true,false,false, $start);
 $ind_notes1d = '';
 
 
@@ -124,7 +127,7 @@ if($_GET['size'] == "full")
 	$size_medium = "15";
 	$size_small = "15";
 	$size_full = "70";
-	$css = "listing spec detailtabricatordebug";
+	$css = "listing spec";
 	$body = "";
 	$cut_string = 100;
 	$extend_url = "&size=full";
@@ -301,7 +304,7 @@ $core_tools->load_header('', true, false);
 ?>
 <body id="<?php functions::xecho($body);?>">
 <?php
-$title = '';
+$title = _RESULTS.' : '.$_SESSION['save_list']['full_count']. ' '. _NOTES;
 $list_notes = new list_show();
 $list_notes->list_simple($tabNotes, count($tabNotes), $title,'id','id', false, '',$css);
 $core_tools->load_js();

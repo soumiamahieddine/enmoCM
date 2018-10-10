@@ -4644,6 +4644,12 @@ if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) {
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS_DESC')) {
     define('_REJECTION_WORKFLOW_PREVIOUS_DESC', "Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du document ('process_date' de la table listinstance).");
 }
+if (!defined('_REJECTION_WORKFLOW_ENTITY')) {
+    define('_REJECTION_WORKFLOW_ENTITY', 'Refuser le visa - retour à l\'entité initiatrice');
+}
+if (!defined('_REJECTION_WORKFLOW_ENTITY_DESC')) {
+    define('_REJECTION_WORKFLOW_ENTITY_DESC', 'Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du document (\'process_date\' de la table listinstance) et le renvoit à l\'entité initiatrice.');
+}
 if (!defined('_VISA_MAIL')) {
     define('_VISA_MAIL', 'Viser le courrier');
 }
@@ -5181,4 +5187,7 @@ if (!defined('_CHRONO_NUMBER_HELP')) {
 }
 if (!defined('_BARCODE_HELP')) {
     define('_BARCODE_HELP', "Exemple : ABC000004");
+}
+if (!defined('_PROCESS_IN_PROGRESS')) {
+    define('_PROCESS_IN_PROGRESS', "Traitement en cours");
 }

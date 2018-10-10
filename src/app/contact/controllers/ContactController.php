@@ -14,6 +14,7 @@
 
 namespace Contact\controllers;
 
+use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Group\models\ServiceModel;
 use SrcCore\models\CoreConfigModel;
@@ -21,6 +22,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\TextFormatModel;
+use SrcCore\models\ValidatorModel;
 
 class ContactController
 {
@@ -183,6 +185,67 @@ class ContactController
         ]);
 
         return $response->withJson([$contact]);
+    }
+
+    public function getFilling(Request $request, Response $response)
+    {
+        $contactsFilling = ContactFillingModel::get();
+        $contactsFilling['rating_columns'] = json_decode($contactsFilling['rating_columns']);
+
+        return $response->withJson(['contactsFilling' => $contactsFilling]);
+    }
+
+    public function updateFilling(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+        $check = Validator::boolType()->notEmpty()->validate($data['enable']);
+        $check = $check && Validator::arrayType()->notEmpty()->validate($data['rating_columns']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['first_threshold']) && $data['first_threshold'] > 0 && $data['first_threshold'] < 99;
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['second_threshold']) && $data['second_threshold'] > 1 && $data['second_threshold'] < 100;
+        $check = $check && $data['first_threshold'] < $data['second_threshold'];
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $data['rating_columns'] = json_encode($data['rating_columns']);
+
+        ContactFillingModel::update($data);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    public static function getFillingRate(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['contact']);
+        ValidatorModel::arrayType($aArgs, ['contact']);
+
+        $contactsFilling = ContactFillingModel::get();
+        $contactsFilling['rating_columns'] = json_decode($contactsFilling['rating_columns']);
+
+        if ($contactsFilling['enable'] && !empty($contactsFilling['rating_columns'])) {
+            $percent = 0;
+            foreach ($contactsFilling['rating_columns'] as $ratingColumn) {
+                if (!empty($aArgs['contact'][$ratingColumn])) {
+                    $percent++;
+                }
+            }
+            $percent = $percent * 100 / count($contactsFilling['rating_columns']);
+            if ($percent <= $contactsFilling['first_threshold']) {
+                $color = '#f87474';
+            } elseif ($percent <= $contactsFilling['second_threshold']) {
+                $color = '#f6cd81';
+            } else {
+                $color = '#ccffcc';
+            }
+
+            return ['rate' => $percent, 'color' => $color];
+        }
+
+        return [];
     }
 
     public static function formatContactAddressAfnor(array $aArgs)

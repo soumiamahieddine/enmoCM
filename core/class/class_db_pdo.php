@@ -485,13 +485,12 @@ class Database extends functions
             $query = 'SELECT' . 
                 ' ' . $select_opts . 
                 ' ' . $select_expr . 
-                ' FROM ' . $table_refs .
+                ', count(1) OVER() AS __full_count FROM ' . $table_refs .
                 ' WHERE ' . $where_def .
                 ' ' . $other_clauses .
                 ' ' . $order_by .
                 ' ' . $limit_clause;
         }
-        
         return $query;
         
     }

@@ -668,4 +668,5 @@ export const LANG_FR = {
     "ascending"                         : "Ascendant",
     "descending"                        : "Descendant",
     "orderBy"                           : "Ordre",
+    "indexingWithProfile"               : "Enregistrer un document avec le profil",
 };

@@ -109,12 +109,11 @@ $urlParameters = '';
     if (!empty($selectedTemplate)) {
         $parameters .= '&template='.$selectedTemplate;
     }
-    if (!empty($start)) {
-        $parameters .= '&start='.$start;
-    }
+    $parameters .= '&start='.$start;
+
 
 //Query
-    $tab=$request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", $add_security);
+    $tab=$request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", $add_security, false, false, $start);
     // $request->show();
     
 //Result array
@@ -189,6 +188,7 @@ if (count($tab) > 0) {
     }
 
     $paramsTab['listCss'] = 'listing largerList spec';                       //css
+    $paramsTab['start'] = $start;
     $paramsTab['bool_showTemplateDefaultList'] = false;                      //Default list (no template)
 
     //Form attributs

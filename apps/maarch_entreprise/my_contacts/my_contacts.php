@@ -145,8 +145,13 @@ $contact    = new contacts_v2();
         $orderstr = "order by contact_lastname, society asc";
     }
 
+    if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+        $parameters .= '&start='.$_REQUEST['start'];
+    } else {
+        $_REQUEST['start'] = 0;
+    }
     //Request
-    $tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+    $tab=$request->PDOselect($select,$where,$arrayPDO,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true, $_REQUEST['start']);
     
     //Result array    
     for ($i=0;$i<count($tab);$i++)
@@ -242,13 +247,14 @@ $contact    = new contacts_v2();
     //List parameters
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
-    $paramsTab['pageTitle'] =  _CONTACTS_LIST." : ".count($tab).' '._CONTACTS;           //Titre de la page
+    $paramsTab['pageTitle'] =  _CONTACTS_LIST." : ".$_SESSION['save_list']['full_count'].' '._CONTACTS;           //Titre de la page
     $paramsTab['urlParameters'] = '&dir=my_contacts';                                   //parametre d'url supplementaire
     if ($_REQUEST['mode'] == 'search') {
         $paramsTab['urlParameters'] .= "&mode=search";
     } 
     $paramsTab['pagePicto'] = 'users';                                //Image (pictogramme) de la page
     $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
+    $paramsTab['start'] = $_REQUEST['start'];
     $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
     $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
                     ."index.php?display=true&page=contacts_v2_list_by_name";            //Script pour l'autocompletion
@@ -262,7 +268,7 @@ $contact    = new contacts_v2();
         // ."index.php?dir=my_contacts&page=my_contact_add";                            //Lien sur le bouton nouveau (1)
     if ($_REQUEST['mode'] <> 'search') {
         $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
-        $paramsTab['addButtonLabel'] = _CONTACT_ADDITION;                                   //Libellé du bouton Nouveau
+        $paramsTab['addButtonLabel'] = _CONTACT_ADDITION;                                   //Libellï¿½ du bouton Nouveau
         $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
             ."index.php?dir=my_contacts&page=my_contact_add'";                              //Action sur le bouton nouveau (2)
     }

@@ -25,12 +25,14 @@ if (!empty($_REQUEST['code']) && !empty($_REQUEST['state'])) {
 }
 
 //reset orders in previous basket list
+
 if (empty($_SESSION['current_basket'])) {
-    $_SESSION['save_list']['start'] = "";
+    $_SESSION['save_list']['start'] = 0;
     $_SESSION['save_list']['lines'] = "";
     $_SESSION['save_list']['order'] = "";
     $_SESSION['save_list']['order_field'] = "";
     $_SESSION['save_list']['template'] = "";
+    $_SESSION['save_list']['full_count'] = 0;
 }
 
 // Useless ???
@@ -202,12 +204,12 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
 
     //DISPLAY FULL PAGE
     $core->start_page_stat();
-    $core->configPosition();
-    if (isset($_SESSION['HTTP_REFERER'])) {
-        $url = $_SESSION['HTTP_REFERER'];
-        unset($_SESSION['HTTP_REFERER']);
-        header('location: '.$url);
-    }
+    // $core->configPosition();
+    // if (isset($_SESSION['HTTP_REFERER'])) {
+    //     $url = $_SESSION['HTTP_REFERER'];
+    //     unset($_SESSION['HTTP_REFERER']);
+    //     header('location: '.$url);
+    // }
     $core->load_html();
     $core->load_header();
 
@@ -272,17 +274,15 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     echo '<div id="content">';
     echo '<div class="error" id="main_error" onclick="this.hide();"></div>';
 
-    if (isset($_SESSION['error'])) {
-        echo '<div class="error" id="main_error_popup" onclick="this.hide();">';
-        echo functions::xssafe($_SESSION['error']);
-        echo '</div>';
-    }
+    echo '<div class="error" id="main_error_popup" onclick="this.hide();">';
+    echo functions::xssafe($_SESSION['error']);
+    echo '</div>';
 
-    if (isset($_SESSION['info'])) {
-        echo '<div class="info" id="main_info" onclick="this.hide();">';
-        echo functions::xssafe($_SESSION['info']);
-        echo '</div>';
-    }
+
+    echo '<div class="info" id="main_info" onclick="this.hide();">';
+    echo functions::xssafe($_SESSION['info']);
+    echo '</div>';
+
 
     if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
         ?>

@@ -56,11 +56,11 @@ class request extends dbquery
     * @param  $distinct_argument  Add the distinct parameters in the sql query (false by default)
     * @return array Results of the built query
     */
-    public function PDOselect($select, $where, $parameters = null, $other, $database_type, $limit="default", $left_join=false, $first_join_table="", $second_join_table="", $join_key="", $add_security = true, $catch_error = false, $distinct_argument = false)
+    public function PDOselect($select, $where, $parameters = null, $other, $database_type, $limit="default", $left_join=false, $first_join_table="", $second_join_table="", $join_key="", $add_security = true, $catch_error = false, $distinct_argument = false, $start = 0)
     {
         $db = new Database();
         if ($limit == 0 || $limit == "default") {
-            $limit = $_SESSION['config']['databasesearchlimit'];
+            $limit = $_SESSION['config']['nblinetoshow'];
         }
       
         //Extracts data in the first argument : $select.
@@ -133,7 +133,7 @@ class request extends dbquery
             $dist = " distinct ";
         }
         
-        $query = $db->limit_select(0, $limit, $field_string, $table_string." ".$join, $where_string, $other, $dist);
+        $query = $db->limit_select($start, $limit, $field_string, $table_string." ".$join, $where_string, $other, $dist);
 
         if (preg_match('/_view/i', $query)) {
             $_SESSION['last_select_query'] = $query;
@@ -149,7 +149,9 @@ class request extends dbquery
         while ($line = $res_query->fetch(PDO::FETCH_ASSOC)) {
             $temp= array();
             foreach (array_keys($line) as $resval) {
-                if (!is_int($resval)) {
+                if ($resval == '__full_count') {
+                    $_SESSION['save_list']['full_count'] = $line[$resval];
+                } else if (!is_int($resval)) {
                     array_push(
                         $temp,
                         array(
@@ -163,6 +165,8 @@ class request extends dbquery
         }
         if (count($result) == 0 && $catch_error) {
             return true;
+        } else if (count($result) == 0) {
+            $_SESSION['save_list']['full_count'] = 0;
         }
         return $result;
     }

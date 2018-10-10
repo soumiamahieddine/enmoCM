@@ -134,6 +134,7 @@ $pagePath = $_SESSION['config']['businessappurl']
     . 'index.php?page=view_baskets&module=basket&baskets='.$_REQUEST['baskets'];
 $pageLabel = _MY_BASKETS;
 $pageId = "my_baskets";
+
 $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 $bask = new basket();
@@ -212,7 +213,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
             <input type="hidden" name="page" id="page" value="view_baskets" />
             <input type="hidden" name="module" id="module" value="basket" />
 
-            <select name="baskets"id="baskets" onchange="cleanSessionBasket('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=cleanSessionBasket','ok'); this.form.submit();" class="listext_big" >
+            <select name="baskets" id="baskets" onchange="cleanSessionBasket('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=cleanSessionBasket','ok');" class="listext_big" >
                 <option value=""><?php echo _CHOOSE_BASKET;?></option>
                 <?php
                 $redirectedBaskets = \Basket\models\BasketModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);

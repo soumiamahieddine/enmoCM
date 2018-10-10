@@ -182,7 +182,6 @@ function change_diff_list(
         specific_role = '';
     }
     var list_div = difflist_div || 'diff_list_div';
-    var list_div_from_action = 'diff_list_div_from_action';
     var list_tr = difflist_tr || 'diff_list_tr';
     var tr_display_val = display_value_tr || 'table-row';
 
@@ -201,27 +200,19 @@ function change_diff_list(
                 {
                     var diff_list_tr = window.opener.$(list_tr);
                     var diff_list_div = window.opener.$(list_div);
-                    var diff_list_div_from_action = window.opener.$(list_div_from_action);
-                    if(diff_list_div != null)
-                    {
-                        diff_list_div.innerHTML = response.div_content;
-                    }
-                    if(diff_list_div_from_action != null)
-                    {
-                        diff_list_div_from_action.innerHTML = response.div_content_action;
-                    }
+
                     if(diff_list_tr != null)
                     {
                         diff_list_tr.style.display = tr_display_val;
                     }
-                    if(window.opener.document.getElementById('save_list_diff')){ 
-                        window.opener.document.getElementById('save_list_diff').click();
-                    }
+
+                    diff_list_div.innerHTML = response.div_content_action;
+
                     if(window.opener.parent.document.getElementById('iframe_tab')){
-                        window.opener.parent.document.getElementById('iframe_tab').src = window.opener.parent.document.getElementById('iframe_tab').src;
-                    }
-                    if(window.opener.parent.document.getElementById('uniqueDetailsIframe')){
-                        window.opener.parent.document.getElementById('uniqueDetailsIframe').src = window.opener.parent.document.getElementById('uniqueDetailsIframe').src;
+                        diff_list_div.innerHTML = response.div_content_action;
+                    } else if(window.opener.parent.document.getElementById('uniqueDetailsIframe')){
+                        diff_list_div.innerHTML = response.div_content;
+                        window.opener.$j('#save_list_diff').click();
                     }
                     window.close();
                 }

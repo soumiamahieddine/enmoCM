@@ -17,11 +17,13 @@ import { FilterListPipe }                       from '../plugins/filterList.pipe
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
 
+import { SpeedDialFabComponent }                from '../plugins/mat-speed-dial-fab/speed-dial-fab.component';
+
 /*MENU COMPONENT*/
 import { MainHeaderComponent }                  from './menu/main-header.component';
 import { MenuComponent }                        from './menu/menu.component';
 import { MenuNavComponent }                     from './menu/menu-nav.component';
-import { MenuShortcutComponent }                from './menu/menu-shortcut.component';
+import { MenuShortcutComponent, IndexingGroupModalComponent }                from './menu/menu-shortcut.component';
 
 /*SEARCH*/
 import { SearchHomeComponent }                        from './search/search-home.component';
@@ -49,6 +51,8 @@ import { BasketHomeComponent }                        from './basket/basket-home
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,
+        IndexingGroupModalComponent,
+        SpeedDialFabComponent
     ],
     exports: [
         CommonModule,
@@ -68,6 +72,10 @@ import { BasketHomeComponent }                        from './basket/basket-home
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,
-    ]
+        SpeedDialFabComponent
+    ],
+    entryComponents: [
+        IndexingGroupModalComponent
+    ],
 })
 export class SharedModule { }

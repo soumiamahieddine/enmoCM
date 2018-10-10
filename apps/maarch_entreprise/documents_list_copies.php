@@ -129,7 +129,7 @@ $where = implode(' and ', $where_tab);
 //Order
 
 $order = $order_field = '';
-$arr_order = explode(',', $_SESSION['current_basket']['basket_res_order']);
+$arr_order = explode(', ', $_SESSION['current_basket']['basket_res_order']);
 if (count($arr_order) == 1) {
     $order = $list->getOrder();
     $order_field = $list->getOrderField();
@@ -155,7 +155,7 @@ if (!empty($order_field) && !empty($order)) {
             $list->setOrderField($arr_order[0]);
         }
         $orderstr = 'order by '.str_replace('alt_identifier', 'order_alphanum(alt_identifier)', $_SESSION['current_basket']['basket_res_order']);
-        $_SESSION['last_order_basket'] = $orderstr;
+        $_SESSION['last_order_basket'] = $_SESSION['current_basket']['basket_res_order'];
     } else {
         $list->setOrder();
         $list->setOrderField('res_id');
@@ -163,9 +163,13 @@ if (!empty($order_field) && !empty($order)) {
         $_SESSION['last_order_basket'] = $orderstr;
     }
 }
-
+if (isset($_REQUEST['lines'])) {
+    $limit = $_REQUEST['lines'];
+} else {
+    $limit = 'default';
+}
 //Request
-$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, '', '', '', false, false, 'distinct');
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', false, false, 'distinct', $_SESSION['save_list']['start']);
 
 $_SESSION['current_basket']['last_query'] = array();
 $_SESSION['current_basket']['last_query']['select'] = $select;
@@ -527,7 +531,7 @@ $listKey = 'res_id';
 
 //Initialiser le tableau de parametres
 $paramsTab = array();
-$paramsTab['pageTitle'] = _RESULTS.' : '.count($tab).' '._FOUND_DOCS;              //Titre de la page
+$paramsTab['pageTitle'] = _RESULTS.' : '.$_SESSION['save_list']['full_count'].' '._FOUND_DOCS;              //Titre de la page
 $paramsTab['listCss'] = 'listing largerList spec';                                  //css
 $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
@@ -542,6 +546,7 @@ if (count($template_list) > 0) {                                                
 }
 $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
+$paramsTab['start'] = $_SESSION['save_list']['start'];
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
 //Fileplan
 if ($core_tools->test_service('fileplan', 'fileplan', false)) {

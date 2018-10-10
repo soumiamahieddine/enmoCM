@@ -37,7 +37,7 @@ if ($mode == 'list') {
     $list = new list_show();
     $list->admin_list(
         $thesauruslist['tab'],
-        count($thesauruslist['tab']),
+        $_SESSION['save_list']['full_count'],
         $thesauruslist['title'],
         'thesaurus_name',
         'manage_thesaurus_list_controller&mode=list',

@@ -128,13 +128,19 @@ if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field']) && in_a
 
 $orderstr = $list->define_order($order, $field);
 
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+    $parameters .= '&start='.$_REQUEST['start'];
+} else {
+    $_REQUEST['start'] = 0;
+}
+
 $request = new request;
 $tab = $request->PDOselect(
     $select,
     $where,
     $arrayPDO,
     $orderstr,
-    $_SESSION['config']['databasetype']
+    $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true, $_REQUEST['start']
 );
 for ($i = 0; $i < count($tab); $i ++) {
     for ($j = 0; $j < count($tab[$i]); $j ++) {
@@ -334,7 +340,7 @@ if ($_SESSION['origin']=='contacts_list') {
 }
 
 $list->admin_list(
-    $tab, $i, '',
+    $tab, $_SESSION['save_list']['full_count'], '',
     'contact_id"', 'contacts_v2_up', 'contacts_v2',
     'id', true, $pageNameUp, $pageNameVal, $pageNameBan,
     $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_ADDRESSES,

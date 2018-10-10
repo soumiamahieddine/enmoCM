@@ -643,4 +643,5 @@ export const LANG_EN = {
     "ascending"                         : "Ascending",
     "descending"                        : "Descending",
     "orderBy"                           : "Ordering",
+    "indexingWithProfile"               : "Index document with profile",
 };

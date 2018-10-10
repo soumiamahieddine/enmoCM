@@ -12,7 +12,7 @@
 */
 $contentDiffList = '';
 
-$contentDiffList .= '<div style="max-height:490px;overflow:auto;">';
+$contentDiffList .= '<div id="diff_list_div" style="max-height:490px;overflow:auto;">';
 
 $empty = 0;
 $nb_roles = 0;
@@ -60,7 +60,7 @@ foreach ($roles as $role_id => $role_label) {
                 $contentDiffList .= '<td style="width:43%;">'.$user['entity_label'].'</td>';
                 $contentDiffList .= '<td class="movedest" style="width:5%;">';
 
-                if (!empty($difflist['dest']['users'][0]) && $role_id != 'dest' && $origin != null && !$core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
+                if (!isset($specific_role) && !empty($difflist['dest']['users'][0]) && $role_id != 'dest' && $origin != null && !$core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
                     $contentDiffList .= '<i class="fa fa-arrow-up" style="cursor:pointer;" title="'._DEST.'" onclick="moveToDest(\''.$user['user_id'].'\',\''.$role_id.'\',\''.$origin.'\');"></i>';
                 }
                 $contentDiffList .= '</td>';

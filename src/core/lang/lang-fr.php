@@ -327,6 +327,8 @@ define('_REJECTION_WORKFLOW_PREVIOUS', 'Refuser le visa - retour au précédent 
 define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du document (\'process_date\' de la table listinstance).');
 define('_REJECTION_WORKFLOW_REDACTOR', 'Refuser le visa - retour rédacteur');
 define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du document (\'process_date\' de la table listinstance).');
+define('_REJECTION_WORKFLOW_ENTITY', 'Refuser le visa - retour à l\'entité initiatrice');
+define('_REJECTION_WORKFLOW_ENTITY_DESC', 'Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du document (\'process_date\' de la table listinstance) et le renvoit à l\'entité initiatrice.');
 define('_INTERRUPT_WORKFLOW', 'Interrompre le circuit de visa');
 define('_INTERRUPT_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire et de tous les viseurs suivant présents dans le circuit de visa du document (\'process_date\' de la table listinstance). Insère également un message d\'interruption sur le viseur actuel (\'process_comment\' de la table listinstance).');
 define('_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');

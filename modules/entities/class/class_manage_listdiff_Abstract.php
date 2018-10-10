@@ -116,7 +116,9 @@ abstract class diffusion_list_Abstract extends functions
                     .'and l.object_id = ? '
                     ."and u.enabled = 'Y' "
                     ."and u.status != 'DEL' "
-                .'ORDER BY l.sequence', array($item_mode, $objectType, $objectId));
+                .'ORDER BY l.sequence',
+                array($item_mode, $objectType, $objectId)
+            );
             while ($user = $stmt->fetchObject()) {
                 if (!isset($listmodel[$role_id])) {
                     $listmodel[$role_id] = array();
@@ -160,7 +162,8 @@ abstract class diffusion_list_Abstract extends functions
                     ."and l.item_type = 'entity_id' "
                     .'and l.object_type = ? '
                     .'and l.object_id = ? '
-                .'ORDER BY l.sequence ', array($item_mode, $objectType, $objectId)
+                .'ORDER BY l.sequence ',
+                array($item_mode, $objectType, $objectId)
             );
 
             while ($entity = $stmt->fetchObject()) {
@@ -211,7 +214,8 @@ abstract class diffusion_list_Abstract extends functions
             'delete from '.ENT_LISTMODELS
             .' where '
                 .'object_type = ? '
-                .'and object_id = ? ', array($objectType, $objectId)
+                .'and object_id = ? ',
+            array($objectType, $objectId)
         );
         foreach ($roles as $role_id => $role_label) {
             if ($role_id == 'copy') {
@@ -245,7 +249,8 @@ abstract class diffusion_list_Abstract extends functions
                         .'?,'
                         .'?,'
                         .'?'
-                    .')', array($objectId, $objectType, $i, $user['user_id'], $item_mode, $description, $title, $user['visible'], $user['process_comment'])
+                    .')',
+                    array($objectId, $objectType, $i, $user['user_id'], $item_mode, $description, $title, $user['visible'], $user['process_comment'])
                 );
             }
             // Entities
@@ -269,7 +274,8 @@ abstract class diffusion_list_Abstract extends functions
                         .'?, '
                         .'?,'
                         .'?'
-                    .')', array($objectId, $objectType, $i, $entity['entity_id'], $item_mode, $description, $title, $entity['visible'])
+                    .')',
+                    array($objectId, $objectType, $i, $entity['entity_id'], $item_mode, $description, $title, $entity['visible'])
                 );
             }
         }
@@ -290,7 +296,9 @@ abstract class diffusion_list_Abstract extends functions
             'delete from '.ENT_LISTMODELS
             .' where '
                 .'object_type = ? '
-                .'and object_id = ? ', array($objectType, $objectId));
+                .'and object_id = ? ',
+            array($objectType, $objectId)
+        );
     }
 
     //**************************************************************************
@@ -371,21 +379,23 @@ abstract class diffusion_list_Abstract extends functions
         foreach ($roles as $role_id => $role_label) {
             if ($stmt->rowCount() > 0 && (isset($oldListInst[$role_id]) || isset($diffList[$role_id]))) {
                 //compare old and new difflist
-                for ($iOld = 0; $iOld < count($oldListInst[$role_id]['users']); ++$iOld) {
-                    if ($oldListInst[$role_id]['users'][$iOld]['user_id'] != $diffList[$role_id]['users'][$iOld]['user_id']) {
-                        $diffUser = true;
-                        break;
+                if (!empty($oldListInst[$role_id]['users'])) {
+                    for ($iOld = 0; $iOld < count($oldListInst[$role_id]['users']); ++$iOld) {
+                        if ($oldListInst[$role_id]['users'][$iOld]['user_id'] != $diffList[$role_id]['users'][$iOld]['user_id']) {
+                            $diffUser = true;
+                            break;
+                        }
                     }
                 }
 
                 //USELESS ?
-                if (!$diffUser && isset($oldListInst[$role_id]['users'])) {
+                if (!$diffUser && isset($oldListInst[$role_id]['users']) && !empty($oldListInst[$role_id]['users'])) {
                     if (count($oldListInst[$role_id]['users']) != count($diffList[$role_id]['users'])) {
                         $diffCopyUsers = true;
                     }
                 }
 
-                if (!$diffUser && !$diffCopyEntities && isset($oldListInst[$role_id]['entities'])) {
+                if (!$diffUser && !$diffCopyEntities && isset($oldListInst[$role_id]['entities']) && !empty($oldListInst[$role_id]['entities'])) {
                     if (count($oldListInst[$role_id]['entities']) != count($diffList[$role_id]['entities'])) {
                         $diffCopyEntities = true;
                     }
@@ -414,7 +424,8 @@ abstract class diffusion_list_Abstract extends functions
         $stmt = $db->query(
             'DELETE FROM '.ENT_LISTINSTANCE
             .' WHERE coll_id = ?'
-                .' AND res_id = ? AND difflist_type = ?', array($collId, $resId, $difflistType)
+                .' AND res_id = ? AND difflist_type = ?',
+            array($collId, $resId, $difflistType)
         );
 
         $roles = $this->list_difflist_roles();
@@ -455,7 +466,9 @@ abstract class diffusion_list_Abstract extends functions
                 }
                 //Modification du dest_user dans la table res_letterbox
                 if ($role_id == 'dest' && $collId == 'letterbox_coll') {
-                    $stmt = $db->query('update res_letterbox set dest_user = ? where res_id = ?', array($userId, $resId));
+                    $stmt = $db->query("SELECT object_id FROM listmodels WHERE item_id = ?", [$userId]);
+                    $resEntityId = $stmt->fetch();
+                    $stmt = $db->query('update res_letterbox set dest_user = ?, destination = ? where res_id = ?', array($userId, $resEntityId['object_id'], $resId));
                 }
 
                 if ($processDate != '') {
@@ -476,7 +489,8 @@ abstract class diffusion_list_Abstract extends functions
                             .'?, '
                             .'?, '
                             .'?'
-                        .' )', array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $creatorEntity, $visible, $viewed, $difflistType, $processComment, $processDate, $signatory, $requested_signature)
+                        .' )',
+                        array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $creatorEntity, $visible, $viewed, $difflistType, $processComment, $processDate, $signatory, $requested_signature)
                     );
                 } else {
                     $stmt = $db->query(
@@ -495,7 +509,8 @@ abstract class diffusion_list_Abstract extends functions
                             .'?, '
                             .'?, '
                             .'?'
-                        .' )', array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $creatorEntity, $visible, $viewed, $difflistType, $processComment, $signatory, $requested_signature)
+                        .' )',
+                        array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $creatorEntity, $visible, $viewed, $difflistType, $processComment, $signatory, $requested_signature)
                     );
                 }
 
@@ -550,7 +565,8 @@ abstract class diffusion_list_Abstract extends functions
                         .'?, '
                         .'?,?, '
                         .'?'
-                    .' )', array($collId, $resId, $j, $entityId, $item_mode, $creatorUser, $creatorEntity, $visible, $viewed, $difflistType)
+                    .' )',
+                    array($collId, $resId, $j, $entityId, $item_mode, $creatorUser, $creatorEntity, $visible, $viewed, $difflistType)
                 );
 
                 if (!$entityFound || $fromQualif) {
@@ -592,7 +608,8 @@ abstract class diffusion_list_Abstract extends functions
                     .'?,?, '
                     .'?, '
                     .'?'
-                .' )', array($listinstance_history_id, $resListinstance->coll_id, $res_id, $resListinstance->sequence, $resListinstance->item_id, $resListinstance->item_type, $resListinstance->item_mode, $resListinstance->added_by_user, $resListinstance->added_by_entity, $resListinstance->visible, $resListinstance->viewed, $resListinstance->difflist_type, $resListinstance->process_comment)
+                .' )',
+                array($listinstance_history_id, $resListinstance->coll_id, $res_id, $resListinstance->sequence, $resListinstance->item_id, $resListinstance->item_type, $resListinstance->item_mode, $resListinstance->added_by_user, $resListinstance->added_by_entity, $resListinstance->visible, $resListinstance->viewed, $resListinstance->difflist_type, $resListinstance->process_comment)
             );
         }
     }
@@ -686,7 +703,8 @@ abstract class diffusion_list_Abstract extends functions
             ." ue where l.coll_id = '".$collId."' "
             ." and l.item_type = 'user_id' and l.item_id = u.user_id "
             .' and l.item_id = ue.user_id and ue.user_id=u.user_id '
-            ." and e.entity_id = ue.entity_id and l.difflist_type = ? and l.res_id = ? and ue.primary_entity = 'Y' order by l.sequence ", array($typeList, $resId)
+            ." and e.entity_id = ue.entity_id and l.difflist_type = ? and l.res_id = ? and ue.primary_entity = 'Y' order by l.sequence ",
+            array($typeList, $resId)
         );
         //$this->show();
         while ($res = $stmt->fetchObject()) {
@@ -722,7 +740,8 @@ abstract class diffusion_list_Abstract extends functions
             'select l.item_id,  e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment  from '.ENT_LISTINSTANCE
             .' l, '.ENT_ENTITIES.' e where l.difflist_type = ? and l.coll_id =  ? '
             ."and l.item_type = 'entity_id' and l.item_id = e.entity_id "
-            .'and l.res_id = ? order by l.sequence ', array($typeList, $collId, $resId)
+            .'and l.res_id = ? order by l.sequence ',
+            array($typeList, $collId, $resId)
         );
 
         while ($res = $stmt->fetchObject()) {
@@ -762,17 +781,20 @@ abstract class diffusion_list_Abstract extends functions
     ) {
         $db = new Database();
         $stmt = $db->query(
-            'select item_id from '.ENT_LISTINSTANCE." where res_id = ? and coll_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'", array($resId, $collId, $itemType)
+            'select item_id from '.ENT_LISTINSTANCE." where res_id = ? and coll_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'",
+            array($resId, $collId, $itemType)
         );
         if ($stmt->rowCount() == 1) {
             $stmt = $db->query(
-                'update '.ENT_LISTINSTANCE." set item_id = ?, viewed = ? where res_id = ? and coll_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'", array($dest, $viewed, $resId, $collId, $itemType)
+                'update '.ENT_LISTINSTANCE." set item_id = ?, viewed = ? where res_id = ? and coll_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'",
+                array($dest, $viewed, $resId, $collId, $itemType)
             );
         } else {
             $stmt = $db->query(
                 'insert into '.ENT_LISTINSTANCE.' (coll_id, res_id, '
                 .'item_id, item_type, item_mode, sequence, '
-                ."added_by_user, added_by_entity, viewed) values (?, ?, ?, ?, 'dest', 0, ?,?, ?)", array($collId, $resId, $dest, $itemType, $_SESSION['user']['UserId'], $_SESSION['primaryentity']['id'], $viewed)
+                ."added_by_user, added_by_entity, viewed) values (?, ?, ?, ?, 'dest', 0, ?,?, ?)",
+                array($collId, $resId, $dest, $itemType, $_SESSION['user']['UserId'], $_SESSION['primaryentity']['id'], $viewed)
             );
         }
     }
@@ -940,7 +962,8 @@ abstract class diffusion_list_Abstract extends functions
         $db = new Database();
         $stmt = $db->query(
             'SELECT * FROM '.ENT_DIFFLIST_TYPES
-            .' WHERE difflist_type_id = ?', array($difflist_type_id)
+            .' WHERE difflist_type_id = ?',
+            array($difflist_type_id)
         );
 
         $difflist_type = $stmt->fetchObject();
@@ -998,7 +1021,8 @@ abstract class diffusion_list_Abstract extends functions
                     .'?,'
                     .'?,'
                     .'?'
-                    .')', array($difflist_type_id, $difflist_type_label, $difflist_type_roles, $allow_entities)
+                    .')',
+            array($difflist_type_id, $difflist_type_label, $difflist_type_roles, $allow_entities)
         );
     }
 
@@ -1015,7 +1039,8 @@ abstract class diffusion_list_Abstract extends functions
                     .' difflist_type_label = ?,'
                     .' difflist_type_roles = ?,'
                     .' allow_entities = ?'
-                .' where difflist_type_id = ?', array($difflist_type_label, $difflist_type_roles, $allow_entities, $difflist_type_id)
+                .' where difflist_type_id = ?',
+            array($difflist_type_label, $difflist_type_roles, $allow_entities, $difflist_type_id)
         );
     }
 
@@ -1025,7 +1050,8 @@ abstract class diffusion_list_Abstract extends functions
         $db = new Database();
         $stmt = $db->query(
             'DELETE FROM '.ENT_DIFFLIST_TYPES
-            .' WHERE difflist_type_id = ?', array($difflist_type_id)
+            .' WHERE difflist_type_id = ?',
+            array($difflist_type_id)
         );
     }
 }

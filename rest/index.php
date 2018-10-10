@@ -104,6 +104,8 @@ $app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController
 $app->post('/contactsGroups/{id}/contacts', \Contact\controllers\ContactGroupController::class . ':addContacts');
 $app->delete('/contactsGroups/{id}/contacts/{addressId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
 $app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . ':get');
+$app->get('/contactsFilling', \Contact\controllers\ContactController::class . ':getFilling');
+$app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':updateFilling');
 
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');

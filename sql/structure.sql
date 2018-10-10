@@ -461,7 +461,9 @@ CREATE TABLE entities
   ldap_id character varying(255),
   archival_agency character varying(255),
   archival_agreement character varying(255),
-  CONSTRAINT entities_pkey PRIMARY KEY (entity_id)
+  folder_import character varying(64),
+  CONSTRAINT entities_pkey PRIMARY KEY (entity_id),
+  CONSTRAINT entities_folder_import_unique_key UNIQUE (folder_import)
 )
 WITH (OIDS=FALSE);
 
@@ -2130,3 +2132,13 @@ CREATE TABLE password_history
 )
 WITH (OIDS=FALSE);
 
+CREATE TABLE contacts_filling
+(
+  id serial NOT NULL,
+  enable boolean NOT NULL,
+  rating_columns text NOT NULL,
+  first_threshold int NOT NULL,
+  second_threshold int NOT NULL,
+  CONSTRAINT contacts_filling_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);

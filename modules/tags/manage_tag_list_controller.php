@@ -226,10 +226,17 @@ function display_list()
     }
 
     $orderstr = $list->define_order($order, $field);
+
+    if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+        $parameters .= '&start='.$_REQUEST['start'];
+    } else {
+        $_REQUEST['start'] = 0;
+    }
+
     $request  = new request();
     $tab = $request->PDOselect(
         $select, $where, $where_what, $orderstr, $_SESSION['config']['databasetype'], 
-        "default", false, "", "", "", true, false, false
+        "default", false, "", "", "", true, false, false, $_REQUEST['start']
     );
 
     for ($i=0;$i<count($tab);$i++) {
@@ -260,7 +267,7 @@ function display_list()
         'page_name_val'       => '',
         'page_name_ban'       => '',
         'label_add'           => _ADD_TAG,
-        'title'               => _TAGS_LIST . ' : ' . $i,
+        'title'               => _TAGS_LIST . ' : ' . $_SESSION['save_list']['full_count'],
         'autoCompletionArray' => array(
                                      'list_script_url'  =>
                                         $_SESSION['config']['businessappurl']

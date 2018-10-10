@@ -36,12 +36,13 @@ import { NotificationsAdministrationComponent }         from './notification/not
 import { NotificationAdministrationComponent }          from './notification/notification-administration.component';
 import { ContactsGroupsAdministrationComponent }        from './contact/contacts-groups-administration.component';
 import { ContactsGroupAdministrationComponent }         from './contact/contacts-group-administration.component';
+import { ContactsFillingAdministrationComponent }       from './contact/contacts-filling-administration.component';
 import { VersionsUpdateAdministrationComponent }        from './versionUpdate/versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docserver/docservers-administration.component';
 import { DocserverAdministrationComponent }             from './docserver/docserver-administration.component';
 import { TemplatesAdministrationComponent }             from './template/templates-administration.component';
 import { TemplateAdministrationComponent }              from './template/template-administration.component';
-import { SecuritiesAdministrationComponent }              from './security/securities-administration.component';
+import { SecuritiesAdministrationComponent }            from './security/securities-administration.component';
 
 @NgModule({
     imports:      [
@@ -74,6 +75,7 @@ import { SecuritiesAdministrationComponent }              from './security/secur
         UpdateStatusAdministrationComponent,
         ContactsGroupsAdministrationComponent,
         ContactsGroupAdministrationComponent,
+        ContactsFillingAdministrationComponent,
         NotificationsAdministrationComponent,
         NotificationAdministrationComponent,
         UsersAdministrationRedirectModalComponent,

@@ -76,7 +76,7 @@ $_SESSION['origin'] = 'search_folder_tree';
                 <table width="100%" border="0">
                     <tr>
                         <td align="right">
-                            <label for="folder">
+                            <label for="folder" style="color:white;">
                                 <?php echo _FOLDER; ?> :</label>
                         </td>
                         <td class="indexing_field">
@@ -89,12 +89,6 @@ $_SESSION['origin'] = 'search_folder_tree';
                                 </div>
                             </div>
                         </td>
-                        <!-- <td align="right"><label for="subfolder"><?php echo _SUBFOLDER; ?>
-                        :</label></td>
-                        <td>
-                            <input type="text" name="subfolder" id="subfolder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
-                            <div id="show_subfolder" class="autocomplete"></div>
-                        </td>-->
                         <td>
                             <input id="tree_send" type="button" value="<?php echo _SEARCH; ?>"
                                 onclick="javascript:submitForm();" class="button">
@@ -125,25 +119,7 @@ $_SESSION['origin'] = 'search_folder_tree';
             </tr>
         </table>
     </div>
-    <!-- Display the layout of search_folder_tree -->
 </div>
-<form id="form-country_v1" name="form-country_v1">
-    <div class="typeahead__container">
-        <div class="typeahead__field">
-
-            <span class="typeahead__query">
-                <input class="js-typeahead-country_v1" name="country_v1[query]" placeholder="Search" autocomplete="off"
-                    type="search">
-            </span>
-            <span class="typeahead__button">
-                <button type="submit">
-                    <i class="typeahead__search-icon"></i>
-                </button>
-            </span>
-
-        </div>
-    </div>
-</form>
 <script type="text/javascript">
     loadTypeahead('.folderTest', 'desc', true,
         'index.php?display=true&module=folder&page=autocomplete_folders&mode=folder');

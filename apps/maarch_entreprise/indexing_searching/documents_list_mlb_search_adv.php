@@ -329,22 +329,25 @@ if ($mode == 'normal') {
     if (!empty($selectedTemplate)) {
         $parameters .= '&template='.$selectedTemplate;
     }
-    if (!empty($start)) {
-        $parameters .= '&start='.$start;
-    }
+    
+    $parameters .= '&start='.$start;
     $_SESSION['save_list']['start'] = $start;
 
     if (isset($_SESSION['where_from_contact_check']) && $_SESSION['where_from_contact_check'] != '' && (isset($_REQUEST['fromContactCheck']) || $_SESSION['fromContactCheck'] == 'ok')) {
         $_SESSION['fromContactCheck'] = 'ok';
         $where_request .= $_SESSION['where_from_contact_check'];
     }
-
+    if (isset($_REQUEST['lines'])) {
+        $limit = $_REQUEST['lines'];
+    } else {
+        $limit = 'default';
+    }
 //Query
-    $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], 'default', false, '', '', '', $add_security);
+    $tab = $request->PDOselect($select, $where_request, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', $add_security, false, false, $_SESSION['save_list']['start']);
     // $request->show();
 //Result array
-
     $tabI = count($tab);
+
     for ($i = 0; $i < $tabI; ++$i) {
         $tabJ = count($tab[$i]);
         for ($j = 0; $j < $tabJ; ++$j) {
@@ -771,7 +774,7 @@ if ($mode == 'normal') {
         }
     }
 
-$nbTab = count($tab);
+$nbTab = $_SESSION['save_list']['full_count'];
 if ($nbTab > 0) {
     /************Construction de la liste*******************/
     //Clé de la liste
@@ -819,7 +822,7 @@ if ($nbTab > 0) {
             $paramsTab['buttons'] = array();
             $paramsTab['buttons'] = $buttons;
         }
-
+    $paramsTab['start'] = $_SESSION['save_list']['start'];
     //Toolbar
         $paramsTab['tools'] = array();                                                  //Icones dans la barre d'outils
 

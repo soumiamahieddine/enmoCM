@@ -81,9 +81,19 @@ if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field'])) {
 
 $orderstr = $list->define_order($order, $field);
 
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+    $parameters .= '&start='.$_REQUEST['start'];
+} else {
+    $_REQUEST['start'] = 0;
+}
+if (isset($_REQUEST['lines'])) {
+    $limit = $_REQUEST['lines'];
+} else {
+    $limit = 'default';
+}
 $request = new request;
 $tab = $request->PDOselect(
-    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
+    $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', true, false, false, $_REQUEST['start']
 );
 for ($i = 0; $i < count($tab); $i ++) {
     for ($j = 0; $j < count($tab[$i]); $j ++) {
@@ -128,7 +138,7 @@ $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
     . "index.php?display=true&page=contact_purposes_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 $list->admin_list(
-    $tab, $i, _CONTACT_PURPOSES_LIST . ' : ' . $i . " " . _CONTACT_PURPOSES,
+    $tab, $_SESSION['save_list']['full_count'], _CONTACT_PURPOSES_LIST . ' : ' .$_SESSION['save_list']['full_count']. " " . _CONTACT_PURPOSES,
     'contact_purposes_id"', 'contact_purposes', 'contact_purposes',
     'contact_purposes_id', true, $pageNameUp, $pageNameVal, $pageNameBan,
     $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_PURPOSES,

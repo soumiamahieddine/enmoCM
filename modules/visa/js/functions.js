@@ -147,10 +147,16 @@ function updateVisaWorkflow(resId) {
        },
        success : function(response){
             if (response.status == 0) {
-                parent.$('main_info').innerHTML = 'Mise à jour du circuit effectuée';
-                parent.$('main_info').style.display = 'table-cell';
-                parent.Element.hide.delay(5, 'main_info');
-                eval(response.exec_js);
+                var modInfo = $j('<div class="info" id="main_info" onclick="this.remove();">Mise à jour du circuit effectuée</div>');
+                modInfo.appendTo('body');
+                modInfo.css({'display' : 'table-cell'});
+                setTimeout(function() {
+                    modInfo.remove();
+                }, 5000);
+                
+                if(parent.$j('#visa_tab').length){
+                    eval(response.exec_js);
+                }
                 if(parent.$j('.contentShow iframe').length){
                     parent.$j('.contentShow iframe')[0].contentWindow.location.reload(true);
                 }
