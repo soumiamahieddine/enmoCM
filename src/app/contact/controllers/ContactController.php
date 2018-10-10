@@ -202,8 +202,9 @@ class ContactController
         }
 
         $data = $request->getParams();
-        $check = Validator::boolType()->notEmpty()->validate($data['enable']);
-        $check = $check && Validator::arrayType()->notEmpty()->validate($data['rating_columns']);
+
+        $check = Validator::boolType()->validate($data['enable']);
+        $check = $check && Validator::arrayType()->validate($data['rating_columns']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['first_threshold']) && $data['first_threshold'] > 0 && $data['first_threshold'] < 99;
         $check = $check && Validator::intVal()->notEmpty()->validate($data['second_threshold']) && $data['second_threshold'] > 1 && $data['second_threshold'] < 100;
         $check = $check && $data['first_threshold'] < $data['second_threshold'];

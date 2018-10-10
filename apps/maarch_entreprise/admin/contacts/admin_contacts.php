@@ -109,7 +109,7 @@ unset($_SESSION['m_admin']);
     <div class="admin_item" onclick="triggerAngular('#/administration/contacts-filling')">
         <div>
             <i class="fas fa-address-card fa-4x"></i>
-            <i class="fas fa-magic" style="position: absolute;font-size: 16px;margin-left: 5px;"></i> 
+            <i class="far fa-question-circle" style="position: absolute;font-size: 26px;margin-left: 5px;"></i> 
         </div>
         <div>
             <strong><?php echo _CONTACTS_FILLING;?></strong>

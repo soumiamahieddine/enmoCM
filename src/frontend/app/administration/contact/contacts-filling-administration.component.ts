@@ -18,27 +18,27 @@ declare var angularGlobals: any;
 })
 export class ContactsFillingAdministrationComponent implements OnInit {
     /*HEADER*/
-    titleHeader                              : string;
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
-    
+    titleHeader: string;
+    @ViewChild('snav') public sidenavLeft: MatSidenav;
+    @ViewChild('snav2') public sidenavRight: MatSidenav;
+
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     lang: any = LANG;
     coreUrl: string;
 
     contactsFilling: any = {
-        'rating_columns' : [],
-        'first_threshold' : '33',
-        'second_threshold' : '66',
+        'rating_columns': [],
+        'enable': false,
+        'first_threshold': '33',
+        'second_threshold': '66',
     };
 
     arrRatingColumns: String[] = [];
     fillingColor = {
-        'first_threshold' : '#8e3e52',
-        'second_threshold' : '#FF9740',
-        'third_threshold' : '#ffffff',
-        
+        'first_threshold': '#f87474',
+        'second_threshold': '#f6cd81',
+        'third_threshold': '#ccffcc',
     };
     fillingColumns = [
         'address_complement',
@@ -63,10 +63,38 @@ export class ContactsFillingAdministrationComponent implements OnInit {
         'salutation_footer',
         'salutation_footer',
         'salutation_header',
-        'society_sort',
+        'society_short',
         'society',
         'title',
         'website',
+    ];
+    fillingColumnsState = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
     ];
     fillingColumnsSelected = ['society'];
 
@@ -95,27 +123,33 @@ export class ContactsFillingAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/contactsFilling')
             .subscribe((data: any) => {
                 this.contactsFilling = data.contactsFilling;
-
+                if (this.contactsFilling.rating_columns.length > 0) {
+                    this.contactsFilling.rating_columns.forEach((col: any) => {
+                        let i = this.fillingColumns.indexOf(col);
+                        this.fillingColumnsState[i] = true;    
+                    });
+                }  
+                console.log(this.fillingColumnsState);
                 this.loading = false;
             });
     }
 
-    addCriteria(event:any,criteria:String) {
+    addCriteria(event: any, criteria: String) {
         console.log(event);
         if (event.checked) {
             this.arrRatingColumns.push(criteria);
         } else {
             this.arrRatingColumns.splice(this.arrRatingColumns.indexOf(criteria), 1);
         }
-        
-        console.log(this.arrRatingColumns);
+        this.contactsFilling.rating_columns = this.arrRatingColumns;
+        this.contactsFilling.rating_columns.length == 0 ? this.contactsFilling.enable = false : this.contactsFilling.enable = true;
+        this.onSubmit();
     }
 
     onSubmit() {
         this.http.put(this.coreUrl + 'rest/contactsFilling', this.contactsFilling)
             .subscribe(() => {
-                this.router.navigate(['/administration/contacts-filling']);
-                // this.notify.success(this.lang.contactsGroupUpdated);
+                this.notify.success(this.lang.contactsFillingUpdated);
 
             }, (err) => {
                 this.notify.error(err.error.errors);

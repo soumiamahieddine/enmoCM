@@ -645,5 +645,13 @@ export const LANG_EN = {
     "orderBy"                           : "Ordering",
     "indexingWithProfile"               : "Index document with profile",
     "contactsFillingAdministration"     : "Contact informations filling",
+    "contactsFillingStr"                : "of filling.",
     "criteria"                          : "Criteria",
+    "contactsFillingCriteria"           : "Filling criteria",
+    "contactsFillingUpdated"            : "Filling contacts updated",
+    "contactsFillingStep1"              : "First step",
+    "contactsFillingStep2"              : "Second step",
+    "contactsFillingStep3"              : "Last step",
+    "from"                              : "From",
+    "at"                                : "At",
 };

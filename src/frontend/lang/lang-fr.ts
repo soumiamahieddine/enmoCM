@@ -671,4 +671,12 @@ export const LANG_FR = {
     "indexingWithProfile"               : "Enregistrer un document avec le profil",
     "contactsFillingAdministration"     : "Complétude des informations contacts",
     "criteria"                          : "Critère",
+    "contactsFillingCriteria"           : "Critères de complétude",
+    "contactsFillingStr"                : "de complétude.",
+    "contactsFillingUpdated"            : "Critères de complétude modifiés",
+    "contactsFillingStep1"              : "Premier palier",
+    "contactsFillingStep2"              : "Deuxième palier",
+    "contactsFillingStep3"              : "Dernier palier",
+    "from"                              : "À partir de",
+    "at"                                : "À",
 };

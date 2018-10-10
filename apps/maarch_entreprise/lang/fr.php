@@ -5191,3 +5191,6 @@ if (!defined('_BARCODE_HELP')) {
 if (!defined('_PROCESS_IN_PROGRESS')) {
     define('_PROCESS_IN_PROGRESS', "Traitement en cours");
 }
+if (!defined('_CONTACTS_FILLING')) {
+    define('_CONTACTS_FILLING', "Complétude des informations contacts");
+}

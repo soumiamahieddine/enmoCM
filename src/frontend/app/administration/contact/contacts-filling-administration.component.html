@@ -14,43 +14,47 @@
                     <div class="col-md-4 col-xs-4">
                         <mat-card>
                             <mat-card-header>
-                                <mat-card-title>1er palier</mat-card-title>
+                                <mat-card-title>{{lang.contactsFillingStep1}}</mat-card-title>
                             </mat-card-header>
+                            <p>{{lang.until}} <b [ngStyle]="{color : fillingColor.first_threshold}">{{contactsFilling.first_threshold}}%</b> {{lang.contactsFillingStr}}</p>
                             <mat-slider [(ngModel)]="contactsFilling.first_threshold" style="width:100%" color="primary"
-                                max="100" min="0" step="1" thumbLabel="true"></mat-slider>
+                                max="100" min="0" step="1" thumbLabel="false" (change)="onSubmit()"></mat-slider>
                             <input disabled matInput type="color" name="color" value="{{fillingColor.first_threshold}}">
                         </mat-card>
                     </div>
                     <div class="col-md-4 col-xs-4">
                         <mat-card>
                             <mat-card-header>
-                                <mat-card-title>2e palier</mat-card-title>
+                                <mat-card-title>{{lang.contactsFillingStep2}}</mat-card-title>
                             </mat-card-header>
+                            <p>{{lang.from}} <b [ngStyle]="{color : fillingColor.second_threshold}">{{contactsFilling.second_threshold}}%</b> {{lang.contactsFillingStr}}</p>
                             <mat-slider [(ngModel)]="contactsFilling.second_threshold" style="width:100%" color="primary"
-                                max="100" [min]="contactsFilling.first_threshold" step="1" thumbLabel="true"></mat-slider>
+                                max="100" [min]="contactsFilling.first_threshold+1" step="1" thumbLabel="false" (change)="onSubmit()"></mat-slider>
                             <input disabled matInput type="color" name="color" value="{{fillingColor.second_threshold}}">
                         </mat-card>
                     </div>
                     <div class="col-md-4 col-xs-4">
                         <mat-card>
                             <mat-card-header>
-                                <mat-card-title>3e palier</mat-card-title>
+                                <mat-card-title>{{lang.contactsFillingStep3}}</mat-card-title>
                             </mat-card-header>
-                            <mat-slider style="width:100%" color="primary" max="100" min="100" step="1" thumbLabel="true"></mat-slider>
+                            <p>{{lang.at}} <b [ngStyle]="{color : fillingColor.third_threshold}">100%</b> {{lang.contactsFillingStr}}</p>
+                            <mat-slider style="width:100%" color="primary" max="100" min="100" step="1" thumbLabel="false" disabled></mat-slider>
                             <input disabled matInput type="color" name="color" value="{{fillingColor.third_threshold}}">
                         </mat-card>
                     </div>
                 </div>
                 <div class="row" style="margin-top:10px;">
                     <div class="col-md-12 col-xs-12">
-                        <mat-card>
-                            <mat-card-title>Critères de complétude</mat-card-title>
-                            <div class="row" *ngFor="let fillingColumnSelected of fillingColumnsSelected;let i = index">
-                                <div class="col-md-3 col-xs-3" *ngFor="let fillingColumn of fillingColumns" style="padding-bottom: 5px;">
-                                    <mat-slide-toggle color="primary" name="{{fillingColumn}}" (change)="addCriteria($event,fillingColumn)">{{fillingColumn}}</mat-slide-toggle>
+                        <mat-tab-group>
+                            <mat-tab label="{{lang.contactsFillingCriteria}}">
+                                <div class="row" *ngFor="let fillingColumnSelected of fillingColumnsSelected">
+                                    <div class="col-md-3 col-xs-6" *ngFor="let fillingColumn of fillingColumns;let i = index" style="padding-bottom: 5px;">
+                                        <mat-slide-toggle color="primary" name="{{fillingColumn}}" (change)="addCriteria($event,fillingColumn)" [checked]="fillingColumnsState[i]">{{fillingColumn}}</mat-slide-toggle>
+                                    </div>
                                 </div>
-                            </div>
-                        </mat-card>
+                            </mat-tab>
+                        </mat-tab-group>
                     </div>
                 </div>
             </mat-card>
