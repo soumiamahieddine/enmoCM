@@ -13,6 +13,7 @@ declare var angularGlobals : any;
 
 @Component({
     selector: 'menu-shortcut',
+    styleUrls: ['menu-shortcut.component.scss'],
     templateUrl : "menu-shortcut.component.html",
 })
 export class MenuShortcutComponent implements OnInit {

@@ -18,6 +18,7 @@ import { FilterListPipe }                       from '../plugins/filterList.pipe
 import { AppMaterialModule }                    from './app-material.module';
 
 import { SpeedDialFabComponent }                from '../plugins/mat-speed-dial-fab/speed-dial-fab.component';
+import { EcoFabSpeedDialModule }                from '@ecodev/fab-speed-dial';
 
 /*MENU COMPONENT*/
 import { MainHeaderComponent }                  from './menu/main-header.component';
@@ -39,7 +40,8 @@ import { BasketHomeComponent }                        from './basket/basket-home
         FormsModule,
         HttpClientModule,
         RouterModule,
-        AppMaterialModule
+        AppMaterialModule,
+        EcoFabSpeedDialModule
     ],
     declarations: [
         MainHeaderComponent,
