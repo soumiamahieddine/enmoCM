@@ -55,7 +55,6 @@ CREATE TABLE docservers
   docserver_type_id character varying(32) NOT NULL,
   device_label character varying(255) DEFAULT NULL::character varying,
   is_readonly character(1) NOT NULL DEFAULT 'N'::bpchar,
-  enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   size_limit_number bigint NOT NULL DEFAULT (0)::bigint,
   actual_size_number bigint NOT NULL DEFAULT (0)::bigint,
   path_template character varying(255) NOT NULL,
