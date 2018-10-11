@@ -1717,6 +1717,9 @@ function set_new_contact_address(path_manage_script, id_div, close,transmission)
             } else if (parent.parent.$('contact')  && parent.parent.$('add_multi_contact_tr').style.display == 'none') {
                 parent.parent.$('contact').value = response.contactName;
             }
+            if (response.rateColor != "") {
+                parent.$j('#contact').css('background-color', response.rateColor);
+            }
             if (parent.$('email') && parent.$('add_multi_contact_tr').style.display != 'none') {
                 parent.$('email').value = response.contactName;
             } else if (parent.parent.$('email') && parent.parent.$('add_multi_contact_tr').style.display != 'none') {

@@ -202,7 +202,6 @@ class ContactController
         }
 
         $data = $request->getParams();
-
         $check = Validator::boolType()->validate($data['enable']);
         $check = $check && Validator::arrayType()->validate($data['rating_columns']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['first_threshold']) && $data['first_threshold'] > 0 && $data['first_threshold'] < 99;
@@ -228,6 +227,14 @@ class ContactController
         $contactsFilling['rating_columns'] = json_decode($contactsFilling['rating_columns']);
 
         if ($contactsFilling['enable'] && !empty($contactsFilling['rating_columns'])) {
+            if ($aArgs['contact']['is_corporate_person'] == 'N') {
+                foreach ($contactsFilling['rating_columns'] as $key => $value) {
+                    if (in_array($value, ['firstname', 'lastname', 'title', 'function'])) {
+
+                        $contactsFilling['rating_columns'][$key] = 'contact_' . $value;
+                    }
+                }
+            }
             $percent = 0;
             foreach ($contactsFilling['rating_columns'] as $ratingColumn) {
                 if (!empty($aArgs['contact'][$ratingColumn])) {
