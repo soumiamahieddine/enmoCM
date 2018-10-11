@@ -18,7 +18,7 @@
                             </mat-card-header>
                             <p>{{lang.until}} <b [ngStyle]="{color : fillingColor.first_threshold}">{{contactsFilling.first_threshold}}%</b> {{lang.contactsFillingStr}}</p>
                             <mat-slider [(ngModel)]="contactsFilling.first_threshold" style="width:100%" color="primary"
-                                max="100" min="0" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
+                                max="100" min="1" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
                             <input disabled matInput type="color" name="color" value="{{fillingColor.first_threshold}}">
                         </mat-card>
                     </div>
@@ -29,7 +29,7 @@
                             </mat-card-header>
                             <p>{{lang.from}} <b [ngStyle]="{color : fillingColor.second_threshold}">{{contactsFilling.second_threshold}}%</b> {{lang.contactsFillingStr}}</p>
                             <mat-slider [(ngModel)]="contactsFilling.second_threshold" style="width:100%" color="primary"
-                                max="100" [min]="contactsFilling.first_threshold+1" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
+                                max="99" [min]="contactsFilling.first_threshold+1" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
                             <input disabled matInput type="color" name="color" value="{{fillingColor.second_threshold}}">
                         </mat-card>
                     </div>
