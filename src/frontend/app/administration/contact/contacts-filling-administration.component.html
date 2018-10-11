@@ -18,7 +18,7 @@
                             </mat-card-header>
                             <p>{{lang.until}} <b [ngStyle]="{color : fillingColor.first_threshold}">{{contactsFilling.first_threshold}}%</b> {{lang.contactsFillingStr}}</p>
                             <mat-slider [(ngModel)]="contactsFilling.first_threshold" style="width:100%" color="primary"
-                                max="100" min="0" step="1" thumbLabel="false" (change)="onSubmit()"></mat-slider>
+                                max="100" min="0" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
                             <input disabled matInput type="color" name="color" value="{{fillingColor.first_threshold}}">
                         </mat-card>
                     </div>
@@ -29,7 +29,7 @@
                             </mat-card-header>
                             <p>{{lang.from}} <b [ngStyle]="{color : fillingColor.second_threshold}">{{contactsFilling.second_threshold}}%</b> {{lang.contactsFillingStr}}</p>
                             <mat-slider [(ngModel)]="contactsFilling.second_threshold" style="width:100%" color="primary"
-                                max="100" [min]="contactsFilling.first_threshold+1" step="1" thumbLabel="false" (change)="onSubmit()"></mat-slider>
+                                max="100" [min]="contactsFilling.first_threshold+1" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
                             <input disabled matInput type="color" name="color" value="{{fillingColor.second_threshold}}">
                         </mat-card>
                     </div>
@@ -39,7 +39,7 @@
                                 <mat-card-title>{{lang.contactsFillingStep3}}</mat-card-title>
                             </mat-card-header>
                             <p>{{lang.at}} <b [ngStyle]="{color : fillingColor.third_threshold}">100%</b> {{lang.contactsFillingStr}}</p>
-                            <mat-slider style="width:100%" color="primary" max="100" min="100" step="1" thumbLabel="false" disabled></mat-slider>
+                            <mat-slider style="width:100%" color="primary" max="100" min="100" step="1" thumbLabel="true" disabled></mat-slider>
                             <input disabled matInput type="color" name="color" value="{{fillingColor.third_threshold}}">
                         </mat-card>
                     </div>
@@ -50,7 +50,7 @@
                             <mat-tab label="{{lang.contactsFillingCriteria}}">
                                 <div class="row" *ngFor="let fillingColumnSelected of fillingColumnsSelected">
                                     <div class="col-md-3 col-xs-6" *ngFor="let fillingColumn of fillingColumns;let i = index" style="padding-bottom: 5px;">
-                                        <mat-slide-toggle color="primary" name="{{fillingColumn}}" (change)="addCriteria($event,fillingColumn)" [checked]="fillingColumnsState[i]">{{fillingColumn}}</mat-slide-toggle>
+                                        <mat-slide-toggle color="primary" name="{{fillingColumn}}" (change)="addCriteria($event,fillingColumn)" [checked]="fillingColumnsState[i]">{{lang['contactsFilling_'+fillingColumn]}}</mat-slide-toggle>
                                     </div>
                                 </div>
                             </mat-tab>

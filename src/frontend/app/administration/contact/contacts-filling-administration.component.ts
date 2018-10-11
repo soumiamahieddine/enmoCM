@@ -13,7 +13,6 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "contacts-filling-administration.component.html",
-    styleUrls: ['contacts-filling-administration.component.scss'],
     providers: [NotificationService]
 })
 export class ContactsFillingAdministrationComponent implements OnInit {
@@ -41,32 +40,31 @@ export class ContactsFillingAdministrationComponent implements OnInit {
         'third_threshold': '#ccffcc',
     };
     fillingColumns = [
-        'address_complement',
-        'address_country',
-        'address_num',
-        'address_postal_code',
-        'address_street',
-        'address_town',
-        'contact_firstname',
-        'contact_function',
-        'contact_lastname',
-        'contact_other_data',
-        'contact_title',
-        'department',
-        'email',
-        'firstname',
-        'function',
-        'lastname',
-        'occupancy',
-        'other_data',
-        'phone',
-        'salutation_footer',
-        'salutation_footer',
-        'salutation_header',
-        'society_short',
-        'society',
         'title',
+        'contact_title',
+        'address_postal_code',
+        'email',
+        'function',
+        'contact_function',
+        'salutation_header',
+        'salutation_footer',
+        'other_data',
+        'contact_other_data',
+        'occupancy',
+        'lastname',
+        'contact_lastname',
+        'address_num',
+        'address_country',
+        'firstname',
+        'contact_firstname',
+        'department',
+        'society_short',
         'website',
+        'society',
+        'phone',
+        'address_complement',
+        'address_town',
+        'address_street',   
     ];
     fillingColumnsState = [
         false,
@@ -129,13 +127,11 @@ export class ContactsFillingAdministrationComponent implements OnInit {
                         this.fillingColumnsState[i] = true;    
                     });
                 }  
-                console.log(this.fillingColumnsState);
                 this.loading = false;
             });
     }
 
     addCriteria(event: any, criteria: String) {
-        console.log(event);
         if (event.checked) {
             this.arrRatingColumns.push(criteria);
         } else {
