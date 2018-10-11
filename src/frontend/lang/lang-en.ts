@@ -679,4 +679,5 @@ export const LANG_EN = {
     "contactsFilling_society"                           : "Society",
     "contactsFilling_title"                             : "Title",
     "contactsFilling_website"                           : "Website",
+    "chooseIndexationProfil"                            : "Choose an indexation profil",
 };
