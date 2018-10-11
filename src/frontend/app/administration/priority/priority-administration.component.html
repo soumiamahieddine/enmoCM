@@ -1,7 +1,7 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+    <mat-sidenav-container autosize class="admin-sidenav-container">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
         </mat-sidenav>
@@ -12,16 +12,19 @@
             <mat-card *ngIf="!loading" class="card-app-content">
                 <form class="form-horizontal" (ngSubmit)="onSubmit()" #priorityForm="ngForm">
                     <div class="form-group">
-                        <div class="col-md-1 col-xs-1">
-                            <mat-form-field>
-                                <input matInput type="color" name="color" matTooltip="{{lang.chooseColor}}" [(ngModel)]="priority.color" required>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-11 col-xs-11">
-                            <mat-form-field>
-                                <input matInput type="text" name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="priority.label"
-                                    maxlength="128" required>
-                            </mat-form-field>
+                        <div class="row" style="margin:0px;">
+                            <div class="col-md-1 col-xs-2">
+                                <mat-form-field>
+                                    <input matInput type="color" name="color" matTooltip="{{lang.chooseColor}}"
+                                        [(ngModel)]="priority.color" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-11 col-xs-10">
+                                <mat-form-field>
+                                    <input matInput type="text" name="label" title="{{lang.label}}" placeholder="{{lang.label}}"
+                                        [(ngModel)]="priority.label" maxlength="128" required>
+                                </mat-form-field>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -40,27 +43,32 @@
                         <div class="col-md-6">
                             <mat-form-field>
                                 <span matPrefix>
-                                    <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay" matTooltip="{{lang.tooltipPriorityDelay}}"></mat-checkbox>&nbsp;</span>
-                                <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays" placeholder="{{lang.processDelayDay}}" [(ngModel)]="priority.delays"
-                                    required pattern="^\d+$">
+                                    <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay"
+                                        matTooltip="{{lang.tooltipPriorityDelay}}"></mat-checkbox>&nbsp;
+                                </span>
+                                <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays"
+                                    placeholder="{{lang.processDelayDay}}" [(ngModel)]="priority.delays" required
+                                    pattern="^\d+$">
                             </mat-form-field>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-2 col-xs-1" style="padding-top:10px;">
-                            <mat-checkbox color="primary" name="default_priority" [(ngModel)]="priority.default_priority" matTooltip="{{lang.tooltipPriorityDefault}}">{{lang.defaultPriority}}</mat-checkbox>
+                            <mat-checkbox color="primary" name="default_priority" [(ngModel)]="priority.default_priority"
+                                matTooltip="{{lang.tooltipPriorityDefault}}">{{lang.defaultPriority}}</mat-checkbox>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12 text-center" style="padding:10px;">
-                            <button class="enableAtionBottomCenterSmarpthone" mat-raised-button [disabled]="!priorityForm.form.valid" color="primary">{{lang.save}}</button>
+                            <button mat-raised-button [disabled]="!priorityForm.form.valid"
+                                color="primary">{{lang.save}}</button>
                         </div>
                     </div>
                 </form>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
             <mat-list>
                 <h3 mat-subheader>Action(s)</h3>
             </mat-list>
