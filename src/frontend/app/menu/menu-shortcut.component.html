@@ -41,7 +41,7 @@
                 <eco-fab-speed-dial #myFab direction="down" animationMode="fling" fixed="false" (mouseenter)="myFab.open = true" (mouseleave)="myFab.open = false">
 
                     <eco-fab-speed-dial-trigger spin="true">
-                        <button color="default" mat-fab (click)="doAction('trigger')">
+                        <button color="default" mat-fab matTooltip="{{shortcut.name}}" matTooltipPosition="above">
                             <mat-icon style="font-size:22px;" class="fa {{shortcut.style}} spin360"></mat-icon>
                         </button>
                     </eco-fab-speed-dial-trigger>
