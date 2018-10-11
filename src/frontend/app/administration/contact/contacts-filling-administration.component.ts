@@ -125,6 +125,7 @@ export class ContactsFillingAdministrationComponent implements OnInit {
                     this.contactsFilling.rating_columns.forEach((col: any) => {
                         let i = this.fillingColumns.indexOf(col);
                         this.fillingColumnsState[i] = true;    
+                        this.arrRatingColumns.push(col);
                     });
                 }  
                 this.loading = false;
