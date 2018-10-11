@@ -1349,7 +1349,7 @@ th.ref {
     width: 99.8%;
     margin-bottom: 0px;
     margin-left: 1px;
-    height: 70px;
+    height: 64px;
     margin-top: 3px;
     min-width: 1000px;
     border:solid 2px #135F7F;
@@ -1482,19 +1482,18 @@ th.ref {
 /* ariane */
 
 #ariane {
-    color: White;
-    position: absolute;
-    position: absolute;
+    color: #666;
     margin: 0px;
+    padding: 5px;
     left: 5px;
     top: 5px;
-    font-size: 0.9em;
+    font-size: 0.8em;
     height: 18px;
 }
 
 
 #ariane a {
-    color: White;
+    color: #135F7F;
 }
 
 /* content */
@@ -1516,7 +1515,7 @@ th.ref {
 #inner_content {
     border-top: none;
     border-bottom: none;
-    padding: 15px 0px 0px;
+    padding: 0px 0px 0px;
     min-width: 1000px;
     min-height: 370px;
     height: auto;
@@ -1534,7 +1533,7 @@ th.ref {
     height: 1.6em;
     position: absolute;
     padding: 0px;
-    top: 38px;
+    top: 28px;
     left: 200px;
     width: auto;
 }

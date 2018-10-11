@@ -227,7 +227,7 @@ class CoreConfigModel
         $favIconPath = CoreConfigModel::getFavIcon(["path" => "apps/maarch_entreprise/img/logo_only.svg"]);
 
         $structure = '<!doctype html>';
-        $structure = "<html lang='{$lang}'>";
+        $structure .= "<html lang='{$lang}'>";
         $structure .= '<head>';
         $structure .= "<meta charset='utf-8'>";
         $structure .= "<title>{$appName}</title>";
