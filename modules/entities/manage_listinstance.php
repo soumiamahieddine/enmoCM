@@ -802,6 +802,9 @@ $linkwithwhat =
             if ($cat == 'outgoing' && $role_label == 'Destinataire') {
                 $role_label = _SHIPPER;
             }
+            if (!empty($_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_id'])) {
+                $entity_id_dest = $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_id'];
+            }
             if ((!empty($_SESSION[$origin]['diff_list'][$role_id]['users']) && count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0) || (!empty($_SESSION[$origin]['diff_list'][$role_id]['entities']) && count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0)) {
                 if (($specific_role == $role_id || $specific_role.'_copy' == $role_id || $specific_role.'_info' == $role_id) || !isset($_REQUEST['specific_role'])) {
                     ?>
@@ -994,8 +997,9 @@ $linkwithwhat =
                     if ($_REQUEST['origin'] == 'redirect') {
                         echo ",'diff_list_div_redirect','','','".$specific_role."'";
                     } else {
-                        echo ",'','','".$cat."'",'';
+                        echo ",'','','".$cat."',''";
                     }
+                    echo ",'".$entity_id_dest."'";
                 ?>);" />
 				<input align="middle" type="button" value="<?php echo _CANCEL; ?>"  onclick="self.close();" class="button"/>
 			</div>
