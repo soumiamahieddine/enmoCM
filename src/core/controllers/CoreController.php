@@ -72,6 +72,11 @@ class CoreController
 
         if ($GLOBALS['userId'] == 'superadmin') {
             $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
+            foreach ($menu as $key => $value) {
+                if ($value['id'] == 'index_mlb' && $GLOBALS['userId'] == 'superadmin') {
+                    unset($menu[$key]);
+                }
+            }
             $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
             $menu = array_merge($menu, $menuModules);
         } else {
