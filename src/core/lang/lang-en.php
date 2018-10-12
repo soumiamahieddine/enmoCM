@@ -54,7 +54,7 @@ define('_ENTITY_MODIFICATION', 'Entity modification');
 define('_ENTITY_SUPPRESSION', 'Entity suppression');
 define('_ENTITY_ID_ALREADY_EXISTS', 'Entity already exists');
 define('_ID', 'Identifier');
-define('_ID_TO_DISPLAY', 'res_id');
+define('_ID_TO_DISPLAY', 'chrono_number');
 define('_INVALID_CLAUSE', 'Clause is not valid');
 define('_INVALID_REQUEST', 'Request is not valid');
 define('_LIST_TEMPLATE_CREATION', 'List model creation');
