@@ -11,7 +11,7 @@
         <nblinetoshow>10</nblinetoshow>
         <limitcharsearch>2</limitcharsearch>
         <lang>fr</lang>
-        <adminmail>dev@maarch.org</adminmail>
+        <adminmail>support@maarch.fr</adminmail>
         <adminname>maarch</adminname>
         <debug>false</debug>
         <applicationname>MAARCH 18.10</applicationname>
