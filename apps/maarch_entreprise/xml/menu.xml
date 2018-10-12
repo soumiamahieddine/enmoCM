@@ -24,7 +24,7 @@
         <id>index_mlb</id>
         <libconst>_INDEXING_MLB</libconst>
         <url>index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket</url>
-        <style>fa fa-plus</style>
+        <style>fa fa-file-medical</style>
     </MENU>
     <MENU>
         <id>adv_search_mlb</id>
