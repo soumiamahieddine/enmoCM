@@ -26,6 +26,7 @@ class IxbusController
                 $html .= $value->Identifiant;
                 $html .= '">';
                 $html .= $value->Libelle;
+                $html .= '</option>';
             }
         }
         $html .= '</select><br /><br />';
@@ -33,12 +34,13 @@ class IxbusController
         // $initializeDatas['messagesModel'] = ['12' => 'modele courrier', '34' => 'DRH'];
 
         $html .= '<label for="messageModel">' . _WORKFLOW_MODEL_IXBUS . '</label><select name="messageModel" id="messageModel">';
-        // foreach ($initializeDatas['messagesModel'] as $key => $value) {
-        //     $html .= '<option value="';
-        //     $html .= $key;
-        //     $html .= '">';
-        //     $html .= $value;
-        // }
+        foreach ($initializeDatas['messagesModel'] as $key => $value) {
+            $html .= '<option value="';
+            $html .= $key;
+            $html .= '">';
+            $html .= $value;
+            $html .= '</option>';
+        }
         $html .= '</select><br /><br />';
         $html .= '<label for="loginIxbus">'._ID_IXBUS.'</label><input name="loginIxbus" id="loginIxbus"/><br /><br />';
         $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input name="passwordIxbus" id="passwordIxbus"/><br /><br />';
@@ -85,10 +87,10 @@ class IxbusController
         if (!empty($rawResponse['natures']->Classeur)) {
             foreach ($rawResponse['natures']->Classeur as $nature) {
                 foreach ($messagesModels->Message as $message) {
-                    if ($message->Nature == $nature->Libelle) {
-                        $messageModel = IxbusController::getMessageNature(['messageId' => $message->Identifiant, 'sessionId' => $sessionId]);
-                        if ($messageModel->IdentifiantClasseur == $nature->Identifiant) {
-                            $rawResponse['messagesModel'][$nature->Identifiant][] = $messageModel;
+                    if ($message->Identifiant == 392213) {
+                        $messageModel = IxbusController::getMessageNature(['config' => $config, 'messageId' => $message->Identifiant, 'sessionId' => $sessionId]);
+                        if ((string)$messageModel->IdentifiantClasseur == (string)$nature->Identifiant) {
+                            $rawResponse['messagesModel'][(string)$messageModel->IdentifiantMessage] = (string)$message->IdentifiantSpecifique;
                         }
                     }
                 }
@@ -135,7 +137,7 @@ class IxbusController
         return $response;
     }
 
-    public static function getUsersList($aArgs)
+    /*public static function getUsersList($aArgs)
     {
         $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
                         <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -170,7 +172,7 @@ class IxbusController
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetListeUtilisateursDroitCreerResponse->GetListeUtilisateursDroitCreerResult;
 
         return $response;
-    }
+    }*/
 
     public static function getMessagesModel($aArgs)
     {
@@ -303,7 +305,7 @@ class IxbusController
 
         $attachmentToFreeze = [];
         $opts = [
-            CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/3.21/MessagerieImprimante.asmx',
+            CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
             CURLOPT_HTTPHEADER => [
                 'content-type:text/xml;charset=\"utf-8\"',
                 'accept:text/xml',
@@ -311,7 +313,7 @@ class IxbusController
                 "Pragma: no-cache",
                 "Content-length: ".strlen($xmlPostString),
                 "Cookie:".$aArgs['sessionId'],
-                "SOAPAction: \"http://www.srci.fr/Transmettre\""
+                "SOAPAction: \"http://www.srci.fr/SendDossier\""
             ],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
@@ -321,31 +323,19 @@ class IxbusController
             $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
               <soap:Body>
-                <Transmettre xmlns="http://www.srci.fr">
-                  <NomUtilisateur>'.$aArgs['config']['data']['userId'].'</NomUtilisateur>
-                  <MotdePasse>'.$aArgs['config']['data']['password'].'</MotdePasse>
-                  <IdentifiantOrganisation>'.$aArgs['config']['data']['organizationId'].'</IdentifiantOrganisation>
-                  <attach>
-                    <Document>
-                      <Attachment>
-                        <Name>string</Name>
-                        <Content>base64Binary</Content>
-                        <Size>int</Size>
-                      </Attachment>
-                      <Attachment>
-                        <Name>string</Name>
-                        <Content>base64Binary</Content>
-                        <Size>int</Size>
-                      </Attachment>
-                    </Document>
-                    <Description>xml</Description>
-                  </attach>
+                <SendDossier xmlns="http://www.srci.fr">
+                  <ContenuDocumentZip>base64Binary</ContenuDocumentZip>
+                  <NomDocumentPrincipal>string</NomDocumentPrincipal>
                   <NomDossier>'. $value['title'] .'</NomDossier>
+                  <NomModele>'. $aArgs['messageModel'] .'</NomModele>
+                  <NomNature>'. $aArgs['idClasseur'] .'</NomNature>
                   <DateLimite>dateTime</DateLimite>
-                  <MessageModele>'. $aArgs['messageModel'] .'</MessageModele>
-                  <IdClasseur>'. $aArgs['idClasseur'] .'</IdClasseur>
-                  <Responsable>'. $userInfo->Identifiant .'</Responsable>
-                </Transmettre>
+                  <LoginResponsable>'. $userInfo->Identifiant .'</LoginResponsable>
+                  <Confidentiel>false</Confidentiel>
+                  <DocumentModifiable>true</DocumentModifiable>
+                  <AnnexesSignables>false</AnnexesSignables>
+                  <SignatureManuscrite>true</SignatureManuscrite>
+                </SendDossier>
               </soap:Body>
             </soap:Envelope>';
     
@@ -353,10 +343,10 @@ class IxbusController
             curl_setopt_array($curl, $opts);
             $rawResponse = curl_exec($curl);
     
-            // $data = simplexml_load_string($rawResponse);
-            // $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->TransmettreResponse;
+            $data = simplexml_load_string($rawResponse);
+            $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->SendDossierResponse->SendDossierResult;
 
-            $attachmentToFreeze[] = $value['res_id'];
+            $attachmentToFreeze[] = $response;
         }
 
         
