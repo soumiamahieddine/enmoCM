@@ -205,7 +205,7 @@ class ActionController
         $obj['categoriesList']             = ResModel::getCategories();
 
         foreach ($obj['categoriesList'] as $key => $value) {
-            $obj['categoriesList'][$key]['selected'] = true;
+            $obj['action']['actionCategories'][] = $value['id'];
         }
 
         $obj['statuses'] = StatusModel::get();
@@ -219,7 +219,7 @@ class ActionController
 
     protected function manageValue($request)
     {
-        foreach ($request  as $key => $value) {
+        foreach ($request as $key => $value) {
             if (in_array($key, ['history'])) {
                 if (empty($value)) {
                     $request[$key] = 'N';
