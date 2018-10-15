@@ -2231,14 +2231,40 @@ abstract class contacts_v2_Abstract extends Database
                     $bodyData = [];
                     $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendContactToExternalApplication']);
 
-                    $select = [];
-                    foreach ($config['rawData'] as $value) {
-                        $select[] = $value;
-                    }
+                    if (!empty($config['inObject'])) {
+                        $multipleObject = true;
 
-                    $select[] = 'ca_id';
-                    $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
-                    if (count($document) === 1) {
+                        foreach ($config['objects'] as $object) {
+                            $select = [];
+                            $tmpBodyData = [];
+                            foreach ($object['rawData'] as $value) {
+                                $select[] = $value;
+                            }
+
+                            $select[] = 'ca_id';
+                            $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
+                            if (!empty($document[0])) {
+                                foreach ($object['rawData'] as $key => $value) {
+                                    $tmpBodyData[$key] = $document[0][$value];
+                                }
+                            }
+
+                            if (!empty($object['data'])) {
+                                $tmpBodyData = array_merge($tmpBodyData, $object['data']);
+                            }
+
+                            $bodyData[$object['name']] = $tmpBodyData;
+                        }
+                    } else {
+                        $multipleObject = false;
+
+                        $select = [];
+                        foreach ($config['rawData'] as $value) {
+                            $select[] = $value;
+                        }
+
+                        $select[] = 'ca_id';
+                        $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
                         if (!empty($document[0])) {
                             foreach ($config['rawData'] as $key => $value) {
                                 $bodyData[$key] = $document[0][$value];
@@ -2248,19 +2274,11 @@ abstract class contacts_v2_Abstract extends Database
                         if (!empty($config['data'])) {
                             $bodyData = array_merge($bodyData, $config['data']);
                         }
-
-                        $multipleObject = false;
-                        if (!empty($config['objectName'])) {
-                            $tmpBodyData = $bodyData;
-                            $bodyData = [];
-                            $bodyData[$config['objectName']] = $tmpBodyData;
-                            $multipleObject = true;
-                        }
-
-                        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendContactToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject]);
-
-                        \Contact\models\ContactModel::updateAddress(['set' => ['external_contact_id' => $response[$config['return']]], 'where' => ['id = ?'], 'data' => [$document[0]['ca_id']]]);
                     }
+
+                    $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendContactToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
+
+                    \Contact\models\ContactModel::updateAddress(['set' => ['external_contact_id' => $response[$config['return']]], 'where' => ['id = ?'], 'data' => [$document[0]['ca_id']]]);
                 }
 
                 if ($iframe) {

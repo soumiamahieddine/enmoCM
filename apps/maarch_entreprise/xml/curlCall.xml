@@ -23,26 +23,50 @@
         <enabled>false</enabled>
         <url></url>
         <method>POST</method>
-        <file>
-            <key>encodedFile</key>
-        </file>
-        <rawData>
-            <key>resId</key>
-            <value>res_id</value>
-        </rawData>
-        <rawData>
-            <key>status</key>
-            <value>status</value>
-        </rawData>
-        <data>
-            <key>collId</key>
-            <value>letterbox_coll</value>
-        </data>
-        <data>
-            <key>table</key>
-            <value>res_letterbox</value>
-        </data>
-        <return>externalId</return>
+        <header></header>
+        <sendInObject>
+            <objectName>requete</objectName>
+            <rawData>
+                <key>externalId</key>
+                <value>res_id</value>
+            </rawData>
+            <rawData>
+                <key>subject</key>
+                <value>subject</value>
+            </rawData>
+            <data>
+                <key>cityId</key>
+                <value>73</value>
+            </data>
+            <data>
+                <key>servId</key>
+                <value>4129</value>
+            </data>
+            <data>
+                <key>sqrtId</key>
+                <value>12178</value>
+            </data>
+            <data>
+                <key>qrtId</key>
+                <value>125</value>
+            </data>
+            <data>
+                <key>geo</key>
+                <value>false</value>
+            </data>
+        </sendInObject>
+        <sendInObject>
+            <objectName>citoyen</objectName>
+            <rawData>
+                <key>id</key>
+                <value>external_contact_id</value>
+            </rawData>
+            <rawData>
+                <key>externalId</key>
+                <value>address_id</value>
+            </rawData>
+        </sendInObject>
+        <return>id</return>
     </call>
     <call>
         <id>sendAttachmentToExternalApplication</id>
@@ -72,33 +96,36 @@
     <call>
         <id>sendContactToExternalApplication</id>
         <enabled>false</enabled>
-        <url>url</url>
+        <url></url>
         <method>POST</method>
-        <sendInObject>citoyen</sendInObject>
-        <rawData>
-            <key>street</key>
-            <value>address_street</value>
-        </rawData>
-        <rawData>
-            <key>ZC</key>
-            <value>address_postal_code</value>
-        </rawData>
-        <rawData>
-            <key>city</key>
-            <value>address_town</value>
-        </rawData>
-        <rawData>
-            <key>usualName</key>
-            <value>contact_lastname</value>
-        </rawData>
-        <rawData>
-            <key>firstname</key>
-            <value>contact_firstname</value>
-        </rawData>
-        <data>
-            <key>cityId</key>
-            <value>1</value>
-        </data>
+        <header></header>
+        <sendInObject>
+            <objectName>citoyen</objectName>
+            <rawData>
+                <key>street</key>
+                <value>address_street</value>
+            </rawData>
+            <rawData>
+                <key>ZC</key>
+                <value>address_postal_code</value>
+            </rawData>
+            <rawData>
+                <key>city</key>
+                <value>address_town</value>
+            </rawData>
+            <rawData>
+                <key>usualName</key>
+                <value>contact_lastname</value>
+            </rawData>
+            <rawData>
+                <key>firstname</key>
+                <value>contact_firstname</value>
+            </rawData>
+            <data>
+                <key>cityId</key>
+                <value>73</value>
+            </data>
+        </sendInObject>
         <return>id</return>
     </call>
     <call>
