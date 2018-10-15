@@ -1,5 +1,4 @@
 var isAlreadyClick = false;
-var chronoExpiration;
 
 page_result_final = '';
 
@@ -848,31 +847,6 @@ function getWindowSize() {
         var height = $(document.documentElement).getHeight();
     }
     return [width, height];
-}
-
-
-/**
- * Redirect to a given url
- *
- * @param url String Url to redirect to
- */
-function redirect_to_url(url) {
-    var localTime = new Date();
-    var hours = localTime.getHours();
-    var minutes = localTime.getMinutes();
-    var text = hours + ":" + minutes;
-    alert('Vous avez été déconnecté à ' + text + ' (temps d\'inactivité trop long)\n\nVeuillez vous reconnecter');
-    location.href = url;
-}
-
-/**
- * redirect to a given url when the session expirates
- *
- * @param expiration Integer Expiration time (in minutes))
- * @param url String Url to redirect to
- */
-function session_expirate(expiration, url) {
-    chronoExpiration = setTimeout('redirect_to_url(\'' + url + '\')', expiration * 60 * 1000);
 }
 
 /*************** Tabs functions *****************/

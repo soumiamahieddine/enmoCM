@@ -185,21 +185,24 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
         exit();
     }
     $core->load_lang();
+
+
+    /**
+     * [New Authentication System]
+     */
+    if ($_REQUEST['page'] <> 'login' && $_REQUEST['page'] <> 'log' && $_REQUEST['page'] <> 'logout') {
+        $cookie = \SrcCore\models\AuthenticationModel::getCookieAuth();
+        if (!empty($cookie) && \SrcCore\models\AuthenticationModel::cookieAuthentication($cookie)) {
+            \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
+        } else {
+            header('location: index.php?display=true&page=logout&logout=true');
+        }
+    }
+
     //INSERT PART OF PAGE
     if (isset($_REQUEST['display'])) {
         $core->insert_page();
         exit();
-    } else {
-        // RESET SESSION TIME
-        ?>
-        <script>
-            var element = document;
-            element.addEventListener('click', function() {
-                window.clearTimeout(window.chronoExpiration);
-                window.chronoExpiration=window.setTimeout('redirect_to_url(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true\')', '<?php echo $_SESSION['config']['cookietime']; ?>'*60*1000);
-            });
-        </script>
-        <?php
     }
 
     //DISPLAY FULL PAGE
@@ -213,22 +216,11 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     $core->load_html();
     $core->load_header();
 
+    
     /**
-     * [New Authentication System]
+     * [Initialize cookie expiration]
      */
-    $cookie = \SrcCore\models\AuthenticationModel::getCookieAuth();
-    if (!empty($cookie) && \SrcCore\models\AuthenticationModel::cookieAuthentication($cookie)) {
-        \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
-    } else {
-        header('location: index.php?display=true&page=logout&logout=true');
-    }
-
-    /**
-     * [Initialize session expiration]
-     */
-    $time = $core->get_session_time_expire();
-    $urlLogout = $_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&logout=true';
-    echo "<script>session_expirate('{$time}','{$urlLogout}');</script>";
+    echo "<script>checkCookieAuth();</script>";
 
     if (isset($_GET['body_loaded'])) {
         echo '<body style="background:#f2f2f2;" id="maarch_body">';
@@ -330,23 +322,6 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     echo '</html>';
     exit();
 } else {
-    //V2
-    ?>
-    <link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" media="screen" />
-    <link rel="stylesheet" href="css/font-awesome-maarch/css/font-maarch.css" media="screen" />
-    <script src='../../node_modules/jquery/dist/jquery.min.js'></script>
-    <script src='../../node_modules/core-js/client/shim.js'></script>
-    <script src='../../node_modules/zone.js/dist/zone.min.js'></script>
-    <script src='../../node_modules/bootstrap/dist/js/bootstrap.min.js'></script>
-    <script src='../../node_modules/chart.js/Chart.min.js'></script>
-    <script src='../../node_modules/tinymce/tinymce.min.js'></script>
-    <script src='../../node_modules/jquery.nicescroll/jquery.nicescroll.min.js'></script>
-    <script src='../../node_modules/tooltipster/dist/js/tooltipster.bundle.min.js'></script>
-    <script src='../../node_modules/jquery-typeahead/dist/jquery.typeahead.min.js'></script> 
-    <script src='../../node_modules/chosen-js/chosen.jquery.min.js'></script>
-    <script src='../../node_modules/jstree-bootstrap-theme/dist/jstree.js'></script>
-    <script src='js/angularFunctions.js'></script>
-    <?php
     $cookie = \SrcCore\models\AuthenticationModel::getCookieAuth();
     if (empty($cookie)) {
         header('location: index.php?display=true&page=logout&logout=true');

@@ -232,7 +232,30 @@ class CoreConfigModel
         $structure .= "<meta charset='utf-8'>";
         $structure .= "<title>{$appName}</title>";
         $structure .= "<link rel='icon' href='../../{$favIconPath}' />";
+
+        /* CSS PARTS */
+        $structure .= '<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" media="screen" />';
+        $structure .= '<link rel="stylesheet" href="css/font-awesome-maarch/css/font-maarch.css" media="screen" />';
+
         $structure .= '</head>';
+
+        /* SCRIPS PARTS */
+        $structure .= "<script src='../../node_modules/jquery/dist/jquery.min.js'></script>";
+        $structure .= "<script src='../../node_modules/core-js/client/shim.js'></script>";
+        $structure .= "<script src='../../node_modules/zone.js/dist/zone.min.js'></script>";
+        $structure .= "<script src='../../node_modules/bootstrap/dist/js/bootstrap.min.js'></script>";
+        $structure .= "<script src='../../node_modules/chart.js/Chart.min.js'></script>";
+        $structure .= "<script src='../../node_modules/tinymce/tinymce.min.js'></script>";
+        $structure .= "<script src='../../node_modules/jquery.nicescroll/jquery.nicescroll.min.js'></script>";
+        $structure .= "<script src='../../node_modules/tooltipster/dist/js/tooltipster.bundle.min.js'></script>";
+        $structure .= "<script src='../../node_modules/jquery-typeahead/dist/jquery.typeahead.min.js'></script> ";
+        $structure .= "<script src='../../node_modules/chosen-js/chosen.jquery.min.js'></script>";
+        $structure .= "<script src='../../node_modules/jstree-bootstrap-theme/dist/jstree.js'></script>";
+        $structure .= "<script src='js/angularFunctions.js'></script>";
+
+        /* AUTO DISCONNECT */
+        $structure .= "<script>checkCookieAuth();</script>";
+        
         $structure .= '<body>';
         $structure .= '</body>';
         $structure .= '</html>';
