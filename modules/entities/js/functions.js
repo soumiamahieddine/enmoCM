@@ -168,12 +168,13 @@ function load_listmodel(
 }
 
 function change_diff_list(
-	origin,
-	display_value_tr, 
-	difflist_div, 
-	difflist_tr,
+    origin,
+    display_value_tr,
+    difflist_div,
+    difflist_tr,
     category,
-    specific_role
+    specific_role,
+    entity_id_dest
 ) {
     if(category === undefined){
         category = '';
@@ -207,6 +208,9 @@ function change_diff_list(
                     }
 
                     diff_list_div.innerHTML = response.div_content_action;
+
+                    window.opener.$j('#destination').val(entity_id_dest);
+                    window.opener.$j('#destination').trigger("chosen:updated");
 
                     if(window.opener.parent.document.getElementById('iframe_tab')){
                         diff_list_div.innerHTML = response.div_content_action;

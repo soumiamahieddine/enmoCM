@@ -46,16 +46,18 @@
                                 <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="basket.id"
                                     required disabled>
                             </mat-form-field>
-                            <div class="col-md-11 col-xs-11" style="padding-left:0px;">
-                                <mat-form-field>
-                                    <input matInput name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="basket.basket_name" maxlength="255"
-                                        [ngStyle]="{'color': basket.color}" required>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-1 col-xs-1">
-                                <mat-form-field>
-                                    <input matInput type="color" name="color" matTooltip="{{lang.chooseColor}}" [(ngModel)]="basket.color">
-                                </mat-form-field>
+                            <div class="row">
+                                <div class="col-md-11 col-xs-10">
+                                    <mat-form-field>
+                                        <input matInput name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="basket.basket_name" maxlength="255"
+                                            [ngStyle]="{'color': basket.color}" required>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-1 col-xs-2">
+                                    <mat-form-field>
+                                        <input matInput type="color" name="color" matTooltip="{{lang.chooseColor}}" [(ngModel)]="basket.color">
+                                    </mat-form-field>
+                                </div>
                             </div>
                             <mat-form-field>
                                 <input matInput name="description" title="{{lang.description}}" placeholder="{{lang.description}}" [(ngModel)]="basket.basket_desc"
@@ -94,7 +96,7 @@
                                 </div>
                             </div>
                             <div class="col-md-12 text-center" style="padding:10px;">
-                                <button class="enableAtionBottomCenterSmarpthone" mat-raised-button [disabled]="!basketForm.form.valid || orderColumnsSelected.length == 0" color="primary">{{lang.save}}</button>
+                                <button mat-raised-button [disabled]="!basketForm.form.valid || orderColumnsSelected.length == 0" color="primary">{{lang.save}}</button>
                             </div>
                         </form>
                     </mat-tab>

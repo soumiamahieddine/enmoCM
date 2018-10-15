@@ -334,10 +334,10 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>rejection_visa_entity</ID>
-        <LABEL>_REJECTION_WORKFLOW_ENTITY</LABEL>
-        <NAME>rejection_visa_entity</NAME>
-        <DESC>_REJECTION_WORKFLOW_ENTITY_DESC</DESC>
+        <ID>redirect_visa_entity</ID>
+        <LABEL>_REDIRECT_WORKFLOW_ENTITY</LABEL>
+        <NAME>redirect_visa_entity</NAME>
+        <DESC>_REDIRECT_WORKFLOW_ENTITY_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

@@ -353,7 +353,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
                                         .'index.php?display=true&module=sendmail&page=sendmail_ajax_content'
                                         .'&mode=add&identifier='.$identifier.'&origin='.$origin.'&formContent=messageExchange'
                                         .$parameters."')",
-                'icon' => 'exchange',
+                'icon' => 'exchange-alt',
                 'tooltip' => _NEW_NUMERIC_PACKAGE,
                 'alwaysVisible' => true,
                 );

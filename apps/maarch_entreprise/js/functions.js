@@ -2907,6 +2907,9 @@ function affiche_reference() {
 function erase_contact_external_id(id, erase_id) {
     if ($j('#' + id).val() == '') {
         $j('#' + erase_id).val('');
+        if (id == "contact") {
+            $j('#contact').css("background-color", "");
+        }
     }
 }
 

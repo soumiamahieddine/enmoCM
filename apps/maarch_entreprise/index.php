@@ -355,7 +355,7 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     $user = \User\models\UserModel::getByUserId(['userId' => $cookie['userId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
 
     //HTML CONTENT OF ANGULAR
-    echo '<body></body>';
+    echo \SrcCore\models\CoreConfigModel::initAngularStructure();
 
     if ($user['status'] == 'ABS') {
         $_REQUEST['triggerAngular'] = 'activateUser';

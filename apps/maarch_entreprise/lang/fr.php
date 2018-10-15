@@ -4644,11 +4644,11 @@ if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) {
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS_DESC')) {
     define('_REJECTION_WORKFLOW_PREVIOUS_DESC', "Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du document ('process_date' de la table listinstance).");
 }
-if (!defined('_REJECTION_WORKFLOW_ENTITY')) {
-    define('_REJECTION_WORKFLOW_ENTITY', 'Refuser le visa - retour à l\'entité initiatrice');
+if (!defined('_REDIRECT_WORKFLOW_ENTITY')) {
+    define('_REDIRECT_WORKFLOW_ENTITY', 'Rediriger à l\'entité initiatrice');
 }
-if (!defined('_REJECTION_WORKFLOW_ENTITY_DESC')) {
-    define('_REJECTION_WORKFLOW_ENTITY_DESC', 'Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du document (\'process_date\' de la table listinstance) et le renvoit à l\'entité initiatrice.');
+if (!defined('_REDIRECT_WORKFLOW_ENTITY_DESC')) {
+    define('_REDIRECT_WORKFLOW_ENTITY_DESC', "Renvoie le document vers l'entité initiatrice du document sans modifier le circuit de visa actuel.");
 }
 if (!defined('_VISA_MAIL')) {
     define('_VISA_MAIL', 'Viser le courrier');
@@ -5190,4 +5190,7 @@ if (!defined('_BARCODE_HELP')) {
 }
 if (!defined('_PROCESS_IN_PROGRESS')) {
     define('_PROCESS_IN_PROGRESS', "Traitement en cours");
+}
+if (!defined('_CONTACTS_FILLING')) {
+    define('_CONTACTS_FILLING', "Complétude des informations contacts");
 }

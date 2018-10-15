@@ -104,13 +104,13 @@ table tr:not(.filters) .mat-form-field {
 
 /*** FIX BUG EXPANSION PANEL MATERIAL WITH TABS (DELETE AFTER CORRECTION) ***/
 
-.mat-expansion-panel-header {
+/* .mat-expansion-panel-header {
     height: 48px;
 }
 
 .mat-expansion-panel-content:not(.mat-expanded):not(.ng-animating) {
     display: none;
-}
+} */
 
 /*********************************/
 
@@ -376,4 +376,9 @@ h1.admin-app-name {
 
 .note-width-bottom-sheet{
     width: 400px;
+}
+
+/* FIX BUG CSS WITH CHROME */
+.mat-dialog-container, .mat-tab-body-content {
+    height: auto !important;
 }

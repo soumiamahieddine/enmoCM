@@ -883,7 +883,7 @@ if (isset($_POST['add']) && $_POST['add']) {
         if (!empty($_REQUEST['effectiveDateStatus'])) {
             $set_update .= ', status = :effectiveStatus';
             $arrayPDO = array_merge($arrayPDO, array(':effectiveStatus' => $_REQUEST['effectiveDateStatus'][0]));
-        } else if ($res->status == 'TMP') {
+        } elseif ($res->status == 'TMP') {
             $set_update .= ", status = 'A_TRA'";
         }
         $arrayPDO = array_merge($arrayPDO, array(':res_id' => $_REQUEST['res_id']));
@@ -1092,7 +1092,7 @@ if (!empty($infoAttach->multi_contact)) {
     foreach ($infoAttach->multi_contact as $key => $value) {
         $content .= '<option value="'.$value['contact_id'].'#'.$value['address_id'].'#'.$value['format_contact'].'">'.$value['format_contact'].'</option>';
     }
-        $content .= '<option value="mailing">Publipostage</option>';
+    $content .= '<option value="mailing">Publipostage</option>';
     $content .= '</select>';
     $content .= '<script>$j("#selectContactIdRes", window.top.document).change();</script>';
 }
@@ -1182,7 +1182,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     $content .= '<input type="text" name="chrono_display[]" id="chrono_display" value="'.$infoAttach->identifier.'"  style="display:none" disabled class="readonly"/>';
     if ($mode == 'add') {
         $content .= '<select name="get_chrono_display[]" id="get_chrono_display" style="display:none" onchange="$(\'chrono\').value=this.options[this.selectedIndex].value"/>';
-    } else {
+    } elseif (!empty($infoAttach->identifier)) {
         $js .= '$j("#chrono_label,#chrono_display", window.top.document).show();';
     }
     $content .= '<input type="hidden" name="chrono[]" id="chrono" value="'.$infoAttach->identifier.'"/>';

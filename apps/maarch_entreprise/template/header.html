@@ -1,22 +1,14 @@
 <div id="header">
-    <div id="nav">
-        <div><p id="ariane"></p></div>
+    <div id="nav" style="margin-left: 0px;">
         <div style="display:flex;padding-left: 20px;padding-right: 20px;height:100%;">
             <a href="index.php">
-                <div style="background: url(static.php?filename=logo_white.svg) #135F7F;background-size: 80%;background-position-y: 26px;background-repeat: no-repeat;width: 140px;height: 100%;">
+                <div style="background: url(static.php?filename=logo_white.svg) #135F7F;background-size: 80%;background-position: center;background-repeat: no-repeat;width: 140px;height: 100%;">
                 </div>
             </a>
             <div style="justify-content: flex-end;display: flex;width: 100%;color: white;align-items: center;">
-                <span class="maarchToolButton" style="cursor:pointer;padding:15px;position: relative;" onclick="$j('#menunav').slideToggle('fast');event.stopPropagation();" title="Menu">
+                <span class="maarchToolButton" style="cursor:pointer;padding:15px;padding-left: 20px;padding-right: 20px;position: relative;margin-right: 15px;" onclick="$j('#menunav').slideToggle('fast');event.stopPropagation();" title="Menu">
                     <i class="fa fa-th fa-2x" style="font-size: 16px;"></i>
                     <div id="menunav" class="menunav" style="left: -225px;display:none;">
-                        <div class="footer_menu">
-                            <span style="color:white;float:left;">
-                                MENU
-                            </span>
-                            
-                            <div style="clear:both;"></div>
-                        </div>
                         <div class="header_menu_blank">&nbsp;</div>
                         <ul>
                             <?php
@@ -78,7 +70,7 @@
                     </div>
                 </span>
             </div>
-        </div>
-        
+        </div> 
     </div>
 </div>
+<div><p id="ariane"></p></div>

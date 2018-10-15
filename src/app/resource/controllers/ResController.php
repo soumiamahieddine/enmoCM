@@ -22,6 +22,7 @@ use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use Docserver\models\DocserverTypeModel;
 use Docserver\models\ResDocserverModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\GroupController;
@@ -231,6 +232,7 @@ class ResController
                 $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
                 $document['path'] = $attachmentTodisplay['path'];
                 $document['filename'] = $attachmentTodisplay['filename'];
+                $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
             }
         } else {
             $convertedDocument = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
@@ -240,10 +242,11 @@ class ResController
                 $document['docserver_id'] = $documentTodisplay['docserver_id'];
                 $document['path'] = $documentTodisplay['path'];
                 $document['filename'] = $documentTodisplay['filename'];
+                $document['fingerprint'] = $documentTodisplay['fingerprint'];
             }
         }
 
-        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template']]);
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
@@ -253,7 +256,13 @@ class ResController
         if (!file_exists($pathToDocument)) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
-        
+
+        $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+            return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
+        }
+
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/features.xml']);
         if ($loadedXml) {
             $watermark = (array)$loadedXml->FEATURES->watermark;

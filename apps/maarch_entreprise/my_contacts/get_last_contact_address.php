@@ -128,5 +128,8 @@ if (!empty($trimed)) {
 $contactId = $res->contact_id;
 $addressId = $res->ca_id;
 
-echo "{ status: 1, contactName: '" . addslashes($contact) . "', contactId: '" . $contactId . "', addressId: '" . $addressId . "'}";
+$contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$addressId]]);
+$rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+
+echo "{ status: 1, contactName: '" . addslashes($contact) . "', contactId: '" . $contactId . "', addressId: '" . $addressId . "', rateColor: '". $rate['color']."'}";
 exit;

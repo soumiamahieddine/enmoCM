@@ -4,21 +4,21 @@
             [opened]="mobileQuery.matches ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-nav-list style="width:250px;">
+            <mat-nav-list style="width:250px;" *ngIf="!creationMode && !loading">
                 <h3 mat-subheader>{{lang.actions}}</h3>
-                <a mat-list-item *ngIf="user.status != 'ABS' && !creationMode && !loading" (click)="activateAbsence()">
+                <a mat-list-item *ngIf="user.status != 'ABS'" (click)="activateAbsence()">
                     <mat-icon color="warn" mat-list-icon class="fa fa-plane"></mat-icon>
                     <p mat-line>
                         {{lang.activateAbsence}}
                     </p>
                 </a>
-                <a mat-list-item *ngIf="user.status == 'ABS' && !creationMode && !loading" (click)="desactivateAbsence()">
+                <a mat-list-item *ngIf="user.status == 'ABS'" (click)="desactivateAbsence()">
                     <mat-icon color="accent" mat-list-icon class="fa fa-check"></mat-icon>
                     <p mat-line>
                         {{lang.desactivateAbsence}}
                     </p>
                 </a>
-                <a mat-list-item *ngIf="!creationMode && !loading && user.canModifyPassword" (click)="resetPassword(user)">
+                <a mat-list-item *ngIf="user.canModifyPassword" (click)="resetPassword(user)">
                     <mat-icon color="primary" mat-list-icon class="fa fa-key"></mat-icon>
                     <p mat-line>
                         {{lang.reinitPassword}}

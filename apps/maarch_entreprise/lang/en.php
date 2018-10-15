@@ -5025,3 +5025,6 @@ if (!defined('_BARCODE_HELP')) {
 if (!defined('_PROCESS_IN_PROGRESS')) {
     define('_PROCESS_IN_PROGRESS', "Data processing ...");
 }
+if (!defined('_CONTACTS_FILLING')) {
+    define('_CONTACTS_FILLING', "Filling contacts informations");
+}

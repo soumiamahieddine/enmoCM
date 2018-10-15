@@ -1,15 +1,74 @@
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+    <mat-sidenav-container autosize class="admin-sidenav-container">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
+            <mat-nav-list>
+                <h3 mat-subheader>{{lang.actions}}</h3>
+                <a mat-list-item disableRipple="true">
+                    <mat-icon color="primary" mat-list-icon>
+                        <mat-slide-toggle [checked]="contactsFilling.enable" color="primary" (click)="toggleFillingContact();"></mat-slide-toggle>
+                    </mat-icon>
+                    <p mat-line (click)="toggleFillingContact();" [ngStyle]="{'opacity': contactsFilling.enable ? '' : '0.5'}">
+                        <span *ngIf="contactsFilling.enable">{{lang.disabledContactsFilling}}</span>
+                        <span *ngIf="!contactsFilling.enable">{{lang.enabledContactsFilling}}</span>
+                    </p>
+                </a>
+            </mat-nav-list>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
+                <div class="row">
+                    <div class="col-md-4 col-xs-12">
+                        <mat-card style="margin-bottom: 5px;">
+                            <mat-card-header>
+                                <mat-card-title>{{lang.contactsFillingStep1}}</mat-card-title>
+                            </mat-card-header>
+                            <p>{{lang.until}} <b [ngStyle]="{color : fillingColor.first_threshold}">{{contactsFilling.first_threshold}}%</b> {{lang.contactsFillingStr}}</p>
+                            <mat-slider [(ngModel)]="contactsFilling.first_threshold" style="width:100%" color="primary"
+                                max="98" min="1" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
+                            <input disabled matInput type="color" name="color" value="{{fillingColor.first_threshold}}">
+                        </mat-card>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                        <mat-card style="margin-bottom: 5px;">
+                            <mat-card-header>
+                                <mat-card-title>{{lang.contactsFillingStep2}}</mat-card-title>
+                            </mat-card-header>
+                            <p>{{lang.from}} <b [ngStyle]="{color : fillingColor.second_threshold}">{{contactsFilling.second_threshold}}%</b> {{lang.contactsFillingStr}}</p>
+                            <mat-slider [(ngModel)]="contactsFilling.second_threshold" style="width:100%" color="primary"
+                                max="99" [min]="contactsFilling.first_threshold+1" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
+                            <input disabled matInput type="color" name="color" value="{{fillingColor.second_threshold}}">
+                        </mat-card>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                        <mat-card style="margin-bottom: 5px;">
+                            <mat-card-header>
+                                <mat-card-title>{{lang.contactsFillingStep3}}</mat-card-title>
+                            </mat-card-header>
+                            <p>{{lang.at}} <b [ngStyle]="{color : fillingColor.third_threshold}">100%</b> {{lang.contactsFillingStr}}</p>
+                            <mat-slider style="width:100%" color="primary" max="100" min="100" step="1" thumbLabel="true" disabled></mat-slider>
+                            <input disabled matInput type="color" name="color" value="{{fillingColor.third_threshold}}">
+                        </mat-card>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-12 col-xs-12">
+                        <mat-tab-group>
+                            <mat-tab label="{{lang.contactsFillingCriteria}}">
+                                <div class="row" *ngFor="let fillingColumnSelected of fillingColumnsSelected">
+                                    <div class="col-md-3 col-sm-6 col-xs-12" *ngFor="let fillingColumn of fillingColumns;let i = index" style="padding-bottom: 5px;">
+                                        <mat-slide-toggle color="primary" name="{{fillingColumn}}" (change)="addCriteria($event,fillingColumn)" [checked]="fillingColumnsState[i]">{{lang['contactsFilling_'+fillingColumn]}}</mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
             </mat-card>
         </mat-sidenav-content>
     </mat-sidenav-container>

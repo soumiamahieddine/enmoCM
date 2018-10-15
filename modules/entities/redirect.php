@@ -375,7 +375,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             }
             
             $stmt = $db->query("update ".$table." set dest_user = ? where res_id = ?", array($new_dest,$res_id));
-            $stmt = $db->query("SELECT object_id FROM listmodels WHERE item_id = ?", [new_dest]);
+            $stmt = $db->query("SELECT object_id FROM listmodels WHERE item_id = ?", [$new_dest]);
             $resEntityId = $stmt->fetch();
             $entityId = $resEntityId['object_id'];
             // If new dest was in other roles, get number of views
