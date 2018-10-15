@@ -817,7 +817,12 @@ $linkwithwhat =
                 // OTHER ROLE USERS
                 //**************************************************************************
                 $color = ' class="col"';
-                    for ($i = 0, $l = count($_SESSION[$origin]['diff_list'][$role_id]['users']);
+                    if (empty($_SESSION[$origin]['diff_list'][$role_id]['users'])) {
+                        $nbDiffListUser = count($_SESSION[$origin]['diff_list'][$role_id]['users']);
+                    } else {
+                        $nbDiffListUser = 0;
+                    }
+                    for ($i = 0, $l = $nbDiffListUser;
                     $i < $l;
                     ++$i
                 ) {
