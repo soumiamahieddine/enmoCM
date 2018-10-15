@@ -4644,11 +4644,11 @@ if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) {
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS_DESC')) {
     define('_REJECTION_WORKFLOW_PREVIOUS_DESC', "Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du document ('process_date' de la table listinstance).");
 }
-if (!defined('_INTERRUPT_WORKFLOW_ENTITY')) {
-    define('_INTERRUPT_WORKFLOW_ENTITY', 'Interrompre le circuit de visa - retour à l\'entité initiatrice');
+if (!defined('_REDIRECT_WORKFLOW_ENTITY')) {
+    define('_REDIRECT_WORKFLOW_ENTITY', 'Rediriger à l\'entité initiatrice');
 }
-if (!defined('_INTERRUPT_WORKFLOW_ENTITY_DESC')) {
-    define('_INTERRUPT_WORKFLOW_ENTITY_DESC', "Met à jour la date du visa de l'actuel viseur / signataire et de tous les viseurs suivant présents dans le circuit de visa du document ('process_date' de la table listinstance). Insère également un message d'interruption sur le viseur actuel ('process_comment' de la table listinstance) puis renvoie le document vers l'entité initiatrice de ce document.");
+if (!defined('_REDIRECT_WORKFLOW_ENTITY_DESC')) {
+    define('_REDIRECT_WORKFLOW_ENTITY_DESC', "Renvoie le document vers l'entité initiatrice du document sans modifier le circuit de visa actuel.");
 }
 if (!defined('_VISA_MAIL')) {
     define('_VISA_MAIL', 'Viser le courrier');
