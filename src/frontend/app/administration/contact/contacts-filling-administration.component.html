@@ -10,9 +10,9 @@
                     <mat-icon color="primary" mat-list-icon>
                         <mat-slide-toggle [checked]="contactsFilling.enable" color="primary" (click)="toggleFillingContact();"></mat-slide-toggle>
                     </mat-icon>
-                    <p mat-line (click)="toggleFillingContact();">
-                        <span *ngIf="contactsFilling.enable">{{lang.disableContactsFilling}}</span>
-                        <span *ngIf="!contactsFilling.enable">{{lang.enableContactsFilling}}</span>
+                    <p mat-line (click)="toggleFillingContact();" [ngStyle]="{'opacity': contactsFilling.enable ? '' : '0.5'}">
+                        <span *ngIf="contactsFilling.enable">{{lang.disabledContactsFilling}}</span>
+                        <span *ngIf="!contactsFilling.enable">{{lang.enabledContactsFilling}}</span>
                     </p>
                 </a>
             </mat-nav-list>

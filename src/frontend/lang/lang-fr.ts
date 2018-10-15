@@ -705,7 +705,7 @@ export const LANG_FR = {
     "contactsFilling_title"                             : "Civilité",
     "contactsFilling_website"                           : "Site internet",
     "chooseIndexationProfil"                            : "Choisissez un profil d'indexation",
-    "enableContactsFilling"                             : "Activer la complétude",
-    "disableContactsFilling"                            : "Désactiver la complétude",
+    "enabledContactsFilling"                            : "Complétude désactivée",
+    "disabledContactsFilling"                           : "Complétude activée",
     
 };
