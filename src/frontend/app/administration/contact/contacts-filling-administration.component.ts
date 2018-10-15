@@ -41,22 +41,18 @@ export class ContactsFillingAdministrationComponent implements OnInit {
     };
     fillingColumns = [
         'title',
-        'contact_title',
         'address_postal_code',
         'email',
         'function',
-        'contact_function',
         'salutation_header',
         'salutation_footer',
         'other_data',
         'contact_other_data',
         'occupancy',
         'lastname',
-        'contact_lastname',
         'address_num',
         'address_country',
         'firstname',
-        'contact_firstname',
         'department',
         'society_short',
         'website',
@@ -151,5 +147,10 @@ export class ContactsFillingAdministrationComponent implements OnInit {
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
+    }
+
+    toggleFillingContact() {
+        this.contactsFilling.enable == true ? this.contactsFilling.enable = false : this.contactsFilling.enable = true;
+        this.onSubmit();
     }
 }

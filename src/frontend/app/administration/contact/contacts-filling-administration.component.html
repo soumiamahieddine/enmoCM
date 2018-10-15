@@ -4,6 +4,18 @@
             fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
+            <mat-nav-list *ngIf="!creationMode">
+                <h3 mat-subheader>{{lang.actions}}</h3>
+                <a mat-list-item disableRipple="true">
+                    <mat-icon color="primary" mat-list-icon>
+                        <mat-slide-toggle [checked]="contactsFilling.enable" color="primary" (click)="toggleFillingContact();"></mat-slide-toggle>
+                    </mat-icon>
+                    <p mat-line (click)="toggleFillingContact();">
+                        <span *ngIf="contactsFilling.enable">{{lang.disableContactsFilling}}</span>
+                        <span *ngIf="!contactsFilling.enable">{{lang.enableContactsFilling}}</span>
+                    </p>
+                </a>
+            </mat-nav-list>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
@@ -18,7 +30,7 @@
                             </mat-card-header>
                             <p>{{lang.until}} <b [ngStyle]="{color : fillingColor.first_threshold}">{{contactsFilling.first_threshold}}%</b> {{lang.contactsFillingStr}}</p>
                             <mat-slider [(ngModel)]="contactsFilling.first_threshold" style="width:100%" color="primary"
-                                max="100" min="1" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
+                                max="98" min="1" step="1" thumbLabel="true" (change)="onSubmit()"></mat-slider>
                             <input disabled matInput type="color" name="color" value="{{fillingColor.first_threshold}}">
                         </mat-card>
                     </div>

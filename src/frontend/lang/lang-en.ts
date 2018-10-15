@@ -680,4 +680,6 @@ export const LANG_EN = {
     "contactsFilling_title"                             : "Title",
     "contactsFilling_website"                           : "Website",
     "chooseIndexationProfil"                            : "Choose an indexation profil",
+    "enableContactsFilling"                             : "Enable contacts Filling",
+    "disableContactsFilling"                            : "Disable contacts Filling",
 };
