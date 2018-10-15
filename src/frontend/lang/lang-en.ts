@@ -682,4 +682,6 @@ export const LANG_EN = {
     "chooseIndexationProfil"                            : "Choose an indexation profil",
     "enabledContactsFilling"                            : "Contacts filling disabled",
     "disabledContactsFilling"                           : "Contacts filling enabled",
+    "fromRange"                                         : "From",
+    "toRange"                                           : "to",
 };

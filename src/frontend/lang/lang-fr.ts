@@ -707,5 +707,6 @@ export const LANG_FR = {
     "chooseIndexationProfil"                            : "Choisissez un profil d'indexation",
     "enabledContactsFilling"                            : "Complétude désactivée",
     "disabledContactsFilling"                           : "Complétude activée",
-    
+    "fromRange"                                         : "De",
+    "toRange"                                           : "à",
 };
