@@ -32,12 +32,14 @@
 /**
  * Class for manage web service
  */
-class webService {
+class webService
+{
 
     /**
      * load web service catalog of the Maarch core
      */
-    function WSCoreCatalog() {
+    public function WSCoreCatalog()
+    {
         if (file_exists($_SESSION['config']['corepath'] . 'custom'
             . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
             . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'class'
@@ -61,7 +63,8 @@ class webService {
     /**
      * load web service catalog of the Maarch application
      */
-    function WSAppsCatalog() {
+    public function WSAppsCatalog()
+    {
         if (file_exists($_SESSION['config']['corepath'] . 'custom'
             . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
             . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
@@ -85,11 +88,13 @@ class webService {
     /**
      * load web service catalog of the Maarch loading modules
      */
-    function WSModulesCatalog() {
+    public function WSModulesCatalog()
+    {
         for ($cptModules=0;$cptModules<count($_SESSION['modules']);$cptModules++) {
             if (
                 $_SESSION['modules'][$cptModules]['moduleid'] <> ""
-                && file_exists($_SESSION['config']['corepath'] . 'custom'
+                && file_exists(
+                    $_SESSION['config']['corepath'] . 'custom'
                     . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
                     . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR
                     . $_SESSION['modules'][$cptModules]['moduleid']
@@ -104,7 +109,8 @@ class webService {
                 );
             } elseif (
                 $_SESSION['modules'][$cptModules]['moduleid'] <> ""
-                && file_exists($_SESSION['config']['corepath']
+                && file_exists(
+                    $_SESSION['config']['corepath']
                     . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR
                     . $_SESSION['modules'][$cptModules]['moduleid']
                     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'ws.php'
@@ -122,7 +128,8 @@ class webService {
     /**
      * load web service catalog of the Maarch custom required
      */
-    function WScustomCatalog() {
+    public function WScustomCatalog()
+    {
         if (file_exists($_SESSION['config']['corepath'] . 'custom'
             . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
             . DIRECTORY_SEPARATOR . 'ws.php')
@@ -137,9 +144,11 @@ class webService {
     /**
      * web service authentification
      */
-    function authentication() {
+    public function authentication()
+    {
         if (
-            (isset($_SERVER["PHP_AUTH_USER"])
+            (
+                isset($_SERVER["PHP_AUTH_USER"])
                 && isset($_SERVER["PHP_AUTH_PW"])
                 && isset($_SERVER["HTTP_AUTHORIZATION"])
             )
@@ -151,7 +160,8 @@ class webService {
         }
         $authenticated = false;
         if (
-            (isset($_SERVER["PHP_AUTH_USER"])
+            (
+                isset($_SERVER["PHP_AUTH_USER"])
                 && isset($_SERVER["PHP_AUTH_PW"])
             )
             && ($_SERVER["PHP_AUTH_USER"] || $_SERVER["PHP_AUTH_PW"])
@@ -188,7 +198,8 @@ class webService {
     /**
      * launch the web service engine required
      */
-    function launchWs() {
+    public function launchWs()
+    {
         require_once('core/class/web_service/class_rest_server.php');
         require_once('core/class/web_service/class_soap_server.php');
         require_once('core/class/web_service/class_xmlrpc_server.php');
@@ -208,25 +219,25 @@ class webService {
         }
         if (
             isset($wsMode)
-            && strcasecmp($wsMode,'wsdl') == 0
+            && strcasecmp($wsMode, 'wsdl') == 0
         ) {
             //WSDL
             $soapServer->makeWSDL();
         } elseif (
             isset($wsMode)
-            && strcasecmp($wsMode,'xmlrpc') == 0
+            && strcasecmp($wsMode, 'xmlrpc') == 0
         ) {
             //XMLRPC
             $xmlRPC->makeXMLRPCServer();
         } elseif (
             isset($wsMode)
-            && strcasecmp($wsMode,'rest') == 0
+            && strcasecmp($wsMode, 'rest') == 0
         ) {
             //REST
             $restServer->makeRESTServer();
         } elseif (
             isset($wsMode)
-            && strcasecmp($wsMode,'cmis') == 0
+            && strcasecmp($wsMode, 'cmis') == 0
         ) {
             //CMIS
             $restRequest = explode('/', $_SERVER['QUERY_STRING']);
@@ -256,7 +267,8 @@ class webService {
      * @param   $methods array array of signature
      * @return  array with path, object and method
      */
-    function parseRequestedMethod($method, $methods) {
+    public function parseRequestedMethod($method, $methods)
+    {
         if (is_array($methods)) {
             require_once('core/class/class_functions.php');
             $arrayMethods = array();
@@ -271,11 +283,11 @@ class webService {
                 } elseif ($keyMethod == $method) {
                     $rootPathArray = array();
                     $stringMethod = $arrayMethods[$keyMethod]["method"];
-                    $rootPathArray = explode("#",$stringMethod);
+                    $rootPathArray = explode("#", $stringMethod);
                     $rootPath = $rootPathArray[0];
                     $objectPath = $rootPathArray[1];
                     $objectPathArray = array();
-                    $objectPathArray = explode("::",$objectPath);
+                    $objectPathArray = explode("::", $objectPath);
                     if ($rootPath == "core") {
                         $path = "core" . DIRECTORY_SEPARATOR . "class"
                               . DIRECTORY_SEPARATOR . $objectPathArray[0] . "_controler.php";
@@ -286,9 +298,9 @@ class webService {
                               . DIRECTORY_SEPARATOR . $objectPathArray[0] . "_controler.php";
                     } else {
                         preg_match("'modules'", $rootPath, $out);
-                        if (count($out[0])) {
+                        if (!empty($out[0])) {
                             $modulePathArray = array();
-                            $modulePathArray = explode("/",$rootPath);
+                            $modulePathArray = explode("/", $rootPath);
                             $path = "modules" . DIRECTORY_SEPARATOR
                                   . $modulePathArray[1] . DIRECTORY_SEPARATOR
                                   . "class" . DIRECTORY_SEPARATOR
