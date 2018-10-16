@@ -334,7 +334,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         //first check confidential state
         this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
             .subscribe((data: any) => {
-                console.log(data);
                 if (!data['hasConfidentialityInstances'] && !data['hasListTemplates']) {
                     this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
                         .subscribe((data: any) => {
@@ -348,7 +347,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                     this.config = { data: { hasConfidentialityInstances:data['hasConfidentialityInstances'], hasListTemplates:data['hasListTemplates'] } };
                     this.dialogRef = this.dialog.open(UserAdministrationRedirectModalComponent, this.config);
                     this.dialogRef.afterClosed().subscribe((result: any) => {
-                        console.log(result);
                         this.mode = 'delete';
                         if (result) {
                             this.mode = result.processMode;

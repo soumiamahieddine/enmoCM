@@ -28,7 +28,7 @@ export class AutoCompletePlugin {
             this.userCtrl = new FormControl();
             this.userCtrl.valueChanges.pipe(
                 debounceTime(300),
-                filter(value => value.length > 2),
+                filter(value => value ? value.length > 2 : false),
                 distinctUntilChanged(),
                 switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/users', { params: { "search": data } }))
             ).subscribe((response: any) => {
@@ -109,7 +109,7 @@ export class AutoCompletePlugin {
             this.elementCtrl = new FormControl();
             this.elementCtrl.valueChanges.pipe(
                 debounceTime(300),
-                filter(value => value.length > 2),
+                filter(value => value ? value.length > 2 : false),
                 distinctUntilChanged(),
                 switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/entities', { params: { "search": data } }))
             ).subscribe((response: any) => {

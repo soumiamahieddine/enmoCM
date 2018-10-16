@@ -709,4 +709,6 @@ export const LANG_FR = {
     "disabledContactsFilling"                           : "Complétude activée",
     "fromRange"                                         : "De",
     "toRange"                                           : "à",
+    "redirectUserListDiff"                              : "Changement de destinataire des modèles de liste de diffusion",
+    "chooseNewDest"                                     : "est en <b>destinataire</b> des modèles de liste de difffusion suivants, veuillez choisir un utilisateur de <b>remplacement</b>",
 };

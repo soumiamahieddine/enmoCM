@@ -687,7 +687,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     linkUser(newUser:any) {
-        console.log(newUser);
         this.userCtrl.setValue('');
         $j('.autocompleteSearch').blur();
         let entity = {
