@@ -11,7 +11,6 @@
         <bask_baskets>baskets</bask_baskets>
         <bask_groupbasket>groupbasket</bask_groupbasket>
         <bask_actions_groupbaskets>actions_groupbaskets</bask_actions_groupbaskets>
-        <bask_users_abs>user_abs</bask_users_abs>
     </TABLENAME>
     <HISTORY>
         <basketadd>true</basketadd>

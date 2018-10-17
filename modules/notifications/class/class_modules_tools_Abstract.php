@@ -91,7 +91,6 @@ abstract class notifications_Abstract {
 			$_SESSION['tablename']['history'] = utf8_decode((string) $TABLENAME->history);
 			$_SESSION['tablename']['listinstance'] = utf8_decode((string) $TABLENAME->listinstance);
 			$_SESSION['tablename']['users'] = utf8_decode((string) $TABLENAME->users);
-			$_SESSION['tablename']['user_abs'] = utf8_decode((string) $TABLENAME->user_abs);
 			$_SESSION['tablename']['entities'] = utf8_decode((string) $TABLENAME->entities);
 			$_SESSION['tablename']['ent_entities'] = utf8_decode((string) $TABLENAME->entities);
 			$_SESSION['tablename']['ent_users_entities'] = utf8_decode((string) $TABLENAME->users_entities);

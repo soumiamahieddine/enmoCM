@@ -21,7 +21,7 @@ import { SaveNumericPackageComponent }      from './save-numeric-package.compone
             { path: 'basketList/:groupSerialId/baskets/:basketId', component: BasketListComponent },
             { path: 'saveNumericPackage', component: SaveNumericPackageComponent },
             { path: 'groups/:groupId/baskets/:basketId/signatureBook/:resId', component: SignatureBookComponent },
-            { path: '**',   redirectTo: '', pathMatch: 'full' },
+            { path: '**',   redirectTo: 'home', pathMatch: 'full' },
         ], { useHash: true }),
     ],
     exports: [

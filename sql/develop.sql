@@ -558,3 +558,5 @@ INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_th
 ALTER TABLE entities DROP COLUMN IF EXISTS folder_import;
 ALTER TABLE entities ADD COLUMN folder_import character varying(64);
 ALTER TABLE entities ADD UNIQUE (folder_import);
+ALTER TABLE user_abs DROP COLUMN IF EXISTS group_id;
+ALTER TABLE user_abs ADD COLUMN group_id int;

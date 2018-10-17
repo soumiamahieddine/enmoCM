@@ -81,7 +81,6 @@ abstract class basket_Abstract extends Database
         $tablename = $xmlconfig->TABLENAME;
         $_SESSION['tablename']['bask_baskets'] = (string) $tablename->bask_baskets;
         $_SESSION['tablename']['bask_groupbasket'] = (string) $tablename->bask_groupbasket;
-        $_SESSION['tablename']['bask_users_abs'] = (string) $tablename->bask_users_abs;
         $_SESSION['tablename']['bask_actions_groupbaskets'] = (string) $tablename->bask_actions_groupbaskets;
 
         // Loads the log setting of the module basket  into session
@@ -292,8 +291,7 @@ abstract class basket_Abstract extends Database
         $db = new Database();
         $arr = array();
         $stmt = $db->query(
-            "select system_id, basket_id, user_abs from " . USER_ABS_TABLE
-            . " where new_user = ?",
+            "select system_id, basket_id, user_abs from user_abs where new_user = ?",
             array($userId)
         );
         //$db->show();
@@ -686,92 +684,6 @@ abstract class basket_Abstract extends Database
     }
 
     /**
-     * Returns in an array the baskets of a given user
-     *  (Including the redirected baskets)
-     *
-     * @param  $userId string Owner of the baskets (identifier)
-     * @return array
-     */
-    public function get_baskets($userId)
-    {
-        $db = new Database();
-        $stmt = $db->query(
-            "select b.basket_id, b.basket_name from " . BASKET_TABLE . " b, "
-            . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
-            . USERGROUPS_TABLE . " u where uc.user_id = ? and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
-            . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id and u.enabled = 'Y' ",
-            [$userId]
-        );
-
-        $arr = [];
-        while ($res = $stmt->fetchObject()) {
-            $arr[] = [
-                'id'           => $res->basket_id,
-                'name'         => $res->basket_name,
-                'is_virtual'   => 'N',
-                'basket_owner' => '',
-                'abs_basket'   => false
-            ];
-        }
-        $absBaskets = $this->get_abs_baskets($userId);
-        if (isset($absBaskets)) {
-            return array_merge($arr, $absBaskets);
-        }
-        return $arr;
-    }
-
-    /**
-     * Returns in an array the redirected baskets of a given user
-     *
-     * @param  $userId string Owner of the baskets (identifier)
-     */
-    public function get_abs_baskets($userId)
-    {//var_dump('get_abs_baskets');exit;
-        $db = new Database();
-        $stmt = $db->query(
-            "select basket_id, is_virtual, basket_owner from "
-            . USER_ABS_TABLE . " mu where user_abs = ?",
-            array($userId)
-        );
-        $arr = array();
-        while ($res = $stmt->fetchObject()) {
-            $basketId = $res->basket_id;
-            $basketOwner = $res->basket_owner;
-            $isVirtual = $res->is_virtual;
-            $stmt2 = $db->query(
-                "select basket_name from " . BASKET_TABLE
-                . " where basket_id = ?",
-                array($basketId)
-            );
-            $res2 = $stmt2->fetchObject();
-            $basketName = $res2->basket_name;
-            if ($isVirtual == 'Y' && $basketOwner <> '') {
-                $stmt3 = $db->query(
-                    "select firstname, lastname from " . USERS_TABLE
-                    ." where user_id = ?",
-                    array($basketOwner)
-                );
-                $res2 = $stmt3->fetchObject();
-                $userName = $res2->firstname . ' ' . $res2->lastname;
-                $basketName .= "(".$userName.")";
-            } else {
-                $basketOwner = $userId;
-            }
-            array_push(
-                $arr,
-                array(
-                    'id' => $basketId,
-                    'name' => $basketName,
-                    'is_virtual' => $isVirtual,
-                    'basket_owner' => $basketOwner,
-                    'abs_basket' => true,
-                )
-            );
-        }
-        return $arr;
-    }
-
-    /**
      * Returns in an array all the data of a basket for a user
      *(checks if the basket is a redirected one and then if already a virtual one)
      *
@@ -912,8 +824,7 @@ abstract class basket_Abstract extends Database
         $tab['clause'] = $res->basket_clause;
         $tab['is_visible'] = $res->is_visible;
         $stmt = $db->query(
-            "select user_abs, is_virtual, basket_owner from " . USER_ABS_TABLE
-            . " where basket_id = ? and new_user = ? and system_id = ?",
+            "select user_abs, is_virtual, basket_owner from user_abs where basket_id = ? and new_user = ? and system_id = ?",
             array($basketId,$userId,$systemId)
         );
 
@@ -1018,47 +929,6 @@ abstract class basket_Abstract extends Database
         $tab['lock_sublist'] = '';
         
         return $tab;
-    }
-
-    /**
-     * Cancel leaving for a user
-     *
-     * @param  $userId string user identifier
-     *
-     */
-    public function cancel_abs($userId)
-    {
-        $db = new Database();
-        $stmt = $db->query(
-            "delete from " . USER_ABS_TABLE . " where is_virtual = 'Y' "
-            . "and basket_owner = ?",
-            array($userId)
-        );
-        //Then we search all the virtual baskets assigned to the user
-        $stmt = $db->query(
-            "select basket_owner, basket_id from " . USER_ABS_TABLE
-            . " where is_virtual='Y' and user_abs = ?",
-            array($userId)
-        );
-        // and delete this baskets if they were reassigned to someone else
-        $i = 0;
-        while ($res = $stmt->fetchObject()) {
-            $stmt2 = $db->query(
-                "delete from " . USER_ABS_TABLE . " where is_virtual ='Y' "
-                . " and basket_id = ? and basket_owner = ? ",
-                array($res->basket_id,$res->basket_owner)
-            );
-            $i ++;
-        }
-        // then we delete all baskets where the user was the missing user
-        $stmt = $db->query(
-            "DELETE  from " . USER_ABS_TABLE . " WHERE user_abs=?",
-            array($userId)
-        );
-        $stmt = $db->query(
-            "update " . USERS_TABLE . " set status = 'OK' where user_id = ?",
-            array($userId)
-        );
     }
 
     public function is_redirect_to_action_basket($basketId, $groupId)

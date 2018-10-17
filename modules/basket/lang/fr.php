@@ -341,8 +341,6 @@ if (!defined("_BASKETS_OWNER_MISSING"))
     define("_BASKETS_OWNER_MISSING", "Le propriétaire des bannettes n'est pas défini.");
 if (!defined("_FORM_ERROR"))
     define("_FORM_ERROR", "Erreur dans la transmission du formulaire...");
-if (!defined("_USER_ABS"))
-    define("_USER_ABS", "Utilisateur absent : redirection déjà paramétrée.");
 if (!defined("_ABS_LOG_OUT"))
     define("_ABS_LOG_OUT", "si vous vous reconnectez, le mode absent sera annulé.");
 if (!defined("_ABS_USER"))

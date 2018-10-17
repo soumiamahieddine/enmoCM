@@ -395,6 +395,7 @@ CREATE TABLE user_abs
   basket_id character varying(255) NOT NULL,
   basket_owner character varying(255),
   is_virtual character(1) NOT NULL DEFAULT 'N'::bpchar,
+  group_id INTEGER,
   CONSTRAINT user_abs_pkey PRIMARY KEY (system_id)
 )
 WITH (OIDS=FALSE);
