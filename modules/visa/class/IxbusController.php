@@ -23,7 +23,7 @@ class IxbusController
         if (!empty($initializeDatas['natures']->Classeur)) {
             foreach ($initializeDatas['natures']->Classeur as $value) {
                 $html .= '<option value="';
-                $html .= $value->Identifiant;
+                $html .= $value->Libelle;
                 $html .= '">';
                 $html .= $value->Libelle;
                 $html .= '</option>';
@@ -36,14 +36,14 @@ class IxbusController
         $html .= '<label for="messageModel">' . _WORKFLOW_MODEL_IXBUS . '</label><select name="messageModel" id="messageModel">';
         foreach ($initializeDatas['messagesModel'] as $key => $value) {
             $html .= '<option value="';
-            $html .= $key;
+            $html .= $value;
             $html .= '">';
             $html .= $value;
             $html .= '</option>';
         }
         $html .= '</select><br /><br />';
         $html .= '<label for="loginIxbus">'._ID_IXBUS.'</label><input name="loginIxbus" id="loginIxbus"/><br /><br />';
-        $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input name="passwordIxbus" id="passwordIxbus"/><br /><br />';
+        $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input type="password" name="passwordIxbus" id="passwordIxbus"/><br /><br />';
 
         return $html;
     }
@@ -290,46 +290,35 @@ class IxbusController
 
     public static function sendDatas($aArgs)
     {
-        $userInfo = IxbusController::getInfoUtilisateur(['config' => $aArgs['config'], 'login' => $aArgs['loginIxbus'], 'password' => $aArgs['passwordIxbus']]);
+        $sessionId = IxbusController::createSession($aArgs['config']);
+        $userInfo  = IxbusController::getInfoUtilisateur(['config' => $aArgs['config'], 'login' => $aArgs['loginIxbus'], 'password' => $aArgs['passwordIxbus']]);
 
         $attachments = \Attachment\models\AttachmentModel::getOnView([
             'select'    => [
                 'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
-                'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
-                'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
-                'dest_address_id', 'origin', 'doc_date', 'attachment_id_master'
+                'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
+                'validation_date', 'relation', 'attachment_id_master'
             ],
-            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS', 'FRZ')", 'in_signature_book = TRUE'],
             'data'      => [$aArgs['resIdMaster'], ['incoming_mail_attachment', 'print_folder']]
         ]);
 
         $attachmentToFreeze = [];
-        $opts = [
-            CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-            CURLOPT_HTTPHEADER => [
-                'content-type:text/xml;charset=\"utf-8\"',
-                'accept:text/xml',
-                "Cache-Control: no-cache",
-                "Pragma: no-cache",
-                "Content-length: ".strlen($xmlPostString),
-                "Cookie:".$aArgs['sessionId'],
-                "SOAPAction: \"http://www.srci.fr/SendDossier\""
-            ],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
+
         foreach ($attachments as $value) {
+            $encodedZipFile = IxbusController::createZip($value);
+            $filename = pathinfo($value['filename'], PATHINFO_FILENAME);
+
             $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
               <soap:Body>
                 <SendDossier xmlns="http://www.srci.fr">
-                  <ContenuDocumentZip>base64Binary</ContenuDocumentZip>
-                  <NomDocumentPrincipal>string</NomDocumentPrincipal>
+                  <ContenuDocumentZip>'. $encodedZipFile .'</ContenuDocumentZip>
+                  <NomDocumentPrincipal>'. $filename . '</NomDocumentPrincipal>
                   <NomDossier>'. $value['title'] .'</NomDossier>
                   <NomModele>'. $aArgs['messageModel'] .'</NomModele>
-                  <NomNature>'. $aArgs['idClasseur'] .'</NomNature>
-                  <DateLimite>dateTime</DateLimite>
+                  <NomNature>'. $aArgs['classeurName'] .'</NomNature>
+                  <DateLimite>2018-12-17</DateLimite>
                   <LoginResponsable>'. $userInfo->Identifiant .'</LoginResponsable>
                   <Confidentiel>false</Confidentiel>
                   <DocumentModifiable>true</DocumentModifiable>
@@ -338,6 +327,22 @@ class IxbusController
                 </SendDossier>
               </soap:Body>
             </soap:Envelope>';
+
+            $opts = [
+                CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+                CURLOPT_HTTPHEADER => [
+                    'content-type:text/xml;charset=\"utf-8\"',
+                    'accept:text/xml',
+                    "Cache-Control: no-cache",
+                    "Pragma: no-cache",
+                    "Content-length: ".strlen($xmlPostString),
+                    "Cookie:".$sessionId,
+                    "SOAPAction: \"http://www.srci.fr/SendDossier\""
+                ],
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS  => $xmlPostString
+            ];
     
             $curl = curl_init();
             curl_setopt_array($curl, $opts);
@@ -374,5 +379,27 @@ class IxbusController
 
         // retourner seulement les mails récupérés (validés ou signés)
         return $aArgs['idsToRetrieve'];
+    }
+
+    public static function createZip($aArgs)
+    {
+        $zip = new ZipArchive();
+
+        $pathInfo      = pathinfo($aArgs['filename'], PATHINFO_FILENAME);
+        $tmpPath       = \SrcCore\models\CoreConfigModel::getTmpPath();
+        $zipFilename   = '/var/www/html/maarch_v2/' . $pathInfo."_".rand().".zip";
+
+        if ($zip->open($zipFilename, ZipArchive::CREATE) === true) {
+            $docserverInfo = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $aArgs['docserver_id']]);
+            $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $aArgs['path']) . $aArgs['filename'];
+            $zip->addFile($filePath, $aArgs['filename']);
+            $zip->close();
+
+            $fileContent = file_get_contents($zipFilename);
+            $base64 =  base64_encode($fileContent);
+            return $base64;
+        } else {
+            echo 'Impossible de créer l\'archive;';
+        }
     }
 }
