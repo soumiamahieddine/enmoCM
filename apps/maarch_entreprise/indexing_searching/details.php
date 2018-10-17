@@ -658,7 +658,7 @@ if ($stmt->rowCount() == 0) {
                     $inputValue = $data[$key]['value'];
                     $inputAddressValue = $data[$key]['address_value'];
 
-                    $iconShow = "<a href=\"#\" onclick=\"window.open('index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid={$inputValue}&addressid={$inputAddressValue}', 'contact_info', 'height=800, width=1000,scrollbars=yes,resizable=yes');\">".$iconShow.'</a>';
+                    $iconShow = "<a href=\"#\" onclick=\"window.open('index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetail&editDetail&popup&contactid='+document.getElementById('contactid').value+'&addressid='+document.getElementById('addressid').value+'', 'contact_info', 'height=800, width=1000,scrollbars=yes,resizable=yes');\">".$iconShow.'</a>';
                 } elseif (in_array($key, ['dest_user_id', 'exp_user_id'])) {
                     $inputValue = $data[$key]['value'];
                     $inputAddressValue = $data[$key]['address_value'];

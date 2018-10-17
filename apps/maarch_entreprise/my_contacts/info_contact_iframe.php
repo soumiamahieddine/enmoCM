@@ -32,7 +32,7 @@ $_SESSION['info'] = '';
 
 if (isset($_GET['contactid']) && $_GET['contactid'] <> '') {
     $_SESSION['contact']['current_contact_id'] = $id;
-} else if ($_SESSION['contact']['current_contact_id'] <> '') {
+} elseif ($_SESSION['contact']['current_contact_id'] <> '') {
     $_GET['contactid'] = $_SESSION['contact']['current_contact_id'];
 }
 
@@ -41,7 +41,7 @@ if (isset($_GET['fromAttachmentContact']) && $_GET['fromAttachmentContact'] == "
 }
 if (isset($_GET['addressid']) && $_GET['addressid'] <> '') {
     $_SESSION['contact']['current_address_id'] = $id;
-} else if ($_SESSION['contact']['current_address_id'] <> '') {
+} elseif ($_SESSION['contact']['current_address_id'] <> '') {
     $_GET['addressid'] = $_SESSION['contact']['current_address_id'];
 }
 
@@ -98,7 +98,6 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
         $_GET['id'] = $_GET['addressid'];
         include_once 'apps/' . $_SESSION['config']['app_id'] . '/my_contacts/update_address_iframe.php';
     }
-
 } else {
     include_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php";
     include_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php";
@@ -134,7 +133,7 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
     $_SESSION['m_admin']['address']['SALUTATION_FOOTER']  = $request->show_string($line->salutation_footer);
     $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID']= $request->show_string($line->external_contact_id);
 
-	$core_tools2->load_js();
+    $core_tools2->load_js();
 
     $query = "SELECT * FROM ".$_SESSION['tablename']['contact_communication']." WHERE contact_id = ?";
     $stmt = $db->query($query, array($line->contact_id));
@@ -144,18 +143,39 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
     $_SESSION['m_admin']['communication']['ID']              = $contactCommunication->id;
     $_SESSION['m_admin']['communication']['CONTACT_ID']      = $contactCommunication->contact_id;
     $_SESSION['m_admin']['communication']['TYPE']            = functions::show_string($contactCommunication->type);
-    $_SESSION['m_admin']['communication']['VALUE']           = functions::show_string($contactCommunication->value);
-
-	?>
-	    <div id="inner_content" class="clearfix" align="center" style="padding:0px;width:100% !important;">
-	    	<div class="block">
-	<?php
-		$contact->get_contact_form();
-		$contact->get_address_form();
-	?>		
-			</div>
-		</div>
+    $_SESSION['m_admin']['communication']['VALUE']           = functions::show_string($contactCommunication->value); ?>
+<div id="inner_content" class="clearfix" align="center" style="padding:0px;width:100% !important;">
+    <div class="block">
+        <?php
+        $contact->get_contact_form();
+    $contact->get_address_form(); ?>
+    </div>
+</div>
 <?php
+}
+
+if ($_GET['created'] == "editDetail") {
+    ?>
+    <script type="text/javascript">
+        new Ajax.Request('index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up',
+        {
+        method:'post',
+        parameters: {},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+
+            if (response.rateColor != "") {
+                window.opener.$j('#contact').css('background-color', response.rateColor);
+            }
+
+            window.opener.$j('#contact').html(response.contactName);
+            window.opener.$j('#contactid').val(response.contactId);
+            window.opener.$j('#addressid').val(response.addressId);
+            this.close();
+        }       
+    });
+    </script><?php
+    exit;
 }
 
 ?>
@@ -166,32 +186,31 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
 
 
 if (isset($_SESSION['AttachmentContact']) && $_SESSION['AttachmentContact'] =="1" && $_GET['created'] <> '' && isset($_GET['created'])) {
-	$infoContactDiv = "info_contact_div_attach";
-	?>
+    $infoContactDiv = "info_contact_div_attach"; ?>
 	<script>
-		simpleAjax("<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=unsetAttachmentContact';?>");
+		simpleAjax("<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=unsetAttachmentContact'; ?>");
 	</script>
 	<?php
 } else {
-	$infoContactDiv = "show_tab";
-}
+        $infoContactDiv = "show_tab";
+    }
 
 if ($_GET['created'] == "open") {
-	?>
+    ?>
 		<script type="text/javascript">
-			set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "<?php functions::xecho($infoContactDiv );?>", "false");
+			set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up'; ?>", "<?php functions::xecho($infoContactDiv); ?>", "false");
 		</script>
 	<?php
-} else if(isset($_GET['created']) && $_GET['created'] == 'add'){
-?>
+} elseif (isset($_GET['created']) && $_GET['created'] == 'add') {
+        ?>
 	<script type="text/javascript">
-		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "<?php functions::xecho($infoContactDiv );?>", "true");
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address'; ?>", "<?php functions::xecho($infoContactDiv); ?>", "true");
 	</script>
 <?php
-} else if(isset($_GET['created']) && $_GET['created'] <> ''){
-?>
+    } elseif (isset($_GET['created']) && $_GET['created'] <> '') {
+        ?>
 	<script type="text/javascript">
-		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "<?php functions::xecho($infoContactDiv );?>", "true");
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up'; ?>", "<?php functions::xecho($infoContactDiv); ?>", "true");
 	</script>
 <?php
-}
+    }

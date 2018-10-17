@@ -49,9 +49,8 @@ if (!$return) {
 }
 
 if (!$return) {
-    $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN;
-    ?>
-    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+    $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN; ?>
+    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']; ?>index.php';</script>
     <?php
     exit();
 }
@@ -61,18 +60,19 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 $contact = new contacts_v2();
 $iframe = false;
 
-if(isset($_GET['mycontact']) && $_GET['mycontact'] <> ''){
-	$admin = false;
-	if($_GET['mycontact'] == 'iframe'){
-		$iframe = 1;
-	} else if ($_GET['mycontact'] == 'iframe_add_up') {
-		$iframe = 2;
-	} else if ($_GET['mycontact'] == 'fromContactIframe') {
+if (isset($_GET['mycontact']) && $_GET['mycontact'] <> '') {
+    $admin = false;
+    if ($_GET['mycontact'] == 'iframe') {
+        $iframe = 1;
+    } elseif ($_GET['mycontact'] == 'iframe_add_up') {
+        $iframe = 2;
+    } elseif ($_GET['mycontact'] == 'fromContactIframe') {
         $iframe = 3;
+    } elseif ($_GET['mycontact'] == 'editDetail') {
+        $iframe = 4;
     }
-
 } else {
-	$admin = true;
+    $admin = true;
 }
 
 if (isset($_REQUEST['fromContactAddressesList'])) {
@@ -80,4 +80,3 @@ if (isset($_REQUEST['fromContactAddressesList'])) {
 }
 
 $contact->addupaddress($_POST['mode'], $admin, $iframe);
-?>

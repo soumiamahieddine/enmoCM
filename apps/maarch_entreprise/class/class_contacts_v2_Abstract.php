@@ -1381,11 +1381,8 @@ abstract class contacts_v2_Abstract extends Database
             echo '</h2>';
         }
 
-        if ($iframe != true) {
-            echo '<div id="inner_content_contact" class="clearfix" align="center">';
-        } else {
-            echo '<div id="inner_content_contact" class="clearfix" align="center">';
-        }
+        echo '<div id="inner_content_contact" class="clearfix" align="center">';
+
         if ($state == false) {
             echo '<br /><br /><br /><br />'._THE_ADDRESS.' '._UNKOWN.'<br /><br /><br /><br />';
         } else {
@@ -1404,6 +1401,8 @@ abstract class contacts_v2_Abstract extends Database
                 $action = $_SESSION['config']['businessappurl'].'index.php?display=false&page=contact_addresses_up_db&mycontact=iframe_add_up';
             } elseif ($iframe == 'fromContactIframe') {
                 $action = $_SESSION['config']['businessappurl'].'index.php?display=false&page=contact_addresses_up_db&mycontact=fromContactIframe';
+            } elseif ($iframe == 'editDetail') {
+                $action = 'index.php?display=false&page=contact_addresses_up_db&mycontact=editDetail&editDetail';
             }
             if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] != '') {
                 $action = $_SESSION['config']['businessappurl'].'index.php?display=true&page=contact_addresses_up_db&fromContactAddressesList';
@@ -2118,32 +2117,29 @@ abstract class contacts_v2_Abstract extends Database
         if ($iframe) {
             if ($mode == 'add') {
                 if ($iframe == 1) {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                              .'index.php?display=false&dir=my_contacts&page=create_contact_iframe&created=Y';
-                    $path_contacts_add_errors = $_SESSION['config']['businessappurl']
-                                              .'index.php?display=false&dir=my_contacts&page=create_address_iframe';
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=create_contact_iframe&created=Y';
+                    $path_contacts_add_errors = 'index.php?display=false&dir=my_contacts&page=create_address_iframe';
                 } elseif ($iframe == 2) {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
-                    $path_contacts_add_errors = $_SESSION['config']['businessappurl']
-                                              .'index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add';
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts_add_errors = 'index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add';
                 } elseif ($iframe == 3) {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=add&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
-                    $path_contacts_add_errors = $_SESSION['config']['businessappurl']
-                                              .'index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add';
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=add&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts_add_errors = 'index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add';
                 }
             } elseif ($mode == 'up') {
                 if ($iframe == 3) {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=Y&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=Y&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
                 } else {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=Y&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=Y&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
                 }
 
-                $path_contacts_up_errors = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=update_address_iframe';
+                $path_contacts_up_errors = 'index.php?display=false&dir=my_contacts&page=update_address_iframe';
+
+                if ($iframe == 4) {
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=editDetail&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts_up_errors = 'index.php?display=false&dir=my_contacts&page=update_address_iframe&editDetail';
+                }
+
             }
         }
         if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] != '') {
