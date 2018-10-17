@@ -222,8 +222,9 @@ $app->get('/reports/groups', \Report\controllers\ReportController::class . ':get
 $app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':getByGroupId');
 $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':updateForGroupId');
 
-//Ressources
-$app->post('/res', \Resource\controllers\ResController::class . ':create');
+//Resources
+$app->post('/resources', \Resource\controllers\ResController::class . ':create');
+$app->post('/res', \Resource\controllers\ResController::class . ':createRes');
 $app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
 $app->get('/res/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
 $app->get('/res/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');

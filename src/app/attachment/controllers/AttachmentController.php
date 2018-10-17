@@ -48,7 +48,7 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $resId = StoreController::storeResource($data);
+        $resId = StoreController::storeResourceRes($data);
 
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[AttachmentController create] ' . $resId['errors']]);
@@ -421,7 +421,7 @@ class AttachmentController
                         "status"      => 'A_TRA'
                     ];
 
-                    StoreController::storeResource($allDatas);
+                    StoreController::storeResourceRes($allDatas);
 
                     AttachmentModel::update([
                         'table'     => $table,

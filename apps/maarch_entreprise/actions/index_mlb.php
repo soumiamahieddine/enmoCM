@@ -1796,7 +1796,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
     }
 
-    $data = \Resource\controllers\StoreController::prepareStorage([
+    $data = \Resource\controllers\StoreController::prepareStorageRes([
         'data'          => $_SESSION['data'],
         'docserverId'   => $_SESSION['indexing']['docserver_id'],
         'fileName'      => $_SESSION['indexing']['file_destination_name'],
