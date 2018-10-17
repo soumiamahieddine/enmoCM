@@ -592,7 +592,7 @@ class DoctypeControllerTest extends TestCase
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $resController->create($fullRequest, new \Slim\Http\Response());
+        $response     = $resController->createRes($fullRequest, new \Slim\Http\Response());
 
         $responseBody = json_decode((string)$response->getBody());
 

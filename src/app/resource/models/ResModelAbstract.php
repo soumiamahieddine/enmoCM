@@ -319,7 +319,7 @@ abstract class ResModelAbstract
         if (!empty($aArgs['typeId'])) {
             $typeId = $aArgs['type_id'];
         } else {
-            $document = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['creation_date', 'type_id']]);
+            $document = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['type_id']]);
             $typeId = $document['type_id'];
         }
 
