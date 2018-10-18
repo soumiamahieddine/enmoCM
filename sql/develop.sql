@@ -560,3 +560,16 @@ ALTER TABLE entities ADD COLUMN folder_import character varying(64);
 ALTER TABLE entities ADD UNIQUE (folder_import);
 ALTER TABLE user_abs DROP COLUMN IF EXISTS group_id;
 ALTER TABLE user_abs ADD COLUMN group_id int;
+
+/* Sender/Recipient */
+DROP TABLE IF EXISTS resource_contacts;
+CREATE TABLE resource_contacts
+(
+  id serial NOT NULL,
+  res_id int NOT NULL,
+  item_id int NOT NULL,
+  type character varying(32) NOT NULL,
+  mode character varying(32) NOT NULL,
+  CONSTRAINT resource_contacts_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);

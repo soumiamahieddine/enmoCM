@@ -117,6 +117,75 @@ class AutoCompleteController
         return $response->withJson($data);
     }
 
+    public static function getContactsAndUsers(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['search']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $searchItems = explode(' ', $data['search']);
+
+        $fields = '(contact_firstname ilike ? OR contact_lastname ilike ? OR firstname ilike ? OR lastname ilike ? OR society ilike ? 
+                    OR address_num ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postal_code ilike ?)';
+        $where = [];
+        $requestData = [];
+        foreach ($searchItems as $item) {
+            if (strlen($item) >= 2) {
+                $where[] = $fields;
+                for ($i = 0; $i < 9; $i++) {
+                    $requestData[] = "%{$item}%";
+                }
+            }
+        }
+
+        $contacts = ContactModel::getOnView([
+            'select'    => [
+                'ca_id', 'firstname', 'lastname', 'contact_lastname', 'contact_firstname', 'society', 'address_num',
+                'address_street', 'address_town', 'address_postal_code', 'is_corporate_person'
+            ],
+            'where'     => $where,
+            'data'      => $requestData,
+            'limit'     => self::LIMIT
+        ]);
+
+        $autocompleteData = [];
+        foreach ($contacts as $contact) {
+            $autocompleteData[] = AutoCompleteController::getFormattedContact(['contact' => $contact])['contact'];
+        }
+
+        $excludedUsers = ['superadmin'];
+
+        $requestData = AutoCompleteController::getDataForRequest([
+            'search'        => $data['search'],
+            'fields'        => '(firstname ilike ? OR lastname ilike ?)',
+            'where'         => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
+            'data'          => ['Y', 'DEL', $excludedUsers],
+            'fieldsNumber'  => 2,
+        ]);
+
+        $users = UserModel::get([
+            'select'    => ['id', 'user_id', 'firstname', 'lastname'],
+            'where'     => $requestData['where'],
+            'data'      => $requestData['data'],
+            'orderBy'   => ['lastname'],
+            'limit'     => self::LIMIT
+        ]);
+
+        foreach ($users as $value) {
+            $autocompleteData[] = [
+                'type'          => 'user',
+                'id'            => $value['id'],
+                'idToDisplay'   => "{$value['firstname']} {$value['lastname']}",
+                'otherInfo'     => "{$value['firstname']} {$value['lastname']}"
+            ];
+        }
+
+        return $response->withJson($autocompleteData);
+    }
+
     public static function getUsersForAdministration(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
@@ -386,5 +455,68 @@ class AutoCompleteController
         }
 
         return ['where' => $aArgs['where'], 'data' => $aArgs['data']];
+    }
+
+    public static function getFormattedContact(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['contact']);
+        ValidatorModel::arrayType($aArgs, ['contact']);
+
+        $address = '';
+        if ($aArgs['contact']['is_corporate_person'] == 'Y') {
+            $address.= $aArgs['contact']['firstname'];
+            $address.= (empty($address) ? $aArgs['contact']['lastname'] : " {$aArgs['contact']['lastname']}");
+            if (!empty($address)) {
+                $address.= ', ';
+            }
+            if (!empty($aArgs['contact']['address_num'])) {
+                $address.= $aArgs['contact']['address_num'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_street'])) {
+                $address.= $aArgs['contact']['address_street'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_town'])) {
+                $address.= $aArgs['contact']['address_town'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_postal_code'])) {
+                $address.= $aArgs['contact']['address_postal_code'] . ' ';
+            }
+            $contact = [
+                'type'          => 'contact',
+                'id'            => $aArgs['contact']['ca_id'],
+                'contact'       => $aArgs['contact']['society'],
+                'address'       => $address,
+                'idToDisplay'   => "{$aArgs['contact']['society']}<br/>{$address}",
+                'otherInfo'     => "{$aArgs['contact']['society']} - {$address}"
+            ];
+        } else {
+            if (!empty($aArgs['contact']['address_num'])) {
+                $address.= $aArgs['contact']['address_num'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_street'])) {
+                $address.= $aArgs['contact']['address_street'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_town'])) {
+                $address.= $aArgs['contact']['address_town'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_postal_code'])) {
+                $address.= $aArgs['contact']['address_postal_code'] . ' ';
+            }
+            $idToDisplay = "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']}";
+            if (!empty($aArgs['contact']['society'])) {
+                $idToDisplay .= " ({$aArgs['contact']['society']})";
+            }
+
+            $contact = [
+                'type'          => 'contact',
+                'id'            => $aArgs['contact']['ca_id'],
+                'contact'       => "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']} ({$aArgs['contact']['society']})",
+                'address'       => $address,
+                'idToDisplay'   => "{$idToDisplay}<br/>{$address}",
+                'otherInfo'     => "{$idToDisplay} - {$address}"
+            ];
+        }
+
+        return ['contact' => $contact];
     }
 }

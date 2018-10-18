@@ -407,120 +407,124 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
     if(cat_id == 'incoming')
     {
         var category = [
-        {id:'doctype_mail', type:'label', state:'display'},
-        {id:'doctype_res', type:'label', state:'hide'},
-        {id:'priority_tr', type:'tr', state:'display'},
-        {id:'external_id_tr', type:'tr', state:'display'},
-        {id:'external_id_mandatory', type:'tr', state:'display'},
-        {id:'doc_date_label', type:'label', state:'hide'},
-        {id:'mail_date_label', type:'label', state:'display'},
-        {id:'author_tr', type:'tr', state:'hide'},
-        {id:'admission_date_tr', type:'tr', state:'display'},
-        {id:'contact_check', type:'tr', state:'hide'},
-        {id:'nature_id_tr', type:'tr', state:'display'},
-        {id:'label_dep_dest', type:'label', state:'display'},
-        {id:'label_dep_exp', type:'label', state:'hide'},
-        {id:'label_dep_owner', type:'label', state:'hide'},
-        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_tr', type:'tr', state:'display'},
-        {id:'department_tr', type:'tr', state:'display'},
-        {id:'difflist_tr', type:'tr', state:'display'},
-        {id:'box_id_tr', type:'tr', state:'display'},
-        {id:'contact_choose_tr', type:'tr', state:'hide'},
-        {id:'contact_choose_2_tr', type:'tr', state:'hide'},
-        {id:'contact_choose_3_tr', type:'tr', state:'hide'},
-        {id:'dest_contact_choose_label', type:'label', state:'hide'},
-        {id:'exp_contact_choose_label', type:'label', state:'display'},
-        {id:'contact_id_tr', type:'tr', state:'display'},
-        {id:'dest_contact', type:'label', state:'hide'},
-        {id:'exp_contact', type:'label', state:'display'},
-        {id:'dest_multi_contact', type:'label', state:'hide'},
-        {id:'exp_multi_contact', type:'label', state:'display'},
-        {id:'author_contact', type:'label', state:'hide'},
-        {id:'type_multi_contact_external_icon', type:'label', state:'display'},
-        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
-        {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
-        {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
-        {id:'folder_tr', type:'tr', state:'display'},
-        {id:'category_id_mandatory', type:'label', state:'display'},
-        {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'priority_mandatory', type:'label', state:'display'},
-        {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'departure_date_mandatory', type:'label', state:'hide'},
-        {id:'departure_date_tr', type:'tr', state:'hide'},
-        {id:'author_mandatory', type:'label', state:'hide'},
-        {id:'admission_date_mandatory', type:'label', state:'display'},
-        {id:'type_contact_mandatory', type:'label', state:'display'},
-        {id:'contact_mandatory', type:'label', state:'display'},
-        {id:'nature_id_mandatory', type:'label', state:'display'},
-        {id:'subject_mandatory', type:'label', state:'display'},
-        {id:'destination_mandatory', type:'label', state:'display'},
-        {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
-        {id:'process_limit_date_mandatory', type:'label', state:'display'},
-        {id:'chrono_number', type:'label', state:'hide'},
-        {id:'chrono_number_mandatory', type:'label', state:'hide'},
-        {id:'chrono_number_tr', type:'tr', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
+            {id:'doctype_mail', type:'label', state:'display'},
+            {id:'doctype_res', type:'label', state:'hide'},
+            {id:'priority_tr', type:'tr', state:'display'},
+            {id:'external_id_tr', type:'tr', state:'display'},
+            {id:'external_id_mandatory', type:'tr', state:'display'},
+            {id:'doc_date_label', type:'label', state:'hide'},
+            {id:'mail_date_label', type:'label', state:'display'},
+            {id:'author_tr', type:'tr', state:'hide'},
+            {id:'admission_date_tr', type:'tr', state:'display'},
+            {id:'contact_check', type:'tr', state:'hide'},
+            {id:'nature_id_tr', type:'tr', state:'display'},
+            {id:'label_dep_dest', type:'label', state:'display'},
+            {id:'label_dep_exp', type:'label', state:'hide'},
+            {id:'label_dep_owner', type:'label', state:'hide'},
+            {id:'process_limit_date_use_tr', type:'tr', state:'display'},
+            {id:'process_limit_date_tr', type:'tr', state:'display'},
+            {id:'department_tr', type:'tr', state:'display'},
+            {id:'difflist_tr', type:'tr', state:'display'},
+            {id:'box_id_tr', type:'tr', state:'display'},
+            {id:'contact_choose_tr', type:'tr', state:'hide'},
+            {id:'contact_choose_2_tr', type:'tr', state:'hide'},
+            {id:'contact_choose_3_tr', type:'tr', state:'hide'},
+            {id:'dest_contact_choose_label', type:'label', state:'hide'},
+            {id:'exp_contact_choose_label', type:'label', state:'display'},
+            {id:'contact_id_tr', type:'tr', state:'display'},
+            {id:'dest_contact', type:'label', state:'hide'},
+            {id:'exp_contact', type:'label', state:'display'},
+            {id:'dest_multi_contact', type:'label', state:'hide'},
+            {id:'exp_multi_contact', type:'label', state:'display'},
+            {id:'author_contact', type:'label', state:'hide'},
+            {id:'type_multi_contact_external_icon', type:'label', state:'display'},
+            {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
+            {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
+            {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
+            {id:'folder_tr', type:'tr', state:'display'},
+            {id:'category_id_mandatory', type:'label', state:'display'},
+            {id:'type_id_mandatory', type:'label', state:'display'},
+            {id:'priority_mandatory', type:'label', state:'display'},
+            {id:'doc_date_mandatory', type:'label', state:'display'},
+            {id:'departure_date_mandatory', type:'label', state:'hide'},
+            {id:'departure_date_tr', type:'tr', state:'hide'},
+            {id:'author_mandatory', type:'label', state:'hide'},
+            {id:'admission_date_mandatory', type:'label', state:'display'},
+            {id:'type_contact_mandatory', type:'label', state:'display'},
+            {id:'contact_mandatory', type:'label', state:'display'},
+            {id:'nature_id_mandatory', type:'label', state:'display'},
+            {id:'subject_mandatory', type:'label', state:'display'},
+            {id:'destination_mandatory', type:'label', state:'display'},
+            {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
+            {id:'process_limit_date_mandatory', type:'label', state:'display'},
+            {id:'chrono_number', type:'label', state:'hide'},
+            {id:'chrono_number_mandatory', type:'label', state:'hide'},
+            {id:'chrono_number_tr', type:'tr', state:'hide'},
+            {id:'folder_mandatory', type:'label', state:'hide'},
+            {id:'sr_sender_span', type:'label', state:'hide'},
+            {id:'sr_recipient_span', type:'label', state:'display'}
         ];
     }
     //Category = OUTGOING
     else if(cat_id == 'outgoing')
     {
         var category = [
-        {id:'doctype_mail', type:'label', state:'display'},
-        {id:'doctype_res', type:'label', state:'hide'},
-        {id:'priority_tr', type:'tr', state:'display'},
-        {id:'external_id_tr', type:'tr', state:'hide'},
-        {id:'external_id_mandatory', type:'tr', state:'hide'},
-        {id:'doc_date_label', type:'label', state:'hide'},
-        {id:'mail_date_label', type:'label', state:'display'},
-        {id:'author_tr', type:'tr', state:'hide'},
-        {id:'admission_date_tr', type:'tr', state:'hide'},
-        {id:'contact_check', type:'tr', state:'hide'},
-        {id:'nature_id_tr', type:'tr', state:'display'},
-        {id:'department_tr', type:'tr', state:'display'},
-        {id:'label_dep_dest', type:'label', state:'hide'},
-        {id:'label_dep_exp', type:'label', state:'display'},
-        {id:'label_dep_owner', type:'label', state:'hide'},
-        {id:'difflist_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_tr', type:'tr', state:'display'},
-        {id:'box_id_tr', type:'tr', state:'display'},
-        {id:'contact_choose_tr', type:'tr', state:'hide'},
-        {id:'contact_choose_2_tr', type:'tr', state:'hide'},
-        {id:'contact_choose_3_tr', type:'tr', state:'hide'},
-        {id:'dest_contact_choose_label', type:'label', state:'display'},
-        {id:'exp_contact_choose_label', type:'label', state:'hide'},
-        {id:'contact_id_tr', type:'tr', state:'display'},
-        {id:'dest_contact', type:'label', state:'display'},
-        {id:'exp_contact', type:'label', state:'hide'},
-        {id:'dest_multi_contact', type:'label', state:'display'},
-        {id:'exp_multi_contact', type:'label', state:'hide'},
-        {id:'author_contact', type:'label', state:'hide'},
-        {id:'type_multi_contact_external_icon', type:'label', state:'display'},
-        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
-        {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
-        {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
-        {id:'folder_tr', type:'tr', state:'display'},
-        {id:'category_id_mandatory', type:'label', state:'display'},
-        {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'priority_mandatory', type:'label', state:'display'},
-        {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'departure_date_mandatory', type:'label', state:'hide'},
-        {id:'departure_date_tr', type:'tr', state:'hide'},
-        {id:'author_mandatory', type:'label', state:'hide'},
-        {id:'admission_date_mandatory', type:'label', state:'hide'},
-        {id:'type_contact_mandatory', type:'label', state:'display'},
-        {id:'contact_mandatory', type:'label', state:'display'},
-        {id:'nature_id_mandatory', type:'label', state:'display'},
-        {id:'subject_mandatory', type:'label', state:'display'},
-        {id:'destination_mandatory', type:'label', state:'display'},
-        {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
-        {id:'process_limit_date_mandatory', type:'label', state:'display'},
-        {id:'chrono_number', type:'label', state:'hide'},
-        {id:'chrono_number_tr', type:'tr', state:'hide'},
-        {id:'chrono_number_mandatory', type:'label', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
+            {id:'doctype_mail', type:'label', state:'display'},
+            {id:'doctype_res', type:'label', state:'hide'},
+            {id:'priority_tr', type:'tr', state:'display'},
+            {id:'external_id_tr', type:'tr', state:'hide'},
+            {id:'external_id_mandatory', type:'tr', state:'hide'},
+            {id:'doc_date_label', type:'label', state:'hide'},
+            {id:'mail_date_label', type:'label', state:'display'},
+            {id:'author_tr', type:'tr', state:'hide'},
+            {id:'admission_date_tr', type:'tr', state:'hide'},
+            {id:'contact_check', type:'tr', state:'hide'},
+            {id:'nature_id_tr', type:'tr', state:'display'},
+            {id:'department_tr', type:'tr', state:'display'},
+            {id:'label_dep_dest', type:'label', state:'hide'},
+            {id:'label_dep_exp', type:'label', state:'display'},
+            {id:'label_dep_owner', type:'label', state:'hide'},
+            {id:'difflist_tr', type:'tr', state:'display'},
+            {id:'process_limit_date_use_tr', type:'tr', state:'display'},
+            {id:'process_limit_date_tr', type:'tr', state:'display'},
+            {id:'box_id_tr', type:'tr', state:'display'},
+            {id:'contact_choose_tr', type:'tr', state:'hide'},
+            {id:'contact_choose_2_tr', type:'tr', state:'hide'},
+            {id:'contact_choose_3_tr', type:'tr', state:'hide'},
+            {id:'dest_contact_choose_label', type:'label', state:'display'},
+            {id:'exp_contact_choose_label', type:'label', state:'hide'},
+            {id:'contact_id_tr', type:'tr', state:'display'},
+            {id:'dest_contact', type:'label', state:'display'},
+            {id:'exp_contact', type:'label', state:'hide'},
+            {id:'dest_multi_contact', type:'label', state:'display'},
+            {id:'exp_multi_contact', type:'label', state:'hide'},
+            {id:'author_contact', type:'label', state:'hide'},
+            {id:'type_multi_contact_external_icon', type:'label', state:'display'},
+            {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
+            {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
+            {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
+            {id:'folder_tr', type:'tr', state:'display'},
+            {id:'category_id_mandatory', type:'label', state:'display'},
+            {id:'type_id_mandatory', type:'label', state:'display'},
+            {id:'priority_mandatory', type:'label', state:'display'},
+            {id:'doc_date_mandatory', type:'label', state:'display'},
+            {id:'departure_date_mandatory', type:'label', state:'hide'},
+            {id:'departure_date_tr', type:'tr', state:'hide'},
+            {id:'author_mandatory', type:'label', state:'hide'},
+            {id:'admission_date_mandatory', type:'label', state:'hide'},
+            {id:'type_contact_mandatory', type:'label', state:'display'},
+            {id:'contact_mandatory', type:'label', state:'display'},
+            {id:'nature_id_mandatory', type:'label', state:'display'},
+            {id:'subject_mandatory', type:'label', state:'display'},
+            {id:'destination_mandatory', type:'label', state:'display'},
+            {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
+            {id:'process_limit_date_mandatory', type:'label', state:'display'},
+            {id:'chrono_number', type:'label', state:'hide'},
+            {id:'chrono_number_tr', type:'tr', state:'hide'},
+            {id:'chrono_number_mandatory', type:'label', state:'hide'},
+            {id:'folder_mandatory', type:'label', state:'hide'},
+            {id:'sr_sender_span', type:'label', state:'display'},
+            {id:'sr_recipient_span', type:'label', state:'hide'}
         ];
     }
     //Category = INTERNAL
@@ -576,7 +580,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'chrono_number', type:'label', state:'hide'},
         {id:'chrono_number_tr', type:'tr', state:'hide'},
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
+        {id:'folder_mandatory', type:'label', state:'hide'},
+            {id:'sr_sender_span', type:'label', state:'hide'},
+            {id:'sr_recipient_span', type:'label', state:'display'}
         ];
     }
     //Category = GED_DOC
@@ -633,159 +639,11 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'chrono_number_tr', type:'tr', state:'hide'},
         {id:'folder_mandatory', type:'label', state:'hide'},
         {id:'external_id_tr', type:'tr', state:'hide'},
-        {id:'external_id_mandatory', type:'tr', state:'hide'}
+        {id:'external_id_mandatory', type:'tr', state:'hide'},
+            {id:'sr_sender_span', type:'label', state:'hide'},
+            {id:'sr_recipient_span', type:'label', state:'display'}
         ];
-    }
-    //Category = FOLDER_DOCUMENT
-    else if(cat_id == 'folder_document')
-    {
-        var category = [
-        {id:'doctype_mail', type:'label', state:'hide'},
-        {id:'doctype_res', type:'label', state:'display'},
-        {id:'priority_tr', type:'tr', state:'hide'},
-        {id:'doc_date_label', type:'label', state:'display'},
-        {id:'mail_date_label', type:'label', state:'hide'},
-        {id:'author_tr', type:'tr', state:'display'},
-        {id:'admission_date_tr', type:'tr', state:'hide'},
-        {id:'nature_id_tr', type:'tr', state:'hide'},
-        {id:'department_tr', type:'tr', state:'hide'},
-        {id:'process_limit_date_use_tr', type:'tr', state:'hide'},
-        {id:'process_limit_date_tr', type:'tr', state:'hide'},
-        {id:'diff_list_tr', type:'tr', state:'hide'},
-        {id:'box_id_tr', type:'tr', state:'display'},
-        {id:'contact_choose_tr', type:'tr', state:'hide'},
-        {id:'contact_id_tr', type:'tr', state:'hide'},
-        {id:'folder_tr', type:'tr', state:'display'},
-        {id:'category_id_mandatory', type:'label', state:'display'},
-        {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'priority_mandatory', type:'label', state:'hide'},
-        {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'author_mandatory', type:'label', state:'display'},
-        {id:'admission_date_mandatory', type:'label', state:'hide'},
-        {id:'type_contact_mandatory', type:'label', state:'hide'},
-        {id:'contact_mandatory', type:'label', state:'hide'},
-        {id:'nature_id_mandatory', type:'label', state:'hide'},
-        {id:'subject_mandatory', type:'label', state:'display'},
-        {id:'destination_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_mandatory', type:'label', state:'hide'},
-        {id:'chrono_number', type:'label', state:'hide'},
-        {id:'chrono_number_tr', type:'tr', state:'hide'},
-        {id:'chrono_number_mandatory', type:'label', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
-        ];
-    }
-    //Category = ENTERPRISE_DOCUMENT
-    else if(cat_id == 'enterprise_document')
-    {
-        var category = [
-        {id:'category_img_purchase', type:'label', state:'hide'},
-        {id:'category_img_sell', type:'label', state:'hide'},
-        {id:'category_img_enterprise_document', type:'label', state:'display'},
-        {id:'category_img_human_resources', type:'label', state:'hide'},
-        
-        {id:'doctype_tr', type:'tr', state:'display'},
-		{id:'box_id_tr', type:'tr', state:'display'},
-		{id:'type_id_tr', type:'tr', state:'display'},
-		{id:'appraisal_code_tr', type:'tr', state:'display'},
-		{id:'appraisal_duration_tr', type:'tr', state:'display'},
-		{id:'access_restriction_code_tr', type:'tr', state:'display'},
-		{id:'project_tr', type:'tr', state:'display'},
-        
-        {id:'contact_id_tr', type:'tr', state:'display'},
-        {id:'contact_label_purchase', type:'label', state:'hide'},
-        {id:'contact_label_sell', type:'label', state:'hide'},
-        {id:'contact_label_enterprise_document', type:'label', state:'display'},
-        {id:'contact_label_human_resources', type:'label', state:'hide'},
-        {id:'contact_purchase_img', type:'label', state:'hide'},
-        {id:'contact_sell_img', type:'label', state:'hide'},
-        {id:'contact_enterprise_document_img', type:'label', state:'display'},
-        {id:'contact_human_resources_img', type:'label', state:'hide'},
-        
-        {id:'identifier_tr', type:'tr', state:'display'},
-        {id:'doc_date_tr', type:'tr', state:'display'},
-        {id:'currency_tr', type:'tr', state:'hide'},
-        {id:'net_sum_tr', type:'tr', state:'hide'},
-        {id:'tax_sum_tr', type:'tr', state:'hide'},
-        {id:'total_sum_tr', type:'tr', state:'hide'},
-        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_tr', type:'tr', state:'display'},
-        {id:'department_tr', type:'tr', state:'display'},
-        {id:'folder_tr', type:'tr', state:'display'},
-		{id:'difflist_tr', type:'tr', state:'hide'},
-        
-        {id:'category_id_mandatory', type:'label', state:'display'},
-        {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'subject_mandatory', type:'label', state:'display'},
-        {id:'contact_mandatory', type:'label', state:'hide'},
-        {id:'identifier_mandatory', type:'label', state:'hide'},
-        {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'currency_mandatory', type:'label', state:'hide'},
-        {id:'tax_sum_mandatory', type:'label', state:'hide'},
-        {id:'total_sum_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_mandatory', type:'label', state:'hide'},
-        {id:'destination_mandatory', type:'label', state:'display'},
-        {id:'difflist_mandatory', type:'label', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}		 
-        ];
-    }
-    //Category = HUMAN_RESOURCES
-    else if(cat_id == 'human_resources')
-    {
-        var category = [
-        {id:'category_img_purchase', type:'label', state:'hide'},
-        {id:'category_img_sell', type:'label', state:'hide'},
-        {id:'category_img_enterprise_document', type:'label', state:'hide'},
-        {id:'category_img_human_resources', type:'label', state:'display'},
-        
-        {id:'doctype_tr', type:'tr', state:'display'},
-		{id:'box_id_tr', type:'tr', state:'hide'},
-		{id:'type_id_tr', type:'tr', state:'hide'},
-		{id:'appraisal_code_tr', type:'tr', state:'hide'},
-		{id:'appraisal_duration_tr', type:'tr', state:'hide'},
-		{id:'access_restriction_code_tr', type:'tr', state:'hide'},
-		{id:'project_tr', type:'tr', state:'hide'},		
-        
-        {id:'contact_id_tr', type:'tr', state:'display'},
-        {id:'contact_label_purchase', type:'label', state:'hide'},
-        {id:'contact_label_sell', type:'label', state:'hide'},
-        {id:'contact_label_enterprise_document', type:'label', state:'hide'},
-        {id:'contact_label_human_resources', type:'label', state:'display'},
-        {id:'contact_purchase_img', type:'label', state:'hide'},
-        {id:'contact_sell_img', type:'label', state:'hide'},
-        {id:'contact_enterprise_document_img', type:'label', state:'hide'},
-        {id:'contact_human_resources_img', type:'label', state:'display'},
-        
-        {id:'identifier_tr', type:'tr', state:'display'},
-        {id:'doc_date_tr', type:'tr', state:'display'},
-        {id:'currency_tr', type:'tr', state:'hide'},
-        {id:'net_sum_tr', type:'tr', state:'hide'},
-        {id:'tax_sum_tr', type:'tr', state:'hide'},
-        {id:'total_sum_tr', type:'tr', state:'hide'},
-        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_tr', type:'tr', state:'display'},
-        {id:'department_tr', type:'tr', state:'display'},
-        {id:'folder_tr', type:'tr', state:'display'},
-		{id:'difflist_tr', type:'tr', state:'display'},
-        
-        {id:'category_id_mandatory', type:'label', state:'display'},
-        {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'subject_mandatory', type:'label', state:'display'},
-        {id:'contact_mandatory', type:'label', state:'hide'},
-        {id:'identifier_mandatory', type:'label', state:'hide'},
-        {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'currency_mandatory', type:'label', state:'hide'},
-        {id:'tax_sum_mandatory', type:'label', state:'hide'},
-        {id:'total_sum_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_mandatory', type:'label', state:'hide'},
-        {id:'destination_mandatory', type:'label', state:'display'},
-        {id:'difflist_mandatory', type:'label', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
-        ];
-    }
-    else if(cat_id == 'attachment'){    // NCH01
+    } else if(cat_id == 'attachment'){    // NCH01
         var category = [
             {id:'doctype_mail', type:'label', state:'display'},
             {id:'doctype_res', type:'label', state:'hide'},
@@ -844,7 +702,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
             {id:'departure_date_mandatory', type:'label', state:'hide'},
             {id:'departure_date_tr', type:'tr', state:'hide'},
             {id:'add_multi_contact_tr', type:'tr', state:'hide'},
-            {id:'show_multi_contact_tr', type:'tr', state:'hide'}
+            {id:'show_multi_contact_tr', type:'tr', state:'hide'},
+            {id:'sr_sender_span', type:'label', state:'hide'},
+            {id:'sr_recipient_span', type:'label', state:'display'}
         ];
     }
 
@@ -1233,26 +1093,6 @@ function getContacts(path_script, id, mode){
 }
 
 /**
- * Get the type of the contact with the category_id
- *
- * @return String category_id
- **/
-function get_contact_type (category_id)
-{
-     if (category_id == 'purchase') {
-        return 'supplier';
-    } else if (category_id == 'sell') {
-        return 'purchaser';
-    } else if (category_id == 'enterprise_document') {
-        return 'contact';
-    } else if (category_id == 'human_resources') {
-        return 'employee';
-    } else {
-        return 'letter';
-    }
-}
-
-/**
  * Gets the parameters for the contacts : the table which must be use in the ajax script
  *
  * @return String parameters
@@ -1272,7 +1112,7 @@ function get_contacts_params(name_radio)
         cat = document.getElementById('category_id').value;
     }
     if (arr.length == 0) {
-        var contact_type = get_contact_type(cat);
+        var contact_type = 'letter';
         params = 'table=contacts&contact_type=' + contact_type;
     } else {
         if (arr[0] == 'internal') {
@@ -1593,7 +1433,7 @@ function update_contact_type_session(path)
     var params = '';
     
     if (arr.length == 0) {
-        var contact_type = get_contact_type($('category_id').value);
+        var contact_type = 'letter';
         params = 'table=contacts&contact_type=' + contact_type;
     } else {
         if (arr[0] == 'internal') {
@@ -2100,4 +1940,35 @@ function delIndexingModel() {
         
         });    
     }
+}
+
+function initSenderRecipientAutocomplete() {
+    $j("#sender_recipient").typeahead({
+        order: "asc",
+        display: "idToDisplay",
+        templateValue: "{{otherInfo}}",
+        minLength: 3,
+        dynamic: true,
+        source: {
+            ajax: function (query) {
+                return {
+                    type: "GET",
+                    url: "../../rest/autocomplete/contactsUsers",
+                    data: {
+                        search : query
+                    }
+                }
+            }
+        },
+        callback: {
+            onClickAfter: function (node, li, item) {
+                $j("#sender_recipient_id").val(item.id);
+                $j("#sender_recipient_type").val(item.type);
+            },
+            onCancel: function () {
+                $j("#sender_recipient_id").val('');
+                $j("#sender_recipient_type").val('');
+            }
+        }
+    });
 }

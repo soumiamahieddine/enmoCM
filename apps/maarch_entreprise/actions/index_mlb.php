@@ -683,6 +683,20 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
 
+    /*** Sender/Recipient ***/
+    $frmStr .= '<tr id="sender_recipient_tr" style="display:' . $displayValue . ';">';
+    $frmStr .= '<td><label for="sender_recipient" class="form_title" >';
+    $frmStr .= '<span id="sr_sender_span">'._SHIPPER.'</span>';
+    $frmStr .= '<span id="sr_recipient_span">'._DEST.'</span>';
+    $frmStr .= '</label></td>';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td class="indexing_field"><div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
+    $frmStr .= '<input name="sender_recipient" type="text" id="sender_recipient" autocomplete="off"/></span></div></div>';
+    $frmStr .= '</td><td>&nbsp;</td>';
+    $frmStr .= '<input type="hidden" id="sender_recipient_id" />';
+    $frmStr .= '<input type="hidden" id="sender_recipient_type" />';
+    $frmStr .= '</tr>';
+
     /*** Nature ***/
     $frmStr .= '<tr id="nature_id_tr" style="display:'.$displayValue.';">';
     $frmStr .= '<td><label for="nature_id" class="form_title" >'._NATURE
@@ -1030,6 +1044,8 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
                 . $_SESSION['config']['businessappurl'] . 'index.php?display='
                 . 'true&page=autocomplete_department_number\','
                 . ' \'Input\', \'2\', \'department_number_id\');';
+
+    $frmStr .= 'initSenderRecipientAutocomplete();';
 
     $frmStr .= '$j(\'#baskets\').css(\'visibility\',\'hidden\');'
             .'var item  = $j(\'#index_div\')[0]; if(item)'
