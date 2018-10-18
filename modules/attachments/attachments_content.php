@@ -1089,10 +1089,11 @@ $content .= '<h2>&nbsp;'.$title;
 if (!empty($infoAttach->multi_contact)) {
     $content .= ' pour le contact : <select style="background-color: #FFF;border: 1px solid #999;color: #666;text-align: left;" id="selectContactIdRes" onchange="loadSelectedContact()">';
 
+    $content .= '<option value="mailing">Publipostage</option>';
     foreach ($infoAttach->multi_contact as $key => $value) {
         $content .= '<option value="'.$value['contact_id'].'#'.$value['address_id'].'#'.$value['format_contact'].'">'.$value['format_contact'].'</option>';
     }
-    $content .= '<option value="mailing">Publipostage</option>';
+    
     $content .= '</select>';
     $content .= '<script>$j("#selectContactIdRes", window.top.document).change();</script>';
 }
@@ -1200,7 +1201,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
         $content .= ' <input type="button" value="';
         $content .= _EDIT_MODEL;
         $content .= '" name="templateOffice_edit[]" id="templateOffice_edit" style="display:none;margin-top: 0" class="button" '
-            .'onclick="if($(\'selectContactIdRes\')){$(\'selectContactIdRes\').disabled=\'disabled\'};showAppletLauncher(this, \''.$_SESSION['doc_id'].'\',\''.$objectTable.'\',\'attachmentVersion\',\'attachment\');$(\'add\').value=\'Edition en cours ...\';editingDoc(this,\''.$_SESSION['user']['UserId'].'\');$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';this.hide();$j(\'#\'+this.id).parent().find(\'[name=templateOffice\\\\[\\\\]]\').css(\'width\',\'206px\');"/>';
+            .'onclick="$j(\'#add\').css(\'display\',\'inline\');showAppletLauncher(this, \''.$_SESSION['doc_id'].'\',\''.$objectTable.'\',\'attachmentVersion\',\'attachment\');$(\'add\').value=\'Edition en cours ...\';editingDoc(this,\''.$_SESSION['user']['UserId'].'\');$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';this.hide();$j(\'#\'+this.id).parent().find(\'[name=templateOffice\\\\[\\\\]]\').css(\'width\',\'206px\');"/>';
         $content .= '<iframe style="display:none; width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="'.$_SESSION['config']['businessappurl']
             .'index.php?display=true&module=attachments&page=choose_attachment"></iframe>';
 
