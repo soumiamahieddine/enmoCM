@@ -502,18 +502,18 @@ class AutoCompleteController
             if (!empty($aArgs['contact']['address_postal_code'])) {
                 $address.= $aArgs['contact']['address_postal_code'] . ' ';
             }
-            $idToDisplay = "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']}";
+            $contactToDisplay = "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']}";
             if (!empty($aArgs['contact']['society'])) {
-                $idToDisplay .= " ({$aArgs['contact']['society']})";
+                $contactToDisplay .= " ({$aArgs['contact']['society']})";
             }
 
             $contact = [
                 'type'          => 'contact',
                 'id'            => $aArgs['contact']['ca_id'],
-                'contact'       => "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']} ({$aArgs['contact']['society']})",
+                'contact'       => $contactToDisplay,
                 'address'       => $address,
-                'idToDisplay'   => "{$idToDisplay}<br/>{$address}",
-                'otherInfo'     => "{$idToDisplay} - {$address}"
+                'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
+                'otherInfo'     => "{$contactToDisplay} - {$address}"
             ];
         }
 
