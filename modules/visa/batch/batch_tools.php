@@ -243,6 +243,7 @@ function Bt_processVisaWorkflow($aArgs = [])
             $nbUserProcess++;
             // Stop to the first signatory user
             if ($listInstance->requested_signature) {
+                $GLOBALS['db']->query("UPDATE listinstance SET signatory = 'true' WHERE listinstance_id = ?", [$listInstance->listinstance_id]);
                 break;
             }
         }
