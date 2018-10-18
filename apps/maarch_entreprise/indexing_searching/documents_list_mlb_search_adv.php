@@ -228,7 +228,7 @@ if ($mode == 'normal') {
     array_push($select[$view],  'res_id', 'res_id as is_labeled', 'alt_identifier', 'priority', 'status', 'subject', 'category_id as category_img',
                                 'contact_firstname', 'contact_lastname', 'contact_society',
                                 'user_lastname', 'user_firstname', 'category_id', 'dest_user', 'type_label',
-                                'creation_date', 'entity_label', 'address_id', 'exp_user_id', 'doc_custom_n1 as count_attachment', 'is_multicontacts', 'filename');
+                                'creation_date', 'entity_label', 'address_id', 'exp_user_id', 'doc_custom_n1 as count_attachment', 'is_multicontacts', 'filename', 'res_id as real_dest');
     //Cases
     if ($core_tools->is_module_loaded('cases') == true) {
         array_push($select[$view], 'case_id', 'case_label', 'case_description');
@@ -604,8 +604,7 @@ if ($mode == 'normal') {
                     }
 
                     $priority = $_SESSION['mail_priorities'][$fakeId];
-                    if(!empty($_SESSION['searching']['where_request_parameters'][':priorityChosen'])){
-                    
+                    if (!empty($_SESSION['searching']['where_request_parameters'][':priorityChosen'])) {
                         $priority = '<i style="background: #009dc5 none repeat scroll 0 0;border-radius: 4px;color: white;padding: 3px;" title="mot cible">'.$_SESSION['mail_priorities'][$fakeId].'</i>';    
                     }
                     $tab[$i][$j]['value'] = $priority;
@@ -619,32 +618,39 @@ if ($mode == 'normal') {
                 }
 
                 if ($tab[$i][$j][$value] == 'dest_user') {
-                    if(!empty($_SESSION['searching']['where_request_parameters'][':destinataireChosen'])){
+                    if (!empty($_SESSION['searching']['where_request_parameters'][':destinataireChosen'])) {
                         foreach ($_SESSION['searching']['where_request_parameters'][':destinataireChosen'] as $key => $value) {
-                            if($value == $tab[$i][$j]['value']){
+                            if ($value == $tab[$i][$j]['value']) {
+                                $user = \User\models\UserModel::getByUserId(['userId' => $value, 'select' => ['firstname', 'lastname']]);
                                 $target_dest = $value;
                                 $target_dest = str_replace('%', '', $target_dest);
                                 $dest = $tab[$i][$j]['value'];
-                                $dest = str_replace($target_dest, '<i style="background: #135F7F none repeat scroll 0 0;border-radius: 4px;color: white;padding: 3px;" title="mot cible">'.$target_dest.'</i>', $dest);
+                                $dest = str_replace($user['firstname'] . ' ' . $user['lastname'], '<i style="background: #135F7F none repeat scroll 0 0;border-radius: 4px;color: white;padding: 3px;" title="mot cible">'.$user['firstname'] . ' ' . $user['lastname'].'</i>', $user['firstname'] . ' ' . $user['lastname']);
                                 break;
                             }
-                        }  
-                    }else{
-                        $dest = $tab[$i][$j]['value'];
+                        }
+                    } else {
+                        if (!empty($tab[$i][$j]['value'])) {
+                            $user = \User\models\UserModel::getByUserId(['userId' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
+                            $dest = $tab[$i][$j]['value'];
+                            $dest = $user['firstname'] . ' ' . $user['lastname'];
+                        } else {
+                            $dest = '<i>???</i>';
+                        }
                     }
 
                     $tab[$i][$j]["label"]=_DEST_USER;
                     $tab[$i][$j]["size"]="10";
                     $tab[$i][$j]['label_align'] = 'left';
-		    $tab[$i][$j]["value"]=$dest;
+                    $tab[$i][$j]["value"]=$dest;
                     $tab[$i][$j]['align'] = 'left';
                     $tab[$i][$j]['valign'] = 'bottom';
                     $tab[$i][$j]['show'] = false;
                     $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
                     if ($categoryId == 'outgoing') {
-                        $tab[$i][$j]['value'] = '<b>'._TO_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
+                        $tab[$i][$j]['value'] = '<b>'._WRITTEN_BY.' : </b>'.$tab[$i][$j]['value'];
                     } else {
-                        $tab[$i][$j]['value'] = '<b>'._FOR_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
+                        $tab[$i][$j]['value'] = '<b>'._PROCESSED_BY.' : </b>'.$tab[$i][$j]['value'];
                     }
                     $tab[$i][$j]['order'] = false;
                 }
@@ -686,18 +692,6 @@ if ($mode == 'normal') {
                 if ($tab[$i][$j][$value] == 'user_lastname') {
                     $user_lastname = $tab[$i][$j]['value'];
                     $tab[$i][$j]['show'] = false;
-                }
-
-                if ($tab[$i][$j][$value] == "$template_to_use exp_user_id") {
-                    $tab[$i][$j]['label'] = _CONTACT;
-                    $tab[$i][$j]['size'] = '10';
-                    $tab[$i][$j]['label_align'] = 'left';
-                    $tab[$i][$j]['align'] = 'left';
-                    $tab[$i][$j]['valign'] = 'bottom';
-                    $tab[$i][$j]['show'] = false;
-                    $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['value'] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
-                    $tab[$i][$j]['order'] = false;
                 }
 
                 if ($tab[$i][$j][$value] == 'is_multicontacts') {
@@ -772,6 +766,40 @@ if ($mode == 'normal') {
                     $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
                     $tab[$i][$j]['value'] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
                     $tab[$i][$j]['order'] = false;
+                }
+                if ($tab[$i][$j][$value] == 'real_dest') {
+                    $query = 'SELECT item_id, type FROM resource_contacts WHERE res_id = ?';
+                    $arrayPDO = array($tab[$i][$j]['value']);
+                    $stmt2 = $db->query($query, $arrayPDO);
+                    $return_stmt = $stmt2->fetchObject();
+
+                    if ($return_stmt->type == 'contact') {
+                        $query = 'SELECT * FROM view_contacts WHERE ca_id = ?';
+                        $arrayPDO = array($return_stmt->item_id);
+                        $stmt2 = $db->query($query, $arrayPDO);
+                        $return_stmt = $stmt2->fetch(PDO::FETCH_ASSOC);
+                        $formattedContact = \SrcCore\controllers\AutoCompleteController::getFormattedContact(['contact' => $return_stmt]);
+                        $tab[$i][$j]['value'] = $formattedContact['contact']['contact'];
+                    } else if ($return_stmt->type == 'entity') {
+                        $query = 'SELECT entity_label FROM entities WHERE id = ?';
+                        $arrayPDO = array($return_stmt->item_id);
+                        $stmt2 = $db->query($query, $arrayPDO);
+                        $return_stmt = $stmt2->fetchObject();
+                        $tab[$i][$j]['value'] = $return_stmt->entity_label;
+                    } else {
+                        $query = 'SELECT firstname, lastname FROM users WHERE id = ?';
+                        $arrayPDO = array($return_stmt->item_id);
+                        $stmt2 = $db->query($query, $arrayPDO);
+                        $return_stmt = $stmt2->fetchObject();
+                        $tab[$i][$j]['value'] = $return_stmt->firstname.' '. $return_stmt->lastname;
+                    }
+                    if (empty(trim($tab[$i][$j]['value']))) {
+                        $tab[$i][$j]['value'] = null;
+                    } else if ($_SESSION['mlb_search_current_category_id'] == 'outgoing') {
+                        $tab[$i][$j]['value'] = '<b>'._TO_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
+                    } else {
+                        $tab[$i][$j]['value'] = '<b>'._FOR_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
+                    }
                 }
             }
         }

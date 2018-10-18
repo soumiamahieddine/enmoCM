@@ -2173,7 +2173,6 @@ if (!defined('_CHOOSE_STATUS_SEARCH_TITLE')) {
 if (!defined('_ERROR_IE_SEARCH')) {
     define('_ERROR_IE_SEARCH', 'Cet élément est déjà défini !');
 }
-
 if (!defined('_DEST_USER')) {
     define('_DEST_USER', 'Destinataire');
 }
@@ -5193,4 +5192,13 @@ if (!defined('_PROCESS_IN_PROGRESS')) {
 }
 if (!defined('_CONTACTS_FILLING')) {
     define('_CONTACTS_FILLING', "Complétude des informations contacts");
+}
+if (!defined('_PROCESSED_BY')) {
+    define('_PROCESSED_BY', "Traité par");
+}
+if (!defined('_REDACTOR')) {
+    define('_REDACTOR', 'Rédacteur');
+}
+if (!defined('_ASSIGNEE')) {
+    define('_ASSIGNEE', 'Attributaire');
 }
