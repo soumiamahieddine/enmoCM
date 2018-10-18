@@ -273,9 +273,7 @@ function Bt_validatedMail($aArgs = [])
     $req       = "SELECT count(1) as nbresult FROM res_view_attachments WHERE res_id_master = ? AND status = ?";
     $stmt      = $GLOBALS['db']->query($req, array($aArgs['resId'], 'FRZ'));
     $reqResult = $stmt->fetchObject();
-    var_dump($reqResult->nbresult);
     if ($reqResult->nbresult == 0) {
-        var_dump('a');
         $GLOBALS['db']->query('UPDATE res_letterbox SET status = ? WHERE res_id = ? ', [$aArgs['status'], $aArgs['resId']]);
     }
 }
