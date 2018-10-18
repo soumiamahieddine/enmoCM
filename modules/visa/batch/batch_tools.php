@@ -195,8 +195,6 @@ function Bt_createAttachment($aArgs = [])
     curl_setopt_array($curl, $opts);
     $rawResponse = curl_exec($curl);
 
-    $GLOBALS['db']->query("UPDATE res_letterbox SET status = ? WHERE res_id = ?", [$aArgs['validatedStatus'], $aArgs['res_id_master']]);
-
     return json_decode($rawResponse, true);
 }
 
@@ -237,7 +235,6 @@ function Bt_processVisaWorkflow($aArgs = [])
 
     $nbVisaWorkflow = $visaWorkflow->rowCount();
     if ($nbVisaWorkflow > 0) {
-        $signatureRequestedFound = false;
         while ($listInstance = $visaWorkflow->fetchObject()) {
             $GLOBALS['db']->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE listinstance_id = ?", [$listInstance->listinstance_id]);
             $nbUserProcess++;
@@ -256,8 +253,10 @@ function Bt_processVisaWorkflow($aArgs = [])
                 $mailStatus = 'EVIS';
             }
 
-            $GLOBALS['db']->query('UPDATE res_letterbox SET status = ? WHERE res_id = ? ', [$mailStatus, $aArgs['res_id_master']]);
+            Bt_validatedMail(['status' => $mailStatus, 'resId' => $aArgs['res_id_master']]);
         }
+    } else {
+        Bt_validatedMail(['status' => $aArgs['validatedStatus'], 'resId' => $aArgs['res_id_master']]);
     }
 }
 
@@ -267,4 +266,16 @@ function Bt_getVisaWorkflow($aArgs = [])
     $stmt = $GLOBALS['db']->query($req, array($aArgs['resId']));
 
     return $stmt;
+}
+
+function Bt_validatedMail($aArgs = [])
+{
+    $req       = "SELECT count(1) as nbresult FROM res_view_attachments WHERE res_id_master = ? AND status = ?";
+    $stmt      = $GLOBALS['db']->query($req, array($aArgs['resId'], 'FRZ'));
+    $reqResult = $stmt->fetchObject();
+    var_dump($reqResult->nbresult);
+    if ($reqResult->nbresult == 0) {
+        var_dump('a');
+        $GLOBALS['db']->query('UPDATE res_letterbox SET status = ? WHERE res_id = ? ', [$aArgs['status'], $aArgs['resId']]);
+    }
 }
