@@ -35,27 +35,27 @@ export class ContactsFillingAdministrationComponent implements OnInit {
 
     arrRatingColumns: String[] = [];
     fillingColor = {
-        'first_threshold': '#f87474',
+        'first_threshold': '#ff9e9e',
         'second_threshold': '#f6cd81',
         'third_threshold': '#ccffcc',
     };
     fillingColumns = [
-        'title',
-        'lastname',
-        'firstname',
-        'function',
-        'department',
-        'phone',
-        'email',
         'address_num',
-        'address_street',
-        'occupancy',
-        'address_complement',
         'address_postal_code',
+        'title',
+        'function',
+        'address_street',
         'address_town',
+        'lastname',
+        'department',
+        'occupancy',
         'address_country',
+        'firstname',
+        'phone',
+        'address_complement',
         'society',
         'society_short',
+        'email',
     ];
     fillingColumnsState = [
         false,

@@ -243,7 +243,7 @@ class ContactController
             }
             $percent = $percent * 100 / count($contactsFilling['rating_columns']);
             if ($percent <= $contactsFilling['first_threshold']) {
-                $color = '#f87474';
+                $color = '#ff9e9e';
             } elseif ($percent <= $contactsFilling['second_threshold']) {
                 $color = '#f6cd81';
             } else {

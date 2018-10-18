@@ -2438,7 +2438,7 @@ text-align:left;
 }
 .selected{
     /*font-weight: bold;*/
-    color:rgb(22, 173, 235);
+    /* color:rgb(22, 173, 235); */
     font-size:12px;
 }
 
