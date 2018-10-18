@@ -1999,9 +1999,11 @@ abstract class contacts_v2_Abstract extends Database
                 $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contact_up&amp;dir=my_contacts&amp;load';
             }
             if ($iframe == 'iframe') {
-                $cancel_target = $_SESSION['config']['businessappurl'].'index.php?display=false&page=create_contact_iframe&dir=my_contacts';
+                $cancel_target = 'index.php?display=false&page=create_contact_iframe&dir=my_contacts';
             } elseif ($iframe == 'fromContactIframe') {
-                $cancel_target = $_SESSION['config']['businessappurl'].'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                $cancel_target = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+            } elseif ($iframe == 'editDetail') {
+                $cancel_target = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=cancelDetail';
             }
             if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] != '') {
                 $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contact_addresses_list';

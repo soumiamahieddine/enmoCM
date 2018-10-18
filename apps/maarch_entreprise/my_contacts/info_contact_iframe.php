@@ -154,9 +154,10 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
 <?php
 }
 
-if ($_GET['created'] == "editDetail") {
-    ?>
-    <script type="text/javascript">
+?>
+    <script type="text/javascript"><?php
+    if ($_GET['created'] == "editDetail") {
+        ?>
         new Ajax.Request('index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up',
         {
         method:'post',
@@ -164,19 +165,48 @@ if ($_GET['created'] == "editDetail") {
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
 
-            if (response.rateColor != "") {
-                window.opener.$j('#contact').css('background-color', response.rateColor);
-            }
+            //Page Detail
+            if(window.opener){
+                if (response.rateColor != "") {
+                    window.opener.$j('#contact').css('background-color', response.rateColor);
+                }
+                window.opener.$j('#contact').html(response.contactName);
+                window.opener.$j('#contactid').val(response.contactId);
+                window.opener.$j('#addressid').val(response.addressId);
+                this.close();
+            //Processing Mail
+            } else {
+                if(parent.$j('#exp_contact_id')){
+                    if (response.rateColor != "") {
+                        parent.$j('#exp_contact_id').css('background-color', response.rateColor);
+                    }
+                    parent.$j('#exp_contact_id').html(response.contactName);
+                }
 
-            window.opener.$j('#contact').html(response.contactName);
-            window.opener.$j('#contactid').val(response.contactId);
-            window.opener.$j('#addressid').val(response.addressId);
-            this.close();
+                if(parent.$j('#dest_contact_id')){
+                    if (response.rateColor != "") {
+                        parent.$j('#dest_contact_id').css('background-color', response.rateColor);
+                    }
+                    parent.$j('#dest_contact_id').html(response.contactName);
+                }
+
+                parent.document.getElementById('show_tab').style.display = 'none';
+                parent.document.getElementById('show_tab').setAttribute('module', '');
+            }
         }       
-    });
+    });<?php
+    } elseif ($_GET['created'] == "cancelDetail") {
+        ?>
+        if (window.opener) {
+            this.close();
+        } else {
+            parent.document.getElementById('show_tab').style.display = 'none';
+            parent.document.getElementById('show_tab').setAttribute('module', '');
+        }
+   <?php
+    } ?>
     </script><?php
     exit;
-}
 
 ?>
 	<script type="text/javascript">

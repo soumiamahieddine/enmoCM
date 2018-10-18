@@ -1206,7 +1206,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                             $data[$arr[$i]]['show_value'] .= ', '.$res->address_num.' '.$res->address_street.' '.$res->address_postal_code.' '.strtoupper($res->address_town);
                         }
                     }
-                    $pathScriptTab = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid='.$line->{$arr[$i]}.'&addressid='.$addressId;
+                    $pathScriptTab = 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetail&editDetail&popup&contactid='.$line->{$arr[$i]}.'&addressid='.$addressId;
 
                     $preAddon = '<a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="';
                     $postAddon = ' ><i class="fa fa-book fa-2x" title="'._CONTACT_CARD.'"></i></a>';

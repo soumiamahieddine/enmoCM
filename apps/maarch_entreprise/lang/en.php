@@ -2389,7 +2389,7 @@ if (!defined('_CONTACT_REAFFECT')) {
     define('_CONTACT_REAFFECT', 'Reallocation of documents and mails');
 }
 if (!defined('_UPDATE_CONTACTS')) {
-    define('_UPDATE_CONTACTS', 'Contact update from indexation/ title');
+    define('_UPDATE_CONTACTS', 'Update contactsc');
 }
 if (!defined('_CONTACT_TYPE')) {
     define('_CONTACT_TYPE', 'Contact type');

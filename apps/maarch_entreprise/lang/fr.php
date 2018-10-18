@@ -2420,7 +2420,7 @@ if (!defined('_CONTACT_REAFFECT')) {
     define('_CONTACT_REAFFECT', 'Réaffectation des documents et des courriers');
 }
 if (!defined('_UPDATE_CONTACTS')) {
-    define('_UPDATE_CONTACTS', 'Mise à jour contact depuis indexation/qualification');
+    define('_UPDATE_CONTACTS', 'Mise à jour des contacts');
 }
 if (!defined('_CONTACT_TYPE')) {
     define('_CONTACT_TYPE', 'Type de contact');
