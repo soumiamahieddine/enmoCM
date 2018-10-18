@@ -944,7 +944,22 @@ abstract class contacts_v2_Abstract extends Database
                 } ?>
         </p>
     </form>
+    <?php
+        $ContactFillingModel = new \Contact\models\ContactFillingModel();
+        $contactsFilling = $ContactFillingModel::get();
+        $contactsFilling['rating_columns'] = $contactsFilling['rating_columns'];
+    ?>
     <script type="text/javascript">
+        var fieldsCtrl = <?php echo $contactsFilling['rating_columns']; ?>;
+        var elements = document.getElementById("frmcontact").elements;
+        for (var i = 0, element; element = elements[i++];) {
+            for (var j = 0, fieldsCtrlElem; fieldsCtrlElem = fieldsCtrl[j++];) {
+                if (element.name === fieldsCtrlElem) {
+                    element.style.borderColor = "green";
+                    element.style.borderWidth = "2px";
+                }
+            }
+        }
         var isChecked = false;
         if (!checkContactType('no_corporate', '<?php echo $can_add_contact; ?>')) {
             $j('#span_no_corporate').css('display', 'none');
@@ -2064,6 +2079,26 @@ abstract class contacts_v2_Abstract extends Database
             } ?>
     </p>
 </form>
+
+    <?php
+        $ContactFillingModel = new \Contact\models\ContactFillingModel();
+        $contactsFilling = $ContactFillingModel::get();
+        $contactsFilling['rating_columns'] = $contactsFilling['rating_columns'];
+    ?>
+    <script type="text/javascript">
+        var fieldsCtrl = <?php echo $contactsFilling['rating_columns']; ?>;
+        var elements = document.getElementById("frmcontact").elements;
+        console.log(fieldsCtrl);
+        for (var i = 0, element; element = elements[i++];) {
+            for (var j = 0, fieldsCtrlElem; fieldsCtrlElem = fieldsCtrl[j++];) {
+                console.log(element.name);
+                if (element.name === fieldsCtrlElem) {
+                    element.style.borderColor = "green";
+                    element.style.borderWidth = "2px";
+                }
+            }
+        }
+    </script>
 
 <?php
                 if ($mode == 'up' && $admin) {
