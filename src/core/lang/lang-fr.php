@@ -203,7 +203,7 @@ define('_QUICKLAUNCH', 'Raccourcis');
 define('_MY_CONTACTS', 'Créer des contacts depuis indexation/qualification');
 define('_MY_CONTACTS_MENU', 'Mes contacts');
 define('_CREATE_CONTACTS', 'Tous les contacts');
-define('_UPDATE_CONTACTS', 'Mise à jour contact depuis indexation/qualification');
+define('_UPDATE_CONTACTS', 'Mise à jour des contacts');
 define('_VIEW_TECHNICAL_INFORMATIONS', 'Voir les informations techniques');
 define('_VIEW_DOC_HISTORY', "Voir l'historique des actions sur le document");
 define('_VIEW_HISTORY_DESC', "Consulter l'historique des événements relatifs à l'utilisation de Maarch Courrier.");

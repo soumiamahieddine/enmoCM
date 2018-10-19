@@ -203,7 +203,7 @@ define('_QUICKLAUNCH', 'Short cut');
 define('_MY_CONTACTS', 'Create contacts from indexation/title');
 define('_MY_CONTACTS_MENU', 'My contacts');
 define('_CREATE_CONTACTS', 'All the contacts');
-define('_UPDATE_CONTACTS', 'Contact update from indexation/ title');
+define('_UPDATE_CONTACTS', 'Contact update');
 define('_VIEW_TECHNICAL_INFORMATIONS', 'See technical information');
 define('_VIEW_DOC_HISTORY', 'See global document history');
 define('_VIEW_HISTORY_DESC', 'Read the events history linked to the utilisation of Maarch.');
