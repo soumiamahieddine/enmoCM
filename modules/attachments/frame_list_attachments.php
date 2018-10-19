@@ -115,8 +115,9 @@ if (!empty($order_field) && !empty($order)) {
     if ($_REQUEST['order_field'] == 'identifier') {
         $orderstr = "order by order_alphanum(identifier)"." ".$order;
     } else if ($_REQUEST['order_field'] == 'priority') {
+        $where .= ' and res_view_attachments.priority = priorities.id';
         $select['priorities'] = ['order', 'id'];
-        $orderstr = 'order by (select priorities.order from priorities where priorities.id = priority) '.$order;
+        $orderstr = 'order by priorities.order '.$order;
     } else {
         $orderstr = "order by ".$order_field." ".$order;
     }
