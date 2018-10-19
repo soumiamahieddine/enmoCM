@@ -529,7 +529,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
         this.allEntities.forEach((entity: any) => {
             entity.state = { "opened": false, "selected": false };
             this.data.action.redirects.forEach((keyword: any) => {
-                if (entity.id == keyword.keyword && keyword.redirect_mode == 'USERS') {
+                if ((entity.id == keyword.keyword && keyword.redirect_mode == 'USERS') || (entity.id == keyword.entity_id && keyword.redirect_mode == 'USERS')) {
                     entity.state = { "opened": true, "selected": true };
                 }
             });
