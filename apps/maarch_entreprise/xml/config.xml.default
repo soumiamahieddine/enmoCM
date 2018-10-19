@@ -16,7 +16,6 @@
         <debug>false</debug>
         <applicationname>MAARCH 18.10</applicationname>
         <defaultPage>welcome</defaultPage>
-        <exportdirectory/>
         <CookieTime>20</CookieTime> <!-- minutes -->
         <timezone>Europe/Paris</timezone>
         <userdefaultpassword>maarch</userdefaultpassword> <!-- default user's password -->

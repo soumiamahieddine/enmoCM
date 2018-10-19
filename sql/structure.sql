@@ -2142,3 +2142,16 @@ CREATE TABLE contacts_filling
   CONSTRAINT contacts_filling_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
+/* Sender/Recipient */
+DROP TABLE IF EXISTS resource_contacts;
+CREATE TABLE resource_contacts
+(
+  id serial NOT NULL,
+  res_id int NOT NULL,
+  item_id int NOT NULL,
+  type character varying(32) NOT NULL,
+  mode character varying(32) NOT NULL,
+  CONSTRAINT resource_contacts_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
