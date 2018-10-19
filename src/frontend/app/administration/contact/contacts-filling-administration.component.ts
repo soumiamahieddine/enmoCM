@@ -47,7 +47,7 @@ export class ContactsFillingAdministrationComponent implements OnInit {
         'address_street',
         'address_town',
         'lastname',
-        'department',
+        'departement',
         'occupancy',
         'address_country',
         'firstname',

@@ -690,7 +690,7 @@ export const LANG_FR = {
     "contactsFilling_contact_lastname"                  : "Nom (contact physique)",
     "contactsFilling_contact_other_data"                : "Informations complémentaires (contact physique)",
     "contactsFilling_contact_title"                     : "Civilité (contact physique)",
-    "contactsFilling_department"                        : "Service",
+    "contactsFilling_departement"                       : "Service",
     "contactsFilling_email"                             : "Courriel",
     "contactsFilling_firstname"                         : "Prénom",
     "contactsFilling_function"                          : "Fonction",

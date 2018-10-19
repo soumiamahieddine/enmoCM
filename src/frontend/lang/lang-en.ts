@@ -665,7 +665,7 @@ export const LANG_EN = {
     "contactsFilling_contact_lastname"                  : "Lastname (physical contact)",
     "contactsFilling_contact_other_data"                : "Other data (physical contact)",
     "contactsFilling_contact_title"                     : "Title (physical contact)",
-    "contactsFilling_department"                        : "Department",
+    "contactsFilling_departement"                       : "Department",
     "contactsFilling_email"                             : "Email",
     "contactsFilling_firstname"                         : "Firtsname",
     "contactsFilling_function"                          : "Function",
