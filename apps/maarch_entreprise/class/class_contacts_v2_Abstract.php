@@ -448,8 +448,7 @@ abstract class contacts_v2_Abstract extends Database
         $db = new Database();
 
         // usefull for fields important
-        $ContactFillingModel = new \Contact\models\ContactFillingModel();
-        $contactsFilling = $ContactFillingModel::get();
+        $contactsFilling = \Contact\models\ContactFillingModel::get();
         $contactsFilling['rating_columns'] = $contactsFilling['rating_columns'];
         
         $display_value = 'table-row';
@@ -1298,8 +1297,7 @@ abstract class contacts_v2_Abstract extends Database
         $db = new Database();
 
         // usefull for fields important
-        $ContactFillingModel = new \Contact\models\ContactFillingModel();
-        $contactsFilling = $ContactFillingModel::get();
+        $contactsFilling = \Contact\models\ContactFillingModel::get();
         $contactsFilling['rating_columns'] = $contactsFilling['rating_columns'];
 
         $display_value = 'table-row';
