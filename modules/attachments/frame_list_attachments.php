@@ -114,6 +114,9 @@ $order_field = $list->getOrderField();
 if (!empty($order_field) && !empty($order)) {
     if ($_REQUEST['order_field'] == 'identifier') {
         $orderstr = "order by order_alphanum(identifier)"." ".$order;
+    } else if ($_REQUEST['order_field'] == 'priority') {
+        $select['priorities'] = ['order', 'id'];
+        $orderstr = 'order by (select priorities.order from priorities where priorities.id = priority) '.$order;
     } else {
         $orderstr = "order by ".$order_field." ".$order;
     }

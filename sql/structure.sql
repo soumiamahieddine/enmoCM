@@ -395,6 +395,7 @@ CREATE TABLE user_abs
   basket_id character varying(255) NOT NULL,
   basket_owner character varying(255),
   is_virtual character(1) NOT NULL DEFAULT 'N'::bpchar,
+  group_id INTEGER,
   CONSTRAINT user_abs_pkey PRIMARY KEY (system_id)
 )
 WITH (OIDS=FALSE);
@@ -2139,5 +2140,18 @@ CREATE TABLE contacts_filling
   first_threshold int NOT NULL,
   second_threshold int NOT NULL,
   CONSTRAINT contacts_filling_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+/* Sender/Recipient */
+DROP TABLE IF EXISTS resource_contacts;
+CREATE TABLE resource_contacts
+(
+  id serial NOT NULL,
+  res_id int NOT NULL,
+  item_id int NOT NULL,
+  type character varying(32) NOT NULL,
+  mode character varying(32) NOT NULL,
+  CONSTRAINT resource_contacts_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

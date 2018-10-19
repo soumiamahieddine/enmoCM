@@ -2438,7 +2438,7 @@ text-align:left;
 }
 .selected{
     /*font-weight: bold;*/
-    color:rgb(22, 173, 235);
+    /* color:rgb(22, 173, 235); */
     font-size:12px;
 }
 
@@ -3737,4 +3737,20 @@ width:auto;
 .maarchToolButton:hover {
     transition: background-color 0.5s ease;
     background-color: rgba(0,0,0,.12); 
+}
+
+.listResultContent .actionsTool {
+    display: flex;
+}
+
+.listResultContent .actionsTool .fa {
+    font-size: 24px;
+}
+
+.listResultContent .actionsTool a, .listResultContent .actionsTool div, .listResultContent .actionsTool i{
+    flex: 1;
+}
+
+.listResultContent .fa {
+    font-size: 16px;
 }

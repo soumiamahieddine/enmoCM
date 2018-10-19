@@ -270,7 +270,7 @@ export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugi
     }
     sendFunction() {
         var valid = true;
-        this.data.userDestRedirectModels.each(function (element: any) {
+        this.data.userDestRedirectModels.forEach((element: any) => {
             if (!element.redirectUserId) {
                 valid = false;
             }

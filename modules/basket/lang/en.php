@@ -341,8 +341,6 @@ if (!defined("_BASKETS_OWNER_MISSING"))
     define("_BASKETS_OWNER_MISSING", "The baskets owner isn't defined.");
 if (!defined("_FORM_ERROR"))
     define("_FORM_ERROR", "Error on the form handover...");
-if (!defined("_USER_ABS"))
-    define("_USER_ABS", "Absent user : redirection already set up.");
 if (!defined("_ABS_LOG_OUT"))
     define("_ABS_LOG_OUT", "If you connect again, absent mode will be cancelled.");
 if (!defined("_ABS_USER"))

@@ -665,7 +665,7 @@ export const LANG_EN = {
     "contactsFilling_contact_lastname"                  : "Lastname (physical contact)",
     "contactsFilling_contact_other_data"                : "Other data (physical contact)",
     "contactsFilling_contact_title"                     : "Title (physical contact)",
-    "contactsFilling_department"                        : "Department",
+    "contactsFilling_departement"                       : "Department",
     "contactsFilling_email"                             : "Email",
     "contactsFilling_firstname"                         : "Firtsname",
     "contactsFilling_function"                          : "Function",
@@ -682,4 +682,8 @@ export const LANG_EN = {
     "chooseIndexationProfil"                            : "Choose an indexation profil",
     "enabledContactsFilling"                            : "Contacts filling disabled",
     "disabledContactsFilling"                           : "Contacts filling enabled",
+    "fromRange"                                         : "From",
+    "toRange"                                           : "to",
+    "redirectUserListDiff"                              : "Change destination user of diffusion list model",
+    "chooseNewDest"                                     : "is to <b>recipient</b> of following diffusion list model, please choose a <b>replacement</b> user",
 };

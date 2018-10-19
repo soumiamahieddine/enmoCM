@@ -107,7 +107,6 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['config']['debug']               = (string) $config->debug;
             $_SESSION['config']['applicationname']     = (string) $config->applicationname;
             $_SESSION['config']['defaultPage']         = (string) $config->defaultPage;
-            $_SESSION['config']['exportdirectory']     = (string) $config->exportdirectory;
             $_SESSION['config']['cookietime']          = (string) $config->CookieTime;
             $_SESSION['config']['userdefaultpassword'] = (string) $config->userdefaultpassword;
             $_SESSION['config']['usePHPIDS']           = (string) $config->usePHPIDS;

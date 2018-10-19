@@ -202,6 +202,7 @@ abstract class contacts_v2_Abstract extends Database
     public function addupcontact($mode, $admin = true, $confirm = 'N', $mycontact = 'N')
     {
         $db = new Database();
+        
         // add ou modify users in the database
         if ($confirm == 'N') {
             $this->contactinfo($mode);
@@ -445,6 +446,12 @@ abstract class contacts_v2_Abstract extends Database
     public function formcontact($mode, $id = '', $admin = true, $iframe = false)
     {
         $db = new Database();
+
+        // usefull for fields important
+        $ContactFillingModel = new \Contact\models\ContactFillingModel();
+        $contactsFilling = $ContactFillingModel::get();
+        $contactsFilling['rating_columns'] = $contactsFilling['rating_columns'];
+        
         $display_value = 'table-row';
 
         $func = new functions();
@@ -944,7 +951,11 @@ abstract class contacts_v2_Abstract extends Database
                 } ?>
         </p>
     </form>
+    
     <script type="text/javascript">
+        var fieldsCtrl = <?php echo $contactsFilling['rating_columns']; ?>;
+        contactMapping(fieldsCtrl, "frmcontact");
+        
         var isChecked = false;
         if (!checkContactType('no_corporate', '<?php echo $can_add_contact; ?>')) {
             $j('#span_no_corporate').css('display', 'none');
@@ -1285,6 +1296,12 @@ abstract class contacts_v2_Abstract extends Database
     public function formaddress($mode, $id = '', $admin = true, $iframe = '')
     {
         $db = new Database();
+
+        // usefull for fields important
+        $ContactFillingModel = new \Contact\models\ContactFillingModel();
+        $contactsFilling = $ContactFillingModel::get();
+        $contactsFilling['rating_columns'] = $contactsFilling['rating_columns'];
+
         $display_value = 'table-row';
         $func = new functions();
         $state = true;
@@ -1381,11 +1398,8 @@ abstract class contacts_v2_Abstract extends Database
             echo '</h2>';
         }
 
-        if ($iframe != true) {
-            echo '<div id="inner_content_contact" class="clearfix" align="center">';
-        } else {
-            echo '<div id="inner_content_contact" class="clearfix" align="center">';
-        }
+        echo '<div id="inner_content_contact" class="clearfix" align="center">';
+
         if ($state == false) {
             echo '<br /><br /><br /><br />'._THE_ADDRESS.' '._UNKOWN.'<br /><br /><br /><br />';
         } else {
@@ -1404,6 +1418,8 @@ abstract class contacts_v2_Abstract extends Database
                 $action = $_SESSION['config']['businessappurl'].'index.php?display=false&page=contact_addresses_up_db&mycontact=iframe_add_up';
             } elseif ($iframe == 'fromContactIframe') {
                 $action = $_SESSION['config']['businessappurl'].'index.php?display=false&page=contact_addresses_up_db&mycontact=fromContactIframe';
+            } elseif ($iframe == 'editDetail') {
+                $action = 'index.php?display=false&page=contact_addresses_up_db&mycontact=editDetail&editDetail';
             }
             if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] != '') {
                 $action = $_SESSION['config']['businessappurl'].'index.php?display=true&page=contact_addresses_up_db&fromContactAddressesList';
@@ -2000,9 +2016,11 @@ abstract class contacts_v2_Abstract extends Database
                 $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contact_up&amp;dir=my_contacts&amp;load';
             }
             if ($iframe == 'iframe') {
-                $cancel_target = $_SESSION['config']['businessappurl'].'index.php?display=false&page=create_contact_iframe&dir=my_contacts';
+                $cancel_target = 'index.php?display=false&page=create_contact_iframe&dir=my_contacts';
             } elseif ($iframe == 'fromContactIframe') {
-                $cancel_target = $_SESSION['config']['businessappurl'].'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                $cancel_target = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+            } elseif ($iframe == 'editDetail') {
+                $cancel_target = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=cancelDetail';
             }
             if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] != '') {
                 $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contact_addresses_list';
@@ -2064,6 +2082,11 @@ abstract class contacts_v2_Abstract extends Database
     </p>
 </form>
 
+    <script type="text/javascript">
+        var fieldsCtrl = <?php echo $contactsFilling['rating_columns']; ?>;
+        contactMapping(fieldsCtrl, "frmcontact");
+    </script>
+
 <?php
                 if ($mode == 'up' && $admin) {
                     ?>
@@ -2118,32 +2141,29 @@ abstract class contacts_v2_Abstract extends Database
         if ($iframe) {
             if ($mode == 'add') {
                 if ($iframe == 1) {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                              .'index.php?display=false&dir=my_contacts&page=create_contact_iframe&created=Y';
-                    $path_contacts_add_errors = $_SESSION['config']['businessappurl']
-                                              .'index.php?display=false&dir=my_contacts&page=create_address_iframe';
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=create_contact_iframe&created=Y';
+                    $path_contacts_add_errors = 'index.php?display=false&dir=my_contacts&page=create_address_iframe';
                 } elseif ($iframe == 2) {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
-                    $path_contacts_add_errors = $_SESSION['config']['businessappurl']
-                                              .'index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add';
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts_add_errors = 'index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add';
                 } elseif ($iframe == 3) {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=add&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
-                    $path_contacts_add_errors = $_SESSION['config']['businessappurl']
-                                              .'index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add';
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=add&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts_add_errors = 'index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add';
                 }
             } elseif ($mode == 'up') {
                 if ($iframe == 3) {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=Y&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=Y&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
                 } else {
-                    $path_contacts = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=Y&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=Y&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
                 }
 
-                $path_contacts_up_errors = $_SESSION['config']['businessappurl']
-                                          .'index.php?display=false&dir=my_contacts&page=update_address_iframe';
+                $path_contacts_up_errors = 'index.php?display=false&dir=my_contacts&page=update_address_iframe';
+
+                if ($iframe == 4) {
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=editDetail&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts_up_errors = 'index.php?display=false&dir=my_contacts&page=update_address_iframe&editDetail';
+                }
+
             }
         }
         if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] != '') {
@@ -2231,14 +2251,40 @@ abstract class contacts_v2_Abstract extends Database
                     $bodyData = [];
                     $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendContactToExternalApplication']);
 
-                    $select = [];
-                    foreach ($config['rawData'] as $value) {
-                        $select[] = $value;
-                    }
+                    if (!empty($config['inObject'])) {
+                        $multipleObject = true;
 
-                    $select[] = 'ca_id';
-                    $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
-                    if (count($document) === 1) {
+                        foreach ($config['objects'] as $object) {
+                            $select = [];
+                            $tmpBodyData = [];
+                            foreach ($object['rawData'] as $value) {
+                                $select[] = $value;
+                            }
+
+                            $select[] = 'ca_id';
+                            $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
+                            if (!empty($document[0])) {
+                                foreach ($object['rawData'] as $key => $value) {
+                                    $tmpBodyData[$key] = $document[0][$value];
+                                }
+                            }
+
+                            if (!empty($object['data'])) {
+                                $tmpBodyData = array_merge($tmpBodyData, $object['data']);
+                            }
+
+                            $bodyData[$object['name']] = $tmpBodyData;
+                        }
+                    } else {
+                        $multipleObject = false;
+
+                        $select = [];
+                        foreach ($config['rawData'] as $value) {
+                            $select[] = $value;
+                        }
+
+                        $select[] = 'ca_id';
+                        $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
                         if (!empty($document[0])) {
                             foreach ($config['rawData'] as $key => $value) {
                                 $bodyData[$key] = $document[0][$value];
@@ -2248,19 +2294,11 @@ abstract class contacts_v2_Abstract extends Database
                         if (!empty($config['data'])) {
                             $bodyData = array_merge($bodyData, $config['data']);
                         }
-
-                        $multipleObject = false;
-                        if (!empty($config['objectName'])) {
-                            $tmpBodyData = $bodyData;
-                            $bodyData = [];
-                            $bodyData[$config['objectName']] = $tmpBodyData;
-                            $multipleObject = true;
-                        }
-
-                        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendContactToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject]);
-
-                        \Contact\models\ContactModel::updateAddress(['set' => ['external_contact_id' => $response[$config['return']]], 'where' => ['id = ?'], 'data' => [$document[0]['ca_id']]]);
                     }
+
+                    $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendContactToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
+
+                    \Contact\models\ContactModel::updateAddress(['set' => ['external_contact_id' => $response[$config['return']]], 'where' => ['id = ?'], 'data' => [$document[0]['ca_id']]]);
                 }
 
                 if ($iframe) {

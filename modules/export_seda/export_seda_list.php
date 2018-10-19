@@ -137,6 +137,10 @@ $order_field = $list->getOrderField();
 if (!empty($order_field) && !empty($order)) {
     if ($_REQUEST['order_field'] == 'alt_identifier') {
         $orderstr = 'order by order_alphanum(alt_identifier)'.' '.$order;
+    } else if ($_REQUEST['order_field'] == 'priority') {
+        $where .= ' and '.$table.'.priority = priorities.id';
+        $select['priorities'] = ['order', 'id'];
+        $orderstr = 'order by priorities.order '.$order;
     } else {
         $orderstr = 'order by '.$order_field.' '.$order;
     }
@@ -144,6 +148,10 @@ if (!empty($order_field) && !empty($order)) {
 } elseif (!empty($_SESSION['save_list']['order']) && !empty($_SESSION['save_list']['order_field'])) {
     if ($_SESSION['save_list']['order_field'] == 'alt_identifier') {
         $orderstr = 'order by order_alphanum(alt_identifier)'.' '.$_SESSION['save_list']['order'];
+    } else if ($_SESSION['save_list']['order_field']) {
+        $where .= ' and '.$table.'.priority = priorities.id';
+        $select['priorities'] = ['order', 'id'];
+        $orderstr = 'order by priorities.order '.$_SESSION['save_list']['order'];
     } else {
         $orderstr = 'order by '.$_SESSION['save_list']['order_field'].' '.$_SESSION['save_list']['order'];
     }
@@ -156,7 +164,7 @@ if (!empty($order_field) && !empty($order)) {
 }
 
 //Request
-$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, '', '', '', false, false, 'distinct');
+$tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, '', '', '', false, false, false);
 // $request->show(); exit;
 //Templates
 $defaultTemplate = 'documents_list_with_attachments';

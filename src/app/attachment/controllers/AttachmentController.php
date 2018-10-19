@@ -19,6 +19,7 @@ use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
+use Docserver\models\DocserverTypeModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Respect\Validation\Validator;
@@ -47,7 +48,7 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $resId = StoreController::storeResource($data);
+        $resId = StoreController::storeResourceRes($data);
 
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[AttachmentController create] ' . $resId['errors']]);
@@ -193,8 +194,9 @@ class AttachmentController
         $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
         $document['path'] = $attachmentTodisplay['path'];
         $document['filename'] = $attachmentTodisplay['filename'];
+        $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
 
-        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template']]);
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
@@ -203,6 +205,12 @@ class AttachmentController
 
         if (!file_exists($pathToDocument)) {
             return $response->withStatus(404)->withJson(['errors' => 'Attachment not found on docserver']);
+        }
+
+        $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+            return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
         }
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/attachments/xml/config.xml']);
@@ -413,7 +421,7 @@ class AttachmentController
                         "status"      => 'A_TRA'
                     ];
 
-                    StoreController::storeResource($allDatas);
+                    StoreController::storeResourceRes($allDatas);
 
                     AttachmentModel::update([
                         'table'     => $table,

@@ -20,17 +20,14 @@ use Basket\models\GroupBasketModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
-use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Docserver\models\ResDocserverModel;
-use Entity\models\ListInstanceModel;
 use Group\controllers\GroupController;
 use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Note\models\NoteModel;
-use Resource\models\ChronoModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\TcpdfFpdi;
@@ -60,7 +57,33 @@ class ResController
     // file_put_contents("storeResourceLogs.log", ob_get_flush());
     //END LOG FOR DEBUG ONLY
     //*****************************************************************************************
+
     public function create(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::notEmpty()->validate($data['encodedFile']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['format']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['status']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['type_id']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['category_id']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $resId = StoreController::storeResource($data);
+        if (empty($resId) || !empty($resId['errors'])) {
+            return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
+        }
+
+        return $response->withJson(['resId' => $resId]);
+    }
+
+    public function createRes(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -94,7 +117,7 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Data array needs column(s) [' . implode(', ', $mandatoryColumns) . ']']);
         }
 
-        $resId = StoreController::storeResource($data);
+        $resId = StoreController::storeResourceRes($data);
 
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
@@ -549,7 +572,7 @@ class ResController
         $basketsClause = '';
         foreach ($baskets as $key => $basket) {
             if (!empty($basket['basket_clause'])) {
-                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $aArgs['userId']]);
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $basket['basket_owner']]);
                 if ($key > 0) {
                     $basketsClause .= ' or ';
                 }

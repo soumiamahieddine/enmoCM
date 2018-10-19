@@ -1,11 +1,9 @@
-<h2 mat-dialog-title>Changement de destinataire des modèles de liste de diffusion</h2>
+<h2 mat-dialog-title>{{lang.redirectUserListDiff}}</h2>
 <mat-dialog-content>
     <form #changeDiffListDestForm="ngForm">
         <div class="modal-body">
             <div class="alert alert-warning" role="alert">
-                <b>{{this.data.userDestRedirect.firstname}} {{this.data.userDestRedirect.lastname}}</b> est en
-                <b>destinataire</b> des modèles liste de difffusion suivante, veuillez choisir un utilisateur de
-                <b>remplacement</b> :
+                <b>{{this.data.userDestRedirect.firstname}} {{this.data.userDestRedirect.lastname}}</b> <span [innerHTML]="lang.chooseNewDest"></span> :
             </div>
             <div *ngFor="let userDestRedirectModel of data.userDestRedirectModels;let i of index" id="{{userDestRedirectModel.object_id}}"
                 class="form-group">

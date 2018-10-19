@@ -107,15 +107,13 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
         $allEntitiesTree = array();
         $EntitiesIdExclusion = array();
-
-        if (!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']) &&
-            is_array($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']) &&
-            count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']) > 0)
+        if (!empty($_SESSION['user']['redirect_groupbasket_by_group'][$_SESSION['current_basket']['id']][$_SESSION['current_basket']['group_id']][$actionId]['entities']))
         {
+            
             $stmt = $db->query(
                 'SELECT entity_id FROM '
                 .ENT_ENTITIES.' WHERE entity_id not in ('
-                .$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']
+                .$_SESSION['user']['redirect_groupbasket_by_group'][$_SESSION['current_basket']['id']][$_SESSION['current_basket']['group_id']][$actionId]['entities']
                 .") and enabled= 'Y' order by entity_id"
             );
 
@@ -685,6 +683,20 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
 
+    /*** Sender/Recipient ***/
+    $frmStr .= '<tr id="sender_recipient_tr" style="display:' . $displayValue . ';">';
+    $frmStr .= '<td><label for="sender_recipient" class="form_title" >';
+    $frmStr .= '<span id="sr_sender_span">'._SHIPPER.'</span>';
+    $frmStr .= '<span id="sr_recipient_span">'._DEST.'</span>';
+    $frmStr .= '</label></td>';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td class="indexing_field"><div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
+    $frmStr .= '<input name="sender_recipient" type="text" id="sender_recipient" autocomplete="off"/></span></div></div>';
+    $frmStr .= '</td><td>&nbsp;</td>';
+    $frmStr .= '<input type="hidden" id="sender_recipient_id" />';
+    $frmStr .= '<input type="hidden" id="sender_recipient_type" />';
+    $frmStr .= '</tr>';
+
     /*** Nature ***/
     $frmStr .= '<tr id="nature_id_tr" style="display:'.$displayValue.';">';
     $frmStr .= '<td><label for="nature_id" class="form_title" >'._NATURE
@@ -1032,6 +1044,8 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
                 . $_SESSION['config']['businessappurl'] . 'index.php?display='
                 . 'true&page=autocomplete_department_number\','
                 . ' \'Input\', \'2\', \'department_number_id\');';
+
+    $frmStr .= 'initSenderRecipientAutocomplete();';
 
     $frmStr .= '$j(\'#baskets\').css(\'visibility\',\'hidden\');'
             .'var item  = $j(\'#index_div\')[0]; if(item)'
@@ -1796,7 +1810,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
     }
 
-    $data = \Resource\controllers\StoreController::prepareStorage([
+    $data = \Resource\controllers\StoreController::prepareStorageRes([
         'data'          => $_SESSION['data'],
         'docserverId'   => $_SESSION['indexing']['docserver_id'],
         'fileName'      => $_SESSION['indexing']['file_destination_name'],
@@ -2033,27 +2047,84 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             $bodyData = [];
             $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
 
-            $select = [];
-            foreach ($config['rawData'] as $value) {
-                $select[] = $value;
+            $columnsInContact = ['external_contact_id'];
+            if (!empty($config['inObject'])) {
+                $multipleObject = true;
+
+                foreach ($config['objects'] as $object) {
+                    $select = [];
+                    $tmpBodyData = [];
+                    $getContact = false;
+                    foreach ($object['rawData'] as $value) {
+                        if (in_array($value, $columnsInContact)) {
+                            $getContact = true;
+                        } else {
+                            $select[] = $value;
+                        }
+                    }
+
+                    $select[] = 'address_id';
+                    $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
+                    if (!empty($document[0])) {
+                        if ($getContact) {
+                            $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$document[0]['address_id']]]);
+                        }
+                        foreach ($object['rawData'] as $key => $value) {
+                            if (in_array($value, $columnsInContact)) {
+                                $tmpBodyData[$key] = $contact[0][$value];
+                            } else {
+                                $tmpBodyData[$key] = $document[0][$value];
+                            }
+                        }
+                    }
+
+                    if (!empty($object['data'])) {
+                        $tmpBodyData = array_merge($tmpBodyData, $object['data']);
+                    }
+
+                    $bodyData[$object['name']] = $tmpBodyData;
+                }
+            } else {
+                $multipleObject = false;
+                $getContact = false;
+
+                $select = [];
+                foreach ($config['rawData'] as $value) {
+                    if (in_array($value, $columnsInContact)) {
+                        $getContact = true;
+                    } else {
+                        $select[] = $value;
+                    }
+                }
+
+                $select[] = 'address_id';
+                $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
+                if (!empty($document[0])) {
+                    if ($getContact) {
+                        $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$document[0]['address_id']]]);
+                    }
+                    foreach ($config['rawData'] as $key => $value) {
+                        if (in_array($value, $columnsInContact)) {
+                            $tmpBodyData[$key] = $contact[0][$value];
+                        } else {
+                            $tmpBodyData[$key] = $document[0][$value];
+                        }
+                    }
+
+                }
+
+                if (!empty($config['data'])) {
+                    $bodyData = array_merge($bodyData, $config['data']);
+                }
+
+//                if (!empty($config['file'])) {
+//                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
+//                    $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']);
+//                    $bodyData[$config['file']] = base64_encode($file);
+//                }
             }
 
-            $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
-            if (!empty($document[0])) {
-                $bodyData = $document[0];
-            }
-
-            if (!empty($config['data'])) {
-                $bodyData = array_merge($bodyData, $config['data']);
-            }
-
-            if (!empty($config['file'])) {
-                $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
-                $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']);
-                $bodyData[$config['file']] = base64_encode($file);
-            }
-
-            $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData]);
+            $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
 
             \Resource\models\ResModel::update(['set' => ['external_id' => $response[$config['return']]], 'where' => ['res_id = ?'], 'data' => [$resId]]);
         }

@@ -42,23 +42,25 @@ $func = new functions();
 
 if (isset($_GET['id'])) {
     $id = addslashes($func->wash($_GET['id'], "alphanum", _ADDRESS));
-
 } else {
     $id = "";
 }
 
-if (isset($_GET['fromContactIframe'])) {
-    $iframe_txt = "fromContactIframe";
-    $_SESSION['contact']['current_address_id'] = $id;
+if (isset($_GET['editDetail'])) {
+    $contact->formaddress("up", $id, false, 'editDetail');
 } else {
-    $iframe_txt = "iframe_add_up";
+    if (isset($_GET['fromContactIframe'])) {
+        $iframe_txt = "fromContactIframe";
+        $_SESSION['contact']['current_address_id'] = $id;
+    } else {
+        $iframe_txt = "iframe_add_up";
+    }
+        
+    $load_js = '<script type="text/javascript">';
+    $load_js .= "resize_frame_contact('address');";
+    $load_js .= '</script>';
+        
+    $contact->formaddress("up", $id, false, $iframe_txt);
+        
+    echo $load_js;
 }
-
-$load_js = '<script type="text/javascript">';
-$load_js .= "resize_frame_contact('address');";
-$load_js .= '</script>';
-
-$contact->formaddress("up", $id, false, $iframe_txt);
-
-echo $load_js;
-?>

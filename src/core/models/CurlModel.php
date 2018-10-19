@@ -40,9 +40,13 @@ class CurlModel
 
         if (empty($aArgs['noAuth']) && !empty($curlConfig['user']) && !empty($curlConfig['password'])) {
             $opts[CURLOPT_HTTPHEADER][] = 'Authorization: Basic ' . base64_encode($curlConfig['user']. ':' .$curlConfig['password']);
-        } else {
-            $opts[CURLOPT_HTTPHEADER][] = 'Api-Key: ' . $curlConfig['apiKey'];
-            $opts[CURLOPT_HTTPHEADER][] = 'appName: ' . $curlConfig['appName'];
+        }
+
+        if (!empty($curlConfig['header'])) {
+            if (empty($opts[CURLOPT_HTTPHEADER])) {
+                $opts[CURLOPT_HTTPHEADER] = [];
+            }
+            $opts[CURLOPT_HTTPHEADER] = array_merge($opts[CURLOPT_HTTPHEADER], $curlConfig['header']);
         }
 
         if ($curlConfig['method'] == 'POST' || $curlConfig['method'] == 'PUT') {
@@ -105,7 +109,7 @@ class CurlModel
 
         $infos = curl_getinfo($curl);
 
-        $cookies = array();
+        $cookies = [];
         if (!empty($aArgs['options'][CURLOPT_HEADER])) {
             preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $rawResponse, $matches);
             foreach ($matches[1] as $item) {
@@ -135,11 +139,36 @@ class CurlModel
                 if ((string)$call->id == $aArgs['curlCallId']) {
                     $curlConfig['url']      = (string)$call->url;
                     $curlConfig['method']   = strtoupper((string)$call->method);
-                    if (!empty($call->sendInObject)) {
-                        $curlConfig['objectName'] = (string)$call->sendInObject;
-                    }
                     if (!empty($call->file)) {
                         $curlConfig['file'] = (string)$call->file->key;
+                    }
+                    if (!empty($call->header)) {
+                        $curlConfig['header'] = [];
+                        foreach ($call->header as $data) {
+                            $curlConfig['header'][] = (string)$data;
+                        }
+                    }
+                    if (!empty($call->sendInObject)) {
+                        $curlConfig['inObject'] = true;
+                        foreach ($call->sendInObject as $object) {
+                            $tmpdata = [];
+                            if (!empty($object->data)) {
+                                foreach ($object->data as $data) {
+                                    $tmpdata[(string)$data->key] = (string)$data->value;
+                                }
+                            }
+                            $tmpRawData = [];
+                            if (!empty($object->rawData)) {
+                                foreach ($object->rawData as $data) {
+                                    $tmpRawData[(string)$data->key] = (string)$data->value;
+                                }
+                            }
+                            $curlConfig['objects'][] = [
+                                'name'      => (string)$object->objectName,
+                                'data'      => $tmpdata,
+                                'rawData'   => $tmpRawData
+                            ];
+                        }
                     }
                     if (!empty($call->data)) {
                         $curlConfig['data'] = [];

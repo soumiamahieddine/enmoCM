@@ -328,7 +328,7 @@ define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Reset visa date of previous supervi
 define('_REJECTION_WORKFLOW_REDACTOR', 'Visa rejection - back to the author');
 define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Reset visa date of all supervisor in visa circuit of document (\'process_date\' of listinstance table).');
 define('_REDIRECT_WORKFLOW_ENTITY', 'Back to the initiator entity');
-define('_REDIRECT_WORKFLOW_ENTITY_DESC', 'Back the document to the initiator entity without modofy the visa circuit.');
+define('_REDIRECT_WORKFLOW_ENTITY_DESC', 'Back the document to the initiator entity.');
 define('_INTERRUPT_WORKFLOW', 'Break the visa flow');
 define('_INTERRUPT_WORKFLOW_DESC', 'Update visa date of current supervisor / signatory and all next supervisors in visa circuit of document (\'process_date\' of listinstance table). Insert an interrupt message on the actual visor (\'process_comment\' of listinstance table).');
 define('_PROCEED_WORKFLOW', 'continue the visa flow');

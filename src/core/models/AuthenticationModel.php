@@ -110,7 +110,7 @@ class AuthenticationModel
         ]);
 
         $cookieData = json_encode(['userId' => $args['userId'], 'cookieKey' => $cookieKey]);
-        setcookie('maarchCourrierAuth', base64_encode($cookieData), $cookieTime, $cookiePath, '', false, true);
+        setcookie('maarchCourrierAuth', base64_encode($cookieData), $cookieTime, $cookiePath, '', false, false);
 
         return true;
     }

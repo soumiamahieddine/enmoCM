@@ -19,6 +19,7 @@ use Attachment\models\AttachmentModel;
 use Convert\models\AdrModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use Resource\controllers\StoreController;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
@@ -115,6 +116,7 @@ class ConvertPdfController
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],
                 'filename'      => $storeResult['file_destination_name'],
+                'fingerprint'   => $storeResult['fingerPrint']
             ]);
         } else {
             AdrModel::createAttachAdr([
@@ -124,6 +126,7 @@ class ConvertPdfController
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],
                 'filename'      => $storeResult['file_destination_name'],
+                'fingerprint'   => $storeResult['fingerPrint']
             ]);
         }
 

@@ -795,7 +795,7 @@ class list_show_Abstract extends functions
         $param_comp .= '&amp;what='.$what;
         // define the defaults values
         $nb_show = $_SESSION['config']['nblinetoshow'];
-        $current_page = ceil($start / $nb_show)+1;
+        $current_page = ceil((int)$start / $nb_show)+1;
         $nb_pages = ceil($nb_total / $nb_show);
 
         if ($nb_pages > 500) {

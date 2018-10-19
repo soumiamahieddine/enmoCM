@@ -96,7 +96,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $passwordIxbus      = get_value_fields($values_form, 'passwordIxbus');
                 $nature             = get_value_fields($values_form, 'nature');
                 $messageModel       = get_value_fields($values_form, 'messageModel');
-                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $res_id, 'loginIxbus' => $loginIxbus, 'passwordIxbus' => $passwordIxbus, 'idClasseur' => $nature, 'messageModel' => $messageModel]);
+                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $res_id, 'loginIxbus' => $loginIxbus, 'passwordIxbus' => $passwordIxbus, 'classeurName' => $nature, 'messageModel' => $messageModel]);
             } elseif ($config['id'] == 'iParapheur') {
                 include_once 'modules/visa/class/IParapheurController.php';
                 $attachmentToFreeze = IParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);

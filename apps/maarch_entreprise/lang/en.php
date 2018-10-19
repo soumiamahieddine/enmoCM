@@ -2389,7 +2389,7 @@ if (!defined('_CONTACT_REAFFECT')) {
     define('_CONTACT_REAFFECT', 'Reallocation of documents and mails');
 }
 if (!defined('_UPDATE_CONTACTS')) {
-    define('_UPDATE_CONTACTS', 'Contact update from indexation/ title');
+    define('_UPDATE_CONTACTS', 'Update contactsc');
 }
 if (!defined('_CONTACT_TYPE')) {
     define('_CONTACT_TYPE', 'Contact type');
@@ -5027,4 +5027,16 @@ if (!defined('_PROCESS_IN_PROGRESS')) {
 }
 if (!defined('_CONTACTS_FILLING')) {
     define('_CONTACTS_FILLING', "Filling contacts informations");
+}
+if (!defined('_PROCESSED_BY')) {
+    define('_PROCESSED_BY', "Processed by");
+}
+if (!defined('_EXP_USER')) {
+    define('_EXP_USER', 'Expéditeur');
+}
+if (!defined('_REDACTOR')) {
+    define('_REDACTOR', 'Rédactor');
+}
+if (!defined('_ASSIGNEE')) {
+    define('_ASSIGNEE', 'Assignee');
 }

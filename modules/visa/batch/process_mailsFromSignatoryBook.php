@@ -256,12 +256,11 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
             'dest_contact_id' => $value->dest_contact_id,
             'dest_address_id' => $value->dest_address_id,
             'dest_user'       => $value->dest_user,
-            'typist'          => $value->typist,
-            'validatedStatus' => $validatedStatus
+            'typist'          => $value->typist
         ]);
 
         $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
-        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master]);
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_version_attachments) a été validée dans le parapheur externe';
         Bt_history([
@@ -302,12 +301,11 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             'dest_user'       => $value->dest_user,
             'typist'          => $value->typist,
             'format'          => $value->format,
-            'encodedFile'     => $value->encodedFile,
-            'validatedStatus' => $validatedStatus
+            'encodedFile'     => $value->encodedFile
         ]);
 
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
-        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master]);
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_attachments) a été validée dans le parapheur externe';
         Bt_history([

@@ -35,32 +35,27 @@ export class ContactsFillingAdministrationComponent implements OnInit {
 
     arrRatingColumns: String[] = [];
     fillingColor = {
-        'first_threshold': '#f87474',
+        'first_threshold': '#ff9e9e',
         'second_threshold': '#f6cd81',
         'third_threshold': '#ccffcc',
     };
     fillingColumns = [
-        'title',
-        'address_postal_code',
-        'email',
-        'function',
-        'salutation_header',
-        'salutation_footer',
-        'other_data',
-        'contact_other_data',
-        'occupancy',
-        'lastname',
         'address_num',
+        'address_postal_code',
+        'title',
+        'function',
+        'address_street',
+        'address_town',
+        'lastname',
+        'departement',
+        'occupancy',
         'address_country',
         'firstname',
-        'department',
-        'society_short',
-        'website',
-        'society',
         'phone',
         'address_complement',
-        'address_town',
-        'address_street',   
+        'society',
+        'society_short',
+        'email',
     ];
     fillingColumnsState = [
         false,
@@ -140,6 +135,9 @@ export class ContactsFillingAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
+        if (this.contactsFilling.first_threshold >= this.contactsFilling.second_threshold) {
+            this.contactsFilling.second_threshold = this.contactsFilling.first_threshold + 1;
+        }
         this.http.put(this.coreUrl + 'rest/contactsFilling', this.contactsFilling)
             .subscribe(() => {
                 this.notify.success(this.lang.contactsFillingUpdated);
