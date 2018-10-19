@@ -782,7 +782,7 @@ if ($mode == 'normal') {
                         $formattedContact = \SrcCore\controllers\AutoCompleteController::getFormattedContact(['contact' => $return_stmt]);
                         $tab[$i][$j]['value'] = $formattedContact['contact']['contact'];
                     } else if ($return_stmt->type == 'entity') {
-                        $query = 'SELECT entity_label FROM entities WHERE id = ?';
+                        $query = 'SELECT short_label FROM entities WHERE id = ?';
                         $arrayPDO = array($return_stmt->item_id);
                         $stmt2 = $db->query($query, $arrayPDO);
                         $return_stmt = $stmt2->fetchObject();
@@ -801,6 +801,7 @@ if ($mode == 'normal') {
                     } else {
                         $tab[$i][$j]['value'] = '<b>'._FOR_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
                     }
+                    $tab[$i][$j]['order'] = false;
                 }
             }
         }
