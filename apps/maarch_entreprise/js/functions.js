@@ -3814,3 +3814,54 @@ function writeLocationBar(path,label,level) {
         separator.insertBefore(elem);
     }    
 }
+
+function contactMapping(fieldsCtrl, formId) {
+    for (var j = 0, fieldsCtrlElem; fieldsCtrlElem = fieldsCtrl[j++];) {
+        if (fieldsCtrlElem === "department") {
+            fieldsCtrl[j-1] = "departement";
+        }
+        if (fieldsCtrlElem === "address_complement") {
+            fieldsCtrl[j-1] = "add_comp";
+        }
+        if (fieldsCtrlElem === "address_num") {
+            fieldsCtrl[j-1] = "num";
+        }
+        if (fieldsCtrlElem === "address_street") {
+            fieldsCtrl[j-1] = "street";
+        }
+        if (fieldsCtrlElem === "address_postal_code") {
+            fieldsCtrl[j-1] = "cp";
+        }
+        if (fieldsCtrlElem === "address_town") {
+            fieldsCtrl[j-1] = "town";
+        }
+        if (fieldsCtrlElem === "address_country") {
+            fieldsCtrl[j-1] = "country";
+        }
+        if (fieldsCtrlElem === "email") {
+            fieldsCtrl[j-1] = "mail";
+        }
+        if (fieldsCtrlElem === "add_comp") {
+            fieldsCtrl[j-1] = "comp_data";
+        }
+        if (fieldsCtrlElem === "other_data") {
+            fieldsCtrl[j-1] = "comp_data";
+        }
+    }
+    var elements = document.getElementById(formId).elements;
+    // console.log(fieldsCtrl);
+    // console.log(elements);
+    for (var i = 0, element; element = elements[i++];) {
+        for (var j = 0, fieldsCtrlElem; fieldsCtrlElem = fieldsCtrl[j++];) {
+            if (element.name === fieldsCtrlElem) {
+                //console.log("ok : "+element.name);
+                element.style.borderWidth = "2px";
+                if (element.value !== '') {
+                    element.style.borderColor = "green";
+                } else {
+                    element.style.borderColor = "orange";
+                }
+            }
+        }
+    }
+}
