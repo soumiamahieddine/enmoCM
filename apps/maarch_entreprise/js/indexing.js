@@ -1949,6 +1949,7 @@ function initSenderRecipientAutocomplete() {
         templateValue: "{{otherInfo}}",
         minLength: 3,
         dynamic: true,
+        filter: false,
         source: {
             ajax: function (query) {
                 return {
