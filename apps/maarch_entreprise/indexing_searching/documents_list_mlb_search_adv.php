@@ -309,8 +309,9 @@ if ($mode == 'normal') {
         if ($_REQUEST['order_field'] == 'alt_identifier') {
             $orderstr = 'order by order_alphanum(alt_identifier)'.' '.$order;
         } else if ($_REQUEST['order_field'] == 'priority') {
+            $where_request .= ' and '.$view.'.priority = priorities.id';
             $select['priorities'] = ['order', 'id'];
-            $orderstr = 'order by (select priorities.order from priorities where priorities.id = priority) '.$order;
+            $orderstr = 'order by priorities.order '.$order;
         } else {
             $orderstr = 'order by '.$order_field.' '.$order;
         }
