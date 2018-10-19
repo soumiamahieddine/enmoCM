@@ -2858,7 +2858,7 @@ div.autocomplete {
   border: 1px solid #888;
   margin: 0px;
   padding: 0px;
-  z-index: 1;
+  z-index: 3;
 }
 
 div.autocomplete ul {
@@ -3753,4 +3753,21 @@ width:auto;
 
 .listResultContent .fa {
     font-size: 16px;
+}
+
+.indexing_field .typeahead__field input {
+    min-height: 0px;
+    height: 20px;
+    font-size: 12px;
+    padding-right: 22px !important;
+    padding-left : 5px !important;
+}
+
+.typeahead__list {
+    font-size: 12px;
+}
+
+.typeahead__cancel-button {
+    padding: 0px !important;
+    padding-right: 10px !important;
 }
