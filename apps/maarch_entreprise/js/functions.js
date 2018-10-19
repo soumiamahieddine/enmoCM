@@ -3856,9 +3856,7 @@ function contactMapping(fieldsCtrl, formId) {
             if (element.name === fieldsCtrlElem) {
                 //console.log("ok : "+element.name);
                 element.style.borderWidth = "2px";
-                if (element.value !== '') {
-                    element.style.borderColor = "green";
-                }
+                element.style.borderColor = "#CCFFCC";
             }
         }
     }
