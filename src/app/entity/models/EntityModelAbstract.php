@@ -40,6 +40,25 @@ abstract class EntityModelAbstract
 
     public static function getById(array $aArgs)
     {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
+
+        $aEntity = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['entities'],
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        if (empty($aEntity[0])) {
+            return [];
+        }
+
+        return $aEntity[0];
+    }
+
+    public static function getByEntityId(array $aArgs)
+    {
         ValidatorModel::notEmpty($aArgs, ['entityId']);
         ValidatorModel::stringType($aArgs, ['entityId']);
 
@@ -49,6 +68,10 @@ abstract class EntityModelAbstract
             'where'     => ['entity_id = ?'],
             'data'      => [$aArgs['entityId']]
         ]);
+
+        if (empty($aEntity[0])) {
+            return [];
+        }
 
         return $aEntity[0];
     }
@@ -192,7 +215,7 @@ abstract class EntityModelAbstract
         ValidatorModel::notEmpty($aArgs, ['entityId']);
         ValidatorModel::stringType($aArgs, ['entityId']);
 
-        $aReturn = EntityModel::getById([
+        $aReturn = entitymodel::getByEntityId([
             'select'   => ['entity_id', 'entity_label', 'parent_entity_id'],
             'entityId' => $aArgs['entityId']
         ]);

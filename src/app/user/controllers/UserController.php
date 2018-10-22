@@ -780,7 +780,7 @@ class UserController
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['entityId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        if (empty(EntityModel::getById(['entityId' => $data['entityId']]))) {
+        if (empty(entitymodel::getByEntityId(['entityId' => $data['entityId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         } elseif (UserModel::hasEntity(['id' => $aArgs['id'], 'entityId' => $data['entityId']])) {
             return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_ENTITY]);
@@ -817,7 +817,7 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(EntityModel::getById(['entityId' => $aArgs['entityId']]))) {
+        if (empty(entitymodel::getByEntityId(['entityId' => $aArgs['entityId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 
@@ -845,7 +845,7 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(EntityModel::getById(['entityId' => $aArgs['entityId']]))) {
+        if (empty(entitymodel::getByEntityId(['entityId' => $aArgs['entityId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 
@@ -861,7 +861,7 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(EntityModel::getById(['entityId' => $aArgs['entityId']]))) {
+        if (empty(entitymodel::getByEntityId(['entityId' => $aArgs['entityId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 
@@ -967,7 +967,7 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(EntityModel::getById(['entityId' => $aArgs['entityId']]))) {
+        if (empty(entitymodel::getByEntityId(['entityId' => $aArgs['entityId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 

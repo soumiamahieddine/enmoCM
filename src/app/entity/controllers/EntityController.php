@@ -37,7 +37,7 @@ class EntityController
 
     public function getById(Request $request, Response $response, array $aArgs)
     {
-        $entity = EntityModel::getById(['entityId' => $aArgs['id']]);
+        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -51,7 +51,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = EntityModel::getById(['entityId' => $aArgs['id']]);
+        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -117,7 +117,7 @@ class EntityController
                         'sequence'              => $listTemplate['sequence'],
                         'title'                 => $listTemplate['title'],
                         'description'           => $listTemplate['description'],
-                        'labelToDisplay'        => EntityModel::getById(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label'],
+                        'labelToDisplay'        => entitymodel::getByEntityId(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label'],
                         'descriptionToDisplay'  => ''
                     ];
                 }
@@ -172,7 +172,7 @@ class EntityController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingEntity = EntityModel::getById(['entityId' => $data['entity_id'], 'select' => [1]]);
+        $existingEntity = entitymodel::getByEntityId(['entityId' => $data['entity_id'], 'select' => [1]]);
         if (!empty($existingEntity)) {
             return $response->withStatus(400)->withJson(['errors' => _ENTITY_ID_ALREADY_EXISTS]);
         }
@@ -215,7 +215,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = EntityModel::getById(['entityId' => $aArgs['id'], 'select' => [1]]);
+        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -292,7 +292,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = EntityModel::getById(['entityId' => $aArgs['id'], 'select' => [1]]);
+        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -336,8 +336,8 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $dyingEntity = EntityModel::getById(['entityId' => $aArgs['id'], 'select' => ['parent_entity_id']]);
-        $successorEntity = EntityModel::getById(['entityId' => $aArgs['newEntityId'], 'select' => [1]]);
+        $dyingEntity = entitymodel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['parent_entity_id']]);
+        $successorEntity = entitymodel::getByEntityId(['entityId' => $aArgs['newEntityId'], 'select' => [1]]);
         if (empty($dyingEntity) || empty($successorEntity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
         }
@@ -411,7 +411,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = EntityModel::getById(['entityId' => $aArgs['id'], 'select' => [1]]);
+        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }

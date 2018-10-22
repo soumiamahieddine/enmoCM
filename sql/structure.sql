@@ -442,6 +442,7 @@ CREATE TABLE cases_res
 
 CREATE TABLE entities
 (
+  id serial NOT NULL,
   entity_id character varying(32) NOT NULL,
   entity_label character varying(255),
   short_label character varying(50),

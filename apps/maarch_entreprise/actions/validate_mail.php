@@ -246,6 +246,8 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         array_push($_SESSION['adresses']['contactid'], $res->contact_id);
     }
 
+    $resourceContacts = \Resource\models\ResourceContactModel::getFormattedByResId(['resId' => $res_id]);
+
     //USERS
     $query = 'SELECT u.firstname, u.lastname, u.user_id ';
     $query .= 'FROM users u, contacts_res cres ';
@@ -812,6 +814,39 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $frm_str .= '</tr>';
     }
 
+    foreach ($resourceContacts as $resourceContact) {
+        if ($resourceContact['mode'] == 'recipient' && ($data['category_id']['value'] == 'incoming' || $data['category_id']['value'] == 'internal')) {
+            $sr = $resourceContact;
+        } elseif ($resourceContact['mode'] == 'sender' && $data['category_id']['value'] == 'outgoing') {
+            $sr = $resourceContact;
+        }
+    }
+    /*** Sender/Recipient ***/
+    $frm_str .= '<tr id="sender_recipient_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<td><label for="sender_recipient" class="form_title" >';
+    $frm_str .= '<span id="sr_sender_span">'._SHIPPER.'</span>';
+    $frm_str .= '<span id="sr_recipient_span">'._DEST.'</span>';
+    $frm_str .= '</label></td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td class="indexing_field"><div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
+    $frm_str .= '<input name="sender_recipient" type="text" id="sender_recipient" autocomplete="off"';
+    if (!empty($sr['format'])) {
+        $frm_str .= 'value="'. $sr['format'].'"';
+    }
+    $frm_str .= '/></span></div></div>';
+    $frm_str .= '</td><td>&nbsp;</td>';
+    $frm_str .= '<input type="hidden" id="sender_recipient_id"';
+    if (!empty($sr['item_id'])) {
+        $frm_str .= 'value="'. $sr['item_id'].'"';
+    }
+    $frm_str .= '/>';
+    $frm_str .= '<input type="hidden" id="sender_recipient_type"';
+    if (!empty($sr['type'])) {
+        $frm_str .= 'value="'. $sr['type'].'"';
+    }
+    $frm_str .= '/>';
+    $frm_str .= '</tr>';
+
     /*** Nature ***/
     $frm_str .= '<tr id="nature_id_tr" style="display:'.$display_value.';">';
     $frm_str .= '<td class="indexing_label"><label for="nature_id" class="form_title" >'._NATURE.'</label></td>';
@@ -1361,6 +1396,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
     $frm_str .= 'affiche_reference();';
+    $frm_str .= 'initSenderRecipientAutocomplete();';
     $frm_str .= 'initList_hidden_input(\'department_number\', \'show_department_number\',\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display='
          . 'true&page=autocomplete_department_number\','
@@ -1846,6 +1882,25 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $query_ext .= ', is_multicontacts = null';
             }
         }
+    }
+
+    // Sender/Recipient
+    $srId = get_value_fields($values_form, 'sender_recipient_id');
+    $srType = get_value_fields($values_form, 'sender_recipient_type');
+
+    if (!empty($srId) && !empty($srType) && in_array($cat_id, ['incoming', 'outgoing', 'internal'])) {
+        if ($cat_id == 'incoming' || $cat_id == 'internal') {
+            $srMode = 'recipient';
+        } else {
+            $srMode = 'sender';
+        }
+        \Resource\models\ResourceContactModel::delete(['where' => ['res_id = ?', 'mode = ?'], 'data' => [$res_id, $srMode]]);
+        \Resource\models\ResourceContactModel::create([
+            'res_id'    => $res_id,
+            'item_id'   => $srId,
+            'type'      => $srType,
+            'mode'      => $srMode
+        ]);
     }
 
     if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder', false) == 1)) {

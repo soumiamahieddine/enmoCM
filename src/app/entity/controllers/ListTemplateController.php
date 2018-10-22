@@ -52,7 +52,7 @@ class ListTemplateController
 
         foreach ($listTemplates as $key => $value) {
             if ($value['item_type'] == 'entity_id') {
-                $listTemplates[$key]['idToDisplay'] = EntityModel::getById(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                $listTemplates[$key]['idToDisplay'] = entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
                 $listTemplates[$key]['descriptionToDisplay'] = '';
             } else {
                 $listTemplates[$key]['idToDisplay'] = UserModel::getLabelledUserById(['userId' => $value['item_id']]);
@@ -319,7 +319,7 @@ class ListTemplateController
             $roles[$key]['usedIn'] = [];
             $listTemplates = ListTemplateModel::get(['select' => ['object_id'], 'where' => ['object_type = ?', 'item_mode = ?'], 'data' => [$aArgs['typeId'], $roles[$key]['id']]]);
             foreach ($listTemplates as $listTemplate) {
-                $entity = EntityModel::getById(['select' => ['short_label'], 'entityId' => $listTemplate['object_id']]);
+                $entity = entitymodel::getByEntityId(['select' => ['short_label'], 'entityId' => $listTemplate['object_id']]);
                 $roles[$key]['usedIn'][] = $entity['short_label'];
             }
         }

@@ -249,7 +249,7 @@ class SendMessageExchangeController
                     $oComment        = new stdClass();
                     $date            = new DateTime($value['date_note']);
                     $entityRoot      = \Entity\models\EntityModel::getEntityRootById(['entityId' => $value['entity_id']]);
-                    $userEntity      = \Entity\models\EntityModel::getById(['entityId' => $value['entity_id']]);
+                    $userEntity      = \Entity\models\entitymodel::getByEntityId(['entityId' => $value['entity_id']]);
                     $oComment->value = $value['firstname'].' '.$value['lastname'].' - '.$date->format('d-m-Y H:i:s').' ('.$entityRoot['entity_label'].' - '.$userEntity['entity_label'].') : '.$value['note_text'];
                     array_push($aReturn, $oComment);
                 }

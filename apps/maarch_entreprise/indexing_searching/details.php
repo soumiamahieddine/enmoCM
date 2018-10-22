@@ -771,6 +771,37 @@ if ($stmt->rowCount() == 0) {
                     echo '</div>';
                     echo "<input type='hidden' name='contactid' id='contactid' value='' title='' alt='' size='40' />";
                     echo "<input type='hidden' name='addressid' id='addressid' value='' title='' alt='' size='40' />";
+                } elseif ($key == 'resourceContact') {
+                    $resourceContacts = \Resource\models\ResourceContactModel::getFormattedByResId(['resId' => $s_id]);
+                    foreach ($resourceContacts as $resourceContact) {
+                        if ($resourceContact['mode'] == 'recipient' && ($data['category_id']['value'] == 'incoming' || $data['category_id']['value'] == 'internal')) {
+                            $sr = $resourceContact;
+                        } elseif ($resourceContact['mode'] == 'sender' && $data['category_id']['value'] == 'outgoing') {
+                            $sr = $resourceContact;
+                        }
+                    }
+
+                    echo '<div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
+                    echo "<textarea name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr}/>";
+                    if (!empty($sr['format'])) {
+                        echo $sr['format'];
+                    }
+                    echo '</textarea>';
+                    echo '</span></div></div>';
+                    echo "<input type='hidden' name='sender_recipient_id' id='sender_recipient_id' ";
+                    if (!empty($sr['item_id'])) {
+                        echo "value='{$sr['item_id']}'";
+                    }
+                    echo "/>";
+                    echo "<input type='hidden' name='sender_recipient_type' id='sender_recipient_type' ";
+                    if (!empty($sr['type'])) {
+                        echo "value='{$sr['type']}'";
+                    }
+                    echo "/>";
+
+                    //initialize autocomplete
+                    echo '<script>initSenderRecipientAutocomplete();</script>';
+
                 } else {
                     echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";
                 }

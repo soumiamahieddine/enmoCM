@@ -1499,7 +1499,7 @@ function get_value_fields($values, $field)
  * @param $status String  Not used here
  * @param $collId String Collection identifier
  * @param $table String Table
- * @param $formValues String Values of the form to load
+ * @param $formValues array
  *
  * @return array
  *               $data['result'] : res_id of the new file followed by #
@@ -1918,6 +1918,24 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                 $arrayPDO = array_merge($arrayPDO, array($addressId));
             }
         }
+    }
+
+    // Sender/Recipient
+    $srId = get_value_fields($formValues, 'sender_recipient_id');
+    $srType = get_value_fields($formValues, 'sender_recipient_type');
+
+    if (!empty($srId) && !empty($srType) && in_array($catId, ['incoming', 'outgoing', 'internal'])) {
+        if ($catId == 'incoming' || $catId == 'internal') {
+            $srMode = 'recipient';
+        } else {
+            $srMode = 'sender';
+        }
+        \Resource\models\ResourceContactModel::create([
+            'res_id'    => $resId,
+            'item_id'   => $srId,
+            'type'      => $srType,
+            'mode'      => $srMode
+        ]);
     }
 
     if ($resId != false) {
