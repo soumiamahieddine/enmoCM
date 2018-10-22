@@ -97,14 +97,14 @@ Mods
         
 #!#RESULT
 <!-- ----------------------------------------------------------------------- -->
-            <tr class="##cssLine|col|white##">
-                <td style="width:150px;text-align:center;">
+            <tr class="##cssLine|col|white##" title="##showDefaultAction##">
+                <td style="width:150px;text-align:center;" ##clickOnLine##>
                     ##loadValue|status####func_isConfidential##<br/><br/>
                     <b title="n°##loadValue|res_id##">##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==res_id|#loadValue|res_id#|## ##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==chrono_number|#loadValue|alt_identifier#|##</b>
                     ##func_cadenas|'#loadValue|locker_user_id#'|'#loadValue|locker_time#'##  ##radioButton## ##checkBox##
                 </td>
                 <td style="padding: 10px;">
-                    <span style="display: flex;width: 100%;padding-bottom: 20px;align-items: center;">
+                    <span style="display: flex;width: 100%;padding-bottom: 20px;align-items: center;" ##clickOnLine##>
                         <span style="flex:5;font-weight:bold;padding-left: 10px;font-size:15px;">
                             ##loadValue|subject##
                         </span>
@@ -115,22 +115,22 @@ Mods
                         </span>
                     </span>
                     <span style="display: flex;width: 100%;">
-                        <span style="flex:1;" title="##defineLang|_PRIORITY##">
+                        <span style="flex:1;" title="##defineLang|_PRIORITY##" ##clickOnLine##>
                             ##loadValue|priority##
                         </span>
-                        <span style="flex:1;" title="##defineLang|_CATEGORY##">
+                        <span style="flex:1;" title="##defineLang|_CATEGORY##" ##clickOnLine##>
                             ##loadValue|category_img## ##loadValue|category_id##
                         </span>
-                        <span style="flex:1;" title="##defineLang|_CREATION_DATE##">
+                        <span style="flex:1;" title="##defineLang|_CREATION_DATE##" ##clickOnLine##>
                             <i class="fa fa-calendar-alt fa-2x"></i> ##loadValue|creation_date##
                         </span>
-                        <span style="flex:1;" title="##defineLang|_PROCESS_LIMIT_DATE##">
+                        <span style="flex:1;" title="##defineLang|_PROCESS_LIMIT_DATE##" ##clickOnLine##>
                             <i class="fa fa-bell fa-2x"></i> ##loadValue|process_limit_date##
                         </span>
-                        <span style="flex:2;" >
+                        <span style="flex:2;" ##clickOnLine##>
                             <span title="##defineLang|_ASSIGNEE## - ##defineLang|_REDACTOR##">##loadValue|dest_user##</span> <span title="##defineLang|_ENTITY##">(##loadValue|entity_label##)</span>
                         </span>
-                        <span style="flex:1;" title="##defineLang|_TYPE##">
+                        <span style="flex:1;" title="##defineLang|_TYPE##" ##clickOnLine##>
                             <i class="fa fa-file fa-2x"></i> ##loadValue|type_label##
                         </span>
                         <span style="flex:1;" title="##defineLang|_TYPE##">
