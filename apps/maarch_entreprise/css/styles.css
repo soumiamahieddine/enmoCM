@@ -2140,6 +2140,7 @@ color: #CCC;
 .indexingform .indexing_field
 {
     text-align: right;
+    width:220px;
 }
 
 .indexingformBusiness .indexing_field
