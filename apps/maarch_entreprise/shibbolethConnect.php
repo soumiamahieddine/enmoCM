@@ -33,8 +33,8 @@ if ($_SERVER['REMOTE_USER'] <> '' && $_SERVER['AUTH_TYPE'] = 'shibboleth') {
             $_SESSION['error'] = $res['error'];
         }
 
-	if ($res['error'] == '') {
-            \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
+    if ($res['error'] == '') {
+            \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
             $core->load_menu($_SESSION['modules']);
             //login OK
             $trace = new history();
@@ -46,7 +46,7 @@ if ($_SERVER['REMOTE_USER'] <> '' && $_SERVER['AUTH_TYPE'] = 'shibboleth') {
             exit;
         }
     } else {
-   		$_SESSION['error'] = _USER_NOT_EXIST . ' ' . $login;
+           $_SESSION['error'] = _USER_NOT_EXIST . ' ' . $login;
         echo $_SESSION['error'];
         exit;
     }
