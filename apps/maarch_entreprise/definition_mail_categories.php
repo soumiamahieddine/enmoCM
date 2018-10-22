@@ -1113,8 +1113,12 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
             'display' => 'textarea',
             'img' => $_ENV['categories'][$cat_id]['other_cases']['resourceContact']['img'],
             'field_type' => $_ENV['categories'][$cat_id]['other_cases']['resourceContact']['form_show'],
-            'readonly' => false,
         );
+        if (isset($_ENV['categories'][$cat_id]['other_cases']['resourceContact']['modify'])
+            && $mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['resourceContact']['modify']
+        ) {
+            $data['resourceContact']['readonly'] = false;
+        }
         $arr[] = 'resourceContact';
     }
 
