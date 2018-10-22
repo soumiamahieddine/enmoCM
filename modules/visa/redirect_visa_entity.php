@@ -18,5 +18,15 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
         $db->query("UPDATE res_letterbox SET dest_user = ?, destination = ? WHERE res_id = ?", [$resListModel['item_id'], $resInitiator['initiator'], $res_id]);
     }
 
+    $stmt = $db->query("SELECT entity_label FROM entities WHERE entity_id = ?", [$resInitiator['initiator']]);
+    $resEntity = $stmt->fetch();
+    $stmt = $db->query("SELECT lastname, firstname FROM users WHERE user_id = ?", [$resListModel['item_id']]);
+    $resUsers = $stmt->fetch();
+    $_SESSION['process']['diff_list']['dest']['users'][0]['user_id'] = $resListModel['item_id'];
+    $_SESSION['process']['diff_list']['dest']['users'][0]['lastname'] = $resUsers['lastname'];
+    $_SESSION['process']['diff_list']['dest']['users'][0]['firstname'] = $resUsers['firstname'];
+    $_SESSION['process']['diff_list']['dest']['users'][0]['entity_id'] = $resInitiator['initiator'];
+    $_SESSION['process']['diff_list']['dest']['users'][0]['entity_label'] = $resEntity['entity_label'];
+
     return array('result' => $res_id . '#', 'history_msg' => '');
 }
