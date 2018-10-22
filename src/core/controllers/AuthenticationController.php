@@ -55,7 +55,7 @@ class AuthenticationController
             if (!in_array($aArgs['currentRoute'], ['/passwordRules', '/currentUser/password'])) {
                 $loggingMethod = CoreConfigModel::getLoggingMethod();
 
-                if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
+                if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
 
                     $passwordRules = PasswordModel::getEnabledRules();
                     if ($user['change_password'] == 'Y') {

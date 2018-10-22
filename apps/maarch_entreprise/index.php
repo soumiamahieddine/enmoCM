@@ -336,7 +336,7 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
         $_REQUEST['triggerAngular'] = 'activateUser';
     }
     $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
-    if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
+    if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
         $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
         if ($user['change_password'] == 'Y') {
             $_REQUEST['triggerAngular'] = 'changePass';
