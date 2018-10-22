@@ -314,6 +314,9 @@ for ($i = 0; $i < $tabI; ++$i) {
                         $tab[$i][$j]['value'] = "<span style='color:blue;'><b>".$tab[$i][$j]['value'].'<br><small>('._LAST_DAY.')<small></b></span>';
                     }
                 }
+                if (empty($tab[$i][$j]['value'])) {
+                    $tab[$i][$j]['value'] = '<i style="opacity:0.5;">'._UNDEFINED_DATA.'</i>';
+                }
                 $tab[$i][$j]['label'] = _PROCESS_LIMIT_DATE;
                 $tab[$i][$j]['size'] = '10';
                 $tab[$i][$j]['label_align'] = 'left';
@@ -380,6 +383,8 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['show'] = false;
             }
             if ($tab[$i][$j][$value] == 'exp_user_id') {
+                $itContactI = $i;
+                $itContactJ = $j;
                 if (empty($contact_lastname) && empty($contact_firstname) && empty($user_lastname) && empty($user_firstname) && !empty($addressId)) {
                     $query = 'SELECT ca.firstname, ca.lastname FROM contact_addresses ca WHERE ca.id = ?';
                     $arrayPDO = array($addressId);
@@ -399,7 +404,11 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['valign'] = 'bottom';
                 $tab[$i][$j]['show'] = false;
                 $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['value'] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
+                if (empty($contact_lastname) && empty($contact_firstname) && empty($user_lastname) && empty($user_firstname)) {
+                    $tab[$i][$j]['value'] = '<i style="opacity:0.5;">'._UNDEFINED_DATA.'</i>';
+                } else {
+                    $tab[$i][$j]['value'] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
+                }
                 $tab[$i][$j]['order'] = false;
             }
             if ($tab[$i][$j][$value] == 'dest_user') {
@@ -410,10 +419,18 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['valign'] = 'bottom';
                 $tab[$i][$j]['show'] = false;
                 $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                if ($tab[$i][15]['value'] == 'outgoing') {
-                    $tab[$i][$j]['value'] = '<b>'._TO_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
+                if (!empty($tab[$i][$j]['value'])) {
+                    $user = \User\models\UserModel::getByUserId(['userId' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
+                    $dest = $tab[$i][$j]['value'];
+                    $dest = $user['firstname'] . ' ' . $user['lastname'];
                 } else {
-                    $tab[$i][$j]['value'] = '<b>'._FOR_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
+                    $dest = '<i style="opacity:0.5;">'._UNDEFINED_DATA.'</i>';
+                }
+                $tab[$i][$j]["value"]=$dest;
+                if ($tab[$i][15]['value'] == 'outgoing') {
+                    $tab[$i][$j]['value'] = '<b>'._WRITTEN_BY.' : </b>'.$tab[$i][$j]['value'];
+                } else {
+                    $tab[$i][$j]['value'] = '<b>'._PROCESSED_BY.' : </b>'.$tab[$i][$j]['value'];
                 }
                 $tab[$i][$j]['order'] = false;
             }
@@ -426,9 +443,17 @@ for ($i = 0; $i < $tabI; ++$i) {
                     $tab[$i][$j]['valign'] = 'bottom';
                     $tab[$i][$j]['show'] = false;
                     $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['value'] = _MULTI_CONTACT;
                     $tab[$i][$j]['order'] = false;
+                    if ($_SESSION['mlb_search_current_category_id'] == 'incoming') {
+                        $prefix = '<b>'._TO_CONTACT_C.'</b>';
+                    } elseif ($_SESSION['mlb_search_current_category_id'] == 'outgoing' || $_SESSION['mlb_search_current_category_id'] == 'internal') {
+                        $prefix = '<b>'._FOR_CONTACT_C.'</b>';
+                    } else {
+                        $prefix = '';
+                    }
+                    $tab[$i][$j]['value'] = $prefix.' '._MULTI_CONTACT;
                     $tab[$i][$j]['is_multi_contacts'] = 'Y';
+                    $tab[$itContactI][$itContactJ]['value'] = null;
                 }
             }
             if ($tab[$i][$j][$value] == 'type_label') {
@@ -516,6 +541,41 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['show'] = false;
                 $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
                 $tab[$i][$j]['order'] = 'case_label';
+            }
+            if ($tab[$i][$j][$value] == 'real_dest') {
+                $query = 'SELECT item_id, type FROM resource_contacts WHERE res_id = ?';
+                $arrayPDO = array($tab[$i][$j]['value']);
+                $stmt2 = $db->query($query, $arrayPDO);
+                $return_stmt = $stmt2->fetchObject();
+
+                if ($return_stmt->type == 'contact') {
+                    $query = 'SELECT * FROM view_contacts WHERE ca_id = ?';
+                    $arrayPDO = array($return_stmt->item_id);
+                    $stmt2 = $db->query($query, $arrayPDO);
+                    $return_stmt = $stmt2->fetch(PDO::FETCH_ASSOC);
+                    $formattedContact = \SrcCore\controllers\AutoCompleteController::getFormattedContact(['contact' => $return_stmt]);
+                    $tab[$i][$j]['value'] = $formattedContact['contact']['contact'];
+                } else if ($return_stmt->type == 'entity') {
+                    $query = 'SELECT short_label FROM entities WHERE id = ?';
+                    $arrayPDO = array($return_stmt->item_id);
+                    $stmt2 = $db->query($query, $arrayPDO);
+                    $return_stmt = $stmt2->fetchObject();
+                    $tab[$i][$j]['value'] = $return_stmt->entity_label;
+                } else {
+                    $query = 'SELECT firstname, lastname FROM users WHERE id = ?';
+                    $arrayPDO = array($return_stmt->item_id);
+                    $stmt2 = $db->query($query, $arrayPDO);
+                    $return_stmt = $stmt2->fetchObject();
+                    $tab[$i][$j]['value'] = $return_stmt->firstname.' '. $return_stmt->lastname;
+                }
+                if (empty(trim($tab[$i][$j]['value']))) {
+                    $tab[$i][$j]['value'] = null;
+                } else if ($_SESSION['mlb_search_current_category_id'] == 'outgoing') {
+                    $tab[$i][$j]['value'] = '<b>'._TO_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
+                } else {
+                    $tab[$i][$j]['value'] = '<b>'._FOR_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
+                }
+                $tab[$i][$j]['order'] = false;
             }
         }
     }

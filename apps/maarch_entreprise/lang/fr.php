@@ -1611,6 +1611,9 @@ if (!defined('_NUM2')) {
 if (!defined('_UNDEFINED')) {
     define('_UNDEFINED', 'N.C.');
 }
+if (!defined('_UNDEFINED_DATA')) {
+    define('_UNDEFINED_DATA', 'Non défini');
+}
 if (!defined('_CONSULT_EXTRACTION')) {
     define('_CONSULT_EXTRACTION', 'vous pouvez consulter les documents extraits ici');
 }

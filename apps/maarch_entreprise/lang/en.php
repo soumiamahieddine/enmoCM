@@ -1599,6 +1599,9 @@ if (!defined('_NUM2')) {
 if (!defined('_UNDEFINED')) {
     define('_UNDEFINED', 'Unknown.');
 }
+if (!defined('_UNDEFINED_DATA')) {
+    define('_UNDEFINED_DATA', 'Undefined');
+}
 if (!defined('_CONSULT_EXTRACTION')) {
     define('_CONSULT_EXTRACTION', 'You can consult here the extracted files');
 }
