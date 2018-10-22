@@ -136,10 +136,10 @@ Mods
                         <span style="flex:1;" title="##defineLang|_TYPE##" ##clickOnLine##>
                             <i class="fa fa-file fa-2x"></i> ##loadValue|type_label##
                         </span>
-                        <span style="flex:1;" title="##defineLang|_TYPE##">
+                        <span style="flex:1;">
                             <span class="actionsTool" style="text-align:center;">
                                 ##func_bool_see_notes##
-                                ##showActionAdvResultFA|#defineLang|_ATTACHMENTS#|paperclip|loadRepList('#loadValue|res_id#', 'FT')|#loadValue|count_attachment# == 0##
+                                ##showActionFA|#defineLang|_ATTACHMENTS#|paperclip|loadRepList('#loadValue|res_id#', 'FT')|#loadValue|count_attachment# == 0##
                                 ##showActionFA|#defineLang|_WF#|share-alt|loadDiffList('#loadValue|res_id#')##
                                 ##ifStatement|'#loadValue|filename#'!=null|#showIconDocument#|##
                                 ##showIconDetails##
