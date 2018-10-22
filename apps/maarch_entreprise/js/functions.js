@@ -214,9 +214,9 @@ var initList_hidden_input3 = function (idField, idList, theUrlToListScript, para
             afterUpdateElement: function (text, li) {
                 var str = li.id;
                 var res = str.split(",");
-                $j("#" + new_value).value = res[0];
-                $j("#" + actual_value).value = res[1];
-                $j('#country').value = 'FRANCE';
+                $(new_value).value = res[0];
+                $(actual_value).value = res[1];
+                $('country').value = 'FRANCE';
             }
         });
 };
