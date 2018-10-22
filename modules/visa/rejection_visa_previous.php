@@ -146,7 +146,11 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
     $stmt = $db->query($query,[$res_id, 'VISA_CIRCUIT']);
 
     if ($stmt->rowCount() < 1) {
-        $newStatus = 'AREV';
+        if ($status == '_NOSTATUS_') {
+            $newStatus = 'AREV';
+        } else {
+            $newStatus = $status;
+        }
     } else {
         $listInstance = $stmt->fetchObject();
         $db->query('UPDATE listinstance SET process_date = NULL WHERE res_id = ? AND difflist_type = ? AND listinstance_id = ?',
