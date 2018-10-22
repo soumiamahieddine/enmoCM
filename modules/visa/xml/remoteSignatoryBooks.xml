@@ -7,6 +7,8 @@
         <password></password>
         <url></url>
         <organizationId>9</organizationId>
+        <ixbusIdRefused>14</ixbusIdRefused>
+        <ixbusIdValidated>2</ixbusIdValidated>
     </signatoryBook>
     <signatoryBook>
         <id>iParapheur</id>

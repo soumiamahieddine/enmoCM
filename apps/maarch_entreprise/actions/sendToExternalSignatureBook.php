@@ -158,7 +158,7 @@ function getXml()
  **/
 function get_value_fields($values, $field)
 {
-    for ($i=0; $i<count($values);$i++) {
+    for ($i=0; $i<count($values); $i++) {
         if ($values[$i]['ID'] == $field) {
             return  $values[$i]['VALUE'];
         }
