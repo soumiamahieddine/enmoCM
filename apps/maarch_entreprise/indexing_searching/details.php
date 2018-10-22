@@ -781,8 +781,8 @@ if ($stmt->rowCount() == 0) {
                         }
                     }
 
-                    echo '<div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
-                    echo "<textarea name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr}/>";
+                    echo '<div class="typeahead__container" style="width: 206px;"><div class="typeahead__field"><span class="typeahead__query">';
+                    echo "<textarea style='font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 11px;padding: 5px;width: 206px;max-width: 206px;' name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr}/>";
                     if (!empty($sr['format'])) {
                         echo $sr['format'];
                     }
