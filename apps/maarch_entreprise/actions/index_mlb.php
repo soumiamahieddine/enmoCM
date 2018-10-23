@@ -2104,6 +2104,11 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
                     $bodyData[$object['name']] = $tmpBodyData;
                 }
+
+                if (!empty($config['file']) && $config['file'] == 'true') {
+                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
+                    $bodyData['file'] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']]);
+                }
             } else {
                 $multipleObject = false;
                 $getContact = false;
