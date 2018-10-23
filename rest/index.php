@@ -28,27 +28,33 @@ require_once("src/core/lang/lang-{$language}.php");
 
 $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true]]);
 
+//route without auth
+$app->get('/jnlpDownload/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':donwloadJnlp');
+
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-    $userId = \SrcCore\controllers\AuthenticationController::authentication();
-
-    if (!empty($userId)) {
-        $GLOBALS['userId'] = $userId;
-        $route = $request->getAttribute('route');
-        if (!empty($route)) {
-            $currentRoute = $route->getPattern();
-            $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
-            if (!$r['isRouteAvailable']) {
-                return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
+    $route = $request->getAttribute('route');
+    if ($route->getPattern() <> '/jnlpDownload/{jnlpUniqueId}') {
+        $userId = \SrcCore\controllers\AuthenticationController::authentication();
+        if (!empty($userId)) {
+            $GLOBALS['userId'] = $userId;
+            if (!empty($route)) {
+                $currentRoute = $route->getPattern();
+                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
+                if (!$r['isRouteAvailable']) {
+                    return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
+                }
             }
+            $response = $next($request, $response);
+            return $response;
+        } else {
+            return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
         }
+    } else {
         $response = $next($request, $response);
         return $response;
-    } else {
-        return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
     }
 });
-
 
 //Initialize
 $app->get('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
@@ -171,7 +177,8 @@ $app->get('/home/lastRessources', \Home\controllers\HomeController::class . ':ge
 
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
-$app->get('/jnlp', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
+
+//$app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
 $app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
 
