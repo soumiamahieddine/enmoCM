@@ -3880,3 +3880,11 @@ function switchAutoCompleteType(mode) {
     $j("#sender_recipient_id").val('');
     $j("#sender_recipient_type").val('');   
 }
+
+function openSenderInfoContact(id, type) {
+    if(type == 'entity'){
+        alert('Aucune information disponible pour les entités');
+    } else {
+        window.open('index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetailSender&editDetailSender&popup&sender_recipient_id='+id+'&sender_recipient_type='+type, 'contact_info', 'height=800, width=1000,scrollbars=yes,resizable=yes');
+    }
+}

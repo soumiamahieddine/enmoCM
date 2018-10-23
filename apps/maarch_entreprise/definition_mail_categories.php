@@ -1324,6 +1324,25 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                 if (!empty($sr['format'])) {
                     $data[$arr[$i]]['show_value'] = functions::show_string($sr['format']);
                 }
+
+                $resourceContacts = \Resource\models\ResourceContactModel::getByResId(['resId' => $res_id]);
+                foreach ($resourceContacts as $resourceContact) {
+                    if ($resourceContact['mode'] == 'recipient' && $cat_id == 'incoming') {
+                        $contact = $resourceContact;
+                    } elseif ($resourceContact['mode'] == 'sender' && $cat_id == 'outgoing') {
+                        $contact = $resourceContact;
+                    }
+                }
+
+                if ($contact['type'] != 'entity') {
+                    $pathScriptTab = 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetailSender&editDetailSender&popup&sender_recipient_id='.$contact['item_id'].'&sender_recipient_type='.$contact['type'];
+    
+                    $preAddon = '<a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="';
+                    $postAddon = ' ><i class="fa fa-book fa-2x" title="'._CONTACT_CARD.'"></i></a>';
+    
+                    $data[$arr[$i]]['addon'] = $preAddon.'loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._CONTACT_CARD.'\',\''.$pathScriptTab.'\',\'contactInfo\');return false;"'.$postAddon;
+                }
+
             }
             // Folder
             elseif ($arr[$i] == 'folder' && isset($line->folders_system_id) && $line->folders_system_id != '') {
