@@ -1942,11 +1942,19 @@ function delIndexingModel() {
     }
 }
 
-function initSenderRecipientAutocomplete() {
+function initSenderRecipientAutocomplete(mode) {
+    var route = '';
+    if (mode == 'contactsUsers') {
+        route = '../../rest/autocomplete/contactsUsers';
+    } else {
+        route = '../../rest/autocomplete/entities';
+    }
+    
     $j("#sender_recipient").typeahead({
         order: "asc",
         display: "idToDisplay",
         templateValue: "{{otherInfo}}",
+        emptyTemplate: "Aucune donnée pour <b>{{query}}</b>",
         minLength: 3,
         dynamic: true,
         filter: false,
@@ -1954,7 +1962,7 @@ function initSenderRecipientAutocomplete() {
             ajax: function (query) {
                 return {
                     type: "GET",
-                    url: "../../rest/autocomplete/contactsUsers",
+                    url: route,
                     data: {
                         search : query
                     }
