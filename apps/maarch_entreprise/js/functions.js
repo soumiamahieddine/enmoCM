@@ -7,7 +7,6 @@ function capitalizeFirstLetter(theString) {
 }
 
 function whatIsTheDivStatus(theDiv, divStatus) {
-    console.log($j('#' + theDiv).css('display'));
     if ($j('#' + theDiv).css('display') == 'none') {
         $j('#' + divStatus).html('<i class="fa fa-minus-square"></i>');
     } else {
@@ -292,7 +291,7 @@ function setValue(ele) {
         var monthOut = month + 1;
         if (monthOut < 10) monthOut = '0' + monthOut;
         target.value = dayOut + '-' + monthOut + '-' + year;
-        //console.log(target);
+
         target.focus();
         removeCalender();
     }
@@ -2025,7 +2024,7 @@ function valid_report_by_period(url) {
                     if (type_report == 'array') {
                         if (response.status == 2) {
                             eval("response = " + answer.responseText);
-                            //console.log($('main_error_popup'));
+
                             $('main_error_popup').innerHTML = response.error_txt;
                             $('main_error_popup').style.display = 'table-cell';
                             Element.hide.delay(3, 'main_error_popup');
@@ -2036,10 +2035,7 @@ function valid_report_by_period(url) {
                     } else if (type_report == 'graph') {
                         eval("response = " + answer.responseText);
 
-                        //console.log(response.status);
-
                         if (response.status == 2) {
-                            //console.log($('main_error_popup'));
                             $('main_error_popup').innerHTML = response.error_txt;
                             $('main_error_popup').style.display = 'table-cell';
                             Element.hide.delay(3, 'main_error_popup');
@@ -2161,7 +2157,7 @@ function get_opt_index(url, id_coll) {
             },
             onSuccess: function (answer) {
                 var div_to_fill = $('opt_index');
-                //  console.log(div_to_fill);
+
                 if (div_to_fill) {
                     div_to_fill.innerHTML = answer.responseText;
                 }
@@ -2273,7 +2269,6 @@ function unCheckAll() {
 
 function show_attach(state) {
     if (state == 'true') {
-        //console.log('true');
         $('attach_show').slideDown();
     } else {
         $('attach_show').setStyle({
@@ -3037,7 +3032,6 @@ function linkDuplicate(id_form) {
         if (document.forms[id_form][i].type == 'checkbox' && document.forms[id_form][i].checked == true) {
             if (document.forms[id_form][i].name == 'delete_address') {
                 address_del.push(document.forms[id_form][i].value);
-                console.log(document.forms[id_form][i].value);
             } else {
                 slave.push(document.forms[id_form][i].value);
             }
@@ -3849,12 +3843,10 @@ function contactMapping(fieldsCtrl, formId) {
         }
     }
     var elements = document.getElementById(formId).elements;
-    // console.log(fieldsCtrl);
-    // console.log(elements);
+
     for (var i = 0, element; element = elements[i++];) {
         for (var j = 0, fieldsCtrlElem; fieldsCtrlElem = fieldsCtrl[j++];) {
             if (element.name === fieldsCtrlElem) {
-                //console.log("ok : "+element.name);
                 element.style.borderWidth = "2px";
                 element.style.borderColor = "#CCFFCC";
             }
@@ -3863,7 +3855,6 @@ function contactMapping(fieldsCtrl, formId) {
 }
 
 function switchAutoCompleteType(id, mode) {
-    console.log(id);
     if (mode == 'contactsUsers') {
         $j('#'+id+'_icon_contactsUsers').css({'color' : '#135F7F'});
         $j('#'+id+'_icon_entities').css({'color' : '#666'});
@@ -3883,9 +3874,15 @@ function switchAutoCompleteType(id, mode) {
 }
 
 function openSenderInfoContact(id, type) {
+    var height = '';
     if(type == 'entity'){
         alert('Aucune information disponible pour les entités');
     } else {
-        window.open('index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetailSender&editDetailSender&popup&sender_recipient_id='+id+'&sender_recipient_type='+type, 'contact_info', 'height=800, width=1000,scrollbars=yes,resizable=yes');
+        if(type == 'user'){
+            height = '400';
+        } else {
+            height = '800';
+        }
+        window.open('index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetailSender&editDetailSender&popup&sender_recipient_id='+id+'&sender_recipient_type='+type, 'contact_info', 'height='+height+', width=1000,scrollbars=yes,resizable=yes');
     }
 }

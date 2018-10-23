@@ -1328,14 +1328,14 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                 $resourceContacts = \Resource\models\ResourceContactModel::getByResId(['resId' => $res_id]);
                 foreach ($resourceContacts as $resourceContact) {
                     if ($resourceContact['mode'] == 'recipient' && $cat_id == 'incoming') {
-                        $contact = $resourceContact;
+                        $senderRecipientContact = $resourceContact;
                     } elseif ($resourceContact['mode'] == 'sender' && $cat_id == 'outgoing') {
-                        $contact = $resourceContact;
+                        $senderRecipientContact = $resourceContact;
                     }
                 }
 
-                if ($contact['type'] != 'entity') {
-                    $pathScriptTab = 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetailSender&editDetailSender&popup&sender_recipient_id='.$contact['item_id'].'&sender_recipient_type='.$contact['type'];
+                if (!empty($senderRecipientContact['type']) && $senderRecipientContact['type'] != 'entity') {
+                    $pathScriptTab = 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetailSender&editDetailSender&popup&sender_recipient_id='.$senderRecipientContact['item_id'].'&sender_recipient_type='.$senderRecipientContact['type'];
     
                     $preAddon = '<a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="';
                     $postAddon = ' ><i class="fa fa-book fa-2x" title="'._CONTACT_CARD.'"></i></a>';
