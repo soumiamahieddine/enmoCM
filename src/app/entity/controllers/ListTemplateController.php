@@ -303,6 +303,9 @@ class ListTemplateController
         $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => [$aArgs['typeId']]]);
         $rolesForType = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
         foreach ($roles as $key => $role) {
+            if ($role['id'] == 'dest') {
+                $roles[$key]['label'] = _ASSIGNEE . ' / ' . _REDACTOR ;
+            }
             if (in_array($role['id'], $unneededRoles)) {
                 unset($roles[$key]);
                 continue;

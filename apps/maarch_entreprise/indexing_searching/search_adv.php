@@ -189,7 +189,7 @@ $arr_tmp = array();
 for ($i = 0; $i < count($users_list); ++$i) {
     array_push($arr_tmp, array('VALUE' => $users_list[$i]['ID'], 'LABEL' => $users_list[$i]['NOM'].' '.$users_list[$i]['PRENOM']));
 }
-$arr_tmp2 = array('label' => _PROCESS_RECEIPT, 'type' => 'select_multiple', 'param' => array('field_label' => _PROCESS_RECEIPT, 'label_title' => _CHOOSE_RECIPIENT_SEARCH_TITLE,
+$arr_tmp2 = array('label' => _ASSIGNEE . ' / ' . _REDACTOR, 'type' => 'select_multiple', 'param' => array('field_label' => _ASSIGNEE . ' / ' . _REDACTOR, 'label_title' => _CHOOSE_RECIPIENT_SEARCH_TITLE,
 'id' => 'destinataire', 'options' => $arr_tmp, ));
 $param['destinataire'] = $arr_tmp2;
 

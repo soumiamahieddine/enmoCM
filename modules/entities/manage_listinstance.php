@@ -719,14 +719,15 @@ $linkwithwhat =
         function add_user(id) {
             var user_id = $('user_id_' + id).value;
             var role_select = $('user_role_' + id);
-			var role = role_select.options[role_select.selectedIndex].value;
-            goTo('<?php echo $linkwithwhat; ?>&action=add_user&id='+user_id+'&role='+role);
+            var role = role_select.options[role_select.selectedIndex].value;
+            goTo('<?php echo $linkwithwhat; ?>&action=add_user&id=' + user_id + '&role=' + role);
         }
+
         function add_entity(id) {
             var entity_id = $('entity_id_' + id).value;
             var role_select = $('entity_role_' + id);
-			var role = role_select.options[role_select.selectedIndex].value;
-            goTo('<?php echo $linkwithwhat; ?>&action=add_entity&id='+entity_id+'&role='+role);
+            var role = role_select.options[role_select.selectedIndex].value;
+            goTo('<?php echo $linkwithwhat; ?>&action=add_entity&id=' + entity_id + '&role=' + role);
         }
     </script>
     <br />
@@ -799,8 +800,10 @@ $linkwithwhat =
         // OTHER ROLES
         //**************************************************************************
         foreach ($roles as $role_id => $role_label) {
-            if ($cat == 'outgoing' && $role_label == 'Destinataire') {
-                $role_label = _SHIPPER;
+            if ($cat == 'outgoing' && $role_id == 'dest') {
+                $role_label = _REDACTOR;
+            } elseif ($cat != 'outgoing' && $role_id == 'dest') {
+                $role_label = _ASSIGNEE;
             }
             if (!empty($_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_id'])) {
                 $entity_id_dest = $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_id'];
@@ -1103,7 +1106,6 @@ $linkwithwhat =
                     }
                 }
 
-                //var_dump($roles);
                 if ($color == ' class="col"') {
                     $color = '';
                 } else {
@@ -1118,8 +1120,10 @@ $linkwithwhat =
 								<input type="hidden" id="user_id_<?php functions::xecho($j); ?>" value="<?php functions::xecho($users[$j]['ID']); ?>" />
 								<select name="role" id="user_role_<?php functions::xecho($j); ?>" style="width:60%;"><?php
                                 foreach ($possible_roles as $role_id => $role_label) {
-                                    if ($cat == 'outgoing' && $role_label == 'Destinataire') {
-                                        $role_label = _SHIPPER;
+                                    if ($cat == 'outgoing' && $role_id == 'dest') {
+                                        $role_label = _REDACTOR;
+                                    } elseif ($cat != 'outgoing' && $role_id == 'dest') {
+                                        $role_label = _ASSIGNEE;
                                     }
 
                                     if ((($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) && (!isset($_REQUEST['specific_role']))) || ($role_id == $specific_role || $role_id == $specific_role.'_copy' || $role_id == $specific_role.'_info')) {

@@ -69,6 +69,9 @@ class EntityController
         $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => ['entity_id']]);
         $rolesForService = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
         foreach ($entity['roles'] as $key => $role) {
+            if ($role['id'] == 'dest') {
+                $entity['roles'][$key]['label'] = _ASSIGNEE . ' / ' . _REDACTOR ;
+            }
             if (in_array($role['id'], $unneededRoles)) {
                 unset($entity['roles'][$key]);
                 continue;

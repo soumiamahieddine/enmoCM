@@ -1912,7 +1912,7 @@ if (!defined('_DEPARTMENT_DEST')) {
     define('_DEPARTMENT_DEST', 'Entité traitante');
 }
 if (!defined('_DEPARTMENT_EXP')) {
-    define('_DEPARTMENT_EXP', 'Entité expéditrice');
+    define('_DEPARTMENT_EXP', 'Entité rédactrice');
 }
 
 // Mail Categories

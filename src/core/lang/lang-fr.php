@@ -416,3 +416,5 @@ define("_CONVERTED_PDF", "PDF converti par la solution");
 define('_PRINT_FOLDER', 'Dossier');
 define('_SVA', 'SVA');
 define('_SVR', 'SVR');
+define('_REDACTOR', 'Rédacteur');
+define('_ASSIGNEE', 'Attributaire');
