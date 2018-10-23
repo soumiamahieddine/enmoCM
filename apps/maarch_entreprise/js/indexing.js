@@ -1981,6 +1981,13 @@ function initSenderRecipientAutocomplete(inputId, mode) {
             onCancel: function () {
                 $j("#" + inputId + "_id").val('');
                 $j("#" + inputId + "_type").val('');
+            },
+            onLayoutBuiltBefore: function (node, query, result, resultHtmlList) {
+                $j.each(resultHtmlList.find('li'), function (i, target) {
+                    $j(target).css({"background-color":"#dadadada"});
+                    console.log(target);
+                });
+                return resultHtmlList;
             }
         }
     });
