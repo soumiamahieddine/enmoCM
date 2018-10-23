@@ -307,11 +307,11 @@ for ($i = 0; $i < $tabI; ++$i) {
                 if ($tab[$i][$j]['value'] != '' && ($statusCmp == 'NEW' || $statusCmp == 'COU' || $statusCmp == 'VAL' || $statusCmp == 'RET')) {
                     $compareDate = $core_tools->compare_date($tab[$i][$j]['value'], date('d-m-Y'));
                     if ($compareDate == 'date2') {
-                        $tab[$i][$j]['value'] = "<span style='color:red;'><b>".$tab[$i][$j]['value'].'<br><small>('.$core_tools->nbDaysBetween2Dates($tab[$i][$j]['value'], date('d-m-Y')).' '._DAYS.')<small></b></span>';
+                        $tab[$i][$j]['value'] = "<span style='color:red;'><b>".$tab[$i][$j]['value'].'<br><small>('.$core_tools->nbDaysBetween2Dates($tab[$i][$j]['value'], date('d-m-Y')).' '._DAYS.')</small></b></span>';
                     } elseif ($compareDate == 'date1') {
-                        $tab[$i][$j]['value'] = $tab[$i][$j]['value'].'<br><small>('.$core_tools->nbDaysBetween2Dates(date('d-m-Y'), $tab[$i][$j]['value']).' '._DAYS.')<small>';
+                        $tab[$i][$j]['value'] = $tab[$i][$j]['value'].'<br><small>('.$core_tools->nbDaysBetween2Dates(date('d-m-Y'), $tab[$i][$j]['value']).' '._DAYS.')</small>';
                     } elseif ($compareDate == 'equal') {
-                        $tab[$i][$j]['value'] = "<span style='color:blue;'><b>".$tab[$i][$j]['value'].'<br><small>('._LAST_DAY.')<small></b></span>';
+                        $tab[$i][$j]['value'] = "<span style='color:blue;'><b>".$tab[$i][$j]['value'].'<br><small>('._LAST_DAY.')</small></b></span>';
                     }
                 }
                 if (empty($tab[$i][$j]['value'])) {
