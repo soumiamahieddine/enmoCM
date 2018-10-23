@@ -780,7 +780,9 @@ if ($stmt->rowCount() == 0) {
                             $sr = $resourceContact;
                         }
                     }
-
+                    if (empty($disabledAttr)) {
+                        echo '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'contactsUsers\');" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'entities\');" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
+                    }
                     echo '<div class="typeahead__container" style="width: 206px;"><div class="typeahead__field"><span class="typeahead__query">';
                     echo "<textarea style='font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 11px;padding: 5px;width: 206px;max-width: 206px;' name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr}/>";
                     if (!empty($sr['format'])) {
