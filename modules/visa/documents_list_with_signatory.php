@@ -476,12 +476,23 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['order'] = 'case_label';
             }
             if ($tab[$i][$j][$value] == 'signatory_user') {
-                $query = "SELECT u.firstname || ' ' || u.lastname || ' (' || ue.user_role || ')' as signatory_user, process_date
+                $query = "SELECT u.firstname || ' ' || u.lastname || ' (' || ue.user_role || ')' as signatory_user, process_date, signatory, requested_signature
                     FROM users u INNER JOIN listinstance l ON u.user_id = l.item_id
-                    INNER JOIN users_entities ue ON ue.user_id=u.user_id WHERE ue.primary_entity = 'Y' AND l.difflist_type = 'VISA_CIRCUIT' AND item_mode = 'sign' AND l.res_id = ?";
+                    INNER JOIN users_entities ue ON ue.user_id=u.user_id WHERE ue.primary_entity = 'Y' AND l.difflist_type = 'VISA_CIRCUIT' AND (requested_signature = 'true' OR signatory = 'true') AND l.res_id = ? ORDER BY listinstance_id ASC";
                 $arrayPDO = array($tab[$i][0]['res_id']);
                 $stmt2 = $db->query($query, $arrayPDO);
-                $res = $stmt2->fetchObject();
+
+                $res = '';
+                while ($resTmp = $stmt2->fetchObject()) {
+                    // On recupere le 1er signataire
+                    if ($resTmp->signatory) {
+                        $res = $resTmp;
+                        break;
+                    // Sinon on recupere le 1er requested signatory
+                    } elseif ($resTmp->requested_signature && empty($resTmp->process_date) && empty($res)) {
+                        $res = $resTmp;
+                    }
+                }
 
                 if (!empty($res->signatory_user)) {
                     $res->signatory_user = str_replace('()', '', $res->signatory_user);
