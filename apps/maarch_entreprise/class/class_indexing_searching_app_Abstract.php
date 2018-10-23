@@ -283,13 +283,13 @@ abstract class indexing_searching_app_Abstract extends Database
         $srId = $post['sender_recipient_id'];
         $srType = $post['sender_recipient_type'];
 
+        if ($cat_id == 'incoming' || $cat_id == 'internal') {
+            $srMode = 'recipient';
+        } else {
+            $srMode = 'sender';
+        }
+        \Resource\models\ResourceContactModel::delete(['where' => ['res_id = ?', 'mode = ?'], 'data' => [$id_to_update, $srMode]]);
         if (!empty($srId) && !empty($srType) && in_array($cat_id, ['incoming', 'outgoing', 'internal'])) {
-            if ($cat_id == 'incoming' || $cat_id == 'internal') {
-                $srMode = 'recipient';
-            } else {
-                $srMode = 'sender';
-            }
-            \Resource\models\ResourceContactModel::delete(['where' => ['res_id = ?', 'mode = ?'], 'data' => [$id_to_update, $srMode]]);
             \Resource\models\ResourceContactModel::create([
                 'res_id'    => $id_to_update,
                 'item_id'   => $srId,

@@ -1890,13 +1890,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $srId = get_value_fields($values_form, 'sender_recipient_id');
     $srType = get_value_fields($values_form, 'sender_recipient_type');
 
+    if ($cat_id == 'incoming' || $cat_id == 'internal') {
+        $srMode = 'recipient';
+    } else {
+        $srMode = 'sender';
+    }
+    \Resource\models\ResourceContactModel::delete(['where' => ['res_id = ?', 'mode = ?'], 'data' => [$res_id, $srMode]]);
     if (!empty($srId) && !empty($srType) && in_array($cat_id, ['incoming', 'outgoing', 'internal'])) {
-        if ($cat_id == 'incoming' || $cat_id == 'internal') {
-            $srMode = 'recipient';
-        } else {
-            $srMode = 'sender';
-        }
-        \Resource\models\ResourceContactModel::delete(['where' => ['res_id = ?', 'mode = ?'], 'data' => [$res_id, $srMode]]);
         \Resource\models\ResourceContactModel::create([
             'res_id'    => $res_id,
             'item_id'   => $srId,
@@ -1906,7 +1906,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     }
 
     if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder', false) == 1)) {
-        $folder_id = '';
         $folder_id = get_value_fields($values_form, 'folder');
 
         $stmt = $db->query('SELECT folders_system_id FROM '.$table.' WHERE res_id = ?', array($res_id));
