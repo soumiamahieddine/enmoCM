@@ -227,7 +227,7 @@ abstract class diffusion_list_Abstract extends functions
             // users
             //**********************************************************************
             $l = 0;
-            if (!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users'])) {
+            if (!empty($diffList[$role_id]['users']) && is_array($diffList[$role_id]['users'])) {
                 $l = count($diffList[$role_id]['users']);
             }
             for ($i = 0;
@@ -256,7 +256,7 @@ abstract class diffusion_list_Abstract extends functions
             // Entities
             //**********************************************************************
             $l = 0;
-            if (!empty($difflist[$role_id]['entities']) && is_array($difflist[$role_id]['entities'])) {
+            if (!empty($diffList[$role_id]['entities']) && is_array($diffList[$role_id]['entities'])) {
                 $l = count($diffList[$role_id]['entities']);
             }
             for ($i = 0; $i < $l; ++$i) {
