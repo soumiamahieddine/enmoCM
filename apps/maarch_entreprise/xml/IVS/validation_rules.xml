@@ -336,9 +336,12 @@
 
     <validationRule name="search_adv_result" extends="standardForm" mode="error">
       <parameter name="baskets_clause" type="identifier" />
-      <parameter name="contact" type="string" />
-      <parameter name="contactid" type="string" />
-      <parameter name="addressid" type="string" />
+      <parameter name="sender" type="string" />
+      <parameter name="sender_id" type="integer" />
+      <parameter name="sender_type" type="string" />
+      <parameter name="recipient" type="string" />
+      <parameter name="recipient_id" type="integer" />
+      <parameter name="recipient_type" type="string" />
       <parameter name="withAddress" type="boolean" />
       <parameter name="contact_type" type="identifier" />
       <parameter name="visa_user" type="string" />

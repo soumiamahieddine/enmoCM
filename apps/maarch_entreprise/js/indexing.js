@@ -1942,15 +1942,15 @@ function delIndexingModel() {
     }
 }
 
-function initSenderRecipientAutocomplete(mode) {
+function initSenderRecipientAutocomplete(inputId, mode) {
     var route = '';
     if (mode == 'contactsUsers') {
         route = '../../rest/autocomplete/contactsUsers';
     } else {
         route = '../../rest/autocomplete/entities';
     }
-    
-    $j("#sender_recipient").typeahead({
+
+    $j("#" + inputId).typeahead({
         order: "asc",
         display: "idToDisplay",
         templateValue: "{{otherInfo}}",
@@ -1971,12 +1971,12 @@ function initSenderRecipientAutocomplete(mode) {
         },
         callback: {
             onClickAfter: function (node, li, item) {
-                $j("#sender_recipient_id").val(item.id);
-                $j("#sender_recipient_type").val(item.type);
+                $j("#" + inputId + "_id").val(item.id);
+                $j("#" + inputId + "_type").val(item.type);
             },
             onCancel: function () {
-                $j("#sender_recipient_id").val('');
-                $j("#sender_recipient_type").val('');
+                $j("#" + inputId + "_id").val('');
+                $j("#" + inputId + "_type").val('');
             }
         }
     });

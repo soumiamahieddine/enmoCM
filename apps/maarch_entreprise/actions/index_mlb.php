@@ -1045,7 +1045,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
                 . 'true&page=autocomplete_department_number\','
                 . ' \'Input\', \'2\', \'department_number_id\');';
 
-    $frmStr .= 'initSenderRecipientAutocomplete();';
+    $frmStr .= 'initSenderRecipientAutocomplete(\'sender_recipient\');';
 
     $frmStr .= '$j(\'#baskets\').css(\'visibility\',\'hidden\');'
             .'var item  = $j(\'#index_div\')[0]; if(item)'

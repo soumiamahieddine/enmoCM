@@ -619,23 +619,42 @@ if (isset($_REQUEST['nodetails'])) {
                     <td><em><?php echo _BARCODE_HELP; ?></em></td>
                 </tr>
                 <tr>
-                    <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT; ?></label>
+                    <td width="70%"><label for="sender" class="bold"><?php echo _SENDER; ?></label>
                         <span style="position:relative;">
-                            <input type="text" name="contact" id="contact" onkeyup="erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');"/>
-                            <input type="hidden" name="meta[]" value="contact#contact#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
-                            <div id="show_contacts" class="autocomplete autocompleteIndex" style="width:100%;left:0px;top:17px;"></div>
-                            <div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div>
+                            <div class="typeahead__container"><div class="typeahead__field">
+                                <span class="typeahead__query">
+                                    <input name="sender" type="text" id="sender" autocomplete="off"/>
+                                    <input type="hidden" name="meta[]" value="sender#sender#input_text" />
+                                </span>
+                            </div></div>
                         </span>
                         <script type="text/javascript">
-                            launch_autocompleter_contacts_search('index.php?display=true&dir=indexing_searching&page=autocomplete_contacts','contact', 'show_contacts', '', 'contactid', 'addressid', '');
+                            initSenderRecipientAutocomplete('sender');
                         </script>
-                        <input id="withAddress" name="withAddress" type="checkbox" value="true"/> recherche avec adresse du contact
-                        <input id="contactid" name="contactid" type="hidden" />
-                        <input id="addressid" name="addressid" type="hidden" />
+                        <input type="hidden" name="sender_id" id="sender_id" />
+                        <input type="hidden" name="sender_type" id="sender_type" />
                     </td>
                     <td><em><?php echo ''; ?></em></td>
                 </tr>
-               
+                <tr>
+                    <td width="70%"><label for="recipient" class="bold"><?php echo _DEST; ?></label>
+                        <span style="position:relative;">
+                            <div class="typeahead__container"><div class="typeahead__field">
+                                <span class="typeahead__query">
+                                    <input name="recipient" type="text" id="recipient" autocomplete="off"/>
+                                    <span class="green_asterisk"><i class="fa fa-star"></i></span>
+                                    <input type="hidden" name="meta[]" value="recipient#recipient#input_text" />
+                                </span>
+                            </div></div>
+                        </span>
+                        <script type="text/javascript">
+                            initSenderRecipientAutocomplete('recipient');
+                        </script>
+                        <input type="hidden" name="recipient_id" id="recipient_id" />
+                        <input type="hidden" name="recipient_type" id="recipient_type" />
+                    </td>
+                    <td><em><?php echo ''; ?></em></td>
+                </tr>
                 <tr>
                     <td width="70%"><label for="signatory_name" class="bold"><?php echo _SIGNATORY_NAME;?></label>
                         <input type="text" name="signatory_name" id="signatory_name" onkeyup="erase_contact_external_id('signatory_name', 'ac_signatory_name');"/>

@@ -1396,7 +1396,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
     $frm_str .= 'affiche_reference();';
-    $frm_str .= 'initSenderRecipientAutocomplete();';
+    $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\');';
     $frm_str .= 'initList_hidden_input(\'department_number\', \'show_department_number\',\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display='
          . 'true&page=autocomplete_department_number\','
