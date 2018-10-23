@@ -560,7 +560,7 @@ for ($i = 0; $i < $tabI; ++$i) {
                     $arrayPDO = array($return_stmt->item_id);
                     $stmt2 = $db->query($query, $arrayPDO);
                     $return_stmt = $stmt2->fetchObject();
-                    $tab[$i][$j]['value'] = $return_stmt->entity_label;
+                    $tab[$i][$j]['value'] = $return_stmt->short_label;
                 } else {
                     $query = 'SELECT firstname, lastname FROM users WHERE id = ?';
                     $arrayPDO = array($return_stmt->item_id);
