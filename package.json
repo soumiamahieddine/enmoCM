@@ -22,7 +22,7 @@
     "jquery.nicescroll": "~3.6.8",
     "jstree-bootstrap-theme": "^1.0.1",
     "photoswipe": "^4.1.2",
-    "tinymce": "^4.8.3",
+    "tinymce": "^4.8.4",
     "tooltipster": "^4.2.6",
     "uglify-es": "3.2.2",
     "uglifyjs-webpack-plugin": "1.1.5",
