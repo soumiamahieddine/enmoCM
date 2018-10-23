@@ -3862,23 +3862,24 @@ function contactMapping(fieldsCtrl, formId) {
     }
 }
 
-function switchAutoCompleteType(mode) {
+function switchAutoCompleteType(id, mode) {
+    console.log(id);
     if (mode == 'contactsUsers') {
-        $j('#sender_recipient_icon_contactsUsers').css({'color' : '#135F7F'});
-        $j('#sender_recipient_icon_entities').css({'color' : '#666'});
-        $j('#sender_recipient').attr('placeholder','Rechercher un contact / utilisateur');
+        $j('#'+id+'_icon_contactsUsers').css({'color' : '#135F7F'});
+        $j('#'+id+'_icon_entities').css({'color' : '#666'});
+        $j('#'+id+'').attr('placeholder','Rechercher un contact / utilisateur');
         $j(".typeahead__result").remove();
-        initSenderRecipientAutocomplete('sender_recipient', 'contactsUsers');
+        initSenderRecipientAutocomplete(id, 'contactsUsers');
     } else {
-        $j('#sender_recipient_icon_contactsUsers').css({'color' : '#666'});
-        $j('#sender_recipient_icon_entities').css({'color' : '#135F7F'});
-        $j('#sender_recipient').attr('placeholder','Rechercher une entité');
+        $j('#'+id+'_icon_contactsUsers').css({'color' : '#666'});
+        $j('#'+id+'_icon_entities').css({'color' : '#135F7F'});
+        $j('#'+id+'').attr('placeholder','Rechercher une entité');
         $j(".typeahead__result").remove();
-        initSenderRecipientAutocomplete('sender_recipient', 'entities');
+        initSenderRecipientAutocomplete(id, 'entities');
     }
-    $j('#sender_recipient').val('');
-    $j("#sender_recipient_id").val('');
-    $j("#sender_recipient_type").val('');   
+    $j('#'+id).val('');
+    $j('#'+id+'_id').val('');
+    $j('#'+id+'_type').val('');
 }
 
 function openSenderInfoContact(id, type) {

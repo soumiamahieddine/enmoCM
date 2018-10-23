@@ -3773,3 +3773,26 @@ width:auto;
     padding: 0px !important;
     padding-right: 10px !important;
 }
+
+.adv_search_field_content {
+    display:flex;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.adv_search_field_content .adv_search_field{
+    flex:1;
+    padding: 10px;
+}
+
+.adv_search_field_content .adv_search_field .typeahead__container {
+    width: 206px;
+}
+
+.adv_search_field_content .adv_search_field .required::before {
+    position: absolute;
+    left: -10px;
+    top: 0;
+    content: '*';
+    color: red;
+  }
