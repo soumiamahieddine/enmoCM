@@ -340,7 +340,7 @@ class AutoCompleteController
         ]);
 
         $entities = EntityModel::get([
-            'select'    => ['entity_id', 'entity_label', 'short_label'],
+            'select'    => ['id', 'entity_id', 'entity_label', 'short_label'],
             'where'     => $requestData['where'],
             'data'      => $requestData['data'],
             'orderBy'   => ['entity_label'],
@@ -352,6 +352,7 @@ class AutoCompleteController
             $data[] = [
                 'type'          => 'entity',
                 'id'            => $value['entity_id'],
+                'serialId'      => $value['id'],
                 'idToDisplay'   => $value['entity_label'],
                 'otherInfo'     => $value['short_label']
             ];

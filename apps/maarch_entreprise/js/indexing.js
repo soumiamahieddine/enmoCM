@@ -1971,7 +1971,11 @@ function initSenderRecipientAutocomplete(inputId, mode) {
         },
         callback: {
             onClickAfter: function (node, li, item) {
-                $j("#" + inputId + "_id").val(item.id);
+                if (item.type == "entity") {
+                    $j("#" + inputId + "_id").val(item.serialId);
+                } else {
+                    $j("#" + inputId + "_id").val(item.id);
+                }
                 $j("#" + inputId + "_type").val(item.type);
             },
             onCancel: function () {
