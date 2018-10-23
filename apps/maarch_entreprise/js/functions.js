@@ -3861,3 +3861,22 @@ function contactMapping(fieldsCtrl, formId) {
         }
     }
 }
+
+function switchAutoCompleteType(mode) {
+    if (mode == 'contactsUsers') {
+        $j('#sender_recipient_icon_contactsUsers').css({'color' : '#135F7F'});
+        $j('#sender_recipient_icon_entities').css({'color' : '#666'});
+        $j('#sender_recipient').attr('placeholder','Rechercher un contact / utilisateur');
+        $j(".typeahead__result").remove();
+        initSenderRecipientAutocomplete('sender_recipient', 'contactsUsers');
+    } else {
+        $j('#sender_recipient_icon_contactsUsers').css({'color' : '#666'});
+        $j('#sender_recipient_icon_entities').css({'color' : '#135F7F'});
+        $j('#sender_recipient').attr('placeholder','Rechercher une entité');
+        $j(".typeahead__result").remove();
+        initSenderRecipientAutocomplete('sender_recipient', 'entities');
+    }
+    $j('#sender_recipient').val('');
+    $j("#sender_recipient_id").val('');
+    $j("#sender_recipient_type").val('');   
+}

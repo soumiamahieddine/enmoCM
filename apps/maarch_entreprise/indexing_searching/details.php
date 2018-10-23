@@ -800,7 +800,7 @@ if ($stmt->rowCount() == 0) {
                     echo "/>";
 
                     //initialize autocomplete
-                    echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\');</script>';
+                    echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\');</script>';
 
                 } else {
                     echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";

@@ -5205,3 +5205,12 @@ if (!defined('_REDACTOR')) {
 if (!defined('_ASSIGNEE')) {
     define('_ASSIGNEE', 'Attributaire');
 }
+if (!defined('_CONTACTS_USERS_LIST')) {
+    define('_CONTACTS_USERS_LIST', 'Répertoire contacts / utilisateurs');
+}
+if (!defined('_ENTITIES_LIST')) {
+    define('_ENTITIES_LIST', 'Répertoire entités');
+}
+if (!defined('_CONTACTS_USERS_SEARCH')) {
+    define('_CONTACTS_USERS_SEARCH', 'Rechercher un contact / utilisateur');
+}

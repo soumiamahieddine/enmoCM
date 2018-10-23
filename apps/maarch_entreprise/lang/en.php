@@ -5043,3 +5043,12 @@ if (!defined('_REDACTOR')) {
 if (!defined('_ASSIGNEE')) {
     define('_ASSIGNEE', 'Assignee');
 }
+if (!defined('_CONTACTS_USERS_LIST')) {
+    define('_CONTACTS_USERS_LIST', 'Contacts / users list');
+}
+if (!defined('_ENTITIES_LIST')) {
+    define('_ENTITIES_LIST', 'Entities list');
+}
+if (!defined('_CONTACTS_USERS_SEARCH')) {
+    define('_CONTACTS_USERS_SEARCH', 'Contacts / users search');
+}
