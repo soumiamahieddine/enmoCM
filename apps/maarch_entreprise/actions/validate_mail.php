@@ -846,6 +846,14 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     if (!empty($sr['type'])) {
         $frm_str .= 'value="'. $sr['type'].'"';
     }
+
+    if ($sr['type'] == 'entity') {
+        $frm_str .= '<script>$j("#sender_recipient_icon_contactsUsers").css({"color":"#666"});</script>';
+        $frm_str .= '<script>$j("#sender_recipient_icon_entities").css({"color":"#135F7F"});</script>';
+    } else {
+        $frm_str .= '<script>$j("#sender_recipient_icon_contactsUsers").css({"color":"#135F7F"});</script>';
+        $frm_str .= '<script>$j("#sender_recipient_icon_entities").css({"color":"#666"});</script>';
+    }
     $frm_str .= '/>';
     $frm_str .= '</tr>';
 
