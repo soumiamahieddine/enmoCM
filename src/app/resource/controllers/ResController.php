@@ -23,6 +23,7 @@ use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Docserver\models\ResDocserverModel;
+use Entity\models\ListInstanceModel;
 use Group\controllers\GroupController;
 use Group\models\GroupModel;
 use Group\models\ServiceModel;
@@ -368,6 +369,11 @@ class ResController
         $response->write($fileContent);
         $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
 
+        ListInstanceModel::update([
+            'postSet'   => ['viewed' => 'viewed + 1'],
+            'where'     => ['item_id = ?', 'item_mode = ?', 'res_id = ?'],
+            'data'      => [$GLOBALS['userId'], 'cc', $aArgs['resId']]
+        ]);
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $aArgs['resId'],
