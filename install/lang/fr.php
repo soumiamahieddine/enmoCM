@@ -82,13 +82,19 @@ if (!defined('_GENERAL')) {
     define('_GENERAL', 'Général');
 }
 if (!defined('_PHP_VERSION')) {
-    define('_PHP_VERSION', 'Version de PHP (5.6 ou sup.)');
+    define('_PHP_VERSION', 'Version de PHP (7.0 et 7.1)');
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
     define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'écriture du répertoire racine de Maarch Courrier");
 }
 if (!defined('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
     define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', 'Les droits du répertoire racine de Maarch Courrier ne sont pas corrects');
+}
+if (!defined('_UNOCONV_INSTALLED')) {
+    define('_UNOCONV_INSTALLED', "Outils de conversion de documents bureautiques soffice/unoconv installés");
+}
+if (!defined('_UNOCONV_NOT_INSTALLED')) {
+    define('_UNOCONV_NOT_INSTALLED', "Outils de conversion de documents bureautiques soffice/unoconv non installés");
 }
 if (!defined('_PGSQL')) {
     define('_PGSQL', 'Librairie pgsql');

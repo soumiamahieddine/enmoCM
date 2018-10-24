@@ -66,6 +66,16 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isUnoconvInstalled()
+                        );?>
+                    </td>
+                    <td>
+                        <?php echo _UNOCONV_INSTALLED;?>
+                    </td>
+                </tr>
+                <tr>
                     <td>&nbsp;
 
                     </td>
