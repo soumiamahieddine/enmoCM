@@ -19,7 +19,7 @@ if ($_SERVER['REMOTE_USER'] <> '' && $_SERVER['AUTH_TYPE'] = 'shibboleth') {
     $sec = new security();
 
     $database = new Database();
-    $stmt = $database->query("SELECT * FROM users WHERE user_id ILIKE ?", array($login));
+    $stmt = $database->query("SELECT 1 FROM users WHERE user_id ILIKE ?", array($login));
     $result = $stmt->fetch();
 
     if ($result) {
@@ -31,7 +31,7 @@ if ($_SERVER['REMOTE_USER'] <> '' && $_SERVER['AUTH_TYPE'] = 'shibboleth') {
 
         if (empty($_SESSION['error'])) {
             $_SESSION['error'] = $res['error'];
-        }
+    }
 
     if ($res['error'] == '') {
             \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
@@ -46,11 +46,8 @@ if ($_SERVER['REMOTE_USER'] <> '' && $_SERVER['AUTH_TYPE'] = 'shibboleth') {
             exit;
         }
     } else {
-           $_SESSION['error'] = _USER_NOT_EXIST . ' ' . $login;
+        $_SESSION['error'] = _USER_NOT_EXIST . ' ' . $login;
         echo $_SESSION['error'];
         exit;
     }
-} else {
-    //redirect to shibboleth authentication ?
-    //header('location: ' . $shibbolethConfig['shibbolethUri'] );
 }
