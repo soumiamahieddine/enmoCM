@@ -624,7 +624,7 @@ if ($core_tools->is_module_loaded('basket') == true) {
                 <label for="sender" class="bold"><?php echo _SENDER; ?></label>
             </div>
             <div class="adv_search_field indexing_field">
-            <i id="sender_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType('sender','contactsUsers');" style="color:#135F7F;display: inline-block;cursor:pointer;" title="<?php echo _CONTACTS_USERS_LIST; ?>" ></i> <i id="sender_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType('sender','entities');" style="display: inline-block;cursor:pointer;" title="<?php echo _ENTITIES_LIST; ?>" ></i>
+            <i id="sender_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType('sender','contactsUsers', true);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="<?php echo _CONTACTS_USERS_LIST; ?>" ></i> <i id="sender_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType('sender','entities');" style="display: inline-block;cursor:pointer;" title="<?php echo _ENTITIES_LIST; ?>" ></i>
                 <span style="position:relative;">
                     <div class="typeahead__container"><div class="typeahead__field">
                         <span class="typeahead__query">
@@ -634,7 +634,7 @@ if ($core_tools->is_module_loaded('basket') == true) {
                     </div></div>
                 </span>
                 <script type="text/javascript">
-                    initSenderRecipientAutocomplete('sender','contactsUsers');
+                    initSenderRecipientAutocomplete('sender','contactsUsers', true);
                 </script>
                 <input type="hidden" name="sender_id" id="sender_id" />
                 <input type="hidden" name="sender_type" id="sender_type" />
@@ -648,7 +648,7 @@ if ($core_tools->is_module_loaded('basket') == true) {
                 <label for="recipient" class="bold"><?php echo _DEST; ?></label>
             </div>
             <div class="adv_search_field indexing_field">
-            <i id="recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType('recipient','contactsUsers');" style="color:#135F7F;display: inline-block;cursor:pointer;" title="<?php echo _CONTACTS_USERS_LIST; ?>" ></i> <i id="recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType('recipient','entities');" style="display: inline-block;cursor:pointer;" title="<?php echo _ENTITIES_LIST; ?>" ></i>
+            <i id="recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType('recipient','contactsUsers', true);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="<?php echo _CONTACTS_USERS_LIST; ?>" ></i> <i id="recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType('recipient','entities');" style="display: inline-block;cursor:pointer;" title="<?php echo _ENTITIES_LIST; ?>" ></i>
                 <span style="position:relative;">
                     <div class="typeahead__container"><div class="typeahead__field">
                         <span class="typeahead__query">
@@ -659,7 +659,7 @@ if ($core_tools->is_module_loaded('basket') == true) {
                     </div></div>
                 </span>
                 <script type="text/javascript">
-                    initSenderRecipientAutocomplete('recipient', 'contactsUsers');
+                    initSenderRecipientAutocomplete('recipient', 'contactsUsers', true);
                 </script>
                 <input type="hidden" name="recipient_id" id="recipient_id" />
                 <input type="hidden" name="recipient_type" id="recipient_type" />

@@ -785,7 +785,7 @@ if ($stmt->rowCount() == 0) {
                         }
                     }
                     if (empty($disabledAttr)) {
-                        echo '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\');" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\');" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
+                        echo '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\', false);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\');" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
                         if ($sr['type'] == 'entity') {
                             echo '<script>$j("#sender_recipient_icon_contactsUsers").css({"color":"#666"});</script>';
                             echo '<script>$j("#sender_recipient_icon_entities").css({"color":"#135F7F"});</script>';
@@ -813,7 +813,7 @@ if ($stmt->rowCount() == 0) {
                     echo "/>";
 
                     //initialize autocomplete
-                    echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\');</script>';
+                    echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);</script>';
 
                 } else {
                     echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";

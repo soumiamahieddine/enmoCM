@@ -1942,7 +1942,7 @@ function delIndexingModel() {
     }
 }
 
-function initSenderRecipientAutocomplete(inputId, mode) {
+function initSenderRecipientAutocomplete(inputId, mode, alternateVersion) {
     var route = '';
     if (mode == 'contactsUsers') {
         route = '../../rest/autocomplete/contactsUsers';
@@ -1964,7 +1964,9 @@ function initSenderRecipientAutocomplete(inputId, mode) {
                     type: "GET",
                     url: route,
                     data: {
-                        search : query
+                        search : query,
+                        onlyContacts : alternateVersion,
+                        color : !alternateVersion
                     }
                 }
             }

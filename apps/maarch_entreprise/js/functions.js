@@ -3854,19 +3854,19 @@ function contactMapping(fieldsCtrl, formId) {
     }
 }
 
-function switchAutoCompleteType(id, mode) {
+function switchAutoCompleteType(id, mode, alternateVersion) {
     if (mode == 'contactsUsers') {
         $j('#'+id+'_icon_contactsUsers').css({'color' : '#135F7F'});
         $j('#'+id+'_icon_entities').css({'color' : '#666'});
         $j('#'+id+'').attr('placeholder','Rechercher un contact / utilisateur');
         $j(".typeahead__result").remove();
-        initSenderRecipientAutocomplete(id, 'contactsUsers');
+        initSenderRecipientAutocomplete(id, 'contactsUsers', alternateVersion);
     } else {
         $j('#'+id+'_icon_contactsUsers').css({'color' : '#666'});
         $j('#'+id+'_icon_entities').css({'color' : '#135F7F'});
         $j('#'+id+'').attr('placeholder','Rechercher une entité');
         $j(".typeahead__result").remove();
-        initSenderRecipientAutocomplete(id, 'entities');
+        initSenderRecipientAutocomplete(id, 'entities', alternateVersion);
     }
     $j('#'+id).val('');
     $j('#'+id+'_id').val('');
