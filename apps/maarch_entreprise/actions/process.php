@@ -306,7 +306,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
                     $frm_str .= '/>';
                 } else {
                     $rate = [];
-                    if ($key == 'exp_contact_id') {
+                    if ($key == 'exp_contact_id' || $key == 'dest_contact_id') {
                         if (!empty($data[$key]['address_value'])) {
                             $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['address_value']]]);
                             $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);

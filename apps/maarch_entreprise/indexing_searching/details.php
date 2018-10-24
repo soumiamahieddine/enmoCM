@@ -753,16 +753,18 @@ if ($stmt->rowCount() == 0) {
                             $_SESSION['adresses']['addressid'][] = $data[$key]['multi']['address_id'][$icontacts];
                             $_SESSION['adresses']['contactid'][] = $data[$key]['multi']['contact_id'][$icontacts];
 
-                            echo '<div class="multicontact_element" style="display:table;width:200px;" id="'.$icontacts.'_'.$data[$key]['multi']['contact_id'][$icontacts].'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$data[$key]['multi']['arr_values'][$icontacts].'</div>';
+                            $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['multi']['address_id'][$icontacts]]]);
+                            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);        
+                            echo '<div class="multicontact_element" style="display:table;width:200px;background-color:'.$rate['color'].';" id="'.$icontacts.'_'.$data[$key]['multi']['contact_id'][$icontacts].'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$data[$key]['multi']['arr_values'][$icontacts].'</div>';
 
                             if (empty($disabledAttr)) {
-                                echo '&nbsp;<div class="email_delete_button" style="display:table-cell;vertical-align:middle" id="'.$icontacts.'"'
+                                echo '&nbsp;<div class="email_delete_button" style="display:table-cell;vertical-align:middle;background-color:'.$rate['color'].';" id="'.$icontacts.'"'
                                                         .'onclick="updateMultiContacts(\''.$path_to_script
                                                         .'&mode=adress\', \'del\', \''.$data[$key]['multi']['arr_values'][$icontacts].'\', \'to\', this.id, \''.$data[$key]['multi']['address_id'][$icontacts].'\', \''.$data[$key]['multi']['contact_id'][$icontacts].'\');" alt="'._DELETE.'" title="'
                                                         ._DELETE.'">x</div>';
                                 echo '</div>';
                             } else {
-                                echo '&nbsp;<div class="email_delete_button" style="display:none;vertical-align:middle" id="'.$icontacts.'"'
+                                echo '&nbsp;<div class="email_delete_button" style="display:none;vertical-align:middle;background-color:'.$rate['color'].';" id="'.$icontacts.'"'
                                                     .'onclick="" alt="'._DELETE.'" title="'
                                                     ._DELETE.'">x</div>';
                                 echo '</div>';
