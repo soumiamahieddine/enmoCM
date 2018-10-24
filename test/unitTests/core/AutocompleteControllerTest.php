@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class AutocompleteControllerTest extends TestCase
 {
-    public function testGetContacts()
+    public function testGetContactsForGroups()
     {
         $autocompleteController = new \SrcCore\controllers\AutoCompleteController();
 
@@ -27,7 +27,7 @@ class AutocompleteControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $autocompleteController->getContacts($fullRequest, new \Slim\Http\Response());
+        $response     = $autocompleteController->getContactsForGroups($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody);
