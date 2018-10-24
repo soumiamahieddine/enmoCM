@@ -447,7 +447,7 @@ abstract class content_management_tools_Abstract
         $pathUrl = trim($_SESSION['config']['coreurl'], '/');
 
         $jnlp_attribute2 = $docXML->createAttribute('codebase'); 
-        $jnlp_attribute2->value = $pathUrl . '/rest/jnlpDownload/';
+        $jnlp_attribute2->value = $pathUrl . '/rest/jnlp/';
         $jnlp_balise->appendChild($jnlp_attribute2);
 
         $jnlp_attribute3 = $docXML->createAttribute('href');
@@ -635,7 +635,7 @@ abstract class content_management_tools_Abstract
         $_SESSION['cm_applet'][$_SESSION['user']['UserId']][$uid_applet_name]=$uid_applet_name.'.lck';
 
         $pathUrl = trim($_SESSION['config']['coreurl'], '/');
-        $file = "{$pathUrl}/rest/jnlpDownload/{$jnlp_name}";
+        $file = "{$pathUrl}/rest/jnlp/{$jnlp_name}";
 
         //echo '<a id="jnlp_file" href="'.$file.'" onclick="window.location.href=\''.$file.'\';self.close();"></a>';
         echo '<script>window.location.href=\''.$file.'\';if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};</script>';

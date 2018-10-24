@@ -180,14 +180,10 @@ class JnlpController
         return $response->withJson(['generatedJnlp' => $jnlpFileNameExt, 'jnlpUniqueId' => $jnlpUniqueId]);
     }
 
-    public function donwloadJnlp(Request $request, Response $response, array $aArgs)
+    public function renderJnlp(Request $request, Response $response, array $aArgs)
     {
-        $data = $request->getQueryParams();
-
         if (explode('.', $aArgs['jnlpUniqueId'])[1] != 'jnlp') {
             return $response->withStatus(403)->withJson(['errors' => 'File extension forbidden']);
-        } elseif (strpos($aArgs['jnlpUniqueId'], "{$GLOBALS['userId']}_maarchCM_") === false) {
-            return $response->withStatus(403)->withJson(['errors' => 'File name forbidden']);
         }
 
         $tmpPath = CoreConfigModel::getTmpPath();

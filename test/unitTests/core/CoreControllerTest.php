@@ -31,31 +31,12 @@ class CoreControllerTest extends TestCase
 
     public function testrenderJnlp()
     {
-        // ERROR FILE NAME
         $coreController = new \ContentManagement\controllers\JnlpController();
 
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request     = \Slim\Http\Request::createFromEnvironment($environment);
-
-        $aArgs = [
-            'fileName' => 'superadmin_maarch_12345.jnlp'
-        ];
-        $fullRequest = $request->withQueryParams($aArgs);
-
-        $response     = $coreController->renderJnlp($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('File name forbidden', $responseBody->errors);
-
-        // ERROR EXTENSION
         $request = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $aArgs = [
-            'fileName' => 'superadmin_maarchCM_12345.js'
-        ];
-        $fullRequest = $request->withQueryParams($aArgs);
-
-        $response     = $coreController->renderJnlp($fullRequest, new \Slim\Http\Response());
+        $response     = $coreController->renderJnlp($request, new \Slim\Http\Response(), ['jnlpUniqueId' => 'superadmin_maarchCM_12345.js']);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('File extension forbidden', $responseBody->errors);

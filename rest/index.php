@@ -30,11 +30,12 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRo
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-    $routesWithoutAuthentication = ['/jnlpDownload/{jnlpUniqueId}'];
+    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}'];
     $route = $request->getAttribute('route');
+    $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
 
-    if (!in_array($currentRoute, $routesWithoutAuthentication)) {
+    if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication)) {
         $userId = \SrcCore\controllers\AuthenticationController::authentication();
         if (!empty($userId)) {
             $GLOBALS['userId'] = $userId;
@@ -173,7 +174,6 @@ $app->get('/home/lastRessources', \Home\controllers\HomeController::class . ':ge
 
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
-$app->get('/jnlpDownload/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':donwloadJnlp');
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
 $app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
