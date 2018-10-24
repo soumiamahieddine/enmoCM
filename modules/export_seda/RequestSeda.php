@@ -475,8 +475,13 @@ class RequestSeda
                     ]
             ];
 
-            $ds          =  new docservers_controler();
-            $storeResult = $ds->storeResourceOnDocserver('archive_transfer_coll', $aFileInfo['fileInfos']);
+            
+            $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
+                'collId'            => 'archive_transfer_coll',
+                'docserverTypeId'   => 'ARCHIVETRANSFER',
+                'fileInfos'         => $aFileInfo['fileInfos']
+            ]);
+
             if(!empty($storeResult['error'])){
                 var_dump($storeResult['error']);
             }

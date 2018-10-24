@@ -448,8 +448,7 @@ abstract class contacts_v2_Abstract extends Database
         $db = new Database();
 
         // usefull for fields important
-        $ContactFillingModel = new \Contact\models\ContactFillingModel();
-        $contactsFilling = $ContactFillingModel::get();
+        $contactsFilling = \Contact\models\ContactFillingModel::get();
         $contactsFilling['rating_columns'] = $contactsFilling['rating_columns'];
         
         $display_value = 'table-row';
@@ -1298,8 +1297,7 @@ abstract class contacts_v2_Abstract extends Database
         $db = new Database();
 
         // usefull for fields important
-        $ContactFillingModel = new \Contact\models\ContactFillingModel();
-        $contactsFilling = $ContactFillingModel::get();
+        $contactsFilling = \Contact\models\ContactFillingModel::get();
         $contactsFilling['rating_columns'] = $contactsFilling['rating_columns'];
 
         $display_value = 'table-row';
@@ -1420,6 +1418,8 @@ abstract class contacts_v2_Abstract extends Database
                 $action = $_SESSION['config']['businessappurl'].'index.php?display=false&page=contact_addresses_up_db&mycontact=fromContactIframe';
             } elseif ($iframe == 'editDetail') {
                 $action = 'index.php?display=false&page=contact_addresses_up_db&mycontact=editDetail&editDetail';
+            } elseif ($iframe == 'editDetailSender') {
+                $action = 'index.php?display=false&page=contact_addresses_up_db&mycontact=editDetailSender&editDetailSender';
             }
             if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] != '') {
                 $action = $_SESSION['config']['businessappurl'].'index.php?display=true&page=contact_addresses_up_db&fromContactAddressesList';
@@ -2019,7 +2019,7 @@ abstract class contacts_v2_Abstract extends Database
                 $cancel_target = 'index.php?display=false&page=create_contact_iframe&dir=my_contacts';
             } elseif ($iframe == 'fromContactIframe') {
                 $cancel_target = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
-            } elseif ($iframe == 'editDetail') {
+            } elseif ($iframe == 'editDetail' || $iframe == 'editDetailSender') {
                 $cancel_target = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=cancelDetail';
             }
             if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] != '') {
@@ -2162,6 +2162,9 @@ abstract class contacts_v2_Abstract extends Database
                 if ($iframe == 4) {
                     $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=editDetail&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
                     $path_contacts_up_errors = 'index.php?display=false&dir=my_contacts&page=update_address_iframe&editDetail';
+                } elseif ($iframe == 5) {
+                    $path_contacts = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&created=editDetailSender&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
+                    $path_contacts_up_errors = 'index.php?display=false&dir=my_contacts&page=update_address_iframe&editDetailSender';
                 }
 
             }

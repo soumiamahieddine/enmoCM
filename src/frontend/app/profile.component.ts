@@ -174,7 +174,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
             debounceTime(500),
             filter(value => value.length > 2),
             distinctUntilChanged(),
-            switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/contacts', { params: { "search": data, "type": this.contactTypeSearch } }))
+            switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/contacts/groups', { params: { "search": data, "type": this.contactTypeSearch } }))
         ).subscribe((response: any) => {
             this.searchResult = response;
             this.dataSourceContactsListAutocomplete = new MatTableDataSource(this.searchResult);

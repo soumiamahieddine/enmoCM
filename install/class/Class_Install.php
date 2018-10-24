@@ -110,6 +110,9 @@ class Install extends functions
         if (!$this->isPhpVersion()) {
             return false;
         }
+        if (!$this->isUnoconvInstalled()) {
+            return false;
+        }
         if (!$this->isPhpRequirements('pgsql')) {
             return false;
         }
@@ -159,7 +162,7 @@ class Install extends functions
 
     public function isPhpVersion()
     {
-        if (version_compare(PHP_VERSION, '5.3') < 0) {
+        if (version_compare(PHP_VERSION, '7.0') < 0) {
             return false;
             exit;
         }
@@ -1753,6 +1756,23 @@ class Install extends functions
                 || !is_readable('.')
         ) {
             $error .= _THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * test if unoconv is installed.
+     *
+     * @return bool or error message
+     */
+    public function isUnoconvInstalled()
+    {
+        exec('whereis unoconv', $output, $return);
+        $output = explode(':', $output[0]);
+
+        if (empty($output[1])) {
+            $error .= _UNOCONV_NOT_INSTALLED;
         } else {
             return true;
         }

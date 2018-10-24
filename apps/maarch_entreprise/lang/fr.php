@@ -1611,6 +1611,9 @@ if (!defined('_NUM2')) {
 if (!defined('_UNDEFINED')) {
     define('_UNDEFINED', 'N.C.');
 }
+if (!defined('_UNDEFINED_DATA')) {
+    define('_UNDEFINED_DATA', 'Non défini');
+}
 if (!defined('_CONSULT_EXTRACTION')) {
     define('_CONSULT_EXTRACTION', 'vous pouvez consulter les documents extraits ici');
 }
@@ -1909,7 +1912,7 @@ if (!defined('_DEPARTMENT_DEST')) {
     define('_DEPARTMENT_DEST', 'Entité traitante');
 }
 if (!defined('_DEPARTMENT_EXP')) {
-    define('_DEPARTMENT_EXP', 'Entité expéditrice');
+    define('_DEPARTMENT_EXP', 'Entité rédactrice');
 }
 
 // Mail Categories
@@ -5201,4 +5204,13 @@ if (!defined('_REDACTOR')) {
 }
 if (!defined('_ASSIGNEE')) {
     define('_ASSIGNEE', 'Attributaire');
+}
+if (!defined('_CONTACTS_USERS_LIST')) {
+    define('_CONTACTS_USERS_LIST', 'Répertoire contacts / utilisateurs');
+}
+if (!defined('_ENTITIES_LIST')) {
+    define('_ENTITIES_LIST', 'Répertoire entités');
+}
+if (!defined('_CONTACTS_USERS_SEARCH')) {
+    define('_CONTACTS_USERS_SEARCH', 'Rechercher un contact / utilisateur');
 }

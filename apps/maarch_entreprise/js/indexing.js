@@ -1942,32 +1942,57 @@ function delIndexingModel() {
     }
 }
 
-function initSenderRecipientAutocomplete() {
-    $j("#sender_recipient").typeahead({
+function initSenderRecipientAutocomplete(inputId, mode, alternateVersion) {
+    var route = '';
+    if (mode == 'contactsUsers') {
+        route = '../../rest/autocomplete/contactsUsers';
+    } else {
+        route = '../../rest/autocomplete/entities';
+    }
+
+    $j("#" + inputId).typeahead({
         order: "asc",
         display: "idToDisplay",
         templateValue: "{{otherInfo}}",
+        emptyTemplate: "Aucune donnée pour <b>{{query}}</b>",
         minLength: 3,
         dynamic: true,
+        filter: false,
         source: {
             ajax: function (query) {
                 return {
                     type: "GET",
-                    url: "../../rest/autocomplete/contactsUsers",
+                    url: route,
                     data: {
-                        search : query
+                        search : query,
+                        onlyContacts : alternateVersion,
+                        color : !alternateVersion
                     }
                 }
             }
         },
         callback: {
             onClickAfter: function (node, li, item) {
-                $j("#sender_recipient_id").val(item.id);
-                $j("#sender_recipient_type").val(item.type);
+                if (item.type == "entity") {
+                    $j("#" + inputId + "_id").val(item.serialId);
+                } else {
+                    $j("#" + inputId + "_id").val(item.id);
+                }
+                $j("#" + inputId + "_type").val(item.type);
             },
             onCancel: function () {
-                $j("#sender_recipient_id").val('');
-                $j("#sender_recipient_type").val('');
+                $j("#" + inputId + "_id").val('');
+                $j("#" + inputId + "_type").val('');
+            },
+            onLayoutBuiltBefore: function (node, query, result, resultHtmlList) {
+                if (typeof resultHtmlList != "undefined" && result.length > 0) {
+                    $j.each(resultHtmlList.find('li'), function (i, target) {
+                        if (result[i]['type'] == "contact" && result[i]["rateColor"] != "") {
+                            $j(target).css({"background-color" : result[i]["rateColor"]});
+                        }
+                    });
+                }
+                return resultHtmlList;
             }
         }
     });

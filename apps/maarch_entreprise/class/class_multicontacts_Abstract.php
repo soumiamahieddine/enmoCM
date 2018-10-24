@@ -49,9 +49,11 @@ abstract class multicontacts_Abstract extends Database
         if (isset($contactsArray[$inputField]) && count($contactsArray[$inputField]) > 0) {
             foreach ($contactsArray[$inputField] as $key => $contacts) {
                 if (!empty($contacts)) {
-                    $content .= '<div style="width:200px;" class="multicontact_element" id="'.$key.'_'.$contacts.'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$contacts.'</div>';
+                    $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$contactsArray['addressid'][$key]]]);
+                    $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                    $content .= '<div style="width:200px; background-color:'.$rate['color'].';" class="multicontact_element" id="'.$key.'_'.$contacts.'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$contacts.'</div>';
                     if ($readOnly === false) {
-                        $content .= '<div class="email_delete_button" style="display:table-cell;vertical-align:middle;" id="'.$key.'"'
+                        $content .= '<div class="email_delete_button" style="display:table-cell;vertical-align:middle; background-color:'.$rate['color'].';" id="'.$key.'"'
                             . 'onclick="updateMultiContacts(\''.$ajaxPath
                             .'&mode=adress\', \'del\', \''.addslashes($contacts).'\', \''
                             .$inputField.'\', this.id, \''.$contactsArray['addressid'][$key].'\', \''.$contactsArray['contactid'][$key].'\');" alt="'._DELETE.'" title="'

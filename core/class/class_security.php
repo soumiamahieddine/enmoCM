@@ -108,7 +108,7 @@ class security extends Database
             // #TODO : do evolution of the loginmethod in sql query
             if ($method == 'activex') {
                 $comp = " and STATUS <> 'DEL' and loginmode = 'activex'";
-            } elseif ($method == 'ldap') {
+            } elseif ($method == 'ldap' || $method == 'shibboleth') {
                 $comp = " and STATUS <> 'DEL'";
                 $params = [];
             } else {
@@ -125,7 +125,7 @@ class security extends Database
         }
 
         $check = \SrcCore\models\AuthenticationModel::authentication(['userId' => $s_login, 'password' => $pass]);
-        if ($check || ($method == 'ldap' && $standardConnect == 'false')) {
+        if ($check || (($method == 'ldap' || $method == 'shibboleth') && $standardConnect == 'false')) {
             $user = $uc->getWithComp($s_login, $comp, $params);
         }
 

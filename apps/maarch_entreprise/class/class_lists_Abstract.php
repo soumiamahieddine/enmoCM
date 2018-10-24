@@ -2127,7 +2127,12 @@ abstract class lists_Abstract extends Database
         }
 
         //Print column header
-        for ($actualColumn = 0; $actualColumn < count($listColumn); ++$actualColumn) {
+        if (!empty($listColumn)) {
+            $numberListColumn = count($listColumn);
+        } else {
+            $numberListColumn = 0;
+        }
+        for ($actualColumn = 0; $actualColumn < $numberListColumn; ++$actualColumn) {
             //Show column
             if ($showColumn[$actualColumn] === true) {
                 //Different background on ordered column

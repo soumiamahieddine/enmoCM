@@ -371,6 +371,17 @@ class ExportFunctions
         $this->object_export->{$this->pos}->get_tags = implode(' ## ', $arr_tags);
     }
 
+    public function get_contact_type($libelle, $res_id)
+    {
+        $db = new Database();
+
+        $query = 'SELECT ct.label from contacts_v2 cont LEFT JOIN mlb_coll_ext mlb ON (mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id) LEFT JOIN contact_types ct ON ct.id = cont.contact_type WHERE mlb.res_id = ?';
+        $stmt = $db->query($query, array($res_id));
+        $result = $stmt->fetchObject();
+
+        $this->object_export->{$this->pos}->get_contact_type = $result->label;
+    }
+
     public function get_contact_civility($libelle, $res_id)
     {
         $db = new Database();

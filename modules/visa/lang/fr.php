@@ -441,3 +441,15 @@ if (!defined('_ID_IXBUS')) {
 if (!defined('_PASSWORD_IXBUS')) {
     define('_PASSWORD_IXBUS', "Mot de passe IxBus");
 }
+
+if (!defined('_WRONG_ID_PASSWORD_IXBUS')) {
+    define('_WRONG_ID_PASSWORD_IXBUS', "Identifiant ou Mot de passe IxBus incorrect");
+}
+
+if (!defined('_HANDWRITTEN_SIGN')) {
+    define('_HANDWRITTEN_SIGN', "Signature manuscrite");
+}
+
+if (!defined('_ESIGN')) {
+    define('_ESIGN', "Signature électronique");
+}

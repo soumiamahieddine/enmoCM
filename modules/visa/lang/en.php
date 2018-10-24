@@ -291,3 +291,15 @@ if (!defined('_ID_IXBUS')) {
 if (!defined('_PASSWORD_IXBUS')) {
     define('_PASSWORD_IXBUS', "Password IxBus");
 }
+
+if (!defined('_WRONG_ID_PASSWORD_IXBUS')) {
+    define('_WRONG_ID_PASSWORD_IXBUS', "Invalid IxBus ID or password");
+}
+
+if (!defined('_HANDWRITTEN_SIGN')) {
+    define('_HANDWRITTEN_SIGN', "Handwritten signature");
+}
+
+if (!defined('_ESIGN')) {
+    define('_ESIGN', "Electronique signature");
+}

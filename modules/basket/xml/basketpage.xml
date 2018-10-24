@@ -61,15 +61,4 @@
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </BASKETPAGE>
-    <!-- folders lists -->
-    <BASKETPAGE>
-        <ID>list_folders</ID>
-        <LABEL>_FOLDERS_LIST</LABEL>
-        <NAME>folders_list</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>folder</MODULE>
-        <COLLECTIONS>
-            <COLL_ID>*</COLL_ID>
-        </COLLECTIONS>
-    </BASKETPAGE>
 </ROOT>

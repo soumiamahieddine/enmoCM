@@ -18,8 +18,10 @@ $empty = 0;
 $nb_roles = 0;
 foreach ($roles as $role_id => $role_label) {
     ++$nb_role;
-    if ($category == 'outgoing' && $role_label == 'Destinataire') {
-        $role_label = _SHIPPER;
+    if ($category == 'outgoing' && $role_id == 'dest') {
+        $role_label = _REDACTOR;
+    } elseif ($category != 'outgoing' && $role_id == 'dest') {
+        $role_label = _ASSIGNEE;
     }
     if (($specific_role != $role_id && $specific_role.'_copy' != $role_id && $specific_role.'_info' != $role_id) && isset($specific_role) && $specific_role != '') {
         continue;

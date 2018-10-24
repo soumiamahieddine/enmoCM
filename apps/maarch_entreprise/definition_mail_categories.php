@@ -220,6 +220,17 @@ $_ENV['categories']['incoming']['other_cases']['contact'] = array(
     'img' => 'book',
     'form_show' => 'textfield',
 );
+$_ENV['categories']['incoming']['other_cases']['resourceContact'] = array(
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _DEST,
+    'table' => 'res',
+    'special' => '',
+    'modify' => true,
+    'img' => 'book',
+    'form_show' => 'textfield',
+);
 $_ENV['categories']['incoming']['department_number_id'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
@@ -402,6 +413,17 @@ $_ENV['categories']['outgoing']['other_cases']['contact'] = array(
     'img' => 'book',
     'form_show' => 'textfield',
 );
+$_ENV['categories']['outgoing']['other_cases']['resourceContact'] = array(
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _SENDER,
+    'table' => 'res',
+    'special' => '',
+    'modify' => true,
+    'img' => 'book',
+    'form_show' => 'textfield',
+);
 $_ENV['categories']['outgoing']['confidentiality'] = array(
     'type_form' => 'radio',
     'type_field' => 'string',
@@ -518,6 +540,17 @@ $_ENV['categories']['internal']['other_cases']['contact'] = array(
     'label' => _SHIPPER,
     'table' => 'coll_ext',
     'special' => 'exp_user_id,exp_contact_id,is_multicontacts',
+    'modify' => true,
+    'img' => 'book',
+    'form_show' => 'textfield',
+);
+$_ENV['categories']['internal']['other_cases']['resourceContact'] = array(
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _DEST,
+    'table' => 'res',
+    'special' => '',
     'modify' => true,
     'img' => 'book',
     'form_show' => 'textfield',
@@ -1071,6 +1104,24 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
             $data['contact'] = '';
         }
     }
+
+    if (!empty($_ENV['categories'][$cat_id]['other_cases']['resourceContact'])) {
+        $data['resourceContact'] = array(
+            'value' => '',
+            'show_value' => '',
+            'label' => $_ENV['categories'][$cat_id]['other_cases']['resourceContact']['label'],
+            'display' => 'textarea',
+            'img' => $_ENV['categories'][$cat_id]['other_cases']['resourceContact']['img'],
+            'field_type' => $_ENV['categories'][$cat_id]['other_cases']['resourceContact']['form_show'],
+        );
+        if (isset($_ENV['categories'][$cat_id]['other_cases']['resourceContact']['modify'])
+            && $mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['resourceContact']['modify']
+        ) {
+            $data['resourceContact']['readonly'] = false;
+        }
+        $arr[] = 'resourceContact';
+    }
+
     // Folder
     if (isset($_ENV['categories'][$cat_id]['other_cases']['folder']) && count($_ENV['categories'][$cat_id]['other_cases']['folder']) > 0 && (!isset($params['show_folder']) || $params['show_folder'] == true)) {
         $fields .= 'folders_system_id,';
@@ -1260,6 +1311,38 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                         $data[$arr[$i]][$contact_res->mode]['arr_values'][] = "{$res->firstname} {$res->lastname}";
                     }
                 }
+            } elseif ($arr[$i] == 'resourceContact') {
+                $resourceContacts = \Resource\models\ResourceContactModel::getFormattedByResId(['resId' => $res_id]);
+                foreach ($resourceContacts as $resourceContact) {
+                    if ($resourceContact['mode'] == 'recipient' && $cat_id == 'incoming') {
+                        $sr = $resourceContact;
+                    } elseif ($resourceContact['mode'] == 'sender' && $cat_id == 'outgoing') {
+                        $sr = $resourceContact;
+                    }
+                }
+
+                if (!empty($sr['format'])) {
+                    $data[$arr[$i]]['show_value'] = functions::show_string($sr['format']);
+                }
+
+                $resourceContacts = \Resource\models\ResourceContactModel::getByResId(['resId' => $res_id]);
+                foreach ($resourceContacts as $resourceContact) {
+                    if ($resourceContact['mode'] == 'recipient' && $cat_id == 'incoming') {
+                        $senderRecipientContact = $resourceContact;
+                    } elseif ($resourceContact['mode'] == 'sender' && $cat_id == 'outgoing') {
+                        $senderRecipientContact = $resourceContact;
+                    }
+                }
+
+                if (!empty($senderRecipientContact['type']) && $senderRecipientContact['type'] != 'entity') {
+                    $pathScriptTab = 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetailSender&editDetailSender&popup&sender_recipient_id='.$senderRecipientContact['item_id'].'&sender_recipient_type='.$senderRecipientContact['type'];
+    
+                    $preAddon = '<a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="';
+                    $postAddon = ' ><i class="fa fa-book fa-2x" title="'._CONTACT_CARD.'"></i></a>';
+    
+                    $data[$arr[$i]]['addon'] = $preAddon.'loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._CONTACT_CARD.'\',\''.$pathScriptTab.'\',\'contactInfo\');return false;"'.$postAddon;
+                }
+
             }
             // Folder
             elseif ($arr[$i] == 'folder' && isset($line->folders_system_id) && $line->folders_system_id != '') {

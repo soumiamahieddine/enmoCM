@@ -152,7 +152,8 @@ table tr:not(.filters) .mat-form-field {
 .admin-toolbar .maarchLogo {
     height: 100%;
     width: 120px;
-    /*transform: scale(5);*/
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .admin-toolbar .maarchLogo svg {
@@ -242,22 +243,27 @@ h1.admin-app-name {
 /* small display mode */
 
 @media all and (max-width: 768px) {
+
     #container,
     #content {
         min-width: initial !important;
     }
+
     #header {
         display: none;
     }
+
     #footer {
         display: none;
     }
+
     .enableAtionBottomLeftSmarpthone {
         z-index: 1;
         position: fixed !important;
         bottom: 3%;
         left: 3%;
     }
+
     .enableAtionBottomCenterSmarpthone {
         z-index: 1;
         position: fixed !important;
@@ -267,25 +273,30 @@ h1.admin-app-name {
         margin-left: auto;
         bottom: 10px;
     }
+
     .enableAtionTopLeftSmarpthone {
         z-index: 1;
         position: fixed !important;
         left: 3%;
         top: 3%;
     }
+
     .enableAtionTopRightSmarpthone {
         z-index: 1;
         position: fixed !important;
         right: 3%;
         top: 3%;
     }
+
     .admin-toolbar .mat-button {
         min-width: initial;
     }
+
     .admin-toolbar .maarchLogo {
         height: 100%;
         width: 50px;
     }
+
     .admin-toolbar-title {
         margin-left: 0px !important;
     }
@@ -348,7 +359,7 @@ h1.admin-app-name {
     align-items: center;
 }
 
-.homeBasketList .mat-list .mat-list-item{
+.homeBasketList .mat-list .mat-list-item {
     height: 39px !important;
     font-size: 14px !important;
 }
@@ -366,7 +377,7 @@ h1.admin-app-name {
     justify-content: center;
 }
 
-#searchInput .mat-form-field-infix{
+#searchInput .mat-form-field-infix {
     width: 100%;
 }
 
@@ -374,11 +385,12 @@ h1.admin-app-name {
     opacity: 0.5;
 }
 
-.note-width-bottom-sheet{
+.note-width-bottom-sheet {
     width: 400px;
 }
 
 /* FIX BUG CSS WITH CHROME */
-.mat-dialog-container, .mat-tab-body-content {
+.mat-dialog-container,
+.mat-tab-body-content {
     height: auto !important;
 }

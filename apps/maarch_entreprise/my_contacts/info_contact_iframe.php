@@ -30,6 +30,17 @@ echo '</div>';
 $_SESSION['error'] = '';
 $_SESSION['info'] = '';
 
+if (isset($_GET['editDetailSender']) && empty($_GET['contactid'])) {
+    if ($_GET['sender_recipient_type'] == 'user') {
+        $userInfo = \User\models\UserModel::getById(['id' => $_GET['sender_recipient_id']]);
+        $_GET['contactid'] = $userInfo['user_id'];
+    } elseif ($_GET['sender_recipient_type'] == 'contact') {
+        $addressInfos = \Contact\models\ContactModel::getByAddressId(['addressId' => $_GET['sender_recipient_id']]);
+        $_GET['contactid'] = $addressInfos['contact_id'];
+        $_GET['addressid'] = $_GET['sender_recipient_id'];
+    }
+}
+
 if (isset($_GET['contactid']) && $_GET['contactid'] <> '') {
     $_SESSION['contact']['current_contact_id'] = $id;
 } elseif ($_SESSION['contact']['current_contact_id'] <> '') {
@@ -188,6 +199,36 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
                         parent.$j('#dest_contact_id').css('background-color', response.rateColor);
                     }
                     parent.$j('#dest_contact_id').html(response.contactName);
+                }
+
+                parent.document.getElementById('show_tab').style.display = 'none';
+                parent.document.getElementById('show_tab').setAttribute('module', '');
+            }
+        }       
+    });<?php
+    } elseif ($_GET['created'] == "editDetailSender") {
+        ?>
+        new Ajax.Request('index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up',
+        {
+        method:'post',
+        parameters: {},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+
+            //Page Detail
+            if(window.opener){
+                if (response.rateColor != "") {
+                    window.opener.$j('#sender_recipient').css('background-color', response.rateColor);
+                }
+                window.opener.$j('#sender_recipient').html(response.contactName);
+                this.close();
+            //Processing Mail
+            } else {
+                if(parent.$j('#resourceContact')){
+                    if (response.rateColor != "") {
+                        parent.$j('#resourceContact').css('background-color', response.rateColor);
+                    }
+                    parent.$j('#resourceContact').html(response.contactName);
                 }
 
                 parent.document.getElementById('show_tab').style.display = 'none';

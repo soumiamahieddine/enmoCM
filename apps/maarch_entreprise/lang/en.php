@@ -1599,6 +1599,9 @@ if (!defined('_NUM2')) {
 if (!defined('_UNDEFINED')) {
     define('_UNDEFINED', 'Unknown.');
 }
+if (!defined('_UNDEFINED_DATA')) {
+    define('_UNDEFINED_DATA', 'Undefined');
+}
 if (!defined('_CONSULT_EXTRACTION')) {
     define('_CONSULT_EXTRACTION', 'You can consult here the extracted files');
 }
@@ -5039,4 +5042,13 @@ if (!defined('_REDACTOR')) {
 }
 if (!defined('_ASSIGNEE')) {
     define('_ASSIGNEE', 'Assignee');
+}
+if (!defined('_CONTACTS_USERS_LIST')) {
+    define('_CONTACTS_USERS_LIST', 'Contacts / users list');
+}
+if (!defined('_ENTITIES_LIST')) {
+    define('_ENTITIES_LIST', 'Entities list');
+}
+if (!defined('_CONTACTS_USERS_SEARCH')) {
+    define('_CONTACTS_USERS_SEARCH', 'Contacts / users search');
 }

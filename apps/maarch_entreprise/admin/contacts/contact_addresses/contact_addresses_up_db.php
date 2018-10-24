@@ -70,6 +70,8 @@ if (isset($_GET['mycontact']) && $_GET['mycontact'] <> '') {
         $iframe = 3;
     } elseif ($_GET['mycontact'] == 'editDetail') {
         $iframe = 4;
+    } elseif ($_GET['mycontact'] == 'editDetailSender') {
+        $iframe = 5;
     }
 } else {
     $admin = true;

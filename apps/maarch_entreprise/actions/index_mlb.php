@@ -690,9 +690,11 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<span id="sr_recipient_span">'._DEST.'</span>';
     $frmStr .= '</label></td>';
     $frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
-    $frmStr .= '<input name="sender_recipient" type="text" id="sender_recipient" autocomplete="off"/></span></div></div>';
-    $frmStr .= '</td><td>&nbsp;</td>';
+    $frmStr .= '<td class="indexing_field">';
+    $frmStr .= '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\', false);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\');" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
+    $frmStr .= '<div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
+    $frmStr .= '<input name="sender_recipient" type="text" id="sender_recipient" autocomplete="off" placeholder="'._CONTACTS_USERS_SEARCH.'"/></span></div></div>';
+    $frmStr .= '</td><td></td>';
     $frmStr .= '<input type="hidden" id="sender_recipient_id" />';
     $frmStr .= '<input type="hidden" id="sender_recipient_type" />';
     $frmStr .= '</tr>';
@@ -1045,7 +1047,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
                 . 'true&page=autocomplete_department_number\','
                 . ' \'Input\', \'2\', \'department_number_id\');';
 
-    $frmStr .= 'initSenderRecipientAutocomplete();';
+    $frmStr .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);';
 
     $frmStr .= '$j(\'#baskets\').css(\'visibility\',\'hidden\');'
             .'var item  = $j(\'#index_div\')[0]; if(item)'
@@ -1499,7 +1501,7 @@ function get_value_fields($values, $field)
  * @param $status String  Not used here
  * @param $collId String Collection identifier
  * @param $table String Table
- * @param $formValues String Values of the form to load
+ * @param $formValues array
  *
  * @return array
  *               $data['result'] : res_id of the new file followed by #
@@ -1920,6 +1922,24 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
     }
 
+    // Sender/Recipient
+    $srId = get_value_fields($formValues, 'sender_recipient_id');
+    $srType = get_value_fields($formValues, 'sender_recipient_type');
+
+    if (!empty($srId) && !empty($srType) && in_array($catId, ['incoming', 'outgoing', 'internal'])) {
+        if ($catId == 'incoming' || $catId == 'internal') {
+            $srMode = 'recipient';
+        } else {
+            $srMode = 'sender';
+        }
+        \Resource\models\ResourceContactModel::create([
+            'res_id'    => $resId,
+            'item_id'   => $srId,
+            'type'      => $srType,
+            'mode'      => $srMode
+        ]);
+    }
+
     if ($resId != false) {
         //Create chrono number
         //######
@@ -2083,6 +2103,11 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     }
 
                     $bodyData[$object['name']] = $tmpBodyData;
+                }
+
+                if (!empty($config['file']) && $config['file'] == 'true') {
+                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
+                    $bodyData['file'] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']]);
                 }
             } else {
                 $multipleObject = false;

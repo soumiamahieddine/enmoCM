@@ -2140,6 +2140,7 @@ color: #CCC;
 .indexingform .indexing_field
 {
     text-align: right;
+    width:220px;
 }
 
 .indexingformBusiness .indexing_field
@@ -2858,7 +2859,7 @@ div.autocomplete {
   border: 1px solid #888;
   margin: 0px;
   padding: 0px;
-  z-index: 1;
+  z-index: 3;
 }
 
 div.autocomplete ul {
@@ -3754,3 +3755,44 @@ width:auto;
 .listResultContent .fa {
     font-size: 16px;
 }
+
+.indexing_field .typeahead__field input {
+    min-height: 0px;
+    height: 20px;
+    font-size: 12px;
+    padding-right: 22px !important;
+    padding-left : 5px !important;
+    border: 1px solid #999;
+}
+
+.typeahead__list {
+    font-size: 12px;
+}
+
+.typeahead__cancel-button {
+    padding: 0px !important;
+    padding-right: 10px !important;
+}
+
+.adv_search_field_content {
+    display:flex;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.adv_search_field_content .adv_search_field{
+    flex:1;
+    padding: 10px;
+}
+
+.adv_search_field_content .adv_search_field .typeahead__container {
+    width: 206px;
+}
+
+.adv_search_field_content .adv_search_field .required::before {
+    position: absolute;
+    left: -10px;
+    top: 0;
+    content: '*';
+    color: red;
+  }

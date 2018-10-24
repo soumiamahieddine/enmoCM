@@ -30,4 +30,10 @@
         <SCRIPT>ozwilloConnect.php</SCRIPT>
         <ENABLED>false</ENABLED>
     </METHOD>
+    <METHOD>
+        <ID>shibboleth</ID>
+        <NAME>Shibboleth</NAME>
+        <SCRIPT>shibbolethConnect.php</SCRIPT>
+        <ENABLED>false</ENABLED>
+    </METHOD>
 </ROOT>

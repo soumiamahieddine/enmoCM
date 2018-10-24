@@ -784,30 +784,47 @@ if (count($_REQUEST['meta']) > 0) {
                     $arrayPDO = array_merge($arrayPDO, array(":docDateTo" => $func->format_date_db($_REQUEST['doc_date_to'])));
                     $json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
                 }
-            }
-            // CONTACTS AUTOCOMPLETE
-            elseif ($tab_id_fields[$j] == 'contact' && !empty(trim($_REQUEST['contactid']))) {
-                if (!ctype_digit($_REQUEST['contactid'])) {
-                    $json_txt .= " 'contact' : ['".addslashes(trim($_REQUEST['contact']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."']";
-                    $contact_id = $_REQUEST['contactid'];
-                    $where_request .= " ((exp_user_id = :contactid or dest_user_id = :contactid) or ";
-                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactid and coll_id = '" . $coll_id . "'))) and ";
-                    $arrayPDO = array_merge($arrayPDO, array(":contactid" => $contact_id));
-                } else if (!empty($_REQUEST['contactid']) && (!empty($_REQUEST['addressid']) && isset($_REQUEST['withAddress']))) {
-
-                    $json_txt .= " 'contact' : ['".addslashes(trim($_REQUEST['contact']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'], 'addressid' : ['".addslashes(trim($_REQUEST['addressid']))."'],";
-                    $contact_id = $_REQUEST['contactid'];
-                    $address_id = $_REQUEST['addressid'];
-                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactid and address_id = :addressid and coll_id = '" . $coll_id . "') or ";
-                    $where_request .= " ((exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') and address_id = '".$address_id."') or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id = ".$contact_id." AND dest_address_id = ".$address_id." AND status NOT IN ('DEL','OBS','TMP')) )) and ";
-                    $arrayPDO = array_merge($arrayPDO, array(":contactid" => $contact_id, ":addressid" => $address_id));
-                } else if (!empty($_REQUEST['contactid'])) {
-                    $json_txt .= " 'contact' : ['".addslashes(trim($_REQUEST['contact']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
-                    $contact_id = $_REQUEST['contactid'];
-                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactid and coll_id = '" . $coll_id . "') or ";
-                    $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id = ".$contact_id." AND status NOT IN ('DEL','OBS','TMP')) )) and ";
-                    $arrayPDO = array_merge($arrayPDO, array(":contactid" => $contact_id));
+            } elseif ($tab_id_fields[$j] == 'sender' && !empty($_REQUEST['sender_type']) && !empty($_REQUEST['sender_id'])) {
+                if ($_REQUEST['sender_type'] == 'onlyContact') {
+                    $contactAddresses = \Contact\models\ContactModelAbstract::getOnView(['select' => ['ca_id'], 'where' => ['contact_id = ?'], 'data' => [$_REQUEST['sender_id']]]);
+                    $allAddresses = [];
+                    foreach ($contactAddresses as $contactAddress) {
+                        $allAddresses[] = $contactAddress['ca_id'];
+                    }
+                    $where_request .= " ((res_id in (select res_id from resource_contacts where item_id in (:senderAddresses) and type = :senderType and mode = 'sender'))";
+                    $arrayPDO = array_merge($arrayPDO, [":senderAddresses" => $allAddresses]);
+                    $arrayPDO = array_merge($arrayPDO, [":senderId" => $_REQUEST['sender_id']]);
+                    $arrayPDO = array_merge($arrayPDO, [":senderType" => 'contact']);
+                    $where_request .= " or (exp_contact_id = :senderId)";
+                    $where_request .= " or (category_id = 'incoming' and res_id in (select res_id from contacts_res where contact_id = :senderId))";
+                } else {
+                    $where_request .= " ((res_id in (select res_id from resource_contacts where item_id = :senderId and type = :senderType and mode = 'sender'))";
+                    $arrayPDO = array_merge($arrayPDO, [":senderId" => $_REQUEST['sender_id']]);
+                    $arrayPDO = array_merge($arrayPDO, [":senderType" => $_REQUEST['sender_type']]);
+                    if ($_REQUEST['sender_type'] != 'entity') {
+                        if ($_REQUEST['sender_type'] == 'user') {
+                            $user = \User\models\UserModel::getById(['id' => $_REQUEST['sender_id'], 'select' => ['user_id']]);
+                            $where_request .= " or (exp_user_id = '{$user['user_id']}')";
+                        }
+                        $where_request .= " or (exp_contact_id is not null and address_id = :senderId)";
+                        $where_request .= " or (category_id = 'incoming' and res_id in (select res_id from contacts_res where address_id = :senderId))";
+                    }
                 }
+                $where_request .= ') and ';
+            } elseif ($tab_id_fields[$j] == 'recipient' && !empty($_REQUEST['recipient_type']) && !empty($_REQUEST['recipient_id'])) {
+                $where_request .= " ((res_id in (select res_id from resource_contacts where item_id = :recipientId and type = :recipientType and mode = 'recipient'))";
+                $arrayPDO = array_merge($arrayPDO, [":recipientId" => $_REQUEST['recipient_id']]);
+                $arrayPDO = array_merge($arrayPDO, [":recipientType" => $_REQUEST['recipient_type']]);
+                if ($_REQUEST['recipient_type'] != 'entity') {
+                    if ($_REQUEST['recipient_type'] == 'user') {
+                        $user = \User\models\UserModel::getById(['id' => $_REQUEST['recipient_id'], 'select' => ['user_id']]);
+                        $where_request .= " or (dest_user_id = '{$user['user_id']}')";
+                    }
+                    $where_request .= " or (dest_contact_id is not null and address_id = :recipientId)";
+                    $where_request .= " or (category_id = 'outgoing' and res_id in (select res_id from contacts_res where address_id = :recipientId))";
+                    $where_request .= " or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_address_id = :recipientId AND status NOT IN ('DEL','OBS','TMP')))";
+                }
+                $where_request .= ') and ';
             }
             //recherche sur les contacts externes en fonction de ce que la personne a saisi
             /*elseif ($tab_id_fields[$j] == 'contactid' && empty($_REQUEST['contactid_external']) && !empty($_REQUEST['contactid']))

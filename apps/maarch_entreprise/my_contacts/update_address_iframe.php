@@ -48,6 +48,8 @@ if (isset($_GET['id'])) {
 
 if (isset($_GET['editDetail'])) {
     $contact->formaddress("up", $id, false, 'editDetail');
+} elseif (isset($_GET['editDetailSender'])) {
+    $contact->formaddress("up", $id, false, 'editDetailSender');
 } else {
     if (isset($_GET['fromContactIframe'])) {
         $iframe_txt = "fromContactIframe";

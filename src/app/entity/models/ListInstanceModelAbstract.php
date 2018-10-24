@@ -138,14 +138,15 @@ abstract class ListInstanceModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'postSet', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'listinstance',
-            'set'   => $aArgs['set'],
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
+            'table'     => 'listinstance',
+            'set'       => $aArgs['set'],
+            'postSet'   => $aArgs['postSet'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
         ]);
 
         return true;

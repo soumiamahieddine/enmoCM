@@ -30,25 +30,28 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRo
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-    $userId = \SrcCore\controllers\AuthenticationController::authentication();
+    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}'];
+    $route = $request->getAttribute('route');
+    $currentMethod = empty($route) ? '' : $route->getMethods()[0];
+    $currentRoute = empty($route) ? '' : $route->getPattern();
 
-    if (!empty($userId)) {
-        $GLOBALS['userId'] = $userId;
-        $route = $request->getAttribute('route');
-        if (!empty($route)) {
-            $currentRoute = $route->getPattern();
-            $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
-            if (!$r['isRouteAvailable']) {
-                return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
+    if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication)) {
+        $userId = \SrcCore\controllers\AuthenticationController::authentication();
+        if (!empty($userId)) {
+            $GLOBALS['userId'] = $userId;
+            if (!empty($currentRoute)) {
+                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
+                if (!$r['isRouteAvailable']) {
+                    return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
+                }
             }
+        } else {
+            return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
         }
-        $response = $next($request, $response);
-        return $response;
-    } else {
-        return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
     }
+    $response = $next($request, $response);
+    return $response;
 });
-
 
 //Initialize
 $app->get('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
@@ -68,6 +71,7 @@ $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getA
 $app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
 $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
 $app->get('/autocomplete/contactsUsers', \SrcCore\controllers\AutoCompleteController::class . ':getContactsAndUsers');
+$app->get('/autocomplete/contacts/groups', \SrcCore\controllers\AutoCompleteController::class . ':getContactsForGroups');
 $app->get('/autocomplete/users/administration', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForAdministration');
 $app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');
 $app->get('/autocomplete/entities', \SrcCore\controllers\AutoCompleteController::class . ':getEntities');
@@ -171,7 +175,7 @@ $app->get('/home/lastRessources', \Home\controllers\HomeController::class . ':ge
 
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
-$app->get('/jnlp', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
+$app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
 $app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
 

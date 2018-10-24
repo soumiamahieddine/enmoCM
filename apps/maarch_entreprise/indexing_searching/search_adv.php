@@ -189,7 +189,7 @@ $arr_tmp = array();
 for ($i = 0; $i < count($users_list); ++$i) {
     array_push($arr_tmp, array('VALUE' => $users_list[$i]['ID'], 'LABEL' => $users_list[$i]['NOM'].' '.$users_list[$i]['PRENOM']));
 }
-$arr_tmp2 = array('label' => _PROCESS_RECEIPT, 'type' => 'select_multiple', 'param' => array('field_label' => _PROCESS_RECEIPT, 'label_title' => _CHOOSE_RECIPIENT_SEARCH_TITLE,
+$arr_tmp2 = array('label' => _ASSIGNEE . ' / ' . _REDACTOR, 'type' => 'select_multiple', 'param' => array('field_label' => _ASSIGNEE . ' / ' . _REDACTOR, 'label_title' => _CHOOSE_RECIPIENT_SEARCH_TITLE,
 'id' => 'destinataire', 'options' => $arr_tmp, ));
 $param['destinataire'] = $arr_tmp2;
 
@@ -532,63 +532,50 @@ if (isset($_REQUEST['nodetails'])) {
     </tr>
 </table>
 <table align="center" border="0" width="100%">
+    <tr>
+    <td>
 <?php
-            if ($core_tools->is_module_loaded('basket') == true) {
-                ?>
-             <tr>
-                <td colspan="2" ></td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="block">
-                    <h2><?php echo _SEARCH_SCOPE; ?></h2>
-                    <table border="0" width="100%" class="content">
-                        <tr>
-                            <td width="70%">
-                                <label for="baskets" class="bold" ><?php echo _SPREAD_SEARCH_TO_BASKETS; ?>:</label>
-                                <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
-                                <select name="baskets_clause" id="baskets_clause">
-                                    <option id="true" value="true"><?php echo _ALL_BASKETS; ?></option>
-                                    <!-- <option id="false" value="false"><?php echo _NO;?></option> -->
-                                    <?php 
-                                    if ($_REQUEST['mode'] != 'popup') {
-                                        for ($i = 0; $i < count($_SESSION['user']['baskets']); ++$i) {
-                                            if (
-                                                $_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id
-                                                && $_SESSION['user']['baskets'][$i]['id'] != 'IndexingBasket'
-                                                && $_SESSION['user']['baskets'][$i]['id'] != 'EmailsToQualify'
-                                                && $_SESSION['user']['baskets'][$i]['id'] != 'InitBasket'
-                                                && $_SESSION['user']['baskets'][$i]['id'] != 'RetourCourrier'
-                                                && $_SESSION['user']['baskets'][$i]['id'] != 'QualificationBasket'
-                                            ) {
-                                                ?><option id="<?php 
-                                                    functions::xecho($_SESSION['user']['baskets'][$i]['id']);
-                                                    ?>" value="<?php 
-                                                    functions::xecho($_SESSION['user']['baskets'][$i]['id']);
-                                                    ?>" >[<?php echo _BASKET ;?>] <?php 
-                                                    functions::xecho($_SESSION['user']['baskets'][$i]['desc']);
-                                                ?></option>
-                                                <?php
-                                            }
-                                        }
-                                    } ?>
-                                </select>
-                            </td>
-                            <td><em><?php echo _SEARCH_SCOPE_HELP; ?></em></td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </table>
-                    </div>
-                </td>
-                <td>
-                    <p align="center">
-                    </p>
-                </td>
-            </tr>
-            <tr><td colspan="2">&nbsp;</td></tr>
-            <?php
-            }    ?>
-
+if ($core_tools->is_module_loaded('basket') == true) {
+?>
+    <div class="block">
+        <h2><?php echo _SEARCH_SCOPE; ?></h2>
+        
+        <div class="adv_search_field_content">
+            <div class="adv_search_field">
+                <label for="baskets_clause" class="bold" ><?php echo _SPREAD_SEARCH_TO_BASKETS; ?> : </label>
+            </div>
+            <div class="adv_search_field">
+                <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
+                <select name="baskets_clause" id="baskets_clause">
+                    <option id="true" value="true"><?php echo _ALL_BASKETS; ?></option>
+                    <?php
+                        if ($_REQUEST['mode'] != 'popup') {
+                            for ($i = 0; $i < count($_SESSION['user']['baskets']); ++$i) {
+                                if ($_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id
+                                    && $_SESSION['user']['baskets'][$i]['id'] != 'IndexingBasket'
+                                    && $_SESSION['user']['baskets'][$i]['id'] != 'EmailsToQualify'
+                                    && $_SESSION['user']['baskets'][$i]['id'] != 'InitBasket'
+                                    && $_SESSION['user']['baskets'][$i]['id'] != 'RetourCourrier'
+                                    && $_SESSION['user']['baskets'][$i]['id'] != 'QualificationBasket') { ?>
+                                        <option id="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>" value="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>" >[<?php echo _BASKET; ?>] <?php echo functions::xecho($_SESSION['user']['baskets'][$i]['desc']); ?></option>';
+                                <?php }
+                            }
+                        }
+                    ?>
+                </select>
+            </div>
+            <div class="adv_search_field">
+                <em><?php echo _SEARCH_SCOPE_HELP; ?></em>
+            </div>
+        </div>
+    </div>
+<?php
+}
+?>
+</td>
+</tr>
+</table>
+<table align="center" border="0" width="100%">
     <tr>
         <td colspan="2" ></td>
     </tr>
@@ -596,82 +583,139 @@ if (isset($_REQUEST['nodetails'])) {
         <td >
         <div class="block">
         <h2><?php echo _LETTER_INFO; ?></h2>
-            <table border = "0" width="100%" class="content" style="position:relative;">
-                <tr>
-                    <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT; ?></label>
-                        <input type="text" name="subject" id="subject" <?php functions::xecho($size); ?>  />
-                        <input type="hidden" name="meta[]" value="subject#subject#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
-                    </td>
-                    <td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
-                </tr>
-                <tr>
-                    <td width="70%"><label for="chrono" class="bold"><?php echo _CHRONO_NUMBER;?></label>
-                        <input type="text" name="chrono" id="chrono" <?php echo $size; ?>  />
-                        <input type="hidden" name="meta[]" value="chrono#chrono#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
-                    </td>
-                    <td><em><?php echo _CHRONO_NUMBER_HELP; ?></em></td>
-                </tr>
-                <tr>
-                    <td width="70%"><label for="barcode" class="bold"><?php echo _BARCODE;?></label>
-                        <input type="text" name="barcode" id="barcode" <?php echo $size; ?>  />
-                        <input type="hidden" name="meta[]" value="barcode#barcode#input_text" />
-                    </td>
-                    <td><em><?php echo _BARCODE_HELP; ?></em></td>
-                </tr>
-                <tr>
-                    <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT; ?></label>
-                        <span style="position:relative;">
-                            <input type="text" name="contact" id="contact" onkeyup="erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');"/>
-                            <input type="hidden" name="meta[]" value="contact#contact#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
-                            <div id="show_contacts" class="autocomplete autocompleteIndex" style="width:100%;left:0px;top:17px;"></div>
-                            <div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div>
+        <div class="adv_search_field_content">
+            <div class="adv_search_field">
+                <label for="subject" class="bold" ><?php echo _MAIL_OBJECT; ?></label>
+            </div>
+            <div class="adv_search_field">
+                <input type="text" name="subject" id="subject" <?php functions::xecho($size); ?>  />
+                <input type="hidden" name="meta[]" value="subject#subject#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
+            </div>
+            <div class="adv_search_field">
+                <em><?php echo _MAIL_OBJECT_HELP; ?></em> 
+            </div>
+        </div>
+        <div class="adv_search_field_content">
+            <div class="adv_search_field">
+                <label for="chrono" class="bold"><?php echo _CHRONO_NUMBER;?></label>
+            </div>
+            <div class="adv_search_field">
+                <input type="text" name="chrono" id="chrono" <?php functions::xecho($size); ?>  />
+                <input type="hidden" name="meta[]" value="chrono#chrono#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
+            </div>
+            <div class="adv_search_field">
+                <em><?php echo _CHRONO_NUMBER_HELP; ?></em>
+            </div>
+        </div>
+        <div class="adv_search_field_content">
+            <div class="adv_search_field">
+                <label for="barcode" class="bold"><?php echo _BARCODE;?></label>
+            </div>
+            <div class="adv_search_field">
+                <input type="text" name="barcode" id="barcode" <?php echo $size; ?>  />
+                <input type="hidden" name="meta[]" value="barcode#barcode#input_text" />
+            </div>
+            <div class="adv_search_field">
+                <em><?php echo _BARCODE_HELP; ?></em>
+            </div>
+        </div>
+        <div class="adv_search_field_content">
+            <div class="adv_search_field">
+                <label for="sender" class="bold"><?php echo _SENDER; ?></label>
+            </div>
+            <div class="adv_search_field indexing_field">
+            <i id="sender_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType('sender','contactsUsers', true);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="<?php echo _CONTACTS_USERS_LIST; ?>" ></i> <i id="sender_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType('sender','entities');" style="display: inline-block;cursor:pointer;" title="<?php echo _ENTITIES_LIST; ?>" ></i>
+                <span style="position:relative;">
+                    <div class="typeahead__container"><div class="typeahead__field">
+                        <span class="typeahead__query">
+                            <input name="sender" type="text" id="sender" autocomplete="off" placeholder="<?php echo _CONTACTS_USERS_SEARCH; ?>"/>
+                            <input type="hidden" name="meta[]" value="sender#sender#input_text" />
                         </span>
-                        <script type="text/javascript">
-                            launch_autocompleter_contacts_search('index.php?display=true&dir=indexing_searching&page=autocomplete_contacts','contact', 'show_contacts', '', 'contactid', 'addressid', '');
-                        </script>
-                        <input id="withAddress" name="withAddress" type="checkbox" value="true"/> recherche avec adresse du contact
-                        <input id="contactid" name="contactid" type="hidden" />
-                        <input id="addressid" name="addressid" type="hidden" />
-                    </td>
-                    <td><em><?php echo ''; ?></em></td>
-                </tr>
-               
-                <tr>
-                    <td width="70%"><label for="signatory_name" class="bold"><?php echo _SIGNATORY_NAME;?></label>
-                        <input type="text" name="signatory_name" id="signatory_name" onkeyup="erase_contact_external_id('signatory_name', 'ac_signatory_name');"/>
-                        <input type="hidden" name="meta[]" value="signatory_name#signatory_name#input_text" />
-                        <div id="signatoryNameList" class="autocomplete"></div>
-                        <script type="text/javascript">
-                            initList_hidden_input('signatory_name', 'signatoryNameList', '<?php 
-                                echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=users_list_by_name_search', 'what', '2', 'ac_signatory_name');
-                        </script>
-                        <input id="ac_signatory_name" name="ac_signatory_name" type="hidden" />
-                    </td>
-                    <td><em><?php echo  ""; ?></em></td>
-                </tr>
-                <tr>
-                    <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT; ?></label>
-                        <input type="text" name="fulltext" id="fulltext" <?php functions::xecho($size); ?>  />
-                        <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
-                        <a href="javascript::" onclick="new Effect.toggle('iframe_fulltext_help', 'blind', {delay:0.2})"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>"></i></a>
-                    </td>
-                    <td><em><?php echo _FULLTEXT_HELP; ?></em></td>
-                </tr>
-                <tr id="iframe_fulltext_help" name="iframe_fulltext_help" style="display:none;">
-                    <td width="70%" >
-                        <iframe src="<?php echo $_SESSION['config']['businessappurl']
-                            .'index.php?display=true&page=fulltext_search_help'; ?>" frameborder="0" width="100%" height="227px">
-                        </iframe>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD; ?></label>
-                        <input type="text" name="multifield" id="multifield" <?php functions::xecho($size); ?>  />
-                        <input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
-                    </td>
-                    <td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
-                </tr>
-            </table>
+                    </div></div>
+                </span>
+                <script type="text/javascript">
+                    initSenderRecipientAutocomplete('sender','contactsUsers', true);
+                </script>
+                <input type="hidden" name="sender_id" id="sender_id" />
+                <input type="hidden" name="sender_type" id="sender_type" />
+            </div>
+            <div class="adv_search_field">
+
+            </div>
+        </div>
+        <div class="adv_search_field_content">
+            <div class="adv_search_field">
+                <label for="recipient" class="bold"><?php echo _DEST; ?></label>
+            </div>
+            <div class="adv_search_field indexing_field">
+            <i id="recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType('recipient','contactsUsers', true);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="<?php echo _CONTACTS_USERS_LIST; ?>" ></i> <i id="recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType('recipient','entities');" style="display: inline-block;cursor:pointer;" title="<?php echo _ENTITIES_LIST; ?>" ></i>
+                <span style="position:relative;">
+                    <div class="typeahead__container"><div class="typeahead__field">
+                        <span class="typeahead__query">
+                            <input name="recipient" type="text" id="recipient" autocomplete="off" placeholder="<?php echo _CONTACTS_USERS_SEARCH; ?>"/>
+                            <span class="green_asterisk" style="position: absolute;right: -10px;top: 0px;"><i class="fa fa-star"></i></span>
+                            <input type="hidden" name="meta[]" value="recipient#recipient#input_text" />
+                        </span>
+                    </div></div>
+                </span>
+                <script type="text/javascript">
+                    initSenderRecipientAutocomplete('recipient', 'contactsUsers', true);
+                </script>
+                <input type="hidden" name="recipient_id" id="recipient_id" />
+                <input type="hidden" name="recipient_type" id="recipient_type" />
+            </div>
+            <div class="adv_search_field">
+
+            </div>
+        </div>
+        <div class="adv_search_field_content">
+            <div class="adv_search_field">
+                <label for="signatory_name" class="bold"><?php echo _SIGNATORY_NAME;?></label>
+            </div>
+            <div class="adv_search_field">
+                <input type="text" name="signatory_name" id="signatory_name" onkeyup="erase_contact_external_id('signatory_name', 'ac_signatory_name');"/>
+                <input type="hidden" name="meta[]" value="signatory_name#signatory_name#input_text" />
+                <div id="signatoryNameList" class="autocomplete"></div>
+                <script type="text/javascript">
+                    initList_hidden_input('signatory_name', 'signatoryNameList', '<?php 
+                        echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=users_list_by_name_search', 'what', '2', 'ac_signatory_name');
+                </script>
+                <input id="ac_signatory_name" name="ac_signatory_name" type="hidden" />
+            </div>
+            <div class="adv_search_field">
+
+            </div>
+        </div>
+        <div class="adv_search_field_content">
+            <div class="adv_search_field">
+                <label for="fulltext" class="bold" ><?php echo _FULLTEXT; ?></label>
+            </div>
+            <div class="adv_search_field">
+                <input type="text" name="fulltext" id="fulltext" <?php functions::xecho($size); ?>  />
+                <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
+                <a href="javascript::" onclick='$j("#iframe_fulltext_help").slideToggle("fast");'><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>"></i></a>
+            </div>
+            <div class="adv_search_field">
+                <em><?php echo _FULLTEXT_HELP; ?></em>
+            </div>
+        </div>
+        <div class="adv_search_field_content" id="iframe_fulltext_help" style="display:none;">
+            <iframe src="<?php echo $_SESSION['config']['businessappurl']
+                .'index.php?display=true&page=fulltext_search_help'; ?>" frameborder="0" width="100%" height="240px">
+            </iframe>
+        </div>
+        <div class="adv_search_field_content">
+            <div class="adv_search_field">
+                <label for="multifield" class="bold" ><?php echo _MULTI_FIELD; ?></label>
+            </div>
+            <div class="adv_search_field">
+                <input type="text" name="multifield" id="multifield" <?php functions::xecho($size); ?>  />
+                <input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
+            </div>
+            <div class="adv_search_field">
+                <em><?php echo _MULTI_FIELD_HELP; ?></em>
+            </div>
+        </div>
             </div>
         </td>
     </tr>

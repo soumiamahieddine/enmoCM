@@ -53,7 +53,11 @@ class CurlModel
             if (is_array($aArgs['bodyData']) && !empty($aArgs['bodyData']) && $aArgs['multipleObject']) {
                 $bodyData = [];
                 foreach ($aArgs['bodyData'] as $key => $value) {
-                    $bodyData[$key] = json_encode($value);
+                    if ($key == 'file') {
+                        $bodyData[$key] = $value;
+                    } else {
+                        $bodyData[$key] = json_encode($value);
+                    }
                 }
             } else {
                 $bodyData = json_encode($aArgs['bodyData']);
@@ -140,7 +144,7 @@ class CurlModel
                     $curlConfig['url']      = (string)$call->url;
                     $curlConfig['method']   = strtoupper((string)$call->method);
                     if (!empty($call->file)) {
-                        $curlConfig['file'] = (string)$call->file->key;
+                        $curlConfig['file'] = (string)$call->file;
                     }
                     if (!empty($call->header)) {
                         $curlConfig['header'] = [];
@@ -209,5 +213,18 @@ class CurlModel
         }
 
         return false;
+    }
+
+    public static function makeCurlFile(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['path']);
+        ValidatorModel::stringType($aArgs, ['path']);
+
+        $mime = mime_content_type($aArgs['path']);
+        $info = pathinfo($aArgs['path']);
+        $name = $info['basename'];
+        $output = new \CURLFile($aArgs['path'], $mime, $name);
+
+        return $output;
     }
 }

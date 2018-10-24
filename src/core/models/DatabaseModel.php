@@ -195,9 +195,9 @@ class DatabaseModel
      */
     public static function update(array $args)
     {
-        ValidatorModel::notEmpty($args, ['table', 'set', 'where']);
+        ValidatorModel::notEmpty($args, ['table', 'where']);
         ValidatorModel::stringType($args, ['table']);
-        ValidatorModel::arrayType($args, ['set', 'where']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'postSet']);
 
         if (empty($args['data'])) {
             $args['data'] = [];
@@ -206,12 +206,19 @@ class DatabaseModel
 
         $querySet  = [];
         $dataSet = [];
-        foreach ($args['set'] as $key => $value) {
-            if ($value == 'SYSDATE' || $value == 'CURRENT_TIMESTAMP') {
+        if (!empty($args['set'])) {
+            foreach ($args['set'] as $key => $value) {
+                if ($value == 'SYSDATE' || $value == 'CURRENT_TIMESTAMP') {
+                    $querySet[] = "{$key} = {$value}";
+                } else {
+                    $querySet[] = "{$key} = ?";
+                    $dataSet[] = $value;
+                }
+            }
+        }
+        if (!empty($args['postSet'])) {
+            foreach ($args['postSet'] as $key => $value) {
                 $querySet[] = "{$key} = {$value}";
-            } else {
-                $querySet[] = "{$key} = ?";
-                $dataSet[] = $value;
             }
         }
         $args['data'] = array_merge($dataSet, $args['data']);

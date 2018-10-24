@@ -1,8 +1,8 @@
 <mat-toolbar color="primary" class="admin-toolbar">
-    <button mat-button (click)="this.snav.toggle();">
-        <mat-icon *ngIf="!mobileMode"class="maarchLogo" svgIcon="maarchLogo"></mat-icon>
-        <mat-icon *ngIf="mobileMode" class="fa fa-bars fa-2x"></mat-icon>
+    <button mat-button (click)="this.snav.toggle();" style="min-width: 50px;padding: 5px;opacity: 0.5;">
+        <mat-icon class="fa fa-bars fa-2x"></mat-icon>
     </button>
+    <a href="#" title="{{lang.home}}" *ngIf="!mobileMode" style="margin-right: 30px;"><mat-icon class="maarchLogo" svgIcon="maarchLogo"></mat-icon></a>
     <h1 class="admin-toolbar-title" *ngIf="!mobileMode">{{titleHeader}}
     </h1>
     <span style="flex: 1 1 auto;"></span>

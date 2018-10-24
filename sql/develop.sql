@@ -573,3 +573,7 @@ CREATE TABLE resource_contacts
   CONSTRAINT resource_contacts_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+ALTER TABLE entities DROP COLUMN IF EXISTS id;
+ALTER TABLE entities ADD COLUMN id serial;
+ALTER TABLE entities ADD UNIQUE (id);
+

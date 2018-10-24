@@ -659,6 +659,8 @@ if ($stmt->rowCount() == 0) {
                     $inputAddressValue = $data[$key]['address_value'];
 
                     $iconShow = "<a href=\"#\" onclick=\"window.open('index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetail&editDetail&popup&contactid='+document.getElementById('contactid').value+'&addressid='+document.getElementById('addressid').value+'', 'contact_info', 'height=800, width=1000,scrollbars=yes,resizable=yes');\">".$iconShow.'</a>';
+                } elseif($key == 'resourceContact') {
+                    $iconShow = "<a href=\"#\" onclick=\"openSenderInfoContact(document.getElementById('sender_recipient_id').value, document.getElementById('sender_recipient_type').value)\">".$iconShow.'</a>';
                 } elseif (in_array($key, ['dest_user_id', 'exp_user_id'])) {
                     $inputValue = $data[$key]['value'];
                     $inputAddressValue = $data[$key]['address_value'];
@@ -751,16 +753,18 @@ if ($stmt->rowCount() == 0) {
                             $_SESSION['adresses']['addressid'][] = $data[$key]['multi']['address_id'][$icontacts];
                             $_SESSION['adresses']['contactid'][] = $data[$key]['multi']['contact_id'][$icontacts];
 
-                            echo '<div class="multicontact_element" style="display:table;width:200px;" id="'.$icontacts.'_'.$data[$key]['multi']['contact_id'][$icontacts].'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$data[$key]['multi']['arr_values'][$icontacts].'</div>';
+                            $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['multi']['address_id'][$icontacts]]]);
+                            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);        
+                            echo '<div class="multicontact_element" style="display:table;width:200px;background-color:'.$rate['color'].';" id="'.$icontacts.'_'.$data[$key]['multi']['contact_id'][$icontacts].'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$data[$key]['multi']['arr_values'][$icontacts].'</div>';
 
                             if (empty($disabledAttr)) {
-                                echo '&nbsp;<div class="email_delete_button" style="display:table-cell;vertical-align:middle" id="'.$icontacts.'"'
+                                echo '&nbsp;<div class="email_delete_button" style="display:table-cell;vertical-align:middle;background-color:'.$rate['color'].';" id="'.$icontacts.'"'
                                                         .'onclick="updateMultiContacts(\''.$path_to_script
                                                         .'&mode=adress\', \'del\', \''.$data[$key]['multi']['arr_values'][$icontacts].'\', \'to\', this.id, \''.$data[$key]['multi']['address_id'][$icontacts].'\', \''.$data[$key]['multi']['contact_id'][$icontacts].'\');" alt="'._DELETE.'" title="'
                                                         ._DELETE.'">x</div>';
                                 echo '</div>';
                             } else {
-                                echo '&nbsp;<div class="email_delete_button" style="display:none;vertical-align:middle" id="'.$icontacts.'"'
+                                echo '&nbsp;<div class="email_delete_button" style="display:none;vertical-align:middle;background-color:'.$rate['color'].';" id="'.$icontacts.'"'
                                                     .'onclick="" alt="'._DELETE.'" title="'
                                                     ._DELETE.'">x</div>';
                                 echo '</div>';
@@ -771,6 +775,46 @@ if ($stmt->rowCount() == 0) {
                     echo '</div>';
                     echo "<input type='hidden' name='contactid' id='contactid' value='' title='' alt='' size='40' />";
                     echo "<input type='hidden' name='addressid' id='addressid' value='' title='' alt='' size='40' />";
+                } elseif ($key == 'resourceContact') {
+                    $resourceContacts = \Resource\models\ResourceContactModel::getFormattedByResId(['resId' => $s_id]);
+                    foreach ($resourceContacts as $resourceContact) {
+                        if ($resourceContact['mode'] == 'recipient' && ($data['category_id']['value'] == 'incoming' || $data['category_id']['value'] == 'internal')) {
+                            $sr = $resourceContact;
+                        } elseif ($resourceContact['mode'] == 'sender' && $data['category_id']['value'] == 'outgoing') {
+                            $sr = $resourceContact;
+                        }
+                    }
+                    if (empty($disabledAttr)) {
+                        echo '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\', false);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\');" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
+                        if ($sr['type'] == 'entity') {
+                            echo '<script>$j("#sender_recipient_icon_contactsUsers").css({"color":"#666"});</script>';
+                            echo '<script>$j("#sender_recipient_icon_entities").css({"color":"#135F7F"});</script>';
+                        } else {
+                            echo '<script>$j("#sender_recipient_icon_contactsUsers").css({"color":"#135F7F"});</script>';
+                            echo '<script>$j("#sender_recipient_icon_entities").css({"color":"#666"});</script>';
+                        }
+                    }
+                    echo '<div class="typeahead__container" style="width: 206px;"><div class="typeahead__field"><span class="typeahead__query">';
+                    echo "<textarea style='font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 11px;padding: 5px;width: 206px;max-width: 206px;' name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr}/>";
+                    if (!empty($sr['format'])) {
+                        echo $sr['format'];
+                    }
+                    echo '</textarea>';
+                    echo '</span></div></div>';
+                    echo "<input type='hidden' name='sender_recipient_id' id='sender_recipient_id' ";
+                    if (!empty($sr['item_id'])) {
+                        echo "value='{$sr['item_id']}'";
+                    }
+                    echo "/>";
+                    echo "<input type='hidden' name='sender_recipient_type' id='sender_recipient_type' ";
+                    if (!empty($sr['type'])) {
+                        echo "value='{$sr['type']}'";
+                    }
+                    echo "/>";
+
+                    //initialize autocomplete
+                    echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);</script>';
+
                 } else {
                     echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";
                 }

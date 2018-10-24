@@ -522,7 +522,7 @@ export const LANG_FR = {
     "uploadSignFileInfo"                : "Cliquer pour ajouter une signature depuis votre poste",
     "used"                              : "Utilisé",
     "usedInActionPage"                  : "Action sur la page d'action",
-    "usedInBasketlist"                  : "Action sur la liste de résultat",
+    "usedInBasketlist"                  : "Action sur la liste de résultats",
     "user"                              : "utilisateur",
     "userAdded"                         : "Utilisateur ajouté",
     "userAuthorized"                    : "Utilisateur autorisé",

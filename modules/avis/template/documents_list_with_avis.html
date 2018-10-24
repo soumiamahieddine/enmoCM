@@ -54,129 +54,117 @@ Mods
 
 #!#TABLE
 <!-- ----------------------------------------------------------------------- -->
-    <table border="0" cellspacing="0" class="listing spec  zero_padding" id="extended_list" style ="padding: 0px;">
+    <table border="0" cellspacing="0" class="listing spec  zero_padding listResultContent" id="extended_list" style="display:block;padding: 0px;width:100%;">
 
 #!#HEAD
 <!-- ----------------------------------------------------------------------- -->
-        <thead border ="1">
+        <thead border="1" class="listResultContentHead">
             <tr>
-                <!--<th width="100%" colspan="2">
-                    <div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;">
-						##checkUncheckAll##&nbsp;
-                        ##defineLang|_SORT_BY## :
-                        ##defineLang|_NUM_GED##            ##sortColumn|res_id##&nbsp;
-                        ##defineLang|_TYPE##               ##sortColumn|type_label##&nbsp;
-                        ##defineLang|_SUBJECT##            ##sortColumn|subject##&nbsp;
-                        ##defineLang|_DEST_USER##          ##sortColumn|dest_user##&nbsp;
-                        ##defineLang|_REG_DATE##           ##sortColumn|creation_date##&nbsp;
-                        ##defineLang|_PROCESS_LIMIT_DATE## ##sortColumn|process_limit_date##&nbsp;
-                        ##defineLang|_ENTITY##             ##sortColumn|entity_label##&nbsp;
-                        ##defineLang|_CATEGORY##           ##sortColumn|category_id##
-                        ##ifStatement|#isModuleLoaded|cases#===true|&nbsp;#defineLang|_CASE# #sortColumn|case_label#| ##
-                    </div>
-                </th>-->
-                <th width="120px;">
-                <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-                <tr>
-                    <th style="text-align:center">##checkUncheckAll##<br/>##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==res_id|<i>#defineLang|_NUM_GED#</i>|## ##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==chrono_number|<i>#defineLang|_CHRONO_NUMBER_SHORT#</i>|## / ##defineLang|_STATUS##<br/>##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==res_id|#sortColumn|res_id#|## ##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==chrono_number|#sortColumn|alt_identifier#|## / ##sortColumn|status##</th>
-                </tr>
-                </table>
+                <th style="width:150px;text-align:center;">
+                    <span style="text-align:center;">
+                        ##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==res_id|<i>#defineLang|_NUM_GED#</i>|## ##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==chrono_number|<i>#defineLang|_CHRONO_NUMBER_SHORT#</i>|## / ##defineLang|_STATUS##<br/>##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==res_id|#sortColumn|res_id#|## ##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==chrono_number|#sortColumn|alt_identifier#|## / ##sortColumn|status##
+                    </span>
                 </th>
-                        <th style="text-align:center" >
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-                                    <tr>
-                                        
-                                        <th style="font-size:9px;" width ="120px">##defineLang|_SUBJECT## / ##defineLang|_PRIORITY##<br/>##sortColumn|subject## / ##sortColumn|priority##</th>
-                                        <th style="font-size:9px;text-align:left;" width ="130px">##defineLang|_CATEGORY##<br/>##sortColumn|category_id##</th>
-                                        <th style="font-size:9px;" width ="140px" >##defineLang|_RECOMMENDATION_LIMIT_DATE##<br/>##sortColumn|recommendation_limit_date##</th>
-                                        <th style="font-size:9px;" width ="185px" >##defineLang|_MODIFICATION_DATE##<br/>##sortColumn|modification_date##</th>
-                                        <th style="font-size:9px;" width ="170px" >##defineLang|_ENTITY##<br/>##sortColumn|entity_label##</th>
-                                        <th style="font-size:9px;" width ="282px" >##defineLang|_TYPE## / ##defineLang|_NB_AVIS##<br/>##sortColumn|type_label##</th>
-                                        <th style="font-size:9px;" width ="50px" >##defineLang|_DEST_USER##<br/>##sortColumn|dest_user##</th>
-                                     
-                                    </tr>                         
-                            </table>
-                        </th>
+                <th>
+                    <div style="display:flex;">
+                        <span style="flex:1;">
+                            ##defineLang|_SUBJECT## / ##defineLang|_PRIORITY##<br/>##sortColumn|subject## / ##sortColumn|priority##
+                        </span>
+                        <span style="flex:1;">
+                            ##defineLang|_CATEGORY##<br/>##sortColumn|category_id##
+                        </span>
+                        <span style="flex:1;">
+                            ##defineLang|_CREATION_DATE##<br/>##sortColumn|creation_date##
+                        </span>
+                        <span style="flex:1;">
+                            ##defineLang|_MODIFICATION_DATE##<br/>##sortColumn|modification_date##
+                        </span>
+                        <span style="flex:2;">
+                            ##defineLang|_ASSIGNEE## - ##defineLang|_REDACTOR## / ##defineLang|_ENTITY##<br/>##sortColumn|dest_user## / ##sortColumn|entity_label##
+                        </span>
+                        <span style="flex:1;">
+                            ##defineLang|_TYPE## / ##defineLang|_NB_AVIS##<br/>##sortColumn|type_label##
+                        </span>
+                        <span style="flex:1;">
+                            ##defineLang|_DEST_USER## / ##defineLang|_SHIPPER##<br/>
+                        </span>
+                    </div>
+                </th>
             </tr>
         </thead>
 
-        <tbody>
+        <tbody class="listResultContentBody">
         
 #!#RESULT
 <!-- ----------------------------------------------------------------------- -->
-                <tr  class="##cssLine|col|white##"  title="##showDefaultAction##">
-
-                    <td width="10%" ##clickOnLine##>
-                        <!--<div align="center"><img src="##load_img|contact_maarch.gif##" alt="##loadValue|status##" title="##loadValue|status##"> </div>-->
-                        <div align="center" style ="color:#135F7F;">##loadValue|status####func_isConfidential##</div>
+            <tr class="##cssLine|col|white##" title="##showDefaultAction##">
+                <td style="width:150px;text-align:center;">
+                    ##loadValue|status####func_isConfidential##<br/><br/>
+                    <b title="n°##loadValue|res_id##">##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==res_id|#loadValue|res_id#|## ##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==chrono_number|#loadValue|alt_identifier#|##</b>
+                    ##func_cadenas|'#loadValue|locker_user_id#'|'#loadValue|locker_time#'##  ##radioButton## ##checkBox##
+                </td>
+                <td style="padding: 10px;">
+                    <span style="display: flex;width: 100%;padding-bottom: 20px;align-items: center;">
+                        <span style="flex:4;font-weight:bold;padding-left: 10px;font-size:15px;" ##clickOnLine##>
+                            ##loadValue|subject##
+                        </span>
+                        <span style="flex:1;font-weight:bold;padding-left: 10px;font-size:15px;text-align:right;color:#5C7C89;font-style: italic;" ##clickOnLine##>
+                            ##nbNoteAvis|'#loadValue|res_id#'## ##defineLang|_NB_AVIS_SENT##
+                        </span>
+                        <span style="flex:1;text-align: right;">
+                            <span title="##defineLang|_DEST_USER## - ##defineLang|_SHIPPER##">##loadValue|exp_user_id####loadValue|is_multicontacts## ##func_bool_see_multi_contacts##</span><br/>
+                            ##ifStatement|'#loadValue|real_dest#'!=null|#loadValue|real_dest#|##<br/><br/>
+                            ##ifStatement|'#loadValue|case_label#'!=null|<b>#defineLang|_CASE# : </b>#loadValue|case_label#|##
+                        </span>
+                    </span>
+                    <span style="display: flex;width: 100%;">
+                        <span style="flex:1;" title="##defineLang|_PRIORITY##" ##clickOnLine##>
+                            ##loadValue|priority##
+                        </span>
+                        <span style="flex:1;" title="##defineLang|_CATEGORY##" ##clickOnLine##>
+                            ##loadValue|category_img## ##loadValue|category_id##
+                        </span>
+                        <span style="flex:1;" title="##defineLang|_CREATION_DATE##" ##clickOnLine##>
+                            <i class="fa fa-calendar-alt fa-2x"></i> ##loadValue|creation_date##
+                        </span>
+                        <span style="flex:1;" title="##defineLang|_MODIFICATION_DATE##" ##clickOnLine##>
+                            <i class="fa fa-calendar-check fa-2x"></i> ##loadValue|modification_date##
+                        </span>
+                        <span style="flex:2;" ##clickOnLine##>
+                            <span title="##defineLang|_ASSIGNEE## - ##defineLang|_REDACTOR##">##loadValue|dest_user##</span> <span title="##defineLang|_ENTITY##">(##loadValue|entity_label##)</span>
+                        </span>
+                        <span style="flex:1;" title="##defineLang|_TYPE##" ##clickOnLine##>
+                            <i class="fa fa-file fa-2x"></i> ##loadValue|type_label##
+                        </span>
+                        <span style="flex:1;">
+                            <span class="actionsTool" style="text-align:center;">
+                                ##func_bool_see_notes##
+                                ##showActionFA|#defineLang|_ATTACHMENTS#|paperclip|loadRepList('#loadValue|res_id#', 'FT')|#loadValue|count_attachment# == 0##
+                                ##showActionFA|#defineLang|_WF#|share-alt|loadDiffList('#loadValue|res_id#')##
+                                ##ifStatement|'#loadValue|filename#'!=null|#showIconDocument#|##
+                                ##showIconDetails##
+                            </span>
+                        </span>
+                    </span>
+                   
+                </td>
+            </tr>
+               <tr id="noteList_##loadValue|res_id##" name="noteList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
+                    <td colspan="6" style="background-color: #f2f2f2;">
+                        <div id="divNoteList_##loadValue|res_id##" align="center" style="color: grey;margin:10px;padding:10px;border: 1px dashed #135F7F;">
+                            <i class="fa fa-spinner fa-2x"></i><br />
+                            ##define_lang|_LOADING_INFORMATIONS##
+                        </div>
                     </td>
-                    <td width="90%" align="center" style="padding : 0px; vertical-align:top" ##clickOnLine##>
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-                                <tr>
-                                    <td style="font-size:14px;font-weight:bold;max-width: 1000px;">##loadValue|subject##</td>
-                                    <td width="17.5%" style="font-size:14px;font-weight:bold;color:#5C7C89;font-style: italic;">
-                                        ##nbNoteAvis|'#loadValue|res_id#'## ##defineLang|_NB_AVIS_SENT##
-                                    </td>
-                                    <td width="17.5%">
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                            <tr>
-                                                <td style="text-align:right">##loadValue|exp_user_id####loadValue|is_multicontacts##</td>
-                                            </tr>
-
-                                            <tr><td> </td><td></td></tr>
-                                            <tr>
-                                                <td style="text-align:right">##loadValue|dest_user##</td>
-                                            </tr>
-											##ifStatement|'#loadValue|case_label#'!=null|<tr><td style="text-align:right"><b>#defineLang|_CASE# : </b>#loadValue|case_label#</td></tr>|##
-                                        </table>
-                                    </td>
-                                </tr>
-                        </table>
+                </tr>   
+               <tr id="contactsList_##loadValue|res_id##" name="contactsList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
+                    <td colspan="6" style="background-color: #f2f2f2;">
+                        <div id="divContactsList_##loadValue|res_id##" align="center" style="color: grey;margin:10px;padding:10px;border: 1px dashed #135F7F;">
+                            <i class="fa fa-spinner fa-2x"></i><br />
+                            ##define_lang|_LOADING_INFORMATIONS##
+                        </div>
                     </td>
-                </tr>
-                <tr class="##cssLineReload##" title="##showDefaultAction##">
-                        <td title="n°##loadValue|res_id##" style="text-align:center" style="font-size:13px;" >##func_cadenas|'#loadValue|locker_user_id#'|'#loadValue|locker_time#'##  ##radioButton## ##checkBox##<b>##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==res_id|#loadValue|res_id#|## ##ifStatement|'#defineLang|_ID_TO_DISPLAY#'==chrono_number|#loadValue|alt_identifier#|##</b></td>
-                        <td style="text-align:center" >
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-                                    <tr>
-                                        
-                                        <td style="font-size:10px;" width ="80px">##loadValue|priority##</td>
-                                        <td style="font-size:10px;text-align:right;" width ="30px" alt="##defineLang|_CATEGORY##" title="##defineLang|_CATEGORY##" ##clickOnLine##>##loadValue|category_img##</td>
-                                        <td style="font-size:10px;" width ="100px" >##loadValue|category_id##</td>
-                                        <td style="font-size:10px;text-align:right;" width ="30px" alt="##defineLang|_RECOMMENDATION_LIMIT_DATE##" title="##defineLang|_RECOMMENDATION_LIMIT_DATE##" ##clickOnLine##><i class="fa fa-calendar-alt fa-2x"></i> </td>
-                                        <td style="font-size:10px;" width ="100px" >##loadValue|recommendation_limit_date##</td>
-                                        <td style="font-size:10px;text-align:right;" width ="30px" alt="##defineLang|_MODIFICATION_DATE##" title="##defineLang|_MODIFICATION_DATE##" ##clickOnLine##><i class="fa fa-calendar-check  fa-2x"></i> </td>
-                                        <td style="font-size:10px;" width ="100px" >##loadValue|modification_date##</td>
-                                        <td style="font-size:10px;text-align:right;" width ="40px" alt="##defineLang|_ENTITY##" title="##defineLang|_ENTITY##" ##clickOnLine##><i class="fa fa-sitemap fa-2x"></i></td>
-                                        <td style="font-size:10px;" width ="110px" > ##loadValue|entity_label##</td>
-                                        <td style="font-size:10px;text-align:right" width ="30px"  alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><i class="fa fa-file fa-2x"></i>
-                                        <td style="font-size:10px;text-align:left"  width ="80px" >##loadValue|type_label##</td>
-                                        <td style="font-size:10px;" width ="50px">##func_bool_see_multi_contacts##</td>
-                                        <td style="font-size:10px;" width ="30px">##func_bool_see_notes##</td>
-                                        <td style="font-size:10px;" width ="30px">##showActionFA|#defineLang|_ATTACHMENTS#|paperclip|loadRepList('#loadValue|res_id#')|#loadValue|count_attachment# == 0##</td>
-                                        <td style="font-size:10px;" width ="30px">##showActionFA|#defineLang|_WF#|share-alt|loadDiffList('#loadValue|res_id#')##</td>
-                                        <td style="font-size:10px;" width ="30px" >##showIconDocument##</td>
-                                        <td style="font-size:10px;" width ="30px" >##showIconDetails##</td>
-                                    </tr>                         
-                            </table>
-                        </td>
-                </tr>
-			   <tr id="noteList_##loadValue|res_id##" name="noteList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
-					<td colspan="6" style="background-color: #f2f2f2;">
-						<div id="divNoteList_##loadValue|res_id##" align="center" style="color: grey;margin:10px;padding:10px;border: 1px dashed #135F7F;">
-							<i class="fa fa-spinner fa-2x"></i><br />
-							##define_lang|_LOADING_INFORMATIONS##
-						</div>
-					</td>
-				</tr>	
-			   <tr id="contactsList_##loadValue|res_id##" name="contactsList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
-					<td colspan="6" style="background-color: #f2f2f2;">
-						<div id="divContactsList_##loadValue|res_id##" align="center" style="color: grey;margin:10px;padding:10px;border: 1px dashed #135F7F;">
-							<i class="fa fa-spinner fa-2x"></i><br />
-							##define_lang|_LOADING_INFORMATIONS##
-						</div>
-					</td>
-				</tr>	
+                </tr>   
                 <tr id="repList_##loadValue|res_id##" name="repList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
                     <td colspan="2" style="background-color: #f2f2f2;">
                         <div id="divRepList_##loadValue|res_id##" align="center" style="color: grey;margin:10px;padding:10px;border: 1px dashed #135F7F;">
@@ -192,7 +180,7 @@ Mods
                             ##defineLang|_LOADING_INFORMATIONS##
                         </div>
                     </td>
-                </tr>
+                </tr> 
 
  #!#FOOTER
  <!--   ----------------------------------------------------------------------- -->
@@ -203,6 +191,5 @@ Mods
 <script>
     $j('#container').attr('style', 'width: 90%; min-width: 1000px;');
     $j('#content').attr('style', 'width: auto; min-width: 1000px;');
-    $j('#inner_content').attr('style', 'width: auto; min-width: 1000px;');
     $j('table#extended_list').attr('style', 'width: 100%; min-width: 900px; margin: 0;');
 </script>
