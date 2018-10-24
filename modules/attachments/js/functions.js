@@ -266,9 +266,9 @@ function loadSelectedContact() {
         $j('#contact_attach').val(value[2]);
         $j('#contact_attach').focus();
     }
-    //if ($j("#templateOffice_edit").css("display") !== "none") {
-        $j("#add").hide();
-    //}
+    
+    $j("#add").hide();
+    
     if ($j("#templateOffice option:selected").val() !== "" && $j("#templateOffice_edit").css("display") == "none") {
         $j("#templateOffice_edit").css("display", "inline");
     }
