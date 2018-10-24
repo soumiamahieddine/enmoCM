@@ -1983,10 +1983,13 @@ function initSenderRecipientAutocomplete(inputId, mode) {
                 $j("#" + inputId + "_type").val('');
             },
             onLayoutBuiltBefore: function (node, query, result, resultHtmlList) {
-                $j.each(resultHtmlList.find('li'), function (i, target) {
-                    $j(target).css({"background-color":"#dadadada"});
-                    console.log(target);
-                });
+                if (typeof resultHtmlList != "undefined" && result.length > 0) {
+                    $j.each(resultHtmlList.find('li'), function (i, target) {
+                        if (result[i]['type'] == "contact" && result[i]["rateColor"] != "") {
+                            $j(target).css({"background-color" : result[i]["rateColor"]});
+                        }
+                    });
+                }
                 return resultHtmlList;
             }
         }

@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use Contact\controllers\ContactController;
 use Contact\controllers\ContactGroupController;
 use Contact\models\ContactModel;
 use Respect\Validation\Validator;
@@ -30,6 +31,7 @@ use User\models\UserModel;
 class AutoCompleteController
 {
     const LIMIT = 50;
+    const TINY_LIMIT = 5;
 
     public static function getContacts(Request $request, Response $response)
     {
@@ -142,13 +144,10 @@ class AutoCompleteController
         }
 
         $contacts = ContactModel::getOnView([
-            'select'    => [
-                'ca_id', 'firstname', 'lastname', 'contact_lastname', 'contact_firstname', 'society', 'address_num',
-                'address_street', 'address_town', 'address_postal_code', 'is_corporate_person'
-            ],
+            'select'    => ['*'],
             'where'     => $where,
             'data'      => $requestData,
-            'limit'     => self::LIMIT
+            'limit'     => self::TINY_LIMIT
         ]);
 
         $autocompleteData = [];
@@ -171,7 +170,7 @@ class AutoCompleteController
             'where'     => $requestData['where'],
             'data'      => $requestData['data'],
             'orderBy'   => ['lastname'],
-            'limit'     => self::LIMIT
+            'limit'     => self::TINY_LIMIT
         ]);
 
         foreach ($users as $value) {
@@ -463,6 +462,9 @@ class AutoCompleteController
         ValidatorModel::notEmpty($aArgs, ['contact']);
         ValidatorModel::arrayType($aArgs, ['contact']);
 
+        $rate = ContactController::getFillingRate(['contact' => $aArgs['contact']]);
+        $rateColor = empty($rate['color']) ? '' : $rate['color'];
+
         $address = '';
         if ($aArgs['contact']['is_corporate_person'] == 'Y') {
             $address.= $aArgs['contact']['firstname'];
@@ -488,7 +490,8 @@ class AutoCompleteController
                 'contact'       => $aArgs['contact']['society'],
                 'address'       => $address,
                 'idToDisplay'   => "{$aArgs['contact']['society']}<br/>{$address}",
-                'otherInfo'     => "{$aArgs['contact']['society']} - {$address}"
+                'otherInfo'     => "{$aArgs['contact']['society']} - {$address}",
+                'rateColor'     => $rateColor
             ];
         } else {
             if (!empty($aArgs['contact']['address_num'])) {
@@ -514,7 +517,8 @@ class AutoCompleteController
                 'contact'       => $contactToDisplay,
                 'address'       => $address,
                 'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
-                'otherInfo'     => "{$contactToDisplay} - {$address}"
+                'otherInfo'     => "{$contactToDisplay} - {$address}",
+                'rateColor'     => $rateColor
             ];
         }
 
