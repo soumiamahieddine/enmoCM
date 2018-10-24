@@ -196,9 +196,9 @@ var initList_hidden_input2 = function (idField, idList, theUrlToListScript, para
             afterUpdateElement: function (text, li) {
                 var str = li.id;
                 var res = str.split(",");
-                $(new_value).value = res[1];
-                $(actual_value).value = res[0];
-                $('country').value = 'FRANCE';
+                $j("#" + new_value).val(res[1]);
+                $j("#" + actual_value).val(res[0]);
+                $j('#country').val('FRANCE');
             }
         });
 };
@@ -213,9 +213,9 @@ var initList_hidden_input3 = function (idField, idList, theUrlToListScript, para
             afterUpdateElement: function (text, li) {
                 var str = li.id;
                 var res = str.split(",");
-                $(new_value).value = res[0];
-                $(actual_value).value = res[1];
-                $('country').value = 'FRANCE';
+                $j("#" + new_value).val(res[0]);
+                $j("#" + actual_value).val(res[1]);
+                $j('#country').val('FRANCE');
             }
         });
 };
