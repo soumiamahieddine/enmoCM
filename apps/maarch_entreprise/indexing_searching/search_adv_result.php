@@ -785,16 +785,30 @@ if (count($_REQUEST['meta']) > 0) {
                     $json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
                 }
             } elseif ($tab_id_fields[$j] == 'sender' && !empty($_REQUEST['sender_type']) && !empty($_REQUEST['sender_id'])) {
-                $where_request .= " ((res_id in (select res_id from resource_contacts where item_id = :senderId and type = :senderType and mode = 'sender'))";
-                $arrayPDO = array_merge($arrayPDO, [":senderId" => $_REQUEST['sender_id']]);
-                $arrayPDO = array_merge($arrayPDO, [":senderType" => $_REQUEST['sender_type']]);
-                if ($_REQUEST['sender_type'] != 'entity') {
-                    if ($_REQUEST['sender_type'] == 'user') {
-                        $user = \User\models\UserModel::getById(['id' => $_REQUEST['sender_id'], 'select' => ['user_id']]);
-                        $where_request .= " or (exp_user_id = '{$user['user_id']}')";
+                if ($_REQUEST['sender_type'] == 'onlyContact') {
+                    $contactAddresses = \Contact\models\ContactModelAbstract::getOnView(['select' => ['ca_id'], 'where' => ['contact_id = ?'], 'data' => [$_REQUEST['sender_id']]]);
+                    $allAddresses = [];
+                    foreach ($contactAddresses as $contactAddress) {
+                        $allAddresses[] = $contactAddress['ca_id'];
                     }
-                    $where_request .= " or (exp_contact_id is not null and address_id = :senderId)";
-                    $where_request .= " or (category_id = 'incoming' and res_id in (select res_id from contacts_res where address_id = :senderId))";
+                    $where_request .= " ((res_id in (select res_id from resource_contacts where item_id in (:senderAddresses) and type = :senderType and mode = 'sender'))";
+                    $arrayPDO = array_merge($arrayPDO, [":senderAddresses" => $allAddresses]);
+                    $arrayPDO = array_merge($arrayPDO, [":senderId" => $_REQUEST['sender_id']]);
+                    $arrayPDO = array_merge($arrayPDO, [":senderType" => 'contact']);
+                    $where_request .= " or (exp_contact_id = :senderId)";
+                    $where_request .= " or (category_id = 'incoming' and res_id in (select res_id from contacts_res where contact_id = :senderId))";
+                } else {
+                    $where_request .= " ((res_id in (select res_id from resource_contacts where item_id = :senderId and type = :senderType and mode = 'sender'))";
+                    $arrayPDO = array_merge($arrayPDO, [":senderId" => $_REQUEST['sender_id']]);
+                    $arrayPDO = array_merge($arrayPDO, [":senderType" => $_REQUEST['sender_type']]);
+                    if ($_REQUEST['sender_type'] != 'entity') {
+                        if ($_REQUEST['sender_type'] == 'user') {
+                            $user = \User\models\UserModel::getById(['id' => $_REQUEST['sender_id'], 'select' => ['user_id']]);
+                            $where_request .= " or (exp_user_id = '{$user['user_id']}')";
+                        }
+                        $where_request .= " or (exp_contact_id is not null and address_id = :senderId)";
+                        $where_request .= " or (category_id = 'incoming' and res_id in (select res_id from contacts_res where address_id = :senderId))";
+                    }
                 }
                 $where_request .= ') and ';
             } elseif ($tab_id_fields[$j] == 'recipient' && !empty($_REQUEST['recipient_type']) && !empty($_REQUEST['recipient_id'])) {
