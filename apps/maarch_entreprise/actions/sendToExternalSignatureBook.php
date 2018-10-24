@@ -37,7 +37,8 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $labelAction = functions::show_string($resAction->label_action);
     }
 
-    $html = '<h2 class="title">' . $labelAction . '</h2>';
+    $html = '<div id="frm_error_'.$id_action.'" class="error"></div>';
+    $html .= '<h2 class="title">' . $labelAction . '</h2>';
 
     $html .= '<form name="sendToExternalSB" id="sendToExternalSB" method="post" class="forms" action="#">';
     $html .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
@@ -72,6 +73,27 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
 function check_form($form_id, $values)
 {
+    $_SESSION['action_error'] = '';
+    $config = getXml();
+
+    if (!empty($config)) {
+        if ($config['id'] == 'ixbus') {
+            include_once 'modules/visa/class/IxbusController.php';
+
+            $loginIxbus    = get_value_fields($values, 'loginIxbus');
+            $passwordIxbus = get_value_fields($values, 'passwordIxbus');
+
+            $userInfo  = IxbusController::getInfoUtilisateur(['config' => $config, 'login' => $loginIxbus, 'password' => $passwordIxbus]);
+
+            if (!empty($userInfo->Identifiant)) {
+                return true;
+            } else {
+                $_SESSION['action_error'] = _WRONG_ID_PASSWORD_IXBUS;
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
@@ -96,7 +118,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $passwordIxbus      = get_value_fields($values_form, 'passwordIxbus');
                 $nature             = get_value_fields($values_form, 'nature');
                 $messageModel       = get_value_fields($values_form, 'messageModel');
-                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $res_id, 'loginIxbus' => $loginIxbus, 'passwordIxbus' => $passwordIxbus, 'classeurName' => $nature, 'messageModel' => $messageModel]);
+                $manSignature       = get_value_fields($values_form, 'mansignature');
+                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $res_id, 'loginIxbus' => $loginIxbus, 'passwordIxbus' => $passwordIxbus, 'classeurName' => $nature, 'messageModel' => $messageModel, 'manSignature' => var_export($manSignature, true)]);
             } elseif ($config['id'] == 'iParapheur') {
                 include_once 'modules/visa/class/IParapheurController.php';
                 $attachmentToFreeze = IParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);

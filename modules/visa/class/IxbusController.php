@@ -31,8 +31,6 @@ class IxbusController
         }
         $html .= '</select><br /><br />';
 
-        // $initializeDatas['messagesModel'] = ['12' => 'modele courrier', '34' => 'DRH'];
-
         $html .= '<label for="messageModel">' . _WORKFLOW_MODEL_IXBUS . '</label><select name="messageModel" id="messageModel">';
         foreach ($initializeDatas['messagesModel'] as $key => $value) {
             $html .= '<option value="';
@@ -44,6 +42,7 @@ class IxbusController
         $html .= '</select><br /><br />';
         $html .= '<label for="loginIxbus">'._ID_IXBUS.'</label><input name="loginIxbus" id="loginIxbus"/><br /><br />';
         $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input type="password" name="passwordIxbus" id="passwordIxbus"/><br /><br />';
+        $html .= _ESIGN . '<input type="radio" name="mansignature" id="esignature" value="false" checked="checked" />' . _HANDWRITTEN_SIGN .'<input type="radio" name="mansignature" id="signature" value="true" checked="checked" /><br /><br />';
 
         return $html;
     }
@@ -282,6 +281,14 @@ class IxbusController
 
             $encodedZipFile = IxbusController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename'], 'res_id_master' => $aArgs['resIdMaster']]);
 
+            $mainResource = \Resource\models\ResModel::getExtById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
+            if (empty($mainResource['process_limit_date'])) {
+                $processLimitDate = $mainResource['process_limit_date'] = date('Y-m-d', strtotime(date("Y-m-d"). ' + 7 days'));
+            } else {
+                $processLimitDateTmp = explode(" ", $mainResource['process_limit_date']);
+                $processLimitDate = $processLimitDateTmp[0];
+            }
+
             $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
               <soap:Body>
@@ -291,12 +298,12 @@ class IxbusController
                   <NomDossier>'. $value['title'] .'</NomDossier>
                   <NomModele>'. $aArgs['messageModel'] .'</NomModele>
                   <NomNature>'. $aArgs['classeurName'] .'</NomNature>
-                  <DateLimite>2019-12-17</DateLimite>
+                  <DateLimite>'.$processLimitDate.'</DateLimite>
                   <LoginResponsable>'. $userInfo->NomUtilisateur .'</LoginResponsable>
                   <Confidentiel>false</Confidentiel>
                   <DocumentModifiable>true</DocumentModifiable>
                   <AnnexesSignables>false</AnnexesSignables>
-                  <SignatureManuscrite>false</SignatureManuscrite>
+                  <SignatureManuscrite>'.$aArgs['manSignature'].'</SignatureManuscrite>
                 </SendDossier>
               </soap:Body>
             </soap:Envelope>';
@@ -365,12 +372,12 @@ class IxbusController
                 $etatDossier = IxbusController::getEtatDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
     
                 // Refused
-                if ((string)$etatDossier == $aArgs['config']['data']['ixbusIdRefused']) {
+                if ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatRefused']) {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
                     $notes = IxbusController::getAnnotations(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
                     $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->Annotation;
                 // Validated
-                } elseif ((string)$etatDossier == $aArgs['config']['data']['ixbusIdValidated']) {
+                } elseif ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatValidated']) {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
                     $signedDocument = IxbusController::getAnnexes(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
                     $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
