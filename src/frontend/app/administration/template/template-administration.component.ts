@@ -237,7 +237,7 @@ export class TemplateAdministrationComponent implements OnInit {
             .subscribe((data: any) => {
                 this.template.jnlpUniqueId = data.jnlpUniqueId;
                 this.fileToImport();
-                window.location.href = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
+                window.location.href = this.coreUrl + 'rest/jnlp/' + data.generatedJnlp;
                 this.checkLockFile();
             }, (err) => {
                 this.notify.error(err.error.errors);
