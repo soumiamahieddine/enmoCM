@@ -32,7 +32,7 @@ class IxbusController
         $html .= '</select><br /><br />';
 
         $html .= '<label for="messageModel">' . _WORKFLOW_MODEL_IXBUS . '</label><select name="messageModel" id="messageModel">';
-        foreach ($initializeDatas['messagesModel'] as $key => $value) {
+        foreach ($initializeDatas['messagesModel'] as $value) {
             $html .= '<option value="';
             $html .= $value;
             $html .= '">';
@@ -42,7 +42,7 @@ class IxbusController
         $html .= '</select><br /><br />';
         $html .= '<label for="loginIxbus">'._ID_IXBUS.'</label><input name="loginIxbus" id="loginIxbus"/><br /><br />';
         $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input type="password" name="passwordIxbus" id="passwordIxbus"/><br /><br />';
-        $html .= _ESIGN . '<input type="radio" name="mansignature" id="esignature" value="false" checked="checked" />' . _HANDWRITTEN_SIGN .'<input type="radio" name="mansignature" id="signature" value="true" /><br /><br />';
+        $html .= _ESIGN . '<input type="radio" name="mansignature" id="mansignature" value="false" checked="checked" />' . _HANDWRITTEN_SIGN .'<input type="radio" name="mansignature" id="mansignature" value="true" /><br /><br />';
 
         return $html;
     }
@@ -283,7 +283,7 @@ class IxbusController
 
             $mainResource = \Resource\models\ResModel::getExtById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
             if (empty($mainResource['process_limit_date'])) {
-                $processLimitDate = $mainResource['process_limit_date'] = date('Y-m-d', strtotime(date("Y-m-d"). ' + 7 days'));
+                $processLimitDate = date('Y-m-d', strtotime(date("Y-m-d"). ' + 14 days'));
             } else {
                 $processLimitDateTmp = explode(" ", $mainResource['process_limit_date']);
                 $processLimitDate = $processLimitDateTmp[0];
