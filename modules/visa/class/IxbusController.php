@@ -42,7 +42,7 @@ class IxbusController
         $html .= '</select><br /><br />';
         $html .= '<label for="loginIxbus">'._ID_IXBUS.'</label><input name="loginIxbus" id="loginIxbus"/><br /><br />';
         $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input type="password" name="passwordIxbus" id="passwordIxbus"/><br /><br />';
-        $html .= _ESIGN . '<input type="radio" name="mansignature" id="esignature" value="false" checked="checked" />' . _HANDWRITTEN_SIGN .'<input type="radio" name="mansignature" id="signature" value="true" checked="checked" /><br /><br />';
+        $html .= _ESIGN . '<input type="radio" name="mansignature" id="esignature" value="false" checked="checked" />' . _HANDWRITTEN_SIGN .'<input type="radio" name="mansignature" id="signature" value="true" /><br /><br />';
 
         return $html;
     }
