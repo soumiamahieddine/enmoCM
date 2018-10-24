@@ -262,8 +262,8 @@ class IxbusController
                 'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
                 'validation_date', 'relation', 'attachment_id_master'
             ],
-            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS', 'FRZ')", 'in_signature_book = TRUE'],
-            'data'      => [$aArgs['resIdMaster'], ['incoming_mail_attachment', 'print_folder']]
+            'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ')", "in_signature_book = 'true'"],
+            'data'      => [$aArgs['resIdMaster'], ['incoming_mail_attachment', 'print_folder', 'signed_response']]
         ]);
 
         $attachmentToFreeze = [];
