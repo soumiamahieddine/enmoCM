@@ -3875,6 +3875,10 @@ function switchAutoCompleteType(id, mode, alternateVersion) {
 
 function openSenderInfoContact(id, type) {
     var height = '';
+    if (id == '') {
+        alert('Aucun contact sélectionné');
+        return false;
+    }
     if(type == 'entity'){
         alert('Aucune information disponible pour les entités');
     } else {
