@@ -3765,6 +3765,16 @@ width:auto;
     border: 1px solid #999;
 }
 
+#sender_recipient_tr .typeahead__field input {
+    width: 225px;
+    margin-left: 17px;
+}
+
+#sender_recipient_tr .typeahead__list {
+    width: 225px;
+    margin-left: 17px;
+}
+
 .typeahead__list {
     font-size: 12px;
 }
