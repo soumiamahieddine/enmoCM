@@ -646,8 +646,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     }
     $frm_str .= '/><label for="type_contact_external">'._EXTERNAL.'</label></td></tr>';
 
-    $frm_str .= '<tr id="contact_choose_3_tr" style="display:'.$displayValue
-                                .';">';
+    $frm_str .= '<tr id="contact_choose_3_tr" style="display:'.$displayValue.';">';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td class="indexing_field"><input type="radio" name="type_contact" '
@@ -697,9 +696,9 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     if ($data['type_contact'] == 'internal') {
         //MODIF:
         $frm_str .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_contact_internal_icon" onclick="$j(\'#type_contact_internal\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\', \'#666\');$j(\'#type_contact_internal_icon\').css(\'color\', \'#135F7F\');$j(\'#type_multi_contact_internal_icon\').css(\'color\', \'#666\');"></i>';
-    } elseif ($data['type_contact'] == 'external') {
+    } else {
         //MODIF:
-        $frm_str .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\', \'#666\');$j(\'#type_contact_external_icon\').css(\'color\', \'#135F7F\');$j(\'#type_multi_contact_external_icon\').css(\'color\', \'#666\');"></i>';
+        $frm_str .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_external_icon\').css(\'color\', \'#666\');$j(\'#type_contact_external_icon\').css(\'color\', \'#135F7F\');$j(\'#type_multi_contact_external_icon\').css(\'color\', \'#666\');"></i>';
     }
 
     $frm_str .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
