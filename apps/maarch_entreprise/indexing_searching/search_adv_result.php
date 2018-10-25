@@ -785,6 +785,7 @@ if (count($_REQUEST['meta']) > 0) {
                     $json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
                 }
             } elseif ($tab_id_fields[$j] == 'sender' && !empty($_REQUEST['sender_type']) && !empty($_REQUEST['sender_id'])) {
+                $json_txt .= " 'sender' : ['".addslashes(trim($_REQUEST['sender']))."'], 'sender_id' : ['".addslashes(trim($_REQUEST['sender_id']))."'], 'sender_type' : ['".addslashes(trim($_REQUEST['sender_type']))."']";
                 if ($_REQUEST['sender_type'] == 'onlyContact') {
                     $contactAddresses = \Contact\models\ContactModelAbstract::getOnView(['select' => ['ca_id'], 'where' => ['contact_id = ?'], 'data' => [$_REQUEST['sender_id']]]);
                     $allAddresses = [];
@@ -796,7 +797,7 @@ if (count($_REQUEST['meta']) > 0) {
                     $arrayPDO = array_merge($arrayPDO, [":senderId" => $_REQUEST['sender_id']]);
                     $arrayPDO = array_merge($arrayPDO, [":senderType" => 'contact']);
                     $where_request .= " or (exp_contact_id = :senderId)";
-                    $where_request .= " or (category_id = 'incoming' and res_id in (select res_id from contacts_res where contact_id = :senderId))";
+                    $where_request .= " or (category_id = 'incoming' and res_id in (select res_id from contacts_res where contact_id = '{$_REQUEST['sender_id']}'))";
                 } else {
                     $where_request .= " ((res_id in (select res_id from resource_contacts where item_id = :senderId and type = :senderType and mode = 'sender'))";
                     $arrayPDO = array_merge($arrayPDO, [":senderId" => $_REQUEST['sender_id']]);
@@ -812,17 +813,33 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 $where_request .= ') and ';
             } elseif ($tab_id_fields[$j] == 'recipient' && !empty($_REQUEST['recipient_type']) && !empty($_REQUEST['recipient_id'])) {
-                $where_request .= " ((res_id in (select res_id from resource_contacts where item_id = :recipientId and type = :recipientType and mode = 'recipient'))";
-                $arrayPDO = array_merge($arrayPDO, [":recipientId" => $_REQUEST['recipient_id']]);
-                $arrayPDO = array_merge($arrayPDO, [":recipientType" => $_REQUEST['recipient_type']]);
-                if ($_REQUEST['recipient_type'] != 'entity') {
-                    if ($_REQUEST['recipient_type'] == 'user') {
-                        $user = \User\models\UserModel::getById(['id' => $_REQUEST['recipient_id'], 'select' => ['user_id']]);
-                        $where_request .= " or (dest_user_id = '{$user['user_id']}')";
+                $json_txt .= " 'recipient' : ['".addslashes(trim($_REQUEST['recipient']))."'], 'recipient_id' : ['".addslashes(trim($_REQUEST['recipient_id']))."'], 'recipient_type' : ['".addslashes(trim($_REQUEST['recipient_type']))."']";
+                if ($_REQUEST['recipient_type'] == 'onlyContact') {
+                    $contactAddresses = \Contact\models\ContactModelAbstract::getOnView(['select' => ['ca_id'], 'where' => ['contact_id = ?'], 'data' => [$_REQUEST['recipient_id']]]);
+                    $allAddresses = [];
+                    foreach ($contactAddresses as $contactAddress) {
+                        $allAddresses[] = $contactAddress['ca_id'];
                     }
-                    $where_request .= " or (dest_contact_id is not null and address_id = :recipientId)";
-                    $where_request .= " or (category_id = 'outgoing' and res_id in (select res_id from contacts_res where address_id = :recipientId))";
-                    $where_request .= " or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_address_id = :recipientId AND status NOT IN ('DEL','OBS','TMP')))";
+                    $where_request .= " ((res_id in (select res_id from resource_contacts where item_id in (:recipientAddresses) and type = :recipientType and mode = 'recipient'))";
+                    $arrayPDO = array_merge($arrayPDO, [":recipientAddresses" => $allAddresses]);
+                    $arrayPDO = array_merge($arrayPDO, [":recipientId" => $_REQUEST['recipient_id']]);
+                    $arrayPDO = array_merge($arrayPDO, [":recipientType" => 'contact']);
+                    $where_request .= " or (dest_contact_id = :recipientId)";
+                    $where_request .= " or (category_id = 'outgoing' and res_id in (select res_id from contacts_res where contact_id = '{$_REQUEST['recipient_id']}'))";
+                    $where_request .= " or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id = :recipientId AND status NOT IN ('DEL','OBS','TMP')))";
+                } else {
+                    $where_request .= " ((res_id in (select res_id from resource_contacts where item_id = :recipientId and type = :recipientType and mode = 'recipient'))";
+                    $arrayPDO = array_merge($arrayPDO, [":recipientId" => $_REQUEST['recipient_id']]);
+                    $arrayPDO = array_merge($arrayPDO, [":recipientType" => $_REQUEST['recipient_type']]);
+                    if ($_REQUEST['recipient_type'] != 'entity') {
+                        if ($_REQUEST['recipient_type'] == 'user') {
+                            $user = \User\models\UserModel::getById(['id' => $_REQUEST['recipient_id'], 'select' => ['user_id']]);
+                            $where_request .= " or (dest_user_id = '{$user['user_id']}')";
+                        }
+                        $where_request .= " or (dest_contact_id is not null and address_id = :recipientId)";
+                        $where_request .= " or (category_id = 'outgoing' and res_id in (select res_id from contacts_res where address_id = :recipientId))";
+                        $where_request .= " or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_address_id = :recipientId AND status NOT IN ('DEL','OBS','TMP')))";
+                    }
                 }
                 $where_request .= ') and ';
             }
