@@ -55,6 +55,8 @@
       <enumeration value="search" />
       <enumeration value="destUser" />
       <enumeration value="download" />
+      <enumeration value="editDetailSender" />
+      <enumeration value="editDetail" />
     </dataType>
     <dataType name="size" base="string">
       <enumeration value="full" />

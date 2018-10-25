@@ -1705,33 +1705,36 @@ function showEditButton(){
         if ($('file_loaded')) {
             $('file_loaded').setStyle({display: 'none'});
         }
-        // $('title').value = modele_id.text;
     } else {
         $('edit').setStyle({display: 'none'});
         if ($('not_enabled')) {
             $('not_enabled').setStyle({display: 'none'});
         }
-        //$('choose_file').setStyle({display: 'inline'});
         if ($('file_loaded')) {
             $('file_loaded').setStyle({display: 'none'});
         }
-        // $('title').value = '';
     }
 }
 
 function loadInfoContact(){
     var reg = /^\d+$/;
     var pathScript = '';
-    //console.log(contactId);
+
     if(!reg.test(document.getElementById('contactid').value)){
-        console.log("contactInterne");
         pathScript = 'index.php?display=false&page=user_info&id='+document.getElementById('contactid').value;
-    
     }else{
-        console.log("contactExterne");
         pathScript = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='+document.getElementById('contactid').value+'&addressid='+document.getElementById('addressid').value;
     }
     
+    return pathScript;
+}
+
+function loadInfoContactSenderRecipient(){
+
+    var pathScript = '';
+
+    pathScript = 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&mode=editDetailSender&editDetailSender&popup&sender_recipient_id='+document.getElementById('sender_recipient_id').value+'&sender_recipient_type='+document.getElementById('sender_recipient_type').value;
+
     return pathScript;
 }
 
@@ -1942,7 +1945,7 @@ function delIndexingModel() {
     }
 }
 
-function initSenderRecipientAutocomplete(inputId, mode, alternateVersion) {
+function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId) {
     var route = '';
     if (mode == 'contactsUsers') {
         route = '../../rest/autocomplete/contactsUsers';
@@ -1982,11 +1985,17 @@ function initSenderRecipientAutocomplete(inputId, mode, alternateVersion) {
                 if (!alternateVersion) {
                     $j("#" + inputId).css('background-color', li[0].getStyle('background-color'));
                 }
+                if(typeof cardId != 'undefined'){
+                    $j("#" + cardId).css('visibility', 'visible');
+                }
             },
             onCancel: function () {
                 $j("#" + inputId + "_id").val('');
                 $j("#" + inputId + "_type").val('');
                 $j("#" + inputId).css('background-color', "");
+                if(typeof cardId != 'undefined'){
+                    $j("#" + cardId).css('visibility', 'hidden');
+                }
             },
             onLayoutBuiltBefore: function (node, query, result, resultHtmlList) {
                 if (typeof resultHtmlList != "undefined" && result.length > 0) {

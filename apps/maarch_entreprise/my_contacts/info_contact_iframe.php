@@ -224,13 +224,19 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
                 }
                 window.opener.$j('#sender_recipient').val(response.contactName);
                 this.close();
-            //Processing Mail
             } else {
-                if(parent.$j('#resourceContact')){
+                //Processing Mail
+                if(parent.$j('#resourceContact').length){
                     if (response.rateColor != "") {
                         parent.$j('#resourceContact').css('background-color', response.rateColor);
                     }
                     parent.$j('#resourceContact').html(response.contactName);
+                //Indexation/Validate Mail
+                } else if (parent.$j('#sender_recipient').length){
+                    if (response.rateColor != "") {
+                        parent.$j('#sender_recipient').css('background-color', response.rateColor);
+                    }
+                    parent.$j('#sender_recipient').val(response.contactName);
                 }
 
                 parent.document.getElementById('show_tab').style.display = 'none';

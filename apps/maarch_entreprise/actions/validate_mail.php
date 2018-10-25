@@ -831,7 +831,14 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<span id="sr_sender_span">'._SHIPPER.'</span>';
     $frm_str .= '<span id="sr_recipient_span">'._DEST.'</span>';
     $frm_str .= '</label></td>';
-    $frm_str .= '<td>&nbsp;</td>';
+    if (!empty($sr['format'])) {
+        $cardVisibility = 'visible';
+    } else {
+        $cardVisibility = 'hidden';
+    }
+    $frm_str .= '<td><a href="#" id="sender_recipient_card" class="fa fa-book fa-2x" title="'._CONTACT_CARD
+    .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_CONTACT).'\',loadInfoContactSenderRecipient(),\'info_contact\');return false;" '
+    .'style="visibility:'.$cardVisibility.';" ></a>&nbsp;</td>';
     $frm_str .= '<td class="indexing_field">';
     $frm_str .= '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\', false);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\', false);" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
     $frm_str .= '<div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
@@ -1413,7 +1420,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
     $frm_str .= 'affiche_reference();';
-    $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);';
+    $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false, \'sender_recipient_card\');';
     $frm_str .= 'initList_hidden_input(\'department_number\', \'show_department_number\',\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display='
          . 'true&page=autocomplete_department_number\','

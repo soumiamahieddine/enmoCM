@@ -618,7 +618,10 @@
       <parameter name="popup" type="identifier" />
       <parameter name="fromAttachmentContact" type="identifier" />
       <parameter name="seeAllAddresses" type="identifier" />
-      <parameter name="created" type="identifier" />
+      <parameter name="sender_recipient_id" type="identifier" />
+      <parameter name="sender_recipient_type" type="string" />
+      <parameter name="editDetailSender" type="identifier" />
+      <parameter name="created" type="string" />
     </validationRule>
 
     <validationRule name="my_contact_del" extends="standardForm" mode="error">  
