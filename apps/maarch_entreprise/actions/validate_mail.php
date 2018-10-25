@@ -820,6 +820,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             $sr = $resourceContact;
         }
     }
+    $rate = [];
     if (!empty($sr['type']) && $sr['type'] == 'contact') {
         $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$sr['item_id']]]);
         $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
