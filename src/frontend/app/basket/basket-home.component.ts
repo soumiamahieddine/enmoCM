@@ -29,11 +29,11 @@ export class BasketHomeComponent implements OnInit {
     }
 
     goTo(basketId:any,groupId:any) {
-        window.location.href="index.php?page=view_baskets&module=basket&baskets="+basketId+"&groupId="+groupId;
+        window.location.href="index.php?page=view_baskets&fromV2=true&module=basket&baskets="+basketId+"&groupId="+groupId;
     }
 
     goToRedirect(basketId:any,owner:any) {
-        window.location.href="index.php?page=view_baskets&module=basket&baskets="+basketId+"_"+owner+"&groupId=";
+        window.location.href="index.php?page=view_baskets&fromV2=true&module=basket&baskets="+basketId+"_"+owner+"&groupId=";
     }
 
     closePanelLeft() {

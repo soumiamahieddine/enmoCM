@@ -32,37 +32,36 @@
 $_SESSION['count_view_baskets']++;
 $_SESSION['location_bar']['level2']['path'] = $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets='.$_REQUEST['baskets'];
 
- $urlParameters = '';
+$urlParameters = '';
 
-    if(preg_match('/MSIE/i',$_SERVER["HTTP_USER_AGENT"]) && !preg_match('/Opera/i',$_SERVER["HTTP_USER_AGENT"])) { 
-        $ub = "MSIE"; 
-    } 
-    elseif(preg_match('/Firefox/i',$_SERVER["HTTP_USER_AGENT"])) { 
-        $ub = "Firefox"; 
-    } else {
-        $ub = "";
-    }
+if(preg_match('/MSIE/i',$_SERVER["HTTP_USER_AGENT"]) && !preg_match('/Opera/i',$_SERVER["HTTP_USER_AGENT"])) { 
+    $ub = "MSIE"; 
+} 
+elseif(preg_match('/Firefox/i',$_SERVER["HTTP_USER_AGENT"])) { 
+    $ub = "Firefox"; 
+} else {
+    $ub = "";
+}
 
-/*if(($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") && ( ($_SESSION['count_view_baskets'] > 1 && $ub == "Firefox") || $ub != "Firefox" )) {
-    if($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") {*/
-        $urlParameters .= '&start='.$_SESSION['save_list']['start'];
-        $urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
-        $urlParameters .= '&order='.$_SESSION['save_list']['order'];
-        $urlParameters .= '&order_field='.$_SESSION['save_list']['order_field'];
-        if ($_SESSION['save_list']['template'] <> "") {
-            $urlParameters .= '&template='.$_SESSION['save_list']['template'];
-        }
-        $_SESSION['save_list']['fromDetail'] = "false";
-        $_SESSION['save_list']['fromValidateMail'] = "false";
-        $_SESSION['save_list']['fromProcess'] = "false";
-        $_SESSION['save_list']['url'] = $urlParameters;
-    /*}
+if ($_REQUEST['fromV2'] === "true") {
     $_SESSION['save_list']['start'] = "";
     $_SESSION['save_list']['lines'] = "";
     $_SESSION['save_list']['order'] = "";
     $_SESSION['save_list']['order_field'] = "";
-    $_SESSION['save_list']['template'] = ""; */ 
-//}
+    $_SESSION['save_list']['template'] = "";
+}
+
+$urlParameters .= '&start='.$_SESSION['save_list']['start'];
+$urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
+$urlParameters .= '&order='.$_SESSION['save_list']['order'];
+$urlParameters .= '&order_field='.$_SESSION['save_list']['order_field'];
+if ($_SESSION['save_list']['template'] <> "") {
+    $urlParameters .= '&template='.$_SESSION['save_list']['template'];
+}
+$_SESSION['save_list']['fromDetail'] = "false";
+$_SESSION['save_list']['fromValidateMail'] = "false";
+$_SESSION['save_list']['fromProcess'] = "false";
+$_SESSION['save_list']['url'] = $urlParameters;
 
 if ($_SESSION['current_basket']['id'] <> $_SESSION['current_basket']['lastBasketFromAction']) {
     $_SESSION['stockCheckbox']= '';
