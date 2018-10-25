@@ -1964,9 +1964,9 @@ function initSenderRecipientAutocomplete(inputId, mode, alternateVersion) {
                     type: "GET",
                     url: route,
                     data: {
-                        search : query,
-                        onlyContacts : alternateVersion,
-                        color : !alternateVersion
+                        search          : query,
+                        onlyContacts    : alternateVersion,
+                        color           : !alternateVersion
                     }
                 }
             }
@@ -1979,10 +1979,14 @@ function initSenderRecipientAutocomplete(inputId, mode, alternateVersion) {
                     $j("#" + inputId + "_id").val(item.id);
                 }
                 $j("#" + inputId + "_type").val(item.type);
+                if (!alternateVersion) {
+                    $j("#" + inputId).css('background-color', li[0].getStyle('background-color'));
+                }
             },
             onCancel: function () {
                 $j("#" + inputId + "_id").val('');
                 $j("#" + inputId + "_type").val('');
+                $j("#" + inputId).css('background-color', "");
             },
             onLayoutBuiltBefore: function (node, query, result, resultHtmlList) {
                 if (typeof resultHtmlList != "undefined" && result.length > 0) {

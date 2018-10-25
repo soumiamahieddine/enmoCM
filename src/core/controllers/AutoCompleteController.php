@@ -534,13 +534,14 @@ class AutoCompleteController
             if (!empty($aArgs['contact']['address_postal_code'])) {
                 $address.= $aArgs['contact']['address_postal_code'] . ' ';
             }
+            $otherInfo = empty($address) ? "{$aArgs['contact']['society']}" : "{$aArgs['contact']['society']} - {$address}";
             $contact = [
                 'type'          => 'contact',
                 'id'            => $aArgs['contact']['ca_id'],
                 'contact'       => $aArgs['contact']['society'],
                 'address'       => $address,
                 'idToDisplay'   => "{$aArgs['contact']['society']}<br/>{$address}",
-                'otherInfo'     => "{$aArgs['contact']['society']} - {$address}",
+                'otherInfo'     => $otherInfo,
                 'rateColor'     => $rateColor
             ];
         } else {
@@ -561,13 +562,14 @@ class AutoCompleteController
                 $contactToDisplay .= " ({$aArgs['contact']['society']})";
             }
 
+            $otherInfo = empty($address) ? "{$contactToDisplay}" : "{$contactToDisplay} - {$address}";
             $contact = [
                 'type'          => 'contact',
                 'id'            => $aArgs['contact']['ca_id'],
                 'contact'       => $contactToDisplay,
                 'address'       => $address,
                 'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
-                'otherInfo'     => "{$contactToDisplay} - {$address}",
+                'otherInfo'     => $otherInfo,
                 'rateColor'     => $rateColor
             ];
         }

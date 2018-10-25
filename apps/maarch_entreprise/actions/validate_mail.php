@@ -821,6 +821,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             $sr = $resourceContact;
         }
     }
+    if (!empty($sr['type']) && $sr['type'] == 'contact') {
+        $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$sr['item_id']]]);
+        $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+    }
+
     /*** Sender/Recipient ***/
     $frm_str .= '<tr id="sender_recipient_tr" style="display:' . $displayValue . ';">';
     $frm_str .= '<td><label for="sender_recipient" class="form_title" >';
@@ -833,7 +838,10 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
     $frm_str .= '<input name="sender_recipient" type="text" id="sender_recipient" autocomplete="off"';
     if (!empty($sr['format'])) {
-        $frm_str .= 'value="'. $sr['format'].'"';
+        $frm_str .= ' value="'. $sr['format'].'"';
+    }
+    if (!empty($rate['color'])) {
+        $frm_str .= ' style="background-color:'.$rate['color'].'"';
     }
     $frm_str .= '/></span></div></div>';
     $frm_str .= '</td><td>&nbsp;</td>';

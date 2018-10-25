@@ -784,6 +784,11 @@ if ($stmt->rowCount() == 0) {
                             $sr = $resourceContact;
                         }
                     }
+                    $rate = [];
+                    if (!empty($sr['type']) && $sr['type'] == 'contact') {
+                        $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$sr['item_id']]]);
+                        $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                    }
                     if (empty($disabledAttr)) {
                         echo '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\', false);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\');" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
                         if ($sr['type'] == 'entity') {
@@ -795,7 +800,11 @@ if ($stmt->rowCount() == 0) {
                         }
                     }
                     echo '<div class="typeahead__container" style="width: 206px;"><div class="typeahead__field"><span class="typeahead__query">';
-                    echo "<textarea style='font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 11px;padding: 5px;width: 206px;max-width: 206px;' name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr}/>";
+                    echo "<textarea name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr} style='font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 11px;padding: 5px;width: 206px;max-width: 206px;";
+                    if (!empty($rate['color'])) {
+                        echo ' ;background-color:'.$rate['color'].' ';
+                    }
+                    echo "'/>";
                     if (!empty($sr['format'])) {
                         echo $sr['format'];
                     }
