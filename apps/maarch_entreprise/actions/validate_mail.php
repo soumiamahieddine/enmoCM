@@ -862,6 +862,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $frm_str .= 'value="'. $sr['type'].'"';
     }
 
+    $frm_str .= '/>';
     if ($sr['type'] == 'entity') {
         $frm_str .= '<script>$j("#sender_recipient_icon_contactsUsers").css({"color":"#666"});</script>';
         $frm_str .= '<script>$j("#sender_recipient_icon_entities").css({"color":"#135F7F"});</script>';
@@ -869,7 +870,6 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $frm_str .= '<script>$j("#sender_recipient_icon_contactsUsers").css({"color":"#135F7F"});</script>';
         $frm_str .= '<script>$j("#sender_recipient_icon_entities").css({"color":"#666"});</script>';
     }
-    $frm_str .= '/>';
     $frm_str .= '</tr>';
 
     /*** Nature ***/
@@ -1421,7 +1421,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
     $frm_str .= 'affiche_reference();';
-    $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false, \'sender_recipient_card\');';
+    if (!empty($sr['type']) && $sr['type'] == 'entity') {
+        $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'entity\');';
+    } else {
+        $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);';
+    }
     $frm_str .= 'initList_hidden_input(\'department_number\', \'show_department_number\',\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display='
          . 'true&page=autocomplete_department_number\','

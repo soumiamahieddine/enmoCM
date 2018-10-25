@@ -822,7 +822,11 @@ if ($stmt->rowCount() == 0) {
                     echo "/>";
 
                     //initialize autocomplete
-                    echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);</script>';
+                    if ($sr['type'] == 'entity') {
+                        echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'entity\');</script>';
+                    } else {
+                        echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);</script>';
+                    }
 
                 } else {
                     echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";
