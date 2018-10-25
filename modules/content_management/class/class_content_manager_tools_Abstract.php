@@ -451,7 +451,7 @@ abstract class content_management_tools_Abstract
         $jnlp_balise->appendChild($jnlp_attribute2);
 
         $jnlp_attribute3 = $docXML->createAttribute('href');
-        $jnlp_attribute3->value = $jnlp_name;
+        $jnlp_attribute3->value = htmlentities($jnlp_name);
         $jnlp_balise->appendChild($jnlp_attribute3);
 
         //"{$pathUrl}/rest/jnlp?fileName={$jnlp_name}";
