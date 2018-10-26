@@ -49,7 +49,7 @@ abstract class multicontacts_Abstract extends Database
         if (isset($contactsArray[$inputField]) && count($contactsArray[$inputField]) > 0) {
             foreach ($contactsArray[$inputField] as $key => $contacts) {
                 if (!empty($contacts)) {
-                    $rate['color'] = '';
+                    $rate['color'] = 'LightYellow';
                     if (!empty($contactsArray['addressid'][$key])) {
                         $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$contactsArray['addressid'][$key]]]);
                         $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
