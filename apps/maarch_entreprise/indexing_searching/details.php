@@ -703,7 +703,11 @@ if ($stmt->rowCount() == 0) {
                     if ($key == 'exp_contact_id') {
                         if (!empty($data[$key]['address_value'])) {
                             $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['address_value']]]);
-                            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                            if(!empty($contactData[0])){
+                                $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                            } else {
+                                $rate['color'] = 'LightYellow';
+                            }
                         }
                     }
 
@@ -754,7 +758,11 @@ if ($stmt->rowCount() == 0) {
                             $_SESSION['adresses']['contactid'][] = $data[$key]['multi']['contact_id'][$icontacts];
 
                             $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['multi']['address_id'][$icontacts]]]);
-                            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);        
+                            if(!empty($contactData[0])){
+                                $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                            } else {
+                                $rate['color'] = 'LightYellow';
+                            }        
                             echo '<div class="multicontact_element" style="display:table;width:200px;background-color:'.$rate['color'].';" id="'.$icontacts.'_'.$data[$key]['multi']['contact_id'][$icontacts].'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$data[$key]['multi']['arr_values'][$icontacts].'</div>';
 
                             if (empty($disabledAttr)) {
