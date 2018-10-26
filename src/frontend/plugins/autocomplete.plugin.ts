@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Observable, empty } from 'rxjs';
 import { startWith, map, debounceTime, filter, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { validateConfig } from '@angular/router/src/config';
 
 declare const angularGlobals: any;
 
@@ -32,9 +33,6 @@ export class AutoCompletePlugin {
                 distinctUntilChanged(),
                 switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/users', { params: { "search": data } }))
             ).subscribe((response: any) => {
-                if (response.length == 0) {
-                    this.userCtrl.setErrors({'noResult': true})
-                }
                 this.filteredUsers = this.userCtrl.valueChanges
                     .pipe(
                         startWith(''),
@@ -50,9 +48,6 @@ export class AutoCompletePlugin {
                 distinctUntilChanged(),
                 switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/users/administration', { params: { "search": data } }))
             ).subscribe((response: any) => {
-                if (response.length == 0) {
-                    this.userCtrl.setErrors({'noResult': true})
-                }
                 this.filteredUsers = this.userCtrl.valueChanges
                     .pipe(
                         startWith(''),
@@ -95,9 +90,6 @@ export class AutoCompletePlugin {
                 switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/entities', { params: { "search": data } }))
             ).subscribe((response: any) => {
                 this.elemList = this.elemList.concat(response);
-                if (this.elemList.length == 0) {
-                    this.elementCtrl.setErrors({'noResult': true})
-                }
                 this.filteredElements = this.elementCtrl.valueChanges
                     .pipe(
                         startWith(''),
@@ -113,9 +105,6 @@ export class AutoCompletePlugin {
                 distinctUntilChanged(),
                 switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/entities', { params: { "search": data } }))
             ).subscribe((response: any) => {
-                if (response.length == 0) {
-                    this.elementCtrl.setErrors({'noResult': true})
-                }
                 this.filteredElements = this.elementCtrl.valueChanges
                     .pipe(
                         startWith(''),
@@ -166,5 +155,4 @@ export class AutoCompletePlugin {
         return this.elemList.filter(elem =>
             elem.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) >= 0);
     }
-
 }
