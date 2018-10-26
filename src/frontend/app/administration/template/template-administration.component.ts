@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatSidenav } from '@angular/material';
+import { HeaderService } from '../../../service/header.service';
 
 declare function $j(selector: any): any;
 declare var tinymce: any;
@@ -18,7 +19,6 @@ declare var angularGlobals: any;
 export class TemplateAdministrationComponent implements OnInit {
 
     /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -45,7 +45,7 @@ export class TemplateAdministrationComponent implements OnInit {
     intervalLockFile        : any;
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -65,7 +65,7 @@ export class TemplateAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.templateCreation);
+                this.headerService.headerMessage = this.lang.templateCreation;
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
@@ -80,7 +80,6 @@ export class TemplateAdministrationComponent implements OnInit {
 
                     });
             } else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.templateModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
@@ -89,6 +88,7 @@ export class TemplateAdministrationComponent implements OnInit {
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template = data.template;
+                        this.headerService.headerMessage = this.lang.templateModification + " <small>" +  this.template.template_label + "</small>";
                         this.loading  = false;
                         if(this.template.template_type=='HTML'){
                             this.initMce();
