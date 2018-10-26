@@ -194,8 +194,8 @@ h1.admin-app-name {
 }
 
 .admin-toolbar-title small {
-    color: white !important;
-    opacity: 0.5;
+    color: #F99830 !important;
+    opacity: 0.9;
 }
 
 .admin-sidenav-container {

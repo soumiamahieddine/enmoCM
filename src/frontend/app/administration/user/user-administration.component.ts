@@ -123,7 +123,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                         this.data = data.history;
                         this.userId = data.user_id;
                         this.minDate = new Date(this.CurrentYear + '-' + this.currentMonth + '-01');
-                        this.headerService.headerMessage = this.lang.userModification + " " +  data.firstname + " " + data.lastname;
+                        this.headerService.headerMessage = this.lang.userModification + " <small>" +  data.firstname + " " + data.lastname + "</small>";
                         this.loading = false;
                         setTimeout(() => {
                             this.dataSource = new MatTableDataSource(this.data);
