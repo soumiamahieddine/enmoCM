@@ -177,152 +177,154 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
      // $request->show();
 
      //Result Array
-     for ($i = 0; $i < count($tab); ++$i) {
-         for ($j = 0; $j < count($tab[$i]); ++$j) {
-             foreach (array_keys($tab[$i][$j]) as $value) {
-                 if ($tab[$i][$j][$value] == 'email_id') {
-                     $tab[$i][$j]['email_id'] = $tab[$i][$j]['value'];
-                     $tab[$i][$j]['label'] = 'ID';
-                     $tab[$i][$j]['size'] = '1';
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = false;
-                     $tab[$i][$j]['order'] = 'id';
-                 }
-                 if ($tab[$i][$j][$value] == 'creation_date') {
-                     $tab[$i][$j]['value'] = $request->dateformat($tab[$i][$j]['value']);
-                     $tab[$i][$j]['label'] = _CREATION_DATE;
-                     $tab[$i][$j]['size'] = '11';
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = true;
-                     $tab[$i][$j]['order'] = 'creation_date';
-                 }
-                 if ($tab[$i][$j][$value] == 'user_id') {
-                     $tab[$i][$j]['label'] = _USER_ID;
-                     $tab[$i][$j]['size'] = '5';
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = false;
-                     $tab[$i][$j]['order'] = 'user_id';
-                 }
-                 if ($tab[$i][$j][$value] == 'firstname') {
-                     $firstname = $request->show_string($tab[$i][$j]['value']);
-                 }
-                 if ($tab[$i][$j][$value] == 'lastname') {
-                     $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']).' '.$firstname;
-                     $tab[$i][$j]['label'] = _USER;
-                     $tab[$i][$j]['size'] = $sizeUser;
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = false;
-                     $tab[$i][$j]['order'] = 'lastname';
-                 }
+    if (!empty($tab)) {
+        for ($i = 0; $i < count($tab); ++$i) {
+            for ($j = 0; $j < count($tab[$i]); ++$j) {
+                foreach (array_keys($tab[$i][$j]) as $value) {
+                    if ($tab[$i][$j][$value] == 'email_id') {
+                        $tab[$i][$j]['email_id'] = $tab[$i][$j]['value'];
+                        $tab[$i][$j]['label'] = 'ID';
+                        $tab[$i][$j]['size'] = '1';
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = false;
+                        $tab[$i][$j]['order'] = 'id';
+                    }
+                    if ($tab[$i][$j][$value] == 'creation_date') {
+                        $tab[$i][$j]['value'] = $request->dateformat($tab[$i][$j]['value']);
+                        $tab[$i][$j]['label'] = _CREATION_DATE;
+                        $tab[$i][$j]['size'] = '11';
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = true;
+                        $tab[$i][$j]['order'] = 'creation_date';
+                    }
+                    if ($tab[$i][$j][$value] == 'user_id') {
+                        $tab[$i][$j]['label'] = _USER_ID;
+                        $tab[$i][$j]['size'] = '5';
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = false;
+                        $tab[$i][$j]['order'] = 'user_id';
+                    }
+                    if ($tab[$i][$j][$value] == 'firstname') {
+                        $firstname = $request->show_string($tab[$i][$j]['value']);
+                    }
+                    if ($tab[$i][$j][$value] == 'lastname') {
+                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']).' '.$firstname;
+                        $tab[$i][$j]['label'] = _USER;
+                        $tab[$i][$j]['size'] = $sizeUser;
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = false;
+                        $tab[$i][$j]['order'] = 'lastname';
+                    }
 
-                 if ($tab[$i][$j][$value] == 'email_destinataire') {
-                     $tab_dest = explode(',', $tab[$i][$j]['value']);
-                     $tab[$i][$j]['value'] = implode(', ', $tab_dest);
-                     $tab[$i][$j]['value'] = $tab[$i][$j]['value'];
-                     $tab[$i][$j]['label'] = _RECIPIENT;
-                     $tab[$i][$j]['size'] = $sizeObject;
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = true;
-                     $tab[$i][$j]['order'] = 'email_destinataire';
-                 }
-                 if ($tab[$i][$j][$value] == 'email_object') {
-                     $tab[$i][$j]['value'] = addslashes($tab[$i][$j]['value']);
-                     $tab[$i][$j]['label'] = _EMAIL_OBJECT;
-                     $tab[$i][$j]['size'] = $sizeObject;
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = false;
-                     $tab[$i][$j]['order'] = 'email_object';
-                 }
-                 if ($tab[$i][$j][$value] == 'email_object_short') {
-                     $tab[$i][$j]['value'] = $request->cut_string($request->show_string($tab[$i][$j]['value']), $cutString);
-                     $tab[$i][$j]['label'] = _EMAIL_OBJECT;
-                     $tab[$i][$j]['size'] = $sizeObject;
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = true;
-                     $tab[$i][$j]['order'] = 'email_object_short';
-                 }
-                 if ($tab[$i][$j][$value] == 'status_label') {
-                     $tab[$i][$j]['value'] = addslashes($_SESSION['sendmail']['status'][$tab[$i][$j]['value']]['label']);
-                     $tab[$i][$j]['label'] = _STATUS;
-                     $tab[$i][$j]['size'] = '1';
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = false;
-                     $tab[$i][$j]['order'] = 'status_label';
-                 }
-                 if ($tab[$i][$j][$value] == 'status_img') {
-                     $tab[$i][$j]['value'] = '<img src="'
-                            .$_SESSION['config']['businessappurl'].'static.php?module=sendmail&filename='
-                            .$_SESSION['sendmail']['status'][$tab[$i][$j]['value']]['img'].'" title="'
-                            .$_SESSION['sendmail']['status'][$tab[$i][$j]['value']]['label'].'" width="20" height="20" />';
-                     $tab[$i][$j]['label'] = _STATUS;
-                     $tab[$i][$j]['size'] = '1';
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = true;
-                     $tab[$i][$j]['order'] = 'status_img';
-                 }
-                 if ($tab[$i][$j][$value] == 'mail') {
-                     $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                     $tab[$i][$j]['label'] = _SENDER;
-                     $tab[$i][$j]['size'] = $sizeUser;
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = false;
-                     $tab[$i][$j]['order'] = 'mail';
-                 }
-                 if ($tab[$i][$j][$value] == 'sender_email') {
-                     $tab[$i][$j]['value'] = $sendmail_tools->explodeSenderEmail($tab[$i][$j]['value']);
+                    if ($tab[$i][$j][$value] == 'email_destinataire') {
+                        $tab_dest = explode(',', $tab[$i][$j]['value']);
+                        $tab[$i][$j]['value'] = implode(', ', $tab_dest);
+                        $tab[$i][$j]['value'] = $tab[$i][$j]['value'];
+                        $tab[$i][$j]['label'] = _RECIPIENT;
+                        $tab[$i][$j]['size'] = $sizeObject;
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = true;
+                        $tab[$i][$j]['order'] = 'email_destinataire';
+                    }
+                    if ($tab[$i][$j][$value] == 'email_object') {
+                        $tab[$i][$j]['value'] = addslashes($tab[$i][$j]['value']);
+                        $tab[$i][$j]['label'] = _EMAIL_OBJECT;
+                        $tab[$i][$j]['size'] = $sizeObject;
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = false;
+                        $tab[$i][$j]['order'] = 'email_object';
+                    }
+                    if ($tab[$i][$j][$value] == 'email_object_short') {
+                        $tab[$i][$j]['value'] = $request->cut_string($request->show_string($tab[$i][$j]['value']), $cutString);
+                        $tab[$i][$j]['label'] = _EMAIL_OBJECT;
+                        $tab[$i][$j]['size'] = $sizeObject;
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = true;
+                        $tab[$i][$j]['order'] = 'email_object_short';
+                    }
+                    if ($tab[$i][$j][$value] == 'status_label') {
+                        $tab[$i][$j]['value'] = addslashes($_SESSION['sendmail']['status'][$tab[$i][$j]['value']]['label']);
+                        $tab[$i][$j]['label'] = _STATUS;
+                        $tab[$i][$j]['size'] = '1';
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = false;
+                        $tab[$i][$j]['order'] = 'status_label';
+                    }
+                    if ($tab[$i][$j][$value] == 'status_img') {
+                        $tab[$i][$j]['value'] = '<img src="'
+                                .$_SESSION['config']['businessappurl'].'static.php?module=sendmail&filename='
+                                .$_SESSION['sendmail']['status'][$tab[$i][$j]['value']]['img'].'" title="'
+                                .$_SESSION['sendmail']['status'][$tab[$i][$j]['value']]['label'].'" width="20" height="20" />';
+                        $tab[$i][$j]['label'] = _STATUS;
+                        $tab[$i][$j]['size'] = '1';
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = true;
+                        $tab[$i][$j]['order'] = 'status_img';
+                    }
+                    if ($tab[$i][$j][$value] == 'mail') {
+                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                        $tab[$i][$j]['label'] = _SENDER;
+                        $tab[$i][$j]['size'] = $sizeUser;
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = false;
+                        $tab[$i][$j]['order'] = 'mail';
+                    }
+                    if ($tab[$i][$j][$value] == 'sender_email') {
+                        $tab[$i][$j]['value'] = $sendmail_tools->explodeSenderEmail($tab[$i][$j]['value']);
 
-                     $tab[$i][$j]['label'] = _SENDER;
-                     $tab[$i][$j]['size'] = '20';
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = true;
-                     $tab[$i][$j]['order'] = 'sender_email';
-                 }
-                 if ($tab[$i][$j][$value] == 'id') {
-                     $tab[$i][$j]['value'] = ($sendmail_tools->haveJoinedFiles($tab[$i][$j]['value'])) ?
-                            '<i class="fa fa-paperclip fa-2x" title="'._JOINED_FILES.'"></i>' :
-                                '';
-                     $tab[$i][$j]['label'] = false;
-                     $tab[$i][$j]['size'] = '1';
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = true;
-                     $tab[$i][$j]['order'] = false;
-                 }
-                 if ($tab[$i][$j][$value] == 'email_status') {
-                     $tab[$i][$j]['label'] = _STATUS;
-                     $tab[$i][$j]['size'] = '1';
-                     $tab[$i][$j]['label_align'] = 'left';
-                     $tab[$i][$j]['align'] = 'left';
-                     $tab[$i][$j]['valign'] = 'bottom';
-                     $tab[$i][$j]['show'] = false;
-                     $tab[$i][$j]['order'] = 'email_status';
-                 }
-             }
-         }
-     }
+                        $tab[$i][$j]['label'] = _SENDER;
+                        $tab[$i][$j]['size'] = '20';
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = true;
+                        $tab[$i][$j]['order'] = 'sender_email';
+                    }
+                    if ($tab[$i][$j][$value] == 'id') {
+                        $tab[$i][$j]['value'] = ($sendmail_tools->haveJoinedFiles($tab[$i][$j]['value'])) ?
+                                '<i class="fa fa-paperclip fa-2x" title="'._JOINED_FILES.'"></i>' :
+                                    '';
+                        $tab[$i][$j]['label'] = false;
+                        $tab[$i][$j]['size'] = '1';
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = true;
+                        $tab[$i][$j]['order'] = false;
+                    }
+                    if ($tab[$i][$j][$value] == 'email_status') {
+                        $tab[$i][$j]['label'] = _STATUS;
+                        $tab[$i][$j]['size'] = '1';
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = false;
+                        $tab[$i][$j]['order'] = 'email_status';
+                    }
+                }
+            }
+        }
+    }
 
      //List
         $listKey = 'email_id';                                                              //Cl� de la liste

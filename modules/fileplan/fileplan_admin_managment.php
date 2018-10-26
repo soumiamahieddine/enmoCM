@@ -174,70 +174,72 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
         // $request->show();
 
         //Result array
-        for ($i = 0; $i < count($tab); ++$i) {
-            for ($j = 0; $j < count($tab[$i]); ++$j) {
-                foreach (array_keys($tab[$i][$j]) as $value) {
-                    if ($tab[$i][$j][$value] == 'position_id') {
-                        $id = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['position_id'] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['label'] = _ID;
-                        $tab[$i][$j]['size'] = '5';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = 'position_id';
-                    }
+        if (!empty($tab)) {
+            for ($i = 0; $i < count($tab); ++$i) {
+                for ($j = 0; $j < count($tab[$i]); ++$j) {
+                    foreach (array_keys($tab[$i][$j]) as $value) {
+                        if ($tab[$i][$j][$value] == 'position_id') {
+                            $id = $tab[$i][$j]['value'];
+                            $tab[$i][$j]['position_id'] = $tab[$i][$j]['value'];
+                            $tab[$i][$j]['label'] = _ID;
+                            $tab[$i][$j]['size'] = '5';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = 'position_id';
+                        }
 
-                    if ($tab[$i][$j][$value] == 'position_label') {
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]['label'] = _POSITION_NAME;
-                        $tab[$i][$j]['size'] = '25';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = 'position_label';
-                    }
-                    if ($tab[$i][$j][$value] == 'parent_id') {
-                        $tab[$i][$j]['value'] = $fileplan->getPosition($fileplan_id, $tab[$i][$j]['value'], 'position_label');
-                        $tab[$i][$j]['label'] = _POSITION_PARENT;
-                        $tab[$i][$j]['size'] = '25';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = 'parent_position_id';
-                    }
-                    if ($tab[$i][$j][$value] == 'position_path') {
-                        $tab[$i][$j]['value'] = $fileplan->getPositionPath($fileplan_id, $tab[$i][$j]['value']);
-                        $tab[$i][$j]['label'] = _POSITION_PATH;
-                        $tab[$i][$j]['size'] = '50';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = 'position_path';
-                    }
+                        if ($tab[$i][$j][$value] == 'position_label') {
+                            $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                            $tab[$i][$j]['label'] = _POSITION_NAME;
+                            $tab[$i][$j]['size'] = '25';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = 'position_label';
+                        }
+                        if ($tab[$i][$j][$value] == 'parent_id') {
+                            $tab[$i][$j]['value'] = $fileplan->getPosition($fileplan_id, $tab[$i][$j]['value'], 'position_label');
+                            $tab[$i][$j]['label'] = _POSITION_PARENT;
+                            $tab[$i][$j]['size'] = '25';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = 'parent_position_id';
+                        }
+                        if ($tab[$i][$j][$value] == 'position_path') {
+                            $tab[$i][$j]['value'] = $fileplan->getPositionPath($fileplan_id, $tab[$i][$j]['value']);
+                            $tab[$i][$j]['label'] = _POSITION_PATH;
+                            $tab[$i][$j]['size'] = '50';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = 'position_path';
+                        }
 
-                    if ($tab[$i][$j][$value] == 'position_enabled') {
-                        $tab[$i][$j]['label'] = _ENABLED;
-                        $tab[$i][$j]['size'] = '1';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'center';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = 'position_enabled';
-                    }
+                        if ($tab[$i][$j][$value] == 'position_enabled') {
+                            $tab[$i][$j]['label'] = _ENABLED;
+                            $tab[$i][$j]['size'] = '1';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'center';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = 'position_enabled';
+                        }
 
-                    if ($tab[$i][$j][$value] == 'fileplan_id') {
-                        $tab[$i][$j]['label'] = _FILEPLAN_ID;
-                        $tab[$i][$j]['size'] = '5';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'center';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = 'fileplan_id';
+                        if ($tab[$i][$j][$value] == 'fileplan_id') {
+                            $tab[$i][$j]['label'] = _FILEPLAN_ID;
+                            $tab[$i][$j]['size'] = '5';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'center';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = 'fileplan_id';
+                        }
                     }
                 }
             }

@@ -157,61 +157,63 @@ if (isset($_REQUEST['load'])) {
         $tab = $request->PDOselect($select, $where, $array_what, $orderstr, $_SESSION['config']['databasetype']);
 
         //Result array
-        for ($i = 0; $i < count($tab); ++$i) {
-            for ($j = 0; $j < count($tab[$i]); ++$j) {
-                foreach (array_keys($tab[$i][$j]) as $value) {
-                    if ($tab[$i][$j][$value] == 'fileplan_id') {
-                        $id = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['fileplan_id'] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['label'] = _ID;
-                        $tab[$i][$j]['size'] = '5';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = 'fileplan_id';
-                    }
+        if (!empty($tab)) {
+            for ($i = 0; $i < count($tab); ++$i) {
+                for ($j = 0; $j < count($tab[$i]); ++$j) {
+                    foreach (array_keys($tab[$i][$j]) as $value) {
+                        if ($tab[$i][$j][$value] == 'fileplan_id') {
+                            $id = $tab[$i][$j]['value'];
+                            $tab[$i][$j]['fileplan_id'] = $tab[$i][$j]['value'];
+                            $tab[$i][$j]['label'] = _ID;
+                            $tab[$i][$j]['size'] = '5';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = 'fileplan_id';
+                        }
 
-                    if ($tab[$i][$j][$value] == 'fileplan_label') {
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]['label'] = _FILEPLAN_NAME;
-                        $tab[$i][$j]['size'] = '45';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = 'fileplan_label';
-                    }
+                        if ($tab[$i][$j][$value] == 'fileplan_label') {
+                            $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                            $tab[$i][$j]['label'] = _FILEPLAN_NAME;
+                            $tab[$i][$j]['size'] = '45';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = 'fileplan_label';
+                        }
 
-                    if ($tab[$i][$j][$value] == 'user_id') {
-                        $userArray = $func->infouser($tab[$i][$j]['value']);
-                        $tab[$i][$j]['value'] = (!empty($userArray['FirstName'])) ? $userArray['FirstName'].' '.$userArray['LastName'] : '';
-                        $tab[$i][$j]['label'] = _USER;
-                        $tab[$i][$j]['size'] = '10';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = 'user_id';
-                    }
-                    if ($tab[$i][$j][$value] == 'entity_id') {
-                        $tab[$i][$j]['label'] = _ENTITY;
-                        $tab[$i][$j]['size'] = '10';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = 'entity_id';
-                    }
+                        if ($tab[$i][$j][$value] == 'user_id') {
+                            $userArray = $func->infouser($tab[$i][$j]['value']);
+                            $tab[$i][$j]['value'] = (!empty($userArray['FirstName'])) ? $userArray['FirstName'].' '.$userArray['LastName'] : '';
+                            $tab[$i][$j]['label'] = _USER;
+                            $tab[$i][$j]['size'] = '10';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = 'user_id';
+                        }
+                        if ($tab[$i][$j][$value] == 'entity_id') {
+                            $tab[$i][$j]['label'] = _ENTITY;
+                            $tab[$i][$j]['size'] = '10';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = 'entity_id';
+                        }
 
-                    if ($tab[$i][$j][$value] == 'enabled') {
-                        $tab[$i][$j]['label'] = _ENABLED;
-                        $tab[$i][$j]['size'] = '1';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'center';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = 'enabled';
+                        if ($tab[$i][$j][$value] == 'enabled') {
+                            $tab[$i][$j]['label'] = _ENABLED;
+                            $tab[$i][$j]['size'] = '1';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'center';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = 'enabled';
+                        }
                     }
                 }
             }

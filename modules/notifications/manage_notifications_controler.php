@@ -211,24 +211,26 @@ function display_list()
     );
     //$request->show();
 
-    for ($i = 0; $i < count($tab); ++$i) {
-        foreach ($tab[$i] as &$item) {
-            switch ($item['column']) {
-                case 'notification_sid':
-                    format_item(
-                        $item, _ID, '15', 'left', 'left', 'bottom', true
-                    );
-                    break;
-                case 'notification_id':
-                    format_item(
-                        $item, _NOTIFICATION_ID, '30', 'left', 'left', 'bottom', true
-                    );
-                    break;
-                case 'description':
-                    format_item(
-                        $item, _DESC, '45', 'left', 'left', 'bottom', true
-                    );
-                    break;
+    if (!empty($tab)) {
+        for ($i = 0; $i < count($tab); ++$i) {
+            foreach ($tab[$i] as &$item) {
+                switch ($item['column']) {
+                    case 'notification_sid':
+                        format_item(
+                            $item, _ID, '15', 'left', 'left', 'bottom', true
+                        );
+                        break;
+                    case 'notification_id':
+                        format_item(
+                            $item, _NOTIFICATION_ID, '30', 'left', 'left', 'bottom', true
+                        );
+                        break;
+                    case 'description':
+                        format_item(
+                            $item, _DESC, '45', 'left', 'left', 'bottom', true
+                        );
+                        break;
+                }
             }
         }
     }

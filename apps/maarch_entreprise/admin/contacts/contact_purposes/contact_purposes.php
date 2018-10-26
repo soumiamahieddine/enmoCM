@@ -95,31 +95,34 @@ $request = new request;
 $tab = $request->PDOselect(
     $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', true, false, false, $_REQUEST['start']
 );
-for ($i = 0; $i < count($tab); $i ++) {
-    for ($j = 0; $j < count($tab[$i]); $j ++) {
-        foreach (array_keys($tab[$i][$j]) as $value) {
-            if ($tab[$i][$j][$value] == "id") {
-                $tab[$i][$j]["contact_purposes_id"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _ID;
-                $tab[$i][$j]["size"] = "30";
-                $tab[$i][$j]["label_align"] = "left";
-                $tab[$i][$j]["align"] = "left";
-                $tab[$i][$j]["valign"] = "bottom";
-                $tab[$i][$j]["show"] = true;
-                $tab[$i][$j]["order"] = 'contact_purposes_id';
-            }
-            if ($tab[$i][$j][$value] == "label") {
-                $tab[$i][$j]['value'] = $request->show_string(
-                    $tab[$i][$j]['value']
-                );
-                $tab[$i][$j]["contact_purposes_label"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _DESC_CONTACT_PURPOSES;
-                $tab[$i][$j]["size"] = "60";
-                $tab[$i][$j]["label_align"] = "left";
-                $tab[$i][$j]["align"] = "left";
-                $tab[$i][$j]["valign"] = "bottom";
-                $tab[$i][$j]["show"] = true;
-                $tab[$i][$j]["order"] = 'contact_purposes_label';
+
+if (!empty($tab)) {
+    for ($i = 0; $i < count($tab); $i ++) {
+        for ($j = 0; $j < count($tab[$i]); $j ++) {
+            foreach (array_keys($tab[$i][$j]) as $value) {
+                if ($tab[$i][$j][$value] == "id") {
+                    $tab[$i][$j]["contact_purposes_id"] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]["label"] = _ID;
+                    $tab[$i][$j]["size"] = "30";
+                    $tab[$i][$j]["label_align"] = "left";
+                    $tab[$i][$j]["align"] = "left";
+                    $tab[$i][$j]["valign"] = "bottom";
+                    $tab[$i][$j]["show"] = true;
+                    $tab[$i][$j]["order"] = 'contact_purposes_id';
+                }
+                if ($tab[$i][$j][$value] == "label") {
+                    $tab[$i][$j]['value'] = $request->show_string(
+                        $tab[$i][$j]['value']
+                    );
+                    $tab[$i][$j]["contact_purposes_label"] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]["label"] = _DESC_CONTACT_PURPOSES;
+                    $tab[$i][$j]["size"] = "60";
+                    $tab[$i][$j]["label_align"] = "left";
+                    $tab[$i][$j]["align"] = "left";
+                    $tab[$i][$j]["valign"] = "bottom";
+                    $tab[$i][$j]["show"] = true;
+                    $tab[$i][$j]["order"] = 'contact_purposes_label';
+                }
             }
         }
     }

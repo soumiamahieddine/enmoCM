@@ -58,7 +58,7 @@ if (isset($whereRequest) && !empty($whereRequest)) {
 />
 
 <?php
-    if (count($tab) > 0) {
+    if (!empty($tab)) {
         for ($i = 0; $i < count($tab); ++$i) {
             if ($view == 'view_folders') {
                 $line = '<li>';

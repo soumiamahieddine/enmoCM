@@ -329,36 +329,38 @@ function display_list()
         $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype']
     );
     //$request->show();
-    for ($i = 0;$i < count($tab);$i++) {
-        foreach ($tab[$i] as &$item) {
-            switch ($item['column']) {
-                case $idName:
-                    At_formatItem(
-                        $item, _ID, "15", "left", "left", "bottom", true
-                    );
-                    break;
-                case "cycle_step_desc":
-                    At_formatItem(
-                        $item, _CYCLE_STEP_DESC, "40", "left", "left", 
-                        "bottom", true
-                    );
-                    break;
-                case "cycle_id":
-                    At_formatItem(
-                        $item, _CYCLE_ID, "15", "left", "left", "bottom", true
-                    );
-                    break;
-                case "policy_id":
-                    At_formatItem(
-                        $item, _POLICY_ID, "15", "left", "left", "bottom", true
-                    );
-                    break;
-                case "sequence_number":
-                    At_formatItem(
-                        $item, _SEQUENCE_NUMBER, "15", "left", "left", 
-                        "bottom", true
-                    );
-                    break;
+    if (!empty($tab)) {
+        for ($i = 0;$i < count($tab);$i++) {
+            foreach ($tab[$i] as &$item) {
+                switch ($item['column']) {
+                    case $idName:
+                        At_formatItem(
+                            $item, _ID, "15", "left", "left", "bottom", true
+                        );
+                        break;
+                    case "cycle_step_desc":
+                        At_formatItem(
+                            $item, _CYCLE_STEP_DESC, "40", "left", "left", 
+                            "bottom", true
+                        );
+                        break;
+                    case "cycle_id":
+                        At_formatItem(
+                            $item, _CYCLE_ID, "15", "left", "left", "bottom", true
+                        );
+                        break;
+                    case "policy_id":
+                        At_formatItem(
+                            $item, _POLICY_ID, "15", "left", "left", "bottom", true
+                        );
+                        break;
+                    case "sequence_number":
+                        At_formatItem(
+                            $item, _SEQUENCE_NUMBER, "15", "left", "left", 
+                            "bottom", true
+                        );
+                        break;
+                }
             }
         }
     }
