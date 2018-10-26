@@ -125,7 +125,7 @@ $where = implode(' and ', $where_tab);
 //Order
 $order = $order_field = '';
 $arr_order = explode(', ', $_SESSION['current_basket']['basket_res_order']);
-if (count($arr_order) == 1) {
+if (!empty($arr_order) && count($arr_order) == 1) {
     $order = $list->getOrder();
     $order_field = $list->getOrderField();
 }
@@ -153,7 +153,7 @@ if (!empty($order_field) && !empty($order)) {
     $_SESSION['last_order_basket'] = $orderstr;
 } else {
     if (!empty($_SESSION['current_basket']['basket_res_order'])) {
-        if (count($arr_order) == 1) {
+        if (!empty($arr_order) && count($arr_order) == 1) {
             $orders = explode(' ', $arr_order[0]);
             if (!empty($orders[1])) {
                 $list->setOrder($orders[1]);
