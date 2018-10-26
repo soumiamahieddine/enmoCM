@@ -19,7 +19,6 @@ declare const angularGlobals : any;
 })
 export class GroupAdministrationComponent  extends AutoCompletePlugin implements OnInit {
     /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 

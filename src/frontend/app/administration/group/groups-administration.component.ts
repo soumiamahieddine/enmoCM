@@ -17,7 +17,6 @@ declare var angularGlobals: any;
 })
 export class GroupsAdministrationComponent implements OnInit {
     /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
