@@ -3,7 +3,7 @@ require 'modules/templates/class/templates_controler.php';
 require_once 'core/class/class_db.php';
 require_once 'core/class/class_db_pdo.php';
 $db = new Database();
-$stmt = $db->query("select destination from ".RES_VIEW_LETTERBOX." where res_id = ? ", array($_SESSION['doc_id']));
+$stmt = $db->query("select destination from res_view_letterbox where res_id = ? ", array($_SESSION['doc_id']));
 if ($stmt->rowCount() > 0) {
         $res = $stmt->fetchObject();
         $destination_entity = $res->destination;
