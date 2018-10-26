@@ -628,7 +628,7 @@ if (!defined('_SELECT_BARCODE_TYPE')) {
     define('_SELECT_BARCODE_TYPE', 'Type de code à barres');
 }
 if (!defined('_ADD_COPY_IN_INDEXING_VALIDATION')) {
-    define('_ADD_COPY_IN_INDEXING_VALIDATION', 'Interdire la modification du destinataire dans la liste de diffusion');
+    define('_ADD_COPY_IN_INDEXING_VALIDATION', "Interdire la modification de l'attributaire dans la liste de diffusion");
 }
 
 if (!defined('_DEL_USER_LISTDIFF')) {
