@@ -1770,7 +1770,7 @@ INSERT INTO password_rules (label, "value") VALUES ('historyLastUse', 2);
 INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
 
 /* Contacts filling rate*/
-INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_threshold) VALUES (FALSE, '{}', 33, 66);
+INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_threshold) VALUES (true, '["address_street","address_postal_code","address_town","lastname","firstname","phone","email"]', 33, 66);
 
 
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise
