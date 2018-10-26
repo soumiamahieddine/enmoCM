@@ -40,32 +40,31 @@
                     <?php                         
                     $strUserInfos = '<i class="fa fa-user fa-2x" style="padding-right:5px;"></i> ' . $_SESSION['user']['FirstName'][0].". ".$_SESSION['user']['LastName'];
                     echo $strUserInfos; ?>
-                    <div id="profilenav" class="menunav" style="left: -135px;display:none;">
-                        <div class="footer_menu">
-                            <span style="color:white;float:left;">
-                                Groupes
-                            </span>
-                            
-                            <div style="clear:both;"></div>
-                        </div>
-                        <div class="header_menu_blank">&nbsp;</div>
-                        <ul style="color:#666;"> 
-                            <?php
-                            $userGroups = \User\models\UserModel::getGroupsByUserId(['userId'=> $_SESSION['user']['UserId']]);
-                       
-                            if(!empty($userGroups)){
-                                for($i=0;$i<count($userGroups);$i++){
-                                    $strGrpInfos .= '<li>'.$userGroups[$i]['group_desc'].'</li>';                              
+                    <div id="profilenav" class="menunav" style="left: -135px;display:none;background: #135f7f;">
+                        <canvas class="header-bg" width="250" height="70" style="width: 100%;background-image: url('static.php?filename=login-banner.jpg');background-size:cover;border-bottom: solid 1px white;"></canvas>
+                        <i title="<?php echo _MY_INFO;?>" onclick="triggerAngular('#/profile')" style="cursor:pointer;z-index:1;color:white;position: absolute;left: 85px;top: 17px;background-image: url('static.php?filename=logo_only.svg');width: 70px;height: 70px;background-size: cover;background-position: top center;border-radius: 50%;border: solid white;background-color:white;"></i>
+                        <div class="content" style="padding-top:10px;color:#666;max-height:250px;overflow-y:auto;overflow-x:hidden;">
+                            <p routerLink="/profile" class="text-center" style="margin-top:10px;cursor:pointer;color:white;"><?php echo $_SESSION['user']['FirstName'].". ".$_SESSION['user']['LastName'];?></p>
+                            <h3 style="padding: 5px;margin-top:10px;color:white;text-align:left;">Groupes</h3>
+                            <ul style="color:white;padding: 10px;text-align:left;opacity: 0.5;"> 
+                                <?php
+                                $userGroups = \User\models\UserModel::getGroupsByUserId(['userId'=> $_SESSION['user']['UserId']]);
+                           
+                                if(!empty($userGroups)){
+                                    for($i=0;$i<count($userGroups);$i++){
+                                        $strGrpInfos .= '<li style="padding-bottom:20px;">'.$userGroups[$i]['group_desc'].'</li>';                              
+                                    }
                                 }
-                            }
-                            echo $strGrpInfos;
-                            ?>
-                        </ul>
-                        <div class="header_menu_blank">&nbsp;</div>
-                        <div class="footer_menu">
-                            <a onclick="triggerAngular('#/profile')" style="cursor: pointer;color:white;float:left;"><?php echo _MY_INFO;?></a>
-                            <a href="index.php?display=true&page=logout&logout=true" style="cursor: pointer;color:white;float:right;"><?php echo _LOGOUT;?></a>
-                            <div style="clear:both;"></div>
+                                echo $strGrpInfos;
+                                ?>
+                            </ul>
+                        </div>
+                        <div style="display:flex;">
+                            <div class="footer_menu">
+                                <a onclick="triggerAngular('#/profile')" style="cursor: pointer;color:white;float:left;"><?php echo _MY_INFO;?></a>
+                                <a href="index.php?display=true&page=logout&logout=true" style="cursor: pointer;color:white;float:right;"><?php echo _LOGOUT;?></a>
+                                <div style="clear:both;"></div>
+                            </div>
                         </div>
                     </div>
                 </span>
