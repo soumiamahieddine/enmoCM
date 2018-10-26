@@ -1256,7 +1256,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     //FILE
     if ($mode == 'add') {
         $content .= '<p>';
-        $content .= '<label id="file_label">'._FILE.' <span id="templateOfficeTool"><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'templateOffice\').disabled=true;$(\'templateOffice_edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-alt fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#135F7F;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'templateOffice\').disabled=false;$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
+        $content .= '<label id="file_label">'._FILE.' <span id="templateOfficeTool"><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$j(\'#add\').css(\'display\', \'inline\');$(\'attachment_type_icon\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'templateOffice\').disabled=true;$(\'templateOffice_edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-alt fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#135F7F;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'templateOffice\').disabled=false;$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
         $content .= '<select name="templateOffice[]" id="templateOffice" style="display:inline-block;" onchange="showEditButton(this);">';
         $content .= '<option value="">'._CHOOSE_MODEL.'</option>';
 
@@ -1398,9 +1398,9 @@ $content .= '<div id="transmission"></div>';
         $content .= '<input type="button" value="';
         $content .= _VALIDATE;
         if (isset($_REQUEST['id'])) {
-            $content .= '" name="edit" id="edit" class="button" onclick="ValidAttachmentsForm(\''.$_SESSION['config']['businessappurl'];
+            $content .= '" name="edit" id="edit" class="button" onclick="refreshAttachmentsTab();ValidAttachmentsForm(\''.$_SESSION['config']['businessappurl'];
         } else {
-            $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\''.$_SESSION['config']['businessappurl'];
+            $content .= '" name="add" id="add" class="button" onclick="refreshAttachmentsTab();simpleAjax(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\''.$_SESSION['config']['businessappurl'];
         }
         $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\'';
 
