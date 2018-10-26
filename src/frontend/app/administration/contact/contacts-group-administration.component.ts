@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
 import { MatPaginator, MatSort, MatTableDataSource, MatSidenav, MatProgressBarModule } from '@angular/material';
@@ -19,8 +20,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class ContactsGroupAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -71,7 +71,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         this.dataSourceAdded.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -102,7 +102,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.contactGroupCreation);
+                this.headerService.headerMessage = this.lang.contactGroupCreation;
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -110,20 +110,20 @@ export class ContactsGroupAdministrationComponent implements OnInit {
                 this.contactsGroup.public = false;
                 this.loading = false;
             } else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.contactsGroupModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = false;
 
                 this.http.get(this.coreUrl + 'rest/contactsTypes')
-                    .subscribe((data: any) => {
-                        this.contactTypes = data.contactsTypes;
-                    });
+                .subscribe((data: any) => {
+                    this.contactTypes = data.contactsTypes;
+                });
 
                 this.http.get(this.coreUrl + 'rest/contactsGroups/' + params['id'])
-                    .subscribe((data: any) => {
+                .subscribe((data: any) => {
                         this.contactsGroup = data.contactsGroup;
+                        this.headerService.headerMessage = this.lang.contactsGroupModification + " <small>" +  this.contactsGroup.label + "</small>";
                         this.nbContact = this.contactsGroup.nbContacts;
                         setTimeout(() => {
                             this.dataSourceAdded = new MatTableDataSource(this.contactsGroup.contacts);

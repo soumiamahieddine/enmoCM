@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { MatSidenav } from '@angular/material';
@@ -19,8 +20,7 @@ declare const angularGlobals: any;
     providers: [NotificationService]
 })
 export class DiffusionModelAdministrationComponent extends AutoCompletePlugin implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
@@ -41,7 +41,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
     displayedColumns    = ['firstname', 'lastname'];
     dataSource          : any;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -60,7 +60,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.diffusionModelCreation);
+                this.headerService.headerMessage = this.lang.diffusionModelCreation;
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
                 
@@ -70,14 +70,14 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
                 this.diffusionModel.object_type = 'VISA_CIRCUIT';
                 this.diffusionModel.diffusionList = [];
             } else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.diffusionModelModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = false;
                 this.http.get(this.coreUrl + "rest/listTemplates/" + params['id'])
-                    .subscribe((data: any) => {
+                .subscribe((data: any) => {
                         this.diffusionModel = data['listTemplate'];
+                        this.headerService.headerMessage = this.lang.diffusionModelModification + " <small>" +  this.diffusionModel.title + "</small>";
                         if (this.diffusionModel.diffusionList[0]) {
                             this.idCircuit = this.diffusionModel.diffusionList[0].id;
                         }

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
@@ -15,8 +16,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class ParameterAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -32,7 +32,7 @@ export class ParameterAdministrationComponent implements OnInit {
     creationMode                    : boolean;
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -49,14 +49,13 @@ export class ParameterAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.parameterCreation);
+                this.headerService.headerMessage = this.lang.parameterCreation;
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = true;
                 this.loading = false;
             } else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.parameterModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -64,7 +63,7 @@ export class ParameterAdministrationComponent implements OnInit {
                 this.http.get(this.coreUrl + "rest/parameters/" + params['id'])
                     .subscribe((data: any) => {
                         this.parameter = data.parameter;
-
+                        this.headerService.headerMessage = this.lang.parameterModification + " <small>" +  this.parameter.id + "</small>";
                         if (typeof (this.parameter.param_value_int) == "number") {
                             this.type = "int";
                         } else if (this.parameter.param_value_date) {
