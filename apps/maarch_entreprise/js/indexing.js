@@ -2003,6 +2003,13 @@ function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId
                         if (result[i]['type'] == "contact" && result[i]["rateColor"] != "") {
                             $j(target).css({"background-color" : result[i]["rateColor"]});
                         }
+                        if (result[i]['type'] == "contact") {
+                            $j(target).find('span').before("<i class='fa fa-building fa-1x'></i>&nbsp;&nbsp;");
+                        } else if (result[i]['type'] == "user") {
+                            $j(target).find('span').before("<i class='fa fa-user fa-1x'></i>&nbsp;&nbsp;");
+                        } else if (result[i]['type'] == "onlyContact") {
+                            $j(target).find('span').before("<i class='fa fa-address-card fa-1x'></i>&nbsp;&nbsp;");
+                        }
                     });
                 }
                 return resultHtmlList;
