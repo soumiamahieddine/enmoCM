@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angula
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { NotificationService } from '../../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
-
+import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
@@ -22,8 +22,6 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     private _mobileQueryListener            : () => void;
     mobileQuery                             : MediaQueryList;
 
-    /*HEADER*/
-    titleHeader                             : string;
     @ViewChild('snav') public sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight : MatSidenav;
 
@@ -52,7 +50,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
         super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -65,7 +63,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.users);
+        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.users;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

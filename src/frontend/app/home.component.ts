@@ -2,8 +2,10 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, QueryList, ViewChildre
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
-import { NotificationService } from './notification.service';
 import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource } from '@angular/material';
+import { NotificationService } from './notification.service';
+import { HeaderService }        from '../service/header.service';
+
 
 import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -42,7 +44,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     @ViewChild('snav2') sidenavRight: MatSidenav;
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private notify: NotificationService, private headerService: HeaderService) {
         super(http, ['users']);
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
@@ -56,9 +58,10 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         if (this.mobileMode) {
             this.displayedColumns = ['res_id', 'subject'];
         }
-        window['MainHeaderComponent'].refreshTitle(this.lang.home);
+        this.headerService.headerMessage = this.lang.home;
         window['MainHeaderComponent'].setSnav(this.snav);
         window['MainHeaderComponent'].setSnavRight(null);
+
         this.coreUrl = angularGlobals.coreUrl;
         let event = new Date();
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
