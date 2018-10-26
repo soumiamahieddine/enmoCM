@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import {MatPaginator, MatTableDataSource, MatSort, MatSidenav } from '@angular/material';
+import { HeaderService } from '../../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -15,7 +16,6 @@ declare var angularGlobals: any;
 })
 export class PrioritiesAdministrationComponent implements OnInit {
     /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -40,7 +40,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -52,7 +52,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.priorities);
+        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.priorities;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatSidenav } from '@angular/material';
+import { HeaderService } from '../../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -18,7 +19,6 @@ declare var angularGlobals: any;
 export class PriorityAdministrationComponent implements OnInit {
 
     /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
@@ -39,7 +39,7 @@ export class PriorityAdministrationComponent implements OnInit {
         default_priority: false
     };
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -57,14 +57,13 @@ export class PriorityAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.priorityCreation);
+                this.headerService.headerMessage = this.lang.priorityCreation;
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = true;
                 this.loading = false;
             } else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.priorityModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -73,6 +72,7 @@ export class PriorityAdministrationComponent implements OnInit {
                 this.http.get(this.coreUrl + "rest/priorities/" + this.id)
                     .subscribe((data: any) => {
                         this.priority = data.priority;
+                        this.headerService.headerMessage = this.lang.priorityModification + " <small>" +  this.priority.label + "</small>";
                         this.priority.useDoctypeDelay = this.priority.delays != null;
                         if (this.priority.working_days === true) {
                             this.priority.working_days = "true";
