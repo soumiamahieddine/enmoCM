@@ -3,6 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
+import { HeaderService }        from '../service/header.service';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MatSidenav, MatExpansionPanel } from '@angular/material';
 
@@ -160,7 +161,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog, private _formBuilder: FormBuilder) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog, private _formBuilder: FormBuilder, private headerService: HeaderService) {
         super(http, ['users']);
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
@@ -396,7 +397,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.myProfile);
+        this.headerService.headerMessage = this.lang.myProfile;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
         this.coreUrl = angularGlobals.coreUrl;

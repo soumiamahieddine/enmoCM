@@ -2,8 +2,9 @@ import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { NotificationService } from '../../notification.service';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 
 
 declare function $j(selector: any): any;
@@ -16,8 +17,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class NotificationsAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -36,7 +36,7 @@ export class NotificationsAdministrationComponent implements OnInit {
 
     dom : any = [];
 
-    dow : any = []
+    dow : any = [];
 
     newCron: any = {
         "m" : "",
@@ -45,7 +45,7 @@ export class NotificationsAdministrationComponent implements OnInit {
         "mon" : "",
         "cmd" : "",
         "state": "normal"
-    }
+    };
 
     authorizedNotification :any;
     crontab:any;
@@ -60,7 +60,7 @@ export class NotificationsAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, , private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -72,7 +72,7 @@ export class NotificationsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.notifications);
+        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.notifications;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
@@ -88,7 +88,7 @@ export class NotificationsAdministrationComponent implements OnInit {
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);
-            }, (err) => {
+            }, (err: any) => {
                 this.notify.error(err.error.errors);
             });
     }

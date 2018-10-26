@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 import { FormControl, Validators} from '@angular/forms';
 import { MatSidenav } from '@angular/material';
 
@@ -15,8 +16,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class StatusAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
@@ -47,7 +47,7 @@ export class StatusAdministrationComponent implements OnInit {
             this.statusId.hasError('pattern') ? this.lang.patternId : '';
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -62,14 +62,14 @@ export class StatusAdministrationComponent implements OnInit {
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
-        this.route.params.subscribe((params) => {
+        this.route.params.subscribe((params: any) => {
             if (typeof params['identifier'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.statusCreation);
+                this.headerService.headerMessage = this.lang.statusCreation;
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
                 this.http.get(this.coreUrl + 'rest/administration/statuses/new')
-                    .subscribe((data) => {
+                    .subscribe((data: any) => {
                         this.status.img_filename = "fm-letter";
                         this.status.can_be_searched = true;
                         this.status.can_be_modified = true;
@@ -79,37 +79,34 @@ export class StatusAdministrationComponent implements OnInit {
                     });
                 this.statusIdAvailable = false;
             } else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.statusModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = false;
                 this.statusIdentifier = params['identifier'];
-                this.getStatusInfos(this.statusIdentifier);
-                this.statusIdAvailable = true;
-                this.loading = false;
+                this.http.get(this.coreUrl + 'rest/statuses/' + params['identifier'])
+                    .subscribe((data: any) => {
+                        this.status = data['status'][0];
+                        this.headerService.headerMessage = this.lang.statusModification + " <small>" + this.status['label_status'] + "</small>";
+
+                        if (this.status.can_be_searched == 'Y') {
+                            this.status.can_be_searched = true;
+                        } else {
+                            this.status.can_be_searched = false;
+                        }
+                        if (this.status.can_be_modified == 'Y') {
+                            this.status.can_be_modified = true;
+                        } else {
+                            this.status.can_be_modified = false;
+                        }
+                        this.statusImages = data['statusImages'];
+                        this.statusIdAvailable = true;
+                        this.loading = false;
+                    }, (err: any) => {
+                        this.notify.error(err.error.errors);
+                    });
             }
         });
-    }
-
-    getStatusInfos(statusIdentifier: string) {
-        this.http.get(this.coreUrl + 'rest/statuses/' + statusIdentifier)
-            .subscribe((data) => {
-                this.status = data['status'][0];
-                if (this.status.can_be_searched == 'Y') {
-                    this.status.can_be_searched = true;
-                } else {
-                    this.status.can_be_searched = false;
-                }
-                if (this.status.can_be_modified == 'Y') {
-                    this.status.can_be_modified = true;
-                } else {
-                    this.status.can_be_modified = false;
-                }
-                this.statusImages = data['statusImages'];
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
     }
 
     isAvailable() {

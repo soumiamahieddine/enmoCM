@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { FormControl } from '@angular/forms';
 
@@ -17,8 +18,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class BasketAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
@@ -60,7 +60,7 @@ export class BasketAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -76,9 +76,9 @@ export class BasketAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.route.params.subscribe((params) => {
+        this.route.params.subscribe((params: any) => {
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.basketCreation);
+                this.headerService.headerMessage = this.lang.basketCreation;
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -87,7 +87,6 @@ export class BasketAdministrationComponent implements OnInit {
                 this.loading = false;
             } else {
                 this.orderColumnsSelected = [];
-                window['MainHeaderComponent'].refreshTitle(this.lang.basketModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
                 
@@ -96,6 +95,8 @@ export class BasketAdministrationComponent implements OnInit {
                 this.id = params['id'];
                 this.http.get(this.coreUrl + "rest/baskets/" + this.id)
                     .subscribe((data: any) => {
+                        this.headerService.headerMessage = this.lang.basketModification + " <small>" + data.basket.basket_name + "</small>";
+
                         this.basket = data.basket;
                         this.basket.id = data.basket.basket_id;
                         this.basket.name = data.basket.basket_name;

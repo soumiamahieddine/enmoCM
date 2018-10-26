@@ -2,9 +2,10 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angula
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ConfirmModalComponent } from '../../confirmModal.component';
 import { NotificationService } from '../../notification.service';
-import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { HeaderService }        from '../../../service/header.service';
 
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 
@@ -54,7 +55,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
         super(http, ['adminUsers', 'usersAndEntities', 'visaUsers']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -67,7 +68,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.entities);
+        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.entities;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
@@ -77,13 +78,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.http.get(this.coreUrl + "rest/entityTypes")
             .subscribe((data: any) => {
                 this.entityTypeList = data['types'];
-            }, (err) => {
+            }, (err: any) => {
                 this.notify.error(err.error.errors);
             });
         this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
             .subscribe((data: any) => {
                 this.listTemplateRoles = data['roles'];
-            }, (err) => {
+            }, (err: any) => {
                 this.notify.error(err.error.errors);
             });
 
