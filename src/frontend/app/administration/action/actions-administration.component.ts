@@ -15,8 +15,7 @@ declare var angularGlobals: any;
 })
 
 export class ActionsAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
@@ -53,7 +52,6 @@ export class ActionsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.actions);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
@@ -64,7 +62,7 @@ export class ActionsAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/actions')
             .subscribe((data) => {
                 this.actions = data['actions'];
-                this.headerService.headerMessage = this.headerService.headerMessage = this.lang.actionModification;
+                this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.actions;
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.actions);

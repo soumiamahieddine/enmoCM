@@ -50,7 +50,6 @@ export class ActionAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.actionCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -69,7 +68,6 @@ export class ActionAdministrationComponent implements OnInit {
                     });
             }
             else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.actionModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
                 
