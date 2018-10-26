@@ -2088,12 +2088,15 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     $select[] = 'address_id';
                     $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
                     if (!empty($document[0])) {
-                        if ($getContact) {
+                        if ($getContact && !empty($document[0]['address_id'])) {
                             $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$document[0]['address_id']]]);
                         }
                         foreach ($object['rawData'] as $key => $value) {
                             if (in_array($value, $columnsInContact)) {
-                                $tmpBodyData[$key] = $contact[0][$value];
+                                $tmpBodyData[$key] = '';
+                                if (!empty($contact[0][$value])) {
+                                    $tmpBodyData[$key] = $contact[0][$value];
+                                }
                             } else {
                                 $tmpBodyData[$key] = $document[0][$value];
                             }
@@ -2107,9 +2110,9 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     $bodyData[$object['name']] = $tmpBodyData;
                 }
 
-                if (!empty($config['file']) && $config['file'] == 'true') {
+                if (!empty($config['file'])) {
                     $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
-                    $bodyData['file'] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']]);
+                    $bodyData[$config['file']] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']]);
                 }
             } else {
                 $multipleObject = false;
@@ -2132,9 +2135,9 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     }
                     foreach ($config['rawData'] as $key => $value) {
                         if (in_array($value, $columnsInContact)) {
-                            $tmpBodyData[$key] = $contact[0][$value];
+                            $bodyData[$key] = $contact[0][$value];
                         } else {
-                            $tmpBodyData[$key] = $document[0][$value];
+                            $bodyData[$key] = $document[0][$value];
                         }
                     }
 
@@ -2143,12 +2146,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                 if (!empty($config['data'])) {
                     $bodyData = array_merge($bodyData, $config['data']);
                 }
-
-//                if (!empty($config['file'])) {
-//                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
-//                    $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']);
-//                    $bodyData[$config['file']] = base64_encode($file);
-//                }
             }
 
             $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);

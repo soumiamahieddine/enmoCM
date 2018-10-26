@@ -374,31 +374,94 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         $_SESSION['data'],
                                         $_SESSION['config']['databasetype']
                                     );
+
                                     if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendAttachmentToExternalApplication'])) {
                                         $bodyData = [];
                                         $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendAttachmentToExternalApplication']);
 
-                                        $select = [];
-                                        foreach ($config['rawData'] as $value) {
-                                            $select[] = $value;
-                                        }
+                                        $columnsInContact = ['external_contact_id'];
+                                        $resource = \Resource\models\ResModel::getOnView(['select' => ['external_id', 'address_id'], 'where' => ['res_id = ?'], 'data' => [$_SESSION['doc_id']]]);
 
-                                        $attachment = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
-                                        if (!empty($attachment[0])) {
-                                            $bodyData = $attachment[0];
-                                        }
+                                        if (!empty($resource[0]['external_id']) && !empty($resource[0]['address_id'])) {
+                                            if (!empty($config['inObject'])) {
+                                                $multipleObject = true;
 
-                                        if (!empty($config['data'])) {
-                                            $bodyData = array_merge($bodyData, $config['data']);
-                                        }
+                                                foreach ($config['objects'] as $object) {
+                                                    $select = [];
+                                                    $tmpBodyData = [];
+                                                    $getContact = false;
+                                                    foreach ($object['rawData'] as $value) {
+                                                        if (in_array($value, $columnsInContact)) {
+                                                            $getContact = true;
+                                                        } elseif (!in_array($value, ['external_id', 'address_id'])) {
+                                                            $select[] = $value;
+                                                        }
+                                                    }
 
-                                        if (!empty($config['file'])) {
-                                            $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $storeResult['docserver_id'], 'select' => ['path_template']]);
-                                            $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $storeResult['destination_dir']) . $storeResult['file_destination_name']);
-                                            $bodyData[$config['file']] = base64_encode($file);
-                                        }
+                                                    if (!empty($select)) {
+                                                        $document = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
+                                                    }
+                                                    if ($getContact) {
+                                                        $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$resource[0]['address_id']]]);
+                                                    }
+                                                    foreach ($object['rawData'] as $key => $value) {
+                                                        if (in_array($value, $columnsInContact)) {
+                                                            $tmpBodyData[$key] = $contact[0][$value];
+                                                        } elseif (in_array($value, ['external_id', 'address_id'])) {
+                                                            $tmpBodyData[$key] = $resource[0][$value];
+                                                        } else {
+                                                            $tmpBodyData[$key] = $document[0][$value];
+                                                        }
+                                                    }
 
-                                        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendAttachmentToExternalApplication', 'bodyData' => $bodyData]);
+                                                    if (!empty($object['data'])) {
+                                                        $tmpBodyData = array_merge($tmpBodyData, $object['data']);
+                                                    }
+
+                                                    $bodyData[$object['name']] = $tmpBodyData;
+                                                }
+
+                                                if (!empty($config['file'])) {
+                                                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $storeResult['docserver_id'], 'select' => ['path_template']]);
+                                                    $bodyData[$config['file']] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $storeResult['destination_dir']) . $storeResult['file_destination_name']]);
+                                                }
+                                            } else {
+                                                $multipleObject = false;
+                                                $getContact = false;
+
+                                                $select = [];
+                                                foreach ($config['rawData'] as $value) {
+                                                    if (in_array($value, $columnsInContact)) {
+                                                        $getContact = true;
+                                                    } elseif (!in_array($value, ['external_id', 'address_id'])) {
+                                                        $select[] = $value;
+                                                    }
+                                                }
+
+                                                $document = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
+                                                if (!empty($document[0])) {
+                                                    if ($getContact) {
+                                                        $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$resource[0]['address_id']]]);
+                                                    }
+                                                    foreach ($config['rawData'] as $key => $value) {
+                                                        if (in_array($value, $columnsInContact)) {
+                                                            $bodyData[$key] = $contact[0][$value];
+                                                        } elseif (in_array($value, ['external_id', 'address_id'])) {
+                                                            $bodyData[$key] = $resource[0][$value];
+                                                        } else {
+                                                            $bodyData[$key] = $document[0][$value];
+                                                        }
+                                                    }
+
+                                                }
+
+                                                if (!empty($config['data'])) {
+                                                    $bodyData = array_merge($bodyData, $config['data']);
+                                                }
+                                            }
+
+                                            $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendAttachmentToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
+                                        }
                                     }
                                 }
 

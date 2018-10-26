@@ -53,7 +53,7 @@ class CurlModel
             if (is_array($aArgs['bodyData']) && !empty($aArgs['bodyData']) && $aArgs['multipleObject']) {
                 $bodyData = [];
                 foreach ($aArgs['bodyData'] as $key => $value) {
-                    if ($key == 'file') {
+                    if (is_object($value)) {
                         $bodyData[$key] = $value;
                     } else {
                         $bodyData[$key] = json_encode($value);
