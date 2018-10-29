@@ -5052,3 +5052,6 @@ if (!defined('_ENTITIES_LIST')) {
 if (!defined('_CONTACTS_USERS_SEARCH')) {
     define('_CONTACTS_USERS_SEARCH', 'Contacts / users search');
 }
+if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) {
+    define('_CONTACTS_USERS_GROUPS_SEARCH', 'Contacts / users / groups search');
+}

@@ -617,7 +617,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
     $frmStr .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
     $frmStr .= ' <i class="fa fa-tty" title="'._CONTACT_COMMUNICATION_DEFINE.'"style="visibility:hidden;display:inline;"" id="type_contact_communication_icon"></i>';
-    $frmStr .= ' <span style="position:relative;"><input type="text" name="contact" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
+    $frmStr .= ' <span style="position:relative;"><input type="text" name="contact" placeholder="'._CONTACTS_USERS_SEARCH.'" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
         .'id="contact" onblur="clear_error(\'frm_error_'.$actionId.'\');'
         .'display_contact_card(\'visible\');checkCommunication(document.getElementById(\'contactid\').value);if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\', \''.$path_check_date_link.'\');}" /><div id="show_contacts" '
             .'class="autocomplete autocompleteIndex" style="width:100%;left:0px;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span></td>';
@@ -662,7 +662,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
     $frmStr .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
 
-    $frmStr .= '<span style="position:relative;"><input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_'.$actionId.'\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
+    $frmStr .= '<span style="position:relative;"><input type="text" name="email" id="email" placeholder="'._CONTACTS_USERS_GROUPS_SEARCH.'" value="" onblur="clear_error(\'frm_error_'.$actionId.'\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
     $frmStr .= '<div id="multiContactList" class="autocomplete" style="left:0px;width:100%;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
     $frmStr .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
         .$_SESSION['config']['businessappurl']

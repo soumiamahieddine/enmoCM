@@ -736,7 +736,7 @@ if ($stmt->rowCount() == 0) {
 
                     if (empty($disabledAttr)) {
                         echo "<div id='input_multi_contact_add' style=''>";
-                        echo "<input type='text' name='{$key}' id='{$key}' value='' title='' alt='' size='40' style='width:140px;'/>";
+                        echo "<input type='text' placeholder='"._CONTACTS_USERS_SEARCH."' name='{$key}' id='{$key}' value='' title='' alt='' size='40' style='width:140px;'/>";
                         echo '<div id="multiContactList" class="autocomplete" style="width:200px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;width:200px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
                         echo '<script type="text/javascript">addMultiContacts(\'is_multicontacts\', \'multiContactList\', \''
                                                     .$_SESSION['config']['businessappurl']
