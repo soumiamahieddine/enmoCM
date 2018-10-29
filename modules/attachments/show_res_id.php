@@ -1,10 +1,10 @@
 <?php
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 
-/*
-*   Copyright 2015 Maarch
-*
-*   This file is part of Maarch Framework.
-*
+* @brief   show_res_id
 * @author  dev <dev@maarch.org>
 * @ingroup attachments
 */
@@ -31,8 +31,20 @@ if (_ID_TO_DISPLAY == 'chrono_number') {
     }
 } ?>
 
-//VALIDATE_MAIL
-if (input_res) {
+//VALIDATE_MAIL (contact_check)
+if (window.opener.document.getElementById('to_link') != null) {
+    console.log(window.opener.document.getElementById('to_link'));
+    console.log(window.opener.document.getElementById('iframe_tab').contentWindow.document.getElementById('attach_link'));
+    window.opener.document.getElementById('iframe_tab').contentWindow.document.getElementById('res_id_link').value=<?php echo json_encode($_SESSION['stockCheckbox']); ?>;
+    <?php 
+    if (_ID_TO_DISPLAY == 'chrono_number') {
+        ?>
+        window.opener.document.getElementById('iframe_tab').contentWindow.document.getElementById('input_chrono_id').value==<?php echo json_encode($arrayChrono); ?>;       
+    <?php
+    } ?>
+    window.opener.document.getElementById('iframe_tab').contentWindow.document.getElementById('attach_link').click();
+} else if (input_res) {
+    //VALIDATE_MAIL
 	input_res.value=<?php echo json_encode($_SESSION['stockCheckbox']); ?>;
         <?php 
         if (_ID_TO_DISPLAY == 'chrono_number') {
@@ -51,6 +63,7 @@ if (input_res) {
     <?php
 
     } ?>
+    window.opener.$('attach').click();
 }
 
 self.close();
