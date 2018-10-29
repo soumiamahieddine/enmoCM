@@ -33,8 +33,6 @@ if (_ID_TO_DISPLAY == 'chrono_number') {
 
 //VALIDATE_MAIL (contact_check)
 if (window.opener.document.getElementById('to_link') != null) {
-    console.log(window.opener.document.getElementById('to_link'));
-    console.log(window.opener.document.getElementById('iframe_tab').contentWindow.document.getElementById('attach_link'));
     window.opener.document.getElementById('iframe_tab').contentWindow.document.getElementById('res_id_link').value=<?php echo json_encode($_SESSION['stockCheckbox']); ?>;
     <?php 
     if (_ID_TO_DISPLAY == 'chrono_number') {
