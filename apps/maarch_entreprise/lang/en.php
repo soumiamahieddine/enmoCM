@@ -5053,5 +5053,5 @@ if (!defined('_CONTACTS_USERS_SEARCH')) {
     define('_CONTACTS_USERS_SEARCH', 'Contacts / users search');
 }
 if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) {
-    define('_CONTACTS_USERS_GROUPS_SEARCH', 'Contacts / users / groups search');
+    define('_CONTACTS_USERS_GROUPS_SEARCH', 'Contacts / users / contacts groups search');
 }
