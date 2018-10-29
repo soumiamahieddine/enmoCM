@@ -50,7 +50,7 @@
     "hammerjs": "^2.0.8",
     "ng2-dnd": "^5.0.2",
     "node-sass": "^4.9.4",
-    "nodemon": "^1.18.4",
+    "nodemon": "^1.18.5",
     "rxjs": "^6.3.3",
     "tslib": "^1.9.3",
     "typescript": "^2.9.2"
