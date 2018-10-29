@@ -517,7 +517,7 @@ if (isset($_REQUEST['nodetails'])) {
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('recipient', 'recipient_id');erase_contact_external_id('recipient', 'recipient_type');erase_contact_external_id('sender', 'sender_id');erase_contact_external_id('sender', 'sender_type');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
                 <i class="fa fa-sync fa-4x" title="<?php echo _CLEAR_SEARCH; ?>"></i>
             </a>
         </td>
@@ -742,7 +742,7 @@ if ($core_tools->is_module_loaded('basket') == true) {
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('recipient', 'recipient_id');erase_contact_external_id('recipient', 'recipient_type');erase_contact_external_id('sender', 'sender_id');erase_contact_external_id('sender', 'sender_type');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
              <i class="fa fa-sync fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
             </a>
         </td>
@@ -761,7 +761,7 @@ if ($core_tools->is_module_loaded('basket') == true) {
 <script type="text/javascript">
 load_query(valeurs, loaded_query, 'parameters_tab', '<?php echo $browser_ie; ?>', '<?php echo _ERROR_IE_SEARCH; ?>');
 <?php if (isset($_REQUEST['init_search'])) {
-            ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contact', 'contactid');erase_contact_external_id('contact', 'addressid');erase_contact_external_id('signatory_name', 'ac_signatory_name') <?php
+            ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('recipient', 'recipient_id');erase_contact_external_id('recipient', 'recipient_type');erase_contact_external_id('sender', 'sender_id');erase_contact_external_id('sender', 'sender_type');erase_contact_external_id('signatory_name', 'ac_signatory_name') <?php
         }?>
 </script>
 
