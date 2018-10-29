@@ -1982,8 +1982,14 @@ function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId
                     $j("#" + inputId + "_id").val(item.id);
                 }
                 $j("#" + inputId + "_type").val(item.type);
+
                 if (!alternateVersion) {
-                    $j("#" + inputId).css('background-color', li[0].getStyle('background-color'));
+                    if (li[0].getStyle('background-color') == 'rgba(0, 0, 0, 0)') {
+                        $j("#" + inputId).css('background-color', 'white');
+                    } else {
+                        $j("#" + inputId).css('background-color', li[0].getStyle('background-color'));
+                    }
+                    
                 }
                 if(typeof cardId != 'undefined'){
                     $j("#" + cardId).css('visibility', 'visible');
