@@ -374,31 +374,94 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         $_SESSION['data'],
                                         $_SESSION['config']['databasetype']
                                     );
+
                                     if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendAttachmentToExternalApplication'])) {
                                         $bodyData = [];
                                         $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendAttachmentToExternalApplication']);
 
-                                        $select = [];
-                                        foreach ($config['rawData'] as $value) {
-                                            $select[] = $value;
-                                        }
+                                        $columnsInContact = ['external_contact_id'];
+                                        $resource = \Resource\models\ResModel::getOnView(['select' => ['external_id', 'address_id'], 'where' => ['res_id = ?'], 'data' => [$_SESSION['doc_id']]]);
 
-                                        $attachment = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
-                                        if (!empty($attachment[0])) {
-                                            $bodyData = $attachment[0];
-                                        }
+                                        if (!empty($resource[0]['external_id']) && !empty($resource[0]['address_id'])) {
+                                            if (!empty($config['inObject'])) {
+                                                $multipleObject = true;
 
-                                        if (!empty($config['data'])) {
-                                            $bodyData = array_merge($bodyData, $config['data']);
-                                        }
+                                                foreach ($config['objects'] as $object) {
+                                                    $select = [];
+                                                    $tmpBodyData = [];
+                                                    $getContact = false;
+                                                    foreach ($object['rawData'] as $value) {
+                                                        if (in_array($value, $columnsInContact)) {
+                                                            $getContact = true;
+                                                        } elseif (!in_array($value, ['external_id', 'address_id'])) {
+                                                            $select[] = $value;
+                                                        }
+                                                    }
 
-                                        if (!empty($config['file'])) {
-                                            $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $storeResult['docserver_id'], 'select' => ['path_template']]);
-                                            $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $storeResult['destination_dir']) . $storeResult['file_destination_name']);
-                                            $bodyData[$config['file']] = base64_encode($file);
-                                        }
+                                                    if (!empty($select)) {
+                                                        $document = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
+                                                    }
+                                                    if ($getContact) {
+                                                        $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$resource[0]['address_id']]]);
+                                                    }
+                                                    foreach ($object['rawData'] as $key => $value) {
+                                                        if (in_array($value, $columnsInContact)) {
+                                                            $tmpBodyData[$key] = $contact[0][$value];
+                                                        } elseif (in_array($value, ['external_id', 'address_id'])) {
+                                                            $tmpBodyData[$key] = $resource[0][$value];
+                                                        } else {
+                                                            $tmpBodyData[$key] = $document[0][$value];
+                                                        }
+                                                    }
 
-                                        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendAttachmentToExternalApplication', 'bodyData' => $bodyData]);
+                                                    if (!empty($object['data'])) {
+                                                        $tmpBodyData = array_merge($tmpBodyData, $object['data']);
+                                                    }
+
+                                                    $bodyData[$object['name']] = $tmpBodyData;
+                                                }
+
+                                                if (!empty($config['file'])) {
+                                                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $storeResult['docserver_id'], 'select' => ['path_template']]);
+                                                    $bodyData[$config['file']] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $storeResult['destination_dir']) . $storeResult['file_destination_name']]);
+                                                }
+                                            } else {
+                                                $multipleObject = false;
+                                                $getContact = false;
+
+                                                $select = [];
+                                                foreach ($config['rawData'] as $value) {
+                                                    if (in_array($value, $columnsInContact)) {
+                                                        $getContact = true;
+                                                    } elseif (!in_array($value, ['external_id', 'address_id'])) {
+                                                        $select[] = $value;
+                                                    }
+                                                }
+
+                                                $document = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
+                                                if (!empty($document[0])) {
+                                                    if ($getContact) {
+                                                        $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$resource[0]['address_id']]]);
+                                                    }
+                                                    foreach ($config['rawData'] as $key => $value) {
+                                                        if (in_array($value, $columnsInContact)) {
+                                                            $bodyData[$key] = $contact[0][$value];
+                                                        } elseif (in_array($value, ['external_id', 'address_id'])) {
+                                                            $bodyData[$key] = $resource[0][$value];
+                                                        } else {
+                                                            $bodyData[$key] = $document[0][$value];
+                                                        }
+                                                    }
+
+                                                }
+
+                                                if (!empty($config['data'])) {
+                                                    $bodyData = array_merge($bodyData, $config['data']);
+                                                }
+                                            }
+
+                                            $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendAttachmentToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
+                                        }
                                     }
                                 }
 
@@ -1193,7 +1256,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     //FILE
     if ($mode == 'add') {
         $content .= '<p>';
-        $content .= '<label id="file_label">'._FILE.' <span id="templateOfficeTool"><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'templateOffice\').disabled=true;$(\'templateOffice_edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-alt fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#135F7F;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'templateOffice\').disabled=false;$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
+        $content .= '<label id="file_label">'._FILE.' <span id="templateOfficeTool"><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$j(\'#add\').css(\'display\', \'inline\');$(\'attachment_type_icon\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'templateOffice\').disabled=true;$(\'templateOffice_edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-alt fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#135F7F;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'templateOffice\').disabled=false;$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
         $content .= '<select name="templateOffice[]" id="templateOffice" style="display:inline-block;" onchange="showEditButton(this);">';
         $content .= '<option value="">'._CHOOSE_MODEL.'</option>';
 
@@ -1335,9 +1398,9 @@ $content .= '<div id="transmission"></div>';
         $content .= '<input type="button" value="';
         $content .= _VALIDATE;
         if (isset($_REQUEST['id'])) {
-            $content .= '" name="edit" id="edit" class="button" onclick="ValidAttachmentsForm(\''.$_SESSION['config']['businessappurl'];
+            $content .= '" name="edit" id="edit" class="button" onclick="refreshAttachmentsTab();ValidAttachmentsForm(\''.$_SESSION['config']['businessappurl'];
         } else {
-            $content .= '" name="add" id="add" class="button" onclick="simpleAjax(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\''.$_SESSION['config']['businessappurl'];
+            $content .= '" name="add" id="add" class="button" onclick="refreshAttachmentsTab();simpleAjax(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=unsetReservedChronoNumber\');ValidAttachmentsForm(\''.$_SESSION['config']['businessappurl'];
         }
         $content .= 'index.php?display=true&module=attachments&page=attachments_content\', \'formAttachment\'';
 

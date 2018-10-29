@@ -49,8 +49,11 @@ abstract class multicontacts_Abstract extends Database
         if (isset($contactsArray[$inputField]) && count($contactsArray[$inputField]) > 0) {
             foreach ($contactsArray[$inputField] as $key => $contacts) {
                 if (!empty($contacts)) {
-                    $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$contactsArray['addressid'][$key]]]);
-                    $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                    $rate['color'] = 'LightYellow';
+                    if (!empty($contactsArray['addressid'][$key])) {
+                        $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$contactsArray['addressid'][$key]]]);
+                        $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                    }
                     $content .= '<div style="width:200px; background-color:'.$rate['color'].';" class="multicontact_element" id="'.$key.'_'.$contacts.'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$contacts.'</div>';
                     if ($readOnly === false) {
                         $content .= '<div class="email_delete_button" style="display:table-cell;vertical-align:middle; background-color:'.$rate['color'].';" id="'.$key.'"'

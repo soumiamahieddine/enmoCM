@@ -1,5 +1,17 @@
 <?php
 
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+*
+* @brief   sendToExternalSignatureBok
+*
+* @author  dev <dev@maarch.org>
+* @ingroup visa
+*/
+
 $confirm    = true;
 $frm_width  = '400px';
 $frm_height = 'auto';
@@ -11,6 +23,19 @@ $isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach
 
 if ($isMailingAttach != false) {
     $warnMsg = $isMailingAttach['nbContacts'] . " " . _RESPONSES_WILL_BE_GENERATED;
+}
+
+$error_visa_workflow_signature_book = false;
+$attachments = \Attachment\models\AttachmentModel::getOnView([
+    'select'    => [
+        'count(1) as nb'
+    ],
+    'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+    'data'      => [$_SESSION['doc_id'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+]);
+
+if ($attachments[0]['nb'] == 0) {
+    $error_visa_workflow_signature_book = true;
 }
 
 function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
@@ -119,7 +144,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $nature             = get_value_fields($values_form, 'nature');
                 $messageModel       = get_value_fields($values_form, 'messageModel');
                 $manSignature       = get_value_fields($values_form, 'mansignature');
-                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $res_id, 'loginIxbus' => $loginIxbus, 'passwordIxbus' => $passwordIxbus, 'classeurName' => $nature, 'messageModel' => $messageModel, 'manSignature' => var_export($manSignature, true)]);
+                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $res_id, 'loginIxbus' => $loginIxbus, 'passwordIxbus' => $passwordIxbus, 'classeurName' => $nature, 'messageModel' => $messageModel, 'manSignature' => $manSignature]);
             } elseif ($config['id'] == 'iParapheur') {
                 include_once 'modules/visa/class/IParapheurController.php';
                 $attachmentToFreeze = IParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);

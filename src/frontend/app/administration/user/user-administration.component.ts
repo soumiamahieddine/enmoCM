@@ -3,8 +3,9 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
-import { NotificationService } from '../../notification.service';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -19,8 +20,6 @@ declare const angularGlobals: any;
     providers: [NotificationService]
 })
 export class UserAdministrationComponent extends AutoCompletePlugin implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -83,7 +82,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
         super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -104,16 +103,15 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
 
         this.loading = true;
 
-        this.route.params.subscribe(params => {
+        this.route.params.subscribe((params: any) => {
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.userCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
+                this.headerService.headerMessage = this.lang.userCreation;
                 this.creationMode = true;
                 this.loading = false;
             } else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.userModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
@@ -125,6 +123,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                         this.data = data.history;
                         this.userId = data.user_id;
                         this.minDate = new Date(this.CurrentYear + '-' + this.currentMonth + '-01');
+                        this.headerService.headerMessage = this.lang.userModification + " <small>" +  data.firstname + " " + data.lastname + "</small>";
                         this.loading = false;
                         setTimeout(() => {
                             this.dataSource = new MatTableDataSource(this.data);

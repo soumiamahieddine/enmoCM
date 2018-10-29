@@ -617,7 +617,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
     $frmStr .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
     $frmStr .= ' <i class="fa fa-tty" title="'._CONTACT_COMMUNICATION_DEFINE.'"style="visibility:hidden;display:inline;"" id="type_contact_communication_icon"></i>';
-    $frmStr .= ' <span style="position:relative;"><input type="text" name="contact" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
+    $frmStr .= ' <span style="position:relative;"><input type="text" name="contact" placeholder="'._CONTACTS_USERS_SEARCH.'" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
         .'id="contact" onblur="clear_error(\'frm_error_'.$actionId.'\');'
         .'display_contact_card(\'visible\');checkCommunication(document.getElementById(\'contactid\').value);if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\', \''.$path_check_date_link.'\');}" /><div id="show_contacts" '
             .'class="autocomplete autocompleteIndex" style="width:100%;left:0px;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span></td>';
@@ -662,7 +662,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
     $frmStr .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
 
-    $frmStr .= '<span style="position:relative;"><input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_'.$actionId.'\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
+    $frmStr .= '<span style="position:relative;"><input type="text" name="email" id="email" placeholder="'._CONTACTS_USERS_GROUPS_SEARCH.'" value="" onblur="clear_error(\'frm_error_'.$actionId.'\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
     $frmStr .= '<div id="multiContactList" class="autocomplete" style="left:0px;width:100%;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
     $frmStr .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
         .$_SESSION['config']['businessappurl']
@@ -689,7 +689,9 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<span id="sr_sender_span">'._SHIPPER.'</span>';
     $frmStr .= '<span id="sr_recipient_span">'._DEST.'</span>';
     $frmStr .= '</label></td>';
-    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td><a href="#" id="sender_recipient_card" class="fa fa-book fa-2x" title="'._CONTACT_CARD
+    .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_CONTACT).'\',loadInfoContactSenderRecipient(),\'info_contact\');return false;" '
+    .'style="visibility:hidden;" ></a>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field">';
     $frmStr .= '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\', false);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\');" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
     $frmStr .= '<div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
@@ -1047,7 +1049,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
                 . 'true&page=autocomplete_department_number\','
                 . ' \'Input\', \'2\', \'department_number_id\');';
 
-    $frmStr .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);';
+    $frmStr .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false, \'sender_recipient_card\');';
 
     $frmStr .= '$j(\'#baskets\').css(\'visibility\',\'hidden\');'
             .'var item  = $j(\'#index_div\')[0]; if(item)'
@@ -2086,12 +2088,15 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     $select[] = 'address_id';
                     $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
                     if (!empty($document[0])) {
-                        if ($getContact) {
+                        if ($getContact && !empty($document[0]['address_id'])) {
                             $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$document[0]['address_id']]]);
                         }
                         foreach ($object['rawData'] as $key => $value) {
                             if (in_array($value, $columnsInContact)) {
-                                $tmpBodyData[$key] = $contact[0][$value];
+                                $tmpBodyData[$key] = '';
+                                if (!empty($contact[0][$value])) {
+                                    $tmpBodyData[$key] = $contact[0][$value];
+                                }
                             } else {
                                 $tmpBodyData[$key] = $document[0][$value];
                             }
@@ -2105,9 +2110,9 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     $bodyData[$object['name']] = $tmpBodyData;
                 }
 
-                if (!empty($config['file']) && $config['file'] == 'true') {
+                if (!empty($config['file'])) {
                     $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
-                    $bodyData['file'] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']]);
+                    $bodyData[$config['file']] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']]);
                 }
             } else {
                 $multipleObject = false;
@@ -2130,9 +2135,9 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     }
                     foreach ($config['rawData'] as $key => $value) {
                         if (in_array($value, $columnsInContact)) {
-                            $tmpBodyData[$key] = $contact[0][$value];
+                            $bodyData[$key] = $contact[0][$value];
                         } else {
-                            $tmpBodyData[$key] = $document[0][$value];
+                            $bodyData[$key] = $document[0][$value];
                         }
                     }
 
@@ -2141,12 +2146,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                 if (!empty($config['data'])) {
                     $bodyData = array_merge($bodyData, $config['data']);
                 }
-
-//                if (!empty($config['file'])) {
-//                    $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
-//                    $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']);
-//                    $bodyData[$config['file']] = base64_encode($file);
-//                }
             }
 
             $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);

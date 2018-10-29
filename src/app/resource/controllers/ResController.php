@@ -668,4 +668,13 @@ class ResController
     {
         return $response->withJson(['natures' => ResModel::getNatures()]);
     }
+
+    public function isAllowedForCurrentUser(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withJson(['isAllowed' => false]);
+        }
+
+        return $response->withJson(['isAllowed' => true]);
+    }
 }

@@ -646,8 +646,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     }
     $frm_str .= '/><label for="type_contact_external">'._EXTERNAL.'</label></td></tr>';
 
-    $frm_str .= '<tr id="contact_choose_3_tr" style="display:'.$displayValue
-                                .';">';
+    $frm_str .= '<tr id="contact_choose_3_tr" style="display:'.$displayValue.';">';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td class="indexing_field"><input type="radio" name="type_contact" '
@@ -697,9 +696,9 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     if ($data['type_contact'] == 'internal') {
         //MODIF:
         $frm_str .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_contact_internal_icon" onclick="$j(\'#type_contact_internal\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\', \'#666\');$j(\'#type_contact_internal_icon\').css(\'color\', \'#135F7F\');$j(\'#type_multi_contact_internal_icon\').css(\'color\', \'#666\');"></i>';
-    } elseif ($data['type_contact'] == 'external') {
+    } else {
         //MODIF:
-        $frm_str .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\', \'#666\');$j(\'#type_contact_external_icon\').css(\'color\', \'#135F7F\');$j(\'#type_multi_contact_external_icon\').css(\'color\', \'#666\');"></i>';
+        $frm_str .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_external_icon\').css(\'color\', \'#666\');$j(\'#type_contact_external_icon\').css(\'color\', \'#135F7F\');$j(\'#type_multi_contact_external_icon\').css(\'color\', \'#666\');"></i>';
     }
 
     $frm_str .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
@@ -709,7 +708,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
     }
 
-    $frm_str .= '<span style="position:relative;"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\',\''.$path_check_date_link.'\');}"';
+    $frm_str .= '<span style="position:relative;"><input type="text" placeholder="'._CONTACTS_USERS_SEARCH.'" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\',\''.$path_check_date_link.'\');}"';
     if (isset($data['contact']) && !empty($data['contact'])) {
         $frm_str .= ' value="'.$data['contact'].'" ';
     }
@@ -769,7 +768,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     $frm_str .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
 
-    $frm_str .= '<span style="position:relative;"><input type="text" name="email" id="email" onblur="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
+    $frm_str .= '<span style="position:relative;"><input type="text" name="email" id="email" placeholder="'._CONTACTS_USERS_GROUPS_SEARCH.'" onblur="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
     $frm_str .= '<div id="multiContactList" class="autocomplete" style="left:0px;width:100%;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
     $frm_str .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
         .$_SESSION['config']['businessappurl']
@@ -821,19 +820,35 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             $sr = $resourceContact;
         }
     }
+    $rate = [];
+    if (!empty($sr['type']) && $sr['type'] == 'contact') {
+        $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$sr['item_id']]]);
+        $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+    }
+
     /*** Sender/Recipient ***/
     $frm_str .= '<tr id="sender_recipient_tr" style="display:' . $displayValue . ';">';
     $frm_str .= '<td><label for="sender_recipient" class="form_title" >';
     $frm_str .= '<span id="sr_sender_span">'._SHIPPER.'</span>';
     $frm_str .= '<span id="sr_recipient_span">'._DEST.'</span>';
     $frm_str .= '</label></td>';
-    $frm_str .= '<td>&nbsp;</td>';
+    if (!empty($sr['format'])) {
+        $cardVisibility = 'visible';
+    } else {
+        $cardVisibility = 'hidden';
+    }
+    $frm_str .= '<td><a href="#" id="sender_recipient_card" class="fa fa-book fa-2x" title="'._CONTACT_CARD
+    .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_CONTACT).'\',loadInfoContactSenderRecipient(),\'info_contact\');return false;" '
+    .'style="visibility:'.$cardVisibility.';" ></a>&nbsp;</td>';
     $frm_str .= '<td class="indexing_field">';
     $frm_str .= '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\', false);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\', false);" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
     $frm_str .= '<div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
     $frm_str .= '<input name="sender_recipient" type="text" id="sender_recipient" autocomplete="off"';
     if (!empty($sr['format'])) {
-        $frm_str .= 'value="'. $sr['format'].'"';
+        $frm_str .= ' value="'. $sr['format'].'"';
+    }
+    if (!empty($rate['color'])) {
+        $frm_str .= ' style="background-color:'.$rate['color'].'"';
     }
     $frm_str .= '/></span></div></div>';
     $frm_str .= '</td><td>&nbsp;</td>';
@@ -847,6 +862,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $frm_str .= 'value="'. $sr['type'].'"';
     }
 
+    $frm_str .= '/>';
     if ($sr['type'] == 'entity') {
         $frm_str .= '<script>$j("#sender_recipient_icon_contactsUsers").css({"color":"#666"});</script>';
         $frm_str .= '<script>$j("#sender_recipient_icon_entities").css({"color":"#135F7F"});</script>';
@@ -854,7 +870,6 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $frm_str .= '<script>$j("#sender_recipient_icon_contactsUsers").css({"color":"#135F7F"});</script>';
         $frm_str .= '<script>$j("#sender_recipient_icon_entities").css({"color":"#666"});</script>';
     }
-    $frm_str .= '/>';
     $frm_str .= '</tr>';
 
     /*** Nature ***/
@@ -1406,7 +1421,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
     $frm_str .= 'affiche_reference();';
-    $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);';
+    if (!empty($sr['type']) && $sr['type'] == 'entity') {
+        $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'entity\');';
+    } else {
+        $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);';
+    }
     $frm_str .= 'initList_hidden_input(\'department_number\', \'show_department_number\',\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display='
          . 'true&page=autocomplete_department_number\','

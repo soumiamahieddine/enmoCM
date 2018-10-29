@@ -267,7 +267,9 @@ function loadSelectedContact() {
         $j('#contact_attach').focus();
     }
     
-    $j("#add").hide();
+    if ($j("#choose_file").css("display") !== "inline-block") {
+        $j("#add").hide();
+    }
     
     if ($j("#templateOffice option:selected").val() !== "" && $j("#templateOffice_edit").css("display") == "none") {
         $j("#templateOffice_edit").css("display", "inline");
@@ -841,4 +843,16 @@ function checkEffectiveDateStatus(effectiveDateStatus) {
         $j('#'+effectiveDateStatus.id).parent().find('[name=back_date\\[\\]]').prop('disabled',false);
         $j('#'+effectiveDateStatus.id).parent().find('[name=back_date\\[\\]]').removeClass('readonly');
     }    
+}
+
+function refreshAttachmentsTab() {
+    if ($j('#attachments_tab') && $j('#responses_tab')) {
+        if ($j('#attachment_types option:selected').val() == 'simple_attachment')  {
+            $j('#responses_tab').click();
+            $j('#attachments_tab').click();
+        } else {
+            $j('#attachments_tab').click();
+            $j('#responses_tab').click();
+        }
+    }
 }

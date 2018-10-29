@@ -19,7 +19,7 @@
                             <mat-spinner style="margin:auto;"></mat-spinner>
                         </div>
                         <form>
-                            <mat-list *ngIf="reports.size() > 0 && !loadingOptions">
+                            <mat-list *ngIf="reports.length > 0 && !loadingOptions">
                                 {{lang.folders}}
                                 <mat-divider></mat-divider>
                                 <span *ngFor="let report of reports;let i = index">

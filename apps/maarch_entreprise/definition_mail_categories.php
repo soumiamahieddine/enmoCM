@@ -1341,6 +1341,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                     $postAddon = ' ><i class="fa fa-book fa-2x" title="'._CONTACT_CARD.'"></i></a>';
     
                     $data[$arr[$i]]['addon'] = $preAddon.'loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._CONTACT_CARD.'\',\''.$pathScriptTab.'\',\'contactInfo\');return false;"'.$postAddon;
+                    if ($senderRecipientContact['type'] == 'contact') {
+                        $data[$arr[$i]]['item_id'] = $senderRecipientContact['item_id'];
+                    }
                 }
 
             }

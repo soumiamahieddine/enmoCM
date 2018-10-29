@@ -5214,3 +5214,6 @@ if (!defined('_ENTITIES_LIST')) {
 if (!defined('_CONTACTS_USERS_SEARCH')) {
     define('_CONTACTS_USERS_SEARCH', 'Rechercher un contact / utilisateur');
 }
+if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) {
+    define('_CONTACTS_USERS_GROUPS_SEARCH', 'Rechercher un contact / utilisateur / groupe');
+}

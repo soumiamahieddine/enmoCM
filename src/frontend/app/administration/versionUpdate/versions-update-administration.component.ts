@@ -3,6 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav } from '@angular/material';
+import { HeaderService }        from '../../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -13,8 +14,7 @@ declare var angularGlobals: any;
     templateUrl: "versions-update-administration.component.html"
 })
 export class VersionsUpdateAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -28,7 +28,7 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
     versions    : any = {};
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -40,8 +40,7 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
-        window['MainHeaderComponent'].refreshTitle(this.lang.updateVersionControl);
+        this.headerService.headerMessage = this.lang.updateVersionControl;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

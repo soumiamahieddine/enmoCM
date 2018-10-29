@@ -34,7 +34,7 @@ if (isset($_SESSION['error_visa']) && $_SESSION['error_visa'] <> '') {
 $visa = new visa();
 $curr_visa_wf = $visa->getWorkflow($_SESSION['doc_id'], $_SESSION['current_basket']['coll_id'], 'VISA_CIRCUIT');
 
-if (count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 0) {
+if (empty($curr_visa_wf['visa']) && empty($curr_visa_wf['sign'])) {
     $error_visa = true;
     //IF NO VISA WF CHECK VISA MODEL
     include_once "modules/entities/class/class_manage_listdiff.php";

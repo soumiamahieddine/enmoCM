@@ -182,7 +182,7 @@ class JnlpController
 
     public function renderJnlp(Request $request, Response $response, array $aArgs)
     {
-        if (explode('.', $aArgs['jnlpUniqueId'])[1] != 'jnlp') {
+        if (strtoupper(pathinfo($aArgs['jnlpUniqueId'], PATHINFO_EXTENSION)) != 'JNLP') {
             return $response->withStatus(403)->withJson(['errors' => 'File extension forbidden']);
         }
 

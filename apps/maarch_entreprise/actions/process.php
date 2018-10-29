@@ -311,6 +311,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
                             $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['address_value']]]);
                             $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
                         }
+                    } elseif ($key == 'resourceContact') {
+                        if (!empty($data[$key]['item_id'])) {
+                            $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['item_id']]]);
+                            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                        }
                     }
                     $frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
                         .'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;';

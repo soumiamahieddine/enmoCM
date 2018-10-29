@@ -17,7 +17,8 @@ import { FilterListPipe }                       from '../plugins/filterList.pipe
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
 
-import { EcoFabSpeedDialModule }                from '@ecodev/fab-speed-dial';
+import { SmdFabSpeedDialComponent,SmdFabSpeedDialTrigger, SmdFabSpeedDialActions, }             from '../plugins/fab-speed-dial';
+
 
 /*MENU COMPONENT*/
 import { MainHeaderComponent }                  from './menu/main-header.component';
@@ -40,7 +41,6 @@ import { BasketHomeComponent }                        from './basket/basket-home
         HttpClientModule,
         RouterModule,
         AppMaterialModule,
-        EcoFabSpeedDialModule
     ],
     declarations: [
         MainHeaderComponent,
@@ -52,7 +52,10 @@ import { BasketHomeComponent }                        from './basket/basket-home
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,
-        IndexingGroupModalComponent
+        IndexingGroupModalComponent,
+        SmdFabSpeedDialComponent,
+        SmdFabSpeedDialTrigger,
+        SmdFabSpeedDialActions,
     ],
     exports: [
         CommonModule,
@@ -71,7 +74,10 @@ import { BasketHomeComponent }                        from './basket/basket-home
         AppMaterialModule,
         TimeAgoPipe,
         TimeLimitPipe,
-        FilterListPipe
+        FilterListPipe,
+        SmdFabSpeedDialComponent,
+        SmdFabSpeedDialTrigger,
+        SmdFabSpeedDialActions,
     ],
     entryComponents: [
         IndexingGroupModalComponent

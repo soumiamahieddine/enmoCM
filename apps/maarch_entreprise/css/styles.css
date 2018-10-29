@@ -1406,7 +1406,6 @@ th.ref {
     width: 260px;
     background: #F2F2F2;
     position: absolute;
-    left: -12px;
     padding: 0px;
     z-index: 10;
     margin: 0px;
@@ -2804,21 +2803,28 @@ font-size: 14px;
 
 .footer_menu{
     background-color: #135F7F;
-    height:15px;
     width:100%;
     font-weight: bold;
     font-size: 0.8em;
     text-align: right;
-    padding-right:0px;
-    padding-top:0px;
-    border-top: 2px solid #FFFFFF;
+    padding: 5px;
     position:relative;
     bottom:0;
 }
 
 .footer_menu span{
-    padding-left: 10px;
-    padding-top: 2px;
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #135f7f;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: white;
+    border-radius: 10px;
 }
 
 .footer_menu a{
@@ -3758,11 +3764,21 @@ width:auto;
 
 .indexing_field .typeahead__field input {
     min-height: 0px;
-    height: 20px;
+    height: 17px;
     font-size: 12px;
     padding-right: 22px !important;
     padding-left : 5px !important;
     border: 1px solid #999;
+}
+
+#sender_recipient_tr .typeahead__field input {
+    width: 225px;
+    margin-left: 17px;
+}
+
+#sender_recipient_tr .typeahead__list {
+    width: 225px;
+    margin-left: 17px;
 }
 
 .typeahead__list {

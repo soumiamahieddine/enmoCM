@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
@@ -16,8 +17,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class ContactsFillingAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader: string;
+
     @ViewChild('snav') public sidenavLeft: MatSidenav;
     @ViewChild('snav2') public sidenavRight: MatSidenav;
 
@@ -89,7 +89,7 @@ export class ContactsFillingAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -105,7 +105,7 @@ export class ContactsFillingAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        window['MainHeaderComponent'].refreshTitle(this.lang.contactsFillingAdministration);
+        this.headerService.headerMessage = this.lang.contactsFillingAdministration;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

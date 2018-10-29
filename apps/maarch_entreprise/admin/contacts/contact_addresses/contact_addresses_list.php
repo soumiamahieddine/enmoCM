@@ -137,129 +137,131 @@ $tab = $request->PDOselect(
 );
 // $request->show();
 
-for ($i = 0; $i < count($tab); ++$i ) {
-    for ($j = 0; $j < count($tab[$i]); ++$j ) {
-        foreach (array_keys($tab[$i][$j]) as $value) {
-            if ($tab[$i][$j][$value] == 'ca_id') {
-                $tab[$i][$j]['id'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['label'] = _ID;
-                $tab[$i][$j]['size'] = '30';
-                $tab[$i][$j]['label_align'] = 'left';
-                $tab[$i][$j]['align'] = 'left';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = false;
-                $tab[$i][$j]['order'] = 'id';
-            }
-            if ($tab[$i][$j][$value] == 'contact_id') {
-                $tab[$i][$j]['contact_id'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['label'] = _CONTACT_ID;
-                $tab[$i][$j]['size'] = '30';
-                $tab[$i][$j]['label_align'] = 'left';
-                $tab[$i][$j]['align'] = 'left';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = false;
-                $tab[$i][$j]['order'] = 'contact_id';
-            }
-            if ($tab[$i][$j][$value] == 'society') {
-                $show_string = explode(' - ', $tab[$i][$j]['value']);
-                $show_string[2] = '<i style="font-size:10px;color:#135F7F;">'.$show_string[2].'</i>';
-                $show_string = implode(' - ', $show_string);
-                $tab[$i][$j]['value'] = $show_string;
-                $tab[$i][$j]['society'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['label'] = _LINKED_CONTACT;
-                $tab[$i][$j]['size'] = '30';
-                $tab[$i][$j]['label_align'] = 'left';
-                $tab[$i][$j]['align'] = 'left';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = true;
-                $tab[$i][$j]['order'] = 'society';
-            }
-            if ($tab[$i][$j][$value] == 'contact_purpose_id') {
-                $tab[$i][$j]['value'] = $contact->get_label_contact($tab[$i][$j]['value'], $_SESSION['tablename']['contact_purposes']);
-                $tab[$i][$j]['contact_purpose_id'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['label'] = _CONTACT_PURPOSE;
-                $tab[$i][$j]['size'] = '20';
-                $tab[$i][$j]['label_align'] = 'left';
-                $tab[$i][$j]['align'] = 'left';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = true;
-                $tab[$i][$j]['order'] = 'contact_purpose_id';
-            }
-            if ($tab[$i][$j][$value] == 'departement') {
-                $tab[$i][$j]['value'] = $request->show_string(
-                    $tab[$i][$j]['value']
-                );
-                $tab[$i][$j]['departement'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['label'] = _SERVICE;
-                $tab[$i][$j]['size'] = '20';
-                $tab[$i][$j]['label_align'] = 'left';
-                $tab[$i][$j]['align'] = 'left';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = true;
-                $tab[$i][$j]['order'] = 'departement';
-            }
-            if ($tab[$i][$j][$value] == 'lastname') {
-                $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]['lastname'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['label'] = _LASTNAME;
-                $tab[$i][$j]['size'] = '15';
-                $tab[$i][$j]['label_align'] = 'left';
-                $tab[$i][$j]['align'] = 'left';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = true;
-                $tab[$i][$j]['order'] = 'lastname';
-            }
-            if ($tab[$i][$j][$value] == 'firstname') {
-                $tab[$i][$j]['firstname'] = $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]['label'] = _FIRSTNAME;
-                $tab[$i][$j]['size'] = '15';
-                $tab[$i][$j]['label_align'] = 'center';
-                $tab[$i][$j]['align'] = 'center';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = true;
-                $tab[$i][$j]['order'] = 'firstname';
-            }
-            if ($tab[$i][$j][$value] == 'function') {
-                $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]['function'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['label'] = _FUNCTION;
-                $tab[$i][$j]['size'] = '15';
-                $tab[$i][$j]['label_align'] = 'left';
-                $tab[$i][$j]['align'] = 'left';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = true;
-                $tab[$i][$j]['order'] = 'function';
-            }
-            if ($tab[$i][$j][$value] == 'address_town') {
-                $tab[$i][$j]['address_town'] = $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]['label'] = _TOWN;
-                $tab[$i][$j]['size'] = '10';
-                $tab[$i][$j]['label_align'] = 'center';
-                $tab[$i][$j]['align'] = 'center';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = true;
-                $tab[$i][$j]['order'] = 'address_town';
-            }
-            if ($tab[$i][$j][$value] == 'phone') {
-                $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]['phone'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['label'] = _PHONE;
-                $tab[$i][$j]['size'] = '15';
-                $tab[$i][$j]['label_align'] = 'left';
-                $tab[$i][$j]['align'] = 'left';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = false;
-                $tab[$i][$j]['order'] = 'phone';
-            }
-            if ($tab[$i][$j][$value] == 'email') {
-                $tab[$i][$j]['email'] = $request->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]['label'] = _MAIL;
-                $tab[$i][$j]['size'] = '15';
-                $tab[$i][$j]['label_align'] = 'center';
-                $tab[$i][$j]['align'] = 'center';
-                $tab[$i][$j]['valign'] = 'bottom';
-                $tab[$i][$j]['show'] = false;
-                $tab[$i][$j]['order'] = 'email';
+if (!empty($tab)) {
+    for ($i = 0; $i < count($tab); ++$i ) {
+        for ($j = 0; $j < count($tab[$i]); ++$j ) {
+            foreach (array_keys($tab[$i][$j]) as $value) {
+                if ($tab[$i][$j][$value] == 'ca_id') {
+                    $tab[$i][$j]['id'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label'] = _ID;
+                    $tab[$i][$j]['size'] = '30';
+                    $tab[$i][$j]['label_align'] = 'left';
+                    $tab[$i][$j]['align'] = 'left';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = false;
+                    $tab[$i][$j]['order'] = 'id';
+                }
+                if ($tab[$i][$j][$value] == 'contact_id') {
+                    $tab[$i][$j]['contact_id'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label'] = _CONTACT_ID;
+                    $tab[$i][$j]['size'] = '30';
+                    $tab[$i][$j]['label_align'] = 'left';
+                    $tab[$i][$j]['align'] = 'left';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = false;
+                    $tab[$i][$j]['order'] = 'contact_id';
+                }
+                if ($tab[$i][$j][$value] == 'society') {
+                    $show_string = explode(' - ', $tab[$i][$j]['value']);
+                    $show_string[2] = '<i style="font-size:10px;color:#135F7F;">'.$show_string[2].'</i>';
+                    $show_string = implode(' - ', $show_string);
+                    $tab[$i][$j]['value'] = $show_string;
+                    $tab[$i][$j]['society'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label'] = _LINKED_CONTACT;
+                    $tab[$i][$j]['size'] = '30';
+                    $tab[$i][$j]['label_align'] = 'left';
+                    $tab[$i][$j]['align'] = 'left';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = true;
+                    $tab[$i][$j]['order'] = 'society';
+                }
+                if ($tab[$i][$j][$value] == 'contact_purpose_id') {
+                    $tab[$i][$j]['value'] = $contact->get_label_contact($tab[$i][$j]['value'], $_SESSION['tablename']['contact_purposes']);
+                    $tab[$i][$j]['contact_purpose_id'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label'] = _CONTACT_PURPOSE;
+                    $tab[$i][$j]['size'] = '20';
+                    $tab[$i][$j]['label_align'] = 'left';
+                    $tab[$i][$j]['align'] = 'left';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = true;
+                    $tab[$i][$j]['order'] = 'contact_purpose_id';
+                }
+                if ($tab[$i][$j][$value] == 'departement') {
+                    $tab[$i][$j]['value'] = $request->show_string(
+                        $tab[$i][$j]['value']
+                    );
+                    $tab[$i][$j]['departement'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label'] = _SERVICE;
+                    $tab[$i][$j]['size'] = '20';
+                    $tab[$i][$j]['label_align'] = 'left';
+                    $tab[$i][$j]['align'] = 'left';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = true;
+                    $tab[$i][$j]['order'] = 'departement';
+                }
+                if ($tab[$i][$j][$value] == 'lastname') {
+                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['lastname'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label'] = _LASTNAME;
+                    $tab[$i][$j]['size'] = '15';
+                    $tab[$i][$j]['label_align'] = 'left';
+                    $tab[$i][$j]['align'] = 'left';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = true;
+                    $tab[$i][$j]['order'] = 'lastname';
+                }
+                if ($tab[$i][$j][$value] == 'firstname') {
+                    $tab[$i][$j]['firstname'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['label'] = _FIRSTNAME;
+                    $tab[$i][$j]['size'] = '15';
+                    $tab[$i][$j]['label_align'] = 'center';
+                    $tab[$i][$j]['align'] = 'center';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = true;
+                    $tab[$i][$j]['order'] = 'firstname';
+                }
+                if ($tab[$i][$j][$value] == 'function') {
+                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['function'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label'] = _FUNCTION;
+                    $tab[$i][$j]['size'] = '15';
+                    $tab[$i][$j]['label_align'] = 'left';
+                    $tab[$i][$j]['align'] = 'left';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = true;
+                    $tab[$i][$j]['order'] = 'function';
+                }
+                if ($tab[$i][$j][$value] == 'address_town') {
+                    $tab[$i][$j]['address_town'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['label'] = _TOWN;
+                    $tab[$i][$j]['size'] = '10';
+                    $tab[$i][$j]['label_align'] = 'center';
+                    $tab[$i][$j]['align'] = 'center';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = true;
+                    $tab[$i][$j]['order'] = 'address_town';
+                }
+                if ($tab[$i][$j][$value] == 'phone') {
+                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['phone'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label'] = _PHONE;
+                    $tab[$i][$j]['size'] = '15';
+                    $tab[$i][$j]['label_align'] = 'left';
+                    $tab[$i][$j]['align'] = 'left';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = false;
+                    $tab[$i][$j]['order'] = 'phone';
+                }
+                if ($tab[$i][$j][$value] == 'email') {
+                    $tab[$i][$j]['email'] = $request->show_string($tab[$i][$j]['value']);
+                    $tab[$i][$j]['label'] = _MAIL;
+                    $tab[$i][$j]['size'] = '15';
+                    $tab[$i][$j]['label_align'] = 'center';
+                    $tab[$i][$j]['align'] = 'center';
+                    $tab[$i][$j]['valign'] = 'bottom';
+                    $tab[$i][$j]['show'] = false;
+                    $tab[$i][$j]['order'] = 'email';
+                }
             }
         }
     }

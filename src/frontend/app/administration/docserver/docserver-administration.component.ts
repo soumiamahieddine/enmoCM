@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatSidenav } from '@angular/material';
+import { HeaderService } from '../../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -17,7 +18,6 @@ declare var angularGlobals: any;
 
 export class DocserverAdministrationComponent implements OnInit {
     /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
@@ -35,7 +35,7 @@ export class DocserverAdministrationComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -47,7 +47,7 @@ export class DocserverAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.docserverCreation);
+        this.headerService.headerMessage = this.lang.docserverCreation;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
         this.coreUrl = angularGlobals.coreUrl;

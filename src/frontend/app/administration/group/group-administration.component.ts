@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatSidenav} from '@angular/material';
 
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
@@ -18,7 +19,6 @@ declare const angularGlobals : any;
 })
 export class GroupAdministrationComponent  extends AutoCompletePlugin implements OnInit {
     /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -56,7 +56,7 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
         this.basketsDataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         super(http, ['adminUsers']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -74,14 +74,14 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.groupCreation);
+                this.headerService.headerMessage = this.lang.groupCreation;
+
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = true;
                 this.loading = false;
-            } else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.groupModification);
+            } else {                
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -89,6 +89,7 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
                 this.http.get(this.coreUrl + "rest/groups/" + params['id'] + "/details")
                     .subscribe((data : any) => {
                         this.group = data['group'];
+                        this.headerService.headerMessage = this.lang.groupModification + " <small>" +  this.group['group_desc'] + "</small>";
                         this.loading = false;
                         setTimeout(() => {
                             this.usersDataSource = new MatTableDataSource(this.group.users);

@@ -10,21 +10,21 @@ Gestionnaire Électronique de Correspondances – Libre et Open Source –
 
 Démonstration : http://demo.maarchcourrier.com/
 
-Documentation : https://docs.maarch.org/MaarchCourrier/18.10/
+Documentation : https://docs.maarch.org/gitbook/html/MaarchCourrier/18.10/
 
 
 ## Installation
-1. Vérifiez que vous avez l'ensemble des [pré-requis](https://docs.maarch.org/MaarchCourrier/18.10/guat/guat_prerequisites/home.html)
+1. Vérifiez que vous avez l'ensemble des [pré-requis](https://docs.maarch.org/gitbook/html/MaarchCourrier/18.10/guat/guat_prerequisites/home.html)
 2. Décompressez *MaarchCourrier-18.10.tar.gz* dans votre zone web
 3. Vérifiez votre vhost Apache
-4. Laissez-vous guider par notre installeur à [http://IP.ouDomaine.tld/MaarchCourrier/install/](https://docs.maarch.org/MaarchCourrier/18.10/guat/guat_installation/online_install.html)
+4. Laissez-vous guider par notre installeur à [http://IP.ouDomaine.tld/MaarchCourrier/install/](https://docs.maarch.org/gitbook/html/MaarchCourrier/18.10/guat/guat_installation/online_install.html)
 
 
 ## Requis techniques
 
 * Apache2.x
 * PostgreSQL 9.x
-* PHP 5.6.* ou PHP 7.0.*
+* PHP 7.0.* ou PHP 7.1.*
    * Extensions PHP (adaptées à votre version de PHP) : PHP-[XSL](http://php.net/manual/en/book.xsl.php), PHP-[XML-RPC](http://php.net/manual/en/book.xmlrpc.php), PHP-[Gettext](http://php.net/manual/en/b$
    * Bibliothèques pear/SOAP (pour php < 7.0), pear/CLITools
 * [ImageMagick](http://imagemagick.org/), avec PHP-[ImageMagick](http://php.net/manual/en/book.imagick.php)
@@ -32,15 +32,16 @@ Documentation : https://docs.maarch.org/MaarchCourrier/18.10/
 * [7-zip](http://www.7-zip.org/)
 * [wkhtmltopdf et wkhtmltoimage](http://wkhtmltopdf.org/downloads.html)
 * [LibreOffice](http://libreoffice.org/) pour la conversion de documents
+* [unoconv](https://packages.debian.org/jessie/unoconv) pour la conversion de documents
 * Java Runtime Environment >= 7
 
 
 ###  Recommandations pour le php.ini
 
 error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
-display_errors (On)
-short_open_tags (On)
-magic_quotes_gpc (Off)
+display_errors = On
+short_open_tags = On
+magic_quotes_gpc = Off
 
 
 ## Le coin des developpeurs

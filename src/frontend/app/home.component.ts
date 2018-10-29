@@ -2,8 +2,10 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, QueryList, ViewChildre
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
-import { NotificationService } from './notification.service';
 import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource } from '@angular/material';
+import { NotificationService } from './notification.service';
+import { HeaderService }        from '../service/header.service';
+
 
 import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -19,30 +21,30 @@ declare var angularGlobals: any;
 })
 export class HomeComponent extends AutoCompletePlugin implements OnInit {
 
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
-    mobileMode: boolean   = false;
-    coreUrl: string;
-    thumbnailUrl: string;
-    lang: any = LANG;
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+    mobileMode                      : boolean   = false;
 
-    loading: boolean = false;
-    docUrl : string = '';
-    public innerHtml: SafeHtml;
+    coreUrl             : string;
+    lang                : any       = LANG;
+    loading             : boolean   = false;
+
+    thumbnailUrl        : string;
+    docUrl              : string    = '';
+    homeData            : any;
+    homeMessage         : string;
+    dataSource          : any;
+    currentDate         : string    = "";
+
+
+    public innerHtml    : SafeHtml;
+    displayedColumns    : string[] = ['res_id', 'subject', 'creation_date'];
 
     @ViewChild('snav') snav: MatSidenav;
     @ViewChild('snav2') sidenavRight: MatSidenav;
-    
-
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
-    homeData: any;
-    homeMessage: string;
-    dataSource: any;
-    displayedColumns: string[] = ['res_id', 'subject', 'creation_date'];
 
-    currentDate : string = "";
-
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private notify: NotificationService, private headerService: HeaderService) {
         super(http, ['users']);
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
@@ -56,9 +58,10 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         if (this.mobileMode) {
             this.displayedColumns = ['res_id', 'subject'];
         }
-        window['MainHeaderComponent'].refreshTitle(this.lang.home);
+        this.headerService.headerMessage = this.lang.home;
         window['MainHeaderComponent'].setSnav(this.snav);
         window['MainHeaderComponent'].setSnavRight(null);
+
         this.coreUrl = angularGlobals.coreUrl;
         let event = new Date();
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -66,9 +69,9 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         this.currentDate = event.toLocaleDateString('fr-FR', options);
 
         this.http.get(this.coreUrl + "rest/home")
-        .subscribe((data: any) => {
-            this.homeData = data;
-            this.homeMessage = data['homeMessage']
+            .subscribe((data: any) => {
+                this.homeData = data;
+                this.homeMessage = data['homeMessage']
         });
     }
 
@@ -82,7 +85,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         });
     }
 
-    goTo(row:any){
+    goTo(row:any) {
         if (this.docUrl == this.coreUrl+'rest/res/'+row.res_id+'/content' && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
@@ -105,7 +108,16 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         $j('#listContent').css({"overflow":"auto"});
     }
 
-    goToDetail(row:any){
-        location.href = "index.php?page=details&dir=indexing_searching&id="+row.res_id;
+    goToDetail(row:any) {
+        this.http.get(this.coreUrl + "rest/resources/" + row.res_id + "/isAllowed")
+            .subscribe((data: any) => {
+                if (data['isAllowed']) {
+                    location.href = "index.php?page=details&dir=indexing_searching&id=" + row.res_id;
+                } else {
+                    this.notify.error(this.lang.documentOutOfPerimeter);
+                }
+            }, () => {
+                this.notify.error(this.lang.errorOccured);
+            });
     }
 }

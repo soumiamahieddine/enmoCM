@@ -241,6 +241,8 @@ $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':u
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
 $app->get('/resources/groups/{groupSerialId}/baskets/{basketId}', \Resource\controllers\ResController::class . ':getResourcesByBasket');
+$app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
+
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');

@@ -5,6 +5,7 @@ import { SharedModule }                         from './app-common.module';
 import { CustomSnackbarComponent }              from './notification.service';
 import { ConfirmModalComponent }                from './confirmModal.component';
 import { ShortcutMenuService }                  from '../service/shortcut-menu.service';
+import { HeaderService }                        from '../service/header.service';
 
 import { AppComponent }                         from './app.component';
 import { AppRoutingModule }                     from './app-routing.module';
@@ -51,7 +52,7 @@ import { ActivateUserComponent }                from './activate-user.component'
         BottomSheetAttachmentList,
         BottomSheetDiffusionList
     ],
-    providers: [ ShortcutMenuService ],
+    providers: [ ShortcutMenuService, HeaderService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

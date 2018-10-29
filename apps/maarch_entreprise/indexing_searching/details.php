@@ -703,7 +703,11 @@ if ($stmt->rowCount() == 0) {
                     if ($key == 'exp_contact_id') {
                         if (!empty($data[$key]['address_value'])) {
                             $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['address_value']]]);
-                            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                            if(!empty($contactData[0])){
+                                $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                            } else {
+                                $rate['color'] = 'LightYellow';
+                            }
                         }
                     }
 
@@ -732,7 +736,7 @@ if ($stmt->rowCount() == 0) {
 
                     if (empty($disabledAttr)) {
                         echo "<div id='input_multi_contact_add' style=''>";
-                        echo "<input type='text' name='{$key}' id='{$key}' value='' title='' alt='' size='40' style='width:140px;'/>";
+                        echo "<input type='text' placeholder='"._CONTACTS_USERS_SEARCH."' name='{$key}' id='{$key}' value='' title='' alt='' size='40' style='width:140px;'/>";
                         echo '<div id="multiContactList" class="autocomplete" style="width:200px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;width:200px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
                         echo '<script type="text/javascript">addMultiContacts(\'is_multicontacts\', \'multiContactList\', \''
                                                     .$_SESSION['config']['businessappurl']
@@ -754,7 +758,11 @@ if ($stmt->rowCount() == 0) {
                             $_SESSION['adresses']['contactid'][] = $data[$key]['multi']['contact_id'][$icontacts];
 
                             $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['multi']['address_id'][$icontacts]]]);
-                            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);        
+                            if(!empty($contactData[0])){
+                                $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                            } else {
+                                $rate['color'] = 'LightYellow';
+                            }        
                             echo '<div class="multicontact_element" style="display:table;width:200px;background-color:'.$rate['color'].';" id="'.$icontacts.'_'.$data[$key]['multi']['contact_id'][$icontacts].'"><div style="display:table-cell;width:100%;vertical-align:middle;">'.$data[$key]['multi']['arr_values'][$icontacts].'</div>';
 
                             if (empty($disabledAttr)) {
@@ -784,6 +792,11 @@ if ($stmt->rowCount() == 0) {
                             $sr = $resourceContact;
                         }
                     }
+                    $rate = [];
+                    if (!empty($sr['type']) && $sr['type'] == 'contact') {
+                        $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$sr['item_id']]]);
+                        $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
+                    }
                     if (empty($disabledAttr)) {
                         echo '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\', false);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\');" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
                         if ($sr['type'] == 'entity') {
@@ -795,7 +808,11 @@ if ($stmt->rowCount() == 0) {
                         }
                     }
                     echo '<div class="typeahead__container" style="width: 206px;"><div class="typeahead__field"><span class="typeahead__query">';
-                    echo "<textarea style='font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 11px;padding: 5px;width: 206px;max-width: 206px;' name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr}/>";
+                    echo "<textarea name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr} style='font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 11px;padding: 5px;width: 206px;max-width: 206px;";
+                    if (!empty($rate['color'])) {
+                        echo ' ;background-color:'.$rate['color'].' ';
+                    }
+                    echo "'/>";
                     if (!empty($sr['format'])) {
                         echo $sr['format'];
                     }
@@ -813,7 +830,11 @@ if ($stmt->rowCount() == 0) {
                     echo "/>";
 
                     //initialize autocomplete
-                    echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);</script>';
+                    if ($sr['type'] == 'entity') {
+                        echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'entity\');</script>';
+                    } else {
+                        echo '<script>initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);</script>';
+                    }
 
                 } else {
                     echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";

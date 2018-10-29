@@ -174,51 +174,53 @@ if (isset($_REQUEST['load'])) {
         $start
     );
         //Result Array
-        for ($i = 0; $i < count($tab); $i++) {
-            for ($j = 0; $j < count($tab[$i]); $j++) {
-                foreach (array_keys($tab[$i][$j]) as $value) {
-                    if ($tab[$i][$j][$value] == "id") {
-                        $tab[$i][$j]["id"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["label"] = _ID;
-                        $tab[$i][$j]["size"] = "1";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = true;
-                        $tab[$i][$j]["order"] = 'id';
-                    }
-                    if ($tab[$i][$j][$value] == "event_date") {
-                        $tab[$i][$j]["value"] = $request->dateformat($tab[$i][$j]["value"]);
-                        $tab[$i][$j]["label"] = _DATE;
-                        $tab[$i][$j]["size"] = "10";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = true;
-                        $tab[$i][$j]["order"] = 'event_date';
-                    }
-                    if ($tab[$i][$j][$value] == "firstname") {
-                        $firstname = $request->show_string($tab[$i][$j]["value"]);
-                    }
-                    if ($tab[$i][$j][$value] == "lastname") {
-                        $tab[$i][$j]["value"] = $firstname . ' ' . $request->show_string($tab[$i][$j]["value"]);
-                        $tab[$i][$j]["label"] = _USER;
-                        $tab[$i][$j]["size"] = $sizeUser;
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = true;
-                        $tab[$i][$j]["order"] = 'lastname';
-                    }
-                    if ($tab[$i][$j][$value] == "info") {
-                        $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
-                        $tab[$i][$j]["label"] = _EVENT;
-                        $tab[$i][$j]["size"] = $sizeText;
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = true;
-                        $tab[$i][$j]["order"] = 'info';
+        if (!empty($tab)) {
+            for ($i = 0; $i < count($tab); $i++) {
+                for ($j = 0; $j < count($tab[$i]); $j++) {
+                    foreach (array_keys($tab[$i][$j]) as $value) {
+                        if ($tab[$i][$j][$value] == "id") {
+                            $tab[$i][$j]["id"] = $tab[$i][$j]['value'];
+                            $tab[$i][$j]["label"] = _ID;
+                            $tab[$i][$j]["size"] = "1";
+                            $tab[$i][$j]["label_align"] = "left";
+                            $tab[$i][$j]["align"] = "left";
+                            $tab[$i][$j]["valign"] = "bottom";
+                            $tab[$i][$j]["show"] = true;
+                            $tab[$i][$j]["order"] = 'id';
+                        }
+                        if ($tab[$i][$j][$value] == "event_date") {
+                            $tab[$i][$j]["value"] = $request->dateformat($tab[$i][$j]["value"]);
+                            $tab[$i][$j]["label"] = _DATE;
+                            $tab[$i][$j]["size"] = "10";
+                            $tab[$i][$j]["label_align"] = "left";
+                            $tab[$i][$j]["align"] = "left";
+                            $tab[$i][$j]["valign"] = "bottom";
+                            $tab[$i][$j]["show"] = true;
+                            $tab[$i][$j]["order"] = 'event_date';
+                        }
+                        if ($tab[$i][$j][$value] == "firstname") {
+                            $firstname = $request->show_string($tab[$i][$j]["value"]);
+                        }
+                        if ($tab[$i][$j][$value] == "lastname") {
+                            $tab[$i][$j]["value"] = $firstname . ' ' . $request->show_string($tab[$i][$j]["value"]);
+                            $tab[$i][$j]["label"] = _USER;
+                            $tab[$i][$j]["size"] = $sizeUser;
+                            $tab[$i][$j]["label_align"] = "left";
+                            $tab[$i][$j]["align"] = "left";
+                            $tab[$i][$j]["valign"] = "bottom";
+                            $tab[$i][$j]["show"] = true;
+                            $tab[$i][$j]["order"] = 'lastname';
+                        }
+                        if ($tab[$i][$j][$value] == "info") {
+                            $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                            $tab[$i][$j]["label"] = _EVENT;
+                            $tab[$i][$j]["size"] = $sizeText;
+                            $tab[$i][$j]["label_align"] = "left";
+                            $tab[$i][$j]["align"] = "left";
+                            $tab[$i][$j]["valign"] = "bottom";
+                            $tab[$i][$j]["show"] = true;
+                            $tab[$i][$j]["order"] = 'info';
+                        }
                     }
                 }
             }

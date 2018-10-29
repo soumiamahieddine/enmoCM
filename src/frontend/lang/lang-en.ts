@@ -686,4 +686,6 @@ export const LANG_EN = {
     "toRange"                                           : "to",
     "redirectUserListDiff"                              : "Change destination user of diffusion list model",
     "chooseNewDest"                                     : "is to <b>recipient</b> of following diffusion list model, please choose a <b>replacement</b> user",
+    "errorOccured"                                      : "An error occured",
+    "documentOutOfPerimeter"                            : "This document is out of perimeter",
 };

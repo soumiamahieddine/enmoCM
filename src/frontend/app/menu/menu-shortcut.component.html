@@ -38,7 +38,7 @@
                 </button>
             </span>
             <span style="flex:1;text-align: left;padding: 5px;" *ngIf="shortcut.id=='index_mlb' && shortcut.shortcut == 'true' && speedDialFabButtons.length>1">
-                <eco-fab-speed-dial #myFab direction="down" animationMode="fling" fixed="false" (mouseenter)="myFab.open = true" (mouseleave)="myFab.open = false">
+                <!--<eco-fab-speed-dial #myFab direction="down" animationMode="fling" fixed="false" (mouseenter)="myFab.open = true" (mouseleave)="myFab.open = false">
 
                     <eco-fab-speed-dial-trigger spin="true">
                         <button color="default" mat-fab matTooltip="{{shortcut.name}}" matTooltipPosition="above">
@@ -52,7 +52,23 @@
                                 style="position: absolute;margin-left: 20px;margin-top: -5px;">{{button.label}}</span><mat-icon class="{{button.icon}}"></mat-icon> 
                         </button>
                     </eco-fab-speed-dial-actions>
-                </eco-fab-speed-dial>
+                </eco-fab-speed-dial>-->
+
+                <smd-fab-speed-dial #myFab direction="down" animationMode="fling" fixed="false" (mouseenter)="myFab.open = true"
+                    (mouseleave)="myFab.open = false">
+                    <smd-fab-trigger spin="true">
+                        <button color="default" mat-fab (click)="_click('trigger')">
+                            <mat-icon style="font-size:22px;" class="fa {{shortcut.style}} spin360"></mat-icon>
+                        </button>
+                    </smd-fab-trigger>
+
+                    <smd-fab-actions>
+                        <button color="primary" mat-mini-fab (click)="onSpeedDialFabClicked(button,shortcut)" *ngFor="let button of speedDialFabButtons">
+                            <span class="speedDialLabel" color="primary"
+                                style="display:none;position: absolute;margin-left: 20px;margin-top: -5px;">{{button.label}}</span><mat-icon class="{{button.icon}}"></mat-icon> 
+                        </button>
+                    </smd-fab-actions>
+                </smd-fab-speed-dial>
             </span>
 
         </ng-container>

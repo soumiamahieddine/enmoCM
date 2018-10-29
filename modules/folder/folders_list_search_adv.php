@@ -73,7 +73,7 @@ if ($_GET['order_field'] != null) {
     $tab = $request->PDOselect($select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, false, $_SESSION['save_list']['start']);
     // $request->show();
 //Result Array
-    if (count($tab) > 0) {
+    if (!empty($tab)) {
         for ($i = 0; $i < count($tab); ++$i) {
             for ($j = 0; $j < count($tab[$i]); ++$j) {
                 foreach (array_keys($tab[$i][$j]) as $value) {

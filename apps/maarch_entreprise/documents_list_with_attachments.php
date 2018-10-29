@@ -129,7 +129,7 @@ $where = implode(' and ', $where_tab);
 
 $order = $order_field = '';
 $arr_order = explode(', ', $_SESSION['current_basket']['basket_res_order']);
-if (count($arr_order) == 1) {
+if (!empty($arr_order) && count($arr_order) == 1) {
     $order = $list->getOrder();
     $order_field = $list->getOrderField();
 }
@@ -157,11 +157,12 @@ if (!empty($order_field) && !empty($order)) {
     $_SESSION['last_order_basket'] = $orderstr;
 } else {
     if (!empty($_SESSION['current_basket']['basket_res_order'])) {
-        if (count($arr_order) == 1) {
+        if (!empty($arr_order) && count($arr_order) == 1) {
             $orders = explode(' ', $arr_order[0]);
             if (!empty($orders[1])) {
                 $list->setOrder($orders[1]);
             } else {
+                $orders[] = 'desc';
                 $list->setOrder();
             }
             $list->setOrderField($orders[0]);
@@ -170,7 +171,7 @@ if (!empty($order_field) && !empty($order)) {
         if (strpos($_SESSION['current_basket']['basket_res_order'], 'priority') !== false) {
             $where .= ' and '.$table.'.priority = priorities.id';
             $select['priorities'] = ['order', 'id'];
-            $orderstr = 'order by priorities.order '.$order;
+            $orderstr = 'order by priorities.order '.$orders[1];
         }
         $_SESSION['last_order_basket'] = $_SESSION['current_basket']['basket_res_order'];
     } else {
@@ -404,7 +405,7 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['valign'] = 'bottom';
                 $tab[$i][$j]['show'] = false;
                 $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                if (empty($contact_lastname) && empty($contact_firstname) && empty($user_lastname) && empty($user_firstname)) {
+                if (empty($contact_lastname) && empty($contact_firstname) && empty($user_lastname) && empty($user_firstname) && empty($contact_society)) {
                     $tab[$i][$j]['value'] = '<i style="opacity:0.5;">'._UNDEFINED_DATA.'</i>';
                 } else {
                     $tab[$i][$j]['value'] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);

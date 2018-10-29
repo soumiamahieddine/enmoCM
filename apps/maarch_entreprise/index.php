@@ -114,7 +114,7 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
         $validOutpout = MaarchIVS::debug();
         $cptValid = count($validOutpout['validationErrors']);
         $error = '';
-        for ($cptV=0; $cptV<=count($cptValid); $cptV++) {
+        for ($cptV=0; $cptV<=$cptValid; $cptV++) {
             $message = $validOutpout['validationErrors'][$cptV]->message;
             if ($message == "Length id below the minimal length") {
                 $message = _IVS_LENGTH_ID_BELOW_MIN_LENGTH;

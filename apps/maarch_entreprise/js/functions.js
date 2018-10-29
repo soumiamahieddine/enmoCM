@@ -196,9 +196,9 @@ var initList_hidden_input2 = function (idField, idList, theUrlToListScript, para
             afterUpdateElement: function (text, li) {
                 var str = li.id;
                 var res = str.split(",");
-                $(new_value).value = res[1];
-                $(actual_value).value = res[0];
-                $('country').value = 'FRANCE';
+                $j("#" + new_value).val(res[1]);
+                $j("#" + actual_value).val(res[0]);
+                $j('#country').val('FRANCE');
             }
         });
 };
@@ -213,9 +213,9 @@ var initList_hidden_input3 = function (idField, idList, theUrlToListScript, para
             afterUpdateElement: function (text, li) {
                 var str = li.id;
                 var res = str.split(",");
-                $(new_value).value = res[0];
-                $(actual_value).value = res[1];
-                $('country').value = 'FRANCE';
+                $j("#" + new_value).val(res[0]);
+                $j("#" + actual_value).val(res[1]);
+                $j('#country').val('FRANCE');
             }
         });
 };
@@ -3230,6 +3230,18 @@ function fill_field_input_text(values) {
 }
 
 /**
+ * Fills inputs fields of textarea type in the search form whith value
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_textarea(values) {
+    for (var key in values) {
+        var tmp_elem = $(key);
+        tmp_elem.value = values[key];
+    }
+}
+
+/**
  * Fills date range in the search form whith value
  *
  * @param values Array Values of the search criteria which must be displayed
@@ -3875,6 +3887,10 @@ function switchAutoCompleteType(id, mode, alternateVersion) {
 
 function openSenderInfoContact(id, type) {
     var height = '';
+    if (id == '') {
+        alert('Aucun contact sélectionné');
+        return false;
+    }
     if(type == 'entity'){
         alert('Aucune information disponible pour les entités');
     } else {

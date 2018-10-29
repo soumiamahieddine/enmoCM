@@ -145,28 +145,18 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
 
     $stmt = $db->query($query,[$res_id, 'VISA_CIRCUIT']);
 
-    if ($stmt->rowCount() < 1) {
-        if ($status == '_NOSTATUS_') {
-            $newStatus = 'AREV';
-        } else {
-            $newStatus = $status;
-        }
-    } else {
+    if ($stmt->rowCount() > 0) {
         $listInstance = $stmt->fetchObject();
         $db->query('UPDATE listinstance SET process_date = NULL WHERE res_id = ? AND difflist_type = ? AND listinstance_id = ?',
             [$res_id, 'VISA_CIRCUIT', $listInstance->listinstance_id]);
-        if ($status == '_NOSTATUS_') {
-            if ($listInstance->requested_signature) {
-                $newStatus = 'ESIG';
-            } else {
-                $newStatus = 'EVIS';
-            }
+        if ($listInstance->requested_signature) {
+            $newStatus = 'ESIG';
         } else {
-            $newStatus = $status;
+            $newStatus = 'EVIS';
         }
+        $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", [$newStatus, $res_id]);
     }
 
-    $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", [$newStatus, $res_id]);
     return array('result' => $res_id.'#', 'history_msg' => $label_action);
 }
 

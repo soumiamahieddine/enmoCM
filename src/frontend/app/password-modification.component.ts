@@ -140,7 +140,7 @@ export class PasswordModificationComponent implements OnInit {
                 this.ruleText = ruleTextArr.join(', ');
                 this.otherRuleText = otherRuleTextArr.join('<br/>');
                 this.firstFormGroup.controls["newPasswordCtrl"].setValidators(valArr);
-            }, (err) => {
+            }, (err: any) => {
                 this.notify.error(err.error.errors);
             });
 

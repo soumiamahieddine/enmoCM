@@ -3,6 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
+import { HeaderService }        from '../service/header.service';
 import { MatDialog, MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
@@ -16,8 +17,6 @@ declare var angularGlobals: any;
 })
 export class AboutUsComponent implements OnInit {
 
-    /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -31,7 +30,7 @@ export class AboutUsComponent implements OnInit {
     loading: boolean = false;
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private headerService: HeaderService) {
         this.mobileMode = angularGlobals.mobileMode;        
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -40,7 +39,7 @@ export class AboutUsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.aboutUs);
+        this.headerService.headerMessage = this.lang.aboutUs;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

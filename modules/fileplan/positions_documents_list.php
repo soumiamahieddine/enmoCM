@@ -126,141 +126,143 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
         $description = $fileplan->getPositionPath($fileplan_id, $position_id, true);
 
         //Result Array
-        for ($i = 0; $i < count($tab); ++$i) {
-            for ($j = 0; $j < count($tab[$i]); ++$j) {
-                foreach (array_keys($tab[$i][$j]) as $value) {
-                    if ($tab[$i][$j][$value] == 'list_id') {
-                        $tab[$i][$j]['list_id'] = $coll_id . '@@' . $res_id;
-                        $tab[$i][$j]['label'] = _ID;
-                        $tab[$i][$j]['size'] = '1';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = false;
-                    }
-                    if ($tab[$i][$j][$value] == 'res_id') {
-                        $display = false;
-                        $res_id = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['label'] = _GED_NUM;
-                        $tab[$i][$j]['size'] = '1';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        if (_ID_TO_DISPLAY == 'res_id') {
-                            $display = true;
+        if (!empty($tab)) {
+            for ($i = 0; $i < count($tab); ++$i) {
+                for ($j = 0; $j < count($tab[$i]); ++$j) {
+                    foreach (array_keys($tab[$i][$j]) as $value) {
+                        if ($tab[$i][$j][$value] == 'list_id') {
+                            $tab[$i][$j]['list_id'] = $coll_id . '@@' . $res_id;
+                            $tab[$i][$j]['label'] = _ID;
+                            $tab[$i][$j]['size'] = '1';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = false;
                         }
-                        $tab[$i][$j]['show'] = $display;
-                        $tab[$i][$j]['order'] = 'res_id';
-                    }
-                    if ($tab[$i][$j][$value] == 'alt_identifier') {
-                        $display = false;
-                        $tab[$i][$j]['label'] = _CHRONO_NUMBER;
-                        $tab[$i][$j]['size'] = '1';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        if (_ID_TO_DISPLAY == 'chrono_number') {
-                            $display = true;
+                        if ($tab[$i][$j][$value] == 'res_id') {
+                            $display = false;
+                            $res_id = $tab[$i][$j]['value'];
+                            $tab[$i][$j]['label'] = _GED_NUM;
+                            $tab[$i][$j]['size'] = '1';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            if (_ID_TO_DISPLAY == 'res_id') {
+                                $display = true;
+                            }
+                            $tab[$i][$j]['show'] = $display;
+                            $tab[$i][$j]['order'] = 'res_id';
                         }
-                        $tab[$i][$j]['show'] = $display;
-                        $tab[$i][$j]['order'] = 'alt_identifier';
-                    }
-                    if ($tab[$i][$j][$value] == 'coll_id') {
-                        $coll_id = $tab[$i][$j]['value']; //Keep collection ID
-                        $tab[$i][$j]['label'] = _COLLECTION;
-                        $tab[$i][$j]['size'] = '1';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = 'coll_id';
-                    }
-                    if ($tab[$i][$j][$value] == 'coll_label') {
-                        $tab[$i][$j]['label'] = _COLLECTION;
-                        $tab[$i][$j]['size'] = '1';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = 'coll_label';
-                    }
-                    if ($tab[$i][$j][$value] == 'page_details') {
-                        $coll_script_details = $security->get_script_from_coll($coll_id, 'script_details');
-                        $coll_script_details = substr($coll_script_details, 0, strlen($coll_script_details) - 4);
-                        $tab[$i][$j]['value'] = $coll_script_details;
-                        $tab[$i][$j]['label'] = _DETAILS;
-                        $tab[$i][$j]['size'] = '1';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = false;
-                    }
-                    if ($tab[$i][$j][$value] == 'right_doc') {
-                        $tab[$i][$j]['value'] = ($security->test_right_doc($coll_id, $tab[$i][$j]['value']) === true) ? 'true' : 'false';
-                        $tab[$i][$j]['label'] = _RIGHT;
-                        $tab[$i][$j]['size'] = '1';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = false;
-                    }
+                        if ($tab[$i][$j][$value] == 'alt_identifier') {
+                            $display = false;
+                            $tab[$i][$j]['label'] = _CHRONO_NUMBER;
+                            $tab[$i][$j]['size'] = '1';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            if (_ID_TO_DISPLAY == 'chrono_number') {
+                                $display = true;
+                            }
+                            $tab[$i][$j]['show'] = $display;
+                            $tab[$i][$j]['order'] = 'alt_identifier';
+                        }
+                        if ($tab[$i][$j][$value] == 'coll_id') {
+                            $coll_id = $tab[$i][$j]['value']; //Keep collection ID
+                            $tab[$i][$j]['label'] = _COLLECTION;
+                            $tab[$i][$j]['size'] = '1';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = 'coll_id';
+                        }
+                        if ($tab[$i][$j][$value] == 'coll_label') {
+                            $tab[$i][$j]['label'] = _COLLECTION;
+                            $tab[$i][$j]['size'] = '1';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = 'coll_label';
+                        }
+                        if ($tab[$i][$j][$value] == 'page_details') {
+                            $coll_script_details = $security->get_script_from_coll($coll_id, 'script_details');
+                            $coll_script_details = substr($coll_script_details, 0, strlen($coll_script_details) - 4);
+                            $tab[$i][$j]['value'] = $coll_script_details;
+                            $tab[$i][$j]['label'] = _DETAILS;
+                            $tab[$i][$j]['size'] = '1';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = false;
+                        }
+                        if ($tab[$i][$j][$value] == 'right_doc') {
+                            $tab[$i][$j]['value'] = ($security->test_right_doc($coll_id, $tab[$i][$j]['value']) === true) ? 'true' : 'false';
+                            $tab[$i][$j]['label'] = _RIGHT;
+                            $tab[$i][$j]['size'] = '1';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = false;
+                        }
 
-                    if ($tab[$i][$j][$value] == 'status') {
-                        $res_status = $status_obj->get_status_data($tab[$i][$j]['value'], $extension_icon);
-                        $statusCmp = $tab[$i][$j]['value'];
-                        $img_class = substr($res_status['IMG_SRC'], 0, 2);
-                        $tab[$i][$j]['value'] = '<i ' . $style . " class = '" . $img_class . ' ' . $res_status['IMG_SRC'] . ' ' . $img_class . "-3x' alt = '" . $res_status['LABEL'] . "' title = '" . $res_status['LABEL'] . "'></i>";
-                        $tab[$i][$j]['label'] = _STATUS;
-                        $tab[$i][$j]['size'] = '4';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = true;
-                    }
-                    if ($tab[$i][$j][$value] == 'subject') {
-                        $tab[$i][$j]['value'] = functions::cut_string(functions::show_string($tab[$i][$j]['value']), 250);
-                        $tab[$i][$j]['label'] = _SUBJECT;
-                        $tab[$i][$j]['size'] = '12';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = true;
-                    }
-                    if ($tab[$i][$j][$value] == 'category_id') {
-                        $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['value'] = $_SESSION['mail_categories'][$tab[$i][$j]['value']];
-                        $tab[$i][$j]['label'] = _CATEGORY;
-                        $tab[$i][$j]['size'] = '10';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = false;
-                    }
-                    if ($tab[$i][$j][$value] == 'type_label') {
-                        $tab[$i][$j]['value'] = functions::show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]['label'] = _TYPE;
-                        $tab[$i][$j]['size'] = '10';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = true;
-                    }
-                    if ($tab[$i][$j][$value] == 'creation_date') {
-                        $tab[$i][$j]['value'] = $core_tools->format_date_db($tab[$i][$j]['value'], false);
-                        $tab[$i][$j]['label'] = _CREATION_DATE;
-                        $tab[$i][$j]['size'] = '10';
-                        $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = false;
-                        $tab[$i][$j]['order'] = false;
+                        if ($tab[$i][$j][$value] == 'status') {
+                            $res_status = $status_obj->get_status_data($tab[$i][$j]['value'], $extension_icon);
+                            $statusCmp = $tab[$i][$j]['value'];
+                            $img_class = substr($res_status['IMG_SRC'], 0, 2);
+                            $tab[$i][$j]['value'] = '<i ' . $style . " class = '" . $img_class . ' ' . $res_status['IMG_SRC'] . ' ' . $img_class . "-3x' alt = '" . $res_status['LABEL'] . "' title = '" . $res_status['LABEL'] . "'></i>";
+                            $tab[$i][$j]['label'] = _STATUS;
+                            $tab[$i][$j]['size'] = '4';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = true;
+                        }
+                        if ($tab[$i][$j][$value] == 'subject') {
+                            $tab[$i][$j]['value'] = functions::cut_string(functions::show_string($tab[$i][$j]['value']), 250);
+                            $tab[$i][$j]['label'] = _SUBJECT;
+                            $tab[$i][$j]['size'] = '12';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = true;
+                        }
+                        if ($tab[$i][$j][$value] == 'category_id') {
+                            $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
+                            $tab[$i][$j]['value'] = $_SESSION['mail_categories'][$tab[$i][$j]['value']];
+                            $tab[$i][$j]['label'] = _CATEGORY;
+                            $tab[$i][$j]['size'] = '10';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = false;
+                        }
+                        if ($tab[$i][$j][$value] == 'type_label') {
+                            $tab[$i][$j]['value'] = functions::show_string($tab[$i][$j]['value']);
+                            $tab[$i][$j]['label'] = _TYPE;
+                            $tab[$i][$j]['size'] = '10';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = true;
+                            $tab[$i][$j]['order'] = true;
+                        }
+                        if ($tab[$i][$j][$value] == 'creation_date') {
+                            $tab[$i][$j]['value'] = $core_tools->format_date_db($tab[$i][$j]['value'], false);
+                            $tab[$i][$j]['label'] = _CREATION_DATE;
+                            $tab[$i][$j]['size'] = '10';
+                            $tab[$i][$j]['label_align'] = 'left';
+                            $tab[$i][$j]['align'] = 'left';
+                            $tab[$i][$j]['valign'] = 'bottom';
+                            $tab[$i][$j]['show'] = false;
+                            $tab[$i][$j]['order'] = false;
+                        }
                     }
                 }
             }

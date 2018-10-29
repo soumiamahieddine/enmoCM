@@ -165,10 +165,9 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
 <?php
 }
 
-?>
-    <script type="text/javascript"><?php
     if ($_GET['created'] == "editDetail") {
         ?>
+        <script type="text/javascript">
         new Ajax.Request('index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up',
         {
         method:'post',
@@ -181,7 +180,7 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
                 if (response.rateColor != "") {
                     window.opener.$j('#contact').css('background-color', response.rateColor);
                 }
-                window.opener.$j('#contact').html(response.contactName);
+                window.opener.$j('#contact').val(response.contactName);
                 window.opener.$j('#contactid').val(response.contactId);
                 window.opener.$j('#addressid').val(response.addressId);
                 this.close();
@@ -205,9 +204,12 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
                 parent.document.getElementById('show_tab').setAttribute('module', '');
             }
         }       
-    });<?php
+        });
+        </script><?php
+        exit;
     } elseif ($_GET['created'] == "editDetailSender") {
         ?>
+        <script type="text/javascript">
         new Ajax.Request('index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up',
         {
         method:'post',
@@ -220,34 +222,43 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
                 if (response.rateColor != "") {
                     window.opener.$j('#sender_recipient').css('background-color', response.rateColor);
                 }
-                window.opener.$j('#sender_recipient').html(response.contactName);
+                window.opener.$j('#sender_recipient').val(response.contactName);
                 this.close();
-            //Processing Mail
             } else {
-                if(parent.$j('#resourceContact')){
+                //Processing Mail
+                if(parent.$j('#resourceContact').length){
                     if (response.rateColor != "") {
                         parent.$j('#resourceContact').css('background-color', response.rateColor);
                     }
                     parent.$j('#resourceContact').html(response.contactName);
+                //Indexation/Validate Mail
+                } else if (parent.$j('#sender_recipient').length){
+                    if (response.rateColor != "") {
+                        parent.$j('#sender_recipient').css('background-color', response.rateColor);
+                    }
+                    parent.$j('#sender_recipient').val(response.contactName);
                 }
 
                 parent.document.getElementById('show_tab').style.display = 'none';
                 parent.document.getElementById('show_tab').setAttribute('module', '');
             }
         }       
-    });<?php
+        });
+        </script><?php
+        exit;
     } elseif ($_GET['created'] == "cancelDetail") {
         ?>
+        <script type="text/javascript">
         if (window.opener) {
             this.close();
         } else {
             parent.document.getElementById('show_tab').style.display = 'none';
             parent.document.getElementById('show_tab').setAttribute('module', '');
         }
-   <?php
-    } ?>
-    </script><?php
-    exit;
+        </script>
+        <?php
+        exit;
+    }
 
 ?>
 	<script type="text/javascript">

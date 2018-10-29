@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
+import { HeaderService } from '../../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -16,7 +17,6 @@ declare var angularGlobals: any;
 })
 export class GroupsAdministrationComponent implements OnInit {
     /*HEADER*/
-    titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -46,7 +46,7 @@ export class GroupsAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -58,7 +58,8 @@ export class GroupsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.groups);
+        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.groups;
+
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

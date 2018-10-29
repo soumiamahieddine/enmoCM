@@ -89,7 +89,7 @@ Cette section vous guide lors de la soumission d'une suggestion d'amélioration 
 En suivant ces directives, les responsables de la maintenance et la communauté comprennent votre suggestion et trouvent des suggestions connexes.
 
 #### Avant de soumettre une amélioration
-* Consultez [http://community.maarch.org Community.maarch.org] ou [https://docs.maarch.org/MaarchCourrier/18.04/ notre documentation]pour obtenir des conseils - vous pourriez découvrir que l'amélioration est déjà disponible. Plus important encore, vérifiez si vous utilisez la dernière version de Maarch Courrier.
+* Consultez [http://community.maarch.org Community.maarch.org] ou [https://docs.maarch.org/ notre documentation]pour obtenir des conseils - vous pourriez découvrir que l'amélioration est déjà disponible. Plus important encore, vérifiez si vous utilisez la dernière version de Maarch Courrier.
 * Effectuez une recherche rapide pour voir si l'amélioration a déjà été suggérée. Si c'est le cas, ajoutez un commentaire au ticket existant au lieu d'ouvrir un nouveau.
 
 

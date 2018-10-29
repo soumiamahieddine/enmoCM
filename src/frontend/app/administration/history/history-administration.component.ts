@@ -3,6 +3,7 @@ import { HttpClient }                                       from '@angular/commo
 import { MediaMatcher }                                     from '@angular/cdk/layout';
 import { MatPaginator, MatTableDataSource, MatSort, MatSidenav }        from '@angular/material';
 import { LANG }                                             from '../../translate.component';
+import { HeaderService }        from '../../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -13,8 +14,7 @@ declare var angularGlobals: any;
     templateUrl: "history-administration.component.html"
 })
 export class HistoryAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -58,7 +58,7 @@ export class HistoryAdministrationComponent implements OnInit {
         }        
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
 
         this.startDate.setHours(0,0,0,0);
@@ -79,7 +79,7 @@ export class HistoryAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.administration + ' ' + this.lang.history);
+        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.history;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

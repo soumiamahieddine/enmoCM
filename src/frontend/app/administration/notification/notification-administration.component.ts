@@ -2,9 +2,11 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatSidenav } from '@angular/material';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MatSidenav } from '@angular/material';
+import { HeaderService }        from '../../../service/header.service';
+
 
 declare function $j(selector: any): any;
 
@@ -16,8 +18,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class NotificationAdministrationComponent implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
@@ -32,7 +33,7 @@ export class NotificationAdministrationComponent implements OnInit {
     loading: boolean = false;
     lang: any = LANG;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -47,9 +48,9 @@ export class NotificationAdministrationComponent implements OnInit {
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
 
-        this.route.params.subscribe(params => {
+        this.route.params.subscribe((params: any) => {
             if (typeof params['identifier'] == "undefined") {
-                window['MainHeaderComponent'].refreshTitle(this.lang.notificationCreation);
+                this.headerService.headerMessage = this.lang.notificationCreation;
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -59,21 +60,22 @@ export class NotificationAdministrationComponent implements OnInit {
                         this.notification = data.notification;
                         this.notification.attachfor_properties = [];
                         this.loading = false;
-                    }, (err) => {
+                    }, (err: any) => {
                         this.notify.error(err.error.errors);
                     });
             } else {
-                window['MainHeaderComponent'].refreshTitle(this.lang.notificationModification);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = false;
                 this.http.get(this.coreUrl + 'rest/notifications/' + params['identifier'])
                     .subscribe((data: any) => {
+                        this.headerService.headerMessage = this.lang.notificationModification + " <small>" + data.notification.description + "</small>";
+
                         this.notification = data.notification;
                         this.notification.attachfor_properties = [];
                         this.loading = false;
-                    }, (err) => {
+                    }, (err: any) => {
                         this.notify.error(err.error.errors);
                     });
             }

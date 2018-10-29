@@ -32,7 +32,7 @@ class IxbusController
         $html .= '</select><br /><br />';
 
         $html .= '<label for="messageModel">' . _WORKFLOW_MODEL_IXBUS . '</label><select name="messageModel" id="messageModel">';
-        foreach ($initializeDatas['messagesModel'] as $key => $value) {
+        foreach ($initializeDatas['messagesModel'] as $value) {
             $html .= '<option value="';
             $html .= $value;
             $html .= '">';
@@ -42,7 +42,7 @@ class IxbusController
         $html .= '</select><br /><br />';
         $html .= '<label for="loginIxbus">'._ID_IXBUS.'</label><input name="loginIxbus" id="loginIxbus"/><br /><br />';
         $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input type="password" name="passwordIxbus" id="passwordIxbus"/><br /><br />';
-        $html .= _ESIGN . '<input type="radio" name="mansignature" id="esignature" value="false" checked="checked" />' . _HANDWRITTEN_SIGN .'<input type="radio" name="mansignature" id="signature" value="true" /><br /><br />';
+        $html .= _ESIGN . '<input type="radio" name="mansignature" id="mansignature" value="false" checked="checked" />' . _HANDWRITTEN_SIGN .'<input type="radio" name="mansignature" id="mansignature" value="true" /><br /><br />';
 
         return $html;
     }
@@ -261,8 +261,8 @@ class IxbusController
                 'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
                 'validation_date', 'relation', 'attachment_id_master'
             ],
-            'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ')", "in_signature_book = 'true'"],
-            'data'      => [$aArgs['resIdMaster'], ['incoming_mail_attachment', 'print_folder', 'signed_response']]
+            'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+            'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
         ]);
 
         $attachmentToFreeze = [];
@@ -283,7 +283,7 @@ class IxbusController
 
             $mainResource = \Resource\models\ResModel::getExtById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
             if (empty($mainResource['process_limit_date'])) {
-                $processLimitDate = $mainResource['process_limit_date'] = date('Y-m-d', strtotime(date("Y-m-d"). ' + 7 days'));
+                $processLimitDate = date('Y-m-d', strtotime(date("Y-m-d"). ' + 14 days'));
             } else {
                 $processLimitDateTmp = explode(" ", $mainResource['process_limit_date']);
                 $processLimitDate = $processLimitDateTmp[0];
@@ -374,8 +374,8 @@ class IxbusController
                 // Refused
                 if ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatRefused']) {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                    $notes = IxbusController::getAnnotations(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
-                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->Annotation;
+                    $notes = IxbusController::getDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
+                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->MotifRefus;
                 // Validated
                 } elseif ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatValidated']) {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
@@ -465,6 +465,43 @@ class IxbusController
 
         $data = simplexml_load_string($rawResponse);
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetAnnotationsResponse->GetAnnotationsResult;
+
+        return $response;
+    }
+
+    public static function getDossier($aArgs)
+    {
+        $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+            <GetDossier xmlns="http://www.srci.fr">
+              <messageID>'.$aArgs['dossier_id'].'</messageID>
+            </GetDossier>
+          </soap:Body>
+        </soap:Envelope>';
+
+        $opts = [
+        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+        CURLOPT_HTTPHEADER => [
+        'content-type:text/xml;charset=\"utf-8\"',
+        'accept:text/xml',
+        "Cache-Control: no-cache",
+        "Pragma: no-cache",
+        "Content-length: ".strlen($xmlPostString),
+        "Cookie:".$aArgs['sessionId'],
+        "SOAPAction: \"http://www.srci.fr/GetDossier\""
+        ],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS  => $xmlPostString
+        ];
+
+        $curl = curl_init();
+        curl_setopt_array($curl, $opts);
+        $rawResponse = curl_exec($curl);
+
+        $data = simplexml_load_string($rawResponse);
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetDossierResponse->GetDossierResult;
 
         return $response;
     }

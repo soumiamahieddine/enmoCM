@@ -308,8 +308,14 @@ class PrintControler extends PrintFunctions
 					//CATEGORY
 					$pdf->Cell(91,5,utf8_decode(_PRINT_CATEGORY . ' : ' 
 						. html_entity_decode($categoryLabel)),1,0, 'L', false);
-					//PRIORITY
-					$pdf->Cell(91,5,utf8_decode(_PRINT_PRIORITY . ' : ' . $_SESSION['mail_priorities'][$this->array_print[$cpt]['priority']]),1,1, 'L', false);
+                    //PRIORITY
+                    foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                        if ($prioValue == $this->array_print[$cpt]['priority']) {
+                            $fakeId = $key;
+                        }
+                    }
+
+					$pdf->Cell(91,5,utf8_decode(_PRINT_PRIORITY . ' : ' . $_SESSION['mail_priorities'][$fakeId]),1,1, 'L', false);
 				}
 				
 				//LINE 2

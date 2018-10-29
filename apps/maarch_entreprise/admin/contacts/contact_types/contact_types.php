@@ -96,50 +96,52 @@ $request = new request;
 $tab = $request->PDOselect(
     $select, $where, $arrayPDO, $orderstr, $_SESSION['config']['databasetype'], $limit, false, '', '', '', true, false, false, $_REQUEST['start']
 );
-for ($i = 0; $i < count($tab); $i ++) {
-    for ($j = 0; $j < count($tab[$i]); $j ++) {
-        foreach (array_keys($tab[$i][$j]) as $value) {
-            if ($tab[$i][$j][$value] == "id") {
-                $tab[$i][$j]["contact_types_id"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _ID;
-                $tab[$i][$j]["size"] = "10";
-                $tab[$i][$j]["label_align"] = "left";
-                $tab[$i][$j]["align"] = "left";
-                $tab[$i][$j]["valign"] = "bottom";
-                $tab[$i][$j]["show"] = true;
-                $tab[$i][$j]["order"] = 'contact_types_id';
-            }
-            if ($tab[$i][$j][$value] == "label") {
-                $tab[$i][$j]['value'] = $request->show_string(
-                    $tab[$i][$j]['value']
-                );
-                $tab[$i][$j]["contact_types_label"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _DESC_CONTACT_TYPES;
-                $tab[$i][$j]["size"] = "30";
-                $tab[$i][$j]["label_align"] = "left";
-                $tab[$i][$j]["align"] = "left";
-                $tab[$i][$j]["valign"] = "bottom";
-                $tab[$i][$j]["show"] = true;
-                $tab[$i][$j]["order"] = 'contact_types_label';
-            }
-            if ($tab[$i][$j][$value] == "contact_target") {
-                if ($tab[$i][$j]['value'] == "both") {
-                    $tab[$i][$j]['value'] = _IS_CORPORATE_PERSON . " ". _AND ." " . _INDIVIDUAL;
-                } else if ($tab[$i][$j]['value'] == "corporate") {
-                    $tab[$i][$j]['value'] = _IS_CORPORATE_PERSON;
-                } else if($tab[$i][$j]['value'] == "no_corporate") {
-                    $tab[$i][$j]['value'] = _INDIVIDUAL;
-                } else {
-                    $tab[$i][$j]['value'] = "";
+if (!empty($tab)) {
+    for ($i = 0; $i < count($tab); $i ++) {
+        for ($j = 0; $j < count($tab[$i]); $j ++) {
+            foreach (array_keys($tab[$i][$j]) as $value) {
+                if ($tab[$i][$j][$value] == "id") {
+                    $tab[$i][$j]["contact_types_id"] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]["label"] = _ID;
+                    $tab[$i][$j]["size"] = "10";
+                    $tab[$i][$j]["label_align"] = "left";
+                    $tab[$i][$j]["align"] = "left";
+                    $tab[$i][$j]["valign"] = "bottom";
+                    $tab[$i][$j]["show"] = true;
+                    $tab[$i][$j]["order"] = 'contact_types_id';
                 }
-                
-                $tab[$i][$j]["label"] = _CONTACT_TARGET_LIST;
-                $tab[$i][$j]["size"] = "50";
-                $tab[$i][$j]["label_align"] = "left";
-                $tab[$i][$j]["align"] = "left";
-                $tab[$i][$j]["valign"] = "bottom";
-                $tab[$i][$j]["show"] = true;
-                $tab[$i][$j]["order"] = 'contact_target';
+                if ($tab[$i][$j][$value] == "label") {
+                    $tab[$i][$j]['value'] = $request->show_string(
+                        $tab[$i][$j]['value']
+                    );
+                    $tab[$i][$j]["contact_types_label"] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]["label"] = _DESC_CONTACT_TYPES;
+                    $tab[$i][$j]["size"] = "30";
+                    $tab[$i][$j]["label_align"] = "left";
+                    $tab[$i][$j]["align"] = "left";
+                    $tab[$i][$j]["valign"] = "bottom";
+                    $tab[$i][$j]["show"] = true;
+                    $tab[$i][$j]["order"] = 'contact_types_label';
+                }
+                if ($tab[$i][$j][$value] == "contact_target") {
+                    if ($tab[$i][$j]['value'] == "both") {
+                        $tab[$i][$j]['value'] = _IS_CORPORATE_PERSON . " ". _AND ." " . _INDIVIDUAL;
+                    } else if ($tab[$i][$j]['value'] == "corporate") {
+                        $tab[$i][$j]['value'] = _IS_CORPORATE_PERSON;
+                    } else if($tab[$i][$j]['value'] == "no_corporate") {
+                        $tab[$i][$j]['value'] = _INDIVIDUAL;
+                    } else {
+                        $tab[$i][$j]['value'] = "";
+                    }
+                    
+                    $tab[$i][$j]["label"] = _CONTACT_TARGET_LIST;
+                    $tab[$i][$j]["size"] = "50";
+                    $tab[$i][$j]["label_align"] = "left";
+                    $tab[$i][$j]["align"] = "left";
+                    $tab[$i][$j]["valign"] = "bottom";
+                    $tab[$i][$j]["show"] = true;
+                    $tab[$i][$j]["order"] = 'contact_target';
+                }
             }
         }
     }

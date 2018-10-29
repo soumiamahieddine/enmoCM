@@ -2,10 +2,11 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { MatSidenav } from '@angular/material';
 import { NotificationService } from '../../notification.service';
+import { HeaderService }        from '../../../service/header.service';
 
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
-import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -17,8 +18,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class UpdateStatusAdministrationComponent extends AutoCompletePlugin implements OnInit {
-    /*HEADER*/
-    titleHeader                              : string;
+
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
@@ -36,7 +36,7 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     resIdList                       : string[]  = [];
     chronoList                      : string[]  = [];
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
         super(http, ['statuses']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -49,7 +49,7 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].refreshTitle(this.lang.updateStatus);
+        this.headerService.headerMessage = this.lang.updateStatus;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
@@ -76,7 +76,7 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
                 this.resIdList = [];
                 this.chronoList = [];
                 this.notify.success(this.lang.modificationSaved);
-            }, (err) => {
+            }, (err: any) => {
                 this.notify.error(err.error.errors);
             });
     }
