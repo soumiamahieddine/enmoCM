@@ -256,7 +256,8 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
             'dest_contact_id' => $value->dest_contact_id,
             'dest_address_id' => $value->dest_address_id,
             'dest_user'       => $value->dest_user,
-            'typist'          => $value->typist
+            'typist'          => $value->typist,
+            'noteContent'     => $value->noteContent
         ]);
 
         $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
@@ -301,7 +302,8 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             'dest_user'       => $value->dest_user,
             'typist'          => $value->typist,
             'format'          => $value->format,
-            'encodedFile'     => $value->encodedFile
+            'encodedFile'     => $value->encodedFile,
+            'noteContent'     => $value->noteContent
         ]);
 
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);

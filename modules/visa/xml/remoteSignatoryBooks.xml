@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <signatoryBookEnabled>ixbus</signatoryBookEnabled>
+    <signatoryBookEnabled>fastParapheur</signatoryBookEnabled>
     <signatoryBook>
         <id>ixbus</id>
         <userId></userId>
@@ -15,11 +15,24 @@
         <userId></userId>
         <password></password>
         <url></url>
+        <certPath></certPath>
+        <certType>pem</certType>
+        <defaultType></defaultType>
+        <defaultSousType></defaultSousType>
+        <errorCode>KO</errorCode>
+        <visaState>Vise</visaState>
+        <signState>Signe</signState>
+        <refusedVisa>RejetVisa</refusedVisa>
+        <refusedSign>RejetSignataire</refusedSign>
     </signatoryBook>
     <signatoryBook>
         <id>fastParapheur</id>
-        <userId></userId>
-        <password></password>
+        <subscriberId></subscriberId>
         <url></url>
+        <certPath></certPath>
+        <certPass></certPass>
+        <certType>P12</certType>
+        <validatedState>Signé</validatedState>
+        <refusedState>Refusé</refusedState>
     </signatoryBook>
 </root>

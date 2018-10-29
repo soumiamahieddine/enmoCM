@@ -156,6 +156,13 @@ function Bt_myInclude($file)
 
 function Bt_createAttachment($aArgs = [])
 {
+    if (!empty($aArgs['noteContent'])) {
+        $GLOBALS['db']->query(
+            "INSERT INTO notes (identifier, tablename, user_id, date_note, note_text, coll_id) VALUES (?, 'res_letterbox', 'superadmin', CURRENT_TIMESTAMP, ?, 'letterbox_coll')",
+            [$aArgs['res_id_master'], $aArgs['noteContent']]
+        );
+    }
+
     $dataValue = [];
     array_push($dataValue, ['column' => 'res_id_master',    'value' => $aArgs['res_id_master'],   'type' => 'integer']);
     array_push($dataValue, ['column' => 'title',            'value' => $aArgs['title'],           'type' => 'string']);

@@ -453,3 +453,25 @@ if (!defined('_HANDWRITTEN_SIGN')) {
 if (!defined('_ESIGN')) {
     define('_ESIGN', "Signature électronique");
 }
+
+/* NCH01 */
+
+if (!defined('_PJ_NUMBER')) {
+    define('_PJ_NUMBER', "PJ n°");
+}
+
+if (!defined('_AND_DOC_ORIG')) {
+    define('_AND_DOC_ORIG', "et document original n°");
+}
+
+if (!defined('_EXTERNAL_ID_EMPTY')) {
+    define('_EXTERNAL_ID_EMPTY', "La référence externe est vide");
+}
+
+if(!defined('_SEND_TO_IPARAPHEUR')){
+    define('_SEND_TO_IPARAPHEUR', "Envoyer à l'IParapheur ?");
+}
+
+if(!defined('_SEND_TO_FAST')){
+    define('_SEND_TO_FAST', "Envoyer au parapheur FAST ?");
+}
