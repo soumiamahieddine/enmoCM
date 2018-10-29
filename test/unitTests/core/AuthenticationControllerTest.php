@@ -66,9 +66,11 @@ class AuthenticationControllerTest extends TestCase
             $response = \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => 'superadmin']);
             $this->assertSame(true, $response);
     
+            var_dump($lockAttempts);
             for ($i = 1; $i < $lockAttempts; $i++) {
                 $response = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => 'superadmin']);
                 $this->assertSame(_BAD_LOGIN_OR_PSW, $response);
+                var_dump('a');
             }
             $response = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => 'superadmin']);
             $this->assertSame(_ACCOUNT_LOCKED_FOR . " " . $lockTime . " mn", $response);
