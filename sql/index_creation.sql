@@ -9,15 +9,19 @@ CREATE INDEX dest_user_idx ON res_letterbox (dest_user);
 CREATE INDEX custom_t15_idx ON res_letterbox (custom_t15);
 CREATE INDEX res_letterbox_docserver_id_idx ON res_letterbox (docserver_id);
 CREATE INDEX res_letterbox_filename_idx ON res_letterbox (filename);
+CREATE INDEX res_departure_date_idx ON res_letterbox (departure_date);
+CREATE INDEX res_barcode_idx ON res_letterbox (barcode);
 
 -- res_attachments
 CREATE INDEX res_id_idx ON res_attachments (res_id);
 CREATE INDEX res_id_master_idx ON res_attachments (res_id_master);
+CREATE INDEX res_att_external_id_idx ON res_attachments (external_id);
 
 -- res_version_attachments
 CREATE INDEX res_id_version_attachments_idx ON res_version_attachments (res_id);
 CREATE INDEX res_id_master_version_attachments_idx ON res_version_attachments (res_id_master);
 CREATE INDEX attachment_id_master_idx ON res_version_attachments (attachment_id_master);
+CREATE INDEX res_vers_external_id_idx ON res_version_attachments (external_id);
 
 -- mlb_coll_ext
 CREATE INDEX category_id_idx ON mlb_coll_ext (category_id);
@@ -54,6 +58,7 @@ CREATE INDEX description_idx ON doctypes (description);
 -- entities
 CREATE INDEX entity_label_idx ON entities (entity_label);
 CREATE INDEX entity_id_idx ON entities (entity_id);
+CREATE INDEX entity_folder_import_idx ON entities (folder_import);
 
 -- folders
 CREATE INDEX folders_system_id_folders_idx ON folders (folders_system_id);
@@ -97,3 +102,6 @@ CREATE INDEX object_id_listmodels_idx ON listmodels (object_id);
 
 -- contact_addresses
 CREATE INDEX contact_id_contact_addresses_idx ON contact_addresses (contact_id);
+
+-- resource_contacts
+CREATE INDEX resource_contacts_res_id_idx ON resource_contacts (res_id);
