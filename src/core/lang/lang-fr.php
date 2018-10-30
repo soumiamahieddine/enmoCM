@@ -232,7 +232,7 @@ define('_REPORTS_COMMENT', 'Statistiques');
 define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
 define('_CONTENT_MANAGEMENT_COMMENT', 'Gestion des Versions de document');
 define('_TAGS_COMMENT', 'Mots-clés');
-define('_SENDMAIL_COMMENT', 'Envoi de courriels');
+define('_SENDMAIL_COMMENT', 'Envoi de courriels et plis numériques');
 define('_THUMBNAILS_COMMENT', 'Module des miniatures');
 define('_VISA_WORKFLOW_COMMENT', 'Gestion du circuit de visa');
 define('_AVIS_WORKFLOW_COMMENT', "Gestion du circuit d'avis");

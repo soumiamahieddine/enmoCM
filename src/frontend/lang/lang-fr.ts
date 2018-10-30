@@ -451,7 +451,7 @@ export const LANG_FR = {
     "secondLevelUpdated"                : "Sous-chemise mise à jour",
     "selectAll"                         : "Sélectionner tout",
     "selectedDocumentStatus"            : "Statut du document à prendre en compte",
-    "sendmail"                          : "Envoi de courriels",
+    "sendmail"                          : "Envoi de courriels et plis numériques",
     "sendTo"                            : "Envoyer à",
     "september"                         : "Septembre",
     "septemberShort"                    : "Sept.",
