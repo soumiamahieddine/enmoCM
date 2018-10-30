@@ -110,7 +110,7 @@ class CurlModel
         $curl = curl_init();
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
-
+        $error = curl_error($curl);
         $infos = curl_getinfo($curl);
 
         $cookies = [];
@@ -123,7 +123,7 @@ class CurlModel
             $rawResponse = substr($rawResponse, $infos['header_size']);
         }
 
-        return ['response' => simplexml_load_string($rawResponse), 'infos' => $infos, 'cookies' => $cookies];
+        return ['response' => simplexml_load_string($rawResponse), 'infos' => $infos, 'cookies' => $cookies, 'raw' => $rawResponse, 'error' => $error];
     }
 
     public static function getConfigByCallId(array $aArgs)
