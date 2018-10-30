@@ -711,7 +711,7 @@ if ($stmt->rowCount() == 0) {
                         }
                     }
 
-                    echo "<textarea name='contact' id='contact' rows='3' class='{$disabledClass}' {$disabledAttr}";
+                    echo "<textarea name='contact' id='contact' rows='3' placeholder='"._CONTACTS_USERS_SEARCH."' class='{$disabledClass}' {$disabledAttr}";
                     if (!empty($rate['color'])) {
                         echo ' style="background-color:'.$rate['color'].'" ';
                     }
@@ -808,7 +808,7 @@ if ($stmt->rowCount() == 0) {
                         }
                     }
                     echo '<div class="typeahead__container" style="width: 206px;"><div class="typeahead__field"><span class="typeahead__query">';
-                    echo "<textarea name='sender_recipient' id='sender_recipient' rows='3' class='{$disabledClass}' {$disabledAttr} style='font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 11px;padding: 5px;width: 206px;max-width: 206px;";
+                    echo "<textarea name='sender_recipient' id='sender_recipient' placeholder='"._CONTACTS_USERS_SEARCH."' rows='3' class='{$disabledClass}' {$disabledAttr} style='font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 11px;padding: 5px;width: 206px;max-width: 206px;";
                     if (!empty($rate['color'])) {
                         echo ' ;background-color:'.$rate['color'].' ';
                     }
