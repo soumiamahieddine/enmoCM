@@ -16,6 +16,7 @@ namespace SrcCore\models;
 
 class DatabasePDO
 {
+    protected static $_instances    = [];
     private static $pdo             = null;
     private static $type            = null;
     private static $preparedQueries = [];
@@ -25,6 +26,11 @@ class DatabasePDO
     {
         if (!empty(self::$pdo)) {
             return;
+        }
+
+        $persistent = true;
+        if ($args['persistent'] == false) {
+            $persistent = false;
         }
 
         $server = '';
@@ -100,7 +106,7 @@ class DatabasePDO
         }
 
         $options = [
-            \PDO::ATTR_PERSISTENT   => true,
+            \PDO::ATTR_PERSISTENT   => $persistent,
             \PDO::ATTR_ERRMODE      => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_CASE         => \PDO::CASE_LOWER
         ];
@@ -119,6 +125,18 @@ class DatabasePDO
         if (self::$type == 'ORACLE') {
             $this->query("alter session set nls_date_format='dd-mm-yyyy HH24:MI:SS'");
         }
+
+        self::$_instances[] = $this;
+    }
+
+    /**
+     * Destroy all objects of the class
+     * 
+     * @return bool
+     */
+    public function __destruct()
+    {
+        unset(self::$_instances[array_search($this, self::$_instances, true)]);
     }
 
     public function query($queryString, array $data = [])
@@ -153,14 +171,25 @@ class DatabasePDO
 
             $query->execute($data);
         } catch (\PDOException $PDOException) {
-            $param = implode(', ', $data);
+            if (strpos($PDOException->getMessage(), 'Admin shutdown: 7') !== false) {
+                $db = self::Database(['persistent' => false]);
+                if (empty($db::$preparedQueries[$queryString])) {
+                    $query = $db::$pdo->prepare($queryString);
+                    self::$preparedQueries[$queryString] = $query;
+                } else {
+                    $query = $db::$preparedQueries[$queryString];
+                }
+                $query->execute($data);
 
-            $file = fopen('queries_error.log', 'a');
-            fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
-            fwrite($file, '[' . date('Y-m-d H:i:s') . "] [{$param}]" . PHP_EOL);
-            fclose($file);
+            } else {
+                $param = implode(', ', $data);
+                $file = fopen('queries_error.log', 'a');
+                fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
+                fwrite($file, '[' . date('Y-m-d H:i:s') . "] [{$param}]" . PHP_EOL);
+                fclose($file);
 
-            throw new \Exception($PDOException->getMessage());
+                throw new \Exception($PDOException->getMessage());
+            }
         }
 
         return $query;

@@ -51,8 +51,12 @@ class Database extends functions
     /**
      * Constructor. Connects to the database if connection parameters are available in the session config 
      */
-    public function __construct()
+    public function __construct($params=[])
     {
+        $persistent = true;
+        if ($params['persistent'] == false) {
+            $persistent = false;
+        }
         $args = func_get_args();
         if (count($args) < 1 || empty($args[0])) {
             if (isset($_SESSION['config']['databaseserver'])) {
@@ -186,7 +190,7 @@ class Database extends functions
 
         // Set options
         $options = array (
-            PDO::ATTR_PERSISTENT    => true,
+            PDO::ATTR_PERSISTENT    => $persistent,
             PDO::ATTR_ERRMODE       => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_CASE          => PDO::CASE_LOWER
         );
@@ -375,10 +379,12 @@ class Database extends functions
             try {
                 $this->stmt = $this->prepare($queryString);
                 preg_match_all("/\?|\:/", $queryString, $matches, PREG_OFFSET_CAPTURE);
+                $withParams = false;
                 if (empty($matches[0])) {
                     //echo $queryString;
                     $executed = $this->stmt->execute();
                 } else {
+                    $withParams = true;
                     $executed = $this->stmt->execute($parameters);
                 }
             } catch (PDOException $PDOException) {
@@ -387,31 +393,41 @@ class Database extends functions
 
                     return false;
                 } else {
-                    if ($_SESSION['config']['debug'] == 'true') {
-                        $_SESSION['error'] = $PDOException->getMessage();
-                        $_SESSION['error'] .= ' ====================== ';
-                        $_SESSION['error'] .= $queryString;
-                        $_SESSION['error'] .= ' ====================== ';
-                        $_SESSION['error'] .= $PDOException->getTraceAsString();
-                        //echo $queryString;
-                        //var_export($parameters);
-                        $file = fopen('queries_error.log', a);
-                        fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
-                        $param = explode('?', $queryString);
-                        $paramNew = [];
-                        $paramQuery = '';
-                        for ($i=1;$i<count($param);$i++) {
-                            if ($i==(count($param)-1)) {
-                                $paramQuery .= "'" . $parameters[$i-1] . "'";
-                            } else {
-                                $paramQuery .= "'" . $parameters[$i-1] . "', ";
-                            }
+                    if (strpos($PDOException->getMessage(), 'Admin shutdown: 7') !== false) {
+                        //echo 'catch error:' . $PDOException->getMessage() .  '<br />';
+                        $db = self::Database(['persistent' => false]);
+                        if ($withParams) {
+                            $executed = $db->stmt->execute($parameters);
+                        } else {
+                            $executed = $db->stmt->execute();
                         }
-                        $queryString = $param[0] . ' ' . $paramQuery . ' ' . $param[count($param)-1];
-                        fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
-                        fclose($file);
+                    } else {
+                        if ($_SESSION['config']['debug'] == 'true') {
+                            $_SESSION['error'] = $PDOException->getMessage();
+                            $_SESSION['error'] .= ' ====================== ';
+                            $_SESSION['error'] .= $queryString;
+                            $_SESSION['error'] .= ' ====================== ';
+                            $_SESSION['error'] .= $PDOException->getTraceAsString();
+                            //echo $queryString;
+                            //var_export($parameters);
+                            $file = fopen('queries_error.log', a);
+                            fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
+                            $param = explode('?', $queryString);
+                            $paramNew = [];
+                            $paramQuery = '';
+                            for ($i=1;$i<count($param);$i++) {
+                                if ($i==(count($param)-1)) {
+                                    $paramQuery .= "'" . $parameters[$i-1] . "'";
+                                } else {
+                                    $paramQuery .= "'" . $parameters[$i-1] . "', ";
+                                }
+                            }
+                            $queryString = $param[0] . ' ' . $paramQuery . ' ' . $param[count($param)-1];
+                            fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
+                            fclose($file);
+                        }
+                        throw $PDOException; 
                     }
-                    throw $PDOException;
                 }
             }
         }
