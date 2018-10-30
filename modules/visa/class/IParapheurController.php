@@ -97,7 +97,7 @@ class IParapheurController
             $attachmentPath         = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $attachmentInfo['docserver_id'], 'select' => ['path_template']]);
             $attachmentFilePath     = $attachmentPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachmentInfo['path']) . $attachmentInfo['filename'];
             $dossierId              = $attachments[$i]['res_id'] . '_' . rand(0001,9999);
-            $dossierTitre           = 'Projet courrier numéro ' . $attachments[$i]['res_id'];
+            $dossierTitre           = _PROJECT_NUMBER . $attachments[$i]['res_id'];
 
             $mainResource = \Resource\models\ResModel::getExtById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
             if (empty($mainResource['process_limit_date'])) {
@@ -191,12 +191,12 @@ class IParapheurController
             echo '[' . $response->MessageRetour->severite . ']' . $response->MessageRetour->message;
             return false;
         }else{
-            $returnedDocumentId = (string) $response -> DossierID;
+            $returnedDocumentId = (string) $response->DossierID;
             if($aArgs['documentId'] !== $returnedDocumentId){
                 // TODO gestion d'une potentielle erreur
                 return false;
             }else{
-                $b64FileContent = (string)$response -> DocPrincipal;
+                $b64FileContent = (string)$response->DocPrincipal;
                 return ['b64FileContent' => $b64FileContent, 'documentId' => $returnedDocumentId];
             }
         }
@@ -233,7 +233,7 @@ class IParapheurController
                    foreach ($response->LogDossier as $res){    // Loop on all steps of the documents (prepared, send to signature, signed etc...)
                        $status = $res->status;
                        if ($status == $aArgs['config']['data']['visaState'] || $status == $aArgs['config']['data']['signState']) {
-                           $noteContent .= $res->nom . ' : ' . $res -> annotation . PHP_EOL;
+                           $noteContent .= $res->nom . ' : ' . $res->annotation . PHP_EOL;
 
                            $response = self::download([
                                'config' => $aArgs['config'],
@@ -245,7 +245,7 @@ class IParapheurController
                            $aArgs['idsToRetrieve']['noVersion'][$noVersion->res_id]->noteContent = $noteContent;
                            if($status == $aArgs['config']['data']['signState']) break;
                        } else if ($status == $aArgs['config']['data']['refusedVisa'] || $status == $aArgs['config']['data']['refusedSign']) {
-                           $noteContent .= $res->nom . ' : ' . $res -> annotation . PHP_EOL;
+                           $noteContent .= $res->nom . ' : ' . $res->annotation . PHP_EOL;
                            $aArgs['idsToRetrieve']['noVersion'][$noVersion->res_id]->status = 'refused';
                            $aArgs['idsToRetrieve']['noVersion'][$noVersion->res_id]->noteContent = $noteContent;
                            break;
@@ -288,7 +288,7 @@ class IParapheurController
                     foreach ($response->LogDossier as $res){    // Loop on all steps of the documents (prepared, send to signature, signed etc...)
                         $status = $res->status;
                         if ($status == $aArgs['config']['data']['visaState'] || $status == $aArgs['config']['data']['signState']) {
-                            $noteContent .= $res->nom . ' : ' . $res -> annotation . PHP_EOL;
+                            $noteContent .= $res->nom . ' : ' . $res->annotation . PHP_EOL;
                             $response = self::download([
                                 'config' => $aArgs['config'],
                                 'documentId' => $isVersion->external_id
@@ -299,7 +299,7 @@ class IParapheurController
                             $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->noteContent = $noteContent;
                             if($status == $aArgs['config']['data']['signState']) break;
                         } else if ($status == $aArgs['config']['data']['refusedVisa'] || $status == $aArgs['config']['data']['refusedSign']) {
-                            $noteContent .= $res->nom . ' : ' . $res -> annotation . PHP_EOL;
+                            $noteContent .= $res->nom . ' : ' . $res->annotation . PHP_EOL;
                             $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->status = 'refused';
                             $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->noteContent = $noteContent;
                             break;

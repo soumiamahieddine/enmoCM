@@ -40,7 +40,7 @@ class FastParapheurController
             $isError    = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
             if(!empty($isError ->Fault[0])){
                 // TODO gestion des erreurs
-                echo _PJ_NUMBER . $noVersion -> res_id . ' ' . _AND_DOC_ORIG . $noVersion -> res_id_master . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
+                echo _PJ_NUMBER . $noVersion->res_id . ' ' . _AND_DOC_ORIG . $noVersion->res_id_master . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
                 continue;
             }
 
@@ -60,7 +60,7 @@ class FastParapheurController
                         'table'     => ['listinstance', 'users'],
                         'left_join' => ['item_id = user_id',],
                         'where'     => ['res_id = ?', 'item_mode = ?'],
-                        'data'      => [$aArgs['idsToRetrieve']['noVersion'][$noVersion->res_id] -> res_id_master, 'sign']
+                        'data'      => [$aArgs['idsToRetrieve']['noVersion'][$noVersion->res_id]->res_id_master, 'sign']
                     ])[0];
 
                     $response = self::getRefusalMessage(['config' => $aArgs['config'], 'documentId' => $noVersion->external_id]);
@@ -96,7 +96,7 @@ class FastParapheurController
             $isError    = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
             if(!empty($isError ->Fault[0])){
                 // TODO gestion des erreurs
-                echo _PJ_NUMBER . $isVersion -> res_id . ' ' . _AND_DOC_ORIG . $isVersion -> res_id_master . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
+                echo _PJ_NUMBER . $isVersion->res_id . ' ' . _AND_DOC_ORIG . $isVersion->res_id_master . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
                 continue;
             }
 
@@ -115,7 +115,7 @@ class FastParapheurController
                         'table'     => ['listinstance', 'users'],
                         'left_join' => ['item_id = user_id',],
                         'where'     => ['res_id = ?', 'item_mode = ?'],
-                        'data'      => [$aArgs['idsToRetrieve']['noVersion'][$noVersion->res_id] -> res_id_master, 'sign']
+                        'data'      => [$aArgs['idsToRetrieve']['noVersion'][$noVersion->res_id]->res_id_master, 'sign']
                     ])[0];
                     $response = self::getRefusalMessage(['config' => $aArgs['config'], 'documentId' => $isVersion->external_id]);
                     $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->status = 'refused';
@@ -177,13 +177,12 @@ class FastParapheurController
             $attachmentFileName     = 'projet_courrier_' . $attachments[$i]['res_id_master'] . '_' . rand(0001,9999) . '.pdf';
 
             $zip            = new ZipArchive();
-            $zipFilePath    = $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR . 'apps'
-                . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR
+            $tmpPath        = \SrcCore\models\CoreConfigModel::getTmpPath();
+            $zipFilePath    = $tmpPath . DIRECTORY_SEPARATOR
                 . $attachmentFileName . '.zip';  // The zip file need to have the same name as the attachment we want to sign
 
             if ($zip->open($zipFilePath, ZipArchive::CREATE)!==TRUE) {
-                exit("Impossible d'ouvrir le fichier <$zipFilePath>\n");
+                exit(_ERROR_CREATE_ZIP . "<$zipFilePath>\n");
             }
             $zip->addFile($attachmentFilePath, $attachmentFileName);
 
@@ -272,12 +271,12 @@ class FastParapheurController
             return false;
         }else{
             $response = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://sei.ws.fast.cdc.com/')->downloadResponse->children()->return;
-            $returnedDocumentId = (string) $response -> documentId;
+            $returnedDocumentId = (string) $response->documentId;
             if($aArgs['documentId'] !== $returnedDocumentId){
                 // TODO gestion d'une potentiel erreur
                 return false;
             }else{
-                $b64FileContent = $response -> content;
+                $b64FileContent = $response->content;
                 return ['b64FileContent' => (string)$b64FileContent, 'documentId' => $returnedDocumentId];
             }
         }
