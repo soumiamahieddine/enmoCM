@@ -16,7 +16,7 @@ namespace SrcCore\models;
 
 class DatabasePDO
 {
-    protected static $_instances    = [];
+
     private static $pdo             = null;
     private static $type            = null;
     private static $preparedQueries = [];
@@ -125,18 +125,6 @@ class DatabasePDO
         if (self::$type == 'ORACLE') {
             $this->query("alter session set nls_date_format='dd-mm-yyyy HH24:MI:SS'");
         }
-
-        self::$_instances[] = $this;
-    }
-
-    /**
-     * Destroy all objects of the class
-     * 
-     * @return bool
-     */
-    public function __destruct()
-    {
-        unset(self::$_instances[array_search($this, self::$_instances, true)]);
     }
 
     public function query($queryString, array $data = [])
