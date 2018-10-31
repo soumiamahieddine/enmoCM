@@ -154,19 +154,25 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             }
         }
 
-        foreach ($attachmentToFreeze as $resId => $externalId) {
-            \Attachment\models\AttachmentModel::freezeAttachment(['resId' => $resId, 'table' => 'res_attachments', 'externalId' => $externalId]);
-        }
+        if($attachmentToFreeze !== false) {
+            foreach ($attachmentToFreeze as $resId => $externalId) {
+                \Attachment\models\AttachmentModel::freezeAttachment([
+                    'resId' => $resId,
+                    'table' => 'res_attachments',
+                    'externalId' => $externalId
+                ]);
+            }
 
-        $stmt = $db->query('SELECT status FROM res_letterbox WHERE res_id = ?', array($res_id));
-        $resource = $stmt->fetchObject();
-        $message = '';
-        if ($resource->status == 'EVIS' || $resource->status == 'ESIG') {
-            $sequence = $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
-            $stepDetails = array();
-            $stepDetails = $circuit_visa->getStepDetails($res_id, $coll_id, 'VISA_CIRCUIT', $sequence);
-    
-            $message = $circuit_visa->processVisaWorkflow(['stepDetails' => $stepDetails, 'res_id' => $res_id]);
+            $stmt = $db->query('SELECT status FROM res_letterbox WHERE res_id = ?', array($res_id));
+            $resource = $stmt->fetchObject();
+            $message = '';
+            if ($resource->status == 'EVIS' || $resource->status == 'ESIG') {
+                $sequence = $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
+                $stepDetails = array();
+                $stepDetails = $circuit_visa->getStepDetails($res_id, $coll_id, 'VISA_CIRCUIT', $sequence);
+
+                $message = $circuit_visa->processVisaWorkflow(['stepDetails' => $stepDetails, 'res_id' => $res_id]);
+            }
         }
     }
 
