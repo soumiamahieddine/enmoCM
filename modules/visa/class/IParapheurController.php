@@ -87,8 +87,8 @@ class IParapheurController
 
         $attachments         = \Attachment\models\AttachmentModel::getOnView([
             'select'         => ['res_id', 'res_id_version', 'title', 'attachment_type','path'],
-            'where'         => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE', "format = 'pdf'"],
-            'data'          => [$aArgs['resIdMaster'], ['incoming_mail_attachment', 'print_folder']]
+            'where'          => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE', "format = 'pdf'"],
+            'data'           => [$aArgs['resIdMaster'], ['incoming_mail_attachment', 'print_folder', 'signed_response']]
         ]);
 
         for($i = 0; $i < count($attachments); $i++){
