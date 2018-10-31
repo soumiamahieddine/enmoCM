@@ -154,7 +154,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             }
         }
 
-        if($attachmentToFreeze !== false) {
+        if (!empty($attachmentToFreeze)) {
             foreach ($attachmentToFreeze as $resId => $externalId) {
                 \Attachment\models\AttachmentModel::freezeAttachment([
                     'resId' => $resId,
