@@ -14,7 +14,7 @@ function manage_send($aId)
         foreach ($config['rawData'] as $value) {
             $select[] = $value;
         }
-        $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$aId[0]]]);
+        $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
 
         \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendData', 'bodyData' => $document[0]]);
 
