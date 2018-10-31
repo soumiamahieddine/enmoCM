@@ -325,6 +325,7 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     $cookie = \SrcCore\models\AuthenticationModel::getCookieAuth();
     if (empty($cookie)) {
         header('location: index.php?display=true&page=logout&logout=true');
+        exit();
     }
     chdir('../..');
     $user = \User\models\UserModel::getByUserId(['userId' => $cookie['userId'], 'select' => ['password_modification_date', 'change_password', 'status']]);

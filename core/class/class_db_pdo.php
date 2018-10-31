@@ -51,12 +51,8 @@ class Database extends functions
     /**
      * Constructor. Connects to the database if connection parameters are available in the session config 
      */
-    public function __construct($params=[])
+    public function __construct()
     {
-        $persistent = true;
-        if ($params['persistent'] == false) {
-            $persistent = false;
-        }
         $args = func_get_args();
         if (count($args) < 1 || empty($args[0])) {
             if (isset($_SESSION['config']['databaseserver'])) {
@@ -129,7 +125,7 @@ class Database extends functions
                 if (!isset($args[0]['password'])) {
                     $this->password = 'postgres';
                 } else {
-                    $this->password = $args[0]['pass'];
+                    $this->password = $args[0]['password'];
                 }
                 if (! isset($args[0]['base'])) {
                     $this->database = '';
@@ -190,11 +186,11 @@ class Database extends functions
 
         // Set options
         $options = array (
-            PDO::ATTR_PERSISTENT    => $persistent,
+            PDO::ATTR_PERSISTENT    => true,
             PDO::ATTR_ERRMODE       => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_CASE          => PDO::CASE_LOWER
         );
-        // Create a new PDO instanace
+        // Create a new PDO instance
         try {
             $this->pdo = new PDO($this->dsn, $this->user, $this->password, $options);
         } catch (PDOException $PDOException) {
@@ -316,7 +312,9 @@ class Database extends functions
      */
     public function query($queryString, $parameters=null, $catchExceptions=false, $multi=false)
     {
+        $originalQuery = $queryString;
         if ($parameters) {
+            $originalData = $parameters;
             foreach ($parameters as $key => $value) {
                 if (is_array($value)) {
                     //echo $key . $value. '<br />';
@@ -395,11 +393,11 @@ class Database extends functions
                 } else {
                     if (strpos($PDOException->getMessage(), 'Admin shutdown: 7') !== false) {
                         //echo 'catch error:' . $PDOException->getMessage() .  '<br />';
-                        $db = self::Database(['persistent' => false]);
-                        if ($withParams) {
-                            $executed = $db->stmt->execute($parameters);
+                        $db = new Database();
+                        if ($originalData) {
+                            $db->query($originalQuery, $originalData);
                         } else {
-                            $executed = $db->stmt->execute();
+                            $db->query($originalQuery);
                         }
                     } else {
                         if ($_SESSION['config']['debug'] == 'true') {
