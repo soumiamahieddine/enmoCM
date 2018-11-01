@@ -45,7 +45,7 @@
     "@angular/router": "^6.1.10",
     "@types/datatables.net": "^1.10.13",
     "@types/jquery": "^2.0.51",
-    "@types/node": "^7.0.71",
+    "@types/node": "^7.10.1",
     "hammerjs": "^2.0.8",
     "ng2-dnd": "^5.0.2",
     "node-sass": "^4.9.4",
