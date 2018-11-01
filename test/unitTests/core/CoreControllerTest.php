@@ -52,7 +52,7 @@ class CoreControllerTest extends TestCase
         $this->assertInternalType('int', $responseBody->user->id);
         $this->assertSame("superadmin", $responseBody->user->user_id);
         $this->assertSame("Super", $responseBody->user->firstname);
-        $this->assertSame("Admin", $responseBody->user->lastname);
+        $this->assertSame("ADMIN", $responseBody->user->lastname);
         $this->assertInternalType('array', $responseBody->user->groups);
         $this->assertInternalType('array', $responseBody->user->entities);
         $this->assertInternalType('array', $responseBody->user->indexingGroups);

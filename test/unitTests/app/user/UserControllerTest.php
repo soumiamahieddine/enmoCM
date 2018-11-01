@@ -601,7 +601,7 @@ class UserControllerTest extends TestCase
         $response       = $userController->deleteCurrentUserEmailSignature($request, new \Slim\Http\Response(), ['id' => self::$idEmailSignature]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertNotEmpty($responseBody->emailSignatures);
+        $this->assertNotNull($responseBody->emailSignatures);
 
         $titleEmailSignature = '';
         $htmlBodyEmailSignature = '';
