@@ -201,4 +201,20 @@ class ListTemplateControllerTest extends TestCase
 
         $this->assertSame('List template not found', $responseBody->errors);
     }
+
+    public function testGetTypesRoles()
+    {
+        $listTemplateController = new \Entity\controllers\ListTemplateController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $listTemplateController->getTypeRoles($request, new \Slim\Http\Response(), ['typeId' => 'entity_id']);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        foreach ($responseBody->roles as $value) {
+            $this->assertNotEmpty($value->id);
+            $this->assertNotEmpty($value->label);
+            $this->assertInternalType("bool", $value->available);
+        }
+    }
 }

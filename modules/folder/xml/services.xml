@@ -14,6 +14,7 @@
     <SERVICE>
         <id>view_folder_tree</id>
         <name>_VIEW_FOLDER_TREE</name>
+        <comment>_VIEW_FOLDER_TREE</comment>
         <servicepage>index.php?page=search_folder_tree&amp;module=folder</servicepage>
         <servicetype>menu</servicetype>
         <system_service>false</system_service>

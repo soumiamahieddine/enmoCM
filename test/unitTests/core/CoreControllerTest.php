@@ -39,6 +39,32 @@ class CoreControllerTest extends TestCase
     //     $this->assertNotEmpty($responseBody->scriptsToinject);
     // }
 
+    public function testGetHeader()
+    {
+        $coreController = new \SrcCore\controllers\CoreController();
+
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $coreController->getHeader($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertNotEmpty($responseBody->user);
+        $this->assertInternalType('int', $responseBody->user->id);
+        $this->assertSame("superadmin", $responseBody->user->user_id);
+        $this->assertSame("Super", $responseBody->user->firstname);
+        $this->assertSame("Admin", $responseBody->user->lastname);
+        $this->assertInternalType('array', $responseBody->user->groups);
+        $this->assertInternalType('array', $responseBody->user->entities);
+        $this->assertInternalType('array', $responseBody->user->indexingGroups);
+        $this->assertNotEmpty($responseBody->menu);
+
+        foreach ($responseBody->menu as $value) {
+            $this->assertNotEmpty($value->id);
+            $this->assertNotEmpty($value->name);
+            $this->assertNotEmpty($value->comment);
+        }
+    }
+
     public function testGetAdministration()
     {
         $coreController = new \SrcCore\controllers\CoreController();

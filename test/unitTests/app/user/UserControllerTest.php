@@ -9,10 +9,10 @@
 
 use PHPUnit\Framework\TestCase;
 
-
 class UserControllerTest extends TestCase
 {
     private static $id = null;
+    private static $idEmailSignature = null;
 
 
     public function testGet()
@@ -340,6 +340,18 @@ class UserControllerTest extends TestCase
         $this->assertEmpty($responseBody->entities);
     }
 
+    public function testGetStatusByUserId()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getStatusByUserId($request, new \Slim\Http\Response(), ['userId' => 'TEST-CKENT']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('OK', $responseBody->status);
+    }
+
     public function testUpdateStatus()
     {
         $userController = new \User\controllers\UserController();
@@ -364,6 +376,18 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
+        $this->assertSame('ABS', $responseBody->status);
+    }
+
+    public function testGetStatusByUserIdAfterUpdate()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getStatusByUserId($request, new \Slim\Http\Response(), ['userId' => 'TEST-CKENT']);
+        $responseBody = json_decode((string)$response->getBody());
+
         $this->assertSame('ABS', $responseBody->status);
     }
 
@@ -413,7 +437,6 @@ class UserControllerTest extends TestCase
         $this->assertSame(20, $responseBody->quota->userQuota);
         $this->assertNotNull($responseBody->quota->actives);
         $this->assertInternalType('int', $responseBody->quota->inactives);
-
     }
 
     public function testUserQuota()
@@ -489,6 +512,108 @@ class UserControllerTest extends TestCase
         ];
         $fullRequest    = \httpRequestCustom::addContentInBody($aArgs, $request);
         $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
+    }
+
+    public function testCreateEmailSignature()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'title'    => 'Titre email signature TU 12345',
+            'htmlBody' => '<p>Body Email Signature</p>'
+        ];
+        $fullRequest    = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response = $userController->createCurrentUserEmailSignature($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertNotEmpty($responseBody->emailSignatures);
+
+        $titleEmailSignature = '';
+        $htmlBodyEmailSignature = '';
+        foreach ($responseBody->emailSignatures as $value) {
+            if ($value->title == 'Titre email signature TU 12345') {
+                self::$idEmailSignature = $value->id;
+                $titleEmailSignature    = $value->title;
+                $htmlBodyEmailSignature = $value->html_body;
+            }
+        }
+        $this->assertNotEmpty(self::$idEmailSignature);
+        $this->assertInternalType('int', self::$idEmailSignature);
+        $this->assertSame('Titre email signature TU 12345', $titleEmailSignature);
+        $this->assertSame('<p>Body Email Signature</p>', $htmlBodyEmailSignature);
+
+        // ERROR
+        $aArgs = [
+            'title'    => '',
+            'htmlBody' => ''
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->createCurrentUserEmailSignature($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+    }
+
+    public function testUpdateEmailSignature()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'title'    => 'Titre email signature TU 12345 UPDATE',
+            'htmlBody' => '<p>Body Email Signature UPDATE</p>'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateCurrentUserEmailSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$idEmailSignature]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotEmpty($responseBody->emailSignature);
+        $this->assertNotEmpty($responseBody->emailSignature->id);
+        $this->assertInternalType('int', $responseBody->emailSignature->id);
+        $this->assertSame('Titre email signature TU 12345 UPDATE', $responseBody->emailSignature->title);
+        $this->assertSame('<p>Body Email Signature UPDATE</p>', $responseBody->emailSignature->html_body);
+
+        // ERROR
+        $aArgs = [
+            'title'    => '',
+            'htmlBody' => ''
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateCurrentUserEmailSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$idEmailSignature]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+    }
+
+    public function testDeleteEmailSignature()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  DELETE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $userController->deleteCurrentUserEmailSignature($request, new \Slim\Http\Response(), ['id' => self::$idEmailSignature]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertNotEmpty($responseBody->emailSignatures);
+
+        $titleEmailSignature = '';
+        $htmlBodyEmailSignature = '';
+        foreach ($responseBody->emailSignatures as $value) {
+            if ($value->title == 'Titre email signature TU 12345 UPDATE') {
+                // Check If Signature Really Deleted
+                $titleEmailSignature    = $value->title;
+                $htmlBodyEmailSignature = $value->html_body;
+            }
+        }
+        $this->assertSame('', $titleEmailSignature);
+        $this->assertSame('', $htmlBodyEmailSignature);
     }
 
     public function testDelete()

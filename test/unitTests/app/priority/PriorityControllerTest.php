@@ -13,7 +13,6 @@ class PriorityControllerTest extends TestCase
 {
     private static $id = null;
 
-
     public function testCreate()
     {
         $priorityController = new \Priority\controllers\PriorityController();
@@ -119,5 +118,25 @@ class PriorityControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('Priority not found', $responseBody->errors);
+    }
+
+    public function testGetSorted()
+    {
+        $priorityController = new \Priority\controllers\PriorityController();
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $priorityController->getSorted($request, new \Slim\Http\Response());
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->priorities);
+        $this->assertNotEmpty($responseBody->priorities);
+        
+        foreach ($responseBody->priorities as $value) {
+            $this->assertNotEmpty($value->id);
+            $this->assertNotEmpty($value->label);
+            $this->assertInternalType('int', $value->order);
+        }
     }
 }

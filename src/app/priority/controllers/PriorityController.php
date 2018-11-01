@@ -140,7 +140,7 @@ class PriorityController
             'orderBy'   => ['"order" NULLS LAST']
         ]);
 
-        return $response->withJson(['priotities' => $priorities]);
+        return $response->withJson(['priorities' => $priorities]);
     }
 
     public function updateSort(Request $request, Response $response)
