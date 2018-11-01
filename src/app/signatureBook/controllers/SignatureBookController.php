@@ -318,14 +318,14 @@ class SignatureBookController
             $attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
             $attachments[$key]['sign'] = $attachmentTypes[$value['attachment_type']]['sign'];
 
-            if(!in_array(strtoupper($value['format']), ['PDF', 'JPG', 'JPEG', 'PNG', 'GIF']) ){
+            if (!in_array(strtoupper($value['format']), ['PDF', 'JPG', 'JPEG', 'PNG', 'GIF'])) {
                 $isVersion = 'false';
             }
 
             if ($value['status'] == 'SIGN') {
-                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachments/{$viewerId}/content";
+                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachments/{$viewerId}/content?".rand();
             } else {
-                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachments/{$realId}/content";
+                $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachments/{$realId}/content?".rand();
             }
         }
 
