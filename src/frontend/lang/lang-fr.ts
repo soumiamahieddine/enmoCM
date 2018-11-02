@@ -630,7 +630,7 @@ export const LANG_FR = {
     "passwordrenewalRequired"           : "Expiration du mot de passe",
     "passwordhistoryLastUseDesc"        : "Vous ne pouvez pas utiliser les",
     "passwordhistoryLastUseDesc2"       : "dernier(s) mot(s) de passe",
-    "passwordhistoryLastUseRequired"    : "Nombre de mots de passe sauvegardé",
+    "passwordhistoryLastUseRequired"    : "Nombre de mots de passe sauvegardés",
     "passwordlockAttemptsRequired"      : "Nombre de tentatives de connexions",
     "passwordlockTimeRequired"          : "Temps de blocage",
     "securitiesAdministration"          : "Administration des sécurités",
