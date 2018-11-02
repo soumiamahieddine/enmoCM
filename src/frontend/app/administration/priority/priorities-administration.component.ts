@@ -65,7 +65,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
                 this.loading = false;
                 this.http.get(this.coreUrl + "rest/sortedPriorities")
                     .subscribe((data: any) => {
-                        this.prioritiesOrder = data['priotities'];
+                        this.prioritiesOrder = data['priorities'];
                     }, () => {
                         location.href = "index.php";
                     });

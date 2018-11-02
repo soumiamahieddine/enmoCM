@@ -1598,6 +1598,7 @@ function check_date_exp(path_manage_script, path_link){
         var res_id = $('values').value;
         var e = $("category_id");
         var category = e.options[e.selectedIndex].value;
+        var scriptAddons = '';
         new Ajax.Request(path_manage_script,
         {
             method:'post',
@@ -1613,9 +1614,12 @@ function check_date_exp(path_manage_script, path_link){
                     document.getElementById('contact_check').style.display='none';
                     document.getElementById('contactcheck').value = answer.responseText;
                 } else {
+                    if (document.getElementById('to_link') != null) {
+                        scriptAddons = "document.getElementById('to_link').click();";
+                    }
                     document.getElementById('contact_check').style.display='table-row';
                     document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">Au moins un courrier enregistré dans les "+check_days_before+" derniers jours est affecté au même contact. "+
-                                                                            "<input type='button' class='button' value='Voir' onclick=\"window.open('"+path_link+"',"+
+                                                                            "<input type='button' class='button' value='Voir' onclick=\""+scriptAddons+"window.open('"+path_link+"',"+
                                                                             " 'search_doc_for_attachment', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775');\"/></td>";
                     document.getElementById('contactcheck').value = answer.responseText;
                 }
@@ -1982,8 +1986,14 @@ function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId
                     $j("#" + inputId + "_id").val(item.id);
                 }
                 $j("#" + inputId + "_type").val(item.type);
+
                 if (!alternateVersion) {
-                    $j("#" + inputId).css('background-color', li[0].getStyle('background-color'));
+                    if (li[0].getStyle('background-color') == 'rgba(0, 0, 0, 0)') {
+                        $j("#" + inputId).css('background-color', 'white');
+                    } else {
+                        $j("#" + inputId).css('background-color', li[0].getStyle('background-color'));
+                    }
+                    
                 }
                 if(typeof cardId != 'undefined'){
                     $j("#" + cardId).css('visibility', 'visible');

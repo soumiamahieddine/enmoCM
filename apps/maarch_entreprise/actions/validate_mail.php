@@ -843,7 +843,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<td class="indexing_field">';
     $frm_str .= '<i id="sender_recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType(\'sender_recipient\',\'contactsUsers\', false);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="'._CONTACTS_USERS_LIST.'" ></i> <i id="sender_recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType(\'sender_recipient\',\'entities\', false);" style="display: inline-block;cursor:pointer;" title="'._ENTITIES_LIST.'" ></i>';
     $frm_str .= '<div class="typeahead__container"><div class="typeahead__field"><span class="typeahead__query">';
-    $frm_str .= '<input name="sender_recipient" type="text" id="sender_recipient" autocomplete="off"';
+    $frm_str .= '<input name="sender_recipient" type="text" placeholder="'._CONTACTS_USERS_SEARCH.'" id="sender_recipient" autocomplete="off"';
     if (!empty($sr['format'])) {
         $frm_str .= ' value="'. $sr['format'].'"';
     }
@@ -1424,7 +1424,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     if (!empty($sr['type']) && $sr['type'] == 'entity') {
         $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'entity\');';
     } else {
-        $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);';
+        $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false, \'sender_recipient_card\');';
     }
     $frm_str .= 'initList_hidden_input(\'department_number\', \'show_department_number\',\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display='

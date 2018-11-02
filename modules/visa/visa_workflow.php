@@ -11,6 +11,7 @@
 * @ingroup visa
 */
 require_once 'modules/visa/class/class_modules_tools.php';
+$db = new Database();
 $visa = new visa();
 $confirm = true;
 $warnMsg = '';
@@ -24,6 +25,12 @@ if ($visa->isAllAttachementSigned($_SESSION['doc_id']) == 'noAttachment') {
     $warnMsg = _NO_USER_SIGNED_DOC;
 } else if ($isMailingAttach != false) {
     $warnMsg = $isMailingAttach['nbContacts'] . " " . _RESPONSES_WILL_BE_GENERATED;
+}
+
+$stmt = $db->query("SELECT 1 FROM listinstance WHERE res_id = ? AND (item_mode = 'visa' OR item_mode = 'sign') AND process_date IS NULL", [$_SESSION['doc_id']]);
+$res = $stmt->fetchAll();
+if (empty($res) || count($res) < 2) {
+    $error_visa_workflow = true;
 }
 
 $etapes = ['empty_error'];

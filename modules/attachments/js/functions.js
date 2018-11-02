@@ -846,6 +846,7 @@ function checkEffectiveDateStatus(effectiveDateStatus) {
 }
 
 function refreshAttachmentsTab() {
+
     if ($j('#attachments_tab') && $j('#responses_tab')) {
         if ($j('#attachment_types option:selected').val() == 'simple_attachment')  {
             $j('#responses_tab').click();

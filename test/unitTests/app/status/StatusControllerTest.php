@@ -75,6 +75,25 @@ class StatusControllerTest extends TestCase
         $this->assertSame('Invalid label_status value', $responseBody->errors[0]);
     }
 
+    public function testGetById()
+    {
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $status      = new \Status\controllers\StatusController();
+
+        $response  = $status->getById($request, new \Slim\Http\Response(), ['id' => 'TEST']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotEmpty($responseBody->status[0]);
+        $this->assertSame('TEST', $responseBody->status[0]->id);
+
+        // ERROR
+        $response  = $status->getById($request, new \Slim\Http\Response(), ['id' => 'NOTFOUNDSTATUS']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('id not found', $responseBody->errors);
+    }
+
     public function testGetListUpdateDelete()
     {
         ########## GET LIST ##########
@@ -90,8 +109,6 @@ class StatusControllerTest extends TestCase
         foreach ($responseBody->statuses as $value) {
             $this->assertInternalType("int", $value->identifier);
         }
-
-        //$this->assertNotNull($responseBody->lang);
 
         $elem = $responseBody->statuses;
         end($elem);
@@ -177,7 +194,6 @@ class StatusControllerTest extends TestCase
 
         $response = $status->delete($request, new \Slim\Http\Response(), ['identifier'=> $lastIdentifier]);
 
-        //$this->assertSame((string)$response->getBody(), '[true]');
         $this->assertRegexp('/statuses/', (string)$response->getBody());
     }
 
@@ -192,6 +208,5 @@ class StatusControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->statusImages);
-        //$this->assertNotNull($responseBody->lang);
     }
 }

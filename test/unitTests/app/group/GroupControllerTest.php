@@ -9,7 +9,6 @@
 
 use PHPUnit\Framework\TestCase;
 
-
 class GroupControllerTest extends TestCase
 {
     private static $id = null;
@@ -100,6 +99,50 @@ class GroupControllerTest extends TestCase
         $this->assertSame(true, $responseBody->group->canAdminBaskets);
     }
 
+    public function testGetById()
+    {
+        $groupController = new \Group\controllers\GroupController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $groupController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotEmpty($responseBody->group);
+
+        $this->assertSame(self::$id, (string)$responseBody->group->id);
+        $this->assertSame('TEST-JusticeLeague', $responseBody->group->group_id);
+        $this->assertSame('Beyond the darkness #2', $responseBody->group->group_desc);
+        $this->assertSame('Y', $responseBody->group->enabled);
+
+        // ERROR
+        $response     = $groupController->getById($request, new \Slim\Http\Response(), ['id' => '123456789']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Group not found', $responseBody->errors);
+    }
+
+    public function testGet()
+    {
+        $groupController = new \Group\controllers\GroupController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $groupController->get($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotEmpty($responseBody->groups);
+
+        foreach ($responseBody->groups as $value) {
+            $this->assertNotEmpty($value->group_id);
+            $this->assertNotEmpty($value->group_desc);
+            $this->assertNotNull($value->users);
+            $this->assertInternalType("int", $value->id);
+        }
+    }
+
     public function testDelete()
     {
         $groupController = new \Group\controllers\GroupController();
@@ -121,5 +164,4 @@ class GroupControllerTest extends TestCase
 
         $this->assertSame('Group not found', $responseBody->errors);
     }
-
 }

@@ -99,6 +99,8 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
     $from_iframe = true;
     if (isset($_REQUEST['popup'])) {
         $_SESSION['info_contact_popup'] = "true";
+    } else {
+        $_SESSION['info_contact_popup'] = "false";
     }
 
     if (isset($_GET['seeAllAddresses'])) {

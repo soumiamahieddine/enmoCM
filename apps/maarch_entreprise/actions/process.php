@@ -158,10 +158,10 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     }
 
     //Load multicontacts
-    $query = 'SELECT c.firstname, c.lastname, c.society, c.contact_id, c.ca_id  ';
+    $query = 'SELECT c.firstname, c.lastname, c.society, c.contact_id, c.ca_id, c.contact_firstname, c.contact_lastname, c.is_corporate_person  ';
     $query .= 'FROM view_contacts c, contacts_res cres  ';
     $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar(128)) = cres.contact_id AND c.ca_id = cres.address_id ";
-    $query .= 'GROUP BY c.firstname, c.lastname, c.society, c.contact_id, c.ca_id';
+    $query .= 'GROUP BY c.firstname, c.lastname, c.society, c.contact_id, c.ca_id, c.contact_firstname, c.contact_lastname, c.is_corporate_person';
 
     $stmt = $db->query($query, array($res_id));
     $nbContacts = 0;
@@ -169,16 +169,24 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frameContacts = '{';
     while ($res = $stmt->fetchObject()) {
         $nbContacts = $nbContacts + 1;
-        $firstname = str_replace("'", "\'", $res->firstname);
-        $firstname = str_replace('"', ' ', $firstname);
-        $lastname = str_replace("'", "\'", $res->lastname);
-        $lastname = str_replace('"', ' ', $lastname);
+        if ($res->is_corporate_person == 'Y') {
+            $firstname = str_replace("'", "\'", $res->firstname);
+            $firstname = str_replace('"', ' ', $firstname);
+            $lastname = str_replace("'", "\'", $res->lastname);
+            $lastname = str_replace('"', ' ', $lastname);
+        } else {
+            $firstname = str_replace("'", "\'", $res->contact_firstname);
+            $firstname = str_replace('"', ' ', $firstname);
+            $lastname = str_replace("'", "\'", $res->contact_lastname);
+            $lastname = str_replace('"', ' ', $lastname);
+        }
         $society = str_replace("'", "\'", $res->society);
         $society = str_replace('"', ' ', $society);
         $frameContacts .= "'contact ".$nbContacts."' : '"
             .functions::xssafe($firstname).' '.functions::xssafe($lastname)
             .' '.functions::xssafe($society)." (contact)', ";
     }
+
     $query = 'select u.firstname, u.lastname, u.user_id ';
     $query .= 'from users u, contacts_res cres  ';
     $query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar(128)) = cres.contact_id ";

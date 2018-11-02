@@ -1059,6 +1059,16 @@ if (isset($_POST['add']) && $_POST['add']) {
             $js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf,print_folder&load';
         }
         $js .= '\';';
+        $js .= 'loadToolbarBadge(\'attachments_tab\',\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&origin=parent&resId='.$_SESSION['doc_id'].'&collId=letterbox_coll\');';
+        $js .= 'loadToolbarBadge(\'responses_tab\',\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=load_toolbar_attachments&responses&origin=parent&resId='.$_SESSION['doc_id'].'&collId=letterbox_coll\');';
+
+        if ($_REQUEST['attachment_types'][0] == 'simple_attachment') {
+            $js .= '$j(\'#responses_tab\').click();';
+            $js .= '$j(\'#attachments_tab\').click();';
+        } else {
+            $js .= '$j(\'#attachments_tab\').click();';
+            $js .= '$j(\'#responses_tab\').click();';
+        }
 
         //RAZ SESSIONS
         if (!isset($_SESSION['new_id'])) {

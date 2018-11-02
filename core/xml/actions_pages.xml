@@ -25,7 +25,7 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
-    <ACTIONPAGE>
+    <!-- <ACTIONPAGE>
         <ID>redirect_visa_sign</ID>
         <LABEL>_REDIRECTION_VISA_SIGN</LABEL>
         <NAME>redirect_visa_sign</NAME>
@@ -36,7 +36,7 @@ An action page is described in a ACTIONPAGE tag :
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
-    </ACTIONPAGE>
+    </ACTIONPAGE> -->
     <ACTIONPAGE>
         <ID>put_in_copy</ID>
         <LABEL>_PUT_IN_COPY</LABEL>
@@ -203,7 +203,7 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
-    <ACTIONPAGE>
+    <!-- <ACTIONPAGE>
         <ID>confirm_folder_status</ID>
         <LABEL>_CONFIRM_FOLDER_STATUS</LABEL>
         <NAME>confirm_folder_status</NAME>
@@ -224,7 +224,7 @@ An action page is described in a ACTIONPAGE tag :
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
-    </ACTIONPAGE>
+    </ACTIONPAGE> -->
     <ACTIONPAGE>
         <ID>close_mail_and_index</ID>
         <LABEL>_CLOSE_MAIL_AND_INDEX</LABEL>

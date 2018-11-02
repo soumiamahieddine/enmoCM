@@ -39,9 +39,7 @@ Documentation : https://docs.maarch.org/gitbook/html/MaarchCourrier/18.10/
 ###  Recommandations pour le php.ini
 
 error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT  
-display_errors = On  
-
+display_errors = On
 
 ## Le coin des developpeurs
 [Maarch Developer handbook](https://labs.maarch.org/maarch/MaarchCourrier/blob/master/CONTRIBUTING.md)
-

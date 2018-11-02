@@ -27,12 +27,12 @@ foreach ($roles as $role_id => $role_label) {
         continue;
     }
     if ((!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users']) && count($difflist[$role_id]['users']) > 0)
-        || (!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users']) && count($difflist[$role_id]['entities']) > 0)
+        || (!empty($difflist[$role_id]['entities']) && is_array($difflist[$role_id]['entities']) && count($difflist[$role_id]['entities']) > 0)
     ) {
         ++$empty;
         $contentDiffList .= '<h3 class="sstit" style="font-size: 1.2em;">'.$role_label.'</h3>';
 
-        if (count($difflist[$role_id]['users']) > 0) {
+        if (!empty($difflist[$role_id]['users']) && count($difflist[$role_id]['users']) > 0) {
             $contentDiffList .= '<table id="diffListUser_'.$role_id.'" cellpadding="0" cellspacing="0" border="0" class="listingsmall liste_diff spec" style="width:100%;margin:0;">';
 
             $color = ' class="col"';
@@ -62,7 +62,7 @@ foreach ($roles as $role_id => $role_label) {
                 $contentDiffList .= '<td style="width:43%;">'.$user['entity_label'].'</td>';
                 $contentDiffList .= '<td class="movedest" style="width:5%;">';
 
-                if (!isset($specific_role) && !empty($difflist['dest']['users'][0]) && $role_id != 'dest' && $origin != null && !$core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
+                if (empty($specific_role) && !empty($difflist['dest']['users'][0]) && $role_id != 'dest' && $origin != null && !$core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
                     $contentDiffList .= '<i class="fa fa-arrow-up" style="cursor:pointer;" title="'._DEST.'" onclick="moveToDest(\''.$user['user_id'].'\',\''.$role_id.'\',\''.$origin.'\');"></i>';
                 }
                 $contentDiffList .= '</td>';

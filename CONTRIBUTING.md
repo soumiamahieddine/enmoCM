@@ -76,12 +76,12 @@ Cette section vous guide lors de la soumission d'un bogue pour Maarch.
 En suivant ces directives, les responsables de la maintenance et la communauté comprennent votre rapport, reproduisent le comportement et trouvent des rapports connexes.
 
 #### Avant de soumettre un bug
-* Consultez la [http://wiki.maarch.org/Maarch_Courrier FAQ] sur le wiki. Vous pourriez peut-être trouver la cause du problème et réparer vous-même les choses. Plus important encore, vérifiez si vous pouvez reproduire le problème dans la dernière version de Maarch.
+* Consultez la [https://community.maarch.org/c/maarch-courrier/f-a-q FAQ] sur notre site communautaire. Vous pourriez peut-être trouver la cause du problème et réparer vous-même les choses. Plus important encore, vérifiez si vous pouvez reproduire le problème dans la dernière version de Maarch.
 * Déterminez dans quelle fonctionnalité posant problème doit être signalée.
 * Effectuez une recherche rapide pour voir si le problème a déjà été signalé. Si c'est le cas, ajoutez un commentaire au problème existant au lieu d'ouvrir un nouveau.
 
 
-Les bugs peuvent être soumis depuis la [http://forge.maarch.org Forge Maarch].
+Les bugs peuvent être soumis sur notre [https://community.maarch.org/c/maarch-courrier Site communautaire].
 
 ### Proposer des améliorations
 Cette section vous guide lors de la soumission d'une suggestion d'amélioration pour les produits Maarch, incluant des fonctionnalités complètement nouvelles et des améliorations mineures aux fonctionnalités existantes. 
@@ -93,7 +93,7 @@ En suivant ces directives, les responsables de la maintenance et la communauté 
 * Effectuez une recherche rapide pour voir si l'amélioration a déjà été suggérée. Si c'est le cas, ajoutez un commentaire au ticket existant au lieu d'ouvrir un nouveau.
 
 
-Les améliorations peuvent être soumises depuis la [http://forge.maarch.org Forge Maarch].
+Les améliorations peuvent être soumises sur notre [https://community.maarch.org/c/maarch-courrier Site communautaire].
 
 ### Et comment je code dans Maarch ?
-Il faut suivre le [[Maarch_Courrier/1.5/fr/Install/DeveloperHandbook|guide du développeur]].
+Il faut suivre le [[https://labs.maarch.org/maarch/MaarchCourrier/wikis/Maarch-Developer-Handbook|guide du développeur]].
