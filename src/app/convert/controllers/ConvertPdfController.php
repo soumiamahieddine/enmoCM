@@ -87,13 +87,14 @@ class ConvertPdfController
 
         copy($pathToDocument, $tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
 
-        $command = "unoconv -f pdf " . escapeshellarg($tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
-
-        
-        exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
-
-        if (!file_exists($tmpPath.$fileNameOnTmp.'.pdf')) {
-            return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
+        if (strtolower($docInfo["extension"]) != 'pdf') {
+    
+            $command = "unoconv -f pdf " . escapeshellarg($tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
+            exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
+    
+            if (!file_exists($tmpPath.$fileNameOnTmp.'.pdf')) {
+                return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
+            }
         }
         
         $storeResult = DocserverController::storeResourceOnDocServer([
