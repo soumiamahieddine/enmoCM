@@ -464,4 +464,5 @@ if (isset($_POST['delete_folder'])) {
     {
         item.style.display='block';
     }
+    $j('#index-folder').click();  
 </script>
