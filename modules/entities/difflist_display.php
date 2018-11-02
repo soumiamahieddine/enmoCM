@@ -27,12 +27,12 @@ foreach ($roles as $role_id => $role_label) {
         continue;
     }
     if ((!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users']) && count($difflist[$role_id]['users']) > 0)
-        || (!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users']) && count($difflist[$role_id]['entities']) > 0)
+        || (!empty($difflist[$role_id]['entities']) && is_array($difflist[$role_id]['entities']) && count($difflist[$role_id]['entities']) > 0)
     ) {
         ++$empty;
         $contentDiffList .= '<h3 class="sstit" style="font-size: 1.2em;">'.$role_label.'</h3>';
 
-        if (count($difflist[$role_id]['users']) > 0) {
+        if (!empty($difflist[$role_id]['users']) && count($difflist[$role_id]['users']) > 0) {
             $contentDiffList .= '<table id="diffListUser_'.$role_id.'" cellpadding="0" cellspacing="0" border="0" class="listingsmall liste_diff spec" style="width:100%;margin:0;">';
 
             $color = ' class="col"';
