@@ -1424,7 +1424,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     if (!empty($sr['type']) && $sr['type'] == 'entity') {
         $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'entity\');';
     } else {
-        $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false);';
+        $frm_str .= 'initSenderRecipientAutocomplete(\'sender_recipient\',\'contactsUsers\', false, \'sender_recipient_card\');';
     }
     $frm_str .= 'initList_hidden_input(\'department_number\', \'show_department_number\',\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display='
