@@ -33,13 +33,9 @@ class Email extends AbstractRule
 
     public function validate($input)
     {
-        if (!is_string($input)) {
-            return false;
-        }
-
         $emailValidator = $this->getEmailValidator();
         if (!$emailValidator instanceof EmailValidator) {
-            return (bool) filter_var($input, FILTER_VALIDATE_EMAIL);
+            return is_string($input) && filter_var($input, FILTER_VALIDATE_EMAIL);
         }
 
         if (!class_exists('Egulias\\EmailValidator\\Validation\\RFCValidation')) {

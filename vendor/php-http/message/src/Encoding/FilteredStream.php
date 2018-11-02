@@ -15,10 +15,7 @@ abstract class FilteredStream implements StreamInterface
 {
     const BUFFER_SIZE = 8192;
 
-    use StreamDecorator {
-        rewind as private doRewind;
-        seek as private doSeek;
-    }
+    use StreamDecorator;
 
     /**
      * @var callable
@@ -60,18 +57,11 @@ abstract class FilteredStream implements StreamInterface
      */
     public function __construct(StreamInterface $stream, $readFilterOptions = null, $writeFilterOptions = null)
     {
-        if (null !== $readFilterOptions) {
-            $this->readFilterCallback = Filter\fun($this->readFilter(), $readFilterOptions);
-        } else {
-            $this->readFilterCallback = Filter\fun($this->readFilter());
-        }
+        $this->readFilterCallback = Filter\fun($this->readFilter(), $readFilterOptions);
+        $this->writeFilterCallback = Filter\fun($this->writeFilter(), $writeFilterOptions);
 
         if (null !== $writeFilterOptions) {
-            $this->writeFilterCallback = Filter\fun($this->writeFilter(), $writeFilterOptions);
-
             @trigger_error('The $writeFilterOptions argument is deprecated since version 1.5 and will be removed in 2.0.', E_USER_DEPRECATED);
-        } else {
-            $this->writeFilterCallback = Filter\fun($this->writeFilter());
         }
 
         $this->stream = $stream;
@@ -108,7 +98,7 @@ abstract class FilteredStream implements StreamInterface
      */
     public function eof()
     {
-        return $this->stream->eof() && '' === $this->buffer;
+        return $this->stream->eof() && $this->buffer === '';
     }
 
     /**
@@ -138,7 +128,7 @@ abstract class FilteredStream implements StreamInterface
         while (!$this->eof()) {
             $buf = $this->read(self::BUFFER_SIZE);
             // Using a loose equality here to match on '' and false.
-            if (null == $buf) {
+            if ($buf == null) {
                 break;
             }
 
@@ -149,11 +139,11 @@ abstract class FilteredStream implements StreamInterface
     }
 
     /**
-     * Always returns null because we can't tell the size of a stream when we filter.
+     * {@inheritdoc}
      */
     public function getSize()
     {
-        return null;
+        return;
     }
 
     /**
@@ -162,34 +152,6 @@ abstract class FilteredStream implements StreamInterface
     public function __toString()
     {
         return $this->getContents();
-    }
-
-    /**
-     * Filtered streams are not seekable.
-     *
-     * We would need to buffer and process everything to allow seeking.
-     */
-    public function isSeekable()
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind()
-    {
-        @trigger_error('Filtered streams are not seekable. This method will start raising an exception in the next major version', E_USER_DEPRECATED);
-        $this->doRewind();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function seek($offset, $whence = SEEK_SET)
-    {
-        @trigger_error('Filtered streams are not seekable. This method will start raising an exception in the next major version', E_USER_DEPRECATED);
-        $this->doSeek($offset, $whence);
     }
 
     /**

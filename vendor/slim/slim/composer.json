@@ -47,15 +47,12 @@
             "Slim\\": "Slim"
         }
     },
-    "autoload-dev": {
-        "files": [
-          "tests/Assets/HeaderFunctions.php"
-        ]
-    },
     "scripts": {
         "test": [
-            "phpunit",
-            "phpcs"
-        ]
+            "@phpunit",
+            "@phpcs"
+        ],
+        "phpunit": "php vendor/bin/phpunit",
+        "phpcs": "php vendor/bin/phpcs"
     }
 }

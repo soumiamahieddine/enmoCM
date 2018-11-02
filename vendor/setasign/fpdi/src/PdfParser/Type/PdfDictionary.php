@@ -3,9 +3,10 @@
  * This file is part of FPDI
  *
  * @package   setasign\Fpdi
- * @copyright Copyright (c) 2018 Setasign - Jan Slabon (https://www.setasign.com)
+ * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
-  */
+ * @version   2.0.3
+ */
 
 namespace setasign\Fpdi\PdfParser\Type;
 
@@ -27,7 +28,6 @@ class PdfDictionary extends PdfType
      * @param StreamReader $streamReader
      * @param PdfParser $parser
      * @return bool|self
-     * @throws PdfTypeException
      */
     public static function parse(Tokenizer $tokenizer, StreamReader $streamReader, PdfParser $parser)
     {
@@ -41,7 +41,7 @@ class PdfDictionary extends PdfType
             }
 
             $key = $parser->readValue($token);
-            if ($key === false) {
+            if (false === $key) {
                 return false;
             }
 
@@ -62,7 +62,7 @@ class PdfDictionary extends PdfType
 
 
             $value = $parser->readValue();
-            if ($value === false) {
+            if (false === $value) {
                 return false;
             }
 
@@ -106,7 +106,6 @@ class PdfDictionary extends PdfType
      * @param string $key
      * @param PdfType|mixed|null $default
      * @return PdfNull|PdfType
-     * @throws PdfTypeException
      */
     public static function get($dictionary, $key, PdfType $default = null)
     {
@@ -126,7 +125,6 @@ class PdfDictionary extends PdfType
      *
      * @param mixed $dictionary
      * @return self
-     * @throws PdfTypeException
      */
     public static function ensure($dictionary)
     {

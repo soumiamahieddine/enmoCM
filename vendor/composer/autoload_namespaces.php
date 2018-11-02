@@ -11,5 +11,4 @@ return array(
     'Zend_Search' => array($vendorDir . '/zf1/zend-search/library'),
     'Zend_Exception' => array($vendorDir . '/zf1/zend-exception/library'),
     'Pimple' => array($vendorDir . '/pimple/pimple/src'),
-    'Gitlab\\' => array($vendorDir . '/m4tthumphrey/php-gitlab-api/lib'),
 );

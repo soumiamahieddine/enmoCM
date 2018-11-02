@@ -3,9 +3,10 @@
  * This file is part of FPDI
  *
  * @package   setasign\Fpdi
- * @copyright Copyright (c) 2018 Setasign - Jan Slabon (https://www.setasign.com)
+ * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
-  */
+ * @version   2.0.3
+ */
 
 namespace setasign\Fpdi\PdfParser;
 
@@ -74,7 +75,7 @@ class Tokenizer
     public function getNextToken()
     {
         $token = \array_pop($this->stack);
-        if ($token !== null) {
+        if (null !== $token) {
             return $token;
         }
 
@@ -89,7 +90,7 @@ class Tokenizer
             $byte === "\x09" ||
             $byte === "\x00"
         ) {
-            if ($this->leapWhiteSpaces() === false) {
+            if (false === $this->leapWhiteSpaces()) {
                 return false;
             }
             $byte = $this->streamReader->readByte();

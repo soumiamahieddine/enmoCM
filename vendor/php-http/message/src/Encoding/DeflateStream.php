@@ -2,7 +2,6 @@
 
 namespace Http\Message\Encoding;
 
-use Clue\StreamFilter as Filter;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -18,10 +17,7 @@ class DeflateStream extends FilteredStream
      */
     public function __construct(StreamInterface $stream, $level = -1)
     {
-        parent::__construct($stream, ['window' => -15, 'level' => $level]);
-
-        // @deprecated will be removed in 2.0
-        $this->writeFilterCallback = Filter\fun($this->writeFilter(), ['window' => -15]);
+        parent::__construct($stream, ['window' => -15, 'level' => $level], ['window' => -15]);
     }
 
     /**

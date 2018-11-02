@@ -52,8 +52,6 @@ class IntValTest extends \PHPUnit_Framework_TestCase
             ['165'],
             [123456],
             [PHP_INT_MAX],
-            ['06'],
-            ['0']
         ];
     }
 

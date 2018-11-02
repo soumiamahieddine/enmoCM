@@ -93,10 +93,6 @@ class PostalCodeTest extends \PHPUnit_Framework_TestCase
             ['PL', '99-300'],
             ['NL', '1012 GX'],
             ['NL', '1012GX'],
-            ['PT', '3660-606'],
-            ['PT', '3660606'],
-            ['CO', '110231'],
-            ['KR', '03187'],
         ];
     }
 
@@ -131,8 +127,6 @@ class PostalCodeTest extends \PHPUnit_Framework_TestCase
             ['US', '021 79'],
             ['YE', '02179'],
             ['PL', '99300'],
-            ['KR', '548940'],
-            ['KR', '548-940'],
         ];
     }
 }
