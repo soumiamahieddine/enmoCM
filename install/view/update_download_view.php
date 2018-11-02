@@ -22,7 +22,7 @@ if ($_SESSION['user']['UserId'] <> 'superadmin') {
 }
 
 //retrives tags
-$client = new \Gitlab\Client('https://labs.maarch.org/api/v4/');
+$client = \Gitlab\Client::create('https://labs.maarch.org/api/v4/');
 
 $tags = $client->api('tags')->all('12');
 
