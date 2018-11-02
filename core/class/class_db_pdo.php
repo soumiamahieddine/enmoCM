@@ -19,7 +19,7 @@
  */
 /**
  * Class for database queries
- * 
+ *
  * @package Core
  */
 
@@ -34,7 +34,7 @@ class Database extends functions
      */
     private static $preparedStmt = array();
 
-    public  $driver;
+    public $driver;
     private $server;
     private $port;
     private $user;
@@ -49,7 +49,7 @@ class Database extends functions
     private $stmt;
 
     /**
-     * Constructor. Connects to the database if connection parameters are available in the session config 
+     * Constructor. Connects to the database if connection parameters are available in the session config
      */
     public function __construct()
     {
@@ -71,11 +71,11 @@ class Database extends functions
                 $this->database = $_SESSION['config']['databasename'];
             }
             if (isset($_SESSION['config']['databasetype'])) {
-                switch($_SESSION['config']['databasetype']) {
-                    case 'POSTGRESQL': 
+                switch ($_SESSION['config']['databasetype']) {
+                    case 'POSTGRESQL':
                         $this->driver = 'pgsql';
                         break;
-                    case 'MYSQL': 
+                    case 'MYSQL':
                         $this->driver = 'mysql';
                         break;
 
@@ -84,7 +84,7 @@ class Database extends functions
                         break;
 
                     default:
-                        print_r('DRIVER ERROR: Unknown database driver ' 
+                        print_r('DRIVER ERROR: Unknown database driver '
                             . $_SESSION['config']['databasetype']);
                 }
             }
@@ -96,11 +96,11 @@ class Database extends functions
                 } else {
                     $this->server = $args[0]['server'];
                 }
-                switch($args[0]['databasetype']) {
-                    case 'POSTGRESQL': 
+                switch ($args[0]['databasetype']) {
+                    case 'POSTGRESQL':
                         $this->driver = 'pgsql';
                         break;
-                    case 'MYSQL': 
+                    case 'MYSQL':
                         $this->driver = 'mysql';
                         break;
 
@@ -109,7 +109,7 @@ class Database extends functions
                         break;
 
                     default:
-                        print_r('DRIVER ERROR: Unknown database driver ' 
+                        print_r('DRIVER ERROR: Unknown database driver '
                             . $_SESSION['config']['databasetype']);
                 }
                 if (!isset($args[0]['port'])) {
@@ -133,17 +133,17 @@ class Database extends functions
                     $this->database = $args[0]['base'];
                 }
                 $errorArgs = false;
-            } else if (is_string($args[0]) && file_exists($args[0])) {
+            } elseif (is_string($args[0]) && file_exists($args[0])) {
                 $xmlconfig = simplexml_load_file($args[0]);
                 $config = $xmlconfig->CONFIG_BASE;
                 $this->server = (string) $config->databaseserver;
                 $this->port = (string) $config->databaseserverport;
                 $this->driver = (string) $config->databasetype;
-                switch($this->driver) {
-                    case 'POSTGRESQL': 
+                switch ($this->driver) {
+                    case 'POSTGRESQL':
                         $this->driver = 'pgsql';
                         break;
-                    case 'MYSQL': 
+                    case 'MYSQL':
                         $this->driver = 'mysql';
                         break;
 
@@ -152,7 +152,7 @@ class Database extends functions
                         break;
 
                     default:
-                        print_r('DRIVER ERROR: Unknown database driver ' 
+                        print_r('DRIVER ERROR: Unknown database driver '
                             . $_SESSION['config']['databasetype']);
                 }
                 $this->database = (string) $config->databasename;
@@ -173,11 +173,12 @@ class Database extends functions
                     . ")"
                 . ")";
             $this->dsn = "oci:dbname=" . $tns . ";charset=utf8";
-        } else
+        } else {
             $this->dsn = $this->driver
                 . ':host=' . $this->server
                 . ';port=' . $this->port
                 . ';dbname=' . $this->database;
+        }
 
 
         if (!isset(self::$preparedStmt[$this->dsn])) {
@@ -185,7 +186,7 @@ class Database extends functions
         }
 
         // Set options
-        $options = array (
+        $options = array(
             PDO::ATTR_PERSISTENT    => true,
             PDO::ATTR_ERRMODE       => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_CASE          => PDO::CASE_LOWER
@@ -213,7 +214,7 @@ class Database extends functions
 
     /**
      * Begin a new transaction
-     * 
+     *
      * @return bool
      */
     public function beginTransaction()
@@ -223,19 +224,19 @@ class Database extends functions
 
     /**
      * Retrieve last record id
-     * 
+     *
      * @return PDOStatement
      */
     public function lastInsertId($sequenceName=null)
     {
-        switch($_SESSION['config']['databasetype']) {
-            case 'MYSQL'        : return @mysqli_insert_id($this->_sqlLink);
-            case 'POSTGRESQL'   : 
+        switch ($_SESSION['config']['databasetype']) {
+            case 'MYSQL': return @mysqli_insert_id($this->_sqlLink);
+            case 'POSTGRESQL':
                 $stmt_last_insert = $this->query("SELECT last_value as lastinsertid FROM " . $sequenceName);
                 $resultat_last = $stmt_last_insert->fetchObject();
                 return $resultat_last->lastinsertid;
-            case 'SQLSERVER'    : return '';
-            case 'ORACLE'       : 
+            case 'SQLSERVER': return '';
+            case 'ORACLE':
                 //$sequenceName = strtoupper($sequenceName);
                 $stmt_last_insert = $this->query("SELECT " . $sequenceName . ".currval as lastinsertid FROM dual");
                 $resultat_last = $stmt_last_insert->fetchObject();
@@ -246,15 +247,15 @@ class Database extends functions
                 }
 
                 return $resultat_last->lastinsertid;
-            default             : return false;
-        }   
+            default: return false;
+        }
     }
 
 
 
     /**
      * Commit a transaction
-     * 
+     *
      * @return bool
      */
     public function commit()
@@ -264,7 +265,7 @@ class Database extends functions
 
     /**
      * Rollback a transaction
-     * 
+     *
      * @return bool
      */
     public function rollback()
@@ -274,7 +275,7 @@ class Database extends functions
 
     /**
      * Check if in a transaction
-     * 
+     *
      * @return bool
      */
     public function inTransaction()
@@ -286,7 +287,7 @@ class Database extends functions
      * Prepare a query and returns the statement.
      * Save the prepared statement for a later execution with parameters
      * @param string $queryString The SQL query string to prepare
-     * 
+     *
      * @return PDOStatement
      */
     public function prepare($queryString)
@@ -303,11 +304,11 @@ class Database extends functions
      * Statement can be used to fetch resulting rows OR by a later call to a fetch method
      * @param string $queryString     The SQL query string
      * @param array  $parameters      An indexed or associative array of parameters
-     * @param bool   $catchExceptions Indicates wheter the PDO exceptions must be caught 
-     * @param bool   $multi Indicates wheter multi queries likes in sql file is required 
-     * 
+     * @param bool   $catchExceptions Indicates wheter the PDO exceptions must be caught
+     * @param bool   $multi Indicates wheter multi queries likes in sql file is required
+     *
      * @return PDOStatement The prepared and executed statement
-     * 
+     *
      * @throws PDOException If a PDO error occurs during preparation or execution
      */
     public function query($queryString, $parameters=null, $catchExceptions=false, $multi=false)
@@ -322,7 +323,7 @@ class Database extends functions
                         $placeholders = implode(',', array_fill(0, count($value), '?'));
                         preg_match_all("/\?/", $queryString, $matches, PREG_OFFSET_CAPTURE);
                         $match = $matches[0][$key];
-                        $queryString = substr($queryString, 0, $match[1]) 
+                        $queryString = substr($queryString, 0, $match[1])
                             . $placeholders . substr($queryString, $match[1]+1);
                         $parameters1 = array_slice($parameters, 0, $key);
                         $parameters2 = array_slice($parameters, $key+1);
@@ -336,7 +337,7 @@ class Database extends functions
                         }
                         $placeholders = implode(',', $placeholdersArr);
                         $queryString = str_replace($key, $placeholders, $queryString);
-                        unset($parameters[$key]);  
+                        unset($parameters[$key]);
                     }
                     // var_dump($queryString);
                     // var_dump($parameters);
@@ -346,8 +347,8 @@ class Database extends functions
 
                     }*/
                     if (
-                        $_SESSION['config']['databasetype'] == 'ORACLE' 
-                        /*&& 
+                        $_SESSION['config']['databasetype'] == 'ORACLE'
+                        /*&&
                         (
                             stripos($queryString, 'insert') !== false ||
                             stripos($queryString, 'update') !== false
@@ -406,14 +407,13 @@ class Database extends functions
                             $_SESSION['error'] .= $queryString;
                             $_SESSION['error'] .= ' ====================== ';
                             $_SESSION['error'] .= $PDOException->getTraceAsString();
-                            //echo $queryString;
-                            //var_export($parameters);
-                            $file = fopen('queries_error.log', a);
+
+                            $file = fopen('queries_error.log', 'a');
                             fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
                             $param = explode('?', $queryString);
-                            $paramNew = [];
+
                             $paramQuery = '';
-                            for ($i=1;$i<count($param);$i++) {
+                            for ($i=1; $i<count($param); $i++) {
                                 if ($i==(count($param)-1)) {
                                     $paramQuery .= "'" . $parameters[$i-1] . "'";
                                 } else {
@@ -424,7 +424,7 @@ class Database extends functions
                             fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
                             fclose($file);
                         }
-                        throw $PDOException; 
+                        throw $PDOException;
                     }
                 }
             }
@@ -439,56 +439,57 @@ class Database extends functions
     {
             
         // LIMIT
-        if($count || $start) 
-        {
-            switch($_SESSION['config']['databasetype']) {
-                case 'MYSQL' : 
+        if ($count || $start) {
+            switch ($_SESSION['config']['databasetype']) {
+                case 'MYSQL':
                     $limit_clause = 'LIMIT ' . $start . ',' . $count;
                     break;
                     
-                case 'POSTGRESQL' : 
+                case 'POSTGRESQL':
                     $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
                     break;
                     
-                case 'SQLSERVER' : 
+                case 'SQLSERVER':
                     $select_opts .= ' TOP ' . $count;
                     break;
                     
-                case 'ORACLE' : 
+                case 'ORACLE':
                     //if($where_def) $where_def .= ' AND ';
                     //$where_def .= ' ROWNUM <= ' . $count;
                     $limit_clause = ' ROWNUM <= ' . $count;
                     break;
                     
-                default : 
+                default:
                  $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
                 break;
             }
         }
         
-        if(empty($where_def)) $where_def = '1=1';
+        if (empty($where_def)) {
+            $where_def = '1=1';
+        }
         
         // CONSTRUCT QUERY
-        $query = 'SELECT' . 
-            ' ' . $select_opts . 
-            ' ' . $select_expr . 
+        $query = 'SELECT' .
+            ' ' . $select_opts .
+            ' ' . $select_expr .
             ' FROM ' . $table_refs .
             ' WHERE ' . $where_def .
             ' ' . $other_clauses .
             ' ' . $limit_clause;
 
         if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-            /*$query = 'SELECT' . 
-                ' ' . $select_opts . 
-                ' ' . $select_expr . 
+            /*$query = 'SELECT' .
+                ' ' . $select_opts .
+                ' ' . $select_expr .
                 ' FROM ' . $table_refs .
                 ' WHERE ' . $where_def .
                 ' ' . $other_clauses .
                 ' ' . $limit_clause .
                 ' ' . $order_by;*/
-            $query = 'SELECT * FROM (SELECT' . 
-                ' ' . $select_opts . 
-                ' ' . $select_expr . 
+            $query = 'SELECT * FROM (SELECT' .
+                ' ' . $select_opts .
+                ' ' . $select_expr .
                 ' FROM ' . $table_refs .
                 ' WHERE ' . $where_def .
                 ' ' . $other_clauses .
@@ -496,9 +497,9 @@ class Database extends functions
                 ' ' . $order_by .
                 ') WHERE ' . $limit_clause;
         } else {
-            $query = 'SELECT' . 
-                ' ' . $select_opts . 
-                ' ' . $select_expr . 
+            $query = 'SELECT' .
+                ' ' . $select_opts .
+                ' ' . $select_expr .
                 ', count(1) OVER() AS __full_count FROM ' . $table_refs .
                 ' WHERE ' . $where_def .
                 ' ' . $other_clauses .
@@ -506,7 +507,6 @@ class Database extends functions
                 ' ' . $limit_clause;
         }
         return $query;
-        
     }
 
     /*************************************************************************
@@ -519,10 +519,10 @@ class Database extends functions
     public function current_datetime()
     {
         switch ($this->driver) {
-            case 'mysql'        : return 'CURRENT_TIMESTAMP';
-            case 'pgsql'        : return 'CURRENT_TIMESTAMP';
-            case 'oci'          : return 'SYSDATE';
-            default             : return ' ';
+            case 'mysql': return 'CURRENT_TIMESTAMP';
+            case 'pgsql': return 'CURRENT_TIMESTAMP';
+            case 'oci': return 'SYSDATE';
+            default: return ' ';
         }
     }
 
@@ -535,25 +535,33 @@ class Database extends functions
     */
     public function test_column($table, $field)
     {
-        switch($this->driver) {
-            case 'pgsql'   : 
+        switch ($this->driver) {
+            case 'pgsql':
                 $stmt = $this->query(
-                    "select column_name from information_schema.columns where table_name = ? and column_name = ?", 
+                    "select column_name from information_schema.columns where table_name = ? and column_name = ?",
                     array($table, $field)
                 );
                 $res = $stmt->rowCount();
-                if ($res > 0) return true; 
-                else return false;
-            case 'oci'       : 
-                $stmt = $this->query("SELECT * from USER_TAB_COLUMNS where TABLE_NAME = ? AND COLUMN_NAME = ?", 
+                if ($res > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+                // no break
+            case 'oci':
+                $stmt = $this->query(
+                    "SELECT * from USER_TAB_COLUMNS where TABLE_NAME = ? AND COLUMN_NAME = ?",
                     array($table, $field)
                 );
                 $res = $stmt->rowCount();
-                if ($res > 0) return true; 
-                else return false;
-            case 'mysql'        : return true; // TO DO
-            default             : return false;
+                if ($res > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+                // no break
+            case 'mysql': return true; // TO DO
+            default: return false;
         }
     }
 }
-
