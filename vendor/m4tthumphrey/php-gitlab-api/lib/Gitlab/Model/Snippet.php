@@ -8,6 +8,7 @@ use Gitlab\Client;
  * @property-read int $id
  * @property-read string $title
  * @property-read string $file_name
+ * @property-read string $expires_at
  * @property-read string $updated_at
  * @property-read string $created_at
  * @property-read Project $project
@@ -23,6 +24,7 @@ class Snippet extends AbstractModel
         'title',
         'file_name',
         'author',
+        'expires_at',
         'updated_at',
         'created_at',
         'project'
@@ -62,7 +64,7 @@ class Snippet extends AbstractModel
      */
     public function show()
     {
-        $data = $this->client->snippets()->show($this->project->id, $this->id);
+        $data = $this->api('snippets')->show($this->project->id, $this->id);
 
         return static::fromArray($this->getClient(), $this->project, $data);
     }
@@ -73,7 +75,7 @@ class Snippet extends AbstractModel
      */
     public function update(array $params)
     {
-        $data = $this->client->snippets()->update($this->project->id, $this->id, $params);
+        $data = $this->api('snippets')->update($this->project->id, $this->id, $params);
 
         return static::fromArray($this->getClient(), $this->project, $data);
     }
@@ -83,7 +85,7 @@ class Snippet extends AbstractModel
      */
     public function content()
     {
-        return $this->client->snippets()->content($this->project->id, $this->id);
+        return $this->api('snippets')->content($this->project->id, $this->id);
     }
 
     /**
@@ -91,7 +93,7 @@ class Snippet extends AbstractModel
      */
     public function remove()
     {
-        $this->client->snippets()->remove($this->project->id, $this->id);
+        $this->api('snippets')->remove($this->project->id, $this->id);
 
         return true;
     }

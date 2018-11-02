@@ -51,7 +51,7 @@ class Session extends AbstractModel
      */
     public function me()
     {
-        $data = $this->client->users()->user();
+        $data = $this->api('users')->show();
 
         return User::fromArray($this->getClient(), $data);
     }
@@ -59,11 +59,11 @@ class Session extends AbstractModel
     /**
      * @param string $email
      * @param string $password
-     * @return Session
+     * @return $this
      */
     public function login($email, $password)
     {
-        $data = $this->client->users()->session($email, $password);
+        $data = $this->api('users')->session($email, $password);
 
         return $this->hydrate($data);
     }

@@ -1,84 +1,78 @@
 <?php namespace Gitlab\Api;
 
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
-
 class Projects extends AbstractApi
 {
+    const ORDER_BY = 'created_at';
+    const SORT = 'asc';
+
     /**
-     * @param array $parameters {
-     *
-     *     @var bool   $archived                    Limit by archived status.
-     *     @var string $visibility                  Limit by visibility public, internal, or private.
-     *     @var string $order_by                    Return projects ordered by id, name, path, created_at, updated_at,
-     *                                              or last_activity_at fields. Default is created_at.
-     *     @var string $sort                        Return projects sorted in asc or desc order. Default is desc.
-     *     @var string $search                      Return list of projects matching the search criteria.
-     *     @var bool   $simple                      Return only the ID, URL, name, and path of each project.
-     *     @var bool   $owned                       Limit by projects owned by the current user.
-     *     @var bool   $membership                  Limit by projects that the current user is a member of.
-     *     @var bool   $starred                     Limit by projects starred by the current user.
-     *     @var bool   $statistics                  Include project statistics.
-     *     @var bool   $with_issues_enabled         Limit by enabled issues feature.
-     *     @var bool   $with_merge_requests_enabled Limit by enabled merge requests feature.
-     * }
-     *
-     * @throws UndefinedOptionsException If an option name is undefined
-     * @throws InvalidOptionsException   If an option doesn't fulfill the
-     *                                   specified validation rules
-     *
+     * @param int $page
+     * @param int $per_page
+     * @param string $order_by
+     * @param string $sort
      * @return mixed
      */
-    public function all(array $parameters = [])
+    public function all($page = 1, $per_page = self::PER_PAGE, $order_by = self::ORDER_BY, $sort = self::SORT)
     {
-        $resolver = $this->createOptionsResolver();
-        $booleanNormalizer = function ($value) {
-            return $value ? 'true' : 'false';
-        };
-        $resolver->setDefined('archived')
-            ->setAllowedTypes('archived', 'bool')
-            ->setNormalizer('archived', $booleanNormalizer)
-        ;
-        $resolver->setDefined('visibility')
-            ->setAllowedValues('visibility', ['public', 'internal', 'private'])
-        ;
-        $resolver->setDefined('order_by')
-            ->setAllowedValues('order_by', ['id', 'name', 'path', 'created_at', 'updated_at', 'last_activity_at'])
-        ;
-        $resolver->setDefined('sort')
-            ->setAllowedValues('sort', ['asc', 'desc'])
-        ;
-        $resolver->setDefined('search');
-        $resolver->setDefined('simple')
-            ->setAllowedTypes('simple', 'bool')
-            ->setNormalizer('simple', $booleanNormalizer)
-        ;
-        $resolver->setDefined('owned')
-            ->setAllowedTypes('owned', 'bool')
-            ->setNormalizer('owned', $booleanNormalizer)
-        ;
-        $resolver->setDefined('membership')
-            ->setAllowedTypes('membership', 'bool')
-            ->setNormalizer('membership', $booleanNormalizer)
-        ;
-        $resolver->setDefined('starred')
-            ->setAllowedTypes('starred', 'bool')
-            ->setNormalizer('starred', $booleanNormalizer)
-        ;
-        $resolver->setDefined('statistics')
-            ->setAllowedTypes('statistics', 'bool')
-            ->setNormalizer('statistics', $booleanNormalizer)
-        ;
-        $resolver->setDefined('with_issues_enabled')
-            ->setAllowedTypes('with_issues_enabled', 'bool')
-            ->setNormalizer('with_issues_enabled', $booleanNormalizer)
-        ;
-        $resolver->setDefined('with_merge_requests_enabled')
-            ->setAllowedTypes('with_merge_requests_enabled', 'bool')
-            ->setNormalizer('with_merge_requests_enabled', $booleanNormalizer)
-        ;
+        return $this->get('projects/all', array(
+            'page' => $page,
+            'per_page' => $per_page,
+            'order_by' => $order_by,
+            'sort' => $sort
+        ));
+    }
 
-        return $this->get('projects', $resolver->resolve($parameters));
+    /**
+     * @param int $page
+     * @param int $per_page
+     * @param string $order_by
+     * @param string $sort
+     * @return mixed
+     */
+    public function accessible($page = 1, $per_page = self::PER_PAGE, $order_by = self::ORDER_BY, $sort = self::SORT)
+    {
+        return $this->get('projects', array(
+            'page' => $page,
+            'per_page' => $per_page,
+            'order_by' => $order_by,
+            'sort' => $sort
+        ));
+    }
+
+    /**
+     * Get projects owned by the current user
+     * @param int $page
+     * @param int $per_page
+     * @param string $order_by
+     * @param string $sort
+     * @return mixed
+     */
+    public function owned($page = 1, $per_page = self::PER_PAGE, $order_by = self::ORDER_BY, $sort = self::SORT)
+    {
+        return $this->get('projects?owned=1', array(
+            'page' => $page,
+            'per_page' => $per_page,
+            'order_by' => $order_by,
+            'sort' => $sort
+        ));
+    }
+
+    /**
+     * @param string $query
+     * @param int $page
+     * @param int $per_page
+     * @param string $order_by
+     * @param string $sort
+     * @return mixed
+     */
+    public function search($query, $page = 1, $per_page = self::PER_PAGE, $order_by = self::ORDER_BY, $sort = self::SORT)
+    {
+        return $this->get('projects/search/'.$this->encodePath($query), array(
+            'page' => $page,
+            'per_page' => $per_page,
+            'order_by' => $order_by,
+            'sort' => $sort
+        ));
     }
 
     /**
@@ -138,8 +132,7 @@ class Projects extends AbstractApi
      * @param int $project_id
      * @return mixed
      */
-    public function archive($project_id)
-    {
+    public function archive($project_id){
         return $this->post("projects/".$this->encodePath($project_id)."/archive");
     }
 
@@ -147,54 +140,49 @@ class Projects extends AbstractApi
      * @param int $project_id
      * @return mixed
      */
-    public function unarchive($project_id)
-    {
+    public function unarchive($project_id){
         return $this->post("projects/".$this->encodePath($project_id)."/unarchive");
     }
 
     /**
-     * @param int   $project_id
-     * @param array $parameters (
-     *
-     *     @var string $scope       The scope of pipelines, one of: running, pending, finished, branches, tags.
-     *     @var string $status      The status of pipelines, one of: running, pending, success, failed, canceled, skipped.
-     *     @var string $ref         The ref of pipelines.
-     *     @var bool   $yaml_errors Returns pipelines with invalid configurations.
-     *     @var string $name        The name of the user who triggered pipelines.
-     *     @var string $username    The username of the user who triggered pipelines.
-     *     @var string $order_by    Order pipelines by id, status, ref, or user_id (default: id).
-     *     @var string $order       Sort pipelines in asc or desc order (default: desc).
-     * )
+     * @param int $project_id
+     * @param array $scope
      * @return mixed
      */
-    public function pipelines($project_id, array $parameters = [])
+    public function builds($project_id, $scope = null)
     {
-        $resolver = $this->createOptionsResolver();
-        $booleanNormalizer = function ($value) {
-            return $value ? 'true' : 'false';
-        };
+        return $this->get($this->getProjectPath($project_id, 'builds'), array(
+            'scope' => $scope
+        ));
+    }
 
-        $resolver->setDefined('scope')
-            ->setAllowedValues('scope', ['running', 'pending', 'finished', 'branches', 'tags'])
-        ;
-        $resolver->setDefined('status')
-            ->setAllowedValues('status', ['running', 'pending', 'success', 'failed', 'canceled', 'skipped'])
-        ;
-        $resolver->setDefined('ref');
-        $resolver->setDefined('yaml_errors')
-            ->setAllowedTypes('yaml_errors', 'bool')
-            ->setNormalizer('yaml_errors', $booleanNormalizer)
-        ;
-        $resolver->setDefined('name');
-        $resolver->setDefined('username');
-        $resolver->setDefined('order_by')
-            ->setAllowedValues('order_by', ['id', 'status', 'ref', 'user_id'])
-        ;
-        $resolver->setDefined('sort')
-            ->setAllowedValues('sort', ['asc', 'desc'])
-        ;
+    /**
+     * @param int $project_id
+     * @param int $build_id
+     * @return mixed
+     */
+    public function build($project_id, $build_id)
+    {
+        return $this->get($this->getProjectPath($project_id, 'builds/'.$this->encodePath($build_id)));
+    }
 
-        return $this->get($this->getProjectPath($project_id, 'pipelines'), $resolver->resolve($parameters));
+    /**
+     * @param int $project_id
+     * @param int $build_id
+     * @return mixed
+     */
+    public function trace($project_id, $build_id)
+    {
+        return $this->get($this->getProjectPath($project_id, 'builds/'.$this->encodePath($build_id).'/trace'));
+    }
+
+    /**
+     * @param int $project_id
+     * @return mixed
+     */
+    public function pipelines($project_id)
+    {
+        return $this->get($this->getProjectPath($project_id, 'pipelines'));
     }
 
     /**
@@ -214,7 +202,7 @@ class Projects extends AbstractApi
      */
     public function createPipeline($project_id, $commit_ref)
     {
-        return $this->post($this->getProjectPath($project_id, 'pipeline'), array(
+        return $this->post($this->getProjectPath($project_id, 'pipelines'), array(
             'ref' => $commit_ref));
     }
 
@@ -299,15 +287,25 @@ class Projects extends AbstractApi
 
     /**
      * @param int $project_id
-     * @param array $parameters
-     *
      * @return mixed
      */
-    public function hooks($project_id, array $parameters = [])
+    public function deployKeys($project_id)
     {
-        $resolver = $this->createOptionsResolver();
+        return $this->get($this->getProjectPath($project_id, 'deploy_keys'));
+    }
 
-        return $this->get($this->getProjectPath($project_id, 'hooks'), $resolver->resolve($parameters));
+    /**
+     * @param int $project_id
+     * @param int $page
+     * @param int $per_page
+     * @return mixed
+     */
+    public function hooks($project_id, $page = 1, $per_page = self::PER_PAGE)
+    {
+        return $this->get($this->getProjectPath($project_id, 'hooks'), array(
+            'page' => $page,
+            'per_page' => $per_page
+        ));
     }
 
     /**
@@ -362,9 +360,9 @@ class Projects extends AbstractApi
      * @param int $project_id
      * @return mixed
      */
-    public function deployKeys($project_id)
+    public function keys($project_id)
     {
-        return $this->get($this->getProjectPath($project_id, 'deploy_keys'));
+        return $this->get($this->getProjectPath($project_id, 'keys'));
     }
 
     /**
@@ -372,24 +370,22 @@ class Projects extends AbstractApi
      * @param int $key_id
      * @return mixed
      */
-    public function deployKey($project_id, $key_id)
+    public function key($project_id, $key_id)
     {
-        return $this->get($this->getProjectPath($project_id, 'deploy_keys/'.$this->encodePath($key_id)));
+        return $this->get($this->getProjectPath($project_id, 'keys/'.$this->encodePath($key_id)));
     }
 
     /**
      * @param int $project_id
      * @param string $title
      * @param string $key
-     * @param bool $canPush
      * @return mixed
      */
-    public function addDeployKey($project_id, $title, $key, $canPush = false)
+    public function addKey($project_id, $title, $key)
     {
-        return $this->post($this->getProjectPath($project_id, 'deploy_keys'), array(
+        return $this->post($this->getProjectPath($project_id, 'keys'), array(
             'title' => $title,
-            'key' => $key,
-            'can_push' => $canPush
+            'key' => $key
         ));
     }
 
@@ -398,9 +394,9 @@ class Projects extends AbstractApi
      * @param int $key_id
      * @return mixed
      */
-    public function deleteDeployKey($project_id, $key_id)
+    public function removeKey($project_id, $key_id)
     {
-        return $this->delete($this->getProjectPath($project_id, 'deploy_keys/'.$this->encodePath($key_id)));
+        return $this->delete($this->getProjectPath($project_id, 'keys/'.$this->encodePath($key_id)));
     }
 
     /**
@@ -408,49 +404,33 @@ class Projects extends AbstractApi
      * @param int $key_id
      * @return mixed
      */
-    public function enableDeployKey($project_id, $key_id)
+    public function enableKey($project_id, $key_id)
     {
-        return $this->post($this->getProjectPath($project_id, 'deploy_keys/'.$this->encodePath($key_id).'/enable'));
+        return $this->post($this->getProjectPath($project_id, 'keys/'.$this->encodePath($key_id).'/enable'));
     }
 
     /**
      * @param int $project_id
-     * @param array $parameters (
-     *
-     *     @var string             $action      Include only events of a particular action type.
-     *     @var string             $target_type Include only events of a particular target type.
-     *     @var \DateTimeInterface $before      Include only events created before a particular date.
-     *     @var \DateTimeInterface $after       Include only events created after a particular date.
-     *     @var string             $sort        Sort events in asc or desc order by created_at. Default is desc.
-     * )
-     *
+     * @param int $key_id
      * @return mixed
      */
-    public function events($project_id, array $parameters = [])
+    public function disableKey($project_id, $key_id)
     {
-        $resolver = $this->createOptionsResolver();
-        $datetimeNormalizer = function (\DateTimeInterface $value) {
-            return $value->format('Y-m-d');
-        };
+        return $this->delete($this->getProjectPath($project_id, 'keys/'.$this->encodePath($key_id).'/disable'));
+    }
 
-        $resolver->setDefined('action')
-            ->setAllowedValues('action', ['created', 'updated', 'closed', 'reopened', 'pushed', 'commented', 'merged', 'joined', 'left', 'destroyed', 'expired'])
-        ;
-        $resolver->setDefined('target_type')
-            ->setAllowedValues('target_type', ['issue', 'milestone', 'merge_request', 'note', 'project', 'snippet', 'user'])
-        ;
-        $resolver->setDefined('before')
-            ->setAllowedTypes('before', \DateTimeInterface::class)
-            ->setNormalizer('before', $datetimeNormalizer);
-        $resolver->setDefined('after')
-            ->setAllowedTypes('after', \DateTimeInterface::class)
-            ->setNormalizer('after', $datetimeNormalizer)
-        ;
-        $resolver->setDefined('sort')
-            ->setAllowedValues('sort', ['asc', 'desc'])
-        ;
-
-        return $this->get($this->getProjectPath($project_id, 'events'), $resolver->resolve($parameters));
+    /**
+     * @param int $project_id
+     * @param int $page
+     * @param int $per_page
+     * @return mixed
+     */
+    public function events($project_id, $page = 1, $per_page = self::PER_PAGE)
+    {
+        return $this->get($this->getProjectPath($project_id, 'events'), array(
+            'page' => $page,
+            'per_page' => $per_page
+        ));
     }
 
     /**
@@ -500,7 +480,7 @@ class Projects extends AbstractApi
      */
     public function fork($project_id)
     {
-        return $this->post('projects/'.$this->encodePath($project_id).'/fork');
+        return $this->post('projects/fork/'.$this->encodePath($project_id));
     }
 
     /**
@@ -566,51 +546,27 @@ class Projects extends AbstractApi
      * @param int $project_id
      * @param string $key
      * @param string $value
-     * @param bool $protected
-     * @param string $environment_scope
      * @return mixed
      */
-    public function addVariable($project_id, $key, $value, $protected = null, $environment_scope = null)
+    public function addVariable($project_id, $key, $value)
     {
-        $payload = array(
+        return $this->post($this->getProjectPath($project_id, 'variables'), array(
             'key'   => $key,
-            'value' => $value,
-        );
-
-        if ($protected) {
-            $payload['protected'] = $protected;
-        }
-
-        if ($environment_scope) {
-            $payload['environment_scope'] = $environment_scope;
-        }
-
-        return $this->post($this->getProjectPath($project_id, 'variables'), $payload);
+            'value' => $value
+        ));
     }
 
     /**
      * @param int $project_id
      * @param string $key
      * @param string $value
-     * @param bool $protected
-     * @param string $environment_scope
      * @return mixed
      */
-    public function updateVariable($project_id, $key, $value, $protected = null, $environment_scope = null)
+    public function updateVariable($project_id, $key, $value)
     {
-        $payload = array(
+        return $this->put($this->getProjectPath($project_id, 'variables/'.$this->encodePath($key)), array(
             'value' => $value,
-        );
-
-        if ($protected) {
-            $payload['protected'] = $protected;
-        }
-
-        if ($environment_scope) {
-            $payload['environment_scope'] = $environment_scope;
-        }
-
-        return $this->put($this->getProjectPath($project_id, 'variables/'.$this->encodePath($key)), $payload);
+        ));
     }
 
     /**
@@ -635,15 +591,16 @@ class Projects extends AbstractApi
 
     /**
      * @param int $project_id
-     * @param array $parameters
-     *
+     * @param int $page
+     * @param int $per_page
      * @return mixed
      */
-    public function deployments($project_id, array $parameters = [])
+    public function deployments($project_id, $page = 1, $per_page = self::PER_PAGE)
     {
-        $resolver = $this->createOptionsResolver();
-
-        return $this->get($this->getProjectPath($project_id, 'deployments'), $resolver->resolve($parameters));
+        return $this->get($this->getProjectPath($project_id, 'deployments'), array(
+            'page' => $page,
+            'per_page' => $per_page
+        ));
     }
 
     /**

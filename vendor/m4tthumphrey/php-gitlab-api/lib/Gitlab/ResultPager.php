@@ -1,7 +1,6 @@
 <?php namespace Gitlab;
 
 use Gitlab\Api\ApiInterface;
-use Gitlab\HttpClient\Message\ResponseMediator;
 
 /**
  * Pager class for supporting pagination in Gitlab classes
@@ -34,7 +33,9 @@ class ResultPager implements ResultPagerInterface
      */
     public function fetch(ApiInterface $api, $method, array $parameters = array())
     {
-        return call_user_func_array(array($api, $method), $parameters);
+        $result = call_user_func_array(array($api, $method), $parameters);
+
+        return $result;
     }
 
     /**
@@ -43,6 +44,7 @@ class ResultPager implements ResultPagerInterface
     public function fetchAll(ApiInterface $api, $method, array $parameters = array())
     {
         $result = call_user_func_array(array($api, $method), $parameters);
+
         while ($this->hasNext()) {
             $result = array_merge($result, $this->fetchNext());
         }
@@ -103,17 +105,7 @@ class ResultPager implements ResultPagerInterface
      */
     protected function has($key)
     {
-        $lastResponse = $this->client->getResponseHistory()->getLastResponse();
-        if ($lastResponse == null) {
-            return false;
-        }
-
-        $pagination = ResponseMediator::getPagination($lastResponse);
-        if ($pagination == null) {
-            return false;
-        }
-
-        return isset($pagination[$key]);
+        return !empty($this->client->getHttpClient()->getLastResponse()->getPagination()) && isset($this->client->getHttpClient()->getLastResponse()->getPagination()[$key]);
     }
 
     /**
@@ -121,12 +113,9 @@ class ResultPager implements ResultPagerInterface
      */
     protected function get($key)
     {
-        if (!$this->has($key)) {
-            return [];
+        if ($this->has($key)) {
+            $result = $this->client->getHttpClient()->get(strtr($this->client->getHttpClient()->getLastResponse()->getPagination()[$key], array($this->client->getBaseUrl() => '')))->getContent();
+            return $result;
         }
-
-        $pagination = ResponseMediator::getPagination($this->client->getResponseHistory()->getLastResponse());
-
-        return ResponseMediator::getContent($this->client->getHttpClient()->get($pagination[$key]));
     }
 }

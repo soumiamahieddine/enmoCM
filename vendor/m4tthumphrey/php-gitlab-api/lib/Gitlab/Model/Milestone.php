@@ -11,7 +11,6 @@ use Gitlab\Client;
  * @property-read string $title
  * @property-read string $description
  * @property-read string $due_date
- * @property-read string $start_date
  * @property-read string $state
  * @property-read bool $closed
  * @property-read string $updated_at
@@ -31,7 +30,6 @@ class Milestone extends AbstractModel
         'title',
         'description',
         'due_date',
-        'start_date',
         'state',
         'closed',
         'updated_at',
@@ -68,7 +66,7 @@ class Milestone extends AbstractModel
      */
     public function show()
     {
-        $data = $this->client->milestones()->show($this->project->id, $this->id);
+        $data = $this->api('milestones')->show($this->project->id, $this->id);
 
         return static::fromArray($this->getClient(), $this->project, $data);
     }
@@ -79,7 +77,7 @@ class Milestone extends AbstractModel
      */
     public function update(array $params)
     {
-        $data = $this->client->milestones()->update($this->project->id, $this->id, $params);
+        $data = $this->api('milestones')->update($this->project->id, $this->id, $params);
 
         return static::fromArray($this->getClient(), $this->project, $data);
     }
@@ -105,7 +103,7 @@ class Milestone extends AbstractModel
      */
     public function issues()
     {
-        $data = $this->client->milestones()->issues($this->project->id, $this->id);
+        $data = $this->api('milestones')->issues($this->project->id, $this->id);
 
         $issues = array();
         foreach ($data as $issue) {

@@ -4,30 +4,16 @@ class Milestones extends AbstractApi
 {
     /**
      * @param int $project_id
-     * @param array $parameters (
-     *
-     *     @var int[]  $iids   Return only the milestones having the given iids.
-     *     @var string $state  Return only active or closed milestones.
-     *     @var string $search Return only milestones with a title or description matching the provided string.
-     * )
-     *
+     * @param int $page
+     * @param int $per_page
      * @return mixed
      */
-    public function all($project_id, array $parameters = [])
+    public function all($project_id, $page = 1, $per_page = self::PER_PAGE)
     {
-        $resolver = $this->createOptionsResolver();
-        $resolver->setDefined('iids')
-            ->setAllowedTypes('iids', 'array')
-            ->setAllowedValues('iids', function (array $value) {
-                return count($value) == count(array_filter($value, 'is_int'));
-            })
-        ;
-        $resolver->setDefined('state')
-            ->setAllowedValues('state', ['active', 'closed'])
-        ;
-        $resolver->setDefined('search');
-
-        return $this->get($this->getProjectPath($project_id, 'milestones'), $resolver->resolve($parameters));
+        return $this->get($this->getProjectPath($project_id, 'milestones'), array(
+            'page' => $page,
+            'per_page' => $per_page
+        ));
     }
 
     /**

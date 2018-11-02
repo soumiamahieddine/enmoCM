@@ -7,4 +7,5 @@
  */
 class ErrorException extends \ErrorException
 {
+
 }

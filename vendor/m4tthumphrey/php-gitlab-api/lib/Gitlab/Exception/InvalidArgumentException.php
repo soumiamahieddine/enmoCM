@@ -7,4 +7,5 @@
  */
 class InvalidArgumentException extends \InvalidArgumentException
 {
+
 }
