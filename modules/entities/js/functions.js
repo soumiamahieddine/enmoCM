@@ -207,8 +207,6 @@ function change_diff_list(
                         diff_list_tr.style.display = tr_display_val;
                     }
 
-                    diff_list_div.innerHTML = response.div_content_action;
-
                     window.opener.$j('#destination').val(entity_id_dest);
                     window.opener.$j('#destination').trigger("chosen:updated");
 
@@ -217,6 +215,8 @@ function change_diff_list(
                     } else if(window.opener.parent.document.getElementById('uniqueDetailsIframe')){
                         diff_list_div.innerHTML = response.div_content;
                         window.opener.$j('#save_list_diff').click();
+                    } else {
+                        diff_list_div.innerHTML = response.div_content;
                     }
                     window.close();
                 }

@@ -29,16 +29,14 @@ if (empty($_REQUEST['origin'])) {
     exit();
 }
 
-if ((! isset($_REQUEST['objectType']) || empty($_REQUEST['objectType']))
-    && $_REQUEST['load_from_model'] == 'true')
-{
+if ((! isset($_REQUEST['objectType']) || empty($_REQUEST['objectType'])) && $_REQUEST['load_from_model'] == 'true') {
     if ($_REQUEST['mandatory'] <> 'none') {
         $_SESSION['error'] = _OBJECT_TYPE . ' ' . _IS_EMPTY;
     }
     $_SESSION[$origin]['diff_list'] = array();
     echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
     exit();
-} 
+}
 
 if ((! isset($_REQUEST['objectId']) || empty($_REQUEST['objectId']))
     && $_REQUEST['load_from_model'] == 'true'
@@ -61,8 +59,8 @@ $specific_role = $_REQUEST['specific_role'];
 
 $onlyCC = false;
 
-if( ($core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST['origin'] == 'process') 
-    || ($core->test_service('add_copy_in_indexing_validation', 'entities', false) && ($_REQUEST['origin'] == 'indexing' || $_REQUEST['origin'] == 'redirect')) ){
+if (($core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST['origin'] == 'process')
+    || ($core->test_service('add_copy_in_indexing_validation', 'entities', false) && ($_REQUEST['origin'] == 'indexing' || $_REQUEST['origin'] == 'redirect'))) {
     $onlyCC = true;
 }
 
@@ -84,7 +82,6 @@ if ($_REQUEST['load_from_model'] == 'true') {
 if ($objectId <> '') {
     $_SESSION[$origin]['difflist_object']['object_id'] = $objectId;
     if ($objectType == 'entity_id') {
-        
         $query = "SELECT entity_label FROM entities WHERE entity_id = ?";
         $stmt  = $db->query($query, array($objectId));
         $res   = $stmt->fetchObject();
@@ -94,7 +91,7 @@ if ($objectId <> '') {
     }
 }
 
-if(($specific_role <> null || $specific_role <> '') && empty($_SESSION[$origin]['diff_list'])){
+if (($specific_role <> null || $specific_role <> '') && empty($_SESSION[$origin]['diff_list'])) {
     $diff_list = new diffusion_list();
     $res_id    = $_SESSION['doc_id'];
     $_SESSION[$origin]['diff_list'] = $diff_list->get_listinstance($res_id);
@@ -102,10 +99,10 @@ if(($specific_role <> null || $specific_role <> '') && empty($_SESSION[$origin][
 
 $content = '';
 
-if(!empty($_SESSION[$origin]['diff_list'])) {
+if (!empty($_SESSION[$origin]['diff_list'])) {
     // Si on redirige en masse plusieurs courriers, on ne récupère pas les roles persistent
-    if(empty($_SESSION['stockCheckbox']) || count($_SESSION['stockCheckbox']) == 1){
-        if(!empty($_SESSION['stockCheckbox']) && count($_SESSION['stockCheckbox']) == 1){
+    if (empty($_SESSION['stockCheckbox']) || count($_SESSION['stockCheckbox']) == 1) {
+        if (!empty($_SESSION['stockCheckbox']) && count($_SESSION['stockCheckbox']) == 1) {
             // Cas où on redirige en masse un courrier
             $res_id = $_SESSION['stockCheckbox'][0];
         } else {
@@ -117,11 +114,11 @@ if(!empty($_SESSION[$origin]['diff_list'])) {
     $roles    = $diffList->list_difflist_roles();
     $difflist = $_SESSION[$origin]['diff_list'];
     
-    # Get content from buffer of difflist_display 
+    // Get content from buffer of difflist_display
     ob_start();
     require_once 'modules/entities/difflist_display.php';
     $content .= str_replace(array("\r", "\n", "\t"), array("", "", ""), ob_get_contents());
-    ob_end_clean();   
+    ob_end_clean();
 
     $labelButton = _UPDATE_LIST_DIFF;
     $arg = '&mode=up';
@@ -140,7 +137,7 @@ if ($origin != 'process' && $origin != 'details') {
     $content_standard .= '<small><input type="button" style="margin-top:0px;" class="button" title="'.$labelButton.'" value="'.$labelButton.'" '
              . 'onclick="window.open(\'';
     $content_standard .= $_SESSION['config']['businessappurl'] . 'index.php?display=true';
-    if($specific_role <> null){
+    if ($specific_role <> null) {
         $content_standard .= '&specific_role='.$specific_role;
     }
     $content_standard .= '&module=entities&page=manage_listinstance&cat='.$category.'&origin=' . $origin . $arg
@@ -148,7 +145,6 @@ if ($origin != 'process' && $origin != 'details') {
              . 'resizable=yes,width=1280,height=800,location=no\');" /></small>';
     $content_standard .= '</span></center>';
     $full_content = $content_standard . $content;
-    
 } else if ($origin == 'details') {
     $full_content =$content;
 } else {
@@ -166,6 +162,5 @@ if ($origin != 'process' && $origin != 'details') {
     $full_content = $content_standard . $content. '</div>';
 }
 
-echo "{status : 0, div_content : '" . addslashes($full_content . '<br>') 
-    . "', div_content_action : '" . addslashes($content) . "'}";
+echo "{status : 0, div_content : '" . addslashes($full_content . '<br>') . "', div_content_action : '" . addslashes($content) . "'}";
 exit();
