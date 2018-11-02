@@ -26,7 +26,7 @@ Documentation : https://docs.maarch.org/gitbook/html/MaarchCourrier/18.10/
 * PostgreSQL 9.x
 * PHP 7.0.* ou PHP 7.1.*
    * Extensions PHP (adaptées à votre version de PHP) : PHP-[XSL](http://php.net/manual/en/book.xsl.php), PHP-[XML-RPC](http://php.net/manual/en/book.xmlrpc.php), PHP-[Gettext](http://php.net/manual/en/b$
-   * Bibliothèques pear/SOAP (pour php < 7.0), pear/CLITools
+   * Bibliothèques pear/CLITools
 * [ImageMagick](http://imagemagick.org/), avec PHP-[ImageMagick](http://php.net/manual/en/book.imagick.php)
 * [Ghostscript](https://www.ghostscript.com/)
 * [7-zip](http://www.7-zip.org/)
@@ -38,12 +38,8 @@ Documentation : https://docs.maarch.org/gitbook/html/MaarchCourrier/18.10/
 
 ###  Recommandations pour le php.ini
 
-error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
+error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT  
 display_errors = On
-short_open_tags = On
-magic_quotes_gpc = Off
-
 
 ## Le coin des developpeurs
 [Maarch Developer handbook](https://labs.maarch.org/maarch/MaarchCourrier/blob/master/CONTRIBUTING.md)
-
