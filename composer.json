@@ -32,8 +32,8 @@
     	}
     },
     "require": {
-        "slim/slim": "^3.10",
-        "respect/validation": "^1.1",
+        "slim/slim": "^3.11",
+        "respect/validation": "^1.1.28",
         "php-http/curl-client": "^1.7",
         "m4tthumphrey/php-gitlab-api": "8",
         "jumbojett/openid-connect-php": "^0.3.0",
