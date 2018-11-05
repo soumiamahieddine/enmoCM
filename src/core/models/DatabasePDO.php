@@ -124,8 +124,8 @@ class DatabasePDO
             $queryString = str_ireplace('CURRENT_TIMESTAMP', 'SYSDATE', $queryString);
         }
 
+        $originalData = $data;
         if (!empty($data)) {
-            $originalData = $data;
             $tmpData = [];
             foreach ($data as $key => $value) {
                 if (is_array($value)) {
@@ -151,16 +151,9 @@ class DatabasePDO
 
             $query->execute($data);
         } catch (\PDOException $PDOException) {
-            if (
-                strpos($PDOException->getMessage(), 'Admin shutdown: 7') !== false ||
-                strpos($PDOException->getMessage(), 'General error: 7') !== false
-            ) {
+            if (strpos($PDOException->getMessage(), 'Admin shutdown: 7') !== false || strpos($PDOException->getMessage(), 'General error: 7') !== false) {
                 $db = new DatabasePDO();
-                if ($originalData) {
-                    $db->query($originalQuery, $originalData);
-                } else {
-                    $db->query($originalQuery);
-                }
+                $query = $db->query($originalQuery, $originalData);
             } else {
                 $param = implode(', ', $data);
                 $file = fopen('queries_error.log', 'a');
@@ -194,12 +187,6 @@ class DatabasePDO
         }
 
         return ['where' => $where, 'limit' => $limit];
-    }
-
-    public static function reset()
-    {
-        $this->pdo = null;
-        self::$preparedQueries = [];
     }
 
     public function getType()
