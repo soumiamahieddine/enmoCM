@@ -150,7 +150,9 @@ class DatabasePDO
 
             $query->execute($data);
         } catch (\PDOException $PDOException) {
-            if (strpos($PDOException->getMessage(), 'Admin shutdown: 7') !== false || strpos($PDOException->getMessage(), 'General error: 7') !== false) {
+            if (strpos($PDOException->getMessage(), 'Admin shutdown: 7') !== false || 
+                strpos($PDOException->getMessage(), 'General error: 7') !== false
+            ) {
                 $db = new DatabasePDO();
                 $query = $db->query($originalQuery, $originalData);
             } else {
