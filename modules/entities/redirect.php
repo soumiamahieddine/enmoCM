@@ -376,7 +376,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             
             // Update destination if needed
             $resEntities = \User\models\UserEntityModel::get(['select' => ['entity_id', 'primary_entity'], 'where' => ['user_id = ?'], 'data' => [$new_dest]]);
-            $mailDestination = \Resource\models\resModel::getById(['select' => ['destination'], 'resId' => $res_id]);
+            $mailDestination = \Resource\models\ResModel::getById(['select' => ['destination'], 'resId' => $res_id]);
 
             $entityFound = false;
             $primaryEntity = '';

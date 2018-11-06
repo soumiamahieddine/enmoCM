@@ -467,7 +467,7 @@ abstract class diffusion_list_Abstract extends functions
                 //Modification du dest_user dans la table res_letterbox
                 if ($role_id == 'dest' && $collId == 'letterbox_coll') {
                     $resEntities = \User\models\UserEntityModel::get(['select' => ['entity_id', 'primary_entity'], 'where' => ['user_id = ?'], 'data' => [$userId]]);
-                    $mailDestination = \Resource\models\resModel::getById(['select' => ['destination'], 'resId' => $resId]);
+                    $mailDestination = \Resource\models\ResModel::getById(['select' => ['destination'], 'resId' => $resId]);
 
                     $entityFound = false;
                     $primaryEntity = '';
