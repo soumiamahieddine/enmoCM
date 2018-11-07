@@ -476,7 +476,7 @@ for ($i = 0; $i < $tabI; ++$i) {
                         $fakeId = $key;
                     }
                 }
-                $style = "style='color:".$_SESSION['mail_priorities_color'][$fakeId].";'";
+                $style = "style='color:".$_SESSION['mail_priorities_color'][$fakeId].";font-size:36px'";
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'], $extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
                 $img_class = substr($res_status['IMG_SRC'], 0, 2);

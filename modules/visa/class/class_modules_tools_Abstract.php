@@ -276,7 +276,7 @@ abstract class visa_Abstract extends Database
 
         $db = new Database();
         if (empty($noSignableAttachments)) {
-            $stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') IN in_signature_book = ?", [$res_id, $coll_id, true]);
+            $stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND in_signature_book = ?", [$res_id, $coll_id, true]);
         } else {
             $stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN (?) AND in_signature_book = ? ", [$res_id, $coll_id, $noSignableAttachments, true]);
         }
@@ -950,10 +950,11 @@ abstract class visa_Abstract extends Database
                         } else {
                             $vised = ' vised';
                             $link_vis = 'check';
-                            if (!empty($info_userVis['signatory'])) {
+                            
+                            if (!empty($info_userSign['signatory'])) {
                                 $info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userSign['process_date'], '', '', true).'</sub>';
     
-                                $info_vised = '<br/><select id="signRequest_'.$i.'" style="width:auto;display:none;" '.$isAllAttachementSigned;
+                                $info_vised .= '<br/><select id="signRequest_'.$i.'" style="width:auto;display:none;" '.$isAllAttachementSigned;
                                 $info_vised .= ' disabled="disabled" ';
                                 $info_vised .= '>';
                                 $info_vised .= '<option value="false">'._VISA_USER_SEARCH.'</option>';
@@ -964,7 +965,7 @@ abstract class visa_Abstract extends Database
                             } else {
                                 $info_vised = '<br/><sub>visé le : '.functions::format_date_db($info_userSign['process_date'], '', '', true).'</sub>';
     
-                                $info_vised = '<br/><select id="signRequest_'.$i.'" style="width:auto;display:none;" '.$isAllAttachementSigned;
+                                $info_vised .= '<br/><select id="signRequest_'.$i.'" style="width:auto;display:none;" '.$isAllAttachementSigned;
                                 $info_vised .= ' disabled="disabled" ';
                                 $info_vised .= '>';
                                 $info_vised .= '<option value="false" selected="selected">'._VISA_USER_SEARCH.'</option>';

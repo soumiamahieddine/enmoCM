@@ -1,7 +1,10 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
+import { HeaderService }        from '../service/header.service';
+import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any) : any;
 
@@ -15,6 +18,8 @@ declare var angularGlobals : any;
 })
 export class SaveNumericPackageComponent implements OnInit {
 
+    private _mobileQueryListener: () => void;
+    mobileQuery: MediaQueryList;
     coreUrl                     : string;
     lang                        : any       = LANG;
 
@@ -29,40 +34,25 @@ export class SaveNumericPackageComponent implements OnInit {
 
     loading                     : boolean   = false;
 
+    @ViewChild('snav') sidenavLeft: MatSidenav;
+    mobileMode                      : boolean   = false;
 
-    constructor(public http: HttpClient, private zone: NgZone, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private notify: NotificationService, private headerService: HeaderService) {
+        this.mobileMode = angularGlobals.mobileMode;
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
         window['angularSaveNumericPackageComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
     }
 
-    preparePage() {
-        $j('#inner_content').remove();
-        $j('#menunav').hide();
-        $j('#divList').remove();
-        $j('#magicContactsTable').remove();
-        $j('#manageBasketsOrderTable').remove();
-        $j('#controlParamTechnicTable').remove();
-        $j('#container').width("99%");
-        if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
-            $j('#content h1')[0].remove();
-        }
-
-    }
-
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " + this.lang.saveNumericPackage;
-        }
-    }
-
     ngOnInit(): void {
-        this.preparePage();
-        this.updateBreadcrumb(angularGlobals.applicationName);
+        this.headerService.headerMessage = this.lang.saveNumericPackage;
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = false;
-
     }
 
     processAfterUpload(b64Content: any) {

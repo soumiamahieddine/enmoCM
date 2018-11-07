@@ -137,7 +137,7 @@ if (!empty($arr_order) && count($arr_order) == 1) {
 if (!empty($order_field) && !empty($order)) {
     if ($_REQUEST['order_field'] == 'alt_identifier') {
         $orderstr = 'order by order_alphanum(alt_identifier)'.' '.$order;
-    } else if ($_REQUEST['order_field'] == 'priority') {
+    } elseif ($_REQUEST['order_field'] == 'priority') {
         $where .= ' and '.$table.'.priority = priorities.id';
         $select['priorities'] = ['order', 'id'];
         $orderstr = 'order by priorities.order '.$order;
@@ -148,7 +148,7 @@ if (!empty($order_field) && !empty($order)) {
 } elseif (!empty($_SESSION['save_list']['order']) && !empty($_SESSION['save_list']['order_field'])) {
     if ($_SESSION['save_list']['order_field'] == 'alt_identifier') {
         $orderstr = 'order by order_alphanum(alt_identifier)'.' '.$_SESSION['save_list']['order'];
-    } else if ($_SESSION['save_list']['order_field']) {
+    } elseif ($_SESSION['save_list']['order_field']) {
         $where .= ' and '.$table.'.priority = priorities.id';
         $select['priorities'] = ['order', 'id'];
         $orderstr = 'order by priorities.order '.$_SESSION['save_list']['order'];
@@ -467,7 +467,7 @@ if (!empty($tab)) {
                             $fakeId = $key;
                         }
                     }
-                    $style = "style='color:".$_SESSION['mail_priorities_color'][$fakeId].";'";
+                    $style = "style='color:".$_SESSION['mail_priorities_color'][$fakeId].";font-size:36px'";
                     $res_status = $status_obj->get_status_data($tab[$i][$j]['value'], $extension_icon);
                     $statusCmp = $tab[$i][$j]['value'];
                     $img_class = substr($res_status['IMG_SRC'], 0, 2);
@@ -564,7 +564,7 @@ if (!empty($tab)) {
                         $return_stmt = $stmt2->fetch(PDO::FETCH_ASSOC);
                         $formattedContact = \SrcCore\controllers\AutoCompleteController::getFormattedContact(['contact' => $return_stmt]);
                         $tab[$i][$j]['value'] = $formattedContact['contact']['contact'];
-                    } else if ($return_stmt->type == 'entity') {
+                    } elseif ($return_stmt->type == 'entity') {
                         $query = 'SELECT short_label FROM entities WHERE id = ?';
                         $arrayPDO = array($return_stmt->item_id);
                         $stmt2 = $db->query($query, $arrayPDO);
@@ -579,7 +579,7 @@ if (!empty($tab)) {
                     }
                     if (empty(trim($tab[$i][$j]['value']))) {
                         $tab[$i][$j]['value'] = null;
-                    } else if ($_SESSION['mlb_search_current_category_id'] == 'outgoing') {
+                    } elseif ($_SESSION['mlb_search_current_category_id'] == 'outgoing') {
                         $tab[$i][$j]['value'] = '<b>'._TO_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
                     } else {
                         $tab[$i][$j]['value'] = '<b>'._FOR_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
