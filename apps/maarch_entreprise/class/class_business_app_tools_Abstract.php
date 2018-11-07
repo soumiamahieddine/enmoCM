@@ -522,6 +522,7 @@ abstract class business_app_tools_Abstract extends Database
         $_SESSION['attachment_types_show'] = array();
         $_SESSION['attachment_types_with_process'] = array();
         $_SESSION['attachment_types_with_delay'] = array();
+        $_SESSION['attachment_types_reconciliation'] = array(); //NCH01
         $attachmentTypes = $xmlfile->attachment_types;
         if (count($attachmentTypes) > 0) {
             foreach ($attachmentTypes->type as $type ) {
@@ -531,6 +532,7 @@ abstract class business_app_tools_Abstract extends Database
                 $attach_in_mail = (string) $type['attach_in_mail'];
                 $show_attachment_type = (string) $type['show'];
                 $delay = (string) $type['with_delay'];
+                $select_in_reconciliation = (string) $type['select_in_reconciliation']; //NCH01
                 $process = (string) $type->process_mode;
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
@@ -546,6 +548,7 @@ abstract class business_app_tools_Abstract extends Database
                 $_SESSION['attachment_types_attach_in_mail'][(string) $type->id] = $attach_in_mail;
                 $_SESSION['attachment_types_with_process'][(string) $type->id] = $process;
                 $_SESSION['attachment_types_with_delay'][(string) $type->id] = $delay;
+                $_SESSION['attachment_types_reconciliation'][(string) $type->id] = $select_in_reconciliation; //NCH01
             }
         }
 

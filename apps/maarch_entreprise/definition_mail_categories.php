@@ -564,12 +564,22 @@ $_ENV['categories']['attachment']['other_cases'] = array();
 $_ENV['categories']['attachment']['other_cases']['chrono_number'] = array(
     'type_form' => 'integer',
     'type_field' => 'integer',
-    'mandatory' => true,
+    'mandatory' => false,
     'label' => _CHRONO_NUMBER,
     'table' => 'none',
     'img' => 'compass',
     'modify' => false,
     'form_show' => 'textfield',
+);
+$_ENV['categories']['attachment']['other_cases']['contact'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _DEST,
+    'table' => 'coll_ext',
+    'special' => 'dest_user_id,dest_contact_id',
+    'img' => 'book',
+    'modify' => false
 );
 $_ENV['categories']['attachment']['type_id'] = array(
     'type_form' => 'integer',
@@ -591,7 +601,16 @@ $_ENV['categories']['attachment']['destination'] = array(
     'modify' => false,
     'form_show' => 'textarea',
 );
-
+$_ENV['categories']['attachment']['other_cases']['contact'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _DEST,
+    'table' => 'coll_ext',
+    'special' => 'dest_user_id,dest_contact_id,is_multicontacts',
+    'img' => 'book',
+    'modify' => false
+);
 ///////////////////////////// GED DOC ////////////////////////////////////////////////
 $_ENV['categories']['ged_doc'] = array();
 $_ENV['categories']['ged_doc']['img_cat'] = '<i class="fa fa-arrow-right fa-2x"></i>';

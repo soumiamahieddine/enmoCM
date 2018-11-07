@@ -6,12 +6,12 @@
  *
  */
 
+use \Attachments\Models\ReconciliationModel;
+
 $core = new core_tools();
 $core->test_user();
 $db = new Database();
-
-require_once 'modules/attachments/Controllers/ReconciliationController.php';
-$reconciliationControler = new ReconciliationController();
+$reconciliationControler = new \Attachment\controllers\ReconciliationController();
 
 $letterboxTable = $_SESSION['tablename']['reconciliation']['letterbox'];
 
@@ -23,20 +23,24 @@ $childResId = $_SESSION['doc_id'];
 $formValues = $reconciliationControler -> get_values_in_array($_REQUEST['form_values']);
 $tabFormValues = array();
 
-foreach ($formValues as $tmpTab) {
-    if ($tmpTab['ID'] == 'title' || $tmpTab['ID'] == 'chrono_number' || $tmpTab['ID'] == 'contactid' || $tmpTab['ID'] == 'addressid' || $tmpTab['ID'] == 'close_incoming_mail') {
-        if ($tmpTab['ID'] == 'chrono_number') { // Check if the identifier is empty. if true, set it at 0
-            if (empty($tmpTab['VALUE'])) {
-                $tmpTab ['VALUE'] = "0";
-            }
-        }
-        if (trim($tmpTab['VALUE']) != '') { // Case of some empty value, that cause some errors
+// NCH01 new modifs
+$allowValues = array('title', 'chrono_number', 'contactid','addressid','close_incoming_mail', 'attachment_type', 'back_date');
+foreach($formValues as $tmpTab){
+    if(in_array($tmpTab['ID'], $allowValues)){
+        if($tmpTab['ID'] == 'chrono_number') // Check if the identifier is empty. if true, set it at NULL
+            if(empty($tmpTab['VALUE'])) $tmpTab ['VALUE'] = NULL;
+        if(trim($tmpTab['VALUE']) != '') // Case of some empty value, that cause some errors
             $tabFormValues[$tmpTab['ID']] = $tmpTab['VALUE'];
-        }
     }
 }
+// END NCH01 new modifs
 
 $_SESSION['modules_loaded']['attachments']['reconciliation']['tabFormValues'] = $tabFormValues;    // declare SESSION var, used in remove_letterbox
+
+// Remove chrono number depends on attachment type ("with chrono" param) // new modifs
+if($_SESSION['attachment_types_with_chrono'][$tabFormValues['attachment_type']] == 'false'){
+    $tabFormValues['chrono_number'] = NULL;
+}
 
 // Retrieve the informations of the newly scanned document (the one to attach as an attachment)
 $queryChildInfos = \Resource\models\ResModel::getById(['resId' => $childResId]);
@@ -97,6 +101,16 @@ array_push(
     array(
         'column' => 'attachment_type',
         'value' => 'outgoing_mail_signed',
+        'type' => 'string',
+    )
+);
+
+// Attachment type
+array_push(
+    $aArgs['data'],
+    array(
+        'column' => 'attachment_type',
+        'value' => $tabFormValues['attachment_type'], // NEW MODIFS
         'type' => 'string',
     )
 );
@@ -188,9 +202,27 @@ for ($i = 0; $i <= count($aArgs['data']); $i++) {
 array_push(
     $aArgs['data'],
     array(
+        'column' => 'logical_adr',
+        'value' => '',
+        'type' => 'string',
+    )
+);
+
+array_push(
+    $aArgs['data'],
+    array(
         'column' => 'offset_doc',
         'value' => '',
         'type' => 'integer',
+    )
+);
+
+array_push(
+    $aArgs['data'],
+    array(
+        'column' => 'typist',
+        'value' => $_SESSION['user']['UserId'],
+        'type' => 'string',
     )
 );
 

@@ -39,8 +39,7 @@ if ($category_id == "outgoing") {
                         ,array($_SESSION['doc_id']));
     $nb_attachment = $stmt->rowCount();
 }
-if ($category_id == "attachment" || $category_id == "incoming" || $category_id == "internal" || ($category_id == "outgoing" && $nb_attachment > 0)){
-
+if ($category_id == "incoming" || $category_id == 'attachment' || ($category_id == "outgoing" && $nb_attachment > 0) || (isset($_POST['type_id']) && $_POST['type_id'] == 'attachment')){
     if (isset($_SESSION['save_chrono_number']) && $_SESSION['save_chrono_number'][$index] <> "") {
         echo "{status: 1, chronoNB: '".$_SESSION['save_chrono_number'][$index]."'}";
     } else {
