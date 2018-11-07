@@ -16,7 +16,6 @@ namespace SrcCore\models;
 
 class DatabasePDO
 {
-
     private $pdo;
     private static $type            = null;
     private static $preparedQueries = [];
@@ -151,7 +150,9 @@ class DatabasePDO
 
             $query->execute($data);
         } catch (\PDOException $PDOException) {
-            if (strpos($PDOException->getMessage(), 'Admin shutdown: 7') !== false || strpos($PDOException->getMessage(), 'General error: 7') !== false) {
+            if (strpos($PDOException->getMessage(), 'Admin shutdown: 7') !== false || 
+                strpos($PDOException->getMessage(), 'General error: 7') !== false
+            ) {
                 $db = new DatabasePDO();
                 $query = $db->query($originalQuery, $originalData);
             } else {
@@ -187,6 +188,12 @@ class DatabasePDO
         }
 
         return ['where' => $where, 'limit' => $limit];
+    }
+
+    public function reset()
+    {
+        $this->pdo = null;
+        self::$preparedQueries = [];
     }
 
     public function getType()
