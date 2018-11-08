@@ -7,7 +7,7 @@
  */
 
 
-namespace Attachments\Models;
+namespace Attachment\models;
 
 
 class ReconciliationModel extends ReconciliationModelAbstract {

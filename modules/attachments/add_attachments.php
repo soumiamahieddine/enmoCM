@@ -6,8 +6,6 @@
  *
  */
 
-use \Attachments\Models\ReconciliationModel;
-
 $core = new core_tools();
 $core->test_user();
 $db = new Database();
@@ -52,7 +50,8 @@ foreach ($queryChildInfos as $key => $value) {
         && $key != 'tablename'
         && $key != 'locker_user_id'
         && $key != 'locker_time'
-        && $key != 'confidentiality') {
+        && $key != 'confidentiality'
+        && $key != 'status') {
         if (is_numeric($value)) {
             array_push(
                 $aArgs['data'],
@@ -91,16 +90,6 @@ array_push(
     array(
         'column' => 'status',
         'value' => 'TRA',
-        'type' => 'string',
-    )
-);
-
-// The attachment type need to be signed_response
-array_push(
-    $aArgs['data'],
-    array(
-        'column' => 'attachment_type',
-        'value' => 'outgoing_mail_signed',
         'type' => 'string',
     )
 );
@@ -159,7 +148,7 @@ if (is_numeric($tabFormValues['contactid'])) { // usefull to avoid user contact 
     );
 }
 //collId's
-$aArgs['collId'] = 'attachment_coll';
+$aArgs['collId'] = 'letterbox_coll';
 $aArgs['collIdMaster'] = 'letterbox_coll';
 
 //table
@@ -185,6 +174,7 @@ for ($i = 0; $i <= count($aArgs['data']); $i++) {
             $aArgs['filename'] = $aArgs['data'][$i]['value'];
         }
     }
+
     if ($aArgs['data'][$i]['column'] == 'docserver_id') {
         // Retrieve the PATH TEMPLATE
         $docserverPath = \Docserver\models\DocserverModel::getByDocserverId([
@@ -197,16 +187,11 @@ for ($i = 0; $i <= count($aArgs['data']); $i++) {
     }
 }
 
+$file = file_get_contents($aArgs['docserverPath'] . str_replace('#', '/', $aArgs['path']) . $aArgs['filename']);
+$aArgs['encodedFile'] = base64_encode($file);
+$aArgs['status']      = 'TRA';
 
-// Add logical adr and offset to empty (loadIntoDb function needed it)
-array_push(
-    $aArgs['data'],
-    array(
-        'column' => 'logical_adr',
-        'value' => '',
-        'type' => 'string',
-    )
-);
+// Add offset to empty (loadIntoDb function needed it)
 
 array_push(
     $aArgs['data'],
@@ -226,14 +211,46 @@ array_push(
     )
 );
 
+array_push(
+    $aArgs['data'],
+    array(
+        'column' => 'coll_id',
+        'value' => 'letterbox_coll',
+        'type' => 'string',
+    )
+);
+
+array_push(
+    $aArgs['data'],
+    array(
+        'column' => 'res_id_master',
+        'value' => $aArgs['resIdMaster'],
+        'type' => 'string',
+    )
+);
+
 // res_attachment insertion
 if (count($parentResId) == 1) {
-    $aArgs['resIdMaster'] = $parentResId[0];
-    $insertResAttach = $reconciliationControler -> storeAttachmentResource($aArgs);
+    array_push(
+        $aArgs['data'],
+        array(
+            'column' => 'res_id_master',
+            'value' => $parentResId[0],
+            'type' => 'string',
+        )
+    );
+    $insertResAttach = \Resource\controllers\StoreController::storeResourceRes($aArgs);
 } else {
     for ($i = 0; $i < count($parentResId); $i++) {
-        $aArgs['resIdMaster'] = $parentResId[$i];
-        $insertResAttach = $reconciliationControler->storeAttachmentResource($aArgs);
+        array_push(
+            $aArgs['data'],
+            array(
+                'column' => 'res_id_master',
+                'value' => $parentResId[$i],
+                'type' => 'string',
+            )
+        );
+        $insertResAttach = \Resource\controllers\StoreController::storeResourceRes($aArgs);
     }
 }
 unset($_SESSION['save_chrono_number']); // Usefull to avoid duplicate chrono number
