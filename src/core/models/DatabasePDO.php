@@ -28,7 +28,6 @@ class DatabasePDO
         $user = '';
         $password = '';
         $formattedDriver = '';
-
         if (!empty($args['server'])) {
             $server     = $args['server'];
             $port       = $args['port'];
@@ -42,6 +41,7 @@ class DatabasePDO
             } else {
                 $customId = CoreConfigModel::getCustomId();
             }
+	
 
             if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
                 $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";

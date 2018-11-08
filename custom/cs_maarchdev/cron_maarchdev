@@ -1,0 +1,230 @@
+
+
+####################################################################################
+#                                                                                  #
+#                                                                                  #
+#                                       maarchtest_v2                                      #
+#                                                                                  #
+#                                                                                  #
+####################################################################################
+
+
+######################THUMBNAILS####################################################
+* * * * *       /var/www/html/maarchtest/custom/cs_maarchtest_v2/modules/thumbnails/scripts/launch_batch_thumbnails.sh
+15 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/thumbnails/log/*.log
+
+######################notification#################################################
+
+15 10 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v2/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 15 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v2/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 12 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v2/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+
+
+30 10 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v2/modules/notifications/batch/scripts/sendmail.sh
+30 15 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v2/modules/notifications/batch/scripts/sendmail.sh
+30 12 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v2/modules/notifications/batch/scripts/sendmail.sh
+
+10 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/notifications/batch/logs/process_event_stack/*.log
+11 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/notifications/batch/logs/process_email_stack/*.log
+######################sendmail####################################################
+
+* * * * *       /var/www/html/maarchtest/custom/cs_maarchtest_v2/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
+
+0 12 * * 0     rm -Rf /var/www/html/maarchtest/modules/sendmail/batch/logs/*.log
+
+
+######################fulltext###################################################
+
+* * * * *       /var/www/html/maarchtest/custom/cs_maarchtest_v2/modules/full_text/scripts/launch_fulltext.sh
+20 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/full_text/log/*.log
+
+
+####################################################################################
+#                                                                                  #
+#                                                                                  #
+#                                       maarchtest_v3                                      #
+#                                                                                  #
+#                                                                                  #
+####################################################################################
+
+
+######################THUMBNAILS####################################################
+* * * * *       /var/www/html/maarchtest/custom/cs_maarchtest_v3/modules/thumbnails/scripts/launch_batch_thumbnails.sh
+15 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/thumbnails/log/*.log
+
+######################notification#################################################
+
+15 10 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v3/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 15 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v3/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 12 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v3/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+
+
+30 10 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v3/modules/notifications/batch/scripts/sendmail.sh
+30 15 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v3/modules/notifications/batch/scripts/sendmail.sh
+30 12 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v3/modules/notifications/batch/scripts/sendmail.sh
+
+10 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/notifications/batch/logs/process_event_stack/*.log
+11 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/notifications/batch/logs/process_email_stack/*.log
+######################sendmail####################################################
+
+* * * * *       /var/www/html/maarchtest/custom/cs_maarchtest_v3/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
+
+0 12 * * 0     rm -Rf /var/www/html/maarchtest/modules/sendmail/batch/logs/*.log
+
+
+######################fulltext###################################################
+
+* * * * *       /var/www/html/maarchtest/custom/cs_maarchtest_v3/modules/full_text/scripts/launch_fulltext.sh
+20 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/full_text/log/*.log
+
+
+####################################################################################
+#                                                                                  #
+#                                                                                  #
+#                                       maarchtest_v4                                      #
+#                                                                                  #
+#                                                                                  #
+####################################################################################
+
+
+######################THUMBNAILS####################################################
+* * * * *       /var/www/html/maarchtest/custom/cs_maarchtest_v4/modules/thumbnails/scripts/launch_batch_thumbnails.sh
+15 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/thumbnails/log/*.log
+
+######################notification#################################################
+
+15 10 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v4/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 15 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v4/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 12 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v4/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+
+
+30 10 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v4/modules/notifications/batch/scripts/sendmail.sh
+30 15 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v4/modules/notifications/batch/scripts/sendmail.sh
+30 12 * * *     /var/www/html/maarchtest/custom/cs_maarchtest_v4/modules/notifications/batch/scripts/sendmail.sh
+
+10 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/notifications/batch/logs/process_event_stack/*.log
+11 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/notifications/batch/logs/process_email_stack/*.log
+######################sendmail####################################################
+
+* * * * *       /var/www/html/maarchtest/custom/cs_maarchtest_v4/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
+
+0 12 * * 0     rm -Rf /var/www/html/maarchtest/modules/sendmail/batch/logs/*.log
+
+
+######################fulltext###################################################
+
+* * * * *       /var/www/html/maarchtest/custom/cs_maarchtest_v4/modules/full_text/scripts/launch_fulltext.sh
+20 12 * * 0        rm -Rf /var/www/html/maarchtest/modules/full_text/log/*.log
+
+
+####################################################################################
+#                                                                                  #
+#                                                                                  #
+#                                       maarch1712                                      #
+#                                                                                  #
+#                                                                                  #
+####################################################################################
+
+
+######################THUMBNAILS####################################################
+* * * * *       /var/www/html/maarch1712/custom/cs_maarch1712/modules/thumbnails/scripts/launch_batch_thumbnails.sh
+15 12 * * 0        rm -Rf /var/www/html/maarch1712/modules/thumbnails/log/*.log
+
+######################notification#################################################
+
+15 10 * * *     /var/www/html/maarch1712/custom/cs_maarch1712/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 15 * * *     /var/www/html/maarch1712/custom/cs_maarch1712/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 12 * * *     /var/www/html/maarch1712/custom/cs_maarch1712/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+
+
+30 10 * * *     /var/www/html/maarch1712/custom/cs_maarch1712/modules/notifications/batch/scripts/sendmail.sh
+30 15 * * *     /var/www/html/maarch1712/custom/cs_maarch1712/modules/notifications/batch/scripts/sendmail.sh
+30 12 * * *     /var/www/html/maarch1712/custom/cs_maarch1712/modules/notifications/batch/scripts/sendmail.sh
+
+10 12 * * 0        rm -Rf /var/www/html/maarch1712/modules/notifications/batch/logs/process_event_stack/*.log
+11 12 * * 0        rm -Rf /var/www/html/maarch1712/modules/notifications/batch/logs/process_email_stack/*.log
+######################sendmail####################################################
+
+* * * * *       /var/www/html/maarch1712/custom/cs_maarch1712/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
+
+0 12 * * 0     rm -Rf /var/www/html/maarch1712/modules/sendmail/batch/logs/*.log
+
+
+######################fulltext###################################################
+
+* * * * *       /var/www/html/maarch1712/custom/cs_maarch1712/modules/full_text/scripts/launch_fulltext.sh
+20 12 * * 0        rm -Rf /var/www/html/maarch1712/modules/full_text/log/*.log
+
+
+####################################################################################
+#                                                                                  #
+#                                                                                  #
+#                                       maarchdev_last                                      #
+#                                                                                  #
+#                                                                                  #
+####################################################################################
+
+
+######################THUMBNAILS####################################################
+*/5 5-21 * * 1-5       /var/www/html/maarchdev/custom/cs_maarchdev_last/modules/thumbnails/scripts/launch_batch_thumbnails.sh
+15 12 * * 0        rm -Rf /var/www/html/maarchdev/modules/thumbnails/log/*.log
+
+######################notification#################################################
+
+15 10 * * *     /var/www/html/maarchdev/custom/cs_maarchdev_last/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 15 * * *     /var/www/html/maarchdev/custom/cs_maarchdev_last/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 12 * * *     /var/www/html/maarchdev/custom/cs_maarchdev_last/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+
+
+30 10 * * *     /var/www/html/maarchdev/custom/cs_maarchdev_last/modules/notifications/batch/scripts/sendmail.sh
+30 15 * * *     /var/www/html/maarchdev/custom/cs_maarchdev_last/modules/notifications/batch/scripts/sendmail.sh
+30 12 * * *     /var/www/html/maarchdev/custom/cs_maarchdev_last/modules/notifications/batch/scripts/sendmail.sh
+
+10 12 * * 0        rm -Rf /var/www/html/maarchdev/modules/notifications/batch/logs/process_event_stack/*.log
+11 12 * * 0        rm -Rf /var/www/html/maarchdev/modules/notifications/batch/logs/process_email_stack/*.log
+######################sendmail####################################################
+
+*/2 * * * *       /var/www/html/maarchdev/custom/cs_maarchdev_last/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
+
+0 12 * * 0     rm -Rf /var/www/html/maarchdev/modules/sendmail/batch/logs/*.log
+
+
+######################fulltext###################################################
+
+*/5 5-21 * * 1-5       /var/www/html/maarchdev/custom/cs_maarchdev_last/modules/full_text/scripts/launch_fulltext.sh
+20 12 * * 0        rm -Rf /var/www/html/maarchdev/modules/full_text/log/*.log
+
+
+####################################################################################
+#                                                                                  #
+#                                                                                  #
+#                                       maarchdev                                      #
+#                                                                                  #
+#                                                                                  #
+####################################################################################
+
+
+######################notification#################################################
+
+15 10 * * *     /var/www/html/maarchdev/custom/cs_maarchdev/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 15 * * *     /var/www/html/maarchdev/custom/cs_maarchdev/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+15 12 * * *     /var/www/html/maarchdev/custom/cs_maarchdev/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+
+
+30 10 * * *     /var/www/html/maarchdev/custom/cs_maarchdev/modules/notifications/batch/scripts/sendmail.sh
+30 15 * * *     /var/www/html/maarchdev/custom/cs_maarchdev/modules/notifications/batch/scripts/sendmail.sh
+30 12 * * *     /var/www/html/maarchdev/custom/cs_maarchdev/modules/notifications/batch/scripts/sendmail.sh
+
+10 12 * * 0        rm -Rf /var/www/html/maarchdev/modules/notifications/batch/logs/process_event_stack/*.log
+11 12 * * 0        rm -Rf /var/www/html/maarchdev/modules/notifications/batch/logs/process_email_stack/*.log
+######################sendmail####################################################
+
+*/2 * * * *       /var/www/html/maarchdev/custom/cs_maarchdev/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
+
+0 12 * * 0     rm -Rf /var/www/html/maarchdev/modules/sendmail/batch/logs/*.log
+
+
+######################fulltext###################################################
+
+*/5 5-21 * * 1-5       /var/www/html/maarchdev/custom/cs_maarchdev/modules/full_text/scripts/launch_fulltext.sh
+20 12 * * 0        rm -Rf /var/www/html/maarchdev/modules/full_text/log/*.log

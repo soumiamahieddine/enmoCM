@@ -26,7 +26,7 @@ if (file_exists("custom/{$customId}/src/core/lang/lang-{$language}.php")) {
 require_once("src/core/lang/lang-{$language}.php");
 
 
-$app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true]]);
+$app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true, 'addContentLengthHeader' => false ]]);
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
@@ -221,6 +221,10 @@ $app->put('/priorities/{id}', \Priority\controllers\PriorityController::class . 
 $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class . ':delete');
 $app->get('/sortedPriorities', \Priority\controllers\PriorityController::class . ':getSorted');
 $app->put('/sortedPriorities', \Priority\controllers\PriorityController::class . ':updateSort');
+
+// Reconciliation
+$app->post('/reconciliation/add', \Attachment\controllers\ReconciliationController::class . ':create');
+$app->get('/reconciliation/check', \Attachment\controllers\ReconciliationController::class . ':checkAttachment');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
