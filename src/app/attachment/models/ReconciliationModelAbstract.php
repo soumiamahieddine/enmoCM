@@ -35,7 +35,7 @@ class ReconciliationModelAbstract {
 
 public static function updateReconciliation (array $aArgs = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['ValidatorModel::notEmpty($aArgs, ['set']);']);
+        ValidatorModel::notEmpty($aArgs, ['set']);
         ValidatorModel::arrayType($aArgs, ['where', 'data', 'set']);
 
         DatabaseModel::update([
