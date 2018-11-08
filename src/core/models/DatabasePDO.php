@@ -191,7 +191,7 @@ class DatabasePDO
         return ['where' => $where, 'limit' => $limit];
     }
 
-    public function reset()
+    public static function reset()
     {
         self::$pdo = null;
         self::$preparedQueries = [];
