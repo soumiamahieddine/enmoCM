@@ -163,16 +163,24 @@ class FastParapheurController
 
         $attachments         = \Attachment\models\AttachmentModel::getOnView([
             'select'         => ['res_id', 'res_id_version', 'title', 'attachment_type','path', 'res_id_master', 'format'],
-            'where'          => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE', "format = 'pdf'"],
-            'data'           => [$aArgs['resIdMaster'], ['incoming_mail_attachment', 'print_folder', 'signed_response']]
+            'where'          => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
+            'data'           => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
         ]);
 
         $attachmentToFreeze = [];
         for($i = 0; $i < count($attachments); $i++){
-            $resId                  = $attachments[$i]['res_id'];
-            $attachmentInfo         = \Attachment\models\AttachmentModel::getById(['id' => $resId, 'isVersion' => false]);
-            $attachmentPath         = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $attachmentInfo['docserver_id'], 'select' => ['path_template']]);
-            $attachmentFilePath     = $attachmentPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachmentInfo['path']) . $attachmentInfo['filename'];
+            if (!empty($attachments[$i]['res_id'])) {
+                $resId  = $attachments[$i]['res_id'];
+                $collId = 'attachments_coll';
+            } else {
+                $resId  = $attachments[$i]['res_id_master'];
+                $collId = 'attachments_version_coll';
+            }
+
+            $adrInfo                = \Convert\models\AdrModel::getConvertedDocumentById(['resId' => $resId, 'collId' => $collId, 'type' => 'PDF']);
+
+            $attachmentPath         = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id'], 'select' => ['path_template']]);
+            $attachmentFilePath     = $attachmentPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $adrInfo['path']) . $adrInfo['filename'];
             $attachmentFileName     = 'projet_courrier_' . $attachments[$i]['res_id_master'] . '_' . rand(0001,9999) . '.pdf';
 
             $zip            = new ZipArchive();
@@ -228,7 +236,7 @@ class FastParapheurController
                     CURLOPT_SSLCERTTYPE     => $aArgs['config']['data']['certType']
                 ]
             ]);
-
+            var_dump($curlReturn);
             $isError    = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
             if(!empty($isError ->Fault[0])){
                 // TODO gestion des erreurs
