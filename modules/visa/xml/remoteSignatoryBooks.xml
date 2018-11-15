@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <signatoryBookEnabled>fastParapheur</signatoryBookEnabled>
+    <signatoryBookEnabled>maarchParapheur</signatoryBookEnabled>
+    <signatoryBook>
+        <id>maarchParapheur</id>
+        <userId>jjane@maarch.com</userId>
+        <password>maarch</password>
+        <url>http://10.2.95.58/MaarchParapheur</url>
+        <signature>SIGN</signature>
+        <annotation>ANNOT</annotation>
+    </signatoryBook>
     <signatoryBook>
         <id>ixbus</id>
         <userId></userId>

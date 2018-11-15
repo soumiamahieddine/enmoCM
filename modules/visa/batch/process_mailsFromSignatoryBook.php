@@ -182,6 +182,8 @@ try {
             $signatoryBook = "/modules/visa/class/IParapheurController.php";
         } elseif ($configRemoteSignatoryBook['id'] == 'fastParapheur') {
             $signatoryBook = "/modules/visa/class/FastParapheurController.php";
+        } elseif ($configRemoteSignatoryBook['id'] == 'maarchParapheur') {
+            $signatoryBook = "/modules/visa/class/MaarchParapheurController.php";
         }
     } else {
         $GLOBALS['logger']->write('no signatory book enabled', 'ERROR', 102);
@@ -251,6 +253,8 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
     $retrievedMails = IParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 } elseif ($configRemoteSignatoryBook['id'] == 'fastParapheur') {
     $retrievedMails = FastParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
+} elseif ($configRemoteSignatoryBook['id'] == 'maarchParapheur') {
+    $retrievedMails = MaarchParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 }
 
 // On dégele les pj et on créé une nouvelle ligne si le document a été signé
