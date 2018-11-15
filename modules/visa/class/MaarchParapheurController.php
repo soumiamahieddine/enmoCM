@@ -19,7 +19,7 @@ class MaarchParapheurController
     {
         $initializeDatas = MaarchParapheurController::getInitializeDatas($config);
 
-        $html .= '<label for="nature">' . _USERS . '</label><select name="nature" id="nature">';
+        $html .= '<label for="processingUser">' . _USER_MAARCH_PARAPHEUR . '</label><select name="processingUser" id="processingUser">';
         if (!empty($initializeDatas['users'])) {
             foreach ($initializeDatas['users'] as $value) {
                 $html .= '<option value="';
@@ -29,20 +29,8 @@ class MaarchParapheurController
                 $html .= '</option>';
             }
         }
-        $html .= '</select><br /><br />';
-
-        // $html .= '<label for="messageModel">' . _WORKFLOW_MODEL_IXBUS . '</label><select name="messageModel" id="messageModel">';
-        // foreach ($initializeDatas['messagesModel'] as $value) {
-        //     $html .= '<option value="';
-        //     $html .= $value;
-        //     $html .= '">';
-        //     $html .= $value;
-        //     $html .= '</option>';
-        // }
-        // $html .= '</select><br /><br />';
-        // $html .= '<label for="loginIxbus">'._ID_IXBUS.'</label><input name="loginIxbus" id="loginIxbus"/><br /><br />';
-        // $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input type="password" name="passwordIxbus" id="passwordIxbus"/><br /><br />';
-        // $html .= _ESIGN . '<input type="radio" name="mansignature" id="mansignature" value="false" checked="checked" />' . _HANDWRITTEN_SIGN .'<input type="radio" name="mansignature" id="mansignature" value="true" /><br /><br />';
+        $html .= '</select><br /><br /><br /><br />';
+        $html .= _NOTE . '<input type="radio" name="mode" id="mode" value="annotation" checked="checked" />' . _SIGNATURE .'<input type="radio" name="mode" id="mode" value="signature" /><br /><br />';
 
         return $html;
     }
@@ -50,38 +38,24 @@ class MaarchParapheurController
     public static function getInitializeDatas($config)
     {
         $rawResponse['users'] = MaarchParapheurController::getUsers(['config' => $config]);
-        // $rawResponse['usersList']     = IxbusController::getUsersList(['config' => $config, 'sessionId' => $sessionId]);
-        // $messagesModels = IxbusController::getMessagesModel(['config' => $config, 'sessionId' => $sessionId]);
-
-        // $rawResponse['messagesModel'] = [];
-        // if (!empty($rawResponse['natures']->Classeur)) {
-        //     foreach ($rawResponse['natures']->Classeur as $nature) {
-        //         foreach ($messagesModels->Message as $message) {
-        //             if ($message->Identifiant == 392213) {
-        //                 $messageModel = IxbusController::getMessageNature(['config' => $config, 'messageId' => $message->Identifiant, 'sessionId' => $sessionId]);
-        //                 if ((string)$messageModel->IdentifiantClasseur == (string)$nature->Identifiant) {
-        //                     $rawResponse['messagesModel'][(string)$messageModel->IdentifiantMessage] = (string)$message->IdentifiantSpecifique;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
 
         return $rawResponse;
     }
 
     public static function getUsers($aArgs)
     {
-        $response = \SrcCore\models\CurlModel::exec(['url' => $aArgs['config']['data']['url'] . '/rest/users', 'user' => $aArgs['config']['data']['userId'], 'password' => $aArgs['config']['data']['password'], 'method' => 'GET']);
+        $response = \SrcCore\models\CurlModel::exec([
+            'url'      => $aArgs['config']['data']['url'] . '/rest/users',
+            'user'     => $aArgs['config']['data']['userId'],
+            'password' => $aArgs['config']['data']['password'],
+            'method'   => 'GET'
+        ]);
 
         return $response['users'];
     }
 
     public static function sendDatas($aArgs)
     {
-        $sessionId = IxbusController::createSession($aArgs['config']);
-        $userInfo  = IxbusController::getInfoUtilisateur(['config' => $aArgs['config'], 'login' => $aArgs['loginIxbus'], 'password' => $aArgs['passwordIxbus']]);
-
         $attachments = \Attachment\models\AttachmentModel::getOnView([
             'select'    => [
                 'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
@@ -93,6 +67,29 @@ class MaarchParapheurController
         ]);
 
         $attachmentToFreeze = [];
+
+        $adrMainInfo              = \Convert\models\AdrModel::getConvertedDocumentById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll', 'type' => 'PDF']);
+        $docserverMainInfo        = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
+        $arrivedMailMainfilePath  = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
+        $encodedMainZipFile       = MaarchParapheurController::createZip(['filepath' => $arrivedMailMainfilePath, 'filename' => 'courrier_arrivee.pdf']);
+
+        $mainResource = \Resource\models\ResModel::getOnView([
+            'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'contact_firstname', 'contact_lastname', 'contact_society'],
+            'where'  => ['res_id = ?'],
+            'data'   => [$aArgs['resIdMaster']]
+        ]);
+        if (empty($mainResource[0]['process_limit_date'])) {
+            $processLimitDate = date('Y-m-d', strtotime(date("Y-m-d"). ' + 14 days'));
+        } else {
+            $processLimitDateTmp = explode(" ", $mainResource[0]['process_limit_date']);
+            $processLimitDate = $processLimitDateTmp[0];
+        }
+
+        $processingUser      = $aArgs['processingUser'];
+        $status              = $aArgs['config']['data'][$aArgs['mode']];
+        $priority            = \Priority\models\PriorityModel::getById(['select' => ['label'], 'id' => $mainResource[0]['priority']]);
+        $sender              = \User\models\UserModel::getByUserId(['select' => ['firstname', 'lastname'], 'userId' => $aArgs['userId']]);
+        $senderPrimaryEntity = \User\models\UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         foreach ($attachments as $value) {
             if (!empty($value['res_id'])) {
@@ -106,59 +103,37 @@ class MaarchParapheurController
             $docserverInfo = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
             $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
 
-            $encodedZipFile = IxbusController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename'], 'res_id_master' => $aArgs['resIdMaster']]);
+            $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
 
-            $mainResource = \Resource\models\ResModel::getExtById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
-            if (empty($mainResource['process_limit_date'])) {
-                $processLimitDate = date('Y-m-d', strtotime(date("Y-m-d"). ' + 14 days'));
-            } else {
-                $processLimitDateTmp = explode(" ", $mainResource['process_limit_date']);
-                $processLimitDate = $processLimitDateTmp[0];
-            }
-
-            $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
-            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-              <soap:Body>
-                <SendDossier xmlns="http://www.srci.fr">
-                  <ContenuDocumentZip>'. $encodedZipFile .'</ContenuDocumentZip>
-                  <NomDocumentPrincipal>'. $adrInfo['filename'] . '</NomDocumentPrincipal>
-                  <NomDossier>'. $value['title'] .'</NomDossier>
-                  <NomModele>'. $aArgs['messageModel'] .'</NomModele>
-                  <NomNature>'. $aArgs['classeurName'] .'</NomNature>
-                  <DateLimite>'.$processLimitDate.'</DateLimite>
-                  <LoginResponsable>'. $userInfo->NomUtilisateur .'</LoginResponsable>
-                  <Confidentiel>false</Confidentiel>
-                  <DocumentModifiable>true</DocumentModifiable>
-                  <AnnexesSignables>false</AnnexesSignables>
-                  <SignatureManuscrite>'.$aArgs['manSignature'].'</SignatureManuscrite>
-                </SendDossier>
-              </soap:Body>
-            </soap:Envelope>';
-
-            $opts = [
-                CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-                CURLOPT_HTTPHEADER => [
-                    'content-type:text/xml;charset=\"utf-8\"',
-                    'accept:text/xml',
-                    "Cache-Control: no-cache",
-                    "Pragma: no-cache",
-                    "Content-length: ".strlen($xmlPostString),
-                    "Cookie:".$sessionId,
-                    "SOAPAction: \"http://www.srci.fr/SendDossier\""
-                ],
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS  => $xmlPostString
+            $attachments = [
+                'encodedZipDocument' => $encodedMainZipFile,
+                'subject'            => $mainResource[0]['subject'],
+                'reference'          => $mainResource[0]['alt_identifier']
             ];
-    
-            $curl = curl_init();
-            curl_setopt_array($curl, $opts);
-            $rawResponse = curl_exec($curl);
-    
-            $data = simplexml_load_string($rawResponse);
-            $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->SendDossierResponse->SendDossierResult;
 
-            $attachmentToFreeze[$value['res_id']] = (string)$response;
+            $bodyData = [
+                'reference'          => $value['identifier'],
+                'subject'            => $value['title'],
+                'status'             => $status,
+                'priority'           => $priority['label'],
+                'sender'             => trim($sender['firstname'] . ' ' .$sender['lastname']),
+                'sender_entity'      => $senderPrimaryEntity['entity_label'],
+                'processing_user'    => $processingUser,
+                'recipient'          => trim($mainResource[0]['contact_firstname'] . ' ' . $mainResource[0]['contact_lastname'] . ' ' . $mainResource[0]['contact_society']),
+                'limit_data'         => $processLimitDate ,
+                'encodedZipDocument' => $encodedZipDocument,
+                'attachments'        => $attachments
+            ];
+
+            $response = \SrcCore\models\CurlModel::exec([
+                'url'      => $aArgs['config']['data']['url'] . '/rest/documents',
+                'user'     => $aArgs['config']['data']['userId'],
+                'password' => $aArgs['config']['data']['password'],
+                'method'   => 'POST',
+                'bodyData' => $bodyData
+            ]);
+
+            $attachmentToFreeze[$value['res_id']] = $response['id'];
         }
 
         return $attachmentToFreeze;
@@ -174,11 +149,6 @@ class MaarchParapheurController
 
         if ($zip->open($zipFilename, ZipArchive::CREATE) === true) {
             $zip->addFile($aArgs['filepath'], $aArgs['filename']);
-            
-            $adrInfo             = \Convert\models\AdrModel::getConvertedDocumentById(['resId' => $aArgs['res_id_master'], 'collId' => 'letterbox_coll', 'type' => 'PDF']);
-            $docserverInfo       = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
-            $arrivedMailfilePath = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
-            $zip->addFile($arrivedMailfilePath, 'courrier_arrivee.pdf');
 
             $zip->close();
 
@@ -192,25 +162,25 @@ class MaarchParapheurController
 
     public static function retrieveSignedMails($aArgs)
     {
-        $sessionId = IxbusController::createSession($aArgs['config']);
+        $sessionId = MaarchParapheurController::createSession($aArgs['config']);
 
         foreach (['noVersion', 'isVersion'] as $version) {
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                $etatDossier = IxbusController::getEtatDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
+                $etatDossier = MaarchParapheurController::getEtatDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
     
                 // Refused
                 if ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatRefused']) {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                    $notes = IxbusController::getDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
+                    $notes = MaarchParapheurController::getDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
                     $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->MotifRefus;
                 // Validated
                 } elseif ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatValidated']) {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-                    $signedDocument = IxbusController::getAnnexes(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
+                    $signedDocument = MaarchParapheurController::getAnnexes(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
                     $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
                     $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = (string)$signedDocument->Fichier;
 
-                    $notes = IxbusController::getAnnotations(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
+                    $notes = MaarchParapheurController::getAnnotations(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
                     $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->Annotation->Texte;
                 } else {
                     unset($aArgs['idsToRetrieve'][$version][$resId]);
