@@ -210,10 +210,7 @@ try {
     exit();
 }
 
-if (!empty($GLOBALS['db'])) {
-    $GLOBALS['db']->reset();
-}
-
+\SrcCore\models\DatabasePDO::reset();
 $GLOBALS['db'] = new \SrcCore\models\DatabasePDO(['customId' => $GLOBALS['CustomId']]);
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR . $GLOBALS['batchName'] .'_error.lck';
