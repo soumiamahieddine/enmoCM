@@ -2,7 +2,7 @@
 <ROOT>
     <CONFIG>
         <MaarchDirectory>/var/www/html/maarchdev/</MaarchDirectory>
-            <CustomId>cs_maarchdev_last</CustomId>
+        <CustomId>cs_maarchdev_last</CustomId>
         <validatedStatus>VAL</validatedStatus>
         <refusedStatus>COU</refusedStatus>
         <applicationUrl>http://localhost/maarchdev/</applicationUrl>

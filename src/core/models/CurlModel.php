@@ -18,14 +18,17 @@ class CurlModel
 {
     public static function exec(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['curlCallId']);
         ValidatorModel::stringType($aArgs, ['curlCallId']);
         ValidatorModel::arrayType($aArgs, ['bodyData']);
         ValidatorModel::boolType($aArgs, ['noAuth', 'multipleObject']);
 
-        $curlConfig = CurlModel::getConfigByCallId(['curlCallId' => $aArgs['curlCallId']]);
-        if (empty($curlConfig)) {
-            return [];
+        if (!empty($aArgs['curlCallId'])) {
+            $curlConfig = CurlModel::getConfigByCallId(['curlCallId' => $aArgs['curlCallId']]);
+        } else {
+            $curlConfig['url']      = $aArgs['url'];
+            $curlConfig['user']     = $aArgs['user'];
+            $curlConfig['password'] = $aArgs['password'];
+            $curlConfig['method']   = $aArgs['method'];
         }
 
         $opts = [

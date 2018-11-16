@@ -5055,3 +5055,6 @@ if (!defined('_CONTACTS_USERS_SEARCH')) {
 if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) {
     define('_CONTACTS_USERS_GROUPS_SEARCH', 'Contacts / users / contacts groups search');
 }
+if (!defined('_USER_MAARCH_PARAPHEUR')) {
+    define('_USER_MAARCH_PARAPHEUR', 'Maarch Parapheur user');
+}

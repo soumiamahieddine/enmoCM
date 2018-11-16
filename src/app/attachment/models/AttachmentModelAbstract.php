@@ -168,7 +168,6 @@ abstract class AttachmentModelAbstract
     public static function freezeAttachment(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['table', 'resId', 'externalId']);
-        ValidatorModel::stringType($aArgs, ['table', 'externalId']);
         ValidatorModel::intType($aArgs, ['resId']);
 
         DatabaseModel::update([

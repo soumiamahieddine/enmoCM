@@ -80,6 +80,10 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             include_once 'modules/visa/class/FastParapheurController.php';
 
             $html .= FastParapheurController::getModal($config);
+        } elseif ($config['id'] == 'maarchParapheur') {
+            include_once 'modules/visa/class/MaarchParapheurController.php';
+
+            $html .= MaarchParapheurController::getModal($config);
         }
     }
 
@@ -144,13 +148,32 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $nature             = get_value_fields($values_form, 'nature');
                 $messageModel       = get_value_fields($values_form, 'messageModel');
                 $manSignature       = get_value_fields($values_form, 'mansignature');
-                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $res_id, 'loginIxbus' => $loginIxbus, 'passwordIxbus' => $passwordIxbus, 'classeurName' => $nature, 'messageModel' => $messageModel, 'manSignature' => $manSignature]);
+                $attachmentToFreeze = IxbusController::sendDatas([
+                    'config'        => $config, 'resIdMaster' => $res_id,
+                    'loginIxbus'    => $loginIxbus,
+                    'passwordIxbus' => $passwordIxbus,
+                    'classeurName'  => $nature,
+                    'messageModel'  => $messageModel,
+                    'manSignature'  => $manSignature
+                ]);
             } elseif ($config['id'] == 'iParapheur') {
                 include_once 'modules/visa/class/IParapheurController.php';
                 $attachmentToFreeze = IParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);
             } elseif ($config['id'] == 'fastParapheur') {
                 include_once 'modules/visa/class/FastParapheurController.php';
                 $attachmentToFreeze = FastParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);
+            } elseif ($config['id'] == 'maarchParapheur') {
+                include_once 'modules/visa/class/MaarchParapheurController.php';
+
+                $processingUser = get_value_fields($values_form, 'processingUser');
+                $mode           = get_value_fields($values_form, 'mode');
+                $attachmentToFreeze = MaarchParapheurController::sendDatas([
+                    'config'         => $config,
+                    'resIdMaster'    => $res_id,
+                    'processingUser' => $processingUser,
+                    'mode'           => $mode,
+                    'userId'         => $_SESSION['user']['UserId']
+                ]);
             }
         }
 
