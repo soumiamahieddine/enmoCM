@@ -46,9 +46,7 @@ foreach ($customs as $custom) {
             }
         }
 
-        if (!empty($db)) {
-            $db->reset();
-        }
+        \SrcCore\models\DatabasePDO::reset();
 
         $db = new \SrcCore\models\DatabasePDO(['customId' => $custom]);
         foreach ($priorities as $key => $priority) {

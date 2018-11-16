@@ -15,9 +15,7 @@ foreach ($customs as $custom) {
         continue;
     }
 
-    if (!empty($db)) {
-        $db->reset();
-    }
+    \SrcCore\models\DatabasePDO::reset();
 
     $db = new \SrcCore\models\DatabasePDO(['customId' => $custom]);
 
