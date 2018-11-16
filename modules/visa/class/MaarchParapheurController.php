@@ -105,11 +105,11 @@ class MaarchParapheurController
 
             $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
 
-            $attachments = [
+            $attachmentsData = [[
                 'encodedZipDocument' => $encodedMainZipFile,
                 'subject'            => $mainResource[0]['subject'],
                 'reference'          => $mainResource[0]['alt_identifier']
-            ];
+            ]];
 
             $bodyData = [
                 'reference'          => $value['identifier'],
@@ -120,9 +120,9 @@ class MaarchParapheurController
                 'sender_entity'      => $senderPrimaryEntity['entity_label'],
                 'processing_user'    => $processingUser,
                 'recipient'          => trim($mainResource[0]['contact_firstname'] . ' ' . $mainResource[0]['contact_lastname'] . ' ' . $mainResource[0]['contact_society']),
-                'limit_data'         => $processLimitDate ,
+                'limit_date'         => $processLimitDate ,
                 'encodedZipDocument' => $encodedZipDocument,
-                'attachments'        => $attachments
+                'attachments'        => $attachmentsData
             ];
 
             $response = \SrcCore\models\CurlModel::exec([
@@ -133,7 +133,7 @@ class MaarchParapheurController
                 'bodyData' => $bodyData
             ]);
 
-            $attachmentToFreeze[$value['res_id']] = $response['id'];
+            $attachmentToFreeze[$value['res_id']] = $response['documentId'];
         }
 
         return $attachmentToFreeze;
