@@ -162,26 +162,19 @@ class MaarchParapheurController
 
     public static function retrieveSignedMails($aArgs)
     {
-        $sessionId = MaarchParapheurController::createSession($aArgs['config']);
-
         foreach (['noVersion', 'isVersion'] as $version) {
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                $etatDossier = MaarchParapheurController::getEtatDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
+                $documentStatus = MaarchParapheurController::getDocumentStatus(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
     
-                // Refused
-                if ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatRefused']) {
-                    $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                    $notes = MaarchParapheurController::getDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
-                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->MotifRefus;
                 // Validated
-                } elseif ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatValidated']) {
+                if ((string)$documentStatus == $aArgs['config']['data']['valsignature']) {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-                    $signedDocument = MaarchParapheurController::getAnnexes(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
+                    $signedDocument = MaarchParapheurController::getHandwrittenDocument(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
                     $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
-                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = (string)$signedDocument->Fichier;
+                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = (string)$signedDocument;
 
-                    $notes = MaarchParapheurController::getAnnotations(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
-                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->Annotation->Texte;
+                // $notes = MaarchParapheurController::getAnnotations(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
+                    // $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->Annotation->Texte;
                 } else {
                     unset($aArgs['idsToRetrieve'][$version][$resId]);
                 }
@@ -192,152 +185,27 @@ class MaarchParapheurController
         return $aArgs['idsToRetrieve'];
     }
 
-    public static function getEtatDossier($aArgs)
+    public static function getDocumentStatus($aArgs)
     {
-        $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
-        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-          <soap:Body>
-            <GetEtatDossier xmlns="http://www.srci.fr">
-              <DossierID>'.$aArgs['dossier_id'].'</DossierID>
-            </GetEtatDossier>
-          </soap:Body>
-        </soap:Envelope>';
+        $response = \SrcCore\models\CurlModel::exec([
+            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/status',
+            'user'     => $aArgs['config']['data']['userId'],
+            'password' => $aArgs['config']['data']['password'],
+            'method'   => 'GET'
+        ]);
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetEtatDossier\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetEtatDossierResponse->GetEtatDossierResult;
-
-        return $response;
+        return $response['status']['reference'];
     }
 
-    public static function getAnnotations($aArgs)
+    public static function getHandwrittenDocument($aArgs)
     {
-        $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
-        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-          <soap:Body>
-            <GetAnnotations xmlns="http://www.srci.fr">
-              <messageID>'.$aArgs['dossier_id'].'</messageID>
-            </GetAnnotations>
-          </soap:Body>
-        </soap:Envelope>';
+        $response = \SrcCore\models\CurlModel::exec([
+            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/handwrittenDocument',
+            'user'     => $aArgs['config']['data']['userId'],
+            'password' => $aArgs['config']['data']['password'],
+            'method'   => 'GET'
+        ]);
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetAnnotations\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetAnnotationsResponse->GetAnnotationsResult;
-
-        return $response;
-    }
-
-    public static function getDossier($aArgs)
-    {
-        $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
-        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-          <soap:Body>
-            <GetDossier xmlns="http://www.srci.fr">
-              <messageID>'.$aArgs['dossier_id'].'</messageID>
-            </GetDossier>
-          </soap:Body>
-        </soap:Envelope>';
-
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetDossier\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetDossierResponse->GetDossierResult;
-
-        return $response;
-    }
-
-    public static function getAnnexes($aArgs)
-    {
-        $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
-        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-          <soap:Body>
-            <GetAnnexe xmlns="http://www.srci.fr">
-              <messageID>'.$aArgs['dossier_id'].'</messageID>
-              <extension>pdf</extension>
-            </GetAnnexe>
-          </soap:Body>
-        </soap:Envelope>';
-
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetAnnexe\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetAnnexeResponse->GetAnnexeResult;
-
-        return $response;
+        return $response['encodedDocument'];
     }
 }

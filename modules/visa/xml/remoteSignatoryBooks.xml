@@ -5,9 +5,13 @@
         <id>maarchParapheur</id>
         <userId>jjane@maarch.com</userId>
         <password>maarch</password>
-        <url>http://10.2.95.58/MaarchParapheur</url>
+        <url>http://localhost/MaarchParapheur</url>
         <signature>SIGN</signature>
+        <valsignature>SIGNED</valsignature>
+        <refsignature>REFSIGNED</refsignature>
         <annotation>ANNOT</annotation>
+        <valannotation>VAL</valannotation>
+        <refannotation>REF</refannotation>
     </signatoryBook>
     <signatoryBook>
         <id>ixbus</id>
