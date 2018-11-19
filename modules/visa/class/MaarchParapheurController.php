@@ -162,19 +162,26 @@ class MaarchParapheurController
 
     public static function retrieveSignedMails($aArgs)
     {
+        $validated = $aArgs['config']['data']['externalValidated'];
+        $refused   = $aArgs['config']['data']['externalRefused'];
+
         foreach (['noVersion', 'isVersion'] as $version) {
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
                 $documentStatus = MaarchParapheurController::getDocumentStatus(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
-    
-                // Validated
-                if ((string)$documentStatus == $aArgs['config']['data']['valsignature']) {
-                    $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
+                
+                if (in_array($documentStatus['reference'], [$validated, $refused])) {
                     $signedDocument = MaarchParapheurController::getHandwrittenDocument(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
                     $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
-                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = (string)$signedDocument;
-
-                // $notes = MaarchParapheurController::getAnnotations(['config' => $aArgs['config'], 'sessionId' => $sessionId, 'dossier_id' => $value->external_id]);
-                    // $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->Annotation->Texte;
+                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $signedDocument;
+                    if ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'sign') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
+                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'sign') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
+                    } elseif ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'note') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validatedNote';
+                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'note') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refusedNote';
+                    }
                 } else {
                     unset($aArgs['idsToRetrieve'][$version][$resId]);
                 }
@@ -194,7 +201,7 @@ class MaarchParapheurController
             'method'   => 'GET'
         ]);
 
-        return $response['status']['reference'];
+        return $response['status'];
     }
 
     public static function getHandwrittenDocument($aArgs)

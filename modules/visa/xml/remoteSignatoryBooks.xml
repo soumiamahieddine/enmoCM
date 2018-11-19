@@ -7,11 +7,9 @@
         <password>maarch</password>
         <url>http://localhost/MaarchParapheur</url>
         <signature>SIGN</signature>
-        <valsignature>SIGNED</valsignature>
-        <refsignature>REFSIGNED</refsignature>
         <annotation>ANNOT</annotation>
-        <valannotation>VAL</valannotation>
-        <refannotation>REF</refannotation>
+        <externalValidated>VAL</externalValidated>
+        <externalRefused>REF</externalRefused>
     </signatoryBook>
     <signatoryBook>
         <id>ixbus</id>

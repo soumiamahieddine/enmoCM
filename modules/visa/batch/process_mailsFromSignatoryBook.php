@@ -122,15 +122,17 @@ if ($xmlconfig == false) {
 
 // Load config
 $config = $xmlconfig->CONFIG;
-$GLOBALS['MaarchDirectory']   = $_SESSION['config']['corepath'] = (string)$config->MaarchDirectory;
-$_SESSION['config']['app_id'] = 'maarch_entreprise';
-$GLOBALS['CustomId']          = $_SESSION['custom_override_id'] = (string)$config->CustomId;
-$GLOBALS['applicationUrl']    = (string)$config->applicationUrl;
-$GLOBALS['userWS']            = (string)$config->userWS;
-$GLOBALS['passwordWS']        = (string)$config->passwordWS;
-$GLOBALS['batchDirectory']    = $GLOBALS['MaarchDirectory'] . 'modules' . DIRECTORY_SEPARATOR . 'visa' . DIRECTORY_SEPARATOR . 'batch';
-$validatedStatus              = (string)$config->validatedStatus;
-$refusedStatus                = (string)$config->refusedStatus;
+$GLOBALS['MaarchDirectory']        = $_SESSION['config']['corepath'] = (string)$config->MaarchDirectory;
+$_SESSION['config']['app_id']      = 'maarch_entreprise';
+$GLOBALS['CustomId']               = $_SESSION['custom_override_id'] = (string)$config->CustomId;
+$GLOBALS['applicationUrl']         = (string)$config->applicationUrl;
+$GLOBALS['userWS']                 = (string)$config->userWS;
+$GLOBALS['passwordWS']             = (string)$config->passwordWS;
+$GLOBALS['batchDirectory']         = $GLOBALS['MaarchDirectory'] . 'modules' . DIRECTORY_SEPARATOR . 'visa' . DIRECTORY_SEPARATOR . 'batch';
+$validatedStatus                   = (string)$config->validatedStatus;
+$refusedStatus                     = (string)$config->refusedStatus;
+$validatedStatusAnnot              = (string)$config->validatedStatusAnnot;
+$refusedStatusAnnot                = (string)$config->refusedStatusAnnot;
 
 set_include_path(get_include_path() . PATH_SEPARATOR . $GLOBALS['MaarchDirectory']);
 
@@ -267,6 +269,8 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
             'dest_address_id' => $value->dest_address_id,
             'dest_user'       => $value->dest_user,
             'typist'          => $value->typist,
+            'format'          => $value->format,
+            'encodedFile'     => $value->encodedFile,
             'noteContent'     => $value->noteContent
         ]);
 
