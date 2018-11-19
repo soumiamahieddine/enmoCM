@@ -129,7 +129,7 @@ class FastParapheurController
     }
 
     public static function upload($aArgs){
-        $circuitId          = /*$aArgs['circuitId']*/ 'bureautique';
+        $circuitId          = $aArgs['circuitId'];
         $label              = $aArgs['label'];
         $subscriberId       = $aArgs['businessId'];
 
@@ -162,7 +162,7 @@ class FastParapheurController
         // END annexes
 
         $attachments         = \Attachment\models\AttachmentModel::getOnView([
-            'select'         => ['res_id', 'res_id_version', 'title', 'attachment_type','path', 'res_id_master', 'format', 'identifier'],
+            'select'         => ['res_id', 'res_id_version', 'title', 'attachment_type','path', 'res_id_master', 'format'],
             'where'          => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
             'data'           => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
         ]);
@@ -177,11 +177,6 @@ class FastParapheurController
                 $collId = 'attachments_version_coll';
             }
             $adrInfo                = \Convert\models\AdrModel::getConvertedDocumentById(['resId' => $resId, 'collId' => $collId, 'type' => 'PDF']);
-            /*$adrInfo             = \Attachment\models\AttachmentModel::getOnView([
-                'select'         => ['res_id', 'path', 'docserver_id', 'path', 'filename'],
-                'where'          => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'OBS')", "title = (?)"],
-                'data'           => [$aArgs['resIdMaster'], ['converted_pdf'], ["SELECT title FROM res_attachments WHERE identifier = '" . $attachments[$i]['identifier'] . "'"]]
-            ]);*/
 
             $attachmentPath         =  \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id'], 'select' => ['path_template']]);
             $attachmentFilePath     = $attachmentPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $adrInfo['path']) . $adrInfo['filename'];
