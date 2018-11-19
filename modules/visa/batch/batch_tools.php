@@ -238,9 +238,11 @@ function Bt_refusedSignedMail($aArgs = [])
 
 function Bt_processVisaWorkflow($aArgs = [])
 {
+
     $visaWorkflow = Bt_getVisaWorkflow(['resId' => $aArgs['res_id_master']]);
 
     $nbVisaWorkflow = $visaWorkflow->rowCount();
+
     if ($nbVisaWorkflow > 0) {
         while ($listInstance = $visaWorkflow->fetchObject()) {
             $GLOBALS['db']->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE listinstance_id = ?", [$listInstance->listinstance_id]);
@@ -259,8 +261,9 @@ function Bt_processVisaWorkflow($aArgs = [])
             } else {
                 $mailStatus = 'EVIS';
             }
-
             Bt_validatedMail(['status' => $mailStatus, 'resId' => $aArgs['res_id_master']]);
+        }else{
+            Bt_validatedMail(['status' => $aArgs['validatedStatus'], 'resId' => $aArgs['res_id_master']]);
         }
     } else {
         Bt_validatedMail(['status' => $aArgs['validatedStatus'], 'resId' => $aArgs['res_id_master']]);
