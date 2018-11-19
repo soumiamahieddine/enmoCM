@@ -259,7 +259,8 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
 // On dégele les pj et on créé une nouvelle ligne si le document a été signé
 foreach ($retrievedMails['isVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update version attachment', 'INFO');
-    if ($value->status == 'validated') {
+
+    if (!empty($value->encodedFile)) {
         Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
@@ -273,7 +274,9 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
             'encodedFile'     => $value->encodedFile,
             'noteContent'     => $value->noteContent
         ]);
+    }
 
+    if ($value->status == 'validated') {
         $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
@@ -305,7 +308,8 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
 
 foreach ($retrievedMails['noVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update attachment', 'INFO');
-    if ($value->status == 'validated') {
+
+    if (!empty($value->encodedFile)) {
         Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
@@ -319,7 +323,9 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             'encodedFile'     => $value->encodedFile,
             'noteContent'     => $value->noteContent
         ]);
+    }
 
+    if ($value->status == 'validated') {
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
