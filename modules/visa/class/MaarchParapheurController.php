@@ -69,10 +69,9 @@ class MaarchParapheurController
             'data'   => [$aArgs['resIdMaster']]
         ]);
         if (empty($mainResource[0]['process_limit_date'])) {
-            $processLimitDate = date('Y-m-d', strtotime(date("Y-m-d"). ' + 14 days'));
+            $processLimitDate = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s"). ' + 14 days'));
         } else {
-            $processLimitDateTmp = explode(" ", $mainResource[0]['process_limit_date']);
-            $processLimitDate = $processLimitDateTmp[0];
+            $processLimitDate = $mainResource[0]['process_limit_date'];
         }
 
         $processingUser      = $aArgs['processingUser'];
