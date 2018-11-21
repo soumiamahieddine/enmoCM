@@ -229,12 +229,12 @@ if (file_exists($GLOBALS['errorLckFile'])) {
 
 Bt_getWorkBatch();
 
-$GLOBALS['logger']->write('Retrieve mails sent to remote signatory book', 'INFO');
+$GLOBALS['logger']->write('Retrieve attachments sent to remote signatory book', 'INFO');
 $query = "SELECT res_id, res_id_version, external_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user, typist 
         FROM res_view_attachments WHERE status = 'FRZ' AND external_id IS NOT NULL AND external_id <> ''";
 $stmt = $GLOBALS['db']->query($query, []);
     
-$idsToRetrieve = ['noVersion' => [], 'isVersion' => []];
+$idsToRetrieve = ['noVersion' => [], 'isVersion' => [], 'resLetterbox' => []];
 
 while ($reqResult = $stmt->fetchObject()) {
     if (!empty($reqResult->res_id)) {
@@ -242,6 +242,15 @@ while ($reqResult = $stmt->fetchObject()) {
     } else {
         $idsToRetrieve['isVersion'][$reqResult->res_id_version] = $reqResult;
     }
+}
+
+$GLOBALS['logger']->write('Retrieve mails sent to remote signatory book', 'INFO');
+$query = "SELECT res_id, external_signatory_book_id as external_id, subject, typist 
+        FROM res_letterbox WHERE external_signatory_book_id IS NOT NULL";
+$stmt = $GLOBALS['db']->query($query, []);
+
+while ($reqResult = $stmt->fetchObject()) {
+    $idsToRetrieve['resLetterbox'][$reqResult->res_id] = $reqResult;
 }
 
 // On récupère les pj signés dans le parapheur distant
@@ -355,8 +364,48 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
     }
 }
 
+foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
+    $GLOBALS['logger']->write('Update main document', 'INFO');
+
+    if (!empty($value->encodedFile)) {
+        Bt_createAttachment([
+            'res_id_master'     => $value->res_id,
+            'title'             => $value->subject,
+            'typist'            => $value->typist,
+            'format'            => $value->format,
+            'encodedFile'       => $value->encodedFile,
+            'noteContent'       => $value->noteContent,
+            'in_signature_book' => 'false',
+            'attachent_type'    => 'document_with_notes'
+        ]);
+    }
+
+    if ($value->status == 'validatedNote') {
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id, 'validatedStatus' => $validatedStatusAnnot]);
+
+        Bt_history([
+            'table_name' => 'res_letterbox',
+            'record_id'  => $value->res_id,
+            'info'       => 'Le document '.$resId.' (res_letterbox) a été validé dans le parapheur externe',
+            'event_type' => 'ACTION#1',
+            'event_id'   => '1'
+        ]);
+    } elseif ($value->status == 'refusedNote') {
+        $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $refusedStatusAnnot . "' WHERE res_id = ?", [$resId]);
+    
+        Bt_history([
+            'table_name' => 'res_letterbox',
+            'record_id'  => $resId,
+            'info'       => 'Le document '.$resId.' (res_letterbox) a été refusé dans le parapheur externe',
+            'event_type' => 'ACTION#1',
+            'event_id'   => '1'
+        ]);
+    }
+    $GLOBALS['db']->query("UPDATE res_letterbox SET external_signatory_book_id = null WHERE res_id = ?", [$resId]);
+}
+
 $GLOBALS['logger']->write('end of process', 'INFO');
-$nbMailsRetrieved = count($retrievedMails['noVersion']) + count($retrievedMails['isVersion']);
+$nbMailsRetrieved = count($retrievedMails['noVersion']) + count($retrievedMails['isVersion']) + count($retrievedMails['resLetterbox']);
 $GLOBALS['logger']->write($nbMailsRetrieved.' mail(s) retrieved', 'INFO');
 
 Bt_logInDataBase(

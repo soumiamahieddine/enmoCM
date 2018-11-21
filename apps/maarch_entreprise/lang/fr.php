@@ -5220,3 +5220,6 @@ if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) {
 if (!defined('_USER_MAARCH_PARAPHEUR')) {
     define('_USER_MAARCH_PARAPHEUR', 'Utilisateur Maarch Parapheur');
 }
+if (!defined('_DOCUMENT_WITH_NOTES')) {
+    define('_DOCUMENT_WITH_NOTES', 'Document annoté');
+}

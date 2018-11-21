@@ -468,18 +468,25 @@ if (!defined('_EXTERNAL_ID_EMPTY')) {
     define('_EXTERNAL_ID_EMPTY', "La référence externe est vide");
 }
 
-if(!defined('_SEND_TO_IPARAPHEUR')){
+if (!defined('_SEND_TO_IPARAPHEUR')) {
     define('_SEND_TO_IPARAPHEUR', "Envoyer à l'IParapheur ?");
 }
 
-if(!defined('_SEND_TO_FAST')){
+if (!defined('_SEND_TO_FAST')) {
     define('_SEND_TO_FAST', "Envoyer au parapheur FAST ?");
 }
 
-if(!defined('_ERROR_CREATE_ZIP')){
+if (!defined('_ERROR_CREATE_ZIP')) {
     define('_ERROR_CREATE_ZIP', "Impossible d'ouvrir le fichier");
 }
 
-if(!defined('_PROJECT_NUMBER')){
+if (!defined('_PROJECT_NUMBER')) {
     define('_PROJECT_NUMBER', "Projet courrier numéro ");
+}
+
+if (!defined('_MAIL_NOTE')) {
+    define('_MAIL_NOTE', "Annotation du document arrivé");
+}
+if (!defined('_ATTACHMENT_SIGNATURE')) {
+    define('_ATTACHMENT_SIGNATURE', "Signature des documents intégrés au parapheur");
 }
