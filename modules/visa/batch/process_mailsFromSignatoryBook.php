@@ -122,15 +122,17 @@ if ($xmlconfig == false) {
 
 // Load config
 $config = $xmlconfig->CONFIG;
-$GLOBALS['MaarchDirectory']   = $_SESSION['config']['corepath'] = (string)$config->MaarchDirectory;
-$_SESSION['config']['app_id'] = 'maarch_entreprise';
-$GLOBALS['CustomId']          = $_SESSION['custom_override_id'] = (string)$config->CustomId;
-$GLOBALS['applicationUrl']    = (string)$config->applicationUrl;
-$GLOBALS['userWS']            = (string)$config->userWS;
-$GLOBALS['passwordWS']        = (string)$config->passwordWS;
-$GLOBALS['batchDirectory']    = $GLOBALS['MaarchDirectory'] . 'modules' . DIRECTORY_SEPARATOR . 'visa' . DIRECTORY_SEPARATOR . 'batch';
-$validatedStatus              = (string)$config->validatedStatus;
-$refusedStatus                = (string)$config->refusedStatus;
+$GLOBALS['MaarchDirectory']        = $_SESSION['config']['corepath'] = (string)$config->MaarchDirectory;
+$_SESSION['config']['app_id']      = 'maarch_entreprise';
+$GLOBALS['CustomId']               = $_SESSION['custom_override_id'] = (string)$config->CustomId;
+$GLOBALS['applicationUrl']         = (string)$config->applicationUrl;
+$GLOBALS['userWS']                 = (string)$config->userWS;
+$GLOBALS['passwordWS']             = (string)$config->passwordWS;
+$GLOBALS['batchDirectory']         = $GLOBALS['MaarchDirectory'] . 'modules' . DIRECTORY_SEPARATOR . 'visa' . DIRECTORY_SEPARATOR . 'batch';
+$validatedStatus                   = (string)$config->validatedStatus;
+$refusedStatus                     = (string)$config->refusedStatus;
+$validatedStatusAnnot              = (string)$config->validatedStatusAnnot;
+$refusedStatusAnnot                = (string)$config->refusedStatusAnnot;
 
 set_include_path(get_include_path() . PATH_SEPARATOR . $GLOBALS['MaarchDirectory']);
 
@@ -210,10 +212,7 @@ try {
     exit();
 }
 
-if (!empty($GLOBALS['db'])) {
-    $GLOBALS['db']->reset();
-}
-
+\SrcCore\models\DatabasePDO::reset();
 $GLOBALS['db'] = new \SrcCore\models\DatabasePDO(['customId' => $GLOBALS['CustomId']]);
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR . $GLOBALS['batchName'] .'_error.lck';
@@ -230,12 +229,12 @@ if (file_exists($GLOBALS['errorLckFile'])) {
 
 Bt_getWorkBatch();
 
-$GLOBALS['logger']->write('Retrieve mails sent to remote signatory book', 'INFO');
+$GLOBALS['logger']->write('Retrieve attachments sent to remote signatory book', 'INFO');
 $query = "SELECT res_id, res_id_version, external_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user, typist 
         FROM res_view_attachments WHERE status = 'FRZ' AND external_id IS NOT NULL AND external_id <> ''";
 $stmt = $GLOBALS['db']->query($query, []);
     
-$idsToRetrieve = ['noVersion' => [], 'isVersion' => []];
+$idsToRetrieve = ['noVersion' => [], 'isVersion' => [], 'resLetterbox' => []];
 
 while ($reqResult = $stmt->fetchObject()) {
     if (!empty($reqResult->res_id)) {
@@ -243,6 +242,15 @@ while ($reqResult = $stmt->fetchObject()) {
     } else {
         $idsToRetrieve['isVersion'][$reqResult->res_id_version] = $reqResult;
     }
+}
+
+$GLOBALS['logger']->write('Retrieve mails sent to remote signatory book', 'INFO');
+$query = "SELECT res_id, external_signatory_book_id as external_id, subject, typist 
+        FROM res_letterbox WHERE external_signatory_book_id IS NOT NULL";
+$stmt = $GLOBALS['db']->query($query, []);
+
+while ($reqResult = $stmt->fetchObject()) {
+    $idsToRetrieve['resLetterbox'][$reqResult->res_id] = $reqResult;
 }
 
 // On récupère les pj signés dans le parapheur distant
@@ -260,7 +268,8 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
 // On dégele les pj et on créé une nouvelle ligne si le document a été signé
 foreach ($retrievedMails['isVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update version attachment', 'INFO');
-    if ($value->status == 'validated') {
+
+    if (!empty($value->encodedFile)) {
         Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
@@ -270,9 +279,13 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
             'dest_address_id' => $value->dest_address_id,
             'dest_user'       => $value->dest_user,
             'typist'          => $value->typist,
+            'format'          => $value->format,
+            'encodedFile'     => $value->encodedFile,
             'noteContent'     => $value->noteContent
         ]);
+    }
 
+    if ($value->status == 'validated') {
         $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
@@ -304,7 +317,8 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
 
 foreach ($retrievedMails['noVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update attachment', 'INFO');
-    if ($value->status == 'validated') {
+
+    if (!empty($value->encodedFile)) {
         Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
@@ -318,7 +332,9 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             'encodedFile'     => $value->encodedFile,
             'noteContent'     => $value->noteContent
         ]);
+    }
 
+    if ($value->status == 'validated') {
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
@@ -348,8 +364,48 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
     }
 }
 
+foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
+    $GLOBALS['logger']->write('Update main document', 'INFO');
+
+    if (!empty($value->encodedFile)) {
+        Bt_createAttachment([
+            'res_id_master'     => $value->res_id,
+            'title'             => $value->subject,
+            'typist'            => $value->typist,
+            'format'            => $value->format,
+            'encodedFile'       => $value->encodedFile,
+            'noteContent'       => $value->noteContent,
+            'in_signature_book' => 'false',
+            'attachent_type'    => 'document_with_notes'
+        ]);
+    }
+
+    if ($value->status == 'validatedNote') {
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id, 'validatedStatus' => $validatedStatusAnnot]);
+
+        Bt_history([
+            'table_name' => 'res_letterbox',
+            'record_id'  => $value->res_id,
+            'info'       => 'Le document '.$resId.' (res_letterbox) a été validé dans le parapheur externe',
+            'event_type' => 'ACTION#1',
+            'event_id'   => '1'
+        ]);
+    } elseif ($value->status == 'refusedNote') {
+        $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $refusedStatusAnnot . "' WHERE res_id = ?", [$resId]);
+    
+        Bt_history([
+            'table_name' => 'res_letterbox',
+            'record_id'  => $resId,
+            'info'       => 'Le document '.$resId.' (res_letterbox) a été refusé dans le parapheur externe',
+            'event_type' => 'ACTION#1',
+            'event_id'   => '1'
+        ]);
+    }
+    $GLOBALS['db']->query("UPDATE res_letterbox SET external_signatory_book_id = null WHERE res_id = ?", [$resId]);
+}
+
 $GLOBALS['logger']->write('end of process', 'INFO');
-$nbMailsRetrieved = count($retrievedMails['noVersion']) + count($retrievedMails['isVersion']);
+$nbMailsRetrieved = count($retrievedMails['noVersion']) + count($retrievedMails['isVersion']) + count($retrievedMails['resLetterbox']);
 $GLOBALS['logger']->write($nbMailsRetrieved.' mail(s) retrieved', 'INFO');
 
 Bt_logInDataBase(

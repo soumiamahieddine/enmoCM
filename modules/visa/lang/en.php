@@ -303,3 +303,10 @@ if (!defined('_HANDWRITTEN_SIGN')) {
 if (!defined('_ESIGN')) {
     define('_ESIGN', "Electronique signature");
 }
+
+if (!defined('_MAIL_NOTE')) {
+    define('_MAIL_NOTE', "Annotation of the arrived document");
+}
+if (!defined('_ATTACHMENT_SIGNATURE')) {
+    define('_ATTACHMENT_SIGNATURE', "Signature of attachment in signature book");
+}

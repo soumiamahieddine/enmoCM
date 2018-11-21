@@ -166,24 +166,39 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 include_once 'modules/visa/class/MaarchParapheurController.php';
 
                 $processingUser = get_value_fields($values_form, 'processingUser');
-                $mode           = get_value_fields($values_form, 'mode');
+                $objectSent     = get_value_fields($values_form, 'objectSent');
                 $attachmentToFreeze = MaarchParapheurController::sendDatas([
                     'config'         => $config,
                     'resIdMaster'    => $res_id,
                     'processingUser' => $processingUser,
-                    'mode'           => $mode,
+                    'objectSent'     => $objectSent,
                     'userId'         => $_SESSION['user']['UserId']
                 ]);
             }
         }
 
         if (!empty($attachmentToFreeze)) {
-            foreach ($attachmentToFreeze as $resId => $externalId) {
-                \Attachment\models\AttachmentModel::freezeAttachment([
-                    'resId' => $resId,
-                    'table' => 'res_attachments',
-                    'externalId' => $externalId
+            if (!empty($attachmentToFreeze['letterbox_coll'])) {
+                \Resource\models\ResModel::update([
+                    'set' => ['external_signatory_book_id' => $attachmentToFreeze['letterbox_coll'][$res_id]],
+                    'where' => ['res_id = ?'],
+                    'data' => [$res_id]
                 ]);
+            } else {
+                foreach ($attachmentToFreeze['attachments_coll'] as $resId => $externalId) {
+                    \Attachment\models\AttachmentModel::freezeAttachment([
+                        'resId' => $resId,
+                        'table' => 'res_attachments',
+                        'externalId' => $externalId
+                    ]);
+                }
+                foreach ($attachmentToFreeze['attachments_version_coll'] as $resId => $externalId) {
+                    \Attachment\models\AttachmentModel::freezeAttachment([
+                        'resId' => $resId,
+                        'table' => 'res_version_attachments',
+                        'externalId' => $externalId
+                    ]);
+                }
             }
 
             $stmt = $db->query('SELECT status FROM res_letterbox WHERE res_id = ?', array($res_id));

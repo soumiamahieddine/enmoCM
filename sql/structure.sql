@@ -1372,6 +1372,7 @@ CREATE TABLE res_letterbox
   department_number_id text,
   barcode text,
   sve_start_date TIMESTAMP without time zone,
+  external_signatory_book_id integer,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1661,6 +1662,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.departure_date,
     r.department_number_id,
     r.barcode,
+    r.external_signatory_book_id,
     r.custom_t1 AS doc_custom_t1,
     r.custom_t2 AS doc_custom_t2,
     r.custom_t3 AS doc_custom_t3,

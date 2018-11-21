@@ -7,7 +7,9 @@
         <password>maarch</password>
         <url>http://10.2.95.58/MaarchParapheur</url>
         <signature>SIGN</signature>
-        <annotation>ANNOT</annotation>
+        <annotation>NOTE</annotation>
+        <externalValidated>VAL</externalValidated>
+        <externalRefused>REF</externalRefused>
     </signatoryBook>
     <signatoryBook>
         <id>ixbus</id>
