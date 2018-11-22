@@ -254,7 +254,7 @@ while ($reqResult = $stmt->fetchObject()) {
 }
 
 // On récupère les pj signés dans le parapheur distant
-$GLOBALS['logger']->write('Retrieve signed mails from remote signatory book', 'INFO');
+$GLOBALS['logger']->write('Retrieve signed/annotated documents from remote signatory book', 'INFO');
 if ($configRemoteSignatoryBook['id'] == 'ixbus') {
     $retrievedMails = IxbusController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 } elseif ($configRemoteSignatoryBook['id'] == 'iParapheur') {
@@ -267,9 +267,10 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
 
 // On dégele les pj et on créé une nouvelle ligne si le document a été signé
 foreach ($retrievedMails['isVersion'] as $resId => $value) {
-    $GLOBALS['logger']->write('Update version attachment', 'INFO');
+    $GLOBALS['logger']->write('Update res_version_attachments : ' . $resId . '. ExternalId : ' . $value->external_id, 'INFO');
 
     if (!empty($value->encodedFile)) {
+        $GLOBALS['logger']->write('Create Attachment', 'INFO');
         Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
@@ -286,6 +287,7 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
     }
 
     if ($value->status == 'validated') {
+        $GLOBALS['logger']->write('Document validated', 'INFO');
         $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
@@ -305,6 +307,7 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
             'event_id'   => '1'
         ]);
     } elseif ($value->status == 'refused') {
+        $GLOBALS['logger']->write('Document refused', 'INFO');
         Bt_refusedSignedMail([
             'tableAttachment' => 'res_version_attachments',
             'resIdAttachment' => $resId,
@@ -316,9 +319,10 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
 }
 
 foreach ($retrievedMails['noVersion'] as $resId => $value) {
-    $GLOBALS['logger']->write('Update attachment', 'INFO');
+    $GLOBALS['logger']->write('Update res_attachments : ' . $resId . '. ExternalId : ' . $value->external_id, 'INFO');
 
     if (!empty($value->encodedFile)) {
+        $GLOBALS['logger']->write('Create Attachment', 'INFO');
         Bt_createAttachment([
             'res_id_master'   => $value->res_id_master,
             'title'           => $value->title,
@@ -335,6 +339,7 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
     }
 
     if ($value->status == 'validated') {
+        $GLOBALS['logger']->write('Document validated', 'INFO');
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
@@ -354,6 +359,7 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             'event_id'   => '1'
         ]);
     } elseif ($value->status == 'refused') {
+        $GLOBALS['logger']->write('Document refused', 'INFO');
         Bt_refusedSignedMail([
             'tableAttachment' => 'res_attachments',
             'resIdAttachment' => $resId,
@@ -365,9 +371,10 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
 }
 
 foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
-    $GLOBALS['logger']->write('Update main document', 'INFO');
+    $GLOBALS['logger']->write('Update res_letterbox : ' . $resId . '. ExternalSignatoryBookId : ' . $value->external_id, 'INFO');
 
     if (!empty($value->encodedFile)) {
+        $GLOBALS['logger']->write('Create Attachment', 'INFO');
         Bt_createAttachment([
             'res_id_master'     => $value->res_id,
             'title'             => $value->subject,
@@ -381,6 +388,7 @@ foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
     }
 
     if ($value->status == 'validatedNote') {
+        $GLOBALS['logger']->write('Document validated', 'INFO');
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id, 'validatedStatus' => $validatedStatusAnnot]);
 
         Bt_history([
@@ -391,6 +399,7 @@ foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
             'event_id'   => '1'
         ]);
     } elseif ($value->status == 'refusedNote') {
+        $GLOBALS['logger']->write('Document refused', 'INFO');
         $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $refusedStatusAnnot . "' WHERE res_id = ?", [$resId]);
     
         Bt_history([
@@ -404,9 +413,9 @@ foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
     $GLOBALS['db']->query("UPDATE res_letterbox SET external_signatory_book_id = null WHERE res_id = ?", [$resId]);
 }
 
-$GLOBALS['logger']->write('end of process', 'INFO');
+$GLOBALS['logger']->write('End of process', 'INFO');
 $nbMailsRetrieved = count($retrievedMails['noVersion']) + count($retrievedMails['isVersion']) + count($retrievedMails['resLetterbox']);
-$GLOBALS['logger']->write($nbMailsRetrieved.' mail(s) retrieved', 'INFO');
+$GLOBALS['logger']->write($nbMailsRetrieved.' document(s) retrieved', 'INFO');
 
 Bt_logInDataBase(
     $nbMailsRetrieved,
