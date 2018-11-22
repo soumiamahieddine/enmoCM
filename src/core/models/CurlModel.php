@@ -121,9 +121,16 @@ class CurlModel
                 $cookies = array_merge($cookies, [$cookie[0] => $cookie[1]]);
             }
             $rawResponse = substr($rawResponse, $infos['header_size']);
+        }else if(!empty($aArgs['delete_header'])){ // Delete header for iparapheur
+            $body = explode(PHP_EOL . PHP_EOL, $rawResponse)[1];        // put the header ahead
+            $pattern = '/--uuid:[0-9a-f-]+--/';                           // And also the footer
+            $rawResponse = preg_replace($pattern, '', $body);
         }
-
-        return ['response' => simplexml_load_string($rawResponse), 'infos' => $infos, 'cookies' => $cookies, 'raw' => $rawResponse, 'error' => $error];
+        $response = simplexml_load_string($rawResponse);
+        if ($response !== false)
+            return ['response' => $response, 'infos' => $infos, 'cookies' => $cookies, 'raw' => $rawResponse, 'error' => $error];
+        else
+            return ['response' => $rawResponse, 'infos' => $infos, 'cookies' => $cookies, 'raw' => $rawResponse, 'error' => $error];
     }
 
     public static function getConfigByCallId(array $aArgs)
