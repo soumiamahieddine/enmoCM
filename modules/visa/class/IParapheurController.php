@@ -97,11 +97,13 @@ class IParapheurController
             if (!empty($attachments[$i]['res_id'])) {
                 $resId  = $attachments[$i]['res_id'];
                 $collId = 'attachments_coll';
+                $is_version = false;
             } else {
                 $resId  = $attachments[$i]['res_id_master'];
                 $collId = 'attachments_version_coll';
+                $is_version = true;
             }
-            $attachmentInfo         = \Convert\models\AdrModel::getConvertedDocumentById(['resId' => $resId, 'collId' => $collId, 'type' => 'PDF']);
+            $attachmentInfo         = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
 
             $attachmentPath         = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $attachmentInfo['docserver_id'], 'select' => ['path_template']]);
             $attachmentFilePath     = $attachmentPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachmentInfo['path']) . $attachmentInfo['filename'];
@@ -126,10 +128,10 @@ class IParapheurController
                                     <ns:encoding>utf-8</ns:encoding>
                                 </ns:DocAnnexe>';
             if (!empty($annexes['attachments'])) {
-                for ($i = 0; $i < count($annexes['attachments']); $i++) {
-                    $b64AnnexesAttachment = base64_encode(file_get_contents($annexes['attachments'][$i]['filePath']));
+                for ($j = 0; $j < count($annexes['attachments']); $j++) {
+                    $b64AnnexesAttachment = base64_encode(file_get_contents($annexes['attachments'][$j]['filePath']));
                     $annexesXmlPostString .= '<ns:DocAnnexe> 
-                                    <ns:nom>PJ_' . ($i + 1) . '</ns:nom> 
+                                    <ns:nom>PJ_' . ($j + 1) . '</ns:nom> 
                                     <ns:fichier xm:contentType="application/pdf">' . $b64AnnexesAttachment . '</ns:fichier> 
                                     <ns:mimetype>application/pdf</ns:mimetype> 
                                     <ns:encoding>utf-8</ns:encoding>
@@ -160,18 +162,20 @@ class IParapheurController
                                 </soapenv:Envelope>';
 
             $curlReturn = self::returnCurl($xmlPostString, $aArgs['config']);
-            if (!$curlReturn['response']) {
+
+            if (!empty($curlReturn['error'])) {
                 // TODO gestin d'une erreur
                 echo $curlReturn['error'];
                 return false;
             }
             $response = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://www.adullact.org/spring-ws/iparapheur/1.0')->CreerDossierResponse[0];
+
             if ($response->MessageRetour->codeRetour == $aArgs['config']['data']['errorCode'] || $curlReturn['infos']['http_code'] >= 500) {
                 // TODO gestion d'une potentielle erreur
                 echo '[' . $response->MessageRetour->severite . ']' . $response->MessageRetour->message;
                 return false;
             } else {
-                $attachmentToFreeze[$resId] = $dossierId;
+                $attachmentToFreeze[$collId][$resId] = $dossierId;
             }
         }
         return $attachmentToFreeze;
@@ -226,7 +230,7 @@ class IParapheurController
 
                 $curlReturn = self::returnCurl($xmlPostString, $aArgs['config']);
 
-                if (!$curlReturn['response']) {
+                if (!empty($curlReturn['response'])) {
                     // TODO gestin d'une erreur
                     echo $curlReturn['error'];
                     return false;
@@ -283,7 +287,7 @@ class IParapheurController
 
                 $curlReturn = self::returnCurl($xmlPostString, $aArgs['config']);
 
-                if (!$curlReturn['response']) {
+                if (!empty($curlReturn['response'])) {
                     // TODO gestin d'une erreur
                     echo $curlReturn['error'];
                     return false;
@@ -341,7 +345,7 @@ class IParapheurController
 
         $curlReturn = $curlReturn = self::returnCurl($xmlPostString, $aArgs['config']);
 
-        if (!$curlReturn['response']) {
+        if (!empty($curlReturn['error'])) {
             // TODO gestin d'une erreur
             echo $curlReturn['error'];
             return false;
@@ -376,7 +380,7 @@ class IParapheurController
 
         $curlReturn = $curlReturn = self::returnCurl($xmlPostString, $aArgs['config']);
 
-        if (!$curlReturn['response']) {
+        if (!empty($curlReturn['error'])) {
             // TODO gestin d'une erreur
             echo $curlReturn['error'];
             return false;
