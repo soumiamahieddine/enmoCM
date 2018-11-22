@@ -130,6 +130,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $coll_id = $_SESSION['current_basket']['coll_id'];
 
     foreach ($arr_id as $res_id) {
+        $result .= $res_id.'#';
         \Attachment\controllers\AttachmentController::generateAttachForMailing(['resIdMaster' => $res_id, 'userId' => $_SESSION['user']['UserId']]);
         
         if (!empty($config)) {
