@@ -586,4 +586,3 @@ ALTER TABLE entities ADD UNIQUE (id);
 
 UPDATE notifications set event_id = 'userModification' where event_id = 'usersup';
 UPDATE notifications set event_id = 'user%' where event_id = 'users%';
-

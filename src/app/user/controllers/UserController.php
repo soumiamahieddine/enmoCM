@@ -230,6 +230,8 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname']]);
+
         UserModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([
@@ -237,7 +239,7 @@ class UserController
             'recordId'     => $GLOBALS['userId'],
             'eventType'    => 'DEL',
             'eventId'      => 'userSuppression',
-            'info'         => _USER_DELETED . " {$aArgs['id']}"
+            'info'         => _USER_DELETED . " {$user['firstname']} {$user['lastname']}"
         ]);
 
         return $response->withJson(['success' => 'success']);
