@@ -19,23 +19,9 @@ $warnMsg    = '';
 
 $etapes = ['form'];
 
-$isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id'], "userId" => $_SESSION['user']['UserId']]);
-
-if ($isMailingAttach != false) {
-    $warnMsg = $isMailingAttach['nbContacts'] . " " . _RESPONSES_WILL_BE_GENERATED;
-}
-
-$error_visa_workflow_signature_book = false;
-$attachments = \Attachment\models\AttachmentModel::getOnView([
-    'select'    => [
-        'count(1) as nb'
-    ],
-    'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-    'data'      => [$_SESSION['doc_id'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
-]);
-
-if ($attachments[0]['nb'] == 0) {
-    $error_visa_workflow_signature_book = true;
+$config = getXml();
+if (!empty($config) && $config['id'] != 'maarchParapheur') {
+    $error_visa_workflow_signature_book = hasAttachmentError();
 }
 
 function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
@@ -121,6 +107,13 @@ function check_form($form_id, $values)
                 return false;
             }
         }
+        if ($config['id'] == 'maarchParapheur') {
+            $objectSent = get_value_fields($values, 'objectSent');
+            if ($objectSent == 'attachment' && hasAttachmentError()) {
+                $_SESSION['action_error'] = _NO_RESPONSE_PROJECT_VISA;
+                return false;
+            }
+        }
     }
 
     return true;
@@ -137,6 +130,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $coll_id = $_SESSION['current_basket']['coll_id'];
 
     foreach ($arr_id as $res_id) {
+        $result .= $res_id.'#';
         \Attachment\controllers\AttachmentController::generateAttachForMailing(['resIdMaster' => $res_id, 'userId' => $_SESSION['user']['UserId']]);
         
         if (!empty($config)) {
@@ -256,4 +250,24 @@ function get_value_fields($values, $field)
         }
     }
     return false;
+}
+
+function hasAttachmentError()
+{
+    $isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id'], "userId" => $_SESSION['user']['UserId']]);
+
+    $errorVisaWorkflowSignatureBook = false;
+    $attachments = \Attachment\models\AttachmentModel::getOnView([
+        'select'    => [
+            'count(1) as nb'
+        ],
+        'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+        'data'      => [$_SESSION['doc_id'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+    ]);
+
+    if ($attachments[0]['nb'] == 0) {
+        $errorVisaWorkflowSignatureBook = true;
+    }
+
+    return $errorVisaWorkflowSignatureBook;
 }
