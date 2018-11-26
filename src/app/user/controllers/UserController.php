@@ -215,8 +215,8 @@ class UserController
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $GLOBALS['userId'],
-            'eventType'    => 'ADD',
-            'eventId'      => 'userCreation',
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
             'info'         => _USER_UPDATED . " {$data['user_id']}"
         ]);
 
@@ -235,8 +235,8 @@ class UserController
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $GLOBALS['userId'],
-            'eventType'    => 'ADD',
-            'eventId'      => 'userCreation',
+            'eventType'    => 'DEL',
+            'eventId'      => 'userSuppression',
             'info'         => _USER_DELETED . " {$aArgs['id']}"
         ]);
 
