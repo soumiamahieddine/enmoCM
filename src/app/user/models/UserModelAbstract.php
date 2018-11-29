@@ -164,6 +164,24 @@ abstract class UserModelAbstract
         return $aUser;
     }
 
+    public static function updateExternalId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'externalId']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::json($aArgs, ['externalId']);
+
+        DatabaseModel::update([
+            'table'     => 'users',
+            'set'       => [
+                'external_id' => $aArgs['externalId']
+            ],
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        return true;
+    }
+
     public static function updatePassword(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'password']);

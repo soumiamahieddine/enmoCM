@@ -39,6 +39,7 @@ use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
 use User\models\UserSignatureModel;
+use SrcCore\models\CurlModel;
 
 class UserController
 {
@@ -240,6 +241,64 @@ class UserController
             'eventType'    => 'DEL',
             'eventId'      => 'userSuppression',
             'info'         => _USER_DELETED . " {$user['firstname']} {$user['lastname']}"
+        ]);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    public function sendToMaarchParapheur(Request $request, Response $response, array $aArgs)
+    {
+        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            $userInfo = UserModel::getById(['select' => ['firstname', 'lastname', 'mail', 'external_id'], 'id' => $aArgs['id']]);
+
+            $bodyData = [
+                "lastname"  => $userInfo['lastname'],
+                "firstname" => $userInfo['firstname'],
+                "email"     => $userInfo['mail'],
+            ];
+
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    $url = $value->url;
+                    $userId = $value->userId;
+                    $password = $value->password;
+                    break;
+                }
+            }
+
+            $responseExec = CurlModel::exec([
+                'url'      => $url . '/rest/users',
+                'user'     => $userId,
+                'password' => $password,
+                'method'   => 'POST',
+                'bodyData' => $bodyData
+            ]);
+
+            if (!empty($responseExec['errors'])) {
+                return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
+            }
+        } else {
+            return $response->withStatus(401)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+
+        $externalId = json_decode($userInfo['external_id']);
+        $externalId->maarchParapheur = $responseExec['user']['id'];
+
+        UserModel::updateExternalId(['id' => $aArgs['id'], 'externalId' => json_encode($externalId)]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'ADD',
+            'eventId'      => 'userCreation',
+            'info'         => _USER_CREATED_IN_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
         ]);
 
         return $response->withJson(['success' => 'success']);
