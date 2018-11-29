@@ -688,4 +688,6 @@ export const LANG_EN = {
     "chooseNewDest"                                     : "is to <b>recipient</b> of following diffusion list model, please choose a <b>replacement</b> user",
     "errorOccured"                                      : "An error occured",
     "documentOutOfPerimeter"                            : "This document is out of perimeter",
+    "userCreatedInMaarchParapheur"                      : "Created in Maarch Parapheur",
+    "createUserInMaarchParapheur"                       : "Create in Maarch Parapheur"
 };

@@ -105,16 +105,20 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint', 'loginmode']]);
-        $user['signatures'] = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint', 'loginmode', 'external_id']]);
+        $user['external_id']     = json_decode($user['external_id']);
+        $user['signatures']      = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
-        $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
-        $user['allGroups'] = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
-        $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
-        $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
-        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
-        $user['history'] = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
+        $user['groups']          = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+        $user['allGroups']       = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
+        $user['entities']        = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $user['allEntities']     = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
+        $user['baskets']         = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['history']         = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
         $user['canModifyPassword'] = true;
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+        $user['externalSignatoryBook'] = (string)$loadedXml->signatoryBookEnabled;
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {
@@ -288,8 +292,8 @@ class UserController
             return $response->withStatus(401)->withJson(['errors' => 'maarchParapheur is not enabled']);
         }
 
-        $externalId = json_decode($userInfo['external_id']);
-        $externalId->maarchParapheur = $responseExec['user']['id'];
+        $externalId = json_decode($userInfo['external_id'], true);
+        $externalId['maarchParapheur'] = $responseExec['user']['id'];
 
         UserModel::updateExternalId(['id' => $aArgs['id'], 'externalId' => json_encode($externalId)]);
 
@@ -301,7 +305,7 @@ class UserController
             'info'         => _USER_CREATED_IN_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson(['externalId' => $responseExec['user']['id']]);
     }
 
     public function getProfile(Request $request, Response $response)

@@ -571,6 +571,16 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             this.user.loginmode = "standard";
         }
     }
+
+    sendToMaarchParapheur(){
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + '/maarchParapheur', '')
+            .subscribe((data: any) => {
+                this.notify.success(this.lang.userCreatedInMaarchParapheur);
+                this.user.external_id['maarchParapheur'] = data.externalId;
+            }, (err: any) => {
+                this.notify.error(err.error.errors);
+            });
+    }
 }
 
 @Component({
