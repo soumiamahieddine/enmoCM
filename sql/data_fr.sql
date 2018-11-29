@@ -1219,6 +1219,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, a
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id) VALUES (524, '', 'Activer la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_on', 'N', 'apps', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id) VALUES (525, '', 'Désactiver la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_off', 'N', 'apps', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id) VALUES (526, '', 'Libérer les courriers', 'VAL', 'Y', 'Y', '', 'N', 'apps', 'N', NULL);
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id) VALUES (527, '', 'Envoyer vers Maarch Parapheur', '_NOSTATUS', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'apps', 'N', NULL);
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 ------------
 -- BANNETTES SECONDAIRES
@@ -1271,6 +1272,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'AGENT', 'EenvBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (507, '', 'AGENT', 'EenvBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'AGENT', 'SuiviParafBasket', 'Y', 'Y', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (527, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'MyBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
