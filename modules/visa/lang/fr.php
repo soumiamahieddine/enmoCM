@@ -485,7 +485,7 @@ if (!defined('_PROJECT_NUMBER')) {
 }
 
 if (!defined('_MAIL_NOTE')) {
-    define('_MAIL_NOTE', "Annotation du document arrivé");
+    define('_MAIL_NOTE', "Annotation du document principal");
 }
 if (!defined('_ATTACHMENT_SIGNATURE')) {
     define('_ATTACHMENT_SIGNATURE', "Signature des documents intégrés au parapheur");

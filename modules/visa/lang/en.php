@@ -305,7 +305,7 @@ if (!defined('_ESIGN')) {
 }
 
 if (!defined('_MAIL_NOTE')) {
-    define('_MAIL_NOTE', "Annotation of the arrived document");
+    define('_MAIL_NOTE', "Annotation of the main document");
 }
 if (!defined('_ATTACHMENT_SIGNATURE')) {
     define('_ATTACHMENT_SIGNATURE', "Signature of attachment in signature book");

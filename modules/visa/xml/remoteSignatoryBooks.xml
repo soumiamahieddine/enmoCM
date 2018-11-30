@@ -3,9 +3,9 @@
     <signatoryBookEnabled>maarchParapheur</signatoryBookEnabled>
     <signatoryBook>
         <id>maarchParapheur</id>
-        <userId>jjane@maarch.com</userId>
+        <userId>ccornillac@maarch.com</userId>
         <password>maarch</password>
-        <url>http://10.2.95.58/MaarchParapheur</url>
+        <url>http://92.243.8.204/MaarchParapheur</url>
         <signature>SIGN</signature>
         <annotation>NOTE</annotation>
         <externalValidated>VAL</externalValidated>

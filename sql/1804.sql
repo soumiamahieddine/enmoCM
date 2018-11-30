@@ -86,6 +86,7 @@ DO $$ BEGIN
     ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_serial_id;
     ALTER TABLE user_signatures ADD COLUMN user_serial_id integer;
     UPDATE user_signatures set user_serial_id = (select id FROM users where users.user_id = user_signatures.user_id);
+    DELETE from user_signatures where user_serial_id is NULL;
     ALTER TABLE user_signatures ALTER COLUMN user_serial_id set not null;
     ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_id;
   END IF;
@@ -771,8 +772,15 @@ UPDATE notifications SET event_id = 'baskets' WHERE notification_id = 'BASKETS';
 DELETE FROM parameters where id = 'user_quota';
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', '', 0, NULL);
 DELETE FROM parameters where id = 'database_version';
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.6', NULL, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.10', NULL, NULL);
 
 INSERT INTO templates_doctype_ext SELECT null, d.type_id, 'N' FROM doctypes d LEFT JOIN templates_doctype_ext tde ON d.type_id = tde.type_id WHERE tde.type_id IS NULL;
 
 UPDATE status set img_filename = 'fm-letter' where img_filename is null or img_filename = '';
+
+DELETE FROM usergroups_services WHERE service_id in ('delete_document_in_detail', 'edit_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT group_id, 'delete_document_in_detail' FROM security WHERE rights_bitmask IN (16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
+
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT group_id, 'edit_document_in_detail' FROM security WHERE rights_bitmask IN (8,9,10,11,12,13,14,15,24,25,26,27,28,29,30,31);
