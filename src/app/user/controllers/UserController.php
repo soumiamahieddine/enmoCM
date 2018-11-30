@@ -289,7 +289,7 @@ class UserController
                 return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
             }
         } else {
-            return $response->withStatus(401)->withJson(['errors' => 'maarchParapheur is not enabled']);
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
         }
 
         $externalId = json_decode($userInfo['external_id'], true);
