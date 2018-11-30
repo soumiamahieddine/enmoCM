@@ -21,7 +21,8 @@ $etapes = ['form'];
 
 $config = getXml();
 if (!empty($config) && $config['id'] != 'maarchParapheur') {
-    $error_visa_workflow_signature_book = hasAttachmentError();
+    $hasAttachmentError = hasAttachmentError();
+    $error_visa_workflow_signature_book = $hasAttachmentError['error'];
 }
 
 function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
@@ -109,8 +110,13 @@ function check_form($form_id, $values)
         }
         if ($config['id'] == 'maarchParapheur') {
             $objectSent = get_value_fields($values, 'objectSent');
-            if ($objectSent == 'attachment' && hasAttachmentError()) {
-                $_SESSION['action_error'] = _NO_RESPONSE_PROJECT_VISA;
+            $hasAttachmentError = hasAttachmentError();
+            if ($objectSent == 'attachment' && $hasAttachmentError['error']) {
+                if (!empty($_SESSION['stockCheckbox'])) {
+                    $_SESSION['action_error'] = _MAIL_HAS_NO_RESPONSE_PROJECT . ' : ' . implode(",", $hasAttachmentError['resList']);
+                } else {
+                    $_SESSION['action_error'] = _NO_RESPONSE_PROJECT_VISA;
+                }
                 return false;
             }
         }
@@ -260,18 +266,32 @@ function hasAttachmentError()
 {
     $isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id'], "userId" => $_SESSION['user']['UserId']]);
 
-    $errorVisaWorkflowSignatureBook = false;
-    $attachments = \Attachment\models\AttachmentModel::getOnView([
-        'select'    => [
-            'count(1) as nb'
-        ],
-        'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-        'data'      => [$_SESSION['doc_id'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
-    ]);
-
-    if ($attachments[0]['nb'] == 0) {
-        $errorVisaWorkflowSignatureBook = true;
+    if (!empty($_SESSION['stockCheckbox'])) {
+        $resIds = $_SESSION['stockCheckbox'];
+    } else {
+        $resIds = [$_SESSION['doc_id']];
     }
 
-    return $errorVisaWorkflowSignatureBook;
+    $noAttachment = [];
+    foreach ($resIds as $resId) {
+        $attachments = \Attachment\models\AttachmentModel::getOnView([
+            'select'    => [
+                'count(1) as nb'
+            ],
+            'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+            'data'      => [$resId, ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+        ]);
+        if ($attachments[0]['nb'] == 0) {
+            $noAttachmentsResource = \Resource\models\ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            $noAttachment[] = $noAttachmentsResource['alt_identifier'];
+        }
+    }
+
+    if (!empty($noAttachment)) {
+        $errorVisaWorkflowSignatureBook = true;
+    } else {
+        $errorVisaWorkflowSignatureBook = false;
+    }
+
+    return ['error' => $errorVisaWorkflowSignatureBook, 'resList' => $noAttachment];
 }
