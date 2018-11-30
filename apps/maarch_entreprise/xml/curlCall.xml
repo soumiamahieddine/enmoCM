@@ -20,10 +20,12 @@
     </call>
     <call>
         <id>sendResourceToExternalApplication</id>
-        <enabled>false</enabled>
-        <url></url>
+        <enabled>true</enabled>
+        <url>https://grc28.localeo.fr/public/maarch/createquery</url>
         <method>POST</method>
-        <header></header>
+        <header>Api-Key: 7a1167abe554c90584c2541ecs3a0f99</header>
+        <header>appName: Maarch</header>
+        <file>filename</file>
         <sendInObject>
             <objectName>requete</objectName>
             <rawData>
@@ -73,35 +75,66 @@
     </call>
     <call>
         <id>sendAttachmentToExternalApplication</id>
-        <enabled>false</enabled>
-        <url></url>
+        <enabled>true</enabled>
+        <url>https://grc28.localeo.fr/public/maarch/createquery</url>
         <method>POST</method>
-        <file>
-            <key>encodedFile</key>
-        </file>
-        <rawData>
-            <key>parentId</key>
-            <value>res_id_master</value>
-        </rawData>
-        <rawData>
-            <key>status</key>
-            <value>status</value>
-        </rawData>
-        <data>
-            <key>column</key>
-            <value>aString</value>
-        </data>
-        <data>
-            <key>column2</key>
-            <value>aString2</value>
-        </data>
+        <header>Api-Key: 7a1167abe554c90584c2541ecs3a0f99</header>
+        <header>appName: Maarch</header>
+        <file>filename</file>
+        <sendInObject>
+            <objectName>requete</objectName>
+            <rawData>
+                <key>parentQueryId</key>
+                <value>custom_t1</value>
+            </rawData>
+            <rawData>
+                <key>externalId</key>
+                <value>res_id</value>
+            </rawData>
+            <rawData>
+                <key>subject</key>
+                <value>title</value>
+            </rawData>
+            <data>
+                <key>cityId</key>
+                <value>73</value>
+            </data>
+            <data>
+                <key>servId</key>
+                <value>4129</value>
+            </data>
+            <data>
+                <key>sqrtId</key>
+                <value>12178</value>
+            </data>
+            <data>
+                <key>qrtId</key>
+                <value>125</value>
+            </data>
+            <data>
+                <key>geo</key>
+                <value>false</value>
+            </data>
+        </sendInObject>
+        <sendInObject>
+            <objectName>citoyen</objectName>
+            <rawData>
+                <key>id</key>
+                <value>external_contact_id</value>
+            </rawData>
+            <rawData>
+                <key>externalId</key>
+                <value>address_id</value>
+            </rawData>
+        </sendInObject>
     </call>
     <call>
         <id>sendContactToExternalApplication</id>
-        <enabled>false</enabled>
-        <url></url>
+        <enabled>true</enabled>
+        <url>https://grc28.localeo.fr/public/maarch/createaccount</url>
         <method>POST</method>
-        <header></header>
+        <header>Api-Key: 7a1167abe554c90584c2541ecs3a0f99</header>
+        <header>appName: Maarch</header>
         <sendInObject>
             <objectName>citoyen</objectName>
             <rawData>
@@ -140,10 +173,11 @@
     </call>
     <call>
         <id>closeResource</id>
-        <enabled>false</enabled>
-        <url></url>
+        <enabled>true</enabled>
+        <url>https://grc28.localeo.fr/public/maarch/updatestatusquery</url>
         <method>POST</method>
-        <header></header>
+        <header>Api-Key: 7a1167abe554c90584c2541ecs3a0f99</header>
+        <header>appName: Maarch</header>
         <sendInObject>
             <objectName>requete</objectName>
             <rawData>
