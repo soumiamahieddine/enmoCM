@@ -132,8 +132,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
     require_once "modules/visa/class/class_modules_tools.php";
     $circuit_visa = new visa();
-    $db = new Database();
-    $coll_id = $_SESSION['current_basket']['coll_id'];
+    $db           = new Database();
+    $coll_id      = $_SESSION['current_basket']['coll_id'];
+    $message      = '';
 
     foreach ($arr_id as $res_id) {
         $result .= $res_id.'#';
@@ -180,6 +181,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     'objectSent'     => $objectSent,
                     'userId'         => $_SESSION['user']['UserId']
                 ]);
+
+                $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $processingUser]);
+                $message = ' (à ' . $processingUserInfo['firstname'] . ' ' . $processingUserInfo['lastname'] . ')';
             }
         }
 
@@ -213,7 +217,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
             $stmt     = $db->query('SELECT status FROM res_letterbox WHERE res_id = ?', array($res_id));
             $resource = $stmt->fetchObject();
-            $message  = '';
+            
             if ($resource->status == 'EVIS' || $resource->status == 'ESIG') {
                 $sequence    = $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
                 $stepDetails = array();

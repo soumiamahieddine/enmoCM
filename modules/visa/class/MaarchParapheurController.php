@@ -235,6 +235,18 @@ class MaarchParapheurController
         return $response['status'];
     }
 
+    public static function getUserById($aArgs)
+    {
+        $response = \SrcCore\models\CurlModel::exec([
+            'url'      => $aArgs['config']['data']['url'] . '/rest/users/'.$aArgs['id'],
+            'user'     => $aArgs['config']['data']['userId'],
+            'password' => $aArgs['config']['data']['password'],
+            'method'   => 'GET'
+        ]);
+
+        return $response['user'];
+    }
+
     public static function getHandwrittenDocument($aArgs)
     {
         $response = \SrcCore\models\CurlModel::exec([
