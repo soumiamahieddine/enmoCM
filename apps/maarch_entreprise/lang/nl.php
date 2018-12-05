@@ -1704,3 +1704,4 @@ if (!defined('_CONTACTS_USERS_SEARCH')) { define('_CONTACTS_USERS_SEARCH', 'Een 
 if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) { define('_CONTACTS_USERS_GROUPS_SEARCH', 'Een contact / gebruiker / contactgroepering zoeken');}
 if (!defined('_USER_MAARCH_PARAPHEUR')) { define('_USER_MAARCH_PARAPHEUR', 'Maarch vloeiboek gebruiker');}
 if (!defined('_DOCUMENT_WITH_NOTES')) { define('_DOCUMENT_WITH_NOTES', 'Document met opmerkingen');}
+if (!defined('_USE_MODEL_MAILING')) { define('_USE_MODEL_MAILING', 'Gebruik een registratiesjabloon');}

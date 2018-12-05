@@ -5061,3 +5061,6 @@ if (!defined('_USER_MAARCH_PARAPHEUR')) {
 if (!defined('_DOCUMENT_WITH_NOTES')) {
     define('_DOCUMENT_WITH_NOTES', 'Document with notes');
 }
+if (!defined('_USE_MODEL_MAILING')) {
+    define('_USE_MODEL_MAILING', 'Use model mailing');
+}
