@@ -56,7 +56,7 @@ function change_entity(
                     {
                         diff_list_tr.css('display',tr_display_val);
                         if(category === 'attachment'){ // NCH01
-                            diff_list_div.css('display','none');
+                            diff_list_tr.css('display','none');
                         }
                     }
                     else
@@ -76,7 +76,7 @@ function change_entity(
                     {
                         diff_list_tr.css('display',tr_display_val);
                         if(category === 'attachment'){ // NCH01
-                            diff_list_div.css('display','none');
+                            diff_list_tr.css('display','none');
                         }
                     }
                     else
