@@ -3,10 +3,10 @@
     <CONFIG>
         <MaarchDirectory>/var/www/html/maarch_v2/</MaarchDirectory>
 		<CustomId>cs_maarch_v2</CustomId>
-        <validatedStatus>VAL</validatedStatus>
-        <refusedStatus>COU</refusedStatus>
-        <validatedStatusAnnot>NEW</validatedStatusAnnot>
-        <refusedStatusAnnot>DEL</refusedStatusAnnot>
+        <validatedStatus>EENV</validatedStatus>
+        <refusedStatus>NEW</refusedStatus>
+        <validatedStatusAnnot>COU</validatedStatusAnnot>
+        <refusedStatusAnnot>RET</refusedStatusAnnot>
         <applicationUrl>http://localhost/maarch_v2/</applicationUrl>
         <userWS>superadmin</userWS>
         <passwordWS>superadmin</passwordWS>

@@ -714,5 +714,13 @@ export const LANG_FR = {
     "errorOccured"                                      : "Une erreur s'est produite",
     "documentOutOfPerimeter"                            : "Ce document est en dehors de votre périmètre",
     "userCreatedInMaarchParapheur"                      : "Créé dans Maarch Parapheur",
-    "createUserInMaarchParapheur"                       : "Créer dans Maarch Parapheur"
+    "createUserInMaarchParapheur"                       : "Créer dans Maarch Parapheur",
+    "myHistoric"                                        : "Mon historique",
+    "contactGroupList"                                  : "Liste des groupements",
+    "actionChosen"                                      : "Action(s) choisie(s)",
+    "createNewEntity"                                   : "Créer une nouvelle entité",
+    "organization"                                      : "ORGANISATION",
+    "production"                                        : "PRODUCTION",
+    "classement"                                        : "CLASSEMENT",
+    "supervision"                                       : "SUPERVISION"
 };

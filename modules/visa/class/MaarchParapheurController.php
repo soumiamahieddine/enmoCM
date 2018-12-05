@@ -30,7 +30,8 @@ class MaarchParapheurController
             }
         }
         $html .= '</select><br /><br /><br /><br />';
-        $html .= '<input type="radio" name="objectSent" id="objectSent" value="mail" checked="checked" />' . _MAIL_NOTE . '<br/><input type="radio" name="objectSent" id="objectSent" value="attachment" />' . _ATTACHMENT_SIGNATURE .'<br /><br />';
+        $html .= '<input type="radio" name="objectSent" id="objectSentNote" value="mail" checked="checked" /><label for="objectSentNote" style="float: none;display: unset;">' . _MAIL_NOTE . '</label><br/>';
+        $html .= '<input type="radio" name="objectSent" id="objectSentSign" value="attachment" /><label for="objectSentSign" style="float: none;display: unset;">' . _ATTACHMENT_SIGNATURE .'</label><br /><br />';
 
         return $html;
     }
@@ -232,6 +233,18 @@ class MaarchParapheurController
         ]);
 
         return $response['status'];
+    }
+
+    public static function getUserById($aArgs)
+    {
+        $response = \SrcCore\models\CurlModel::exec([
+            'url'      => $aArgs['config']['data']['url'] . '/rest/users/'.$aArgs['id'],
+            'user'     => $aArgs['config']['data']['userId'],
+            'password' => $aArgs['config']['data']['password'],
+            'method'   => 'GET'
+        ]);
+
+        return $response['user'];
     }
 
     public static function getHandwrittenDocument($aArgs)
