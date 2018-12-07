@@ -128,8 +128,8 @@ class CurlModel
         $error = curl_error($curl);
         $infos = curl_getinfo($curl);
 
-	$cookies = [];
-	if (!empty($aArgs['options'][CURLOPT_HEADER])) {
+        $cookies = [];
+        if (!empty($aArgs['options'][CURLOPT_HEADER])) {
             preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $rawResponse, $matches);
             foreach ($matches[1] as $item) {
                 $cookie = explode("=", $item);
