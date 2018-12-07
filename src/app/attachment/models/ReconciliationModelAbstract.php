@@ -8,11 +8,13 @@
 
 
 namespace Attachment\models;
+
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class ReconciliationModelAbstract {
-    public static function selectReconciliation (array $aArgs = [])
+class ReconciliationModelAbstract
+{
+    public static function selectReconciliation(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
@@ -33,7 +35,7 @@ class ReconciliationModelAbstract {
         return $aReturn;
     }
 
-public static function updateReconciliation (array $aArgs = [])
+    public static function updateReconciliation(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['set']);
         ValidatorModel::arrayType($aArgs, ['where', 'data', 'set']);

@@ -9,7 +9,6 @@
 
 namespace Attachment\models;
 
-
-class ReconciliationModel extends ReconciliationModelAbstract {
-
+class ReconciliationModel extends ReconciliationModelAbstract
+{
 }

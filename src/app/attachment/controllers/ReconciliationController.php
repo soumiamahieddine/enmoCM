@@ -7,9 +7,8 @@ use Slim\Http\Response;
 use Attachment\models\ReconciliationModel;
 use SrcCore\controllers\StoreController;
 
-
-class ReconciliationController{
-
+class ReconciliationController
+{
     public function create(Request $request, Response $response, $aArgs)
     {
         if (empty($aArgs)) {
@@ -34,19 +33,19 @@ class ReconciliationController{
 
     public function getWs($aArgs)
     {
-
         $identifier = $aArgs['chrono'];
         $res_id = (int) $aArgs['res_id'];
         $encodedContent = $aArgs['encoded_content'];
 
         $info = $this->get_attachment_info_from_chrono($identifier, 'status IN (\'A_TRA\', \'NEW\', \'TMP\')');
-        if(! $info)
-            return False;
+        if (! $info) {
+            return false;
+        }
 
-        $title = $info['title'];
-        $fileFormat = 'pdf';
+        $title           = $info['title'];
+        $fileFormat      = 'pdf';
         $attachment_type = 'outgoing_mail_signed';
-        $collIdMaster = 'letterbox_coll';
+        $collIdMaster    = 'letterbox_coll';
 
         $data = [];
 
@@ -107,7 +106,7 @@ class ReconciliationController{
         // Suppression du projet de reponse
         $delete_response_project = $_SESSION['modules_loaded']['attachments']['reconciliation']['delete_response_project'] == 'true';
 
-        if($delete_response_project){
+        if ($delete_response_project) {
             ReconciliationModel::updateReconciliation([
                 'set'       => ['status' => 'DEL'],
                 'where'     => ['res_id = (?)'],
@@ -118,7 +117,7 @@ class ReconciliationController{
 
         // Cloture du courrier entrant
         $close_incoming = $_SESSION['modules_loaded']['attachments']['reconciliation']['close_incoming'] == 'true';
-        if ($close_incoming){
+        if ($close_incoming) {
             ReconciliationModel::updateReconciliation([
                 'set'       => ['status' => 'END'],
                 'where'     => ['res_id = (?)'],
@@ -136,11 +135,11 @@ class ReconciliationController{
      *  Recupere toutes les infos d'une PJ avec son num chrono
      *  Retourne la PJ la plus recente
      */
-    private function get_attachment_info_from_chrono($identifier, $filter=NULL)
+    private function get_attachment_info_from_chrono($identifier, $filter=null)
     {
         $collId = 'attachments_coll';
-        $sec = new \security();
-        $table = $sec->retrieve_table_from_coll($collId);
+        $sec    = new \security();
+        $table  = $sec->retrieve_table_from_coll($collId);
 
         $result = ReconciliationModel::selectReconciliation([
             'select'    => ['*'],
@@ -159,9 +158,9 @@ class ReconciliationController{
         } else {
             $aArgs = $request->getParsedBody();
         }
-	   $attachment = $this->get_attachment_info_from_chrono($aArgs['chrono'], "status IN ('TMP', 'A_TRA','NEW')");
-        $result = ($attachment != False)? 'OK': 'KO';
-	return $response->withJson(array('result' => $result));
+        $attachment = $this->get_attachment_info_from_chrono($aArgs['chrono'], "status IN ('TMP', 'A_TRA','NEW')");
+        $result = ($attachment != false)? 'OK': 'KO';
+        return $response->withJson(array('result' => $result));
     }
 
 
@@ -189,20 +188,19 @@ class ReconciliationController{
         return $return;
     }
 
-    function get_values_in_array($val){
-        $tab = explode('$$',$val);
+    public function get_values_in_array($val)
+    {
+        $tab = explode('$$', $val);
         $values = array();
-        for($i=0; $i<count($tab);$i++)
-        {
+        for ($i=0; $i<count($tab); $i++) {
             $tmp = explode('#', $tab[$i]);
 
             $val_tmp=array();
-            for($idiese=1;$idiese<count($tmp);$idiese++){
+            for ($idiese=1; $idiese<count($tmp); $idiese++) {
                 $val_tmp[]=$tmp[$idiese];
             }
-            $valeurDiese = implode("#",$val_tmp);
-            if(isset($tmp[1]))
-            {
+            $valeurDiese = implode("#", $val_tmp);
+            if (isset($tmp[1])) {
                 array_push($values, array('ID' => $tmp[0], 'VALUE' => $valeurDiese));
             }
         }
