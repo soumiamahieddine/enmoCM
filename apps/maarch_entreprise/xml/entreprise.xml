@@ -109,6 +109,11 @@
             <label>_SVR</label>
             <process_mode>SVR</process_mode>
         </type>
+        <type show="false" with_chrono="false" icon="" sign="false">
+            <id>document_with_notes</id>
+            <label>_DOCUMENT_WITH_NOTES</label>
+            <process_mode/>
+        </type>
     </attachment_types>
     <process_modes>
         <process_mode>

@@ -713,4 +713,14 @@ export const LANG_FR = {
     "chooseNewDest"                                     : "est en <b>destinataire</b> des modèles de liste de difffusion suivants, veuillez choisir un utilisateur de <b>remplacement</b>",
     "errorOccured"                                      : "Une erreur s'est produite",
     "documentOutOfPerimeter"                            : "Ce document est en dehors de votre périmètre",
+    "userCreatedInMaarchParapheur"                      : "Créé dans Maarch Parapheur",
+    "createUserInMaarchParapheur"                       : "Créer dans Maarch Parapheur",
+    "myHistoric"                                        : "Mon historique",
+    "contactGroupList"                                  : "Liste des groupements",
+    "actionChosen"                                      : "Action(s) choisie(s)",
+    "createNewEntity"                                   : "Créer une nouvelle entité",
+    "organization"                                      : "ORGANISATION",
+    "production"                                        : "PRODUCTION",
+    "classement"                                        : "CLASSEMENT",
+    "supervision"                                       : "SUPERVISION"
 };

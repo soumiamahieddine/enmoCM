@@ -289,6 +289,7 @@ $app->put('/users/{id}', \User\controllers\UserController::class . ':update');
 $app->put('/users/{id}/password', \User\controllers\UserController::class . ':resetPassword');
 $app->get('/users/{userId}/status', \User\controllers\UserController::class . ':getStatusByUserId');
 $app->put('/users/{id}/status', \User\controllers\UserController::class . ':updateStatus');
+$app->put('/users/{id}/maarchParapheur', \User\controllers\UserController::class . ':sendToMaarchParapheur');
 $app->delete('/users/{id}', \User\controllers\UserController::class . ':delete');
 $app->post('/users/{id}/groups', \User\controllers\UserController::class . ':addGroup');
 $app->put('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':updateGroup');

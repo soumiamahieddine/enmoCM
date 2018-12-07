@@ -418,3 +418,5 @@ define('_SVA', 'SVA');
 define('_SVR', 'SVR');
 define('_REDACTOR', 'Rédacteur');
 define('_ASSIGNEE', 'Attributaire');
+
+define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'Utilisateur créé dans Maarch Parapheur');

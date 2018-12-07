@@ -42,6 +42,18 @@ class ValidatorModel
         }
     }
 
+    public static function json(array $aArgs, $aKeys)
+    {
+        foreach ($aKeys as $key) {
+            if (!isset($aArgs[$key])) {
+                continue;
+            }
+            if (!Validator::json()->validate($aArgs[$key])) {
+                throw new \Exception("Argument {$key} is not a json (value)");
+            }
+        }
+    }
+
     public static function intType(array $aArgs, $aKeys)
     {
         foreach ($aKeys as $key) {

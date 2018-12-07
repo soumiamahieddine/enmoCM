@@ -163,6 +163,18 @@ function Bt_createAttachment($aArgs = [])
         );
     }
 
+    if (!empty($aArgs['attachent_type'])) {
+        $attachmentType = $aArgs['attachent_type'];
+    } else {
+        $attachmentType = 'signed_response';
+    }
+
+    if (!empty($aArgs['in_signature_book'])) {
+        $inSignatureBook = $aArgs['in_signature_book'];
+    } else {
+        $inSignatureBook = 'true';
+    }
+
     $dataValue = [];
     array_push($dataValue, ['column' => 'res_id_master',    'value' => $aArgs['res_id_master'],   'type' => 'integer']);
     array_push($dataValue, ['column' => 'title',            'value' => $aArgs['title'],           'type' => 'string']);
@@ -172,10 +184,10 @@ function Bt_createAttachment($aArgs = [])
     array_push($dataValue, ['column' => 'dest_address_id',  'value' => $aArgs['dest_address_id'], 'type' => 'integer']);
     array_push($dataValue, ['column' => 'dest_user',        'value' => $aArgs['dest_user'],       'type' => 'string']);
     array_push($dataValue, ['column' => 'typist',           'value' => $aArgs['typist'],          'type' => 'string']);
-    array_push($dataValue, ['column' => 'attachment_type',  'value' => 'signed_response',         'type' => 'string']);
+    array_push($dataValue, ['column' => 'attachment_type',  'value' => $attachmentType,           'type' => 'string']);
     array_push($dataValue, ['column' => 'coll_id',          'value' => 'letterbox_coll',          'type' => 'string']);
     array_push($dataValue, ['column' => 'relation',         'value' => 1,                         'type' => 'integer']);
-    array_push($dataValue, ['column' => 'in_signature_book','value' => 'true',                    'type' => 'bool']);
+    array_push($dataValue, ['column' => 'in_signature_book','value' => $inSignatureBook,          'type' => 'bool']);
 
     $allDatas = [
         "encodedFile" => $aArgs['encodedFile'],

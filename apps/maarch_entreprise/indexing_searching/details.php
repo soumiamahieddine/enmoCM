@@ -390,7 +390,7 @@ if ($stmt->rowCount() == 0) {
             <?php if ($info_mail->filename) {
                 ?>
                 <a href="../../rest/res/<?php functions::xecho($s_id); ?>/content" target="_blank">
-                    Voir le document
+                    <?php echo _VIEW_DOC;?>
                     <i class="tooltip visaPjUp tooltipstered fa fa-download fa-2x" style="height: 16px; width: 16px;font-size: 19px;padding-bottom: 11px;padding-left: 9px;margin-right:6px;padding-top:7px;margin-top: -9px;" title="<?php echo _VIEW_DOC; ?>"></i>
                 </a>
             <?php

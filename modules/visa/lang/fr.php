@@ -55,6 +55,9 @@ if (!defined('_NO_VISA')) {
 if (!defined('_NO_RESPONSE_PROJECT_VISA')) {
     define('_NO_RESPONSE_PROJECT_VISA', 'Veuillez intégrer au moins une pièce jointe au parapheur.');
 }
+if (!defined('_MAIL_HAS_NO_RESPONSE_PROJECT')) {
+    define('_MAIL_HAS_NO_RESPONSE_PROJECT', 'Ces documents n\'ont pas de pièce jointe intégrée au parapheur');
+}
 if (!defined('_NO_CONVERTED_PDF_VISA')) {
     define('_NO_CONVERTED_PDF_VISA', 'Veuillez éditer votre/vos pièce(s) jointe(s)');
 }
@@ -468,18 +471,25 @@ if (!defined('_EXTERNAL_ID_EMPTY')) {
     define('_EXTERNAL_ID_EMPTY', "La référence externe est vide");
 }
 
-if(!defined('_SEND_TO_IPARAPHEUR')){
+if (!defined('_SEND_TO_IPARAPHEUR')) {
     define('_SEND_TO_IPARAPHEUR', "Envoyer à l'IParapheur ?");
 }
 
-if(!defined('_SEND_TO_FAST')){
+if (!defined('_SEND_TO_FAST')) {
     define('_SEND_TO_FAST', "Envoyer au parapheur FAST ?");
 }
 
-if(!defined('_ERROR_CREATE_ZIP')){
+if (!defined('_ERROR_CREATE_ZIP')) {
     define('_ERROR_CREATE_ZIP', "Impossible d'ouvrir le fichier");
 }
 
-if(!defined('_PROJECT_NUMBER')){
+if (!defined('_PROJECT_NUMBER')) {
     define('_PROJECT_NUMBER', "Projet courrier numéro ");
+}
+
+if (!defined('_MAIL_NOTE')) {
+    define('_MAIL_NOTE', "Annotation du document principal");
+}
+if (!defined('_ATTACHMENT_SIGNATURE')) {
+    define('_ATTACHMENT_SIGNATURE', "Signature des documents intégrés au parapheur");
 }

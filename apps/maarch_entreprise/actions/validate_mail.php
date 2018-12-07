@@ -313,7 +313,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     $frm_str .= '<div style="display:table;width:100%;">';
     $frm_str .= '<div style="display:table-cell;vertical-align:middle;">';
-    $frm_str .= '<select id="indexing_models_select" data-placeholder="Utiliser un modèle d\'enregistrement..." onchange="loadIndexingModel();"><option value="none"></option>';
+    $frm_str .= '<select id="indexing_models_select" data-placeholder="'._USE_MODEL_MAILING.'" onchange="loadIndexingModel();"><option value="none"></option>';
     while ($resIndexingModels = $stmt->fetchObject()) {
         $frm_str .= '<option value="'.$resIndexingModels->id.'">'.$resIndexingModels->label.'</option>';
     }
@@ -1136,7 +1136,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         }
         $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
         $frm_str .= '<td><label for="folder" class="form_title" >'._FOLDER_OR_SUBFOLDER.'</label></td>';
-        $frm_str .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">Sélectionnez un dossier</option>';
+        $frm_str .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">'._SELECT_FOLDER_TITLE.'</option>';
 
         foreach ($folder_info as $key => $value) {
             if ($value['folders_system_id'] == $folder_id) {
@@ -2115,7 +2115,100 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         require 'modules/attachments/remove_letterbox.php';
     }
 
-    //$_SESSION['indexing'] = array();
+    if ($cat_id == 'incoming') {
+        if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendResourceToExternalApplication'])) {
+            $bodyData = [];
+            $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
+
+            $columnsInContact = ['external_contact_id'];
+            $resource = \Resource\models\ResModel::getById(['select' => [$config['return']['value'], 'docserver_id', 'path', 'filename'], 'resId' => $res_id]);
+
+            if (empty($resource[$config['return']['value']])) {
+                if (!empty($config['inObject'])) {
+                    $multipleObject = true;
+
+                    foreach ($config['objects'] as $object) {
+                        $select = [];
+                        $tmpBodyData = [];
+                        $getContact = false;
+                        foreach ($object['rawData'] as $value) {
+                            if (in_array($value, $columnsInContact)) {
+                                $getContact = true;
+                            } else {
+                                $select[] = $value;
+                            }
+                        }
+
+                        $select[] = 'address_id';
+                        $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$res_id]]);
+                        if (!empty($document[0])) {
+                            if ($getContact && !empty($document[0]['address_id'])) {
+                                $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$document[0]['address_id']]]);
+                            }
+                            foreach ($object['rawData'] as $key => $value) {
+                                if (in_array($value, $columnsInContact)) {
+                                    $tmpBodyData[$key] = '';
+                                    if (!empty($contact[0][$value])) {
+                                        $tmpBodyData[$key] = $contact[0][$value];
+                                    }
+                                } else {
+                                    $tmpBodyData[$key] = $document[0][$value];
+                                }
+                            }
+                        }
+
+                        if (!empty($object['data'])) {
+                            $tmpBodyData = array_merge($tmpBodyData, $object['data']);
+                        }
+
+                        $bodyData[$object['name']] = $tmpBodyData;
+                    }
+
+                    if (!empty($config['file'])) {
+                        $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
+                        $bodyData[$config['file']] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $resource['path']) . $resource['filename']]);
+                    }
+                } else {
+                    $multipleObject = false;
+                    $getContact = false;
+
+                    $select = [];
+                    foreach ($config['rawData'] as $value) {
+                        if (in_array($value, $columnsInContact)) {
+                            $getContact = true;
+                        } else {
+                            $select[] = $value;
+                        }
+                    }
+
+                    $select[] = 'address_id';
+                    $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$res_id]]);
+                    if (!empty($document[0])) {
+                        if ($getContact) {
+                            $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$document[0]['address_id']]]);
+                        }
+                        foreach ($config['rawData'] as $key => $value) {
+                            if (in_array($value, $columnsInContact)) {
+                                $bodyData[$key] = $contact[0][$value];
+                            } else {
+                                $bodyData[$key] = $document[0][$value];
+                            }
+                        }
+
+                    }
+
+                    if (!empty($config['data'])) {
+                        $bodyData = array_merge($bodyData, $config['data']);
+                    }
+                }
+
+                $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
+
+                \Resource\models\ResModel::update(['set' => [$config['return']['value'] => $response[$config['return']['key']]], 'where' => ['res_id = ?'], 'data' => [$res_id]]);
+            }
+        }
+    }
+
     unset($_SESSION['upfile']);
 
     //$_SESSION['indexation'] = true;

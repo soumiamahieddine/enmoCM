@@ -76,3 +76,7 @@ if (!defined("_SELECT_NOTE_TEMPLATE")) {
 if (!defined("_NOTES_RESTRICTION")) {
     define("_NOTES_RESTRICTION", "Restreindre par défaut les annotations à votre entité");
 }
+
+if (!defined("_NOTE")) {
+    define("_NOTE", "Annotation");
+}

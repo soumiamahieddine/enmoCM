@@ -14,18 +14,23 @@
 
 namespace SrcCore\models;
 
+use SrcCore\controllers\LogsController;
+
 class CurlModel
 {
     public static function exec(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['curlCallId']);
         ValidatorModel::stringType($aArgs, ['curlCallId']);
         ValidatorModel::arrayType($aArgs, ['bodyData']);
         ValidatorModel::boolType($aArgs, ['noAuth', 'multipleObject']);
 
-        $curlConfig = CurlModel::getConfigByCallId(['curlCallId' => $aArgs['curlCallId']]);
-        if (empty($curlConfig)) {
-            return [];
+        if (!empty($aArgs['curlCallId'])) {
+            $curlConfig = CurlModel::getConfigByCallId(['curlCallId' => $aArgs['curlCallId']]);
+        } else {
+            $curlConfig['url']      = $aArgs['url'];
+            $curlConfig['user']     = $aArgs['user'];
+            $curlConfig['password'] = $aArgs['password'];
+            $curlConfig['method']   = $aArgs['method'];
         }
 
         $opts = [
@@ -75,6 +80,16 @@ class CurlModel
         $rawResponse = curl_exec($curl);
         curl_close($curl);
 
+        LogsController::add([
+            'isTech'    => true,
+            'moduleId'  => 'curl',
+            'level'     => 'DEBUG',
+            'tableName' => '',
+            'recordId'  => '',
+            'eventType' => 'Exec Curl : ' . $aArgs['url'],
+            'eventId'   => $rawResponse
+        ]);
+
         return json_decode($rawResponse, true);
     }
 
@@ -113,21 +128,32 @@ class CurlModel
         $error = curl_error($curl);
         $infos = curl_getinfo($curl);
 
-        $cookies = [];
-        if (!empty($aArgs['options'][CURLOPT_HEADER])) {
+	$cookies = [];
+	if (!empty($aArgs['options'][CURLOPT_HEADER])) {
             preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $rawResponse, $matches);
             foreach ($matches[1] as $item) {
                 $cookie = explode("=", $item);
                 $cookies = array_merge($cookies, [$cookie[0] => $cookie[1]]);
             }
             $rawResponse = substr($rawResponse, $infos['header_size']);
-        }else if(!empty($aArgs['delete_header'])){ // Delete header for iparapheur
-            $body = explode(PHP_EOL . PHP_EOL, $rawResponse)[1];        // put the header ahead
-            if(empty($body)) $body = explode(PHP_EOL, $rawResponse)[5];
-
-            $pattern = '/--uuid:[0-9a-f-]+--/';                           // And also the footer
+        } elseif (!empty($aArgs['delete_header'])) { // Delete header for iparapheur
+            $body = explode(PHP_EOL . PHP_EOL, $rawResponse)[1]; // put the header ahead
+            if (empty($body)) {
+                $body = explode(PHP_EOL, $rawResponse)[5];
+            }
+            $pattern = '/--uuid:[0-9a-f-]+--/';                  // And also the footer
             $rawResponse = preg_replace($pattern, '', $body);
         }
+
+        LogsController::add([
+            'isTech'    => true,
+            'moduleId'  => 'curl',
+            'level'     => 'DEBUG',
+            'tableName' => '',
+            'recordId'  => '',
+            'eventType' => 'Exec Curl : ' . $aArgs['url'],
+            'eventId'   => $rawResponse
+        ]);
 
         return ['response' => simplexml_load_string($rawResponse), 'infos' => $infos, 'cookies' => $cookies, 'raw' => $rawResponse, 'error' => $error];
     }
@@ -193,7 +219,8 @@ class CurlModel
                         }
                     }
                     if (!empty($call->return)) {
-                        $curlConfig['return'] = (string)$call->return;
+                        $curlConfig['return']['key'] = (string)$call->return->key;
+                        $curlConfig['return']['value'] = (string)$call->return->value;
                     }
                 }
             }

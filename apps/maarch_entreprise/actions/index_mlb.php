@@ -225,7 +225,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
     $frmStr .= '<div style="display:table;width:100%;">';
     $frmStr .= '<div style="display:table-cell;vertical-align:middle;">';
-    $frmStr .= '<select id="indexing_models_select" data-placeholder="Utiliser un modèle d\'enregistrement..." onchange="loadIndexingModel(\''.$actionId.'\');"><option value="none"></option>';
+    $frmStr .= '<select id="indexing_models_select" data-placeholder="'._USE_MODEL_MAILING.'" onchange="loadIndexingModel(\''.$actionId.'\');"><option value="none"></option>';
     while ($resIndexingModels = $stmt->fetchObject()) {
         $frmStr .= '<option value="'.$resIndexingModels->id.'">'.$resIndexingModels->label.'</option>';
     }
@@ -912,7 +912,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
         $frmStr .= '<tr id="folder_tr" style="display:'.$displayValue.';">';
         $frmStr .= '<td><label for="folder" class="form_title" >'._FOLDER_OR_SUBFOLDER.'</label></td>';
-        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">Sélectionnez un dossier</option>';
+        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">'._SELECT_FOLDER_TITLE.'</option>';
 
         foreach ($folder_info as $key => $value) {
             $frmStr .= '<option value="'.$value['folders_system_id'].'" parent="'.$value['parent_id'].'">'.$value['folder_name'].'</option>';
@@ -2064,7 +2064,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     $_SESSION['action_error'] = _NEW_DOC_ADDED;
     $_SESSION['indexation'] = true;
 
-    if ($catId != 'outgoing') {
+    if ($catId == 'incoming') {
         if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'sendResourceToExternalApplication'])) {
             $bodyData = [];
             $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
@@ -2150,7 +2150,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
             $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
 
-            \Resource\models\ResModel::update(['set' => ['external_id' => $response[$config['return']]], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+            \Resource\models\ResModel::update(['set' => [$config['return']['value'] => $response[$config['return']['key']]], 'where' => ['res_id = ?'], 'data' => [$resId]]);
         }
     }
 
