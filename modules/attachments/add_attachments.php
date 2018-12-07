@@ -18,17 +18,21 @@ $parentResId = $_SESSION['stockCheckbox'];
 $childResId = $_SESSION['doc_id'];
 
 // Retrieve the data of the form (title, chrono number, recipient etc...)
-$formValues = $reconciliationControler -> get_values_in_array($_REQUEST['form_values']);
+$formValues = $reconciliationControler->get_values_in_array($_REQUEST['form_values']);
 $tabFormValues = array();
 
 // NCH01 new modifs
 $allowValues = array('title', 'chrono_number', 'contactid','addressid','close_incoming_mail', 'attachment_type', 'back_date');
-foreach($formValues as $tmpTab){
-    if(in_array($tmpTab['ID'], $allowValues)){
-        if($tmpTab['ID'] == 'chrono_number') // Check if the identifier is empty. if true, set it at NULL
-            if(empty($tmpTab['VALUE'])) $tmpTab ['VALUE'] = NULL;
-        if(trim($tmpTab['VALUE']) != '') // Case of some empty value, that cause some errors
+foreach ($formValues as $tmpTab) {
+    if (in_array($tmpTab['ID'], $allowValues)) {
+        if ($tmpTab['ID'] == 'chrono_number') { // Check if the identifier is empty. if true, set it at NULL
+            if (empty($tmpTab['VALUE'])) {
+                $tmpTab ['VALUE'] = null;
+            }
+        }
+        if (trim($tmpTab['VALUE']) != '') { // Case of some empty value, that cause some errors
             $tabFormValues[$tmpTab['ID']] = $tmpTab['VALUE'];
+        }
     }
 }
 // END NCH01 new modifs
@@ -36,8 +40,8 @@ foreach($formValues as $tmpTab){
 $_SESSION['modules_loaded']['attachments']['reconciliation']['tabFormValues'] = $tabFormValues;    // declare SESSION var, used in remove_letterbox
 
 // Remove chrono number depends on attachment type ("with chrono" param) // new modifs
-if($_SESSION['attachment_types_with_chrono'][$tabFormValues['attachment_type']] == 'false'){
-    $tabFormValues['chrono_number'] = NULL;
+if ($_SESSION['attachment_types_with_chrono'][$tabFormValues['attachment_type']] == 'false') {
+    $tabFormValues['chrono_number'] = null;
 }
 
 // Retrieve the informations of the newly scanned document (the one to attach as an attachment)
