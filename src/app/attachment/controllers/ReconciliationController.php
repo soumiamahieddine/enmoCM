@@ -10,11 +10,8 @@ use History\controllers\HistoryController;
 use Resource\controllers\StoreController;
 use SrcCore\models\CoreConfigModel;
 
-
-
 class ReconciliationController
 {
-
     public function create(Request $request, Response $response)
     {
         $data = $request->getParams();
