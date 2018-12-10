@@ -6,8 +6,6 @@
  *
  */
 
-use Attachments\Models\ReconciliationModel;
-
 $core = new core_tools();
 $core->test_user();
 $core->load_js();

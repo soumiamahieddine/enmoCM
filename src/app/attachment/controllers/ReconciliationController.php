@@ -4,7 +4,8 @@ namespace Attachment\controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Attachment\models\ReconciliationModel;
+use Attachment\models\AttachmentModel;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use History\controllers\HistoryController;
 use Resource\controllers\StoreController;
@@ -22,7 +23,7 @@ class ReconciliationController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $resId = $this->getWs($data);
+        $resId = ReconciliationController::getWs($data);
 
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[ReconciliationController create] ' . $resId['errors']]);
@@ -40,16 +41,15 @@ class ReconciliationController
         return $response->withJson(['resId' => $resId]);
     }
 
-    public function getWs($aArgs)
+    public static function getWs($aArgs)
     {
         $identifier     = $aArgs['chrono'];
         $res_id         = (int)$aArgs['resId'];
         $encodedContent = $aArgs['encodedFile'];
 
-        $info = ReconciliationModel::getReconciliation([
+        $info = AttachmentModel::getOnView([
             'select'  => ['*'],
-            'table'   => ['res_attachments'],
-            'where'   => ['identifier = (?)', "status IN ('A_TRA', 'NEW','TMP')"],
+            'where'   => ['identifier = ?', "status IN ('A_TRA', 'NEW','TMP')"],
             'data'    => [$identifier],
             'orderBy' => ['res_id DESC']
         ])[0];
@@ -142,21 +142,19 @@ class ReconciliationController
             $close_incoming          = $reconciliationConfig->close_incoming;
 
             if ($delete_response_project == 'true') {
-                ReconciliationModel::updateReconciliation([
+                AttachmentModel::update([
                     'set'   => ['status' => 'DEL'],
-                    'where' => ['res_id = (?)'],
+                    'where' => ['res_id = ?'],
                     'data'  => [$info['res_id']],
-                    'table' => 'res_attachments'
                 ]);
             }
 
             // Cloture du courrier entrant
             if ($close_incoming == 'true') {
-                ReconciliationModel::updateReconciliation([
+                ResModel::update([
                     'set'   => ['status' => 'END'],
-                    'where' => ['res_id = (?)'],
+                    'where' => ['res_id = ?'],
                     'data'  => [$res_id],
-                    'table' => 'res_letterbox'
                 ]);
             }
         }
@@ -170,9 +168,8 @@ class ReconciliationController
             $aArgs = $request->getParams();
         }
 
-        $attachment = ReconciliationModel::getReconciliation([
+        $attachment = AttachmentModel::getOnView([
             'select'  => ['*'],
-            'table'   => ['res_attachments'],
             'where'   => ['identifier = (?)', "status IN ('A_TRA', 'NEW','TMP')"],
             'data'    => [$aArgs['chrono']],
             'orderBy' => ['res_id DESC']
