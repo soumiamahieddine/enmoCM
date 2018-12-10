@@ -1284,7 +1284,10 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 				Element.setStyle(valid_multi_contact, {display : 'inline'});
 				Element.setStyle(to_multi_contact, {display : 'table-cell'});
 				Element.setStyle(to, {display : 'inline'});
-                if(cat_id != 'attachment') Element.setStyle(show_multi_contact, {display : 'table-row'}); // NCH01
+                // NCH01
+				if(cat_id !== 'attachment'){
+                    Element.setStyle(show_multi_contact, {display : 'table-row'});
+                }
 				Element.setStyle(add_multi_contact, {display : 'table-row'});
 				Element.setStyle(contact_id_tr, {display : 'none'});
 			}else if ($(external_type ).checked == true){
@@ -1295,7 +1298,9 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 				Element.setStyle(show_multi_contact, {display : 'none'});
 				Element.setStyle(add_multi_contact, {display : 'none'});
 				// NCH01
-                if(cat_id != 'attachment') Element.setStyle(contact_id_tr, {display : 'table-row'});
+                if(cat_id !== 'attachment') {
+                    Element.setStyle(contact_id_tr, {display : 'table-row'});
+                }
 			}
         }
     }

@@ -12,7 +12,7 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
 class ReconciliationModelAbstract {
-    public static function selectReconciliation (array $aArgs = [])
+    public static function getReconciliation (array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);

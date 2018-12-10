@@ -9,7 +9,6 @@
 $core = new core_tools();
 $core->test_user();
 $db = new Database();
-$reconciliationControler = new \Attachment\controllers\ReconciliationController();
 
 $letterboxTable = $_SESSION['tablename']['reconciliation']['letterbox'];
 
@@ -18,7 +17,7 @@ $parentResId = $_SESSION['stockCheckbox'];
 $childResId = $_SESSION['doc_id'];
 
 // Retrieve the data of the form (title, chrono number, recipient etc...)
-$formValues = $reconciliationControler -> get_values_in_array($_REQUEST['form_values']);
+$formValues = get_values_in_array($_REQUEST['form_values']);
 $tabFormValues = array();
 
 // NCH01 new modifs
