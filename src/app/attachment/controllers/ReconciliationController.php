@@ -30,11 +30,11 @@ class ReconciliationController
 
         HistoryController::add([
             'tableName' => 'res_attachments',
-            'recordId' => $resId,
+            'recordId'  => $resId,
             'eventType' => 'ADD',
-            'info' => _DOC_ADDED,
-            'moduleId' => 'reconciliation',
-            'eventId' => 'attachmentadd',
+            'info'      => _DOC_ADDED,
+            'moduleId'  => 'reconciliation',
+            'eventId'   => 'attachmentadd',
         ]);
 
         return $response->withJson(['resId' => $resId]);
@@ -42,15 +42,15 @@ class ReconciliationController
 
     public function getWs($aArgs)
     {
-        $identifier = $aArgs['chrono'];
-        $res_id = (int)$aArgs['resId'];
+        $identifier     = $aArgs['chrono'];
+        $res_id         = (int)$aArgs['resId'];
         $encodedContent = $aArgs['encodedFile'];
 
         $info = ReconciliationModel::getReconciliation([
-            'select' => ['*'],
-            'table' => ['res_attachments'],
-            'where' => ['identifier = (?)', "status IN ('A_TRA', 'NEW','TMP')"],
-            'data' => [$identifier],
+            'select'  => ['*'],
+            'table'   => ['res_attachments'],
+            'where'   => ['identifier = (?)', "status IN ('A_TRA', 'NEW','TMP')"],
+            'data'    => [$identifier],
             'orderBy' => ['res_id DESC']
         ])[0];
 
@@ -58,10 +58,10 @@ class ReconciliationController
             return false;
         }
 
-        $title = $info['title'];
-        $fileFormat = 'pdf';
+        $title           = $info['title'];
+        $fileFormat      = 'pdf';
         $attachment_type = 'outgoing_mail_signed';
-        $collId = 'letterbox_coll';
+        $collId          = 'letterbox_coll';
 
         $data = [];
 
@@ -124,12 +124,12 @@ class ReconciliationController
         );
 
         $aArgs = [
-            'collId' => $collId,
-            'table' => 'res_attachments',
+            'collId'      => $collId,
+            'table'       => 'res_attachments',
             'encodedFile' => $encodedContent,
-            'fileFormat' => $fileFormat,
-            'data' => $data,
-            'status' => 'TRA'
+            'fileFormat'  => $fileFormat,
+            'data'        => $data,
+            'status'      => 'TRA'
         ];
 
         $resId = StoreController::storeResourceRes($aArgs);
@@ -137,15 +137,15 @@ class ReconciliationController
         // Suppression du projet de reponse
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/attachments/xml/config.xml']);
         if ($loadedXml) {
-            $reconciliationConfig = $loadedXml->RECONCILIATION->CONFIG;
+            $reconciliationConfig    = $loadedXml->RECONCILIATION->CONFIG;
             $delete_response_project = $reconciliationConfig->delete_response_project;
-            $close_incoming = $reconciliationConfig->close_incoming;
+            $close_incoming          = $reconciliationConfig->close_incoming;
 
             if ($delete_response_project == 'true') {
                 ReconciliationModel::updateReconciliation([
-                    'set' => ['status' => 'DEL'],
+                    'set'   => ['status' => 'DEL'],
                     'where' => ['res_id = (?)'],
-                    'data' => [$info['res_id']],
+                    'data'  => [$info['res_id']],
                     'table' => 'res_attachments'
                 ]);
             }
@@ -153,9 +153,9 @@ class ReconciliationController
             // Cloture du courrier entrant
             if ($close_incoming == 'true') {
                 ReconciliationModel::updateReconciliation([
-                    'set' => ['status' => 'END'],
+                    'set'   => ['status' => 'END'],
                     'where' => ['res_id = (?)'],
-                    'data' => [$res_id],
+                    'data'  => [$res_id],
                     'table' => 'res_letterbox'
                 ]);
             }
@@ -171,10 +171,10 @@ class ReconciliationController
         }
 
         $attachment = ReconciliationModel::getReconciliation([
-            'select' => ['*'],
-            'table' => ['res_attachments'],
-            'where' => ['identifier = (?)', "status IN ('A_TRA', 'NEW','TMP')"],
-            'data' => [$aArgs['chrono']],
+            'select'  => ['*'],
+            'table'   => ['res_attachments'],
+            'where'   => ['identifier = (?)', "status IN ('A_TRA', 'NEW','TMP')"],
+            'data'    => [$aArgs['chrono']],
             'orderBy' => ['res_id DESC']
         ])[0];
 
