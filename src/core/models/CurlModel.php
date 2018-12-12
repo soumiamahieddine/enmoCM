@@ -85,8 +85,8 @@ class CurlModel
             'moduleId'  => 'curl',
             'level'     => 'DEBUG',
             'tableName' => '',
-            'recordId'  => '',
-            'eventType' => 'Exec Curl : ' . $aArgs['url'],
+            'recordId'  => 'Body : ' . json_encode($bodyData),
+            'eventType' => 'Exec Curl : ' . $curlConfig['url'],
             'eventId'   => $rawResponse
         ]);
 
@@ -154,6 +154,18 @@ class CurlModel
             'eventType' => 'Exec Curl : ' . $aArgs['url'],
             'eventId'   => $rawResponse
         ]);
+
+        if (!empty($error)) {
+            LogsController::add([
+                'isTech'    => true,
+                'moduleId'  => 'curl',
+                'level'     => 'ERROR',
+                'tableName' => '',
+                'recordId'  => '',
+                'eventType' => 'Error Exec Curl : ' . $error,
+                'eventId'   => $rawResponse
+            ]);
+        }
 
         return ['response' => simplexml_load_string($rawResponse), 'infos' => $infos, 'cookies' => $cookies, 'raw' => $rawResponse, 'error' => $error];
     }
