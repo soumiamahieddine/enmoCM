@@ -491,12 +491,9 @@ class ResController
             'offset'    => (int)$data['offset'],
             'limit'     => (int)$data['limit'],
         ]);
-        $allResources = ResModel::getOnView([
-            'select'    => [1],
-            'where'     => [$whereClause],
-        ]);
+        $count = empty($resources[0]['count']) ? 0 : $resources[0]['count'];
 
-        return $response->withJson(['resources' => $resources, 'number' => count($allResources)]);
+        return $response->withJson(['resources' => $resources, 'count' => $count]);
     }
 
     public function updateExternalInfos(Request $request, Response $response)
