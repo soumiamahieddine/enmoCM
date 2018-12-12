@@ -48,7 +48,7 @@ class ReconciliationController
         $encodedContent = $aArgs['encodedFile'];
 
         $info = AttachmentModel::getOnView([
-            'select'  => ['*'],
+            'select'  => [1],
             'where'   => ['identifier = ?', "status IN ('A_TRA', 'NEW','TMP')"],
             'data'    => [$identifier],
             'orderBy' => ['res_id DESC']
@@ -169,8 +169,8 @@ class ReconciliationController
         }
 
         $attachment = AttachmentModel::getOnView([
-            'select'  => ['*'],
-            'where'   => ['identifier = (?)', "status IN ('A_TRA', 'NEW','TMP')"],
+            'select'  => [1],
+            'where'   => ['identifier = ?', "status IN ('A_TRA', 'NEW','TMP')"],
             'data'    => [$aArgs['chrono']],
             'orderBy' => ['res_id DESC']
         ])[0];
