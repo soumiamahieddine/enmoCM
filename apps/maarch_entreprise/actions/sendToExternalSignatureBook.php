@@ -68,6 +68,10 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             include_once 'modules/visa/class/FastParapheurController.php';
 
             $htmlModal = FastParapheurController::getModal($config);
+        } elseif ($config['id'] == 'maarchParapheur') {
+            include_once 'modules/visa/class/MaarchParapheurController.php';
+
+            $htmlModal = MaarchParapheurController::getModal($config);
         }
 
         if (!empty($htmlModal['error'])) {
