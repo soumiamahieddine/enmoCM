@@ -78,6 +78,7 @@ class CurlModel
         $curl = curl_init();
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
+        $error = curl_error($curl);
         curl_close($curl);
 
         LogsController::add([
@@ -85,10 +86,23 @@ class CurlModel
             'moduleId'  => 'curl',
             'level'     => 'DEBUG',
             'tableName' => '',
-            'recordId'  => '',
-            'eventType' => 'Exec Curl : ' . $aArgs['url'],
+            'recordId'  => 'Body : ' . json_encode($bodyData),
+            'eventType' => 'Exec Curl : ' . $curlConfig['url'],
             'eventId'   => $rawResponse
         ]);
+
+        if (!empty($error)) {
+            LogsController::add([
+                'isTech'    => true,
+                'moduleId'  => 'curl',
+                'level'     => 'ERROR',
+                'tableName' => '',
+                'recordId'  => '',
+                'eventType' => 'Error Exec Curl : ' . $error,
+                'eventId'   => $rawResponse
+            ]);
+            return ['error' => $error];
+        }
 
         return json_decode($rawResponse, true);
     }
@@ -154,6 +168,18 @@ class CurlModel
             'eventType' => 'Exec Curl : ' . $aArgs['url'],
             'eventId'   => $rawResponse
         ]);
+
+        if (!empty($error)) {
+            LogsController::add([
+                'isTech'    => true,
+                'moduleId'  => 'curl',
+                'level'     => 'ERROR',
+                'tableName' => '',
+                'recordId'  => '',
+                'eventType' => 'Error Exec Curl : ' . $error,
+                'eventId'   => $rawResponse
+            ]);
+        }
 
         return ['response' => simplexml_load_string($rawResponse), 'infos' => $infos, 'cookies' => $cookies, 'raw' => $rawResponse, 'error' => $error];
     }

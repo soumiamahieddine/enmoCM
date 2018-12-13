@@ -45,11 +45,12 @@ abstract class ResModelAbstract
         ValidatorModel::stringType($aArgs, ['clause']);
         ValidatorModel::intType($aArgs, ['limit', 'offset']);
 
-        $where = ['res_view_letterbox.priority = priorities.id', 'res_view_letterbox.status = status.id', 'res_view_letterbox.dest_user = users.user_id'];
+        $where = ['res_view_letterbox.priority = priorities.id'];
         $where[] = $aArgs['clause'];
 
         $aResources = DatabaseModel::select([
             'select'    => [
+                'count(1) OVER()',
                 'alt_identifier',
                 'category_id',
                 'case_label',
@@ -64,17 +65,10 @@ abstract class ResModelAbstract
                 'priorities.label as priority_label',
                 'process_limit_date',
                 'res_id',
-                'status.img_filename as status_icon',
-                'status.label_status as status_label',
-                'status.id as status_id',
                 'subject',
-                'type_label as doctype_label',
-                'user_lastname',
-                'user_firstname',
-                'users.lastname as user_dest_lastname',
-                'users.firstname as user_dest_firstname',
+                'type_label as doctype_label'
             ],
-            'table'     => ['res_view_letterbox, priorities, status, users'],
+            'table'     => ['res_view_letterbox, priorities'],
             'where'     => $where,
             'data'      => [],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
