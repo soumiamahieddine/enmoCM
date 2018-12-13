@@ -129,7 +129,7 @@ class FastParapheurController
     }
 
     public static function upload($aArgs){
-        $circuitId          = $aArgs['circuitId'];
+	    $circuitId          = $aArgs['circuitId'];
         $label              = $aArgs['label'];
         $subscriberId       = $aArgs['businessId'];
 
@@ -152,8 +152,8 @@ class FastParapheurController
             'data'                  => [$aArgs['resIdMaster'], 'print_folder']
         ]);
 
-        if(!isset($annexes['attachments'])){
-            for($i =0; $i < count($annexes['attachments']); $i++){
+        if(isset($annexes['attachments'])){
+            for($i = 0; $i < count($annexes['attachments']); $i++){
                 $annexAttachmentInfo                    = \Attachment\models\AttachmentModel::getById(['id' => $annexes['attachments'][$i]['res_id'], 'isVersion' => false]);
                 $annexAttachmentPath                    = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $annexAttachmentInfo['docserver_id'], 'select' => ['path_template']]);
                 $annexes['attachments'][$i]['filePath'] = $annexAttachmentPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $annexes['attachments'][$i]['path']) . $annexes['attachments'][$i]['filename'];
@@ -243,7 +243,7 @@ class FastParapheurController
                 return false;
             }else{
                 $documentId = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://sei.ws.fast.cdc.com/')->uploadResponse->children();
-                $attachmentToFreeze[$resId] = (string) $documentId;
+                $attachmentToFreeze[$collId][$resId] = (string) $documentId;
             }
         }
         return $attachmentToFreeze;
