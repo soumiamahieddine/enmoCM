@@ -435,8 +435,7 @@ class UserController
                     'userAbs'       => $user['user_id'],
                     'newUser'       => $value['newUser'],
                     'basketId'      => $value['basketId'],
-                    'basketOwner'   => $value['basketOwner'],
-                    'isVirtual'     => $value['virtual']
+                    'basketOwner'   => $value['basketOwner']
                 ]);
 
                 HistoryController::add([

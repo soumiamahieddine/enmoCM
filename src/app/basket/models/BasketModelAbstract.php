@@ -363,7 +363,6 @@ abstract class BasketModelAbstract
             foreach ($aBaskets as $key => $value) {
                 unset($aBaskets[$key]['groupserialid']);
                 $aBaskets[$key]['groupSerialId'] = $value['groupserialid'];
-                $aBaskets[$key]['is_virtual'] = 'N';
                 $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
                 $aBaskets2 = DatabaseModel::select([
                         'select'    => ['new_user'],
@@ -394,7 +393,7 @@ abstract class BasketModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aBaskets = DatabaseModel::select([
-                'select'    => ['ba.basket_id', 'ba.basket_name', 'ba.basket_desc', 'ba.basket_clause', 'ua.user_abs', 'ua.basket_owner', 'ua.is_virtual'],
+                'select'    => ['ba.basket_id', 'ba.basket_name', 'ba.basket_desc', 'ba.basket_clause', 'ua.user_abs', 'ua.basket_owner'],
                 'table'     => ['baskets ba, user_abs ua'],
                 'where'     => ['ua.new_user = ?', 'ua.basket_id = ba.basket_id'],
                 'data'      => [$aArgs['userId']],
@@ -410,8 +409,8 @@ abstract class BasketModelAbstract
 
     public static function setRedirectedBaskets(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userAbs', 'newUser', 'basketId', 'basketOwner', 'isVirtual']);
-        ValidatorModel::stringType($aArgs, ['userAbs', 'newUser', 'basketId', 'basketOwner', 'isVirtual']);
+        ValidatorModel::notEmpty($aArgs, ['userAbs', 'newUser', 'basketId', 'basketOwner']);
+        ValidatorModel::stringType($aArgs, ['userAbs', 'newUser', 'basketId', 'basketOwner']);
 
         DatabaseModel::insert([
             'table'         => 'user_abs',
@@ -419,8 +418,7 @@ abstract class BasketModelAbstract
                 'user_abs'      => $aArgs['userAbs'],
                 'new_user'      => $aArgs['newUser'],
                 'basket_id'     => $aArgs['basketId'],
-                'basket_owner'  => $aArgs['basketOwner'],
-                'is_virtual'    => $aArgs['isVirtual']
+                'basket_owner'  => $aArgs['basketOwner']
             ]
         ]);
 
