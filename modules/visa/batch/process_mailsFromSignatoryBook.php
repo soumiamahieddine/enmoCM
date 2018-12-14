@@ -265,6 +265,11 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
     $retrievedMails = MaarchParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 }
 
+if (!empty($retrievedMails['error'])) {
+    $GLOBALS['logger']->write($retrievedMails['error'], 'ERROR');
+    exit;
+}
+
 // On dégele les pj et on créé une nouvelle ligne si le document a été signé
 foreach ($retrievedMails['isVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update res_version_attachments : ' . $resId . '. ExternalId : ' . $value->external_id, 'INFO');

@@ -485,18 +485,14 @@ class ResController
         }
 
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $GLOBALS['userId']]);
-        $resources = ResModel::getForList([
+        $list = ResModel::getForList([
             'clause'    => $whereClause,
             'orderBy'   => ["{$basket['basket_res_order']} DESC"],
             'offset'    => (int)$data['offset'],
             'limit'     => (int)$data['limit'],
         ]);
-        $allResources = ResModel::getOnView([
-            'select'    => [1],
-            'where'     => [$whereClause],
-        ]);
 
-        return $response->withJson(['resources' => $resources, 'number' => count($allResources)]);
+        return $response->withJson(['resources' => $list['resources'], 'count' => $list['count']]);
     }
 
     public function updateExternalInfos(Request $request, Response $response)

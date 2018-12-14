@@ -45,44 +45,58 @@ abstract class ResModelAbstract
         ValidatorModel::stringType($aArgs, ['clause']);
         ValidatorModel::intType($aArgs, ['limit', 'offset']);
 
-        $where = ['res_view_letterbox.priority = priorities.id', 'res_view_letterbox.status = status.id', 'res_view_letterbox.dest_user = users.user_id'];
-        $where[] = $aArgs['clause'];
-
-        $aResources = DatabaseModel::select([
+        $resources = ResModel::getOnView([
             'select'    => [
-                'alt_identifier',
-                'category_id',
-                'case_label',
-                'closing_date',
-                'category_id',
-                'contact_lastname',
-                'contact_society',
-                'creation_date',
-                'entity_label as entity_destination',
-                'folder_name',
-                'priorities.color as priority_color',
-                'priorities.label as priority_label',
-                'process_limit_date',
-                'res_id',
-                'status.img_filename as status_icon',
-                'status.label_status as status_label',
-                'status.id as status_id',
-                'subject',
-                'type_label as doctype_label',
-                'user_lastname',
-                'user_firstname',
-                'users.lastname as user_dest_lastname',
-                'users.firstname as user_dest_firstname',
+                'count(1) OVER()',
+                'res_id'
             ],
-            'table'     => ['res_view_letterbox, priorities, status, users'],
-            'where'     => $where,
+            'where'     => [$aArgs['clause']],
             'data'      => [],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
             'offset'    => empty($aArgs['offset']) ? 0 : $aArgs['offset'],
             'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
+        $count = empty($resources[0]['count']) ? 0 : $resources[0]['count'];
 
-        return $aResources;
+        $resIds = [];
+        foreach ($resources as $resource) {
+            $resIds[] = $resource['res_id'];
+        }
+
+        if (!empty($resIds)) {
+            $resources = DatabaseModel::select([
+                'select'    => [
+                    'res_id',
+                    'subject',
+                    'alt_identifier',
+                    'category_id',
+                    'closing_date',
+                    'category_id',
+                    'contact_firstname',
+                    'contact_lastname',
+                    'contact_society',
+                    'user_lastname',
+                    'user_firstname',
+                    'creation_date',
+                    'entity_label as entity_destination',
+                    'process_limit_date',
+                    'type_label as doctype_label',
+                    'priorities.color as priority_color',
+                    'priorities.label as priority_label',
+                    'status.img_filename as status_icon',
+                    'status.label_status as status_label',
+                    'status.id as status_id',
+                    'users.lastname as user_dest_lastname',
+                    'users.firstname as user_dest_firstname',
+                ],
+                'table'     => ['res_view_letterbox, priorities, status, users'],
+                'where'     => ['res_view_letterbox.res_id in (?)', 'res_view_letterbox.priority = priorities.id', 'res_view_letterbox.status = status.id', 'res_view_letterbox.dest_user = users.user_id'],
+                'data'      => [$resIds]
+            ]);
+        }
+
+
+        return ['resources' => $resources, 'count' => $count];
     }
 
     public static function get(array $aArgs)

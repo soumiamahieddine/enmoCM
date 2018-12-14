@@ -714,7 +714,6 @@ abstract class basket_Abstract extends Database
         $tab['basket_res_order'] = $this->show_string($res->basket_res_order);
         $tab['clause'] = $res->basket_clause;
         $tab['is_visible'] = $res->is_visible;
-        $isVirtual = 'N';
         $basketOwner = '';
         $absBasket = false;
 
@@ -766,7 +765,6 @@ abstract class basket_Abstract extends Database
         );
 
         $tab['abs_basket'] = $absBasket;
-        $tab['is_virtual'] = $isVirtual;
         $tab['basket_owner'] = $basketOwner;
         $tab['clause'] = $secCtrl->process_security_where_clause(
             $tab['clause'],
@@ -824,44 +822,29 @@ abstract class basket_Abstract extends Database
         $tab['clause'] = $res->basket_clause;
         $tab['is_visible'] = $res->is_visible;
         $stmt = $db->query(
-            "select user_abs, is_virtual, basket_owner from user_abs where basket_id = ? and new_user = ? and system_id = ?",
+            "select user_abs, basket_owner from user_abs where basket_id = ? and new_user = ? and system_id = ?",
             array($basketId,$userId,$systemId)
         );
 
         $absBasket = true;
         $res = $stmt->fetchObject();
-        $isVirtual = $res->is_virtual;
         $basketOwner = $res->basket_owner;
         $userAbs = $res->user_abs;
 
         if (empty($basketOwner)) {
             $basketOwner = $userAbs;
         }
-        if ($isVirtual == 'N') {
-            $tmpUser = $userAbs;
-            $stmt = $db->query(
-                "select firstname, lastname from " . USERS_TABLE
-                . " where user_id = ? ",
-                array($userAbs)
-            );
-            $res = $stmt->fetchObject();
-            $nameUserAbs = $res->firstname . ' ' . $res->lastname;
-            $tab['name'] .= " (" . $nameUserAbs . ")";
-            $tab['desc'] .= " (" . $nameUserAbs . ")";
-            $tab['id'] .= "_" . $userAbs;
-        } else {
-            $tmpUser = $basketOwner;  /// TO DO : test if basket_owner empty
-            $stmt = $db->query(
-                "select firstname, lastname from " . USERS_TABLE
-                ." where user_id = ?",
-                array($basketOwner)
-            );
-            $res = $stmt->fetchObject();
-            $nameBasketOwner = $res->firstname . ' ' . $res->lastname;
-            $tab['name'] .= " (" . $nameBasketOwner . ")";
-            $tab['desc'] .= " (" . $nameBasketOwner . ")";
-            $tab['id'] .= "_" . $basketOwner;
-        }
+        $tmpUser = $userAbs;
+        $stmt = $db->query(
+            "select firstname, lastname from " . USERS_TABLE
+            . " where user_id = ? ",
+            array($userAbs)
+        );
+        $res = $stmt->fetchObject();
+        $nameUserAbs = $res->firstname . ' ' . $res->lastname;
+        $tab['name'] .= " (" . $nameUserAbs . ")";
+        $tab['desc'] .= " (" . $nameUserAbs . ")";
+        $tab['id'] .= "_" . $userAbs;
 
         /// TO DO : Test if tmp_user is empty
         if ((isset($_SESSION['user']['UserId'])
@@ -915,7 +898,6 @@ abstract class basket_Abstract extends Database
             $userId
         );
 
-        $tab['is_virtual'] = $isVirtual;
         $tab['basket_owner'] = $basketOwner;
         $tab['abs_basket'] = $absBasket;
 

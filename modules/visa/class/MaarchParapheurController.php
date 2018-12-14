@@ -18,7 +18,9 @@ class MaarchParapheurController
     public static function getModal($config)
     {
         $initializeDatas = MaarchParapheurController::getInitializeDatas($config);
-
+        if (!empty($initializeDatas['error'])) {
+            return ['error' => $initializeDatas['error']];
+        }
         $html .= '<label for="processingUser">' . _USER_MAARCH_PARAPHEUR . '</label><select name="processingUser" id="processingUser">';
         if (!empty($initializeDatas['users'])) {
             foreach ($initializeDatas['users'] as $value) {
@@ -39,7 +41,9 @@ class MaarchParapheurController
     public static function getInitializeDatas($config)
     {
         $rawResponse['users'] = MaarchParapheurController::getUsers(['config' => $config]);
-
+        if (!empty($rawResponse['users']['error'])) {
+            return ['error' => $rawResponse['users']['error']];
+        }
         return $rawResponse;
     }
 
@@ -51,6 +55,10 @@ class MaarchParapheurController
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
         ]);
+
+        if (!empty($response['error'])) {
+            return ["error" => $response['error']];
+        }
 
         return $response['users'];
     }
