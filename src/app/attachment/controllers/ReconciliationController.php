@@ -162,20 +162,26 @@ class ReconciliationController
         return $resId;
     }
 
-    public function checkAttachment(Request $request, Response $response, $aArgs)
+    public function checkAttachment(Request $request, Response $response)
     {
-        if (empty($aArgs)) {
-            $aArgs = $request->getParams();
+        $data  = $request->getParams();
+        $check = Validator::stringType()->notEmpty()->validate($data['chrono']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
         $attachment = AttachmentModel::getOnView([
             'select'  => [1],
             'where'   => ['identifier = ?', "status IN ('A_TRA', 'NEW','TMP')"],
-            'data'    => [$aArgs['chrono']],
+            'data'    => [$data['chrono']],
             'orderBy' => ['res_id DESC']
         ])[0];
 
-        $result = ($attachment != false) ? 'OK' : 'KO';
-        return $response->withJson(array('result' => $result));
+        if ($attachment == false) {
+            return $response->withStatus(500)->withJson(['errors' => '[ReconciliationController checkAttachment] ' . _NO_ATTACHMENT_CHRONO]);
+        }else{
+            return $response->withJson(array('result' => 'OK'));
+        }
+
     }
 }
