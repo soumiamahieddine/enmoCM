@@ -1,14 +1,17 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, QueryList, ViewChildren, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { merge, Observable, of as observableOf } from 'rxjs';
 import { NotificationService } from '../notification.service';
-import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource, MatPaginator, MatSort, MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
+import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA, MatButtonToggleGroup } from '@angular/material';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { HeaderService } from '../../service/header.service';
+import { FiltersListService } from '../../service/filtersList.service';
+
 
 declare function $j(selector: any): any;
 
@@ -16,6 +19,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "basket-list.component.html",
+    styleUrls: ['basket-list.component.scss'],
     providers: [NotificationService]
 })
 export class BasketListComponent implements OnInit {
@@ -32,20 +36,73 @@ export class BasketListComponent implements OnInit {
     basketUrl: string;
     homeData: any;
 
-
+    filterMode: boolean = false;
     @ViewChild('snav') sidenavLeft: MatSidenav;
     @ViewChild('snav2') sidenavRight: MatSidenav;
 
+    displayedColumnsBasket: string[] = ['res_id'];
 
-    displayedColumnsBasket: string[] = ['res_id', 'subject', 'contact_society', 'creation_date'];
+    displayedMainData: any = [
+        {
+            'id' : 'status_label',
+            'class' : 'centerData',
+            'icon' : ''
+        },
+        {
+            'id' : 'alt_identifier',
+            'class' : 'softColorData',
+            'icon' : ''
+        },
+        {
+            'id' : 'subject',
+            'class' : 'longData',
+            'icon' : ''
+        }
+    ];
+
+    displayedSecondaryData: any = [
+        {
+            'id' : 'priority_label',
+            'class' : '',
+            'icon' : ''
+        },
+        {
+            'id' : 'category_id',
+            'class' : '',
+            'icon' : ''
+        },
+        {
+            'id' : 'doctype_label',
+            'class' : '',
+            'icon' : 'fa fa-file'
+        },
+        {
+            'id' : 'contact_society',
+            'class' : '',
+            'icon' : ''
+        },
+        {
+            'id' : 'contact_society',
+            'class' : '',
+            'icon' : ''
+        },
+        {
+            'id' : 'date',
+            'class' : 'rightData',
+            'icon' : ''
+        },
+    ];
 
     exampleDatabase: ExampleHttpDao | null;
     data: any[] = [];
     resultsLength = 0;
     isLoadingResults = true;
+    listProperties: any = {};
+    listPropertiesIndex: number = 0;
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
-    constructor(changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet) {
+    constructor(changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, private filtersListService: FiltersListService) {
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -59,7 +116,8 @@ export class BasketListComponent implements OnInit {
         this.loading = false;
 
         if (this.mobileMode) {
-            this.displayedColumnsBasket = ['res_id', 'subject'];
+            $j('.mat-paginator-navigation-previous').hide();
+            $j('.mat-paginator-navigation-next').hide();
         }
 
         this.http.get(this.coreUrl + "rest/home")
@@ -67,18 +125,21 @@ export class BasketListComponent implements OnInit {
                 this.homeData = data;
             });
 
-
+        this.isLoadingResults = false;
         this.route.params.subscribe(params => {
             this.basketUrl = this.coreUrl + 'rest/resources/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
-            this.http.get(this.coreUrl + "rest/baskets/" + params['basketId'])
+            this.http.get(this.basketUrl)
                 .subscribe((data: any) => {
-                    window['MainHeaderComponent'].refreshTitle(data.basket.basket_name);
+                    console.log(data);
+                    this.filterMode = false;
                     window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                    window['MainHeaderComponent'].setSnavRight(null);
-                    this.exampleDatabase = new ExampleHttpDao(this.http);
+                    window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+                    this.exampleDatabase = new ExampleHttpDao(this.http, this.filtersListService);
+
+                    this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
 
                     // If the user changes the sort order, reset back to the first page.
-                    this.paginator.pageIndex = 0;
+                    this.paginator.pageIndex = this.listProperties.page;
                     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
                     merge(this.sort.sortChange, this.paginator.page)
@@ -92,7 +153,7 @@ export class BasketListComponent implements OnInit {
                             map(data => {
                                 // Flip flag to show that loading has finished.
                                 this.isLoadingResults = false;
-                                this.resultsLength = data.number;
+                                this.resultsLength = data.count;
 
                                 return data.resources;
                             }),
@@ -111,6 +172,7 @@ export class BasketListComponent implements OnInit {
     }
 
     goTo(row: any) {
+        this.filterMode = false;
         if (this.docUrl == this.coreUrl + 'rest/res/' + row.res_id + '/content' && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
@@ -120,6 +182,11 @@ export class BasketListComponent implements OnInit {
                 "</iframe>");
             this.sidenavRight.open();
         }
+    }
+
+    openFilter() {
+        this.filterMode = true;
+        this.sidenavRight.open();
     }
 
     goToDetail(row: any) {
@@ -151,18 +218,32 @@ export class BasketListComponent implements OnInit {
                 console.log(data);
             });
     }
+
+    updateFilters(e: any) {
+        this.listProperties.onlyProcesLimit = false;
+        this.listProperties.onlyNewRes = false;
+        this.listProperties.withPj = false;
+        this.listProperties.withNote = false;
+
+        e.value.forEach((element: any) => {
+            this.listProperties[element] = true;
+        });
+        this.filtersListService.updateListsProperties(this.listProperties);
+    }
 }
 export interface BasketList {
     resources: any[];
-    number: number;
+    count: number;
 }
 
 
 export class ExampleHttpDao {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private filtersListService: FiltersListService) { }
 
     getRepoIssues(sort: string, order: string, page: number, href: string): Observable<BasketList> {
+        
+        this.filtersListService.updateListsPropertiesPage(page);
         let offset = page * 10;
         const requestUrl = `${href}?limit=10&offset=${offset}`;
 
@@ -172,6 +253,7 @@ export class ExampleHttpDao {
 
 @Component({
     templateUrl: 'note-list.component.html',
+    styleUrls: ['note-list.component.scss'],
 })
 export class BottomSheetNoteList {
     coreUrl: string;

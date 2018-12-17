@@ -21,4 +21,9 @@
             <span *ngFor="let entity of note.entities_restriction" class="label label-default" style="background-color:rgba(0,0,0,0.4);white-space:normal;display:inline-block;margin-right: 5px;" title="Entité restreinte"><i class="fa fa-sitemap"></i> {{entity}}</span>
         </mat-card-content>
     </mat-card>
+    <mat-form-field appearance="outline">
+            <mat-label>Ecrire une note</mat-label>
+            <input matInput>
+            <mat-icon matSuffix></mat-icon>
+        </mat-form-field>
 </ng-container>

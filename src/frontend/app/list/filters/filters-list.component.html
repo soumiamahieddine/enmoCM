@@ -1,0 +1,49 @@
+<mat-nav-list disableRipple="true">
+    <h3 mat-subheader>{{lang.filterBy}}</h3>
+    <mat-form-field appearance="outline" style="padding-left:10px;padding-right:10px;">
+        <mat-label>Numéro chrono</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <mat-expansion-panel #categoriesPan>
+        <mat-expansion-panel-header>
+            <mat-panel-title style="color: rgba(0,0,0,0.54);font-size: 14px;font-weight: 500;">
+                Categories
+            </mat-panel-title>
+            <mat-panel-description>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-selection-list #categories (selectionChange)="updateFilters(categories, 'categories')">
+            <mat-list-option checkboxPosition="before" color="primary" [value]="category.id" *ngFor="let category of categoriesList" [selected]="category.selected">
+                {{category.label}}
+            </mat-list-option>
+        </mat-selection-list>
+    </mat-expansion-panel>
+    <mat-expansion-panel #prioritiesPan>
+        <mat-expansion-panel-header>
+            <mat-panel-title style="color: rgba(0,0,0,0.54);font-size: 14px;font-weight: 500;">
+                Priorités
+            </mat-panel-title>
+            <mat-panel-description>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-selection-list #priorities (selectionChange)="updateFilters(priorities, 'priorities')">
+            <mat-list-option checkboxPosition="before" color="primary" [value]="priority.id" *ngFor="let priority of prioritiesList" [selected]="priority.selected">
+                {{priority.label}}
+            </mat-list-option>
+        </mat-selection-list>
+    </mat-expansion-panel>
+    <mat-expansion-panel #entitiesPan>
+        <mat-expansion-panel-header>
+            <mat-panel-title style="color: rgba(0,0,0,0.54);font-size: 14px;font-weight: 500;">
+                Services
+            </mat-panel-title>
+            <mat-panel-description>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-selection-list #entities (selectionChange)="updateFilters(entities, 'entities')">
+            <mat-list-option checkboxPosition="before" color="primary" [value]="entity.id" *ngFor="let entity of entitiesList" [selected]="entity.selected">
+                {{entity.label}}
+            </mat-list-option>
+        </mat-selection-list>
+    </mat-expansion-panel>
+</mat-nav-list>
