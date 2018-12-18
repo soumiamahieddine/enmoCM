@@ -70,7 +70,7 @@ For developper :
         </ELEMENT>
         <ELEMENT>
             <type>maarch_functions</type>
-            <value>chr_by_res_id</value>
+            <value>chr_by_category</value>
         </ELEMENT>
     </CHRONO>
 
