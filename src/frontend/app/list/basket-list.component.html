@@ -106,9 +106,10 @@
                                     <mat-checkbox color="primary"></mat-checkbox>
                                 </div>
                                 <div class="resultCol {{data.class}}" *ngFor="let data of displayedMainData">
-                                    <span *ngIf="data.id == 'status_label'">
+                                    <span *ngIf="data.id == 'alt_identifier'">
                                         <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}} {{row.status_icon}} {{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}}-2x"
                                             title="{{row.status_label}} ({{row.status_id}})"></mat-icon><br />
+                                        <span style="color: rgba(0,0,0,0.4);font-size: 90%;">{{row[data.id]}}</span>
                                     </span>
                                     <ng-container *ngIf="data.id == 'date'">
                                         <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;{{row.creation_date
@@ -122,14 +123,9 @@
                                     <ng-container *ngIf="data.id == 'category_id'">
                                         {{lang[row.category_id]}}
                                     </ng-container>
-                                    <ng-container *ngIf="data.id != 'status_label' && data.id != 'date' && data.id != 'category_id'">
+                                    <ng-container *ngIf="data.id != 'status_label' && data.id != 'date' && data.id != 'category_id' && data.id != 'alt_identifier'">
                                         {{row[data.id]}}
                                     </ng-container>
-                                </div>
-                            </div>
-                            <div class="resultRow">
-                                <div class="resultCol smallFontData softColorData">
-                                    <b>Traité par</b> : {{row.user_dest_firstname}} {{row.user_dest_lastname}} ({{row.entity_destination}})
                                 </div>
                                 <mat-button-toggle-group #group="matButtonToggleGroup" class="actions" multiple>
                                     <button color="primary" mat-icon-button (click)="openBottomSheet(row)">

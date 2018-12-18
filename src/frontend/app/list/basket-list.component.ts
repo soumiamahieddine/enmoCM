@@ -44,13 +44,8 @@ export class BasketListComponent implements OnInit {
 
     displayedMainData: any = [
         {
-            'id' : 'status_label',
-            'class' : 'centerData',
-            'icon' : ''
-        },
-        {
             'id' : 'alt_identifier',
-            'class' : 'softColorData',
+            'class' : 'softColorData centerData',
             'icon' : ''
         },
         {
@@ -60,38 +55,39 @@ export class BasketListComponent implements OnInit {
         }
     ];
 
-    displayedSecondaryData: any = [
-        {
-            'id' : 'priority_label',
-            'class' : '',
-            'icon' : ''
-        },
-        {
-            'id' : 'category_id',
-            'class' : '',
-            'icon' : ''
-        },
-        {
-            'id' : 'doctype_label',
-            'class' : '',
-            'icon' : 'fa fa-file'
-        },
-        {
-            'id' : 'contact_society',
-            'class' : '',
-            'icon' : ''
-        },
-        {
-            'id' : 'contact_society',
-            'class' : '',
-            'icon' : ''
-        },
-        {
-            'id' : 'date',
-            'class' : 'rightData',
-            'icon' : ''
-        },
-    ];
+    displayedSecondaryData: any = [];
+    // displayedSecondaryData: any = [
+    //     {
+    //         'id' : 'priority_label',
+    //         'class' : '',
+    //         'icon' : ''
+    //     },
+    //     {
+    //         'id' : 'category_id',
+    //         'class' : '',
+    //         'icon' : ''
+    //     },
+    //     {
+    //         'id' : 'doctype_label',
+    //         'class' : '',
+    //         'icon' : 'fa fa-file'
+    //     },
+    //     {
+    //         'id' : 'contact_society',
+    //         'class' : '',
+    //         'icon' : ''
+    //     },
+    //     {
+    //         'id' : 'contact_society',
+    //         'class' : '',
+    //         'icon' : ''
+    //     },
+    //     {
+    //         'id' : 'date',
+    //         'class' : 'rightData',
+    //         'icon' : ''
+    //     },
+    // ];
 
     exampleDatabase: ExampleHttpDao | null;
     data: any[] = [];
