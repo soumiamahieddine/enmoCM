@@ -6,6 +6,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Attachment\models\AttachmentModel;
 use Resource\models\ResModel;
+use Resource\controllers\ResController;
 use Respect\Validation\Validator;
 use History\controllers\HistoryController;
 use Resource\controllers\StoreController;
@@ -21,6 +22,10 @@ class ReconciliationController
         $check = $check && Validator::stringType()->notEmpty()->validate($data['chrono']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if (!Validator::intVal()->validate($data['resId']) || !ResController::hasRightByResId(['resId' => $data['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $resId = ReconciliationController::getWs($data);
@@ -164,18 +169,22 @@ class ReconciliationController
 
     public function checkAttachment(Request $request, Response $response)
     {
-        $data  = $request->getParams();
+        $data = $request->getQueryParams();
         $check = Validator::stringType()->notEmpty()->validate($data['chrono']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
         $attachment = AttachmentModel::getOnView([
-            'select'  => [1],
+            'select'  => ['res_id_master'],
             'where'   => ['identifier = ?', "status IN ('A_TRA', 'NEW','TMP')"],
             'data'    => [$data['chrono']],
             'orderBy' => ['res_id DESC']
         ])[0];
+
+        if (!Validator::intVal()->validate($attachment['res_id_master']) || !ResController::hasRightByResId(['resId' => $attachment['res_id_master'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
 
         if ($attachment == false) {
             return $response->withStatus(500)->withJson(['errors' => '[ReconciliationController checkAttachment] ' . _NO_ATTACHMENT_CHRONO]);
