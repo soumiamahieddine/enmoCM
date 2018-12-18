@@ -273,6 +273,10 @@ if (!defined('_SAME_RES_ID_ERROR')) {
     define('_SAME_RES_ID_ERROR', 'L\'Un des courriers sélectionnés est le même que le document courant, veuillez le désélectionner');
 }
 
+if (!defined('_NO_ATTACHMENT_CHRONO')) {
+    define('_NO_ATTACHMENT_CHRONO', 'Pas de pièces jointes pour ce numéro de chrono');
+}
+
 /************** INTERFACE ***********/
 
 if (!defined('_GENERATE_CHRONO_NUMBER')) {

@@ -10,8 +10,6 @@ $core = new core_tools();
 $core->test_user();
 $db = new Database();
 
-$letterboxTable = $_SESSION['tablename']['reconciliation']['letterbox'];
-
 // Retrieve the parent res_id (the document which receive the attachment) and the res_id of the attachment we will inject
 $parentResId = $_SESSION['stockCheckbox'];
 $childResId = $_SESSION['doc_id'];
