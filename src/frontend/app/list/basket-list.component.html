@@ -20,51 +20,51 @@
                         <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" (change)="updateFilters($event)" multiple>
                             <mat-checkbox color="primary" style="margin: 10px;" title="Sélectionner tous les courriers de la bannette"></mat-checkbox>
                             <button mat-stroked-button (click)="openFilter()">Filtres</button>
-                            <mat-button-toggle [checked]="this.listProperties.onlyProcesLimit" value="onlyProcesLimit" title="Afficher les courriers en retard">
+                            <mat-button-toggle [checked]="this.listProperties.onlyProcesLimit" value="onlyProcesLimit" title="{{lang.displayProcessLimitRes}}">
                                 <mat-icon fontSet="fas" fontIcon="fa-stopwatch fa-2x"></mat-icon>
                             </mat-button-toggle>
-                            <mat-button-toggle [checked]="this.listProperties.onlyNewRes"value="onlyNewRes" title="Afficher les courriers non lu">
+                            <mat-button-toggle [checked]="this.listProperties.onlyNewRes"value="onlyNewRes" title="{{lang.displayNewRes}}">
                                 <mat-icon fontSet="fas" fontIcon="fa-eye-slash fa-2x"></mat-icon>
                             </mat-button-toggle>
-                            <mat-button-toggle [checked]="this.listProperties.withPj" value="withPj" title="Afficher les courriers avec réponses">
+                            <mat-button-toggle [checked]="this.listProperties.withPj" value="withPj" title="{{lang.displayWithAttach}}">
                                 <mat-icon fontSet="fas" fontIcon="fa-reply fa-2x"></mat-icon>
                             </mat-button-toggle>
-                            <mat-button-toggle [checked]="this.listProperties.withNote" value="withNote" title="Afficher les courriers avec annotations">
+                            <mat-button-toggle [checked]="this.listProperties.withNote" value="withNote" title="{{lang.displayWithNotes}}">
                                 <mat-icon fontSet="fas" fontIcon="fa-comments fa-2x"></mat-icon>
                             </mat-button-toggle>
                             <mat-form-field appearance="outline" [style.fontSize.px]="10" style="width:200px !important;">
-                                <mat-label>Trier par</mat-label>
+                                <mat-label>{{lang.orderBy}}</mat-label>
                                 <mat-select multiple>
-                                    <mat-option value="test">
-                                        Numéro chrono
-                                    </mat-option>
-                                    <mat-option value="test">
-                                        Date de création
+                                    <mat-option [value]="column.id" *ngFor="let column of displayColsOrder">
+                                        {{lang[column.id]}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
+                            <button mat-icon-button title="{{lang.descOrder}}" style="color: rgba(0,0,0,0.38);">
+                                <mat-icon fontSet="fas" fontIcon="fa-sort-amount-up  fa-2x"></mat-icon>
+                            </button>
                             <button mat-icon-button [matMenuTriggerFor]="menuParamList">
                                 <mat-icon color="primary" fontSet="fas" fontIcon="fa-cog fa-2x"></mat-icon>
                             </button>
                             <mat-menu #menuParamList="matMenu">
                                 <button mat-menu-item>
                                     <mat-icon fontSet="fas" fontIcon="fa-print fa-2x"></mat-icon>
-                                    <span>Imprimer la liste</span>
+                                    <span>{{lang.printResultList}}</span>
                                 </button>
                                 <button mat-menu-item>
                                     <mat-icon fontSet="fas" fontIcon="fa-file-export fa-2x"></mat-icon>
-                                    <span>Exporter les données</span>
+                                    <span>{{lang.exportDatas}}</span>
                                 </button>
                                 <button mat-menu-item>
                                     <mat-icon fontSet="far" fontIcon="fa-list-alt fa-2x"></mat-icon>
-                                    <span>Paramétrer l'affichage</span>
+                                    <span>{{lang.settingsList}}</span>
                                 </button>
                             </mat-menu>
                         </mat-button-toggle-group>
                         <div class="filterBadges">
-                            <span class="label label-info" title="Fitre(s) actif(s)" *ngFor="let category of this.listProperties.categories" (click)="openFilter()">{{category.label}}</span>
-                            <span class="label label-info" title="Fitre(s) actif(s)" *ngFor="let priority of this.listProperties.priorities" (click)="openFilter()">{{priority.label}}</span>
-                            <span class="label label-info" title="Fitre(s) actif(s)" *ngFor="let entity of this.listProperties.entities" (click)="openFilter()">{{entity.label}}</span>
+                            <span class="label label-info" title="{{lang.currentFilters}}" *ngFor="let category of this.listProperties.categories" (click)="openFilter()">{{category.label}}</span>
+                            <span class="label label-info" title="{{lang.currentFilters}}" *ngFor="let priority of this.listProperties.priorities" (click)="openFilter()">{{priority.label}}</span>
+                            <span class="label label-info" title="{{lang.currentFilters}}" *ngFor="let entity of this.listProperties.entities" (click)="openFilter()">{{entity.label}}</span>
                         </div>
                     </div>
                     <div class="col-md-3 col-xs-3">

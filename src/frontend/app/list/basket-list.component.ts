@@ -13,6 +13,7 @@ import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 
 
+
 declare function $j(selector: any): any;
 
 declare var angularGlobals: any;
@@ -88,6 +89,18 @@ export class BasketListComponent implements OnInit {
     //         'icon' : ''
     //     },
     // ];
+
+    displayColsOrder = [
+        {'id' : 'dest_user'},
+        {'id' : 'creation_date'},
+        {'id' : 'process_limit_date'},
+        {'id' : 'destination'},
+        {'id' : 'subject'},
+        {'id' : 'alt_identifier'},
+        {'id' : 'priority'},
+        {'id' : 'status'},
+        {'id' : 'type_id'}
+    ]
 
     exampleDatabase: ExampleHttpDao | null;
     data: any[] = [];
