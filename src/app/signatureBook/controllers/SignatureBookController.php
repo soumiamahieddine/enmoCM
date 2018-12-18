@@ -58,7 +58,7 @@ class SignatureBookController
                 if (empty($rawAction['where_clause'])) {
                     $actions[] = ['value' => $rawAction['id_action'], 'label' => $rawAction['label_action']];
                 } else {
-                    $whereClause = PreparedClauseController::getPreparedClause(['clause' => $rawAction['where_clause'], 'userId' => $GLOBALS['userId']]);
+                    $whereClause = PreparedClauseController::getPreparedClause(['clause' => $rawAction['where_clause'], 'login' => $GLOBALS['userId']]);
                     $ressource = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', $whereClause], 'data' => [$aArgs['resId']]]);
                     if (!empty($ressource)) {
                         $actions[] = ['value' => $rawAction['id_action'], 'label' => $rawAction['label_action']];

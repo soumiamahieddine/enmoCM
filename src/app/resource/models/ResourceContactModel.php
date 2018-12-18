@@ -66,7 +66,6 @@ class ResourceContactModel
                     $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
                     $aContacts[$key]['format'] = $contact['contact']['otherInfo'];
                 }
-                
             } elseif ($aContact['type'] == 'entity') {
                 $entity = EntityModel::getById(['id' => $aContact['item_id'], 'select' => ['entity_label']]);
                 $aContacts[$key]['format'] = $entity['entity_label'];

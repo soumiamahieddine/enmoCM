@@ -484,7 +484,7 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this basket']);
         }
 
-        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $GLOBALS['userId']]);
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $GLOBALS['userId']]);
         $list = ResModel::getForList([
             'clause'    => $whereClause,
             'orderBy'   => ["{$basket['basket_res_order']} DESC"],
@@ -555,7 +555,7 @@ class ResController
         $groupsClause = '';
         foreach ($groups as $key => $group) {
             if (!empty($group['where_clause'])) {
-                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'userId' => $aArgs['userId']]);
+                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'login' => $aArgs['userId']]);
                 if ($key > 0) {
                     $groupsClause .= ' or ';
                 }
@@ -574,7 +574,8 @@ class ResController
         $basketsClause = '';
         foreach ($baskets as $key => $basket) {
             if (!empty($basket['basket_clause'])) {
-                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $basket['basket_owner']]);
+                $user = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
                 if ($key > 0) {
                     $basketsClause .= ' or ';
                 }

@@ -300,7 +300,7 @@ $app->get('/users/{id}/signatures/{signatureId}/content', \User\controllers\User
 $app->put('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':deleteSignature');
 $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':setRedirectedBaskets');
-$app->delete('/users/{id}/redirectedBaskets/{basketId}', \User\controllers\UserController::class . ':deleteRedirectedBaskets');
+$app->delete('/users/{id}/redirectedBaskets/{redirectBasketid}', \User\controllers\UserController::class . ':deleteRedirectedBasket');
 $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
 
 //VersionsUpdate

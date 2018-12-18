@@ -381,26 +381,17 @@ CREATE TABLE groupbasket
 )
 WITH (OIDS=FALSE);
 
-CREATE SEQUENCE user_abs_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-
-CREATE TABLE user_abs
+CREATE TABLE redirected_baskets
 (
-  system_id bigint NOT NULL DEFAULT nextval('user_abs_seq'::regclass),
-  user_abs character varying(128) NOT NULL,
-  new_user character varying(128) NOT NULL,
-  basket_id character varying(255) NOT NULL,
-  basket_owner character varying(255),
-  is_virtual character(1) NOT NULL DEFAULT 'N'::bpchar,
-  group_id INTEGER,
-  CONSTRAINT user_abs_pkey PRIMARY KEY (system_id)
+id serial NOT NULL,
+actual_user_id INTEGER NOT NULL,
+owner_user_id INTEGER NOT NULL,
+basket_id character varying(255) NOT NULL,
+group_id INTEGER NOT NULL,
+CONSTRAINT redirected_baskets_pkey PRIMARY KEY (id),
+CONSTRAINT redirected_baskets_unique_key UNIQUE (owner_user_id, basket_id, group_id)
 )
 WITH (OIDS=FALSE);
-
 
 -- modules/cases/sql/structure/cases.postgresql.sql
 
