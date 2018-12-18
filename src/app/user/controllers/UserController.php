@@ -407,7 +407,7 @@ class UserController
                 DatabaseModel::rollbackTransaction();
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
             }
-            $check = UserModel::getByUserId(['userId' => $value['actual_user_id'], 'select' => ['1']]);
+            $check = UserModel::getById(['id' => $value['actual_user_id'], 'select' => ['1']]);
             if (empty($check)) {
                 DatabaseModel::rollbackTransaction();
                 return $response->withStatus(400)->withJson(['errors' => 'User not found']);

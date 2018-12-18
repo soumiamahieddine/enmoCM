@@ -91,7 +91,7 @@ class RedirectBasketModel
         ValidatorModel::intVal($aArgs, ['userId']);
 
         $aBaskets = DatabaseModel::select([
-            'select'    => ['ba.basket_id', 'ba.basket_name', 'ba.basket_desc', 'ba.basket_clause', 'rb.owner_user_id', 'rb.group_id'],
+            'select'    => ['ba.basket_id', 'ba.basket_name', 'ba.basket_desc', 'ba.basket_clause', 'rb.owner_user_id', 'rb.group_id', 'rb.id'],
             'table'     => ['baskets ba, redirected_baskets rb'],
             'where'     => ['rb.actual_user_id = ?', 'rb.basket_id = ba.basket_id'],
             'data'      => [$aArgs['userId']],
@@ -111,7 +111,7 @@ class RedirectBasketModel
         ValidatorModel::intVal($aArgs, ['userId']);
 
         $aBaskets = DatabaseModel::select([
-            'select'    => ['ba.basket_id', 'ba.basket_name', 'rb.actual_user_id'],
+            'select'    => ['ba.basket_id', 'ba.basket_name', 'rb.actual_user_id', 'rb.id'],
             'table'     => ['baskets ba, redirected_baskets rb'],
             'where'     => ['rb.owner_user_id = ?', 'rb.basket_id = ba.basket_id'],
             'data'      => [$aArgs['userId']],
