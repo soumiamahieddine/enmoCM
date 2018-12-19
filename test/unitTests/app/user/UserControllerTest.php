@@ -790,16 +790,9 @@ class UserControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
             [
-                'newUser'       =>  'bblier',
-                'basketId'      =>  'MyBasket',
-                'basketOwner'   =>  'bbain',
-                'virtual'       =>  'Y'
-            ],
-            [
-                'newUser'       =>  'bblier',
-                'basketId'      =>  'EenvBasket',
-                'basketOwner'   =>  'bbain',
-                'virtual'       =>  'Y'
+                'actual_user_id'    =>  21,
+                'basket_id'         =>  'MyBasket',
+                'group_id'          =>  2
             ]
         ];
 
@@ -832,16 +825,9 @@ class UserControllerTest extends TestCase
 
         $aArgs = [
             [
-                'newUser'       =>  'notExist',
-                'basketId'      =>  'MyBasket',
-                'basketOwner'   =>  'bbain',
-                'virtual'       =>  'Y'
-            ],
-            [
-                'newUser'       =>  'existNot',
-                'basketId'      =>  'EenvBasket',
-                'basketOwner'   =>  'bbain',
-                'virtual'       =>  'Y'
+                'actual_user_id'    =>  -1,
+                'basket_id'         =>  'MyBasket',
+                'group_id'          =>  2
             ]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -858,26 +844,26 @@ class UserControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $aArgs = [
-                'basketOwner'   =>  'bbain',
-        ];
-
+//        $aArgs = [
+//                'basketOwner'   =>  'bbain',
+//        ];
+//
         $user_id = \User\models\UserModel::getByUserId(['userId' => 'bbain', 'select' => ['id']]);
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'MyBasket']);
-        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'EenvBasket']);
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertNotNull($responseBody->baskets);
+//        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+//        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'MyBasket']);
+//        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'EenvBasket']);
+//        $responseBody = json_decode((string)$response->getBody());
+//
+//        $this->assertNotNull($responseBody->baskets);
 
         $aArgs = [
             'basketOwner'   =>  null,
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'MyBasket']);
+        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'redirectBasketid' => -1]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('Bad Request', $responseBody->errors);
+        $this->assertSame('Redirected basket out of perimeter', $responseBody->errors);
     }
 }

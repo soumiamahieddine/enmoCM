@@ -6,6 +6,7 @@ import { CustomSnackbarComponent }              from './notification.service';
 import { ConfirmModalComponent }                from './confirmModal.component';
 import { ShortcutMenuService }                  from '../service/shortcut-menu.service';
 import { HeaderService }                        from '../service/header.service';
+import { FiltersListService }                   from '../service/filtersList.service';
 
 import { AppComponent }                         from './app.component';
 import { AppRoutingModule }                     from './app-routing.module';
@@ -14,11 +15,14 @@ import { AdministrationModule }                 from './administration/administr
 import { ProfileComponent }                     from './profile.component';
 import { AboutUsComponent }                     from './about-us.component';
 import { HomeComponent }                        from './home.component';
-import { BasketListComponent, BottomSheetNoteList, BottomSheetAttachmentList, BottomSheetDiffusionList }  from './basket/basket-list.component';
+import { BasketListComponent, BottomSheetNoteList, BottomSheetAttachmentList, BottomSheetDiffusionList }  from './list/basket-list.component';
 import { PasswordModificationComponent, InfoChangePasswordModalComponent, }        from './password-modification.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
 import { ActivateUserComponent }                from './activate-user.component';
+
+
+import { FiltersListComponent }                from './list/filters/filters-list.component';
 
 @NgModule({
     imports: [
@@ -42,7 +46,8 @@ import { ActivateUserComponent }                from './activate-user.component'
         ActivateUserComponent,
         BottomSheetNoteList,
         BottomSheetAttachmentList,
-        BottomSheetDiffusionList
+        BottomSheetDiffusionList,
+        FiltersListComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
@@ -52,7 +57,7 @@ import { ActivateUserComponent }                from './activate-user.component'
         BottomSheetAttachmentList,
         BottomSheetDiffusionList
     ],
-    providers: [ ShortcutMenuService, HeaderService ],
+    providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

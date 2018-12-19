@@ -313,7 +313,7 @@ abstract class BasketModelAbstract
             return [];
         }
 
-        $where = PreparedClauseController::getPreparedClause(['clause' => $aBasket[0]['basket_clause'], 'userId' => $aArgs['userId']]);
+        $where = PreparedClauseController::getPreparedClause(['clause' => $aBasket[0]['basket_clause'], 'login' => $aArgs['userId']]);
 
         $aResList = ResModel::getOnView([
             'select'    => $aArgs['select'],
@@ -363,15 +363,13 @@ abstract class BasketModelAbstract
             foreach ($aBaskets as $key => $value) {
                 unset($aBaskets[$key]['groupserialid']);
                 $aBaskets[$key]['groupSerialId'] = $value['groupserialid'];
-                $aBaskets[$key]['is_virtual'] = 'N';
-                $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
-                $aBaskets2 = DatabaseModel::select([
-                        'select'    => ['new_user'],
-                        'table'     => ['user_abs'],
-                        'where'     => ['user_abs = ?', 'basket_id = ?'],
-                        'data'      => [$aArgs['userId'], $value['basket_id']],
+                $aBaskets[$key]['owner_user_id'] = $user['id'];
+                $redirectedBasket = RedirectBasketModel::get([
+                    'select'    => ['actual_user_id'],
+                    'where'     => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],
+                    'data'      => [$user['id'], $value['basket_id'], $value['groupserialid']]
                 ]);
-                $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $aBaskets2[0]['new_user']]);
+                $aBaskets[$key]['userToDisplay'] = (empty($redirectedBasket[0]) ? null : UserModel::getLabelledUserById(['id' => $redirectedBasket[0]['actual_user_id']]));
                 $aBaskets[$key]['enabled'] = true;
                 $aBaskets[$key]['allowed'] = false;
                 foreach ($userPrefs as $userPref) {
@@ -381,101 +379,8 @@ abstract class BasketModelAbstract
                 }
             }
             if (empty($aArgs['absenceUneeded'])) {
-                $aBaskets = array_merge($aBaskets, BasketModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
+                $aBaskets = array_merge($aBaskets, RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]));
             }
-        }
-
-        return $aBaskets;
-    }
-
-    public static function getAbsBasketsByUserId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        $aBaskets = DatabaseModel::select([
-                'select'    => ['ba.basket_id', 'ba.basket_name', 'ba.basket_desc', 'ba.basket_clause', 'ua.user_abs', 'ua.basket_owner', 'ua.is_virtual'],
-                'table'     => ['baskets ba, user_abs ua'],
-                'where'     => ['ua.new_user = ?', 'ua.basket_id = ba.basket_id'],
-                'data'      => [$aArgs['userId']],
-                'order_by'  => ['ba.basket_order, ba.basket_name']
-        ]);
-
-        foreach ($aBaskets as $key => $value) {
-            $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $value['user_abs']]);
-        }
-
-        return $aBaskets;
-    }
-
-    public static function setRedirectedBaskets(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userAbs', 'newUser', 'basketId', 'basketOwner', 'isVirtual']);
-        ValidatorModel::stringType($aArgs, ['userAbs', 'newUser', 'basketId', 'basketOwner', 'isVirtual']);
-
-        DatabaseModel::insert([
-            'table'         => 'user_abs',
-            'columnsValues' => [
-                'user_abs'      => $aArgs['userAbs'],
-                'new_user'      => $aArgs['newUser'],
-                'basket_id'     => $aArgs['basketId'],
-                'basket_owner'  => $aArgs['basketOwner'],
-                'is_virtual'    => $aArgs['isVirtual']
-            ]
-        ]);
-
-        return true;
-    }
-
-    public static function updateRedirectedBaskets(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId', 'basketOwner', 'basketId', 'userAbs', 'newUser']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        DatabaseModel::update([
-            'table'     => 'user_abs',
-            'set'       => [
-                'new_user' => $aArgs['newUser']
-            ],
-            'where'     => ['basket_id = ?', 'basket_owner = ?', 'user_abs = ?', 'new_user = ?'],
-            'data'      => [$aArgs['basketId'], $aArgs['basketOwner'], $aArgs['userAbs'], $aArgs['userId']]
-        ]);
-
-        return true;
-    }
-
-    public static function deleteBasketRedirection(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId', 'basketId']);
-        ValidatorModel::stringType($aArgs, ['userId', 'basketId']);
-
-        DatabaseModel::delete([
-            'table' => 'user_abs',
-            'where' => ['(user_abs = ? OR basket_owner = ?)', 'basket_id = ?'],
-            'data'  => [$aArgs['userId'], $aArgs['userId'], $aArgs['basketId']]
-        ]);
-
-        return true;
-    }
-
-    public static function getRedirectedBasketsByUserId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        $aBaskets = DatabaseModel::select([
-            'select'    => ['ba.basket_id', 'ba.basket_name', 'ua.new_user', 'ua.basket_owner'],
-            'table'     => ['baskets ba, user_abs ua'],
-            'where'     => ['ua.user_abs = ?', 'ua.basket_id = ba.basket_id'],
-            'data'      => [$aArgs['userId']],
-            'order_by'  => ['ua.system_id']
-        ]);
-
-        foreach ($aBaskets as $key => $value) {
-            $user = UserModel::getByUserId(['userId' => $value['new_user'], 'select' => ['firstname', 'lastname']]);
-            $aBaskets[$key]['userToDisplay']     = "{$user['firstname']} {$user['lastname']}";
-            $aBaskets[$key]['userIdRedirection'] = $value['new_user'];
-            $aBaskets[$key]['user']              = "{$user['firstname']} {$user['lastname']}" ;
         }
 
         return $aBaskets;
@@ -592,11 +497,14 @@ abstract class BasketModelAbstract
     public static function getResourceNumberByClause(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId', 'clause']);
-        ValidatorModel::stringType($aArgs, ['userId', 'clause']);
+        ValidatorModel::stringType($aArgs, ['clause']);
+        ValidatorModel::intVal($aArgs, ['userId']);
+
+        $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
         $count = ResModel::getOnView([
             'select'    => ['COUNT(1)'],
-            'where'     => [PreparedClauseController::getPreparedClause(['userId' => $aArgs['userId'], 'clause' => $aArgs['clause']])]
+            'where'     => [PreparedClauseController::getPreparedClause(['login' => $user['user_id'], 'clause' => $aArgs['clause']])]
         ]);
 
         if (empty($count[0]['count'])) {

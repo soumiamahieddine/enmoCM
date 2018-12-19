@@ -92,7 +92,7 @@ class AutoCompleteController
         ]);
 
         $users = UserModel::get([
-            'select'    => ['user_id', 'firstname', 'lastname'],
+            'select'    => ['id', 'user_id', 'firstname', 'lastname'],
             'where'     => $requestData['where'],
             'data'      => $requestData['data'],
             'orderBy'   => ['lastname'],
@@ -104,6 +104,7 @@ class AutoCompleteController
             $data[] = [
                 'type'          => 'user',
                 'id'            => $value['user_id'],
+                'serialId'      => $value['id'],
                 'idToDisplay'   => "{$value['firstname']} {$value['lastname']}",
                 'otherInfo'     => ''
             ];

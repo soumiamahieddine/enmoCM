@@ -31,14 +31,14 @@
                     </p>
                 </a>
                 <!-- TODO NEW BASKET LIST-->
-                <!--<a mat-list-item *ngIf="!basket.redirected" (click)="closePanelLeft();" routerLink="/basketList/{{regroupedBasket.groupSerialId}}/baskets/{{basket.basket_id}}" style="cursor:pointer;" [ngStyle]="{'opacity': basket.resourceNumber==0 ? '0.5' : '1'}">
+                <!-- <a mat-list-item *ngIf="!basket.redirected" (click)="closePanelLeft();" routerLink="/basketList/{{regroupedBasket.groupSerialId}}/baskets/{{basket.basket_id}}" style="cursor:pointer;" [ngStyle]="{'opacity': basket.resourceNumber==0 ? '0.5' : '1'}">
                     <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="!mobileMode" mat-list-icon class="fa fa-inbox"></mat-icon>
                     <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                     <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                     <p mat-line title="{{basket.basket_name}}" [ngStyle]="{'color': basket.color}">
                         {{basket.basket_name}}
                     </p>
-                </a>-->
+                </a> -->
             </ng-container> 
         </mat-nav-list>
     </ng-container>
@@ -50,7 +50,7 @@
                 <mat-icon *ngIf="!mobileMode" style="color:#666" mat-list-icon class="fa fa-inbox"></mat-icon>
                 <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                 <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
-                <p mat-line (click)="goToRedirect(basket.basket_id,basket.basket_owner)" title="{{basket.basket_name}}" style="color:#666">
+                <p mat-line (click)="goToRedirect(basket.basket_id, basket.ownerLogin, basket.uselessGroupId)" title="{{basket.basket_name}}" style="color:#666">
                     {{basket.basket_name}}<br/><small color="primary">({{basket.userToDisplay}})</small>
                 </p>
             </a>

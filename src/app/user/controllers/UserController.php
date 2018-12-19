@@ -16,6 +16,7 @@ namespace User\controllers;
 
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
+use Basket\models\RedirectBasketModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
@@ -34,6 +35,7 @@ use Slim\Http\Response;
 use SrcCore\controllers\PasswordController;
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
 use SrcCore\models\PasswordModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
@@ -316,7 +318,7 @@ class UserController
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
-        $user['redirectedBaskets'] = BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']]);
+        $user['redirectedBaskets'] = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['regroupedBaskets'] = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
         $user['passwordRules'] = PasswordModel::getEnabledRules();
         $user['canModifyPassword'] = true;
@@ -397,33 +399,33 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-
         $data = $request->getParams();
 
+        DatabaseModel::beginTransaction();
         foreach ($data as $key => $value) {
-            if (empty($value['newUser']) || empty($value['basketId']) || empty($value['basketOwner']) || empty($value['virtual'])) {
+            if (empty($value['actual_user_id']) || empty($value['basket_id']) || empty($value['group_id'])) {
+                DatabaseModel::rollbackTransaction();
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
             }
-            $check = UserModel::getByUserId(['userId' => $value['newUser'], 'select' => ['1']]);
+            $check = UserModel::getById(['id' => $value['actual_user_id'], 'select' => ['1']]);
             if (empty($check)) {
+                DatabaseModel::rollbackTransaction();
                 return $response->withStatus(400)->withJson(['errors' => 'User not found']);
             }
 
-            if ($value['basketOwner'] != $user['user_id']) {
-                BasketModel::updateRedirectedBaskets([
-                    'userId'      => $user['user_id'],
-                    'basketOwner' => $value['basketOwner'],
-                    'basketId'    => $value['basketId'],
-                    'userAbs'     => $value['basketOwner'],
-                    'newUser'     => $value['newUser']
+            if (!empty($value['originalOwner'])) {
+                RedirectBasketModel::update([
+                    'actual_user_id'    => $value['actual_user_id'],
+                    'basket_id'         => $value['basket_id'],
+                    'group_id'          => $value['group_id'],
+                    'owner_user_id'     => $value['originalOwner']
                 ]);
                 HistoryController::add([
-                    'tableName'    => 'user_abs',
+                    'tableName'    => 'redirected_baskets',
                     'recordId'     => $GLOBALS['userId'],
                     'eventType'    => 'UP',
                     'eventId'      => 'basketRedirection',
-                    'info'         => _BASKET_REDIRECTION . " {$value['basketId']} {$user['user_id']} => {$value['newUser']}"
+                    'info'         => _BASKET_REDIRECTION . " {$value['basket_id']} {$value['actual_user_id']}"
                 ]);
                 unset($data[$key]);
             }
@@ -431,57 +433,52 @@ class UserController
 
         if (!empty($data)) {
             foreach ($data as $value) {
-                BasketModel::setRedirectedBaskets([
-                    'userAbs'       => $user['user_id'],
-                    'newUser'       => $value['newUser'],
-                    'basketId'      => $value['basketId'],
-                    'basketOwner'   => $value['basketOwner'],
-                    'isVirtual'     => $value['virtual']
+                RedirectBasketModel::create([
+                    'actual_user_id'    => $value['actual_user_id'],
+                    'basket_id'         => $value['basket_id'],
+                    'group_id'          => $value['group_id'],
+                    'owner_user_id'     => $aArgs['id']
                 ]);
-
                 HistoryController::add([
-                    'tableName'    => 'user_abs',
+                    'tableName'    => 'redirected_baskets',
                     'recordId'     => $GLOBALS['userId'],
                     'eventType'    => 'UP',
                     'eventId'      => 'basketRedirection',
-                    'info'         => _BASKET_REDIRECTION . " {$value['basketId']} {$user['user_id']} => {$value['newUser']}"
+                    'info'         => _BASKET_REDIRECTION . " {$value['basket_id']} {$aArgs['id']} => {$value['actual_user_id']}"
                 ]);
             }
         }
+
+        DatabaseModel::commitTransaction();
+
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
 
         return $response->withJson([
             'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
-    public function deleteRedirectedBaskets(Request $request, Response $response, array $aArgs)
+    public function deleteRedirectedBasket(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $data = $request->getParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['basketOwner']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        $redirectedBasket = RedirectBasketModel::get(['select' => ['actual_user_id', 'owner_user_id'], 'where' => ['id = ?'], 'data' => [$aArgs['redirectBasketid']]]);
+        if (empty($redirectedBasket[0]) || ($redirectedBasket[0]['actual_user_id'] != $aArgs['id'] && $redirectedBasket[0]['owner_user_id'] != $aArgs['id'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Redirected basket out of perimeter']);
         }
+
+        RedirectBasketModel::delete(['where' => ['id = ?'], 'data' => [$aArgs['redirectBasketid']]]);
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-
-        if ($data['basketOwner'] != $user['user_id']) {
-            BasketModel::deleteBasketRedirection(['userId' => $data['basketOwner'], 'basketId' => $aArgs['basketId']]);
-        } else {
-            BasketModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
-        }
-
         HistoryController::add([
-            'tableName'    => 'user_abs',
+            'tableName'    => 'redirected_baskets',
             'recordId'     => $GLOBALS['userId'],
-            'eventType'    => 'UP',
+            'eventType'    => 'DEL',
             'eventId'      => 'basketRedirection',
-            'info'         => _BASKET_REDIRECTION_SUPPRESSION . " {$aArgs['basketId']} {$user['user_id']}"
+            'info'         => _BASKET_REDIRECTION_SUPPRESSION . " {$user['user_id']}"
         ]);
 
         return $response->withJson([

@@ -288,34 +288,16 @@ abstract class basket_Abstract extends Database
 
     public function load_basket_abs($userId)
     {
-        $db = new Database();
-        $arr = array();
-        $stmt = $db->query(
-            "select system_id, basket_id, user_abs from user_abs where new_user = ?",
-            array($userId)
-        );
-        //$db->show();
-        while ($res = $stmt->fetchObject()) {
-            $stmt2 = $db->query(
-            "select status from users"
-            . " where user_id = ?",
-                array($res->user_abs)
-            );
+        $user = \User\models\UserModel::getByUserId(['userId' => $userId, 'select' => ['id']]);
 
-            $res2 = $stmt2->fetchObject();
+        $redirectedBaskets = \Basket\models\RedirectBasketModel::get(['select' => ['id', 'basket_id', 'owner_user_id'], 'where' => ['actual_user_id = ?'], 'data' => [$user['id']]]);
 
-            if ($res2->status <> 'DEL') {
-                array_push(
-                    $arr,
-                    $this->get_abs_baskets_data(
-                        $res->basket_id,
-                        $userId,
-                        $res->system_id
-                    )
-                );
-            }
+        $return = [];
+        foreach ($redirectedBaskets as $redirectedBasket) {
+            $return[] = $this->get_abs_baskets_data($redirectedBasket['basket_id'], $userId, $redirectedBasket['id']);
         }
-        return $arr;
+
+        return $return;
     }
 
     /**
@@ -714,7 +696,6 @@ abstract class basket_Abstract extends Database
         $tab['basket_res_order'] = $this->show_string($res->basket_res_order);
         $tab['clause'] = $res->basket_clause;
         $tab['is_visible'] = $res->is_visible;
-        $isVirtual = 'N';
         $basketOwner = '';
         $absBasket = false;
 
@@ -766,7 +747,6 @@ abstract class basket_Abstract extends Database
         );
 
         $tab['abs_basket'] = $absBasket;
-        $tab['is_virtual'] = $isVirtual;
         $tab['basket_owner'] = $basketOwner;
         $tab['clause'] = $secCtrl->process_security_where_clause(
             $tab['clause'],
@@ -794,97 +774,46 @@ abstract class basket_Abstract extends Database
         return $tab;
     }
 
-    /**
-     * Returns in an array all the data of a basket for a user
-     * (checks if the basket is a redirected one and then if already a virtual one)
-     *
-     * @param  $basketId string Basket identifier
-     * @param  $userId string User identifier
-     */
     public function get_abs_baskets_data($basketId, $userId, $systemId)
     {
-        $tab = array();
+        $tab = [];
         $db = new Database();
         $sec = new security();
         $secCtrl = new SecurityControler();
-        $stmt = $db->query(
-            "select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_visible"
-            . " from " . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",
-            array($basketId)
-        );
 
-        $res = $stmt->fetchObject();
-        $tab['id'] = $res->basket_id;
-        $tab['coll_id'] = $res->coll_id;
+        $basket = \Basket\models\BasketModel::getById(['select' => ['basket_id', 'coll_id', 'basket_name', 'basket_desc', 'basket_clause', 'is_visible'], 'id' => $basketId]);
+
+        $tab['id'] = $basket['basket_id'];
+        $tab['coll_id'] = $basket['coll_id'];
         $tab['table'] = $sec->retrieve_table_from_coll($tab['coll_id']);
         $tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
 
-        $tab['desc'] = $res->basket_desc;
-        $tab['name'] = $res->basket_name;
-        $tab['clause'] = $res->basket_clause;
-        $tab['is_visible'] = $res->is_visible;
-        $stmt = $db->query(
-            "select user_abs, is_virtual, basket_owner from user_abs where basket_id = ? and new_user = ? and system_id = ?",
-            array($basketId,$userId,$systemId)
-        );
+        $tab['desc'] = $basket['basket_desc'];
+        $tab['name'] = $basket['basket_name'];
+        $tab['clause'] = $basket['basket_clause'];
+        $tab['is_visible'] = $basket['is_visible'];
+
+        $redirectedBasket = \Basket\models\RedirectBasketModel::get(['select' => ['actual_user_id', 'owner_user_id', 'group_id'], 'where' => ['id = ?'], 'data' => [$systemId]]);
 
         $absBasket = true;
+        $user = \User\models\UserModel::getById(['id' => $redirectedBasket[0]['owner_user_id'], 'select' => ['user_id']]);
+        $basketOwner = $user['user_id'];
+        $userAbs = $basketOwner;
+
+        $stmt = $db->query(
+            "select firstname, lastname from " . USERS_TABLE
+            . " where user_id = ? ",
+            array($userAbs)
+        );
         $res = $stmt->fetchObject();
-        $isVirtual = $res->is_virtual;
-        $basketOwner = $res->basket_owner;
-        $userAbs = $res->user_abs;
+        $nameUserAbs = $res->firstname . ' ' . $res->lastname;
+        $tab['name'] .= " (" . $nameUserAbs . ")";
+        $tab['desc'] .= " (" . $nameUserAbs . ")";
+        $tab['id'] .= "_" . $userAbs;
 
-        if (empty($basketOwner)) {
-            $basketOwner = $userAbs;
-        }
-        if ($isVirtual == 'N') {
-            $tmpUser = $userAbs;
-            $stmt = $db->query(
-                "select firstname, lastname from " . USERS_TABLE
-                . " where user_id = ? ",
-                array($userAbs)
-            );
-            $res = $stmt->fetchObject();
-            $nameUserAbs = $res->firstname . ' ' . $res->lastname;
-            $tab['name'] .= " (" . $nameUserAbs . ")";
-            $tab['desc'] .= " (" . $nameUserAbs . ")";
-            $tab['id'] .= "_" . $userAbs;
-        } else {
-            $tmpUser = $basketOwner;  /// TO DO : test if basket_owner empty
-            $stmt = $db->query(
-                "select firstname, lastname from " . USERS_TABLE
-                ." where user_id = ?",
-                array($basketOwner)
-            );
-            $res = $stmt->fetchObject();
-            $nameBasketOwner = $res->firstname . ' ' . $res->lastname;
-            $tab['name'] .= " (" . $nameBasketOwner . ")";
-            $tab['desc'] .= " (" . $nameBasketOwner . ")";
-            $tab['id'] .= "_" . $basketOwner;
-        }
-
-        /// TO DO : Test if tmp_user is empty
-        if ((isset($_SESSION['user']['UserId'])
-            && $tmpUser <> $_SESSION['user']['UserId'])
-            || (!isset($_SESSION['user']['UserId']))
-        ) {
-            $stmt = $db->query(
-                "select group_id from usergroup_content where primary_group = 'Y' and user_id = ?",
-                array($tmpUser)
-            );
-
-            $groups = [];
-            while ($res = $stmt->fetchObject()) {
-                $groups[] = $res->group_id;
-            }
-            $stmt = $db->query("select result_page, group_id from groupbasket where group_id in (?) and basket_id = ?", array($groups, $basketId));
-            $res = $stmt->fetchObject();
-            $primaryGroup = $res->group_id;
-        } else {
-            $primaryGroup = $_SESSION['user']['primarygroup'];
-            $stmt = $db->query("select result_page from groupbasket where group_id = ? and basket_id = ?", array($primaryGroup,$basketId));
-            $res = $stmt->fetchObject();
-        }
+        $group = \Group\models\GroupModel::getById(['select' => ['group_id'], 'id' => $redirectedBasket[0]['group_id']]);
+        $stmt = $db->query("select result_page from groupbasket where group_id = ? and basket_id = ?", array($group['group_id'], $basketId));
+        $res = $stmt->fetchObject();
 
         $basketIdPage = $res->result_page;
         $tab['id_page'] = $basketIdPage;
@@ -907,15 +836,14 @@ abstract class basket_Abstract extends Database
         // Gets actions of the basket
         $tab['default_action'] = $this->_getDefaultAction(
             $basketId,
-            $primaryGroup
+            $group['group_id']
         );
         $tab['actions'] = $this->_getActionsFromGroupbaket(
             $basketId,
-            $primaryGroup,
+            $group['group_id'],
             $userId
         );
 
-        $tab['is_virtual'] = $isVirtual;
         $tab['basket_owner'] = $basketOwner;
         $tab['abs_basket'] = $absBasket;
 
@@ -924,7 +852,9 @@ abstract class basket_Abstract extends Database
             $basketOwner
         );
         $tab['clause'] = str_replace('where', '', $tab['clause']);
-        
+        $tab['group_id'] = $group['group_id'];
+        $tab['group_serial_id'] = $redirectedBasket[0]['group_id'];
+
         $tab['lock_list'] = '';
         $tab['lock_sublist'] = '';
         
