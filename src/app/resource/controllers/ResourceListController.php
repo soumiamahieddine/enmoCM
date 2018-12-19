@@ -14,10 +14,12 @@
 
 namespace Resource\controllers;
 
+use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Group\models\GroupModel;
+use Note\models\NoteModel;
 use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -97,7 +99,24 @@ class ResourceListController
             $resIds[] = $resource['res_id'];
         }
 
+        $attachments = AttachmentModel::getOnView([
+            'select'    => ['COUNT(res_id)', 'res_id_master'],
+            'where'     => ['res_id_master in (?)', 'status not in (?)'],
+            'data'      => [$resIds, ['DEL', 'OBS']],
+            'groupBy'   => ['res_id_master']
+        ]);
+
         $resources = ResModel::getForList(['resIds' => $resIds]);
+
+        foreach ($resources as $key => $resource) {
+            $resources[$key]['countAttachments'] = 0;
+            foreach ($attachments as $attachment) {
+                if ($attachment['res_id_master'] == $resource['res_id']) {
+                    $resources[$key]['countAttachments'] = $attachment['count'];
+                }
+            }
+            $resources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $GLOBALS['userId']]);
+        }
 
         return $response->withJson(['resources' => $resources, 'count' => $count]);
     }

@@ -496,7 +496,7 @@ class ResController
 
     public function getNotesCountForCurrentUserById(Request $request, Response $response, array $aArgs)
     {
-        return $response->withJson(NoteModel::countByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
+        return $response->withJson(NoteModel::countByResId(['resId' => $aArgs['resId'], 'login' => $GLOBALS['userId']]));
     }
 
     public static function hasRightByResId(array $aArgs)

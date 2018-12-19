@@ -96,11 +96,11 @@ class DatabaseModel
             $where = ' WHERE ' . implode(' AND ', $args['where']);
         }
 
-        if (empty($args['group_by'])) {
+        if (empty($args['groupBy'])) {
             $groupBy = '';
         } else {
-            ValidatorModel::arrayType($args, ['group_by']);
-            $groupBy = ' GROUP BY ' . implode(', ', $args['group_by']);
+            ValidatorModel::arrayType($args, ['groupBy']);
+            $groupBy = ' GROUP BY ' . implode(', ', $args['groupBy']);
         }
 
         if (empty($args['order_by'])) {

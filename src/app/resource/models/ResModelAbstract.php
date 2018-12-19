@@ -239,7 +239,7 @@ abstract class ResModelAbstract
                 'r.res_id = mlb.res_id',
             ],
             'data'      => [$aArgs['userId'], ['res_letterbox', 'res_view_letterbox'], 'none', 'linkup', 'attach%', 'DEL'],
-            'group_by'  => ['r.subject', 'r.creation_date', 'r.res_id', 'mlb.alt_identifier', 'mlb.closing_date', 'mlb.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
+            'groupBy'   => ['r.subject', 'r.creation_date', 'r.res_id', 'mlb.alt_identifier', 'mlb.closing_date', 'mlb.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
             'order_by'  => ['MAX(history.event_date) DESC'],
             'limit'     => $aArgs['limit']
         ]);

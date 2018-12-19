@@ -21,9 +21,9 @@ abstract class NoteModelAbstract
 {
     public static function countByResId(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'login']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['login']);
 
         $nb = 0;
         $countedNotes = [];
@@ -33,7 +33,7 @@ abstract class NoteModelAbstract
             'select'    => ['entity_id'],
             'table'     => ['users_entities'],
             'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
+            'data'      => [$aArgs['login']]
         ]);
 
         foreach ($aEntities as $value) {
@@ -53,7 +53,7 @@ abstract class NoteModelAbstract
                 ++$nb;
                 $countedNotes[] = $value['id'];
             } elseif (!empty($value['item_id'])) {
-                if ($value['user_id'] == $aArgs['userId'] && !in_array($value['id'], $countedNotes)) {
+                if ($value['user_id'] == $aArgs['login'] && !in_array($value['id'], $countedNotes)) {
                     ++$nb;
                     $countedNotes[] = $value['id'];
                 } elseif (in_array($value['item_id'], $entities) && !in_array($value['id'], $countedNotes)) {

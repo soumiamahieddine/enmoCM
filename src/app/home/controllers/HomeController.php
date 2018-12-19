@@ -44,6 +44,7 @@ class HomeController
             ]);
 
             foreach ($baskets as $kBasket => $basket) {
+                $baskets[$kBasket]['owner_user_id'] = $user['id'];
                 if (!empty($basket['pcolor'])) {
                     $baskets[$kBasket]['color'] = $basket['pcolor'];
                 }
