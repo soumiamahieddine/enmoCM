@@ -1,0 +1,128 @@
+.docView {
+    overflow: hidden;
+}
+
+mat-toolbar {
+    border: solid 1px #F9983066;
+    font-size: 10px;
+    height: 20px;
+    color: #666;
+}
+
+.resultContainer {
+    // color : rgb(102, 102, 102);
+    padding: 10px;
+
+    &-mobile {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+}
+
+.resultRow {
+    align-items: center;
+    display: flex;
+    padding: 5px;
+
+    &-mobile {
+        font-size: 80%;
+    }
+}
+
+.resultCol {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &-mobile {
+        overflow: inherit;
+        text-overflow: inherit;
+        word-break: break-all;
+    }
+}
+
+.twoCol {
+    flex: 2;
+}
+
+.mat-row:hover {
+    background: inherit;
+}
+
+.newRow {
+    // font-weight: bold;
+}
+.endCol {
+    text-align: right;
+}
+
+.chrono {
+    color: #666;
+    &-mobile {
+        font-size: 70%;
+    }
+}
+
+.envFilter {
+    height: 40px;
+
+    mat-icon{
+        height: auto;
+    }
+
+    .mat-button-toggle-checked {
+        background-color: #F99830;
+        color: white;
+    }
+}
+
+.checkThis {
+    width: 40px;
+    text-align: center;
+}
+
+.statusCol {
+    width: 80px;
+    text-align: center;
+}
+
+.actionsCol {
+    width: 40px;
+}
+
+
+.actions {
+    box-shadow: none;
+    flex: 1;
+    justify-content: end;
+    overflow: inherit;
+}
+.mat-badge-content {
+    background: #F99830;   
+}
+
+.smallFontData {
+    font-size: 10px;
+}
+
+.centerData {
+    text-align: center;
+}
+
+.rightData {
+    text-align: right;
+}
+
+.softColorData {
+    color: #666;
+}
+
+.longData {
+    flex: 3;
+}
+
+.filterBadges>.label {
+    margin: 5px;
+    background: #F99830;
+    cursor: pointer;
+}

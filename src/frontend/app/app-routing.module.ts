@@ -6,7 +6,7 @@ import { PasswordModificationComponent }    from './password-modification.compon
 import { ProfileComponent }                 from './profile.component';
 import { AboutUsComponent }                 from './about-us.component';
 import { HomeComponent }                    from './home.component';
-import { BasketListComponent }              from './basket/basket-list.component';
+import { BasketListComponent }              from './list/basket-list.component';
 import { SignatureBookComponent }           from './signature-book.component';
 import { SaveNumericPackageComponent }      from './save-numeric-package.component';
 

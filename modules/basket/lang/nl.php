@@ -465,9 +465,6 @@ if (!defined('_BASKETS_OWNER_MISSING')) {
 if (!defined('_FORM_ERROR')) {
     define('_FORM_ERROR', 'Fout in de overdracht van het formulier...');
 }
-if (!defined('_USER_ABS')) {
-    define('_USER_ABS', 'Gebruiker afwezig: omleiding reeds ingesteld.');
-}
 if (!defined('_ABS_LOG_OUT')) {
     define('_ABS_LOG_OUT', 'Indien u zich opnieuw verbindt, zal de afwezigheidmodus uitgeschakeld worden.');
 }

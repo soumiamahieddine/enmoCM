@@ -17,6 +17,7 @@ namespace Resource\controllers;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
+use Basket\models\RedirectBasketModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
@@ -451,50 +452,6 @@ class ResController
         return $response->withHeader('Content-Type', $mimeType);
     }
 
-    public function getResourcesByBasket(Request $request, Response $response, array $aArgs)
-    {
-        $data = $request->getQueryParams();
-
-        if (empty($data['offset']) || !is_numeric($data['offset'])) {
-            $data['offset'] = 0;
-        }
-        if (empty($data['limit']) || !is_numeric($data['limit'])) {
-            $data['limit'] = 0;
-        }
-
-        $group = GroupModel::getById(['id' => $aArgs['groupSerialId'], 'select' => ['group_id']]);
-        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order']]);
-        if (empty($group) || empty($basket)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
-        }
-
-        $groups = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
-        $groupFound = false;
-        foreach ($groups as $value) {
-            if ($value['id'] == $aArgs['groupSerialId']) {
-                $groupFound = true;
-            }
-        }
-        if (!$groupFound) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this user']);
-        }
-
-        $isBasketLinked = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$aArgs['basketId'], $group['group_id']]]);
-        if (empty($isBasketLinked)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this basket']);
-        }
-
-        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $GLOBALS['userId']]);
-        $list = ResModel::getForList([
-            'clause'    => $whereClause,
-            'orderBy'   => ["{$basket['basket_res_order']} DESC"],
-            'offset'    => (int)$data['offset'],
-            'limit'     => (int)$data['limit'],
-        ]);
-
-        return $response->withJson(['resources' => $list['resources'], 'count' => $list['count']]);
-    }
-
     public function updateExternalInfos(Request $request, Response $response)
     {
         $data = $request->getParams();
@@ -555,7 +512,7 @@ class ResController
         $groupsClause = '';
         foreach ($groups as $key => $group) {
             if (!empty($group['where_clause'])) {
-                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'userId' => $aArgs['userId']]);
+                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'login' => $aArgs['userId']]);
                 if ($key > 0) {
                     $groupsClause .= ' or ';
                 }
@@ -574,7 +531,8 @@ class ResController
         $basketsClause = '';
         foreach ($baskets as $key => $basket) {
             if (!empty($basket['basket_clause'])) {
-                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $basket['basket_owner']]);
+                $user = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
                 if ($key > 0) {
                     $basketsClause .= ' or ';
                 }

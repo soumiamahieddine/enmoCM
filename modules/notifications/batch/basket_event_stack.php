@@ -72,9 +72,9 @@ while ($state != 'END') {
                         if (empty($aRecipients)) {
                             $aRecipients = '0=1';
                         }
-                        $stmt3 = $db->query("SELECT usergroup_content.user_id,users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK','ABS') and usergroup_content.user_id=users.user_id and users.user_id in (?)", array($line2->group_id, $aRecipients));
+                        $stmt3 = $db->query("SELECT usergroup_content.user_id, users.id, users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK','ABS') and usergroup_content.user_id=users.user_id and users.user_id in (?)", array($line2->group_id, $aRecipients));
                     } else {
-                        $stmt3 = $db->query("SELECT usergroup_content.user_id,users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK','ABS') and usergroup_content.user_id=users.user_id", array($line2->group_id));
+                        $stmt3 = $db->query("SELECT usergroup_content.user_id, users.id, users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK','ABS') and usergroup_content.user_id=users.user_id", array($line2->group_id));
                     }
 
                     $baskets_notif = array();
@@ -86,13 +86,14 @@ while ($state != 'END') {
                         $whereClause = $secCtrl->process_security_where_clause($line->basket_clause, $line3->user_id);
                         $whereClause = $entities->process_where_clause($whereClause, $line3->user_id);
                         $user_id = $line3->user_id;
-                        $query = 'SELECT new_user FROM user_abs WHERE user_abs = ? AND basket_id = ?';
-                        $redirStmt = $db->query($query, array($line3->user_id,$line->basket_id));
+                        $group = \Group\models\GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $line2->group_id]);
+                        $query = 'SELECT actual_user_id FROM redirected_baskets WHERE owner_user_id = ? AND basket_id = ? AND group_id = ?';
+                        $redirStmt = $db->query($query, array($line3->id, $line->basket_id, $group['id']));
                         $queryResult = $redirStmt->fetchObject();
                         if ($queryResult) {
-                            $abs_user = $queryResult;
                             $real_user_id = $user_id;
-                            $user_id = $abs_user->new_user;
+                            $user = \User\models\UserModel::getById(['id' => $queryResult->actual_user_id, 'select' => ['user_id']]);
+                            $user_id = $user['user_id'];
                         }
 
 

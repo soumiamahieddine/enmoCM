@@ -12,7 +12,7 @@ ALTER TABLE res_letterbox ADD COLUMN external_signatory_book_id integer;
 ALTER TABLE users DROP COLUMN IF EXISTS external_id;
 ALTER TABLE users ADD COLUMN external_id json DEFAULT '{}';
 
-
+/* Redirected Baskets */
 DO $$ BEGIN
   IF (SELECT count(TABLE_NAME)  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'user_abs') = 1 THEN
       DROP TABLE IF EXISTS redirected_baskets;
