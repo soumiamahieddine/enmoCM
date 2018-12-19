@@ -223,10 +223,6 @@ if (count($_SESSION['user']['baskets']) > 0) {
             if ($redirectBasketValue['basket_id'] == $_SESSION['user']['baskets'][$i]['id']) {
                 $redirectedTo = $redirectBasketValue['user'];
             }
-//            if ($redirectBasketValue['basket_owner'] == $_SESSION['user']['UserId']) {
-//            } elseif ($_SESSION['user']['baskets'][$i]['id'] == $redirectBasketValue['basket_id'] . '_' . $redirectBasketValue['basket_owner']) {
-//                $redirectedTo = $redirectBasketValue['user'];
-//            }
         }
 
         if((($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y' &&  $_SESSION['user']['baskets'][$i]['abs_basket'] == false)
