@@ -123,25 +123,6 @@ while ($state != 'END') {
                             continue;
                         }
 
-//                        if ($recipient->status == 'ABS') {
-//                            $logger->write($user_id.' is absent, routing to replacent', 'INFO');
-//                            unset($recipients[$i]);
-//                            $query = 'SELECT us.* FROM users us'
-//                                .' JOIN user_abs abs ON us.user_id = abs.new_user '
-//                                ." WHERE abs.user_abs = ? AND us.enabled='Y'";
-//                            $dbAbs = new Database();
-//                            $stmt = $dbAbs->query($query, array($user_id));
-//                            if ($stmt->rowCount() > 0) {
-//                                //$recipient = $dbAbs->fetchObject($user_id);
-//                                $recipient = $stmt->fetchObject();
-//                                $user_id = $recipient->user_id;
-//                                $logger->write($user_id.' is the replacent', 'INFO');
-//                                $recipients[] = $recipient;
-//                            } else {
-//                                $logger->write('No replacent found (probably disabled)', 'INFO');
-//                                continue;
-//                            }
-//                        }
                         if (!isset($tmpNotifs[$user_id])) {
                             $tmpNotifs[$user_id]['recipient'] = $recipient;
                         }

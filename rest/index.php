@@ -244,9 +244,9 @@ $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
-$app->get('/resources/groups/{groupSerialId}/baskets/{basketId}', \Resource\controllers\ResController::class . ':getResourcesByBasket');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
 
+$app->get('/resourcesList/users/{userId}/groups/{groupSerialId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');

@@ -39,3 +39,5 @@ DO $$ BEGIN
 --       DROP TABLE IF EXISTS user_abs;
   END IF;
 END$$;
+UPDATE history SET table_name = 'redirected_baskets' WHERE table_name = 'user_abs';
+
