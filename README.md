@@ -43,3 +43,6 @@ display_errors = On
 
 ## Le coin des developpeurs
 [Maarch Developer handbook](https://labs.maarch.org/maarch/MaarchCourrier/blob/master/CONTRIBUTING.md)
+
+## Test
+Test pour GitKraken
