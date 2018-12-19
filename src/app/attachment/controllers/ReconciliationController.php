@@ -18,14 +18,9 @@ class ReconciliationController
     {
         $data = $request->getParams();
         $check = Validator::notEmpty()->validate($data['encodedFile']);
-        $check = $check && Validator::numeric()->notEmpty()->validate($data['resId']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['chrono']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        if (!Validator::intVal()->validate($data['resId']) || !ResController::hasRightByResId(['resId' => $data['resId'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $resId = ReconciliationController::getWs($data);
@@ -49,24 +44,28 @@ class ReconciliationController
     public static function getWs($aArgs)
     {
         $identifier     = $aArgs['chrono'];
-        $res_id         = (int)$aArgs['resId'];
         $encodedContent = $aArgs['encodedFile'];
 
         $info = AttachmentModel::getOnView([
-            'select'  => [1],
+            'select'  => ['res_id', 'title', 'res_id_master', 'dest_contact_id', 'dest_address_id'],
             'where'   => ['identifier = ?', "status IN ('A_TRA', 'NEW','TMP')"],
             'data'    => [$identifier],
             'orderBy' => ['res_id DESC']
         ])[0];
 
+        if (!Validator::intVal()->validate($info['res_id_master']) || !ResController::hasRightByResId(['resId' => $info['res_id_master'], 'userId' => $GLOBALS['userId']])) {
+            return ['errors' => 'Document out of perimeter'];
+        }
+
         if (!$info) {
-            return false;
+            return ['errors' => 'No attachment'];
         }
 
         $title           = $info['title'];
         $fileFormat      = 'pdf';
         $attachment_type = 'outgoing_mail_signed';
         $collId          = 'letterbox_coll';
+        $res_id_master   = $info['res_id_master'];
 
         $data = [];
 
@@ -123,7 +122,7 @@ class ReconciliationController
             $data,
             array(
                 'column' => 'res_id_master',
-                'value' => $res_id,
+                'value' => $res_id_master,
                 'type' => 'integer',
             )
         );
@@ -159,7 +158,7 @@ class ReconciliationController
                 ResModel::update([
                     'set'   => ['status' => 'END'],
                     'where' => ['res_id = ?'],
-                    'data'  => [$res_id],
+                    'data'  => [$res_id_master],
                 ]);
             }
         }
