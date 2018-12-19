@@ -41,62 +41,49 @@ abstract class ResModelAbstract
 
     public static function getForList(array $aArgs)
     {
-        ValidatorModel::arrayType($aArgs, ['orderBy']);
-        ValidatorModel::stringType($aArgs, ['clause']);
-        ValidatorModel::intType($aArgs, ['limit', 'offset']);
+        ValidatorModel::notEmpty($aArgs, ['resIds']);
+        ValidatorModel::arrayType($aArgs, ['resIds']);
 
-        $resources = ResModel::getOnView([
+        $resources = DatabaseModel::select([
             'select'    => [
-                'count(1) OVER()',
-                'res_id'
+                'res_letterbox.res_id',
+                'res_letterbox.subject',
+                'res_letterbox.creation_date',
+                'mlb_coll_ext.alt_identifier',
+                'mlb_coll_ext.category_id',
+                'mlb_coll_ext.closing_date',
+                'mlb_coll_ext.process_limit_date',
+                'entities.entity_label as entity_destination',
+                'doctypes.description as doctype_label',
+                'contacts_v2.firstname as contact_firstname',
+                'contacts_v2.lastname as contact_lastname',
+                'contacts_v2.society as contact_society',
+                'users.firstname as user_firstname',
+                'users.lastname as user_lastname',
+                'priorities.color as priority_color',
+                'priorities.label as priority_label',
+                'status.img_filename as status_icon',
+                'status.label_status as status_label',
+                'status.id as status_id',
+                'us.lastname as user_dest_lastname',
+                'us.firstname as user_dest_firstname',
             ],
-            'where'     => [$aArgs['clause']],
-            'data'      => [],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
-            'offset'    => empty($aArgs['offset']) ? 0 : $aArgs['offset'],
-            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+            'table'     => ['res_letterbox', 'mlb_coll_ext', 'entities', 'doctypes', 'contacts_v2', 'users', 'priorities', 'status', 'users us'],
+            'left_join' => [
+                'res_letterbox.res_id = mlb_coll_ext.res_id',
+                'res_letterbox.destination = entities.entity_id',
+                'res_letterbox.type_id = doctypes.type_id',
+                'mlb_coll_ext.exp_contact_id = contacts_v2.contact_id OR mlb_coll_ext.dest_contact_id = contacts_v2.contact_id',
+                'mlb_coll_ext.exp_user_id = users.user_id OR mlb_coll_ext.dest_user_id = users.user_id',
+                'res_letterbox.priority = priorities.id',
+                'res_letterbox.status = status.id',
+                'res_letterbox.dest_user = us.user_id'
+            ],
+            'where'     => ['res_letterbox.res_id in (?)'],
+            'data'      => [$aArgs['resIds']]
         ]);
-        $count = empty($resources[0]['count']) ? 0 : $resources[0]['count'];
 
-        $resIds = [];
-        foreach ($resources as $resource) {
-            $resIds[] = $resource['res_id'];
-        }
-
-        if (!empty($resIds)) {
-            $resources = DatabaseModel::select([
-                'select'    => [
-                    'res_id',
-                    'subject',
-                    'alt_identifier',
-                    'category_id',
-                    'closing_date',
-                    'category_id',
-                    'contact_firstname',
-                    'contact_lastname',
-                    'contact_society',
-                    'user_lastname',
-                    'user_firstname',
-                    'creation_date',
-                    'entity_label as entity_destination',
-                    'process_limit_date',
-                    'type_label as doctype_label',
-                    'priorities.color as priority_color',
-                    'priorities.label as priority_label',
-                    'status.img_filename as status_icon',
-                    'status.label_status as status_label',
-                    'status.id as status_id',
-                    'users.lastname as user_dest_lastname',
-                    'users.firstname as user_dest_firstname',
-                ],
-                'table'     => ['res_view_letterbox, priorities, status, users'],
-                'where'     => ['res_view_letterbox.res_id in (?)', 'res_view_letterbox.priority = priorities.id', 'res_view_letterbox.status = status.id', 'res_view_letterbox.dest_user = users.user_id'],
-                'data'      => [$resIds]
-            ]);
-        }
-
-
-        return ['resources' => $resources, 'count' => $count];
+        return $resources;
     }
 
     public static function get(array $aArgs)
