@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject, EventEmitter, Output } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
@@ -38,6 +38,8 @@ export class BasketListComponent implements OnInit {
     homeData: any;
 
     filterMode: boolean = false;
+    filtersChange = new EventEmitter();
+    
     @ViewChild('snav') sidenavLeft: MatSidenav;
     @ViewChild('snav2') sidenavRight: MatSidenav;
 
@@ -108,6 +110,7 @@ export class BasketListComponent implements OnInit {
     isLoadingResults = true;
     listProperties: any = {};
     listPropertiesIndex: number = 0;
+    filters: string = '';
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
@@ -143,11 +146,11 @@ export class BasketListComponent implements OnInit {
                     this.filterMode = false;
                     window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                     window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
-                    this.exampleDatabase = new ResultListHttpDao(this.http, this.filtersListService);
+                    
 
                     this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
-
-                    this.initResultList(this.filtersListService.getUrlFilters());
+                    this.filters = this.filtersListService.getUrlFilters();
+                    this.initResultList();
 
                 }, () => {
                     location.href = "index.php";
@@ -155,18 +158,20 @@ export class BasketListComponent implements OnInit {
         });
     }
 
-    initResultList(filters: string) {
+    initResultList() {
+        this.exampleDatabase = new ResultListHttpDao(this.http, this.filtersListService);
         // If the user changes the sort order, reset back to the first page.
         this.paginator.pageIndex = this.listProperties.page;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-        merge(this.sort.sortChange, this.paginator.page)
+        // When list is refresh (sort, page, filters)
+        merge(this.sort.sortChange, this.paginator.page, this.filtersChange)
             .pipe(
                 startWith({}),
                 switchMap(() => {
                     this.isLoadingResults = true;
                     return this.exampleDatabase!.getRepoIssues(
-                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl, filters);
+                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl, this.filters);
                 }),
                 map(data => {
                     // Flip flag to show that loading has finished.
@@ -232,7 +237,9 @@ export class BasketListComponent implements OnInit {
         });
         this.filtersListService.updateListsProperties(this.listProperties);
 
-        this.initResultList(this.filtersListService.getUrlFilters());
+        this.filters = this.filtersListService.getUrlFilters();
+
+        this.filtersChange.emit();
 
     }
 
@@ -240,8 +247,9 @@ export class BasketListComponent implements OnInit {
         this.listProperties.page = 0;
 
         this.filtersListService.updateListsProperties(this.listProperties);
+        this.filters = this.filtersListService.getUrlFilters();
 
-        this.initResultList(this.filtersListService.getUrlFilters());
+        this.filtersChange.emit();
 
     }
 
