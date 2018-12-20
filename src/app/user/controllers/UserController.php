@@ -455,7 +455,8 @@ class UserController
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
 
         return $response->withJson([
-            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
+            'redirectedBaskets' => RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $aArgs['id']]),
+            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
