@@ -415,7 +415,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                         }
                     });
                 });
-                console.log(this.user);
                 this.loading = false;
             });
     }
@@ -527,7 +526,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         if (r) {
             this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets", basketsRedirect)
                 .subscribe((data: any) => {
-                    console.log(data);
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.redirectedBaskets = data["redirectedBaskets"];
