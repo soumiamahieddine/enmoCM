@@ -119,9 +119,7 @@ class RedirectBasketModel
         ]);
 
         foreach ($aBaskets as $key => $value) {
-            $user = UserModel::getById(['id' => $value['actual_user_id'], 'select' => ['firstname', 'lastname']]);
-            $aBaskets[$key]['userToDisplay']     = "{$user['firstname']} {$user['lastname']}";
-            $aBaskets[$key]['user']              = "{$user['firstname']} {$user['lastname']}" ;
+            $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['id' => $value['actual_user_id']]);
         }
 
         return $aBaskets;

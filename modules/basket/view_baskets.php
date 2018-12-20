@@ -221,7 +221,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
         $redirectedTo = "";
         foreach ($redirectedBaskets as $redirectBasketValue) {
             if ($redirectBasketValue['basket_id'] == $_SESSION['user']['baskets'][$i]['id']) {
-                $redirectedTo = $redirectBasketValue['user'];
+                $redirectedTo = $redirectBasketValue['userToDisplay'];
             }
         }
 

@@ -318,6 +318,7 @@ class UserController
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['assignedBaskets'] = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets'] = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['regroupedBaskets'] = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
         $user['passwordRules'] = PasswordModel::getEnabledRules();
