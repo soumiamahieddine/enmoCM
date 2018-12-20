@@ -147,8 +147,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.dataSourceContactsList.filter = filterValue;
     }
 
-
-
     //History
     displayedColumns = ['event_date', 'info'];
     dataSource: any;
@@ -408,6 +406,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
             .subscribe((data: any) => {
                 this.user = data;
 
+
                 this.user.baskets.forEach((value: any, index: number) => {
                     this.user.baskets[index]['disabled'] = false;
                     this.user.redirectedBaskets.forEach((value2: any) => {
@@ -416,6 +415,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                         }
                     });
                 });
+                console.log(this.user);
                 this.loading = false;
             });
     }
@@ -512,7 +512,14 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         let basketsRedirect:any[] = [];
         this.user.baskets.forEach((elem: any) => {
             if (this.selectionBaskets.selected.map((e:any) => { return e.basket_id; }).indexOf(elem.basket_id) != -1 && this.selectionBaskets.selected.map((e:any) => { return e.group_id; }).indexOf(elem.group_id) != -1) {
-                basketsRedirect.push({newUser: newUser,basketId:elem.basket_id,basketOwner:this.user.user_id,virtual:elem.is_virtual})
+                basketsRedirect.push(
+                    {
+                        actual_user_id: newUser.serialId,
+                        basket_id:elem.basket_id,
+                        group_id:elem.groupSerialId,
+                        originalOwner: null
+                    }
+                )
             }
         });
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
@@ -520,8 +527,10 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         if (r) {
             this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets", basketsRedirect)
                 .subscribe((data: any) => {
+                    console.log(data);
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
+                    this.user.redirectedBaskets = data["redirectedBaskets"];
                     this.selectionBaskets.clear();
                     this.notify.success(this.lang.basketUpdated);
                 }, (err) => {
@@ -530,14 +539,15 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         }
     }
 
-    delBasketRedirection(basket: any) {
+    delBasketRedirection(basket: any,i: number) {
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets/" + basket.basket_id, { body: { "basketOwner": basket.basket_owner } })
+            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets/" + basket.id)
                 .subscribe((data: any) => {
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
+                    this.user.redirectedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -545,14 +555,38 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         }
     }
 
-    reassignBasketRedirection(newUser: any, basket: any) {
-        let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
+    delBasketAssignRedirection(basket: any,i: number) {
+        let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets", [{ "newUser": newUser, "basketId": basket.basket_id, "basketOwner": basket.basket_owner, "virtual": basket.is_virtual }])
+            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets/" + basket.id)
                 .subscribe((data: any) => {
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
+                    this.user.assignedBaskets.splice(i, 1);
+                    this.notify.success(this.lang.basketUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
+
+    reassignBasketRedirection(newUser: any, basket: any, i: number) {
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
+
+        if (r) {
+            this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets", [
+                { 
+                    "actual_user_id": newUser.serialId, 
+                    "basket_id": basket.basket_id, 
+                    "group_id": basket.group_id,
+                    "originalOwner": basket.owner_user_id, 
+                }
+            ])
+                .subscribe((data: any) => {
+                    this.userCtrl.setValue('');
+                    this.user.baskets = data["baskets"];
+                    this.user.assignedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
