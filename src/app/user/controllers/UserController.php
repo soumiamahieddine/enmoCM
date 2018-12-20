@@ -108,16 +108,18 @@ class UserController
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint', 'loginmode', 'external_id']]);
-        $user['external_id']     = json_decode($user['external_id']);
-        $user['signatures']      = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
-        $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
-        $user['groups']          = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
-        $user['allGroups']       = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
-        $user['entities']        = UserModel::getEntitiesById(['userId' => $user['user_id']]);
-        $user['allEntities']     = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
-        $user['baskets']         = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
-        $user['history']         = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
-        $user['canModifyPassword'] = true;
+        $user['external_id']        = json_decode($user['external_id']);
+        $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
+        $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
+        $user['groups']             = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+        $user['allGroups']          = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
+        $user['entities']           = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $user['allEntities']        = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
+        $user['baskets']            = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
+        $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
+        $user['history']            = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
+        $user['canModifyPassword']  = true;
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
         $user['externalSignatoryBook'] = (string)$loadedXml->signatoryBookEnabled;
@@ -252,77 +254,19 @@ class UserController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function sendToMaarchParapheur(Request $request, Response $response, array $aArgs)
-    {
-        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
-        if (!empty($error['error'])) {
-            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
-        }
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
-
-        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
-            $userInfo = UserModel::getById(['select' => ['firstname', 'lastname', 'mail', 'external_id'], 'id' => $aArgs['id']]);
-
-            $bodyData = [
-                "lastname"  => $userInfo['lastname'],
-                "firstname" => $userInfo['firstname'],
-                "email"     => $userInfo['mail'],
-            ];
-
-            foreach ($loadedXml->signatoryBook as $value) {
-                if ($value->id == "maarchParapheur") {
-                    $url = $value->url;
-                    $userId = $value->userId;
-                    $password = $value->password;
-                    break;
-                }
-            }
-
-            $responseExec = CurlModel::exec([
-                'url'      => $url . '/rest/users',
-                'user'     => $userId,
-                'password' => $password,
-                'method'   => 'POST',
-                'bodyData' => $bodyData
-            ]);
-
-            if (!empty($responseExec['errors'])) {
-                return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
-            }
-        } else {
-            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
-        }
-
-        $externalId = json_decode($userInfo['external_id'], true);
-        $externalId['maarchParapheur'] = $responseExec['user']['id'];
-
-        UserModel::updateExternalId(['id' => $aArgs['id'], 'externalId' => json_encode($externalId)]);
-
-        HistoryController::add([
-            'tableName'    => 'users',
-            'recordId'     => $GLOBALS['userId'],
-            'eventType'    => 'ADD',
-            'eventId'      => 'userCreation',
-            'info'         => _USER_CREATED_IN_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
-        ]);
-
-        return $response->withJson(['externalId' => $responseExec['user']['id']]);
-    }
-
     public function getProfile(Request $request, Response $response)
     {
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
-        $user['signatures'] = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
-        $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
-        $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
-        $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
-        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
-        $user['assignedBaskets'] = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
-        $user['redirectedBaskets'] = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
-        $user['regroupedBaskets'] = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
-        $user['passwordRules'] = PasswordModel::getEnabledRules();
-        $user['canModifyPassword'] = true;
+        $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
+        $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
+        $user['groups']             = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+        $user['entities']           = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $user['baskets']            = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
+        $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
+        $user['regroupedBaskets']   = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
+        $user['passwordRules']      = PasswordModel::getEnabledRules();
+        $user['canModifyPassword']  = true;
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {
@@ -1141,6 +1085,64 @@ class UserController
         return $response->withJson([
             'userBaskets' => BasketModel::getRegroupedBasketsByUserId(['userId' => $GLOBALS['userId']])
         ]);
+    }
+
+    public function sendToMaarchParapheur(Request $request, Response $response, array $aArgs)
+    {
+        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            $userInfo = UserModel::getById(['select' => ['firstname', 'lastname', 'mail', 'external_id'], 'id' => $aArgs['id']]);
+
+            $bodyData = [
+                "lastname"  => $userInfo['lastname'],
+                "firstname" => $userInfo['firstname'],
+                "email"     => $userInfo['mail'],
+            ];
+
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    $url = $value->url;
+                    $userId = $value->userId;
+                    $password = $value->password;
+                    break;
+                }
+            }
+
+            $responseExec = CurlModel::exec([
+                'url'      => $url . '/rest/users',
+                'user'     => $userId,
+                'password' => $password,
+                'method'   => 'POST',
+                'bodyData' => $bodyData
+            ]);
+
+            if (!empty($responseExec['errors'])) {
+                return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
+            }
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+
+        $externalId = json_decode($userInfo['external_id'], true);
+        $externalId['maarchParapheur'] = $responseExec['user']['id'];
+
+        UserModel::updateExternalId(['id' => $aArgs['id'], 'externalId' => json_encode($externalId)]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'ADD',
+            'eventId'      => 'userCreation',
+            'info'         => _USER_CREATED_IN_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
+        ]);
+
+        return $response->withJson(['externalId' => $responseExec['user']['id']]);
     }
 
     private function hasUsersRights(array $aArgs)
