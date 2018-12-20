@@ -17,10 +17,10 @@
                 </div>
                 <div class="row" style="margin:0px;">
                     <div class="col-md-9 col-xs-9">
-                        <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" (change)="updateFilters($event)" multiple>
+                        <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" (change)="updateFiltersTool($event)" multiple>
                             <mat-checkbox color="primary" style="margin: 10px;" title="Sélectionner tous les courriers de la bannette"></mat-checkbox>
                             <button mat-stroked-button (click)="openFilter()">{{lang.filters}}</button>
-                            <mat-button-toggle [checked]="this.listProperties.onlyProcesLimit" value="onlyProcesLimit" title="{{lang.displayProcessLimitRes}}">
+                            <mat-button-toggle [checked]="this.listProperties.delayed" value="delayed" title="{{lang.displayProcessLimitRes}}">
                                 <mat-icon fontSet="fas" fontIcon="fa-stopwatch fa-2x"></mat-icon>
                             </mat-button-toggle>
                             <mat-form-field appearance="outline" [style.fontSize.px]="10" style="width:200px !important;">
@@ -148,7 +148,7 @@
             [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;" [class.docView]="!filterMode" [ngStyle]="{'width': mobileMode ? '80%' : '40%'}">
             <div *ngIf="innerHtml && !filterMode" [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div>
 
-            <app-filters-list *ngIf="filterMode" [listProperties]="this.listProperties"></app-filters-list>
+            <app-filters-list *ngIf="filterMode" [listProperties]="this.listProperties" (triggerEvent)="updateFilters()"></app-filters-list>
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>

@@ -5,10 +5,7 @@ interface listProperties {
     'groupId' : number,
     'basketId' : number,
     'page' : string,
-    'onlyProcesLimit': boolean,
-    'onlyNewRes': boolean,
-    'withPj': boolean,
-    'withNote': boolean,
+    'delayed': boolean,
     'categories' : string[],
     'priorities' : string[],
     'entities' : string[]
@@ -46,10 +43,7 @@ export class FiltersListService {
                 'groupId' : groupId,
                 'basketId' : basketId,
                 'page' : '0',
-                'onlyProcesLimit': false,
-                'onlyNewRes': false,
-                'withPj': false,
-                'withNote': false,
+                'delayed': false,
                 'categories' : [],
                 'priorities' : [],
                 'entities' : [],
@@ -72,6 +66,31 @@ export class FiltersListService {
 
     saveListsProperties() {
         sessionStorage.setItem('propertyList', JSON.stringify(this.listsProperties));
+    }
+
+    getUrlFilters () {
+        let filters = '';
+        if (this.listsProperties[this.listsPropertiesIndex].delayed) {
+            filters += '&delayed=true';
+        }
+        if (this.listsProperties[this.listsPropertiesIndex].categories.length > 0) {
+            let cat: any[] = [];
+            this.listsProperties[this.listsPropertiesIndex].categories.forEach((element: any) => {
+                cat.push(element.id);
+            });
+
+            filters += '&categories='+cat.join(','); 
+        }
+        if (this.listsProperties[this.listsPropertiesIndex].priorities.length > 0) {
+            let prio: any[] = [];
+            this.listsProperties[this.listsPropertiesIndex].priorities.forEach((element: any) => {
+                prio.push(element.id);
+            });
+
+            filters += '&priorities='+prio.join(','); 
+        }
+        
+        return filters;
     }
     
 }

@@ -147,38 +147,40 @@ export class BasketListComponent implements OnInit {
                     this.exampleDatabase = new ResultListHttpDao(this.http, this.filtersListService);
 
                     this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
-
-                    // If the user changes the sort order, reset back to the first page.
-                    this.paginator.pageIndex = this.listProperties.page;
-                    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
-                    merge(this.sort.sortChange, this.paginator.page)
-                        .pipe(
-                            startWith({}),
-                            switchMap(() => {
-                                this.isLoadingResults = true;
-                                return this.exampleDatabase!.getRepoIssues(
-                                    this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl);
-                            }),
-                            map(data => {
-                                // Flip flag to show that loading has finished.
-                                this.isLoadingResults = false;
-                                this.resultsLength = data.count;
-
-                                return data.resources;
-                            }),
-                            catchError(() => {
-                                this.isLoadingResults = false;
-                                return observableOf([]);
-                            })
-                        ).subscribe(data => this.data = data);
+                    
+                    this.initResultList(this.filtersListService.getUrlFilters());
 
                 }, () => {
                     location.href = "index.php";
                 });
         });
+    }
 
+    initResultList(filters: string) {
+        // If the user changes the sort order, reset back to the first page.
+        this.paginator.pageIndex = this.listProperties.page;
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
+        merge(this.sort.sortChange, this.paginator.page)
+            .pipe(
+                startWith({}),
+                switchMap(() => {
+                    this.isLoadingResults = true;
+                    return this.exampleDatabase!.getRepoIssues(
+                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl, filters);
+                }),
+                map(data => {
+                    // Flip flag to show that loading has finished.
+                    this.isLoadingResults = false;
+                    this.resultsLength = data.count;
+
+                    return data.resources;
+                }),
+                catchError(() => {
+                    this.isLoadingResults = false;
+                    return observableOf([]);
+                })
+            ).subscribe(data => this.data = data);
     }
 
     goTo(row: any) {
@@ -229,16 +231,26 @@ export class BasketListComponent implements OnInit {
             });
     }
 
-    updateFilters(e: any) {
-        this.listProperties.onlyProcesLimit = false;
-        this.listProperties.onlyNewRes = false;
-        this.listProperties.withPj = false;
-        this.listProperties.withNote = false;
+    updateFiltersTool(e: any) {
+        this.listProperties.delayed = false;
+        this.listProperties.page = 0;
 
         e.value.forEach((element: any) => {
             this.listProperties[element] = true;
         });
         this.filtersListService.updateListsProperties(this.listProperties);
+        
+        this.initResultList(this.filtersListService.getUrlFilters());
+
+    }
+
+    updateFilters() {
+        this.listProperties.page = 0;
+
+        this.filtersListService.updateListsProperties(this.listProperties);
+        
+        this.initResultList(this.filtersListService.getUrlFilters());
+
     }
 }
 export interface BasketList {
@@ -251,11 +263,11 @@ export class ResultListHttpDao {
 
     constructor(private http: HttpClient, private filtersListService: FiltersListService) { }
 
-    getRepoIssues(sort: string, order: string, page: number, href: string): Observable<BasketList> {
+    getRepoIssues(sort: string, order: string, page: number, href: string, filters: string): Observable<BasketList> {
         
         this.filtersListService.updateListsPropertiesPage(page);
         let offset = page * 10;
-        const requestUrl = `${href}?limit=10&offset=${offset}`;
+        const requestUrl = `${href}?limit=10&offset=${offset}${filters}`;
 
         return this.http.get<BasketList>(requestUrl);
     }

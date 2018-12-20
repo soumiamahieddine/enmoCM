@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
@@ -27,6 +27,8 @@ export class FiltersListComponent implements OnInit {
     @ViewChild('categoriesPan') categoriesPan: MatExpansionPanel;
     @ViewChild('prioritiesPan') prioritiesPan: MatExpansionPanel;
     @ViewChild('enetitiesPan') enetitiesPan: MatExpansionPanel;
+
+    @Output() triggerEvent = new EventEmitter<string>();
 
 
     constructor(public http: HttpClient, private filtersListService: FiltersListService) { }
@@ -70,6 +72,6 @@ export class FiltersListComponent implements OnInit {
                 'label': element._text.nativeElement.innerText
             });
         });
-        this.filtersListService.updateListsProperties(this.listProperties);
+        this.triggerEvent.emit();
     }
 }
