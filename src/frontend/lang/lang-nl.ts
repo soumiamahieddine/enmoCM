@@ -737,10 +737,9 @@ export const LANG_NL = {
     "exportDatas" : "_TO_TRANSLATE",
     "settingsList" : "_TO_TRANSLATE",
     "displayProcessLimitRes" : "_TO_TRANSLATE",
-    "displayNewRes" : "_TO_TRANSLATE",
-    "displayWithAttach" : "_TO_TRANSLATE",
-    "displayWithNotes" : "_TO_TRANSLATE",
     "ascOrder" : "_TO_TRANSLATE",
     "descOrder" : "_TO_TRANSLATE",
     "currentFilters" : "_TO_TRANSLATE",
+    "host" : "_TO_TRANSLATE",
+    "filters" : "_TO_TRANSLATE",
 };

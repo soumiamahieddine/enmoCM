@@ -19,18 +19,9 @@
                     <div class="col-md-9 col-xs-9">
                         <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" (change)="updateFilters($event)" multiple>
                             <mat-checkbox color="primary" style="margin: 10px;" title="Sélectionner tous les courriers de la bannette"></mat-checkbox>
-                            <button mat-stroked-button (click)="openFilter()">Filtres</button>
+                            <button mat-stroked-button (click)="openFilter()">{{lang.filters}}</button>
                             <mat-button-toggle [checked]="this.listProperties.onlyProcesLimit" value="onlyProcesLimit" title="{{lang.displayProcessLimitRes}}">
                                 <mat-icon fontSet="fas" fontIcon="fa-stopwatch fa-2x"></mat-icon>
-                            </mat-button-toggle>
-                            <mat-button-toggle [checked]="this.listProperties.onlyNewRes"value="onlyNewRes" title="{{lang.displayNewRes}}">
-                                <mat-icon fontSet="fas" fontIcon="fa-eye-slash fa-2x"></mat-icon>
-                            </mat-button-toggle>
-                            <mat-button-toggle [checked]="this.listProperties.withPj" value="withPj" title="{{lang.displayWithAttach}}">
-                                <mat-icon fontSet="fas" fontIcon="fa-reply fa-2x"></mat-icon>
-                            </mat-button-toggle>
-                            <mat-button-toggle [checked]="this.listProperties.withNote" value="withNote" title="{{lang.displayWithNotes}}">
-                                <mat-icon fontSet="fas" fontIcon="fa-comments fa-2x"></mat-icon>
                             </mat-button-toggle>
                             <mat-form-field appearance="outline" [style.fontSize.px]="10" style="width:200px !important;">
                                 <mat-label>{{lang.orderBy}}</mat-label>
@@ -129,13 +120,13 @@
                                 </div>
                                 <mat-button-toggle-group #group="matButtonToggleGroup" class="actions" multiple>
                                     <button color="primary" mat-icon-button (click)="openBottomSheet(row)">
-                                        <mat-icon fontSet="fas" matBadge="??" fontIcon="fa-comments fa-2x"></mat-icon>
+                                        <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas" matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x"></mat-icon>
                                     </button>
                                     <button color="primary" mat-icon-button (click)="openAttachSheet(row)">
-                                        <mat-icon fontSet="fas" matBadge="??" fontIcon="fa-paperclip fa-2x"></mat-icon>
+                                        <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas" matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x"></mat-icon>
                                     </button>
                                     <button color="primary" mat-icon-button (click)="openDiffusionSheet(row)">
-                                        <mat-icon matBadgeSize="medium" fontSet="fas" fontIcon="fa-sitemap fa-2x"></mat-icon>
+                                        <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"></mat-icon>
                                     </button>
                                     <button color="primary" mat-icon-button (click)="goTo(row)">
                                         <mat-icon fontSet="fas" fontIcon="fa-eye fa-2x"></mat-icon>

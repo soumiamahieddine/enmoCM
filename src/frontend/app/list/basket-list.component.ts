@@ -102,7 +102,7 @@ export class BasketListComponent implements OnInit {
         {'id' : 'type_id'}
     ]
 
-    exampleDatabase: ExampleHttpDao | null;
+    exampleDatabase: ResultListHttpDao | null;
     data: any[] = [];
     resultsLength = 0;
     isLoadingResults = true;
@@ -136,14 +136,15 @@ export class BasketListComponent implements OnInit {
 
         this.isLoadingResults = false;
         this.route.params.subscribe(params => {
-            this.basketUrl = this.coreUrl + 'rest/resources/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
+            this.basketUrl = this.coreUrl + 'rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
             this.http.get(this.basketUrl)
                 .subscribe((data: any) => {
                     console.log(data);
+                    this.headerService.headerMessage = data.basketLabel;
                     this.filterMode = false;
                     window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                     window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
-                    this.exampleDatabase = new ExampleHttpDao(this.http, this.filtersListService);
+                    this.exampleDatabase = new ResultListHttpDao(this.http, this.filtersListService);
 
                     this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
 
@@ -246,7 +247,7 @@ export interface BasketList {
 }
 
 
-export class ExampleHttpDao {
+export class ResultListHttpDao {
 
     constructor(private http: HttpClient, private filtersListService: FiltersListService) { }
 
