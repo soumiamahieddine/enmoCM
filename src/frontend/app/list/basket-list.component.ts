@@ -45,14 +45,14 @@ export class BasketListComponent implements OnInit {
 
     displayedMainData: any = [
         {
-            'id' : 'alt_identifier',
-            'class' : 'softColorData centerData',
-            'icon' : ''
+            'id': 'alt_identifier',
+            'class': 'softColorData centerData',
+            'icon': ''
         },
         {
-            'id' : 'subject',
-            'class' : 'longData',
-            'icon' : ''
+            'id': 'subject',
+            'class': 'longData',
+            'icon': ''
         }
     ];
 
@@ -91,15 +91,15 @@ export class BasketListComponent implements OnInit {
     // ];
 
     displayColsOrder = [
-        {'id' : 'dest_user'},
-        {'id' : 'creation_date'},
-        {'id' : 'process_limit_date'},
-        {'id' : 'destination'},
-        {'id' : 'subject'},
-        {'id' : 'alt_identifier'},
-        {'id' : 'priority'},
-        {'id' : 'status'},
-        {'id' : 'type_id'}
+        { 'id': 'dest_user' },
+        { 'id': 'creation_date' },
+        { 'id': 'process_limit_date' },
+        { 'id': 'destination' },
+        { 'id': 'subject' },
+        { 'id': 'alt_identifier' },
+        { 'id': 'priority' },
+        { 'id': 'status' },
+        { 'id': 'type_id' }
     ]
 
     exampleDatabase: ResultListHttpDao | null;
@@ -139,7 +139,6 @@ export class BasketListComponent implements OnInit {
             this.basketUrl = this.coreUrl + 'rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
             this.http.get(this.basketUrl)
                 .subscribe((data: any) => {
-                    console.log(data);
                     this.headerService.headerMessage = data.basketLabel;
                     this.filterMode = false;
                     window['MainHeaderComponent'].setSnav(this.sidenavLeft);
@@ -147,7 +146,7 @@ export class BasketListComponent implements OnInit {
                     this.exampleDatabase = new ResultListHttpDao(this.http, this.filtersListService);
 
                     this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
-                    
+
                     this.initResultList(this.filtersListService.getUrlFilters());
 
                 }, () => {
@@ -224,13 +223,6 @@ export class BasketListComponent implements OnInit {
         });
     }
 
-    test () {
-        this.http.post("index.php?display=true&page=manage_action&module=core",{})
-            .subscribe((data: any) => {
-                console.log(data);
-            });
-    }
-
     updateFiltersTool(e: any) {
         this.listProperties.delayed = false;
         this.listProperties.page = 0;
@@ -239,7 +231,7 @@ export class BasketListComponent implements OnInit {
             this.listProperties[element] = true;
         });
         this.filtersListService.updateListsProperties(this.listProperties);
-        
+
         this.initResultList(this.filtersListService.getUrlFilters());
 
     }
@@ -248,7 +240,7 @@ export class BasketListComponent implements OnInit {
         this.listProperties.page = 0;
 
         this.filtersListService.updateListsProperties(this.listProperties);
-        
+
         this.initResultList(this.filtersListService.getUrlFilters());
 
     }
@@ -273,7 +265,7 @@ export class ResultListHttpDao {
     constructor(private http: HttpClient, private filtersListService: FiltersListService) { }
 
     getRepoIssues(sort: string, order: string, page: number, href: string, filters: string): Observable<BasketList> {
-        
+
         this.filtersListService.updateListsPropertiesPage(page);
         let offset = page * 10;
         const requestUrl = `${href}?limit=10&offset=${offset}${filters}`;

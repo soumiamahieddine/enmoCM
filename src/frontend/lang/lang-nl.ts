@@ -743,4 +743,6 @@ export const LANG_NL = {
     "host" : "_TO_TRANSLATE",
     "filters" : "_TO_TRANSLATE",
     "defaultOrder" : "_TO_TRANSLATE",
+    "categories" : "_TO_TRANSLATE",
+    "prioritiesAlt" : "_TO_TRANSLATE",
 };

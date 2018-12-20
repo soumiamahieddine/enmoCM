@@ -740,4 +740,6 @@ export const LANG_FR = {
     "host"                                              : "Hôte",
     "filters"                                           : "Filtres",
     "defaultOrder"                                      : "Tri(s) par défaut",
+    "categories"                                        : "Catégories",
+    "prioritiesAlt"                                     : "Priorités",
 };

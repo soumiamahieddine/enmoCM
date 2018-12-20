@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { FiltersListService } from '../../../service/filtersList.service';
-import { MatSelectionList, MatExpansionPanel } from '@angular/material';
+import { MatSelectionList, MatExpansionPanel, MatInput } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -12,7 +12,9 @@ declare var angularGlobals: any;
 @Component({
     selector: 'app-filters-list',
     templateUrl: 'filters-list.component.html',
-    providers: [NotificationService]
+    styleUrls: ['filters-list.component.scss'],
+    providers: [NotificationService],
+    encapsulation: ViewEncapsulation.None
 })
 export class FiltersListComponent implements OnInit {
 
@@ -26,7 +28,9 @@ export class FiltersListComponent implements OnInit {
 
     @ViewChild('categoriesPan') categoriesPan: MatExpansionPanel;
     @ViewChild('prioritiesPan') prioritiesPan: MatExpansionPanel;
-    @ViewChild('enetitiesPan') enetitiesPan: MatExpansionPanel;
+    @ViewChild('entitiesPan') entitiesPan: MatExpansionPanel;
+    @ViewChild('subjectPan') subjectPan: MatExpansionPanel;
+    @ViewChild('referencePan') referencePan: MatExpansionPanel;
 
     @Output() triggerEvent = new EventEmitter<string>();
 
@@ -34,6 +38,12 @@ export class FiltersListComponent implements OnInit {
     constructor(public http: HttpClient, private filtersListService: FiltersListService) { }
 
     ngOnInit(): void {
+        if (this.listProperties.reference.length > 0) {
+            this.referencePan.open();
+        }
+        if (this.listProperties.subject.length > 0) {
+            this.subjectPan.open();
+        }
         this.http.get("../../rest/priorities")
             .subscribe((data: any) => {
                 this.prioritiesList = data.priorities;
@@ -46,7 +56,6 @@ export class FiltersListComponent implements OnInit {
                         }
                     });
                 });
-                console.log(this.prioritiesList);
             });
 
         this.http.get("../../rest/categories")
@@ -61,7 +70,6 @@ export class FiltersListComponent implements OnInit {
                         }
                     });
                 });
-                console.log(this.categoriesList);
             });
     }
     updateFilters(e: MatSelectionList, id: string) {
@@ -73,5 +81,11 @@ export class FiltersListComponent implements OnInit {
             });
         });
         this.triggerEvent.emit();
+    }
+
+    setFocus(elem: MatInput) {
+        setTimeout(() => {
+            elem.focus();
+        }, 200);  
     }
 }

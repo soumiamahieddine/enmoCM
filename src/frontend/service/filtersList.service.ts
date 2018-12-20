@@ -7,6 +7,8 @@ interface listProperties {
     'page' : string,
     'order' : string,
     'orderDir' : string,
+    'reference' : string,
+    'subject' : string,
     'delayed': boolean,
     'categories' : string[],
     'priorities' : string[],
@@ -47,6 +49,8 @@ export class FiltersListService {
                 'page' : '0',
                 'order' : '',
                 'orderDir' : 'DESC',
+                'reference' : '',
+                'subject' : '',
                 'delayed': false,
                 'categories' : [],
                 'priorities' : [],
@@ -79,6 +83,12 @@ export class FiltersListService {
         }
         if (this.listsProperties[this.listsPropertiesIndex].order.length > 0) {
             filters += '&order='+this.listsProperties[this.listsPropertiesIndex].order + ' ' + this.listsProperties[this.listsPropertiesIndex].orderDir;
+        }
+        if (this.listsProperties[this.listsPropertiesIndex].reference.length > 0) {
+            filters += '&reference='+this.listsProperties[this.listsPropertiesIndex].reference;
+        }
+        if (this.listsProperties[this.listsPropertiesIndex].subject.length > 0) {
+            filters += '&subject='+this.listsProperties[this.listsPropertiesIndex].subject;
         }
         if (this.listsProperties[this.listsPropertiesIndex].categories.length > 0) {
             let cat: any[] = [];
