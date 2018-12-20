@@ -739,4 +739,5 @@ export const LANG_FR = {
     "currentFilters"                                    : "Filtre(s) actif(s)",
     "host"                                              : "Hôte",
     "filters"                                           : "Filtres",
+    "defaultOrder"                                      : "Tri(s) par défaut",
 };

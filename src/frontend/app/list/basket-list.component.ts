@@ -252,6 +252,15 @@ export class BasketListComponent implements OnInit {
         this.initResultList(this.filtersListService.getUrlFilters());
 
     }
+
+    changeOrderDir() {
+        if (this.listProperties.orderDir == 'ASC') {
+            this.listProperties.orderDir = 'DESC';
+        } else {
+            this.listProperties.orderDir = 'ASC';
+        }
+        this.updateFilters();
+    }
 }
 export interface BasketList {
     resources: any[];

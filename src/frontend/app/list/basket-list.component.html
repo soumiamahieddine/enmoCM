@@ -25,14 +25,16 @@
                             </mat-button-toggle>
                             <mat-form-field appearance="outline" [style.fontSize.px]="10" style="width:200px !important;">
                                 <mat-label>{{lang.orderBy}}</mat-label>
-                                <mat-select multiple>
+                                <mat-select [(ngModel)]="this.listProperties.order" (selectionChange)="updateFilters()">
+                                    <mat-option value="" style="text-align: center;">{{lang.defaultOrder}}</mat-option>
                                     <mat-option [value]="column.id" *ngFor="let column of displayColsOrder">
                                         {{lang[column.id]}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <button mat-icon-button title="{{lang.descOrder}}" style="color: rgba(0,0,0,0.38);">
-                                <mat-icon fontSet="fas" fontIcon="fa-sort-amount-up  fa-2x"></mat-icon>
+                            <button [disabled]="this.listProperties.order == ''" mat-icon-button title="{{lang.descOrder}}" style="color: rgba(0,0,0,0.38);" (click)="changeOrderDir();">
+                                <mat-icon *ngIf="this.listProperties.orderDir == 'DESC'" fontSet="fas" fontIcon="fa-sort-amount-up fa-2x"></mat-icon>
+                                <mat-icon *ngIf="this.listProperties.orderDir == 'ASC'" fontSet="fas" fontIcon="fa-sort-amount-down fa-2x"></mat-icon>
                             </button>
                             <button mat-icon-button [matMenuTriggerFor]="menuParamList">
                                 <mat-icon color="primary" fontSet="fas" fontIcon="fa-cog fa-2x"></mat-icon>

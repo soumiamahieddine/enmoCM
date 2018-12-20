@@ -742,4 +742,5 @@ export const LANG_NL = {
     "currentFilters" : "_TO_TRANSLATE",
     "host" : "_TO_TRANSLATE",
     "filters" : "_TO_TRANSLATE",
+    "defaultOrder" : "_TO_TRANSLATE",
 };

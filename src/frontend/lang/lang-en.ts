@@ -713,4 +713,5 @@ export const LANG_EN = {
     "currentFilters"                                    : "Current filters",
     "host"                                              : "Host",
     "filters"                                           : "Filters",
+    "defaultOrder"                                      : "Default order(s)",
 };

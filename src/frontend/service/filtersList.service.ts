@@ -5,6 +5,8 @@ interface listProperties {
     'groupId' : number,
     'basketId' : number,
     'page' : string,
+    'order' : string,
+    'orderDir' : string,
     'delayed': boolean,
     'categories' : string[],
     'priorities' : string[],
@@ -43,6 +45,8 @@ export class FiltersListService {
                 'groupId' : groupId,
                 'basketId' : basketId,
                 'page' : '0',
+                'order' : '',
+                'orderDir' : 'DESC',
                 'delayed': false,
                 'categories' : [],
                 'priorities' : [],
@@ -72,6 +76,9 @@ export class FiltersListService {
         let filters = '';
         if (this.listsProperties[this.listsPropertiesIndex].delayed) {
             filters += '&delayed=true';
+        }
+        if (this.listsProperties[this.listsPropertiesIndex].order.length > 0) {
+            filters += '&order='+this.listsProperties[this.listsPropertiesIndex].order + ' ' + this.listsProperties[this.listsPropertiesIndex].orderDir;
         }
         if (this.listsProperties[this.listsPropertiesIndex].categories.length > 0) {
             let cat: any[] = [];
