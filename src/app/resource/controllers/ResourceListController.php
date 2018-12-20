@@ -88,6 +88,14 @@ class ResourceListController
         if (!empty($data['delayed']) && $data['delayed'] == 'true') {
             $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
         }
+        if (!empty($data['reference'])) {
+            $where[] = 'alt_identifier ilike ?';
+            $queryData[] = "%{$data['reference']}%";
+        }
+        if (!empty($data['subject']) && mb_strlen($data['subject']) >= 3) {
+            $where[] = 'subject ilike ?';
+            $queryData[] = "%{$data['subject']}%";
+        }
         if (!empty($data['priorities'])) {
             $where[] = 'priority in (?)';
             $queryData[] = explode(',', $data['priorities']);
@@ -95,6 +103,10 @@ class ResourceListController
         if (!empty($data['categories'])) {
             $where[] = 'category_id in (?)';
             $queryData[] = explode(',', $data['categories']);
+        }
+        if (!empty($data['statuses'])) {
+            $where[] = 'status in (?)';
+            $queryData[] = explode(',', $data['statuses']);
         }
         if (!empty($data['entities'])) {
             $where[] = 'destination in (?)';
@@ -111,6 +123,10 @@ class ResourceListController
                 $where[] = 'destination in (?)';
                 $queryData[] = $entitiesChildren;
             }
+        }
+
+        if (!empty($data['order']) && strpos($data['order'], 'alt_identifier') !== false) {
+            $data['order'] = 'order_alphanum(alt_identifier) ' . explode(' ', $data['order'])[1];
         }
 
         $rawResources = ResModel::getOnView([
