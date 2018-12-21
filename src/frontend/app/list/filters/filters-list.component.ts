@@ -7,8 +7,6 @@ import { MatSelectionList, MatExpansionPanel, MatInput } from '@angular/material
 
 declare function $j(selector: any): any;
 
-declare var angularGlobals: any;
-
 @Component({
     selector: 'app-filters-list',
     templateUrl: 'filters-list.component.html',
@@ -18,12 +16,13 @@ declare var angularGlobals: any;
 })
 export class FiltersListComponent implements OnInit {
 
-    coreUrl: string;
     lang: any = LANG;
     prioritiesList: any[] = [];
     categoriesList: any[] = [];
     entitiesList: any[] = [];
     statusesList: any[] = [];
+
+    loading: boolean = true;
 
     @Input('listProperties') listProperties: any;
 
@@ -58,37 +57,39 @@ export class FiltersListComponent implements OnInit {
                         }
                     });
                 });
-            });
 
-        this.http.get("../../rest/categories")
-            .subscribe((data: any) => {
-                this.categoriesList = data.categories;
-                this.categoriesList.forEach(element => {
-                    element.selected = false;
-                    this.listProperties.categories.forEach((listPropertyCat: any) => {
-                        if (element.id === listPropertyCat.id) {
-                            element.selected = true;
-                            this.categoriesPan.open();
-                        }
-                    });
-                });
-            });
+                this.http.get("../../rest/categories")
+                    .subscribe((data: any) => {
+                        this.categoriesList = data.categories;
+                        this.categoriesList.forEach(element => {
+                            element.selected = false;
+                            this.listProperties.categories.forEach((listPropertyCat: any) => {
+                                if (element.id === listPropertyCat.id) {
+                                    element.selected = true;
+                                    this.categoriesPan.open();
+                                }
+                            });
+                        });
 
-        this.http.get("../../rest/statuses")
-            .subscribe((data: any) => {
-                console.log(data);
-                this.statusesList = data.statuses;
-                this.statusesList.forEach(element => {
-                    element.selected = false;
-                    this.listProperties.statuses.forEach((listPropertyStatus: any) => {
-                        if (element.id === listPropertyStatus.id) {
-                            element.selected = true;
-                            this.statusesPan.open();
-                        }
+                        this.http.get("../../rest/statuses")
+                            .subscribe((data: any) => {
+                                console.log(data);
+                                this.statusesList = data.statuses;
+                                this.statusesList.forEach(element => {
+                                    element.selected = false;
+                                    this.listProperties.statuses.forEach((listPropertyStatus: any) => {
+                                        if (element.id === listPropertyStatus.id) {
+                                            element.selected = true;
+                                            this.statusesPan.open();
+                                        }
+                                    });
+                                });
+                                this.loading = false;
+                            });
                     });
-                });
             });
     }
+
     updateFilters(e: MatSelectionList, id: string) {
         this.listProperties[id] = [];
         e.selectedOptions.selected.forEach(element => {
