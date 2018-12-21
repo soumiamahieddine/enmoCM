@@ -212,10 +212,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     //Third, contacts groups
     if ($_REQUEST['multiContact'] == "true") {
         $contactRequest = "lower(translate(label,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE lower(translate('%".$_REQUEST['Input']."%','ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))";
-        $id = \User\models\UserModel::getByUserId([
-            'userId' => $_SESSION['user']['UserId'],
-            'select' => ['id']
-        ]);
+        $id = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
         $contactsGroups = \Contact\models\ContactGroupModel::get([
             'where' => [$contactRequest, '(public IS TRUE OR ? = owner)'],
             'orderBy' => ['label ASC'],

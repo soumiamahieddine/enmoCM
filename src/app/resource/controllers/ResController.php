@@ -527,13 +527,24 @@ class ResController
             }
         }
 
-        $baskets = BasketModel::getBasketsByUserId(['userId' => $aArgs['userId'], 'unneededBasketId' => ['IndexingBasket']]);
+        $baskets = BasketModel::getBasketsByLogin(['login' => $aArgs['userId'], 'unneededBasketId' => ['IndexingBasket']]);
         $basketsClause = '';
-        foreach ($baskets as $key => $basket) {
+        foreach ($baskets as $basket) {
             if (!empty($basket['basket_clause'])) {
-                $user = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
-                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-                if ($key > 0) {
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $aArgs['userId']]);
+                if (!empty($basketsClause)) {
+                    $basketsClause .= ' or ';
+                }
+                $basketsClause .= "({$basketClause})";
+            }
+        }
+        $user = UserModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['id']]);
+        $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
+        foreach ($assignedBaskets as $basket) {
+            if (!empty($basket['basket_clause'])) {
+                $basketOwner = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $basketOwner['user_id']]);
+                if (!empty($basketsClause)) {
                     $basketsClause .= ' or ';
                 }
                 $basketsClause .= "({$basketClause})";

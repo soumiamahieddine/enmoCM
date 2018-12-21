@@ -101,7 +101,7 @@ class EntityController
             if ($listTemplate['object_type'] == 'entity_id' && !empty($listTemplate['item_id'])) {
                 $entity['listTemplate']['id'] = $listTemplate['id'];
                 if ($listTemplate['item_type'] == 'user_id') {
-                    $statusUser = UserModel::getByUserId(['select' => ['status', 'firstname', 'lastname'], 'userId' => $listTemplate['item_id']]);
+                    $statusUser = UserModel::getByLogin(['select' => ['status', 'firstname', 'lastname'], 'login' => $listTemplate['item_id']]);
                     if ($statusUser['status'] != 'DEL') {
                         $entity['listTemplate'][$listTemplate['item_mode']][] = [
                             'item_type'             => $listTemplate['item_type'],
@@ -191,7 +191,7 @@ class EntityController
         ]);
 
         if (empty($data['parent_entity_id']) && $GLOBALS['userId'] != 'superadmin') {
-            $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+            $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
             $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']]);
             $pEntity = 'N';
             if (empty($primaryEntity)) {
@@ -267,7 +267,7 @@ class EntityController
         if (empty($data['parent_entity_id']) && $GLOBALS['userId'] != 'superadmin') {
             $hasEntity = UserEntityModel::get(['select' => [1], 'where' => ['user_id = ?', 'entity_id = ?'], 'data' => [$GLOBALS['userId'], $aArgs['id']]]);
             if (empty($hasEntity)) {
-                $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+                $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
                 $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']]);
                 $pEntity = 'N';
                 if (empty($primaryEntity)) {

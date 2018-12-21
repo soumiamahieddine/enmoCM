@@ -49,7 +49,7 @@ class ResourceListController
                 return $response->withStatus(403)->withJson(['errors' => 'Basket out of perimeter (redirected)']);
             }
         } else {
-            $currentUser = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+            $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
             $redirectedBasket = RedirectBasketModel::get([
                 'select'    => ['actual_user_id'],
                 'where'     => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],

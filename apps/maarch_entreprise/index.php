@@ -329,7 +329,7 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
         exit();
     }
     chdir('../..');
-    $user = \User\models\UserModel::getByUserId(['userId' => $cookie['userId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
+    $user = \User\models\UserModel::getByLogin(['login' => $cookie['userId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
 
     //HTML CONTENT OF ANGULAR
     echo \SrcCore\models\CoreConfigModel::initAngularStructure();

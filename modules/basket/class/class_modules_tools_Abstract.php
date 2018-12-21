@@ -103,7 +103,7 @@ abstract class basket_Abstract extends Database
         $_SESSION['user']['baskets'] = [];
 
         $this->_loadBasketsPages();
-        $user = \User\models\UserModel::getByUserId(['userId' => $userData['UserId'], 'select' => ['id']]);
+        $user = \User\models\UserModel::getByLogin(['login' => $userData['UserId'], 'select' => ['id']]);
 
         if (isset($userData['primarygroup']) && isset($userData['UserId'])) {
             $db = new Database();
@@ -288,7 +288,7 @@ abstract class basket_Abstract extends Database
 
     public function load_basket_abs($userId)
     {
-        $user = \User\models\UserModel::getByUserId(['userId' => $userId, 'select' => ['id']]);
+        $user = \User\models\UserModel::getByLogin(['login' => $userId, 'select' => ['id']]);
 
         $redirectedBaskets = \Basket\models\RedirectBasketModel::get(['select' => ['id', 'basket_id', 'owner_user_id'], 'where' => ['actual_user_id = ?'], 'data' => [$user['id']]]);
 

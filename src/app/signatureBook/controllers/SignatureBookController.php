@@ -79,7 +79,7 @@ class SignatureBookController
             'data'      => [$aArgs['resId'], ['visa', 'sign']]
         ]);
 
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
         $datas = [];
         $datas['actions']               = $actions;
@@ -111,7 +111,7 @@ class SignatureBookController
         AttachmentModel::unsignAttachment(['table' => $data['table'], 'resId' => $aArgs['resId']]);
 
         $isVersion = ($data['table'] == 'res_attachments' ? 'false' : 'true');
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
             $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => ($data['table'] == 'res_attachments'), 'select' => ['res_id_master']]);
             ListInstanceModel::update([

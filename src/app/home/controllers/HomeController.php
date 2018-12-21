@@ -29,7 +29,7 @@ class HomeController
     {
         $regroupedBaskets = [];
 
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $homeMessage = ParameterModel::getById(['select' => ['param_value_string'], 'id'=> 'homepage_message']);
         $homeMessage = trim($homeMessage['param_value_string']);
 

@@ -682,7 +682,7 @@ class UserControllerTest extends TestCase
         $aArgs = [];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $user = \User\models\UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $response     = $userController->resetPassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
@@ -796,7 +796,7 @@ class UserControllerTest extends TestCase
             ]
         ];
 
-        $user_id = \User\models\UserModel::getByUserId(['userId' => 'bbain', 'select' => ['id']]);
+        $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
@@ -848,7 +848,7 @@ class UserControllerTest extends TestCase
 //                'basketOwner'   =>  'bbain',
 //        ];
 //
-        $user_id = \User\models\UserModel::getByUserId(['userId' => 'bbain', 'select' => ['id']]);
+        $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
 //        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 //        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'MyBasket']);
 //        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'EenvBasket']);

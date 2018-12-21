@@ -324,14 +324,13 @@ abstract class BasketModelAbstract
         return $aResList;
     }
 
-    public static function getBasketsByUserId(array $aArgs)
+    public static function getBasketsByLogin(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['login']);
+        ValidatorModel::stringType($aArgs, ['login']);
         ValidatorModel::arrayType($aArgs, ['unneededBasketId']);
-        ValidatorModel::boolType($aArgs, ['absenceUneeded']);
 
-        $userGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
+        $userGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['login']]);
         $groupIds = [];
         foreach ($userGroups as $value) {
             $groupIds[] = $value['group_id'];
@@ -353,7 +352,7 @@ abstract class BasketModelAbstract
                     'order_by'  => ['groupbasket.group_id, basket_order, basket_name']
             ]);
 
-            $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
+            $user = UserModel::getByLogin(['login' => $aArgs['login'], 'select' => ['id']]);
             $userPrefs = UserBasketPreferenceModel::get([
                 'select'    => ['group_serial_id', 'basket_id'],
                 'where'     => ['user_serial_id = ?'],
@@ -378,9 +377,6 @@ abstract class BasketModelAbstract
                     }
                 }
             }
-            if (empty($aArgs['absenceUneeded'])) {
-                $aBaskets = array_merge($aBaskets, RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]));
-            }
         }
 
         return $aBaskets;
@@ -393,7 +389,7 @@ abstract class BasketModelAbstract
 
         $regroupedBaskets = [];
 
-        $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
+        $user = UserModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['id']]);
 
         $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
         foreach ($groups as $group) {

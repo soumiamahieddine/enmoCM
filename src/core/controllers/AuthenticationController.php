@@ -46,7 +46,7 @@ class AuthenticationController
         ValidatorModel::stringType($aArgs, ['userId', 'currentRoute']);
 
         if ($aArgs['currentRoute'] != '/initialize') {
-            $user = UserModel::getByUserId(['select' => ['status', 'change_password'], 'userId' => $aArgs['userId']]);
+            $user = UserModel::getByLogin(['select' => ['status', 'change_password'], 'login' => $aArgs['userId']]);
 
             if ($user['status'] == 'ABS' && $aArgs['currentRoute'] != "/users/{id}/status") {
                 return ['isRouteAvailable' => false, 'errors' => 'User is ABS and must be activated'];
@@ -84,7 +84,7 @@ class AuthenticationController
         $passwordRules = PasswordModel::getEnabledRules();
 
         if (!empty($passwordRules['lockAttempts'])) {
-            $user = UserModel::getByUserId(['select' => ['failed_authentication', 'locked_until'], 'userId' => $aArgs['userId']]);
+            $user = UserModel::getByLogin(['select' => ['failed_authentication', 'locked_until'], 'login' => $aArgs['userId']]);
 
             if (!empty($user)) {
                 if (!empty($user['locked_until'])) {

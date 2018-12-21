@@ -215,7 +215,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
             <select name="baskets" id="baskets" onchange="cleanSessionBasket('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=cleanSessionBasket','ok');" class="listext_big" >
                 <option value=""><?php echo _CHOOSE_BASKET;?></option>
                 <?php
-                $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+                $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
                 $redirectedBaskets = \Basket\models\RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
     for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {
         $redirectedTo = "";

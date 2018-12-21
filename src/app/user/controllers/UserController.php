@@ -115,7 +115,7 @@ class UserController
         $user['allGroups']          = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities']           = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities']        = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
-        $user['baskets']            = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['history']            = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
@@ -149,7 +149,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['id', 'status']]);
+        $existingUser = UserModel::getByLogin(['login' => $data['userId'], 'select' => ['id', 'status']]);
         if (!empty($existingUser) && $existingUser['status'] == 'DEL') {
             UserModel::updateStatus(['id' => $existingUser['id'], 'status' => 'OK']);
             $data['enabled'] = 'Y';
@@ -167,7 +167,7 @@ class UserController
 
         UserModel::create(['user' => $data]);
 
-        $newUser = UserModel::getByUserId(['userId' => $data['userId']]);
+        $newUser = UserModel::getByLogin(['login' => $data['userId']]);
         if (!Validator::intType()->notEmpty()->validate($newUser['id'])) {
             return $response->withStatus(500)->withJson(['errors' => 'User Creation Error']);
         }
@@ -256,12 +256,12 @@ class UserController
 
     public function getProfile(Request $request, Response $response)
     {
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
         $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups']             = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities']           = UserModel::getEntitiesById(['userId' => $user['user_id']]);
-        $user['baskets']            = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['regroupedBaskets']   = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
@@ -278,7 +278,7 @@ class UserController
 
     public function updateProfile(Request $request, Response $response)
     {
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'enabled']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'enabled']]);
 
         $data = $request->getParams();
 
@@ -319,7 +319,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
         if ($data['newPassword'] != $data['reNewPassword']) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
@@ -400,7 +400,7 @@ class UserController
 
         return $response->withJson([
             'redirectedBaskets' => RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $aArgs['id']]),
-            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
+            'baskets'           => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
@@ -428,7 +428,7 @@ class UserController
         ]);
 
         return $response->withJson([
-            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
+            'baskets'   => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
@@ -438,7 +438,7 @@ class UserController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['status']]);
+        $user = UserModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['status']]);
 
         return $response->withJson(['status' => $user['status']]);
     }
@@ -709,7 +709,7 @@ class UserController
 
         return $response->withJson([
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
+            'baskets'   => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
@@ -760,6 +760,10 @@ class UserController
             'where' => ['user_serial_id = ?', 'group_serial_id = ?'],
             'data'  => [$aArgs['id'], $group['id']]
         ]);
+        RedirectBasketModel::delete([
+            'where' => ['owner_user_id = ?', 'group_id = ?'],
+            'data'  => [$aArgs['id'], $group['id']]
+        ]);
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         HistoryController::add([
@@ -772,8 +776,9 @@ class UserController
         ]);
 
         return $response->withJson([
-            'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
+            'groups'            => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
+            'baskets'           => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]),
+            'redirectedBaskets' => RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $aArgs['id']]),
         ]);
     }
 
@@ -1066,7 +1071,7 @@ class UserController
     {
         $data = $request->getParams();
 
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
         if (isset($data['color']) && $data['color'] == '') {
             UserBasketPreferenceModel::update([

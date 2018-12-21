@@ -182,7 +182,7 @@ if (!empty($_SESSION['error'])) {
                     if (empty($res['error'])) {
                         \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
                         \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
-                        $user = \User\models\UserModel::getByUserId(['userId' => $login, 'select' => ['id']]);
+                        $user = \User\models\UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
                         $core->load_menu($_SESSION['modules']);
                         header(
                             'location: ' . $_SESSION['config']['businessappurl']
