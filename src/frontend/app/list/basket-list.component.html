@@ -80,19 +80,19 @@
                                     </ng-container>
                                 </div>
                                 <mat-button-toggle-group #group="matButtonToggleGroup" class="actions" multiple>
-                                    <button color="primary" mat-icon-button (click)="openBottomSheet(row)">
+                                    <button color="primary" mat-icon-button title="{{lang.notes}}" (click)="openBottomSheet(row)">
                                         <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas" matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button (click)="openAttachSheet(row)">
+                                    <button color="primary" mat-icon-button title="{{lang.attachments}}" (click)="openAttachSheet(row)">
                                         <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas" matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button (click)="openDiffusionSheet(row)">
+                                    <button color="primary" mat-icon-button title="{{lang.diffusionList}}" (click)="openDiffusionSheet(row)">
                                         <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button (click)="goTo(row)">
+                                    <button color="primary" mat-icon-button title="{{lang.view}}" (click)="goTo(row)">
                                         <mat-icon fontSet="fas" fontIcon="fa-eye fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button (click)="goToDetail(row);">
+                                    <button color="primary" mat-icon-button title="{{lang.linkDetails}}" (click)="goToDetail(row);">
                                         <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
                                     </button>
                                 </mat-button-toggle-group>
