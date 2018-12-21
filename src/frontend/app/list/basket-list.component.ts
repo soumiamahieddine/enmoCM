@@ -99,6 +99,7 @@ export class BasketListComponent implements OnInit {
     resultsLength = 0;
     isLoadingResults = true;
     listProperties: any = {};
+    currentBasketInfo: any = {};
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
@@ -130,6 +131,11 @@ export class BasketListComponent implements OnInit {
             this.basketUrl = this.coreUrl + 'rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
             this.http.get(this.basketUrl)
                 .subscribe((data: any) => {
+                    this.currentBasketInfo = {
+                        ownerId: params['userSerialId'],
+                        groupId: params['groupSerialId'],
+                        basketId: params['basketId']
+                    };
                     this.headerService.headerMessage = data.basketLabel;
                     this.filtersListService.filterMode = false;
                     window['MainHeaderComponent'].setSnav(this.sidenavLeft);

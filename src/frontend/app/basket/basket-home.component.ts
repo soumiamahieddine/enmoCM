@@ -10,6 +10,7 @@ declare var angularGlobals : any;
 @Component({
     selector: 'basket-home',
     templateUrl: "basket-home.component.html",
+    styleUrls: ['basket-home.component.scss'],
 })
 export class BasketHomeComponent implements OnInit {
 
@@ -18,6 +19,11 @@ export class BasketHomeComponent implements OnInit {
     mobileMode                      : boolean   = false;
     
     @Input() homeData: any;
+    @Input('currentBasketInfo') currentBasketInfo: any = {
+        ownerId: 0,
+        groupId: 0,
+        basketId: ''
+    };
     @Input() snavL: MatSidenav;
 
     constructor(public http: HttpClient) {
@@ -26,7 +32,6 @@ export class BasketHomeComponent implements OnInit {
 
     ngOnInit(): void {        
         this.coreUrl = angularGlobals.coreUrl;
-        console.log(this.homeData);
     }
 
     goTo(basketId:any, groupId:any) {

@@ -39,7 +39,7 @@
                         {{basket.basket_name}}<br/><small color="primary">({{lang.redirectedTo}} {{basket.redirectedUser}})</small>
                     </p>
                 </a>
-                <a mat-list-item *ngIf="!basket.redirected" (click)="closePanelLeft();" routerLink="/basketList/users/{{basket.owner_user_id}}/groups/{{regroupedBasket.groupSerialId}}/baskets/{{basket.basket_id}}" style="cursor:pointer;" [ngStyle]="{'opacity': basket.resourceNumber==0 ? '0.5' : '1', 'height': mobileMode ? '50px' : '38px'}">
+                <a mat-list-item [ngClass]="{'selectedBasket': currentBasketInfo.basketId==basket.basket_id && currentBasketInfo.ownerId==basket.owner_user_id && currentBasketInfo.groupId==regroupedBasket.groupSerialId}" *ngIf="!basket.redirected" (click)="closePanelLeft();" routerLink="/basketList/users/{{basket.owner_user_id}}/groups/{{regroupedBasket.groupSerialId}}/baskets/{{basket.basket_id}}" style="cursor:pointer;" [ngStyle]="{'opacity': basket.resourceNumber==0 ? '0.5' : '1', 'height': mobileMode ? '50px' : '38px'}">
                     <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="!mobileMode" mat-list-icon class="fa fa-inbox"></mat-icon>
                     <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                     <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
@@ -63,7 +63,7 @@
                 </p>
             </a> -->
             <!-- TODO NEW BASKET LIST-->
-            <a mat-list-item *ngFor="let basket of homeData.assignedBaskets | filterList:listFilter.value:'basket_name'" routerLink="/basketList/users/{{basket.owner_user_id}}/groups/{{basket.group_id}}/baskets/{{basket.basket_id}}">
+            <a mat-list-item *ngFor="let basket of homeData.assignedBaskets | filterList:listFilter.value:'basket_name'" [ngClass]="{'selectedBasket': currentBasketInfo.basketId==basket.basket_id && currentBasketInfo.ownerId==basket.owner_user_id && currentBasketInfo.groupId==basket.group_id}" routerLink="/basketList/users/{{basket.owner_user_id}}/groups/{{basket.group_id}}/baskets/{{basket.basket_id}}">
                 <mat-icon *ngIf="!mobileMode" style="color:#666" mat-list-icon class="fa fa-inbox"></mat-icon>
                 <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                 <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
