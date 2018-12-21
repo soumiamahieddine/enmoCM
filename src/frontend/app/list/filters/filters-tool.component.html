@@ -13,10 +13,10 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <button [disabled]="this.listProperties.order == ''" mat-icon-button title="{{lang.descOrder}}" style="color: rgba(0,0,0,0.38);"
+    <button [disabled]="this.listProperties.order == ''" mat-icon-button [title]="this.listProperties.orderDir == 'DESC' ? lang.descOrder : lang.ascOrder" style="color: rgba(0,0,0,0.38);"
         (click)="changeOrderDir();">
-        <mat-icon *ngIf="this.listProperties.orderDir == 'DESC'" fontSet="fas" fontIcon="fa-sort-amount-up fa-2x"></mat-icon>
-        <mat-icon *ngIf="this.listProperties.orderDir == 'ASC'" fontSet="fas" fontIcon="fa-sort-amount-down fa-2x"></mat-icon>
+        <mat-icon *ngIf="this.listProperties.orderDir == 'DESC'" fontSet="fas" fontIcon="fa-sort-amount-down fa-2x"></mat-icon>
+        <mat-icon *ngIf="this.listProperties.orderDir == 'ASC'" fontSet="fas" fontIcon="fa-sort-amount-up fa-2x"></mat-icon>
     </button>
     <button mat-icon-button [matMenuTriggerFor]="menuParamList">
         <mat-icon color="primary" fontSet="fas" fontIcon="fa-cog fa-2x"></mat-icon>
