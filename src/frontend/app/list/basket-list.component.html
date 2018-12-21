@@ -106,7 +106,7 @@
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 mode="over" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'
-            [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;" [class.docView]="!filterMode" [ngStyle]="{'width': mobileMode ? '80%' : '40%'}" autoFocus="false">
+            [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode" [ngStyle]="{'width': mobileMode ? '80%' : '40%'}" autoFocus="false">
             <div *ngIf="innerHtml && !filtersListService.filterMode" [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div>
 
             <app-filters-list *ngIf="filtersListService.filterMode" [listProperties]="this.listProperties" (refreshEvent)="refreshDao()"></app-filters-list>
