@@ -24,6 +24,7 @@
             <file>test/unitTests/app/priority/PriorityControllerTest.php</file>
             <file>test/unitTests/app/report/ReportControllerTest.php</file>
             <file>test/unitTests/app/resource/ResControllerTest.php</file>
+            <file>test/unitTests/app/resource/ResourceListControllerTest.php</file>
             <file>test/unitTests/app/status/StatusControllerTest.php</file>
             <file>test/unitTests/app/user/UserControllerTest.php</file>
             <file>test/unitTests/app/versionUpdate/VersionUpdateControllerTest.php</file>

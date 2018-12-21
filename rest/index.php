@@ -246,6 +246,7 @@ $app->get('/categories', \Resource\controllers\ResController::class . ':getCateg
 $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
 
+//ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupSerialId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
 
 //Attachments
