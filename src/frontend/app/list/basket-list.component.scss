@@ -2,13 +2,6 @@
     overflow: hidden;
 }
 
-mat-toolbar {
-    border: solid 1px #F9983066;
-    font-size: 10px;
-    height: 20px;
-    color: #666;
-}
-
 .resultContainer {
     // color : rgb(102, 102, 102);
     padding: 10px;
@@ -63,19 +56,6 @@ mat-toolbar {
     }
 }
 
-.envFilter {
-    height: 40px;
-
-    mat-icon{
-        height: auto;
-    }
-
-    .mat-button-toggle-checked {
-        background-color: #F99830;
-        color: white;
-    }
-}
-
 .checkThis {
     width: 40px;
     text-align: center;
@@ -119,10 +99,4 @@ mat-toolbar {
 
 .longData {
     flex: 3;
-}
-
-.filterBadges>.label {
-    margin: 5px;
-    background: #F99830;
-    cursor: pointer;
 }

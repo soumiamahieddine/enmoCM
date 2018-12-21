@@ -37,7 +37,6 @@ export class BasketListComponent implements OnInit {
     basketUrl: string;
     homeData: any;
 
-    filterMode: boolean = false;
     filtersChange = new EventEmitter();
     
     @ViewChild('snav') sidenavLeft: MatSidenav;
@@ -92,25 +91,12 @@ export class BasketListComponent implements OnInit {
     //     },
     // ];
 
-    displayColsOrder = [
-        { 'id': 'dest_user' },
-        { 'id': 'creation_date' },
-        { 'id': 'process_limit_date' },
-        { 'id': 'destination' },
-        { 'id': 'subject' },
-        { 'id': 'alt_identifier' },
-        { 'id': 'priority' },
-        { 'id': 'status' },
-        { 'id': 'type_id' }
-    ]
-
     exampleDatabase: ResultListHttpDao | null;
     data: any[] = [];
     resultsLength = 0;
     isLoadingResults = true;
     listProperties: any = {};
     listPropertiesIndex: number = 0;
-    filters: string = '';
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
@@ -143,13 +129,12 @@ export class BasketListComponent implements OnInit {
             this.http.get(this.basketUrl)
                 .subscribe((data: any) => {
                     this.headerService.headerMessage = data.basketLabel;
-                    this.filterMode = false;
+                    this.filtersListService.filterMode = false;
                     window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                     window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
                     
 
                     this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
-                    this.filters = this.filtersListService.getUrlFilters();
                     this.initResultList();
 
                 }, () => {
@@ -171,7 +156,7 @@ export class BasketListComponent implements OnInit {
                 switchMap(() => {
                     this.isLoadingResults = true;
                     return this.exampleDatabase!.getRepoIssues(
-                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl, this.filters);
+                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl, this.filtersListService.getUrlFilters());
                 }),
                 map(data => {
                     // Flip flag to show that loading has finished.
@@ -188,7 +173,7 @@ export class BasketListComponent implements OnInit {
     }
 
     goTo(row: any) {
-        this.filterMode = false;
+        this.filtersListService.filterMode = false;
         if (this.docUrl == this.coreUrl + 'rest/res/' + row.res_id + '/content' && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
@@ -198,11 +183,6 @@ export class BasketListComponent implements OnInit {
                 "</iframe>");
             this.sidenavRight.open();
         }
-    }
-
-    openFilter() {
-        this.filterMode = true;
-        this.sidenavRight.open();
     }
 
     goToDetail(row: any) {
@@ -228,38 +208,8 @@ export class BasketListComponent implements OnInit {
         });
     }
 
-    updateFiltersTool(e: any) {
-        this.listProperties.delayed = false;
-        this.listProperties.page = 0;
-
-        e.value.forEach((element: any) => {
-            this.listProperties[element] = true;
-        });
-        this.filtersListService.updateListsProperties(this.listProperties);
-
-        this.filters = this.filtersListService.getUrlFilters();
-
+    refreshDao() {
         this.filtersChange.emit();
-
-    }
-
-    updateFilters() {
-        this.listProperties.page = 0;
-
-        this.filtersListService.updateListsProperties(this.listProperties);
-        this.filters = this.filtersListService.getUrlFilters();
-
-        this.filtersChange.emit();
-
-    }
-
-    changeOrderDir() {
-        if (this.listProperties.orderDir == 'ASC') {
-            this.listProperties.orderDir = 'DESC';
-        } else {
-            this.listProperties.orderDir = 'ASC';
-        }
-        this.updateFilters();
     }
 }
 export interface BasketList {

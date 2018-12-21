@@ -21,6 +21,7 @@ export class FiltersListService {
 
     listsProperties: any[] = [];
     listsPropertiesIndex: number = 0;
+    filterMode: boolean = false;
 
     constructor() {
         this.listsProperties = JSON.parse(sessionStorage.getItem('propertyList'));

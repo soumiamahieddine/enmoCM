@@ -37,7 +37,7 @@ export class FiltersListComponent implements OnInit {
     @ViewChild('referencePan') referencePan: MatExpansionPanel;
     @ViewChild('statusesPan') statusesPan: MatExpansionPanel;
 
-    @Output() triggerEvent = new EventEmitter<string>();
+    @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
 
 
     constructor(public http: HttpClient, private filtersListService: FiltersListService) { }
@@ -108,7 +108,7 @@ export class FiltersListComponent implements OnInit {
             });
     }
 
-    updateFilters(e: MatSelectionList, id: string) {
+    setFilters(e: MatSelectionList, id: string) {
         this.listProperties[id] = [];
         e.selectedOptions.selected.forEach(element => {
             this.listProperties[id].push({
@@ -116,7 +116,15 @@ export class FiltersListComponent implements OnInit {
                 'label': element._text.nativeElement.innerText
             });
         });
-        this.triggerEvent.emit();
+        this.updateFilters();
+    }
+
+    updateFilters() {
+        this.listProperties.page = 0;
+
+        this.filtersListService.updateListsProperties(this.listProperties);
+
+        this.refreshEvent.emit();
     }
 
     setFocus(elem: MatInput) {

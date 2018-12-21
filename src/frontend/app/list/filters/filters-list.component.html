@@ -13,10 +13,10 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-form-field appearance="outline">
-                <input #reference matInput [(ngModel)]="this.listProperties.reference" (keyup.enter)="this.triggerEvent.emit();"
+                <input #reference matInput [(ngModel)]="this.listProperties.reference" (keyup.enter)="this.updateFilters();"
                     placeholder="3 {{lang.passwordminLength}}">
                 <button mat-button *ngIf="this.listProperties.reference" matSuffix mat-icon-button aria-label="Clear"
-                    (click)="this.listProperties.reference='';this.triggerEvent.emit();">
+                    (click)="this.listProperties.reference='';this.updateFilters();">
                     <mat-icon color="primary" fontSet="fas" fontIcon="fa-times"></mat-icon>
                 </button>
             </mat-form-field>
@@ -30,10 +30,10 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-form-field appearance="outline">
-                <input #subject matInput [(ngModel)]="this.listProperties.subject" (keyup.enter)="this.triggerEvent.emit();"
+                <input #subject matInput [(ngModel)]="this.listProperties.subject" (keyup.enter)="this.updateFilters();"
                     placeholder="3 {{lang.passwordminLength}}">
                 <button mat-button *ngIf="this.listProperties.subject" matSuffix mat-icon-button aria-label="Clear"
-                    (click)="this.listProperties.subject='';this.triggerEvent.emit();">
+                    (click)="this.listProperties.subject='';this.updateFilters();">
                     <mat-icon color="primary" fontSet="fas" fontIcon="fa-times"></mat-icon>
                 </button>
             </mat-form-field>
@@ -46,7 +46,7 @@
                 <mat-panel-description>
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <mat-selection-list #categories (selectionChange)="updateFilters(categories, 'categories')">
+            <mat-selection-list #categories (selectionChange)="setFilters(categories, 'categories')">
                 <mat-list-option checkboxPosition="before" color="primary" [value]="category.id" *ngFor="let category of categoriesList"
                     [selected]="category.selected">
                     {{category.label}}
@@ -61,7 +61,7 @@
                 <mat-panel-description>
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <mat-selection-list #priorities (selectionChange)="updateFilters(priorities, 'priorities')">
+            <mat-selection-list #priorities (selectionChange)="setFilters(priorities, 'priorities')">
                 <mat-list-option checkboxPosition="before" color="primary" [value]="priority.id" *ngFor="let priority of prioritiesList"
                     [selected]="priority.selected">
                     {{priority.label}}
@@ -79,7 +79,7 @@
             <mat-form-field floatLabel="never">
                 <input matInput placeholder="Filtrer" #listFilter>
             </mat-form-field>
-            <mat-selection-list #statuses (selectionChange)="updateFilters(statuses, 'statuses')">
+            <mat-selection-list #statuses (selectionChange)="setFilters(statuses, 'statuses')">
                 <mat-list-option checkboxPosition="before" color="primary" [value]="status.id" *ngFor="let status of statusesList | filterList:listFilter.value:'label_status'"
                     [selected]="status.selected">
                     {{status.label_status}}
@@ -95,7 +95,7 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             Coming soon...
-            <mat-selection-list #entities (selectionChange)="updateFilters(entities, 'entities')">
+            <mat-selection-list #entities (selectionChange)="setFilters(entities, 'entities')">
                 <mat-list-option checkboxPosition="before" color="primary" [value]="entity.id" *ngFor="let entity of entitiesList"
                     [selected]="entity.selected">
                     {{entity.label}}

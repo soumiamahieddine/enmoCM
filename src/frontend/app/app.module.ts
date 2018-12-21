@@ -23,6 +23,7 @@ import { ActivateUserComponent }                from './activate-user.component'
 
 
 import { FiltersListComponent }                from './list/filters/filters-list.component';
+import { FiltersToolComponent }                from './list/filters/filters-tool.component';
 
 @NgModule({
     imports: [
@@ -47,7 +48,8 @@ import { FiltersListComponent }                from './list/filters/filters-list
         BottomSheetNoteList,
         BottomSheetAttachmentList,
         BottomSheetDiffusionList,
-        FiltersListComponent
+        FiltersListComponent,
+        FiltersToolComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
