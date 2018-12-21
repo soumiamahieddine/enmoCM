@@ -15,15 +15,20 @@ import { AdministrationModule }                 from './administration/administr
 import { ProfileComponent }                     from './profile.component';
 import { AboutUsComponent }                     from './about-us.component';
 import { HomeComponent }                        from './home.component';
-import { BasketListComponent, BottomSheetNoteList, BottomSheetAttachmentList, BottomSheetDiffusionList }  from './list/basket-list.component';
+import { BasketListComponent }                  from './list/basket-list.component';
 import { PasswordModificationComponent, InfoChangePasswordModalComponent, }        from './password-modification.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
 import { ActivateUserComponent }                from './activate-user.component';
 
+import { FiltersListComponent }                 from './list/filters/filters-list.component';
+import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
 
-import { FiltersListComponent }                from './list/filters/filters-list.component';
-import { FiltersToolComponent }                from './list/filters/filters-tool.component';
+import { NotesListComponent }                   from './notes/notes.component';
+import { AttachmentsListComponent }             from './attachments/attachments-list.component';
+import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
+
+
 
 @NgModule({
     imports: [
@@ -45,9 +50,9 @@ import { FiltersToolComponent }                from './list/filters/filters-tool
         ConfirmModalComponent,
         InfoChangePasswordModalComponent,
         ActivateUserComponent,
-        BottomSheetNoteList,
-        BottomSheetAttachmentList,
-        BottomSheetDiffusionList,
+        NotesListComponent,
+        AttachmentsListComponent,
+        DiffusionsListComponent,
         FiltersListComponent,
         FiltersToolComponent
     ],
@@ -55,9 +60,9 @@ import { FiltersToolComponent }                from './list/filters/filters-tool
         CustomSnackbarComponent,
         ConfirmModalComponent,
         InfoChangePasswordModalComponent,
-        BottomSheetNoteList,
-        BottomSheetAttachmentList,
-        BottomSheetDiffusionList
+        NotesListComponent,
+        AttachmentsListComponent,
+        DiffusionsListComponent
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]
