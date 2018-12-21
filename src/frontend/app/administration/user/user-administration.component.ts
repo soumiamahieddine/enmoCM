@@ -258,7 +258,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", groupReq)
                 .subscribe((data: any) => {
                     this.user.groups = data.groups;
-                    //this.user.allGroups = data.allGroups;
                     this.user.baskets = data.baskets;
                     this.notify.success(this.lang.groupAdded);
                 }, (err) => {
@@ -268,8 +267,8 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
                 .subscribe((data: any) => {
                     this.user.groups = data.groups;
-                    //this.user.allGroups = data.allGroups;
                     this.user.baskets = data.baskets;
+                    this.user.redirectedBaskets = data.redirectedBaskets;
                     this.notify.success(this.lang.groupDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);

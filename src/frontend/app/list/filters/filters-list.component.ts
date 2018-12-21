@@ -18,11 +18,15 @@ export class FiltersListComponent implements OnInit {
 
     lang: any = LANG;
     prioritiesList: any[] = [];
+    inPrioritiesProperty = false;
     categoriesList: any[] = [];
+    inCategoriesProperty = false;
     entitiesList: any[] = [];
+    inEntitiesProperty = false;
     statusesList: any[] = [];
+    inStatusesProperty = false;
 
-    loading: boolean = true;
+    loading: boolean = false;
 
     @Input('listProperties') listProperties: any;
 
@@ -39,12 +43,7 @@ export class FiltersListComponent implements OnInit {
     constructor(public http: HttpClient, private filtersListService: FiltersListService) { }
 
     ngOnInit(): void {
-        if (this.listProperties.reference.length > 0) {
-            this.referencePan.open();
-        }
-        if (this.listProperties.subject.length > 0) {
-            this.subjectPan.open();
-        }
+        this.loading = true;
         this.http.get("../../rest/priorities")
             .subscribe((data: any) => {
                 this.prioritiesList = data.priorities;
@@ -53,7 +52,7 @@ export class FiltersListComponent implements OnInit {
                     this.listProperties.priorities.forEach((listPropertyPrio: any) => {
                         if (element.id === listPropertyPrio.id) {
                             element.selected = true;
-                            this.prioritiesPan.open();
+                            this.inPrioritiesProperty = true;
                         }
                     });
                 });
@@ -66,25 +65,44 @@ export class FiltersListComponent implements OnInit {
                             this.listProperties.categories.forEach((listPropertyCat: any) => {
                                 if (element.id === listPropertyCat.id) {
                                     element.selected = true;
-                                    this.categoriesPan.open();
+                                    this.inCategoriesProperty = true;
                                 }
                             });
                         });
 
                         this.http.get("../../rest/statuses")
                             .subscribe((data: any) => {
-                                console.log(data);
                                 this.statusesList = data.statuses;
                                 this.statusesList.forEach(element => {
                                     element.selected = false;
                                     this.listProperties.statuses.forEach((listPropertyStatus: any) => {
                                         if (element.id === listPropertyStatus.id) {
                                             element.selected = true;
-                                            this.statusesPan.open();
+                                            this.inStatusesProperty = true;   
                                         }
                                     });
                                 });
+
                                 this.loading = false;
+
+                                setTimeout(() => {
+                                    if (this.listProperties.reference.length > 0) {
+                                        this.referencePan.open();
+                                    }
+                                    if (this.listProperties.subject.length > 0) {
+                                        this.subjectPan.open();
+                                    }
+                                    if (this.inPrioritiesProperty) {
+                                        this.prioritiesPan.open();
+                                    }
+                                    if (this.inCategoriesProperty) {
+                                        this.categoriesPan.open();
+                                    }
+                                    if (this.inStatusesProperty) {
+                                        this.statusesPan.open();
+                                    }
+                                }, 200);
+                                
                             });
                     });
             });

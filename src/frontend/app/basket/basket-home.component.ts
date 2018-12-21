@@ -26,6 +26,7 @@ export class BasketHomeComponent implements OnInit {
 
     ngOnInit(): void {        
         this.coreUrl = angularGlobals.coreUrl;
+        console.log(this.homeData);
     }
 
     goTo(basketId:any, groupId:any) {
