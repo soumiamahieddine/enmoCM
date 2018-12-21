@@ -12,7 +12,8 @@ interface listProperties {
     'delayed': boolean,
     'categories' : string[],
     'priorities' : string[],
-    'entities' : string[]
+    'entities' : string[],
+    'statuses' : string[]
 }
 
 @Injectable()
@@ -55,6 +56,7 @@ export class FiltersListService {
                 'categories' : [],
                 'priorities' : [],
                 'entities' : [],
+                'statuses' : [],
             };
             this.listsProperties.push(listProperties);
             this.saveListsProperties();
@@ -105,6 +107,14 @@ export class FiltersListService {
             });
 
             filters += '&priorities='+prio.join(','); 
+        }
+        if (this.listsProperties[this.listsPropertiesIndex].statuses.length > 0) {
+            let status: any[] = [];
+            this.listsProperties[this.listsPropertiesIndex].statuses.forEach((element: any) => {
+                status.push(element.id);
+            });
+
+            filters += '&statuses='+status.join(','); 
         }
         
         return filters;

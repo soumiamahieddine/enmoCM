@@ -1,4 +1,4 @@
-<mat-nav-list disableRipple="true">
+<mat-nav-list disableRipple="true" class="filterList">
     <h3 mat-subheader>{{lang.filterBy}}</h3>
     <mat-expansion-panel #referencePan (opened)="setFocus(reference)">
         <mat-expansion-panel-header>
@@ -9,8 +9,7 @@
             </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-form-field appearance="outline">
-
-            <input #reference matInput [(ngModel)]="this.listProperties.reference" (keyup.enter)="this.triggerEvent.emit();" (blur)="this.triggerEvent.emit();" placeholder="3 {{lang.passwordminLength}}">
+            <input #reference matInput [(ngModel)]="this.listProperties.reference" (keyup.enter)="this.triggerEvent.emit();" placeholder="3 {{lang.passwordminLength}}">
             <button mat-button *ngIf="this.listProperties.reference" matSuffix mat-icon-button aria-label="Clear"
                 (click)="this.listProperties.reference='';this.triggerEvent.emit();">
                 <mat-icon color="primary" fontSet="fas" fontIcon="fa-times"></mat-icon>
@@ -26,7 +25,7 @@
             </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-form-field appearance="outline">
-            <input #subject matInput [(ngModel)]="this.listProperties.subject" (keyup.enter)="this.triggerEvent.emit();" (blur)="this.triggerEvent.emit();" placeholder="3 {{lang.passwordminLength}}">
+            <input #subject matInput [(ngModel)]="this.listProperties.subject" (keyup.enter)="this.triggerEvent.emit();" placeholder="3 {{lang.passwordminLength}}">
             <button mat-button *ngIf="this.listProperties.subject" matSuffix mat-icon-button aria-label="Clear" (click)="this.listProperties.subject='';this.triggerEvent.emit();">
                 <mat-icon color="primary" fontSet="fas" fontIcon="fa-times"></mat-icon>
             </button>
@@ -59,6 +58,24 @@
             <mat-list-option checkboxPosition="before" color="primary" [value]="priority.id" *ngFor="let priority of prioritiesList"
                 [selected]="priority.selected">
                 {{priority.label}}
+            </mat-list-option>
+        </mat-selection-list>
+    </mat-expansion-panel>
+    <mat-expansion-panel #statusesPan>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{lang.statuses}}
+            </mat-panel-title>
+            <mat-panel-description>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-form-field floatLabel="never">
+            <input matInput placeholder="Filtrer" #listFilter>
+        </mat-form-field>
+        <mat-selection-list #statuses (selectionChange)="updateFilters(statuses, 'statuses')">
+            <mat-list-option checkboxPosition="before" color="primary" [value]="status.id" *ngFor="let status of statusesList | filterList:listFilter.value:'label_status'"
+                [selected]="status.selected">
+                {{status.label_status}}
             </mat-list-option>
         </mat-selection-list>
     </mat-expansion-panel>

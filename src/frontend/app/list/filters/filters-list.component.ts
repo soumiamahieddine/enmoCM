@@ -23,6 +23,7 @@ export class FiltersListComponent implements OnInit {
     prioritiesList: any[] = [];
     categoriesList: any[] = [];
     entitiesList: any[] = [];
+    statusesList: any[] = [];
 
     @Input('listProperties') listProperties: any;
 
@@ -31,6 +32,7 @@ export class FiltersListComponent implements OnInit {
     @ViewChild('entitiesPan') entitiesPan: MatExpansionPanel;
     @ViewChild('subjectPan') subjectPan: MatExpansionPanel;
     @ViewChild('referencePan') referencePan: MatExpansionPanel;
+    @ViewChild('statusesPan') statusesPan: MatExpansionPanel;
 
     @Output() triggerEvent = new EventEmitter<string>();
 
@@ -71,12 +73,27 @@ export class FiltersListComponent implements OnInit {
                     });
                 });
             });
+
+        this.http.get("../../rest/statuses")
+            .subscribe((data: any) => {
+                console.log(data);
+                this.statusesList = data.statuses;
+                this.statusesList.forEach(element => {
+                    element.selected = false;
+                    this.listProperties.statuses.forEach((listPropertyStatus: any) => {
+                        if (element.id === listPropertyStatus.id) {
+                            element.selected = true;
+                            this.statusesPan.open();
+                        }
+                    });
+                });
+            });
     }
     updateFilters(e: MatSelectionList, id: string) {
         this.listProperties[id] = [];
         e.selectedOptions.selected.forEach(element => {
             this.listProperties[id].push({
-                'id' : element.value,
+                'id': element.value,
                 'label': element._text.nativeElement.innerText
             });
         });
@@ -86,6 +103,6 @@ export class FiltersListComponent implements OnInit {
     setFocus(elem: MatInput) {
         setTimeout(() => {
             elem.focus();
-        }, 200);  
+        }, 200);
     }
 }
