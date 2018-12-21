@@ -422,4 +422,16 @@
     <enabled>true</enabled>
     <angular>true</angular>
   </SERVICE>
+  <SERVICE>
+    <id>admin_sendmail</id>
+    <name>_SENDMAIL_PARAM</name>
+    <comment>_SENDMAIL_PARAM_DESC</comment>
+    <servicepage>/administration/sendmail</servicepage>
+    <servicetype>admin</servicetype>
+    <category>supervision</category>
+    <system_service>false</system_service>
+    <style>fas fa-mail-bulk</style>
+    <enabled>true</enabled>
+    <angular>true</angular>
+  </SERVICE>
 </root>
