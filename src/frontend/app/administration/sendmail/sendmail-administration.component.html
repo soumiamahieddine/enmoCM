@@ -1,0 +1,36 @@
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-sidenav-container autosize class="admin-sidenav-container" >
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <menu-shortcut></menu-shortcut>
+            <menu-nav></menu-nav>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading" class="card-app-content">
+                <mat-tab-group>
+                    <mat-tab label="{{lang.informations}}">
+                        <form (ngSubmit)="onSubmit()" #passwordForm="ngForm">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <mat-form-field>
+                                        <input matInput placeholder="{{lang.host}}">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-center" style="padding:10px;">
+                                <button mat-raised-button type="submit" color="primary">{{lang.validate}}</button>
+                                <button mat-raised-button type="button" color="default" (click)="cancelModification()">{{lang.cancel}}</button>
+                            </div>
+                        </form>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;max-width:500px;">
+        </mat-sidenav>
+    </mat-sidenav-container>
+</div>
