@@ -25,22 +25,22 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupSerialId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('int', $responseBody->count);
         $this->assertNotNull( $responseBody->basketLabel);
 
         //  ERRORS
-        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupSerialId' => 777, 'basketId' => 'MyBasket']);
+        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 777, 'basketId' => 'MyBasket']);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Group or basket does not exist', $responseBody->errors);
 
-        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupSerialId' => 2, 'basketId' => 'basketNoExist777']);
+        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'basketNoExist777']);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Group or basket does not exist', $responseBody->errors);
 
-        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 777, 'groupSerialId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 777, 'groupId' => 2, 'basketId' => 'MyBasket']);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Basket out of perimeter', $responseBody->errors);
 
