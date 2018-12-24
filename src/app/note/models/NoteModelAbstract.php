@@ -68,22 +68,26 @@ abstract class NoteModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['identifier', 'tablename', 'user_id', 'coll_id', 'note_text']);
+        //ValidatorModel::notEmpty($aArgs, ['identifier', 'tablename', 'user_id', 'coll_id', 'note_text']);
+        ValidatorModel::notEmpty($aArgs, ['identifier', 'user_id', 'note_text']);
         ValidatorModel::intVal($aArgs, ['identifier']);
+
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'notes_seq']);
 
         DatabaseModel::insert([
             'table' => 'notes',
             'columnsValues' => [
+                'id'         => $nextSequenceId,
                 'identifier' => $aArgs['identifier'],
-                'tablename'  => $aArgs['tablename'],
+                'tablename'  => 'res_letterbox',        //$aArgs['tablename'],
                 'user_id'    => $aArgs['user_id'],
                 'date_note'  => 'CURRENT_TIMESTAMP',
                 'note_text'  => $aArgs['note_text'],
-                'coll_id'    => $aArgs['coll_id'],
+                'coll_id'    => 'letterbox_coll'        //$aArgs['coll_id'],
             ]
         ]);
 
-        return true;
+        return $nextSequenceId;
     }
 
     public static function getByResId(array $aArgs = [])

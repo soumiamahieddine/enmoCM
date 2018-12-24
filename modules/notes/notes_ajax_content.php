@@ -234,6 +234,9 @@ switch ($mode) {
     case 'added':
         if (strlen(trim($_REQUEST['notes'])) > 0) {
             //Identifier?
+
+            // var_dump($_REQUEST, $_SESSION, $table );
+            // exit;
             if (empty($identifier)) {
                 $error = $request->wash_html(_IDENTIFIER.' '._IS_EMPTY.'!','NONE');
                 $status = 1;

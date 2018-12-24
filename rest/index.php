@@ -201,6 +201,7 @@ $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplat
 
 //Notes
 $app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
+$app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
