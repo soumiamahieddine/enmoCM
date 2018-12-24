@@ -14,6 +14,6 @@
 
 namespace Note\models;
 
-class NoteEntitieModel extends NoteEntitieModelAbstract
+class NoteEntityModel extends NoteEntityModelAbstract
 {
 }

@@ -68,7 +68,6 @@ abstract class NoteModelAbstract
 
     public static function create(array $aArgs)
     {
-        //ValidatorModel::notEmpty($aArgs, ['identifier', 'tablename', 'user_id', 'coll_id', 'note_text']);
         ValidatorModel::notEmpty($aArgs, ['identifier', 'user_id', 'note_text']);
         ValidatorModel::intVal($aArgs, ['identifier']);
 
@@ -79,11 +78,11 @@ abstract class NoteModelAbstract
             'columnsValues' => [
                 'id'         => $nextSequenceId,
                 'identifier' => $aArgs['identifier'],
-                'tablename'  => 'res_letterbox',        //$aArgs['tablename'],
+                'tablename'  => 'res_letterbox',
                 'user_id'    => $aArgs['user_id'],
                 'date_note'  => 'CURRENT_TIMESTAMP',
                 'note_text'  => $aArgs['note_text'],
-                'coll_id'    => 'letterbox_coll'        //$aArgs['coll_id'],
+                'coll_id'    => 'letterbox_coll'
             ]
         ]);
 

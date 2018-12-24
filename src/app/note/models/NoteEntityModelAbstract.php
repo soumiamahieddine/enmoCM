@@ -17,7 +17,7 @@ namespace Note\models;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-abstract class NoteEntitieModelAbstract
+abstract class NoteEntityModelAbstract
 {
     public static function create(array $aArgs)
     {
@@ -25,17 +25,12 @@ abstract class NoteEntitieModelAbstract
         ValidatorModel::intVal($aArgs, ['note_id']);
         ValidatorModel::stringType($aArgs, ['item_id']);
 
-        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'notes_entities_id_seq']);
-
         DatabaseModel::insert([
             'table' => 'note_entities',
             'columnsValues' => [
-                'id'        => $nextSequenceId,
                 'note_id'   => $aArgs['note_id'],
                 'item_id'   => $aArgs['item_id']
             ]
         ]);
-
-        return $nextSequenceId;
     }
 }
