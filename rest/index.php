@@ -247,7 +247,8 @@ $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures'
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
 
 //ResourcesList
-$app->get('/resourcesList/users/{userId}/groups/{groupSerialId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/entities', \Resource\controllers\ResourceListController::class . ':getEntities');
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');

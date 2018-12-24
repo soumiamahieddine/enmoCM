@@ -26,56 +26,22 @@ use Resource\models\ResourceListModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
 class ResourceListController
 {
     public function get(Request $request, Response $response, array $aArgs)
     {
-        $group = GroupModel::getById(['id' => $aArgs['groupSerialId'], 'select' => ['group_id']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
-        if (empty($group) || empty($basket)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
-        }
-
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
-        if ($user['user_id'] == $GLOBALS['userId']) {
-            $redirectedBasket = RedirectBasketModel::get([
-                'select'    => [1],
-                'where'     => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],
-                'data'      => [$aArgs['userId'], $aArgs['basketId'], $aArgs['groupSerialId']]
-            ]);
-            if (!empty($redirectedBasket[0])) {
-                return $response->withStatus(403)->withJson(['errors' => 'Basket out of perimeter (redirected)']);
-            }
-        } else {
-            $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-            $redirectedBasket = RedirectBasketModel::get([
-                'select'    => ['actual_user_id'],
-                'where'     => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],
-                'data'      => [$aArgs['userId'], $aArgs['basketId'], $aArgs['groupSerialId']]
-            ]);
-            if (empty($redirectedBasket[0]) || $redirectedBasket[0]['actual_user_id'] != $currentUser['id']) {
-                return $response->withStatus(403)->withJson(['errors' => 'Basket out of perimeter']);
-            }
-        }
-
-        $groups = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
-        $groupFound = false;
-        foreach ($groups as $value) {
-            if ($value['id'] == $aArgs['groupSerialId']) {
-                $groupFound = true;
-            }
-        }
-        if (!$groupFound) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this user']);
-        }
-
-        $isBasketLinked = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$aArgs['basketId'], $group['group_id']]]);
-        if (empty($isBasketLinked)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this basket']);
-        }
-        //END OF CONTROL
 
         $data = $request->getQueryParams();
         $data['offset'] = (empty($data['offset']) || !is_numeric($data['offset']) ? 0 : $data['offset']);
@@ -144,7 +110,6 @@ class ResourceListController
         }
 
         $resources = [];
-        $entities = [];
         if (!empty($resIds)) {
             $attachments = AttachmentModel::getOnView([
                 'select'    => ['COUNT(res_id)', 'res_id_master'],
@@ -164,23 +129,92 @@ class ResourceListController
                 }
                 $resources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $GLOBALS['userId']]);
             }
+        }
 
-            $rawEntities = ResModel::getOnView([
-                'select'    => ['count(res_id)', 'destination'],
-                'where'     => [$whereClause],
-                'groupBy'   => ['destination']
+        return $response->withJson(['resources' => $resources, 'count' => $count, 'basketLabel' => $basket['basket_name']]);
+    }
+
+    public function getEntities(Request $request, Response $response, array $aArgs)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause']]);
+        $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $rawEntities = ResModel::getOnView([
+            'select'    => ['count(res_id)', 'destination'],
+            'where'     => [$whereClause],
+            'groupBy'   => ['destination']
+        ]);
+
+        $entities = [];
+        foreach ($rawEntities as $key => $value) {
+            $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
+            $entities[] = [
+                'entityid'  => $value['destination'],
+                'label'     => $entity['entity_label'],
+                'count'     => $value['count']
+            ];
+        }
+
+        return $response->withJson(['entities' => $entities]);
+    }
+
+    private static function listControl(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['groupId', 'userId', 'basketId', 'currentUserId']);
+        ValidatorModel::intVal($aArgs, ['groupId', 'userId', 'currentUserId']);
+        ValidatorModel::stringType($aArgs, ['basketId']);
+
+        $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
+        if (empty($group) || empty($basket)) {
+            return ['errors' => 'Group or basket does not exist', 'code' => 400];
+        }
+
+        if ($aArgs['userId'] == $aArgs['currentUserId']) {
+            $redirectedBasket = RedirectBasketModel::get([
+                'select'    => [1],
+                'where'     => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],
+                'data'      => [$aArgs['userId'], $aArgs['basketId'], $aArgs['groupId']]
             ]);
-
-            foreach ($rawEntities as $key => $value) {
-                $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
-                $entities[] = [
-                    'entityid'  => $value['destination'],
-                    'label'     => $entity['entity_label'],
-                    'count'     => $value['count']
-                ];
+            if (!empty($redirectedBasket[0])) {
+                return ['errors' => 'Basket out of perimeter (redirected)', 'code' => 403];
+            }
+        } else {
+            $redirectedBasket = RedirectBasketModel::get([
+                'select'    => ['actual_user_id'],
+                'where'     => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],
+                'data'      => [$aArgs['userId'], $aArgs['basketId'], $aArgs['groupId']]
+            ]);
+            if (empty($redirectedBasket[0]) || $redirectedBasket[0]['actual_user_id'] != $aArgs['currentUserId']) {
+                return ['errors' => 'Basket out of perimeter', 'code' => 403];
             }
         }
 
-        return $response->withJson(['resources' => $resources, 'count' => $count, 'entities' => $entities, 'basketLabel' => $basket['basket_name']]);
+        $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+        $groups = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+        $groupFound = false;
+        foreach ($groups as $value) {
+            if ($value['id'] == $aArgs['groupId']) {
+                $groupFound = true;
+            }
+        }
+        if (!$groupFound) {
+            return ['errors' => 'Group is not linked to this user', 'code' => 400];
+        }
+
+        $isBasketLinked = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$aArgs['basketId'], $group['group_id']]]);
+        if (empty($isBasketLinked)) {
+            return ['errors' => 'Group is not linked to this basket', 'code' => 400];
+        }
+
+        return ['success' => 'success'];
     }
 }
