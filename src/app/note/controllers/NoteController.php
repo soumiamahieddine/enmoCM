@@ -43,8 +43,11 @@ class NoteController
         //Insert note in notes table and recover last insert ID
         $check = Validator::stringType()->notEmpty()->validate($data['note_text']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['identifier']); //correspond to res_id
-        $check = $check && Validator::stringType()->notEmpty()->validate($GLOBALS['userId']);
-        $check = $check && Validator::arrayType()->validate($data['entities_chosen']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['user_id']);
+
+        if(isset($data['entities_chosen'])) {
+            $check = $check && Validator::arrayType()->validate($data['entities_chosen']);
+        }
         
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
@@ -53,11 +56,11 @@ class NoteController
         $data['note_id'] = NoteModel::create($data);
     
         //Insert relation note with entities in note_entities_table
-        if (!empty($data['note_id']) && isset($data['entities_chosen']) && !empty($data['entities_chosen'])) {
+        if (!empty($data['note_id']) && !empty($data['entities_chosen'])) {
             foreach($data['entities_chosen'] as $entity) {  
                 $entity = NoteEntityModel::create( ['item_id' => $entity, 'note_id' => $data['note_id'] ]);
             }
-        }      
+        }
 
         //Insert in history
         HistoryController::add( [
@@ -70,6 +73,6 @@ class NoteController
             'eventId'   => 'noteadd']
         );
 
-        return ['success' => 'success'];
+        return $response->withJson(['noteId' => $data['note_id']]);
     }
 }
