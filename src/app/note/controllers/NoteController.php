@@ -37,13 +37,13 @@ class NoteController
         return $response->withJson($aNotes);
     }
 
-    public function create(Request $request, Response $response)
+    public function create(Request $request, Response $response, $aArgs)
     {
         $data = $request->getParams();
 
         //Check data
         $check = Validator::stringType()->notEmpty()->validate($data['note_text']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['identifier']); //correspond to res_id
+        $check = $check && Validator::intVal()->notEmpty()->validate($aArgs['resId']); //correspond to res_id
         $check = $check && Validator::stringType()->notEmpty()->validate($GLOBALS['userId']);
         
         if (isset($data['entities_chosen'])) {
@@ -54,9 +54,11 @@ class NoteController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => $data['identifier'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
+        
+        $data['identifier'] = $aArgs['resId'];
         
         //Insert note in notes table and recover last insert ID
         $noteId = NoteModel::create($data);

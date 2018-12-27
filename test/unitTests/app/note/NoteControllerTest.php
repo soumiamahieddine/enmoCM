@@ -23,7 +23,7 @@ class NoteControllerTest extends TestCase
             'limit'     => 1,
         ]);
 
-        $resID = $getResId[0]['res_id'];
+        $resID['resId'] = $getResId[0]['res_id'];
         $noteController = new \Note\controllers\NoteController();
 
         // CREATE WITH ALL DATA -> OK
@@ -32,13 +32,12 @@ class NoteControllerTest extends TestCase
 
         $aArgs = [
             'note_text'         => "Test d'ajout d'une note par php unit",
-            'identifier'        => $resID,
             'entities_chosen'   => ['COU', 'CAB']
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $noteController->create($fullRequest, new \Slim\Http\Response());
+        $response     = $noteController->create($fullRequest, new \Slim\Http\Response(), $resID);
         $responseBody = json_decode((string)$response->getBody());
 
         self::$noteId = $responseBody->noteId;
@@ -73,7 +72,7 @@ class NoteControllerTest extends TestCase
         $this->assertSame(self::$noteId, $responseBody['id']);
         $this->assertSame($GLOBALS['userId'], $responseBody['user_id']);
         $this->assertSame("Test d'ajout d'une note par php unit", $responseBody['note_text']);
-        $this->assertSame($resID, $responseBody['identifier']);
+        $this->assertSame($resID['resId'], $responseBody['identifier']);
         $this->assertInternalType('array', $responseBody['entities']);
         $this->assertSame('COU', $responseBody['entities'][0]);
         $this->assertSame('CAB', $responseBody['entities'][1]);
@@ -84,13 +83,12 @@ class NoteControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'note_text'         => "Test d'ajout d'une note par php unit",
-            'identifier'        => $resID,
+            'note_text'         => "Test d'ajout d'une note par php unit"
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $noteController->create($fullRequest, new \Slim\Http\Response());
+        $response     = $noteController->create($fullRequest, new \Slim\Http\Response(), $resID);
         $responseBody = json_decode((string)$response->getBody());
 
         self::$noteId = $responseBody->noteId;
@@ -125,22 +123,21 @@ class NoteControllerTest extends TestCase
         $this->assertSame(self::$noteId, $responseBody['id']);
         $this->assertSame($GLOBALS['userId'], $responseBody['user_id']);
         $this->assertSame("Test d'ajout d'une note par php unit", $responseBody['note_text']);
-        $this->assertSame($resID, $responseBody['identifier']);
+        $this->assertSame($resID['resId'], $responseBody['identifier']);
         $this->assertInternalType('string', $responseBody['entities']);
         $this->assertSame('', $responseBody['entities']);
 
-        // CREATE WITH A REQUERY MISSING DATA -> NOT OK
+        // CREATE WITH NOTE_TEXT MISSING -> NOT OK
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'identifier'        => $resID,
             'entities_chosen' => ["COU", "CAB"]
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $noteController->create($fullRequest, new \Slim\Http\Response());
+        $response     = $noteController->create($fullRequest, new \Slim\Http\Response(), $resID);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Bad Request', $responseBody->errors);
