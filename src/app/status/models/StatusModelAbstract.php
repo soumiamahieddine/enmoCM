@@ -44,7 +44,11 @@ abstract class StatusModelAbstract
             'data'      => [$aArgs['id']]
         ]);
 
-        return $aReturn;
+        if (empty($aReturn[0])) {
+            return [];
+        }
+
+        return $aReturn[0];
     }
 
     public static function getByIdentifier(array $aArgs)

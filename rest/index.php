@@ -249,7 +249,7 @@ $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::c
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
-$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/entities', \Resource\controllers\ResourceListController::class . ':getEntities');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/filters', \Resource\controllers\ResourceListController::class . ':getFilters');
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');

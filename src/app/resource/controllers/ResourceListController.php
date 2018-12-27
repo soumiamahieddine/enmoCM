@@ -21,12 +21,14 @@ use Basket\models\RedirectBasketModel;
 use Entity\models\EntityModel;
 use Group\models\GroupModel;
 use Note\models\NoteModel;
+use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceListModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
+use Status\models\StatusModel;
 use User\models\UserModel;
 
 class ResourceListController
@@ -54,13 +56,10 @@ class ResourceListController
         if (!empty($data['delayed']) && $data['delayed'] == 'true') {
             $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
         }
-        if (!empty($data['reference'])) {
-            $where[] = 'alt_identifier ilike ?';
-            $queryData[] = "%{$data['reference']}%";
-        }
-        if (!empty($data['subject']) && mb_strlen($data['subject']) >= 3) {
-            $where[] = 'subject ilike ?';
-            $queryData[] = "%{$data['subject']}%";
+        if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
+            $where[] = '(alt_identifier ilike ? OR subject ilike ?)';
+            $queryData[] = "%{$data['search']}%";
+            $queryData[] = "%{$data['search']}%";
         }
         if (!empty($data['priorities'])) {
             $where[] = 'priority in (?)';
@@ -134,7 +133,7 @@ class ResourceListController
         return $response->withJson(['resources' => $resources, 'count' => $count, 'basketLabel' => $basket['basket_name']]);
     }
 
-    public function getEntities(Request $request, Response $response, array $aArgs)
+    public function getFilters(Request $request, Response $response, array $aArgs)
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
@@ -145,15 +144,14 @@ class ResourceListController
 
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause']]);
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
-
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        
+        $entities = [];
         $rawEntities = ResModel::getOnView([
             'select'    => ['count(res_id)', 'destination'],
             'where'     => [$whereClause],
             'groupBy'   => ['destination']
         ]);
-
-        $entities = [];
         foreach ($rawEntities as $key => $value) {
             $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
             $entities[] = [
@@ -163,7 +161,56 @@ class ResourceListController
             ];
         }
 
-        return $response->withJson(['entities' => $entities]);
+        $priorities = [];
+        $rawPriorities = ResModel::getOnView([
+            'select'    => ['count(res_id)', 'priority'],
+            'where'     => [$whereClause],
+            'groupBy'   => ['priority']
+        ]);
+        foreach ($rawPriorities as $key => $value) {
+            $priority = PriorityModel::getById(['select' => ['label'], 'id' => $value['priority']]);
+            $priorities[] = [
+                'id'        => $value['priority'],
+                'label'     => $priority['label'],
+                'count'     => $value['count']
+            ];
+        }
+
+        $categories = [];
+        $allCategories = ResModel::getCategories();
+        $rawCategories = ResModel::getOnView([
+            'select'    => ['count(res_id)', 'category_id'],
+            'where'     => [$whereClause],
+            'groupBy'   => ['category_id']
+        ]);
+        foreach ($rawCategories as $key => $value) {
+            foreach ($allCategories as $category) {
+                if ($value['category_id'] == $category['id']) {
+                    $categories[] = [
+                        'id'        => $value['category_id'],
+                        'label'     => $category['label'],
+                        'count'     => $value['count']
+                    ];
+                }
+            }
+        }
+
+        $statuses = [];
+        $rawStatuses = ResModel::getOnView([
+            'select'    => ['count(res_id)', 'status'],
+            'where'     => [$whereClause],
+            'groupBy'   => ['status']
+        ]);
+        foreach ($rawStatuses as $key => $value) {
+            $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
+            $statuses[] = [
+                'id'        => $value['status'],
+                'label'     => $status['label_status'],
+                'count'     => $value['count']
+            ];
+        }
+
+        return $response->withJson(['entities' => $entities, 'priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses]);
     }
 
     private static function listControl(array $aArgs)
