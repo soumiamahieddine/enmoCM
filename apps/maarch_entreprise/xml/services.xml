@@ -423,7 +423,7 @@
     <angular>true</angular>
   </SERVICE>
   <SERVICE>
-    <id>admin_sendmail</id>
+    <id>admin_technical_configuration</id>
     <name>_SENDMAIL_PARAM</name>
     <comment>_SENDMAIL_PARAM_DESC</comment>
     <servicepage>/administration/sendmail</servicepage>

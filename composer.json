@@ -5,6 +5,7 @@
             "Action\\"            : "src/app/action/",
             "Attachment\\"        : "src/app/attachment/",
             "Basket\\"            : "src/app/basket/",
+            "Configuration\\"     : "src/app/configuration/",
             "Contact\\"           : "src/app/contact/",
             "ContentManagement\\" : "src/app/contentManagement/",
             "Convert\\"           : "src/app/convert/",
@@ -27,7 +28,6 @@
             "Template\\"          : "src/app/template/",
             "User\\"              : "src/app/user/",
             "VersionUpdate\\"     : "src/app/versionUpdate/",
-
             "Sendmail\\"          : "modules/sendmail/"
     	}
     },

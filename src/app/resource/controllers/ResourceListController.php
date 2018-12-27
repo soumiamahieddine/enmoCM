@@ -187,12 +187,14 @@ class ResourceListController
             'groupBy'   => ['destination']
         ]);
         foreach ($rawEntities as $key => $value) {
-            $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
-            $entities[] = [
-                'entityId'  => $value['destination'],
-                'label'     => $entity['entity_label'],
-                'count'     => $value['count']
-            ];
+            if (!empty($value['destination'])) {
+                $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
+                $entities[] = [
+                    'entityId'  => $value['destination'],
+                    'label'     => $entity['entity_label'],
+                    'count'     => $value['count']
+                ];
+            }
         }
 
         $priorities = [];
@@ -241,12 +243,14 @@ class ResourceListController
             'groupBy'   => ['status']
         ]);
         foreach ($rawStatuses as $key => $value) {
-            $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
-            $statuses[] = [
-                'id'        => $value['status'],
-                'label'     => $status['label_status'],
-                'count'     => $value['count']
-            ];
+            if (!empty($value['status'])) {
+                $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
+                $statuses[] = [
+                    'id'        => $value['status'],
+                    'label'     => $status['label_status'],
+                    'count'     => $value['count']
+                ];
+            }
         }
 
         return $response->withJson(['entities' => $entities, 'priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses]);

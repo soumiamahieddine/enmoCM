@@ -113,6 +113,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
             'Convert\\' => 8,
             'ContentManagement\\' => 18,
             'Contact\\' => 8,
+            'Configuration\\' => 14,
             'Clue\\StreamFilter\\' => 18,
         ),
         'B' => 
@@ -311,6 +312,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Contact\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/contact',
+        ),
+        'Configuration\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/configuration',
         ),
         'Clue\\StreamFilter\\' => 
         array (
