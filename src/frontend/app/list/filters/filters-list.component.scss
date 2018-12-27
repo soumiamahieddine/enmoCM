@@ -2,12 +2,21 @@
     top : 10px !important;
 } 
 
-.mat-expansion-panel-header-title {
+.filterList .mat-subheader {
     color: #F99830;
     font-size: 14px;
     font-weight: 500;
 }
 
-.mat-pseudo-checkbox-checked {
-    background: #135f7f;
+.filterList .mat-button-toggle-group {
+    max-width: 100%;
+    overflow: auto;
+}
+.mat-button-toggle-checked {
+    background-color: #F99830;
+    color: white;
+}
+
+.filterListButton {
+    width: 100%;
 }

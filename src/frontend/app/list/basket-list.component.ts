@@ -14,6 +14,7 @@ import { FiltersListService } from '../../service/filtersList.service';
 import { NotesListComponent } from '../notes/notes.component';
 import { AttachmentsListComponent } from '../attachments/attachments-list.component';
 import { DiffusionsListComponent } from '../diffusions/diffusions-list.component';
+import { FiltersToolComponent } from './filters/filters-tool.component';
 
 
 
@@ -60,39 +61,39 @@ export class BasketListComponent implements OnInit {
         }
     ];
 
-    displayedSecondaryData: any = [];
-    // displayedSecondaryData: any = [
-    //     {
-    //         'id' : 'priority_label',
-    //         'class' : '',
-    //         'icon' : ''
-    //     },
-    //     {
-    //         'id' : 'category_id',
-    //         'class' : '',
-    //         'icon' : ''
-    //     },
-    //     {
-    //         'id' : 'doctype_label',
-    //         'class' : '',
-    //         'icon' : 'fa fa-file'
-    //     },
-    //     {
-    //         'id' : 'contact_society',
-    //         'class' : '',
-    //         'icon' : ''
-    //     },
-    //     {
-    //         'id' : 'contact_society',
-    //         'class' : '',
-    //         'icon' : ''
-    //     },
-    //     {
-    //         'id' : 'date',
-    //         'class' : 'rightData',
-    //         'icon' : ''
-    //     },
-    // ];
+    //displayedSecondaryData: any = [];
+    displayedSecondaryData: any = [
+        {
+            'id' : 'priority_label',
+            'class' : '',
+            'icon' : ''
+        },
+        {
+            'id' : 'category_id',
+            'class' : '',
+            'icon' : ''
+        },
+        {
+            'id' : 'doctype_label',
+            'class' : '',
+            'icon' : 'fa fa-file'
+        },
+        {
+            'id' : 'contact_society',
+            'class' : '',
+            'icon' : ''
+        },
+        {
+            'id' : 'contact_society',
+            'class' : '',
+            'icon' : ''
+        },
+        {
+            'id' : 'date',
+            'class' : 'rightData',
+            'icon' : ''
+        },
+    ];
 
     resultListDatabase: ResultListHttpDao | null;
     data: any[] = [];
@@ -100,6 +101,9 @@ export class BasketListComponent implements OnInit {
     isLoadingResults = true;
     listProperties: any = {};
     currentBasketInfo: any = {};
+    currentChrono: string = '';
+
+    @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
@@ -186,6 +190,7 @@ export class BasketListComponent implements OnInit {
             this.sidenavRight.close();
         } else {
             this.docUrl = this.coreUrl + 'rest/res/' + row.res_id + '/content';
+            this.currentChrono = row.alt_identifier;
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
                 "<iframe style='height:100%;width:100%;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
                 "</iframe>");
@@ -217,7 +222,12 @@ export class BasketListComponent implements OnInit {
     }
 
     refreshDao() {
+        this.paginator.pageIndex = this.listProperties.page;
         this.filtersChange.emit();
+    }
+
+    filterThis(value: string) {
+        this.filtersTool.setInputSearch(value);
     }
 }
 export interface BasketList {

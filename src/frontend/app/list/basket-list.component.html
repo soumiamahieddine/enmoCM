@@ -17,7 +17,7 @@
                 </div>
                 <div class="row" style="margin:0px;">
                     <div class="col-md-9 col-xs-9">
-                        <app-filters-tool [listProperties]="this.listProperties" [snavR]="snav2" (refreshEvent)="refreshDao()"></app-filters-tool>
+                        <app-filters-tool #filtersTool [currentBasketInfo]="currentBasketInfo" [listProperties]="this.listProperties" [snavR]="snav2" (refreshEvent)="refreshDao()"></app-filters-tool>
                     </div>
                     <div class="col-md-3 col-xs-3">
                         <mat-paginator [length]="resultsLength" [pageSize]="10"></mat-paginator>
@@ -60,8 +60,8 @@
                                 <div class="resultCol {{data.class}}" *ngFor="let data of displayedMainData">
                                     <span *ngIf="data.id == 'alt_identifier'">
                                         <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}} {{row.status_icon}} {{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}}-2x"
-                                            title="{{row.status_label}} ({{row.status_id}})"></mat-icon><br />
-                                        <span style="color: rgba(0,0,0,0.4);font-size: 90%;">{{row[data.id]}}</span>
+                                            title="{{row.status_label}} ({{row.status_id}})" style="cursor: crosshair;" (click)="$event.stopPropagation();filterThis(row.status_label)"></mat-icon><br />
+                                        <span style="color: rgba(0,0,0,0.4);font-size: 90%;cursor: crosshair;" (click)="$event.stopPropagation();filterThis(row[data.id])">{{row[data.id]}}</span>
                                     </span>
                                     <ng-container *ngIf="data.id == 'date'">
                                         <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;{{row.creation_date
@@ -80,17 +80,14 @@
                                     </ng-container>
                                 </div>
                                 <mat-button-toggle-group #group="matButtonToggleGroup" class="actions" multiple>
-                                    <button color="primary" mat-icon-button title="{{lang.notes}}" (click)="openBottomSheet(row)">
+                                    <button color="primary" mat-icon-button title="{{lang.notes}}" (click)="$event.stopPropagation();openBottomSheet(row)">
                                         <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas" matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button title="{{lang.attachments}}" (click)="openAttachSheet(row)">
+                                    <button color="primary" mat-icon-button title="{{lang.attachments}}" (click)="$event.stopPropagation();openAttachSheet(row)">
                                         <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas" matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button title="{{lang.diffusionList}}" (click)="openDiffusionSheet(row)">
+                                    <button color="primary" mat-icon-button title="{{lang.diffusionList}}" (click)="$event.stopPropagation();openDiffusionSheet(row)">
                                         <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"></mat-icon>
-                                    </button>
-                                    <button color="primary" mat-icon-button title="{{lang.view}}" (click)="goTo(row)">
-                                        <mat-icon fontSet="fas" fontIcon="fa-eye fa-2x"></mat-icon>
                                     </button>
                                     <button color="primary" mat-icon-button title="{{lang.linkDetails}}" (click)="goToDetail(row);">
                                         <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
@@ -99,7 +96,7 @@
                             </div>
                         </td>
                     </ng-container>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;" (click)="goTo(row);" style="cursor: pointer;"></tr>
                 </table>
                 <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{resultsLength}}
                     {{lang.entries}}</div>
@@ -107,9 +104,10 @@
         </mat-sidenav-content>
         <mat-sidenav #snav2 mode="over" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'
             [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode" [ngStyle]="{'width': mobileMode ? '80%' : '40%'}" autoFocus="false">
-            <div *ngIf="innerHtml && !filtersListService.filterMode" [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div>
+            <div *ngIf="innerHtml && !filtersListService.filterMode" [matTooltip]="currentChrono" [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div>
 
             <app-filters-list *ngIf="filtersListService.filterMode" [listProperties]="this.listProperties" (refreshEvent)="refreshDao()"></app-filters-list>
+
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>

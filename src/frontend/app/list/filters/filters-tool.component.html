@@ -1,7 +1,29 @@
-<mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" (change)="updateFiltersTool($event)" multiple>
+<mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" multiple>
     <mat-checkbox color="primary" style="margin: 10px;" title="Sélectionner tous les courriers de la bannette"></mat-checkbox>
-    <button mat-stroked-button (click)="openFilter()">{{lang.filters}}</button>
-    <mat-button-toggle [checked]="this.listProperties.delayed" value="delayed" title="{{lang.displayProcessLimitRes}}">
+    <form [formGroup]="stateForm">
+        <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
+            <input class="metaSearch" type="text" matInput placeholder="Recherche un document" formControlName="stateGroup"
+                [matAutocomplete]="autoGroup" (focus)="initFilters()" (keyup.enter)="metaSearch($event);">
+            <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="selectFilter($event)" panelWidth="400">
+                <mat-option *ngIf="isLoading" class="is-loading">
+                    <mat-spinner diameter="50"></mat-spinner>
+                </mat-option>
+                <ng-container *ngIf="!isLoading">
+                    <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.letter">
+
+                        <mat-option *ngFor="let name of group.names" [value]="name">
+                                <span [class.undefined]="name.label === '_UNDEFINED'" style="flex:1;overflow: hidden;text-overflow: ellipsis;">{{name.label}}</span>
+                                <span>
+                                <span bgcolor="warn" class="badge" style="min-width:auto;">{{name.count}}</span>
+                            </span>
+                        </mat-option>
+                    </mat-optgroup>
+                </ng-container>
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
+    <mat-button-toggle [checked]="this.listProperties.delayed" value="delayed" title="{{lang.displayProcessLimitRes}}"
+        (change)="setFilters($event, 'delayed')">
         <mat-icon fontSet="fas" fontIcon="fa-stopwatch fa-2x"></mat-icon>
     </mat-button-toggle>
     <mat-form-field appearance="outline" [style.fontSize.px]="10" style="width:200px !important;">
@@ -13,8 +35,8 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <button [disabled]="this.listProperties.order == ''" mat-icon-button [title]="this.listProperties.orderDir == 'DESC' ? lang.descOrder : lang.ascOrder" style="color: rgba(0,0,0,0.38);"
-        (click)="changeOrderDir();">
+    <button [disabled]="this.listProperties.order == ''" mat-icon-button [title]="this.listProperties.orderDir == 'DESC' ? lang.descOrder : lang.ascOrder"
+        style="color: rgba(0,0,0,0.38);" (click)="changeOrderDir();">
         <mat-icon *ngIf="this.listProperties.orderDir == 'DESC'" fontSet="fas" fontIcon="fa-sort-amount-down fa-2x"></mat-icon>
         <mat-icon *ngIf="this.listProperties.orderDir == 'ASC'" fontSet="fas" fontIcon="fa-sort-amount-up fa-2x"></mat-icon>
     </button>
@@ -37,14 +59,13 @@
     </mat-menu>
 </mat-button-toggle-group>
 <div class="filterBadges">
-    <span class="label label-info" title="{{lang.currentFilters}}" *ngFor="let category of this.listProperties.categories"
-        (click)="openFilter()">{{category.label}}</span>
-    <span class="label label-info" title="{{lang.currentFilters}}" *ngFor="let status of this.listProperties.statuses"
-        (click)="openFilter()">{{status.label}}</span>
-    <span class="label label-info" title="{{lang.currentFilters}}" (click)="openFilter()">{{this.listProperties.reference}}</span>
-    <span class="label label-info" title="{{lang.currentFilters}}" (click)="openFilter()">{{this.listProperties.subject}}</span>
-    <span class="label label-info" title="{{lang.currentFilters}}" *ngFor="let priority of this.listProperties.priorities"
-        (click)="openFilter()">{{priority.label}}</span>
-    <span class="label label-info" title="{{lang.currentFilters}}" *ngFor="let entity of this.listProperties.entities"
-        (click)="openFilter()">{{entity.label}}</span>
+    <span class="label badge-meta" *ngIf="this.listProperties.search !== ''" title="{{lang.currentFilters}}">{{this.listProperties.search}}
+        <i class="fa fa-times-circle" (click)="this.listProperties.search='';updateFilters();"></i></span>
+    <span class="label badge-cat" title="{{lang.currentFilters}}" *ngFor="let category of this.listProperties.categories; let i=index">{{category.label}}
+        <i class="fa fa-times-circle" (click)="removeFilter('categories', i)"></i></span>
+    <span class="label badge-prio" title="{{lang.currentFilters}}" *ngFor="let priority of this.listProperties.priorities; let i=index">{{priority.label}}
+        <i class="fa fa-times-circle" (click)="removeFilter('priorities', i)"></i></span>
+    <span class="label badge-stat" title="{{lang.currentFilters}}" *ngFor="let status of this.listProperties.statuses; let i=index">{{status.label}}
+        <i class="fa fa-times-circle" (click)="removeFilter('statuses', i)"></i></span>
+    <span class="label badge-ent" title="{{lang.currentFilters}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}} <i class="fa fa-times-circle" (click)="removeFilter('entities', i)"></i></span>
 </div>

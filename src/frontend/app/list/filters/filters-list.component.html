@@ -1,5 +1,30 @@
 <mat-nav-list disableRipple="true" class="filterList">
-    <h3 mat-subheader>{{lang.filterBy}}</h3>
+    <h3 mat-subheader>{{lang.categories}}</h3>
+    <div class="row">
+        <div class="col-md-4" *ngFor="let category of categories; let i=index">
+            <mat-button-toggle class="filterListButton" [value]="category.id" [checked]="category.selected" (change)="setFilters($event, i, 'categories')">{{category.label}}
+                <span class="badge" style="min-width:auto;position: absolute;right: 1px;top: 1px;font-size: 9px;">??</span></mat-button-toggle>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <h3 mat-subheader>{{lang.prioritiesAlt}}</h3>
+    <div class="row">
+        <div class="col-md-4" *ngFor="let priority of priorities; let i=index">
+            <mat-button-toggle class="filterListButton" [value]="priority.id" [checked]="priority.selected" (change)="setFilters($event, i, 'priorities')">{{priority.label}}
+                <span class="badge" style="min-width:auto;position: absolute;right: 1px;top: 1px;font-size: 9px;">??</span></mat-button-toggle>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <h3 mat-subheader>{{lang.statuses}}</h3>
+    <div class="row">
+        <div class="col-md-4" *ngFor="let status of statuses; let i=index">
+            <mat-button-toggle title="{{status.label_status}}" class="filterListButton" [value]="status.id" [checked]="status.selected" (change)="setFilters($event, i, 'statuses')">{{status.label_status}}
+                <span class="badge" style="min-width:auto;position: absolute;right: 1px;top: 1px;font-size: 9px;">??</span></mat-button-toggle>
+        </div>
+    </div>
+    <h3 mat-subheader>{{lang.entities}}</h3>
+    <div>Coming soon...</div>
+    <!--<h3 mat-subheader>{{lang.filterBy}}</h3>
     <div *ngIf="loading" style="display:flex;height:100%;">
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
@@ -102,5 +127,5 @@
                 </mat-list-option>
             </mat-selection-list>
         </mat-expansion-panel>
-    </ng-container>
+    </ng-container>-->
 </mat-nav-list>

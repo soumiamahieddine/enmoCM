@@ -7,8 +7,7 @@ interface listProperties {
     'page' : string,
     'order' : string,
     'orderDir' : string,
-    'reference' : string,
-    'subject' : string,
+    'search' : string,
     'delayed': boolean,
     'categories' : string[],
     'priorities' : string[],
@@ -51,8 +50,7 @@ export class FiltersListService {
                 'page' : '0',
                 'order' : '',
                 'orderDir' : 'DESC',
-                'reference' : '',
-                'subject' : '',
+                'search' : '',
                 'delayed': false,
                 'categories' : [],
                 'priorities' : [],
@@ -87,11 +85,8 @@ export class FiltersListService {
         if (this.listsProperties[this.listsPropertiesIndex].order.length > 0) {
             filters += '&order='+this.listsProperties[this.listsPropertiesIndex].order + ' ' + this.listsProperties[this.listsPropertiesIndex].orderDir;
         }
-        if (this.listsProperties[this.listsPropertiesIndex].reference.length > 0) {
-            filters += '&reference='+this.listsProperties[this.listsPropertiesIndex].reference;
-        }
-        if (this.listsProperties[this.listsPropertiesIndex].subject.length > 0) {
-            filters += '&subject='+this.listsProperties[this.listsPropertiesIndex].subject;
+        if (this.listsProperties[this.listsPropertiesIndex].search.length > 0) {
+            filters += '&search='+this.listsProperties[this.listsPropertiesIndex].search;
         }
         if (this.listsProperties[this.listsPropertiesIndex].categories.length > 0) {
             let cat: any[] = [];
@@ -116,6 +111,15 @@ export class FiltersListService {
             });
 
             filters += '&statuses='+status.join(','); 
+        }
+
+        if (this.listsProperties[this.listsPropertiesIndex].entities.length > 0) {
+            let ent: any[] = [];
+            this.listsProperties[this.listsPropertiesIndex].entities.forEach((element: any) => {
+                ent.push(element.id);
+            });
+
+            filters += '&entities='+ent.join(','); 
         }
         
         return filters;

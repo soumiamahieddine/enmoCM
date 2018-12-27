@@ -46,12 +46,12 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 		let months = Math.round(Math.abs(days/30.416));
 		let years = Math.round(Math.abs(days/365));
 		if(now > d) {
-			return '<span class="timeDanger" color="warn">' + this.lang.outdated + ' !</span>';
+			return '<span class="timeDanger" color="warn"><b>' + this.lang.outdated + ' !</b></span>';
 		} else {
 			if (Number.isNaN(seconds)){
 				return '';
 			} else if (days <= 3) {
-				return '<span color="warn">'+ days + ' ' + this.lang.dayS +'</span>';
+				return '<span color="warn"><b>'+ days + ' ' + this.lang.dayS +'</b></span>';
 			} else if (days <= 7) {
 				return '<span class="timeWarn">'+ days + ' ' + this.lang.dayS +'</span>';
 			} else if (days <= 345) {

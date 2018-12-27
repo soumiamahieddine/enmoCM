@@ -17,25 +17,14 @@ declare function $j(selector: any): any;
 export class FiltersListComponent implements OnInit {
 
     lang: any = LANG;
-    prioritiesList: any[] = [];
-    inPrioritiesProperty = false;
-    categoriesList: any[] = [];
-    inCategoriesProperty = false;
+    priorities: any[] = [];
+    categories: any[] = [];
     entitiesList: any[] = [];
-    inEntitiesProperty = false;
-    statusesList: any[] = [];
-    inStatusesProperty = false;
+    statuses: any[] = [];
 
     loading: boolean = false;
 
     @Input('listProperties') listProperties: any;
-
-    @ViewChild('categoriesPan') categoriesPan: MatExpansionPanel;
-    @ViewChild('prioritiesPan') prioritiesPan: MatExpansionPanel;
-    @ViewChild('entitiesPan') entitiesPan: MatExpansionPanel;
-    @ViewChild('subjectPan') subjectPan: MatExpansionPanel;
-    @ViewChild('referencePan') referencePan: MatExpansionPanel;
-    @ViewChild('statusesPan') statusesPan: MatExpansionPanel;
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
 
@@ -46,78 +35,73 @@ export class FiltersListComponent implements OnInit {
         this.loading = true;
         this.http.get("../../rest/priorities")
             .subscribe((data: any) => {
-                this.prioritiesList = data.priorities;
-                this.prioritiesList.forEach((element) => {
+                this.priorities = data.priorities;
+                this.priorities.forEach((element) => {
                     element.selected = false;
                     this.listProperties.priorities.forEach((listPropertyPrio: any) => {
                         if (element.id === listPropertyPrio.id) {
                             element.selected = true;
-                            this.inPrioritiesProperty = true;
                         }
                     });
                 });
 
                 this.http.get("../../rest/categories")
                     .subscribe((data: any) => {
-                        this.categoriesList = data.categories;
-                        this.categoriesList.forEach(element => {
+                        this.categories = data.categories;
+                        this.categories.forEach(element => {
                             element.selected = false;
                             this.listProperties.categories.forEach((listPropertyCat: any) => {
                                 if (element.id === listPropertyCat.id) {
                                     element.selected = true;
-                                    this.inCategoriesProperty = true;
                                 }
                             });
                         });
 
                         this.http.get("../../rest/statuses")
                             .subscribe((data: any) => {
-                                this.statusesList = data.statuses;
-                                this.statusesList.forEach(element => {
+                                this.statuses = data.statuses;
+                                this.statuses.forEach(element => {
                                     element.selected = false;
                                     this.listProperties.statuses.forEach((listPropertyStatus: any) => {
                                         if (element.id === listPropertyStatus.id) {
                                             element.selected = true;
-                                            this.inStatusesProperty = true;   
                                         }
                                     });
                                 });
 
                                 this.loading = false;
-
-                                setTimeout(() => {
-                                    if (this.listProperties.reference.length > 0) {
-                                        this.referencePan.open();
-                                    }
-                                    if (this.listProperties.subject.length > 0) {
-                                        this.subjectPan.open();
-                                    }
-                                    if (this.inPrioritiesProperty) {
-                                        this.prioritiesPan.open();
-                                    }
-                                    if (this.inCategoriesProperty) {
-                                        this.categoriesPan.open();
-                                    }
-                                    if (this.inStatusesProperty) {
-                                        this.statusesPan.open();
-                                    }
-                                }, 200);
                                 
                             });
                     });
             });
     }
 
-    setFilters(e: MatSelectionList, id: string) {
+    setFilters(e: any, i: number, id: string) {
+        this[id][i].selected = e.source.checked;
         this.listProperties[id] = [];
-        e.selectedOptions.selected.forEach(element => {
+        this[id].forEach((element: any) => {
+            if (element.selected === true) {
+                this.listProperties[id].push({
+                    'id': element.id,
+                    'label': element.label
+                });
+            }
+            
+        });
+        this.updateFilters();
+    }
+
+    /*setFilters(e: any, elem: any, id: string) {
+        elem.selected = e.source.checked;
+        this.listProperties[id] = [];
+        elem.forEach(element => {
             this.listProperties[id].push({
                 'id': element.value,
                 'label': element._text.nativeElement.innerText
             });
         });
         this.updateFilters();
-    }
+    }*/
 
     updateFilters() {
         this.listProperties.page = 0;
