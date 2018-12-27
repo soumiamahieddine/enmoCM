@@ -59,13 +59,13 @@
     </mat-menu>
 </mat-button-toggle-group>
 <div class="filterBadges">
-    <span class="label badge-meta" *ngIf="this.listProperties.search !== ''" title="{{lang.currentFilters}}">{{this.listProperties.search}}
+    <span class="label badge-meta" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}">{{this.listProperties.search}}
         <i class="fa fa-times-circle" (click)="this.listProperties.search='';updateFilters();"></i></span>
-    <span class="label badge-cat" title="{{lang.currentFilters}}" *ngFor="let category of this.listProperties.categories; let i=index">{{category.label}}
+    <span class="label badge-cat" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index">{{category.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('categories', i)"></i></span>
-    <span class="label badge-prio" title="{{lang.currentFilters}}" *ngFor="let priority of this.listProperties.priorities; let i=index">{{priority.label}}
+    <span class="label badge-prio" title="{{lang.priorities}}" *ngFor="let priority of this.listProperties.priorities; let i=index">{{priority.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('priorities', i)"></i></span>
-    <span class="label badge-stat" title="{{lang.currentFilters}}" *ngFor="let status of this.listProperties.statuses; let i=index">{{status.label}}
+    <span class="label badge-stat" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index">{{status.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('statuses', i)"></i></span>
-    <span class="label badge-ent" title="{{lang.currentFilters}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}} <i class="fa fa-times-circle" (click)="removeFilter('entities', i)"></i></span>
+    <span class="label badge-ent" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}} <i class="fa fa-times-circle" (click)="removeFilter('entities', i)"></i></span>
 </div>

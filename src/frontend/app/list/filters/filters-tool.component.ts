@@ -16,9 +16,11 @@ export interface StateGroup {
 
 export const _filter = (opt: string[], value: string): string[] => {
 
-    const filterValue = value.toLowerCase();
+    if (typeof value === 'string') {
+        const filterValue = value.toLowerCase();
 
-    return opt.filter(item => item['label'].toLowerCase().indexOf(filterValue) != -1);
+        return opt.filter(item => item['label'].toLowerCase().indexOf(filterValue) != -1);
+    }
 };
 @Component({
     selector: 'app-filters-tool',
@@ -72,7 +74,7 @@ export class FiltersToolComponent implements OnInit {
     }
 
     private _filterGroup(value: string): StateGroup[] {
-        if (value) {
+        if (value && typeof value === 'string') {
             return this.stateGroups
                 .map(group => ({ letter: group.letter, names: _filter(group.names, value) }))
                 .filter(group => group.names.length > 0);
@@ -158,7 +160,7 @@ export class FiltersToolComponent implements OnInit {
             },
         ];
 
-        this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/filters')
+        this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/filters?init' + this.filtersListService.getUrlFilters())
             .subscribe((data: any) => {
                 data.categories.forEach((element: any) => {
                     if (this.listProperties.categories.map((category: any) => (category.id)).indexOf(element.id) === -1) {
@@ -199,7 +201,7 @@ export class FiltersToolComponent implements OnInit {
                 });
 
                 data.entities.forEach((element: any) => {
-                    if (this.listProperties.entities.map((entity: any) => (entity.id)).indexOf(element.id) === -1) {
+                    if (this.listProperties.entities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1) {
                         this.stateGroups[3].names.push(
                             {
                                 id: 'entities',
