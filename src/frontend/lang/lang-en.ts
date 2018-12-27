@@ -716,4 +716,5 @@ export const LANG_EN = {
     "defaultOrder"                                      : "Default order(s)",
     "categories"                                        : "Categories",
     "prioritiesAlt"                                     : "Priorities",
+    "undefinedStatus"                                    : "Undefined status",
 };

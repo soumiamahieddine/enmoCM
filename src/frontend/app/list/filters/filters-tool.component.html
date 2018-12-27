@@ -9,15 +9,16 @@
                     <mat-spinner diameter="50"></mat-spinner>
                 </mat-option>
                 <ng-container *ngIf="!isLoading">
-                    <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.letter">
-
-                        <mat-option *ngFor="let name of group.names" [value]="name">
+                    <ng-container *ngFor="let group of stateGroupOptions | async">
+                        <mat-optgroup *ngIf="group.names.length > 0" [label]="group.letter">
+                            <mat-option *ngFor="let name of group.names" [value]="name">
                                 <span [class.undefined]="name.label === '_UNDEFINED'" style="flex:1;overflow: hidden;text-overflow: ellipsis;">{{name.label}}</span>
                                 <span>
-                                <span bgcolor="warn" class="badge" style="min-width:auto;">{{name.count}}</span>
-                            </span>
-                        </mat-option>
-                    </mat-optgroup>
+                                    <span bgcolor="warn" class="badge" style="min-width:auto;">{{name.count}}</span>
+                                </span>
+                            </mat-option>
+                        </mat-optgroup>
+                    </ng-container>
                 </ng-container>
             </mat-autocomplete>
         </mat-form-field>
@@ -67,5 +68,6 @@
         <i class="fa fa-times-circle" (click)="removeFilter('priorities', i)"></i></span>
     <span class="label badge-stat" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index">{{status.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('statuses', i)"></i></span>
-    <span class="label badge-ent" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}} <i class="fa fa-times-circle" (click)="removeFilter('entities', i)"></i></span>
+    <span class="label badge-ent" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}}
+        <i class="fa fa-times-circle" (click)="removeFilter('entities', i)"></i></span>
 </div>

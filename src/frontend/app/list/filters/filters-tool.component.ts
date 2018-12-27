@@ -54,6 +54,7 @@ export class FiltersToolComponent implements OnInit {
     categories: any[] = [];
     entitiesList: any[] = [];
     statuses: any[] = [];
+    metaSearchInput: string = '';
 
     stateGroups: StateGroup[] = [];
     stateGroupOptions: Observable<StateGroup[]>;
@@ -131,10 +132,7 @@ export class FiltersToolComponent implements OnInit {
 
     setInputSearch(value: string) {
         $j('.metaSearch').focus();
-        setTimeout(() => {
-            this.stateForm.controls['stateGroup'].setValue(value);
-        }, 200);
-
+        this.metaSearchInput = value;
     }
 
     initFilters() {
@@ -214,6 +212,12 @@ export class FiltersToolComponent implements OnInit {
 
                 });
                 this.isLoading = false;
+                if (this.metaSearchInput.length > 0) {
+                    setTimeout(() => {
+                        this.stateForm.controls['stateGroup'].setValue(this.metaSearchInput);
+                        this.metaSearchInput = '';
+                    }, 200);
+                } 
             });
 
         this.stateGroupOptions = this.stateForm.get('stateGroup')!.valueChanges
