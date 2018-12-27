@@ -84,8 +84,8 @@ class StatusControllerTest extends TestCase
         $response  = $status->getById($request, new \Slim\Http\Response(), ['id' => 'TEST']);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertNotEmpty($responseBody->status[0]);
-        $this->assertSame('TEST', $responseBody->status[0]->id);
+        $this->assertNotEmpty($responseBody->status);
+        $this->assertSame('TEST', $responseBody->status->id);
 
         // ERROR
         $response  = $status->getById($request, new \Slim\Http\Response(), ['id' => 'NOTFOUNDSTATUS']);

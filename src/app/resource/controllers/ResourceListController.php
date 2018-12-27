@@ -145,17 +145,51 @@ class ResourceListController
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause']]);
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-        
+
+        $where = [$whereClause];
+        $queryData = [];
+
+        $data = $request->getQueryParams();
+        if (!empty($data['priorities'])) {
+            $where[] = 'priority in (?)';
+            $queryData[] = explode(',', $data['priorities']);
+        }
+        if (!empty($data['categories'])) {
+            $where[] = 'category_id in (?)';
+            $queryData[] = explode(',', $data['categories']);
+        }
+        if (!empty($data['statuses'])) {
+            $where[] = 'status in (?)';
+            $queryData[] = explode(',', $data['statuses']);
+        }
+        if (!empty($data['entities'])) {
+            $where[] = 'destination in (?)';
+            $queryData[] = explode(',', $data['entities']);
+        }
+        if (!empty($data['entitiesChildren'])) {
+            $entities = explode(',', $data['entitiesChildren']);
+            $entitiesChildren = [];
+            foreach ($entities as $entity) {
+                $children = EntityModel::getEntityChildren(['entityId' => $entity]);
+                $entitiesChildren = array_merge($entitiesChildren, $children);
+            }
+            if (!empty($entitiesChildren)) {
+                $where[] = 'destination in (?)';
+                $queryData[] = $entitiesChildren;
+            }
+        }
+
         $entities = [];
         $rawEntities = ResModel::getOnView([
             'select'    => ['count(res_id)', 'destination'],
-            'where'     => [$whereClause],
+            'where'     => $where,
+            'data'      => $queryData,
             'groupBy'   => ['destination']
         ]);
         foreach ($rawEntities as $key => $value) {
             $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
             $entities[] = [
-                'entityid'  => $value['destination'],
+                'entityId'  => $value['destination'],
                 'label'     => $entity['entity_label'],
                 'count'     => $value['count']
             ];
@@ -164,7 +198,8 @@ class ResourceListController
         $priorities = [];
         $rawPriorities = ResModel::getOnView([
             'select'    => ['count(res_id)', 'priority'],
-            'where'     => [$whereClause],
+            'where'     => $where,
+            'data'      => $queryData,
             'groupBy'   => ['priority']
         ]);
         foreach ($rawPriorities as $key => $value) {
@@ -180,7 +215,8 @@ class ResourceListController
         $allCategories = ResModel::getCategories();
         $rawCategories = ResModel::getOnView([
             'select'    => ['count(res_id)', 'category_id'],
-            'where'     => [$whereClause],
+            'where'     => $where,
+            'data'      => $queryData,
             'groupBy'   => ['category_id']
         ]);
         foreach ($rawCategories as $key => $value) {
@@ -198,7 +234,8 @@ class ResourceListController
         $statuses = [];
         $rawStatuses = ResModel::getOnView([
             'select'    => ['count(res_id)', 'status'],
-            'where'     => [$whereClause],
+            'where'     => $where,
+            'data'      => $queryData,
             'groupBy'   => ['status']
         ]);
         foreach ($rawStatuses as $key => $value) {
