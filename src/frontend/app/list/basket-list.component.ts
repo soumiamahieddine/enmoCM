@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject, EventEmitter, AfterViewInit } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
@@ -113,6 +113,10 @@ export class BasketListComponent implements OnInit {
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
+
+        route.params.forEach(params => {
+            this.basketUrl = '../../rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
+          });
     }
 
     ngOnInit(): void {
@@ -131,27 +135,26 @@ export class BasketListComponent implements OnInit {
             });
 
         this.isLoadingResults = false;
+
+        this.initResultList();
+
         this.route.params.subscribe(params => {
-            this.basketUrl = this.coreUrl + 'rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
-            this.http.get(this.basketUrl)
-                .subscribe((data: any) => {
-                    this.currentBasketInfo = {
-                        ownerId: params['userSerialId'],
-                        groupId: params['groupSerialId'],
-                        basketId: params['basketId']
-                    };
-                    this.headerService.headerMessage = data.basketLabel;
-                    this.filtersListService.filterMode = false;
-                    window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                    window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
-                    
 
-                    this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
-                    this.initResultList();
+            this.currentBasketInfo = {
+                ownerId: params['userSerialId'],
+                groupId: params['groupSerialId'],
+                basketId: params['basketId']
+            };
+            //this.headerService.headerMessage = data.basketLabel;
+            this.filtersListService.filterMode = false;
+            window['MainHeaderComponent'].setSnav(this.sidenavLeft);
+            window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+            
 
-                }, () => {
-                    location.href = "index.php";
-                });
+            this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
+
+            this.refreshDao();
+
         });
     }
 
@@ -174,7 +177,7 @@ export class BasketListComponent implements OnInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     this.resultsLength = data.count;
-
+                    this.headerService.headerMessage = data.basketLabel;
                     return data.resources;
                 }),
                 catchError(() => {
@@ -233,6 +236,7 @@ export class BasketListComponent implements OnInit {
 export interface BasketList {
     resources: any[];
     count: number;
+    basketLabel: string
 }
 
 
