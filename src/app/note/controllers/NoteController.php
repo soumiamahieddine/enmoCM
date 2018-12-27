@@ -21,6 +21,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use History\controllers\HistoryController;
+use Resource\controllers\ResController;
 
 class NoteController
 {
@@ -39,12 +40,16 @@ class NoteController
     public function create(Request $request, Response $response)
     {
         $data = $request->getParams();
-        
+
+        if (!Validator::intVal()->validate($data['identifier']) || !ResController::hasRightByResId(['resId' => $data['identifier'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+       
         //Insert note in notes table and recover last insert ID
         $check = Validator::stringType()->notEmpty()->validate($data['note_text']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['identifier']); //correspond to res_id
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['user_id']);
-
+        $check = $check && Validator::stringType()->notEmpty()->validate($GLOBALS['userId']);
+        
         if(isset($data['entities_chosen'])) {
             $check = $check && Validator::arrayType()->validate($data['entities_chosen']);
         }

@@ -68,7 +68,7 @@ abstract class NoteModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['identifier', 'user_id', 'note_text']);
+        ValidatorModel::notEmpty($aArgs, ['identifier', 'note_text']);
         ValidatorModel::intVal($aArgs, ['identifier']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'notes_seq']);
@@ -79,7 +79,7 @@ abstract class NoteModelAbstract
                 'id'         => $nextSequenceId,
                 'identifier' => $aArgs['identifier'],
                 'tablename'  => 'res_letterbox',
-                'user_id'    => $aArgs['user_id'],
+                'user_id'    => $GLOBALS['userId'],
                 'date_note'  => 'CURRENT_TIMESTAMP',
                 'note_text'  => $aArgs['note_text'],
                 'coll_id'    => 'letterbox_coll'
