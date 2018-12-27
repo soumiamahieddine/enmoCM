@@ -92,7 +92,7 @@ class StatusController
 
         StatusModel::create($aArgs);
 
-        $return['status'] = StatusModel::getById(['id' => $aArgs['id']])[0];
+        $return['status'] = StatusModel::getById(['id' => $aArgs['id']]);
 
         HistoryController::add([
             'tableName' => 'status',
@@ -190,7 +190,7 @@ class StatusController
             if (!empty($obj)) {
                 array_push(
                     $errors,
-                    _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
+                    _ID . ' ' . $obj['id'] . ' ' . _ALREADY_EXISTS
                 );
             }
         } elseif ($mode == 'update') {
