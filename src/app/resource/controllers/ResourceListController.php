@@ -203,12 +203,14 @@ class ResourceListController
             'groupBy'   => ['priority']
         ]);
         foreach ($rawPriorities as $key => $value) {
-            $priority = PriorityModel::getById(['select' => ['label'], 'id' => $value['priority']]);
-            $priorities[] = [
-                'id'        => $value['priority'],
-                'label'     => $priority['label'],
-                'count'     => $value['count']
-            ];
+            if (!empty($value['priority'])) {
+                $priority = PriorityModel::getById(['select' => ['label'], 'id' => $value['priority']]);
+                $priorities[] = [
+                    'id'        => $value['priority'],
+                    'label'     => $priority['label'],
+                    'count'     => $value['count']
+                ];
+            }
         }
 
         $categories = [];
