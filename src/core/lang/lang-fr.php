@@ -132,6 +132,7 @@ define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
 define('_DOC_ADDED', 'Document ajouté');
 define('_ATTACH_DISPLAYING', 'Visualisation de la pièce jointe');
+define('_NOTE_ADDED', 'Annotation ajoutée');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');

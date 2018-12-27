@@ -132,6 +132,7 @@ define('_BACK_FROM_VACATION', 'back from vacation');
 define('_DOC_DISPLAYING', 'Displaying document');
 define('_DOC_ADDED', 'Document added');
 define('_ATTACH_DISPLAYING', 'Displaying attachment');
+define('_NOTE_ADDED', 'Note added');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');

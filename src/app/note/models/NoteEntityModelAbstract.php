@@ -32,5 +32,7 @@ abstract class NoteEntityModelAbstract
                 'item_id'   => $aArgs['item_id']
             ]
         ]);
+
+        return true;
     }
 }
