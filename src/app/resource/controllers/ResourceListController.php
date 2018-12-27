@@ -253,6 +253,11 @@ class ResourceListController
             }
         }
 
+        $entities = (count($entities) >= 2) ? $entities : [];
+        $priorities = (count($priorities) >= 2) ? $priorities : [];
+        $categories = (count($categories) >= 2) ? $categories : [];
+        $statuses = (count($statuses) >= 2) ? $statuses : [];
+
         return $response->withJson(['entities' => $entities, 'priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses]);
     }
 
