@@ -29,6 +29,7 @@
             <file>test/unitTests/app/user/UserControllerTest.php</file>
             <file>test/unitTests/app/versionUpdate/VersionUpdateControllerTest.php</file>
             <file>test/unitTests/app/template/TemplateControllerTest.php</file>
+            <file>test/unitTests/app/note/NoteControllerTest.php</file>
             <!-- The last one should be history -->
             <file>test/unitTests/app/history/HistoryControllerTest.php</file>
         </testsuite>
