@@ -165,7 +165,6 @@ export class FiltersToolComponent implements OnInit {
 
         this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/filters?init' + this.filtersListService.getUrlFilters())
             .subscribe((data: any) => {
-                console.log(data);
                 data.categories.forEach((element: any) => {
                     if (this.listProperties.categories.map((category: any) => (category.id)).indexOf(element.id) === -1) {
                         this.stateGroups[0].names.push(
