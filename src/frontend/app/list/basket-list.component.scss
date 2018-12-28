@@ -81,7 +81,7 @@ mat-toolbar {
 .actions {
     box-shadow: none;
     flex: 1;
-    justify-content: end;
+    justify-content: flex-end;
     overflow: inherit;
 }
 .mat-badge-content {
