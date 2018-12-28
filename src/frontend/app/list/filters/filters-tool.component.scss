@@ -10,31 +10,37 @@
         color: white;
     }
 }
-.filterBadges>.badge-meta {
+
+.mat-option .badge{
+    background: #F99830;
+    font-size: 11px;
+}
+
+.filterBadges>.badge-search {
     margin: 5px;
     background: #666;
     cursor: pointer;
 }
 
-.filterBadges>.badge-cat {
+.filterBadges>.badge-categories {
     margin: 5px;
     background: #78AD32;
     cursor: pointer;
 }
 
-.filterBadges>.badge-stat {
+.filterBadges>.badge-statuses {
     margin: 5px;
     background: #5bc0de;
     cursor: pointer;
 }
 
-.filterBadges>.badge-prio {
+.filterBadges>.badge-priorities {
     margin: 5px;
     background: #F9D812;
     cursor: pointer;
 }
 
-.filterBadges>.badge-ent {
+.filterBadges>.badge-entities {
     margin: 5px;
     background: #7d5ba6;
     cursor: pointer;
@@ -47,11 +53,6 @@
 
 .filterContent:hover {
     background: inherit !important;
-}
-
-.mat-option .badge{
-    background: #F99830;
-    font-size: 11px;
 }
 
 .mat-option-text {

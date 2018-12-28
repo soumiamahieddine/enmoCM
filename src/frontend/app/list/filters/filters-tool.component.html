@@ -1,6 +1,6 @@
 <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" multiple>
     <mat-checkbox color="primary" style="margin: 10px;" title="Sélectionner tous les courriers de la bannette"></mat-checkbox>
-    <form [formGroup]="stateForm">
+    <form [formGroup]="stateForm" [style.width.px]="300">
         <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
             <input class="metaSearch" type="text" matInput placeholder="Recherche un document" formControlName="stateGroup"
                 [matAutocomplete]="autoGroup" (focus)="initFilters()" (keyup.enter)="metaSearch($event);">
@@ -13,8 +13,8 @@
                         <mat-optgroup *ngIf="group.names.length > 0" [label]="group.letter">
                             <mat-option *ngFor="let name of group.names" [value]="name">
                                 <span [class.undefined]="name.label === '_UNDEFINED'" style="flex:1;overflow: hidden;text-overflow: ellipsis;">{{name.label}}</span>
-                                <span>
-                                    <span bgcolor="warn" class="badge" style="min-width:auto;">{{name.count}}</span>
+                                <span class="filterBadges">
+                                    <span class="badge badge-{{name.id}}" style="min-width:auto;">{{name.count}}</span>
                                 </span>
                             </mat-option>
                         </mat-optgroup>
@@ -60,14 +60,14 @@
     </mat-menu>
 </mat-button-toggle-group>
 <div class="filterBadges">
-    <span class="label badge-meta" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}">{{this.listProperties.search}}
+    <span class="label badge-search" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}">{{this.listProperties.search}}
         <i class="fa fa-times-circle" (click)="this.listProperties.search='';updateFilters();"></i></span>
-    <span class="label badge-cat" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index">{{category.label}}
+    <span class="label badge-categories" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index">{{category.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('categories', i)"></i></span>
-    <span class="label badge-prio" title="{{lang.priorities}}" *ngFor="let priority of this.listProperties.priorities; let i=index">{{priority.label}}
+    <span class="label badge-priorities" title="{{lang.priorities}}" *ngFor="let priority of this.listProperties.priorities; let i=index">{{priority.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('priorities', i)"></i></span>
-    <span class="label badge-stat" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index">{{status.label}}
+    <span class="label badge-statuses" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index">{{status.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('statuses', i)"></i></span>
-    <span class="label badge-ent" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}}
+    <span class="label badge-entities" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('entities', i)"></i></span>
 </div>
