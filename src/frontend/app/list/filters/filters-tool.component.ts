@@ -156,10 +156,15 @@ export class FiltersToolComponent implements OnInit {
                 letter: this.lang.entities,
                 names: []
             },
+            {
+                letter: this.lang.subEntities,
+                names: []
+            },
         ];
 
         this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/filters?init' + this.filtersListService.getUrlFilters())
             .subscribe((data: any) => {
+                console.log(data);
                 data.categories.forEach((element: any) => {
                     if (this.listProperties.categories.map((category: any) => (category.id)).indexOf(element.id) === -1) {
                         this.stateGroups[0].names.push(
@@ -203,6 +208,20 @@ export class FiltersToolComponent implements OnInit {
                         this.stateGroups[3].names.push(
                             {
                                 id: 'entities',
+                                value: element.entityId,
+                                label: (element.label !== null ? element.label : '_UNDEFINED') ,
+                                count: element.count
+                            }
+                        )
+                    }
+
+                });
+
+                data.entities.forEach((element: any) => {
+                    if (this.listProperties.subEntities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1) {
+                        this.stateGroups[4].names.push(
+                            {
+                                id: 'subEntities',
                                 value: element.entityId,
                                 label: (element.label !== null ? element.label : '_UNDEFINED') ,
                                 count: element.count

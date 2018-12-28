@@ -12,6 +12,7 @@ interface listProperties {
     'categories': string[],
     'priorities': string[],
     'entities': string[],
+    'subEntities': string[],
     'statuses': string[]
 }
 
@@ -55,6 +56,7 @@ export class FiltersListService {
                 'categories': [],
                 'priorities': [],
                 'entities': [],
+                'subEntities': [],
                 'statuses': [],
             };
             this.listsProperties.push(listProperties);
@@ -126,6 +128,14 @@ export class FiltersListService {
                 });
 
                 filters += '&entities=' + ent.join(',');
+            }
+            if (this.listsProperties[this.listsPropertiesIndex].subEntities.length > 0) {
+                let ent: any[] = [];
+                this.listsProperties[this.listsPropertiesIndex].subEntities.forEach((element: any) => {
+                    ent.push(element.id);
+                });
+
+                filters += '&entitiesChildren=' + ent.join(',');
             }
         }
         return filters;

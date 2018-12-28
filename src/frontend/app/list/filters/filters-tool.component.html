@@ -70,4 +70,6 @@
         <i class="fa fa-times-circle" (click)="removeFilter('statuses', i)"></i></span>
     <span class="label badge-entities" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('entities', i)"></i></span>
+    <span class="label badge-subEntities" title="{{lang.subEntities}}" *ngFor="let subEntity of this.listProperties.subEntities; let i=index">{{subEntity.label}}
+        <i class="fa fa-times-circle" (click)="removeFilter('subEntities', i)"></i></span>
 </div>

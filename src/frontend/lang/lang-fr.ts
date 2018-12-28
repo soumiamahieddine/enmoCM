@@ -742,5 +742,6 @@ export const LANG_FR = {
     "defaultOrder"                                      : "Tri(s) par défaut",
     "categories"                                        : "Catégories",
     "prioritiesAlt"                                     : "Priorités",
-    "undefinedStatus"                                    : "Statut non défini",
+    "undefinedStatus"                                   : "Statut non défini",
+    "subEntities"                                       : "Entités (et sous-entités)",
 };
