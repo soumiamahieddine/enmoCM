@@ -10,6 +10,7 @@ import { HttpClientModule }                     from '@angular/common/http';
 import { RouterModule }                         from '@angular/router';
 
 /*PLUGINS IMPORTS*/
+import { CookieService }                        from 'ngx-cookie-service';
 import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
 import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe';
 import { FilterListPipe }                       from '../plugins/filterList.pipe';
@@ -78,6 +79,9 @@ import { BasketHomeComponent }                        from './basket/basket-home
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
+    ],
+    providers: [
+        CookieService
     ],
     entryComponents: [
         IndexingGroupModalComponent
