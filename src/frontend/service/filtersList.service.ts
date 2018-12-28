@@ -64,13 +64,17 @@ export class FiltersListService {
     }
 
     updateListsPropertiesPage(page : number) {
-        this.listsProperties[this.listsPropertiesIndex].page = page;
-        this.saveListsProperties();
+        if (this.listsProperties) {
+            this.listsProperties[this.listsPropertiesIndex].page = page;
+            this.saveListsProperties();
+        } 
     }
     
     updateListsProperties(listProperties : any) {
-        this.listsProperties[this.listsPropertiesIndex] = listProperties;
-        this.saveListsProperties();
+        if (this.listsProperties) {
+            this.listsProperties[this.listsPropertiesIndex] = listProperties;
+            this.saveListsProperties();
+        }
     }
 
     saveListsProperties() {
@@ -79,49 +83,50 @@ export class FiltersListService {
 
     getUrlFilters () {
         let filters = '';
-        if (this.listsProperties[this.listsPropertiesIndex].delayed) {
-            filters += '&delayed=true';
+        if (this.listsProperties) {
+            if (this.listsProperties[this.listsPropertiesIndex].delayed) {
+                filters += '&delayed=true';
+            }
+            if (this.listsProperties[this.listsPropertiesIndex].order.length > 0) {
+                filters += '&order='+this.listsProperties[this.listsPropertiesIndex].order + ' ' + this.listsProperties[this.listsPropertiesIndex].orderDir;
+            }
+            if (this.listsProperties[this.listsPropertiesIndex].search.length > 0) {
+                filters += '&search='+this.listsProperties[this.listsPropertiesIndex].search;
+            }
+            if (this.listsProperties[this.listsPropertiesIndex].categories.length > 0) {
+                let cat: any[] = [];
+                this.listsProperties[this.listsPropertiesIndex].categories.forEach((element: any) => {
+                    cat.push(element.id);
+                });
+    
+                filters += '&categories='+cat.join(','); 
+            }
+            if (this.listsProperties[this.listsPropertiesIndex].priorities.length > 0) {
+                let prio: any[] = [];
+                this.listsProperties[this.listsPropertiesIndex].priorities.forEach((element: any) => {
+                    prio.push(element.id);
+                });
+    
+                filters += '&priorities='+prio.join(','); 
+            }
+            if (this.listsProperties[this.listsPropertiesIndex].statuses.length > 0) {
+                let status: any[] = [];
+                this.listsProperties[this.listsPropertiesIndex].statuses.forEach((element: any) => {
+                    status.push(element.id);
+                });
+    
+                filters += '&statuses='+status.join(','); 
+            }
+    
+            if (this.listsProperties[this.listsPropertiesIndex].entities.length > 0) {
+                let ent: any[] = [];
+                this.listsProperties[this.listsPropertiesIndex].entities.forEach((element: any) => {
+                    ent.push(element.id);
+                });
+    
+                filters += '&entities='+ent.join(','); 
+            }
         }
-        if (this.listsProperties[this.listsPropertiesIndex].order.length > 0) {
-            filters += '&order='+this.listsProperties[this.listsPropertiesIndex].order + ' ' + this.listsProperties[this.listsPropertiesIndex].orderDir;
-        }
-        if (this.listsProperties[this.listsPropertiesIndex].search.length > 0) {
-            filters += '&search='+this.listsProperties[this.listsPropertiesIndex].search;
-        }
-        if (this.listsProperties[this.listsPropertiesIndex].categories.length > 0) {
-            let cat: any[] = [];
-            this.listsProperties[this.listsPropertiesIndex].categories.forEach((element: any) => {
-                cat.push(element.id);
-            });
-
-            filters += '&categories='+cat.join(','); 
-        }
-        if (this.listsProperties[this.listsPropertiesIndex].priorities.length > 0) {
-            let prio: any[] = [];
-            this.listsProperties[this.listsPropertiesIndex].priorities.forEach((element: any) => {
-                prio.push(element.id);
-            });
-
-            filters += '&priorities='+prio.join(','); 
-        }
-        if (this.listsProperties[this.listsPropertiesIndex].statuses.length > 0) {
-            let status: any[] = [];
-            this.listsProperties[this.listsPropertiesIndex].statuses.forEach((element: any) => {
-                status.push(element.id);
-            });
-
-            filters += '&statuses='+status.join(','); 
-        }
-
-        if (this.listsProperties[this.listsPropertiesIndex].entities.length > 0) {
-            let ent: any[] = [];
-            this.listsProperties[this.listsPropertiesIndex].entities.forEach((element: any) => {
-                ent.push(element.id);
-            });
-
-            filters += '&entities='+ent.join(','); 
-        }
-        
         return filters;
     }
     

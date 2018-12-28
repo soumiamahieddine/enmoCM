@@ -113,10 +113,6 @@ export class BasketListComponent implements OnInit {
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
-
-        route.params.forEach(params => {
-            this.basketUrl = '../../rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
-          });
     }
 
     ngOnInit(): void {
@@ -139,6 +135,7 @@ export class BasketListComponent implements OnInit {
         this.initResultList();
 
         this.route.params.subscribe(params => {
+            this.basketUrl = '../../rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
 
             this.currentBasketInfo = {
                 ownerId: params['userSerialId'],
@@ -149,7 +146,6 @@ export class BasketListComponent implements OnInit {
             this.filtersListService.filterMode = false;
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
-            
 
             this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
 
@@ -180,7 +176,8 @@ export class BasketListComponent implements OnInit {
                     this.headerService.headerMessage = data.basketLabel;
                     return data.resources;
                 }),
-                catchError(() => {
+                catchError((err: any) => {
+                    console.log(err);
                     this.isLoadingResults = false;
                     return observableOf([]);
                 })
@@ -245,7 +242,6 @@ export class ResultListHttpDao {
     constructor(private http: HttpClient, private filtersListService: FiltersListService) { }
 
     getRepoIssues(sort: string, order: string, page: number, href: string, filters: string): Observable<BasketList> {
-
         this.filtersListService.updateListsPropertiesPage(page);
         let offset = page * 10;
         const requestUrl = `${href}?limit=10&offset=${offset}${filters}`;
