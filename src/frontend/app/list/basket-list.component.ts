@@ -8,7 +8,7 @@ import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet, MatBottom
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 import { NotesListComponent } from '../notes/notes.component';
@@ -107,7 +107,7 @@ export class BasketListComponent implements OnInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
-    constructor(changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService, private notify: NotificationService) {
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -151,6 +151,9 @@ export class BasketListComponent implements OnInit {
 
             this.refreshDao();
 
+        },
+        (err : any) => {
+            this.notify.handleErrors(err);
         });
     }
 
@@ -177,7 +180,8 @@ export class BasketListComponent implements OnInit {
                     return data.resources;
                 }),
                 catchError((err: any) => {
-                    console.log(err);
+                    this.notify.handleErrors(err);
+                    this.router.navigate(['/home']);
                     this.isLoadingResults = false;
                     return observableOf([]);
                 })
