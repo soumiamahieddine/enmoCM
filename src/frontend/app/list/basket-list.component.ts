@@ -147,7 +147,7 @@ export class BasketListComponent implements OnInit {
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
-            this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
+            this.listProperties = this.filtersListService.initListsProperties(this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId);
 
             this.refreshDao();
 
