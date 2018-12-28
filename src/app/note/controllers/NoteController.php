@@ -17,6 +17,7 @@ namespace Note\controllers;
 
 use Note\models\NoteModel;
 use Note\models\NoteEntityModel;
+use Entity\models\EntityModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -41,17 +42,32 @@ class NoteController
     {
         $data = $request->getParams();
 
-        //Check data
+        //Check note text
         $check = Validator::stringType()->notEmpty()->validate($data['note_text']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($aArgs['resId']); //correspond to res_id
-        $check = $check && Validator::stringType()->notEmpty()->validate($GLOBALS['userId']);
-        
-        if (isset($data['entities_chosen'])) {
-            $check = $check && Validator::arrayType()->validate($data['entities_chosen']);
+
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request note text']);
         }
         
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        //Check entities chosen
+        if (isset($data['entities_chosen'])) {
+            
+            $check = $check && Validator::arrayType()->validate($data['entities_chosen']);
+            
+            foreach($data['entities_chosen'] as $entityId) {
+
+                if ($entityId == null) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
+                }
+                
+                $entity = entitymodel::getByEntityId(['select' => ['id'], 'entityId' => $entityId]);
+
+                $check = $check && Validator::intval()->notEmpty()->validate($entity['id']);
+            }
+
+            if (!$check) {
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
+            }
         }
 
         if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
