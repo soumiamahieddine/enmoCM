@@ -759,7 +759,7 @@ class UserControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
             'firstname' => 'Super',
-            'lastname'  => 'Admin',
+            'lastname'  => 'ADMIN',
             'mail'      => 'dev@maarch.org',
             'initials'  => 'SU'
         ];
@@ -778,7 +778,7 @@ class UserControllerTest extends TestCase
 
         $this->assertSame('superadmin', $responseBody->user_id);
         $this->assertSame('Super', $responseBody->firstname);
-        $this->assertSame('Admin', $responseBody->lastname);
+        $this->assertSame('ADMIN', $responseBody->lastname);
         $this->assertSame('dev@maarch.org', $responseBody->mail);
         $this->assertSame('SU', $responseBody->initials);
     }
