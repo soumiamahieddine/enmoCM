@@ -208,7 +208,7 @@ class PreparedClauseController
             }
         }
 
-        return $clause;
+        return "({$clause})";
     }
 
     public static function isRequestValid(array $aArgs)

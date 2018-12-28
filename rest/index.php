@@ -95,6 +95,9 @@ $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . '
 //BatchHistories
 $app->get('/batchHistories', \History\controllers\BatchHistoryController::class . ':get');
 
+//Configurations
+$app->put('/configurations/{name}', \Configuration\controllers\ConfigurationController::class . ':update');
+
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
 $app->put('/contacts/{id}', \Contact\controllers\ContactController::class . ':update');

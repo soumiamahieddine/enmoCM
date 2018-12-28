@@ -51,4 +51,4 @@ CONSTRAINT configuration_pkey PRIMARY KEY (id),
 CONSTRAINT configuration_unique_key UNIQUE (name)
 )
 WITH (OIDS=FALSE);
-INSERT INTO configuration (name, value) VALUES ('mailer', '{"type" : "smtp", "host" : ""}');
+INSERT INTO configuration (name, value) VALUES ('mailer', '{"type" : "smtp", "host" : "ssl://smtp.gmail.com", "port" : 465, "user" : "", "password" : "", "auth" : true, "secure" : "tls", "from" : "notifications@maarch.org"}');
