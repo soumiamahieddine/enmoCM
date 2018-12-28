@@ -718,4 +718,5 @@ export const LANG_EN = {
     "prioritiesAlt"                                     : "Priorities",
     "undefinedStatus"                                   : "Undefined status",
     "subEntities"                                       : "Entities (and sub-entities)",
+    "category_id"                                       : "Category",
 };

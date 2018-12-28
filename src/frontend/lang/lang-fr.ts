@@ -744,4 +744,5 @@ export const LANG_FR = {
     "prioritiesAlt"                                     : "Priorités",
     "undefinedStatus"                                   : "Statut non défini",
     "subEntities"                                       : "Entités (et sous-entités)",
+    "category_id"                                       : "Catégorie",
 };

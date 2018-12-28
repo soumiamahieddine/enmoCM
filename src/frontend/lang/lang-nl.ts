@@ -747,4 +747,5 @@ export const LANG_NL = {
     "prioritiesAlt" : "_TO_TRANSLATE",
     "undefinedStatus" : "_TO_TRANSLATE",
     "subEntities" : "_TO_TRANSLATE",
+    "category_id" : "_TO_TRANSLATE",
 };

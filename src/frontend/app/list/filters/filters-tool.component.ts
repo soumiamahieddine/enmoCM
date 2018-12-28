@@ -38,6 +38,7 @@ export class FiltersToolComponent implements OnInit {
 
     displayColsOrder = [
         { 'id': 'dest_user' },
+        { 'id': 'category_id' },
         { 'id': 'creation_date' },
         { 'id': 'process_limit_date' },
         { 'id': 'destination' },
