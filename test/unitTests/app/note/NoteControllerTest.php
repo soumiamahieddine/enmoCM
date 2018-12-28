@@ -24,6 +24,9 @@ class NoteControllerTest extends TestCase
         ]);
 
         $resID['resId'] = $getResId[0]['res_id'];
+
+        $this->assertInternalType('int', $resID['resId']);
+
         $noteController = new \Note\controllers\NoteController();
 
         // CREATE WITH ALL DATA -> OK

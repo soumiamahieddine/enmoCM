@@ -8,6 +8,7 @@
 */
 
 use PHPUnit\Framework\TestCase;
+use SrcCore\models\DatabaseModel;
 
 class HistoryControllerTest extends TestCase
 {
@@ -67,5 +68,29 @@ class HistoryControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody->batchHistories);
         $this->assertInternalType('bool', $responseBody->limitExceeded);
         $this->assertNotNull($responseBody->batchHistories);
+    }
+
+    public function testRealDelete(){
+        
+        //get notes
+        $getResId = DatabaseModel::select([
+            'select'    => ['res_id'],
+            'table'     => ['res_letterbox'],
+            'limit'     => 1,
+        ]);
+
+        $resID['resId'] = $getResId[0]['res_id'];
+        
+        //  REAL DELETE
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'res_letterbox',
+            'where' => ['res_id = ?'],
+            'data'  => [$resID['resId']]
+        ]);
+
+        //  READ
+        $res = \Resource\models\ResModel::getById(['resId' => $resID['resId']]);
+        $this->assertInternalType('array', $res);
+        $this->assertEmpty($res);
     }
 }

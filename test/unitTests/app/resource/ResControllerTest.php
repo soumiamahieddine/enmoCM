@@ -395,17 +395,5 @@ class ResControllerTest extends TestCase
         $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
         $this->assertInternalType('array', $res);
         $this->assertSame('DEL', $res['status']);
-
-        //  REAL DELETE
-        \SrcCore\models\DatabaseModel::delete([
-            'table' => 'res_letterbox',
-            'where' => ['res_id = ?'],
-            'data'  => [self::$id]
-        ]);
-
-        //  READ
-        $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
-        $this->assertInternalType('array', $res);
-        $this->assertEmpty($res);
     }
 }
