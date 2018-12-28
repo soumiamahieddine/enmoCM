@@ -32,7 +32,7 @@ class PreparedClauseController
             $clause = str_replace('@user', "'{$aArgs['login']}'", $clause);
         }
         if (preg_match('/@email/', $clause)) {
-            $user = UserModel::getByUserId(['userId' => $aArgs['login'], 'select' => ['mail']]);
+            $user = UserModel::getByLogin(['login' => $aArgs['login'], 'select' => ['mail']]);
             $clause = str_replace('@email', "'{$user['mail']}'", $clause);
         }
         if (preg_match('/@my_entities/', $clause)) {

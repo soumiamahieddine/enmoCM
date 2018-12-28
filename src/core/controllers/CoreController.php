@@ -33,7 +33,7 @@ class CoreController
         $aInit['applicationName'] = CoreConfigModel::getApplicationName();
         $aInit['applicationMinorVersion'] = CoreConfigModel::getApplicationVersion()['applicationMinorVersion'];
         $aInit['lang'] = CoreConfigModel::getLanguage();
-        $aInit['user'] = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        $aInit['user'] = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
 
         $aInit['scriptsToinject'] = [];
         $scriptsToInject = [];
@@ -65,7 +65,7 @@ class CoreController
 
     public function getHeader(Request $request, Response $response)
     {
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
         $user['indexingGroups'] = [];

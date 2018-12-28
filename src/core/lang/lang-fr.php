@@ -132,6 +132,7 @@ define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
 define('_DOC_ADDED', 'Document ajouté');
 define('_ATTACH_DISPLAYING', 'Visualisation de la pièce jointe');
+define('_NOTE_ADDED', 'Annotation ajoutée');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
@@ -189,6 +190,10 @@ define('_ADMIN_NOTIFICATIONS_DESC', "Créer et gérer des notifications aux util
 define('_TEMPLATES', 'Modèles de documents');
 define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les annotations");
 define('_SECURITIES', 'Sécurités');
+define('_SENDMAIL_PARAM', 'Serveur mail');
+define('_SENDMAIL_PARAM_DESC', 'Connecter votre serveur de mail à Maarch Courrier afin de pouvoir envoyer des courriels.');
+
+
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');

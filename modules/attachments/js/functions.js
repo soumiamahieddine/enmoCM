@@ -365,6 +365,7 @@ function historyBack(errorMessage){
 function displayInfos(chrono_number, title, contactid, addressid, placeholder, listchrononumber, hiddendata, res_id){
     var chrono_res = window.opener.$('chrono_number');
     var chrono_tr = window.opener.$('chrono_number_tr');
+    var attachment_type_tr = window.opener.$('attachment_type_tr'); // NCH01 new modifs
 
     var list_chrono = window.opener.$('list_chrono_number');
     var list_chrono_tr = window.opener.$('list_chrono_number_tr');
@@ -375,6 +376,7 @@ function displayInfos(chrono_number, title, contactid, addressid, placeholder, l
     chrono_res.removeAttribute('class', 'readonly');
 
     list_chrono_tr.style.display = 'none';
+    attachment_type_tr.style.display = 'table-row'; // NCH01 new modifs
 
     // Enable the chrono number generator (For Orange customer the generate chrono number button is always enabled)
     window.opener.$('chrono_number_generate').style.display = 'table-row';
@@ -392,8 +394,6 @@ function displayInfos(chrono_number, title, contactid, addressid, placeholder, l
         // Fill the hidden input, to get the contact info after the form validation
         window.opener.$('contactid').value = contactid;
         window.opener.$('addressid').value = addressid;
-    }else{
-        window.opener.$('contact_id_tr').style.display = 'table-row';
     }
     // Fill the object input with the current title
     if(title)
@@ -436,10 +436,6 @@ function affiche_chrono_reconciliation(){
                 chrono_number.setAttribute('readonly','readonly');
                 chrono_number.setAttribute('class','readonly');
                 $('chrono_number_generate').style.display = 'none';
-
-                if($('contact_id_tr').style.display === 'none' && (document.getElementById('contactid').value === '' && document.getElementById('addressid').value === '')){
-                    $('contact_id_tr').style.display = 'table-row';
-                }
             }
         });
 }
@@ -454,13 +450,33 @@ function fillHiddenInput(chrono_number){ // Function used to fill the chrono num
         if(allInfos[i][0] === chrono_number){   // Fill the hidden contact input
             if(allInfos[i][1] === '' && allInfos[i][2] === ''){
                 document.getElementById('title').value = allInfos[i][3];
-                document.getElementById('contact_id_tr').style.display = 'table-row';
             }else{
                 document.getElementById('contactid').value = allInfos[i][1];
                 document.getElementById('addressid').value = allInfos[i][2];
                 document.getElementById('title').value = allInfos[i][3];
                 document.getElementById('contact_id_tr').style.display = 'none';
             }
+        }
+    }
+}
+
+function display_chrono(){
+    var type_id = document.getElementById('attachment_type').options[document.getElementById('attachment_type').selectedIndex];
+    var hiddenInput = document.getElementById('hiddenChronoNumber').value;
+
+    if (type_id.getAttribute('with_chrono') === 'true') {
+        if(hiddenInput === ''){
+            $('chrono_number_tr').setStyle({display: 'table-row'});
+            $('chrono_number_generate').setStyle({display: 'table-row'});
+        }else{
+            $('list_chrono_number_tr').setStyle({display: 'table-row'});
+        }
+    } else {
+        if(hiddenInput === ''){
+            $('chrono_number_tr').setStyle({display: 'none'});
+            $('chrono_number_generate').setStyle({display: 'none'});
+        }else{
+            $('list_chrono_number_tr').setStyle({display: 'none'});
         }
     }
 }

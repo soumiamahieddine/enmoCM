@@ -13,8 +13,6 @@ $core->test_user();
 // Variable declaration
 $res_id = $_SESSION['doc_id'];
 $res_id_master = $_SESSION['stockCheckbox'];
-$letterboxTable = $_SESSION['tablename']['reconciliation']['letterbox'];
-$attachmentTable = $_SESSION['tablename']['reconciliation']['attachment'];
 $delete_response_project = $_SESSION['modules_loaded']['attachments']['reconciliation']['delete_response_project'];
 $close_incoming = $_SESSION['modules_loaded']['attachments']['reconciliation']['close_incoming'];
 
@@ -31,7 +29,7 @@ $tabFormValues = $_SESSION['modules_loaded']['attachments']['reconciliation']['t
 if($delete_response_project == 'true'){
     \SrcCore\models\DatabaseModel::update([
         'set'       => ['status' => 'DEL'],
-        'table'     => $attachmentTable,
+        'table'     => 'res_attachments',
         'where'     => ["res_id_master = ? AND identifier = ? AND status NOT IN ('DEL','TMP') AND attachment_type = 'response_project'"],
         'data'      => [$res_id_master[0], $tabFormValues['chrono_number']],
     ]);

@@ -13,6 +13,7 @@ class UserControllerTest extends TestCase
 {
     private static $id = null;
     private static $idEmailSignature = null;
+    private static $redirectId = null;
 
 
     public function testGet()
@@ -682,7 +683,7 @@ class UserControllerTest extends TestCase
         $aArgs = [];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $user = \User\models\UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $response     = $userController->resetPassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
@@ -796,12 +797,20 @@ class UserControllerTest extends TestCase
             ]
         ];
 
-        $user_id = \User\models\UserModel::getByUserId(['userId' => 'bbain', 'select' => ['id']]);
+        $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
         
         $this->assertNotNull($responseBody->baskets);
+        $this->assertNotNull($responseBody->redirectedBaskets);
+        foreach ($responseBody->redirectedBaskets as $redirectedBasket) {
+            if ($redirectedBasket->actual_user_id == 21 && $redirectedBasket->basket_id == 'MyBasket' && $redirectedBasket->group_id == 2) {
+                self::$redirectId = $redirectedBasket->id;
+            }
+        }
+        $this->assertNotNull(self::$redirectId);
+        $this->assertInternalType('int', self::$redirectId);
 
         $aArgs = [
             [
@@ -844,24 +853,14 @@ class UserControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-//        $aArgs = [
-//                'basketOwner'   =>  'bbain',
-//        ];
-//
-        $user_id = \User\models\UserModel::getByUserId(['userId' => 'bbain', 'select' => ['id']]);
-//        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-//        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'MyBasket']);
-//        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'EenvBasket']);
-//        $responseBody = json_decode((string)$response->getBody());
-//
-//        $this->assertNotNull($responseBody->baskets);
+        $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
 
-        $aArgs = [
-            'basketOwner'   =>  null,
-        ];
+        $response     = $userController->deleteRedirectedBasket($request, new \Slim\Http\Response(), ['id' => $user_id['id'], 'redirectBasketid' => self::$redirectId]);
+        $responseBody = json_decode((string)$response->getBody());
 
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'redirectBasketid' => -1]);
+        $this->assertNotNull($responseBody->baskets);
+
+        $response     = $userController->deleteRedirectedBasket($request, new \Slim\Http\Response(), ['id' => $user_id['id'], 'redirectBasketid' => -1]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Redirected basket out of perimeter', $responseBody->errors);

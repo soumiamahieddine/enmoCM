@@ -42,7 +42,7 @@ class ContactGroupControllerTest extends TestCase
         $response       = $contactGroupController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $user = \User\models\UserModel::getByUserId(['select' => ['id'], 'userId' => 'superadmin']);
+        $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => 'superadmin']);
         $this->assertSame(self::$id, $responseBody->contactsGroup->id);
         $this->assertSame('Groupe petition', $responseBody->contactsGroup->label);
         $this->assertSame('Groupe de petition', $responseBody->contactsGroup->description);
@@ -160,7 +160,7 @@ class ContactGroupControllerTest extends TestCase
         $response       = $contactGroupController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $user = \User\models\UserModel::getByUserId(['select' => ['id'], 'userId' => 'superadmin']);
+        $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => 'superadmin']);
         $this->assertSame(self::$id, $responseBody->contactsGroup->id);
         $this->assertSame($user['id'], $responseBody->contactsGroup->owner);
         $this->assertSame('superadmin', $responseBody->contactsGroup->entity_owner);

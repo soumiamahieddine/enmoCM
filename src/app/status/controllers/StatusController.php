@@ -26,10 +26,6 @@ class StatusController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         return $response->withJson(['statuses' => StatusModel::get()]);
     }
 
@@ -96,7 +92,7 @@ class StatusController
 
         StatusModel::create($aArgs);
 
-        $return['status'] = StatusModel::getById(['id' => $aArgs['id']])[0];
+        $return['status'] = StatusModel::getById(['id' => $aArgs['id']]);
 
         HistoryController::add([
             'tableName' => 'status',
@@ -194,7 +190,7 @@ class StatusController
             if (!empty($obj)) {
                 array_push(
                     $errors,
-                    _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
+                    _ID . ' ' . $obj['id'] . ' ' . _ALREADY_EXISTS
                 );
             }
         } elseif ($mode == 'update') {

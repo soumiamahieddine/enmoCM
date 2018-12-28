@@ -132,6 +132,7 @@ define('_BACK_FROM_VACATION', 'back from vacation');
 define('_DOC_DISPLAYING', 'Displaying document');
 define('_DOC_ADDED', 'Document added');
 define('_ATTACH_DISPLAYING', 'Displaying attachment');
+define('_NOTE_ADDED', 'Note added');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
@@ -189,6 +190,8 @@ define('_ADMIN_NOTIFICATIONS_DESC', " Create and manage users' notifications bas
 define('_TEMPLATES', 'Templates');
 define('_ADMIN_TEMPLATES_DESC', 'Manage templates for attachments, notifications, document generation, sendmail and notes');
 define('_SECURITIES', 'Securities');
+define('_SENDMAIL_PARAM', 'Mail server');
+define('_SENDMAIL_PARAM_DESC', 'Link your mail serveur with application in order to send emails.');
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Redirect to an action');

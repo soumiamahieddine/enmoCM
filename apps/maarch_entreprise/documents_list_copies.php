@@ -413,7 +413,7 @@ if (!empty($tab)) {
                     $tab[$i][$j]['show'] = false;
                     $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
                     if (!empty($tab[$i][$j]['value'])) {
-                        $user = \User\models\UserModel::getByUserId(['userId' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
+                        $user = \User\models\UserModel::getByLogin(['login' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
                         $dest = $tab[$i][$j]['value'];
                         $dest = $user['firstname'] . ' ' . $user['lastname'];
                     } else {

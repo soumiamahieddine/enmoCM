@@ -129,16 +129,16 @@ abstract class UserModelAbstract
         return true;
     }
 
-    public static function getByUserId(array $aArgs)
+    public static function getByLogin(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['login']);
+        ValidatorModel::stringType($aArgs, ['login']);
 
         $aUser = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
+            'data'      => [$aArgs['login']]
         ]);
 
         if (empty($aUser)) {
@@ -311,7 +311,7 @@ abstract class UserModelAbstract
         if (!empty($aArgs['id'])) {
             $rawUser = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname']]);
         } elseif (!empty($aArgs['userId'])) {
-            $rawUser = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['firstname', 'lastname']]);
+            $rawUser = UserModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['firstname', 'lastname']]);
         }
 
         $labelledUser = '';

@@ -118,7 +118,7 @@ class ReceiveMessageExchangeController
         ]);
 
         $basketRedirection = null;
-        $userBaskets = BasketModel::getBasketsByUserId(['userId' => $GLOBALS['userId']]);
+        $userBaskets = BasketModel::getBasketsByLogin(['login' => $GLOBALS['userId']]);
         if (!empty($userBaskets)) {
             foreach ($userBaskets as $value) {
                 if ($value['basket_id'] == $aDefaultConfig['basketRedirection_afterUpload'][0]) {

@@ -274,7 +274,7 @@ class ListTemplateController
         $data = $request->getParams();
 
         foreach ($data['redirectListModels'] as $listModel) {
-            $user = UserModel::getByUserId(['userId' => $listModel['redirectUserId']]);
+            $user = UserModel::getByLogin(['login' => $listModel['redirectUserId']]);
             if (empty($user)) {
                 return $response->withStatus(400)->withJson(['errors' => 'User not found']);
             }

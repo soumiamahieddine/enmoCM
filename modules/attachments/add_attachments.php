@@ -10,33 +10,32 @@ $core = new core_tools();
 $core->test_user();
 $db = new Database();
 
-require_once 'modules/attachments/Controllers/ReconciliationController.php';
-$reconciliationControler = new ReconciliationController();
-
-$letterboxTable = $_SESSION['tablename']['reconciliation']['letterbox'];
-
 // Retrieve the parent res_id (the document which receive the attachment) and the res_id of the attachment we will inject
 $parentResId = $_SESSION['stockCheckbox'];
 $childResId = $_SESSION['doc_id'];
 
 // Retrieve the data of the form (title, chrono number, recipient etc...)
-$formValues = $reconciliationControler -> get_values_in_array($_REQUEST['form_values']);
+$formValues = get_values_in_array($_REQUEST['form_values']);
 $tabFormValues = array();
 
-foreach ($formValues as $tmpTab) {
-    if ($tmpTab['ID'] == 'title' || $tmpTab['ID'] == 'chrono_number' || $tmpTab['ID'] == 'contactid' || $tmpTab['ID'] == 'addressid' || $tmpTab['ID'] == 'close_incoming_mail') {
-        if ($tmpTab['ID'] == 'chrono_number') { // Check if the identifier is empty. if true, set it at 0
-            if (empty($tmpTab['VALUE'])) {
-                $tmpTab ['VALUE'] = "0";
-            }
-        }
-        if (trim($tmpTab['VALUE']) != '') { // Case of some empty value, that cause some errors
+// NCH01 new modifs
+$allowValues = array('title', 'chrono_number', 'contactid','addressid','close_incoming_mail', 'attachment_type', 'back_date');
+foreach($formValues as $tmpTab){
+    if(in_array($tmpTab['ID'], $allowValues)){
+        if($tmpTab['ID'] == 'chrono_number') // Check if the identifier is empty. if true, set it at NULL
+            if(empty($tmpTab['VALUE'])) $tmpTab ['VALUE'] = NULL;
+        if(trim($tmpTab['VALUE']) != '') // Case of some empty value, that cause some errors
             $tabFormValues[$tmpTab['ID']] = $tmpTab['VALUE'];
-        }
     }
 }
+// END NCH01 new modifs
 
 $_SESSION['modules_loaded']['attachments']['reconciliation']['tabFormValues'] = $tabFormValues;    // declare SESSION var, used in remove_letterbox
+
+// Remove chrono number depends on attachment type ("with chrono" param) // new modifs
+if($_SESSION['attachment_types_with_chrono'][$tabFormValues['attachment_type']] == 'false'){
+    $tabFormValues['chrono_number'] = NULL;
+}
 
 // Retrieve the informations of the newly scanned document (the one to attach as an attachment)
 $queryChildInfos = \Resource\models\ResModel::getById(['resId' => $childResId]);
@@ -92,12 +91,12 @@ array_push(
     )
 );
 
-// The attachment type need to be signed_response
+// Attachment type
 array_push(
     $aArgs['data'],
     array(
         'column' => 'attachment_type',
-        'value' => 'outgoing_mail_signed',
+        'value' => $tabFormValues['attachment_type'], // NEW MODIFS
         'type' => 'string',
     )
 );
@@ -146,7 +145,7 @@ if (is_numeric($tabFormValues['contactid'])) { // usefull to avoid user contact 
     );
 }
 //collId's
-$aArgs['collId'] = 'attachment_coll';
+$aArgs['collId'] = 'letterbox_coll';
 $aArgs['collIdMaster'] = 'letterbox_coll';
 
 //table
@@ -172,6 +171,7 @@ for ($i = 0; $i <= count($aArgs['data']); $i++) {
             $aArgs['filename'] = $aArgs['data'][$i]['value'];
         }
     }
+
     if ($aArgs['data'][$i]['column'] == 'docserver_id') {
         // Retrieve the PATH TEMPLATE
         $docserverPath = \Docserver\models\DocserverModel::getByDocserverId([
@@ -184,8 +184,12 @@ for ($i = 0; $i <= count($aArgs['data']); $i++) {
     }
 }
 
+$file = file_get_contents($aArgs['docserverPath'] . str_replace('#', '/', $aArgs['path']) . $aArgs['filename']);
+$aArgs['encodedFile'] = base64_encode($file);
+$aArgs['status']      = 'TRA';
 
-// Add logical adr and offset to empty (loadIntoDb function needed it)
+// Add offset to empty (loadIntoDb function needed it)
+
 array_push(
     $aArgs['data'],
     array(
@@ -195,14 +199,55 @@ array_push(
     )
 );
 
+array_push(
+    $aArgs['data'],
+    array(
+        'column' => 'typist',
+        'value' => $_SESSION['user']['UserId'],
+        'type' => 'string',
+    )
+);
+
+array_push(
+    $aArgs['data'],
+    array(
+        'column' => 'coll_id',
+        'value' => 'letterbox_coll',
+        'type' => 'string',
+    )
+);
+
+array_push(
+    $aArgs['data'],
+    array(
+        'column' => 'res_id_master',
+        'value' => $aArgs['resIdMaster'],
+        'type' => 'string',
+    )
+);
+
 // res_attachment insertion
 if (count($parentResId) == 1) {
-    $aArgs['resIdMaster'] = $parentResId[0];
-    $insertResAttach = $reconciliationControler -> storeAttachmentResource($aArgs);
+    array_push(
+        $aArgs['data'],
+        array(
+            'column' => 'res_id_master',
+            'value' => $parentResId[0],
+            'type' => 'string',
+        )
+    );
+    $insertResAttach = \Resource\controllers\StoreController::storeResourceRes($aArgs);
 } else {
     for ($i = 0; $i < count($parentResId); $i++) {
-        $aArgs['resIdMaster'] = $parentResId[$i];
-        $insertResAttach = $reconciliationControler->storeAttachmentResource($aArgs);
+        array_push(
+            $aArgs['data'],
+            array(
+                'column' => 'res_id_master',
+                'value' => $parentResId[$i],
+                'type' => 'string',
+            )
+        );
+        $insertResAttach = \Resource\controllers\StoreController::storeResourceRes($aArgs);
     }
 }
 unset($_SESSION['save_chrono_number']); // Usefull to avoid duplicate chrono number

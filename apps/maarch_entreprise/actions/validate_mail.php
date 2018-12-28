@@ -479,6 +479,27 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '</tr>';
     $frm_str .= '<script>$j("#type_id").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
 
+    // NCH01 add attachment_type
+    $frm_str .= '<tr id="attachment_type_tr" style="display:none">';
+    $frm_str .='<td><label for="attachment_type" class="form_title" >'._ATTACHMENT_TYPE.'</label></td>';
+    $frm_str .='<td>&nbsp;</td>';
+    $frm_str .='<td class="indexing_field"><select name="attachment_type" id="attachment_type" onchange="display_chrono();clear_error(\'frm_error_'.$id_action.'\');">';
+    $frm_str .="<option value='' selected>". _CHOOSE_ATTACHMENT_TYPE . "</option>";
+    if(in_array('true',array_values($_SESSION['attachment_types_reconciliation']))){
+        foreach($_SESSION['attachment_types_reconciliation'] as $attachmentType => $isReconciliation){
+            if($isReconciliation == 'true'){
+                $frm_str .= "<option value='" . $attachmentType . "' with_chrono='" . $_SESSION['attachment_types_with_chrono'][$attachmentType] . "'>";
+                $frm_str .= $_SESSION['attachment_types'][$attachmentType];
+                $frm_str .= "</option>";
+            }
+        }
+    }else{
+        $frm_str .= "<option value='outgoing_mail_signed' with_chrono='" . $_SESSION['attachment_types_with_chrono']['outgoing_mail_signed'] . "' selected>" . $_SESSION['attachment_types']['outgoing_mail_signed'] . "</option>";
+    }
+    $frm_str .= '</select></td>';
+    $frm_str .='<td><span class="red_asterisk" id="attachment_type_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+    $frm_str .= '</tr>';
+
     /*** Object NCH01 ***/
     $frm_str .= '<tr id="title_tr" style="display:none">';
     $frm_str .= '<td><label for="title" class="form_title" >'._OBJECT.'</label></td>';
@@ -505,7 +526,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<input type="hidden" name="hiddenChronoNumber" id="hiddenChronoNumber" value="">';
     $frm_str .= '</tr>';
     $frm_str .= '<tr style="display:none" id="chrono_number_generate"><td colspan="3" style="text-align:center">';
-    $frm_str .= '<a href="#" onclick="affiche_chrono_reconciliation()">'._GENERATE_CHRONO_NUMBER.'</a>';    // NCH
+    $frm_str .= '<a href="#" onclick="affiche_chrono_reconciliation()">'._GENERATE_CHRONO_NUMBER.'</a>';    // NCH01
     $frm_str .= '</td></tr>';
 
     /*** Priority ***/
@@ -1485,6 +1506,15 @@ function check_form($form_id, $values)
 
             return false;
         }
+
+        // NCH01
+        $attachment_type = get_value_fields($values, 'attachment_type');
+        if($cat_id == 'attachment' && $attachment_type == ''){
+            $_SESSION['action_error'] = _ATTACHMENT_TYPE . ' ' . _IS_EMPTY;
+            return false;
+        }
+        // END NCH01
+
         $no_error = process_category_check($cat_id, $values);
 
         return $no_error;
@@ -1634,6 +1664,19 @@ function process_category_check($cat_id, $values)
             }
         }
     }
+
+    // Attachments --> NCH01
+    if (isset($_ENV['categories'][$cat_id]['other_cases']['chrono_number']) && $_ENV['categories'][$cat_id]['other_cases']['chrono_number']['mandatory'] == true) {
+        $chrono = get_value_fields(
+            $values, 'chrono_number'
+        );
+        if ($chrono === '') {
+            $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['chrono_number']['label']
+                . " " . _MANDATORY;
+            return false;
+        }
+    }
+    // end NCH01
 
     if ($core->is_module_loaded('entities')) {
         // Diffusion list
@@ -1971,7 +2014,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     }
 
     //store the initiator entity
-    $initiator = get_value_fields($values, 'initiator');
+    $initiator = get_value_fields($values_form, 'initiator');
     if (!empty($initiator)) {
         $query_res .= ', initiator = ?';
         $arrayPDOres = array_merge($arrayPDOres, array($initiator));

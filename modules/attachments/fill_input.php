@@ -6,7 +6,6 @@
  *
  */
 
-
 $core = new core_tools();
 $core->test_user();
 $core->load_js();
@@ -15,10 +14,6 @@ $db = new Database();
 // Get informations from config.xml
 $multiple_res_id = $_SESSION['modules_loaded']['attachments']['reconciliation']['multiple_res_id'];
 $attach_to_empty = $_SESSION['modules_loaded']['attachments']['reconciliation']['attach_to_empty'];
-$attachmentTable = $_SESSION['tablename']['reconciliation']['attachment'];
-$letterboxTable = $_SESSION['tablename']['reconciliation']['letterbox'];
-$contactsV2Table = $_SESSION['tablename']['reconciliation']['contacts_v2'];
-$contactsAddressesTable = $_SESSION['tablename']['reconciliation']['contact_addresses'];
 
 // If no documents are choosen, force the user to modify his choice by going back in the modal window
 // If multiple documents are choose, the user have to enter manually the chrono number, the title and the recipient

@@ -1714,3 +1714,6 @@ if (!defined('_MAIN_DOCUMENT')) {
 if (!defined('_DOWNLOAD_MAIN_DOCUMENT')) {
     define('_DOWNLOAD_MAIN_DOCUMENT', 'Download het hoofddocument');
 }
+if (!defined('_SENDMAIL_PARAM')) {
+    define('_SENDMAIL_PARAM', '_TO_TRANSLATE');
+}

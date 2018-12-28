@@ -1,0 +1,74 @@
+.envFilter {
+    height: 40px;
+
+    mat-icon{
+        height: auto;
+    }
+
+    .mat-button-toggle-checked {
+        background-color: #F99830;
+        color: white;
+    }
+}
+.filterBadges>.badge-meta {
+    margin: 5px;
+    background: #666;
+    cursor: pointer;
+}
+
+.filterBadges>.badge-cat {
+    margin: 5px;
+    background: #78AD32;
+    cursor: pointer;
+}
+
+.filterBadges>.badge-stat {
+    margin: 5px;
+    background: #5bc0de;
+    cursor: pointer;
+}
+
+.filterBadges>.badge-prio {
+    margin: 5px;
+    background: #F9D812;
+    cursor: pointer;
+}
+
+.filterBadges>.badge-ent {
+    margin: 5px;
+    background: #7d5ba6;
+    cursor: pointer;
+}
+
+
+.filterContent {
+    height: auto;
+}
+
+.filterContent:hover {
+    background: inherit !important;
+}
+
+.mat-option .badge{
+    background: #F99830;
+    font-size: 11px;
+}
+
+.mat-option-text {
+    display: flex !important;
+    overflow: inherit !important;
+}
+
+.mat-autocomplete-panel {
+    min-width: 400px !important;
+}
+
+.mat-optgroup-label {
+    color: #F99830;
+    font-size: 14px;
+    font-weight: 500;
+}
+.undefined {
+    opacity: 0.5;
+    font-style: italic;
+}

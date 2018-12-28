@@ -52,6 +52,7 @@ return array(
     'Convert\\' => array($baseDir . '/src/app/convert'),
     'ContentManagement\\' => array($baseDir . '/src/app/contentManagement'),
     'Contact\\' => array($baseDir . '/src/app/contact'),
+    'Configuration\\' => array($baseDir . '/src/app/configuration'),
     'Clue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),
     'Basket\\' => array($baseDir . '/src/app/basket'),
     'Attachment\\' => array($baseDir . '/src/app/attachment'),

@@ -56,7 +56,7 @@ if (empty($docserver)) {
         } else {
             require_once "core/class/class_request.php";
             $db = new Database();
-            $signatoryUser = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+            $signatoryUser = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
             if ($_SESSION['visa']['repSignRel'] > 1) {
                 $target_table = 'res_version_attachments';
                 $db->query("UPDATE res_version_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?", [$signatoryUser['id'], $_SESSION['visa']['repSignId']]);

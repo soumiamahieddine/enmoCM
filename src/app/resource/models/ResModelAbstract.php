@@ -23,7 +23,7 @@ abstract class ResModelAbstract
     public static function getOnView(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy', 'groupBy']);
         ValidatorModel::intType($aArgs, ['limit', 'offset']);
 
         $aResources = DatabaseModel::select([
@@ -32,58 +32,12 @@ abstract class ResModelAbstract
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy'],
             'offset'    => empty($aArgs['offset']) ? 0 : $aArgs['offset'],
             'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
         
         return $aResources;
-    }
-
-    public static function getForList(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resIds']);
-        ValidatorModel::arrayType($aArgs, ['resIds']);
-
-        $resources = DatabaseModel::select([
-            'select'    => [
-                'res_letterbox.res_id',
-                'res_letterbox.subject',
-                'res_letterbox.creation_date',
-                'mlb_coll_ext.alt_identifier',
-                'mlb_coll_ext.category_id',
-                'mlb_coll_ext.closing_date',
-                'mlb_coll_ext.process_limit_date',
-                'entities.entity_label as entity_destination',
-                'doctypes.description as doctype_label',
-                'contacts_v2.firstname as contact_firstname',
-                'contacts_v2.lastname as contact_lastname',
-                'contacts_v2.society as contact_society',
-                'users.firstname as user_firstname',
-                'users.lastname as user_lastname',
-                'priorities.color as priority_color',
-                'priorities.label as priority_label',
-                'status.img_filename as status_icon',
-                'status.label_status as status_label',
-                'status.id as status_id',
-                'us.lastname as user_dest_lastname',
-                'us.firstname as user_dest_firstname',
-            ],
-            'table'     => ['res_letterbox', 'mlb_coll_ext', 'entities', 'doctypes', 'contacts_v2', 'users', 'priorities', 'status', 'users us'],
-            'left_join' => [
-                'res_letterbox.res_id = mlb_coll_ext.res_id',
-                'res_letterbox.destination = entities.entity_id',
-                'res_letterbox.type_id = doctypes.type_id',
-                'mlb_coll_ext.exp_contact_id = contacts_v2.contact_id OR mlb_coll_ext.dest_contact_id = contacts_v2.contact_id',
-                'mlb_coll_ext.exp_user_id = users.user_id OR mlb_coll_ext.dest_user_id = users.user_id',
-                'res_letterbox.priority = priorities.id',
-                'res_letterbox.status = status.id',
-                'res_letterbox.dest_user = us.user_id'
-            ],
-            'where'     => ['res_letterbox.res_id in (?)'],
-            'data'      => [$aArgs['resIds']]
-        ]);
-
-        return $resources;
     }
 
     public static function get(array $aArgs)
@@ -239,7 +193,7 @@ abstract class ResModelAbstract
                 'r.res_id = mlb.res_id',
             ],
             'data'      => [$aArgs['userId'], ['res_letterbox', 'res_view_letterbox'], 'none', 'linkup', 'attach%', 'DEL'],
-            'group_by'  => ['r.subject', 'r.creation_date', 'r.res_id', 'mlb.alt_identifier', 'mlb.closing_date', 'mlb.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
+            'groupBy'   => ['r.subject', 'r.creation_date', 'r.res_id', 'mlb.alt_identifier', 'mlb.closing_date', 'mlb.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
             'order_by'  => ['MAX(history.event_date) DESC'],
             'limit'     => $aArgs['limit']
         ]);

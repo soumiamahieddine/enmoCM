@@ -39,3 +39,16 @@ DO $$ BEGIN
 --       DROP TABLE IF EXISTS user_abs;
   END IF;
 END$$;
+UPDATE history SET table_name = 'redirected_baskets' WHERE table_name = 'user_abs';
+
+DROP TABLE IF EXISTS configuration;
+CREATE TABLE configuration
+(
+id serial NOT NULL,
+name character varying(64) NOT NULL,
+value json DEFAULT '{}' NOT NULL,
+CONSTRAINT configuration_pkey PRIMARY KEY (id),
+CONSTRAINT configuration_unique_key UNIQUE (name)
+)
+WITH (OIDS=FALSE);
+INSERT INTO configuration (name, value) VALUES ('mailer', '{"type" : "smtp", "host" : ""}');

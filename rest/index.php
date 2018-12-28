@@ -26,7 +26,7 @@ if (file_exists("custom/{$customId}/src/core/lang/lang-{$language}.php")) {
 require_once("src/core/lang/lang-{$language}.php");
 
 
-$app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true]]);
+$app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true, 'addContentLengthHeader' => false ]]);
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
@@ -201,6 +201,7 @@ $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplat
 
 //Notes
 $app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
+$app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
@@ -222,6 +223,10 @@ $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class
 $app->get('/sortedPriorities', \Priority\controllers\PriorityController::class . ':getSorted');
 $app->put('/sortedPriorities', \Priority\controllers\PriorityController::class . ':updateSort');
 
+// Reconciliation
+$app->post('/reconciliation/add', \Attachment\controllers\ReconciliationController::class . ':create');
+$app->get('/reconciliation/check', \Attachment\controllers\ReconciliationController::class . ':checkAttachment');
+
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
 $app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':getByGroupId');
@@ -242,7 +247,9 @@ $app->get('/categories', \Resource\controllers\ResController::class . ':getCateg
 $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
 
-$app->get('/resourcesList/users/{userId}/groups/{groupSerialId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
+//ResourcesList
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/filters', \Resource\controllers\ResourceListController::class . ':getFilters');
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');

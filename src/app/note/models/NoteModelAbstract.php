@@ -21,9 +21,9 @@ abstract class NoteModelAbstract
 {
     public static function countByResId(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'login']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['login']);
 
         $nb = 0;
         $countedNotes = [];
@@ -33,7 +33,7 @@ abstract class NoteModelAbstract
             'select'    => ['entity_id'],
             'table'     => ['users_entities'],
             'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
+            'data'      => [$aArgs['login']]
         ]);
 
         foreach ($aEntities as $value) {
@@ -53,7 +53,7 @@ abstract class NoteModelAbstract
                 ++$nb;
                 $countedNotes[] = $value['id'];
             } elseif (!empty($value['item_id'])) {
-                if ($value['user_id'] == $aArgs['userId'] && !in_array($value['id'], $countedNotes)) {
+                if ($value['user_id'] == $aArgs['login'] && !in_array($value['id'], $countedNotes)) {
                     ++$nb;
                     $countedNotes[] = $value['id'];
                 } elseif (in_array($value['item_id'], $entities) && !in_array($value['id'], $countedNotes)) {
@@ -68,22 +68,25 @@ abstract class NoteModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['identifier', 'tablename', 'user_id', 'coll_id', 'note_text']);
+        ValidatorModel::notEmpty($aArgs, ['identifier', 'note_text']);
         ValidatorModel::intVal($aArgs, ['identifier']);
+
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'notes_seq']);
 
         DatabaseModel::insert([
             'table' => 'notes',
             'columnsValues' => [
+                'id'         => $nextSequenceId,
                 'identifier' => $aArgs['identifier'],
-                'tablename'  => $aArgs['tablename'],
-                'user_id'    => $aArgs['user_id'],
+                'tablename'  => 'res_letterbox',
+                'user_id'    => $GLOBALS['userId'],
                 'date_note'  => 'CURRENT_TIMESTAMP',
                 'note_text'  => $aArgs['note_text'],
-                'coll_id'    => $aArgs['coll_id'],
+                'coll_id'    => 'letterbox_coll'
             ]
         ]);
 
-        return true;
+        return $nextSequenceId;
     }
 
     public static function getByResId(array $aArgs = [])

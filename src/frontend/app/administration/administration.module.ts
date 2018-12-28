@@ -43,6 +43,7 @@ import { DocserverAdministrationComponent }             from './docserver/docser
 import { TemplatesAdministrationComponent }             from './template/templates-administration.component';
 import { TemplateAdministrationComponent }              from './template/template-administration.component';
 import { SecuritiesAdministrationComponent }            from './security/securities-administration.component';
+import { SendmailAdministrationComponent }            from './sendmail/sendmail-administration.component';
 
 @NgModule({
     imports:      [
@@ -94,6 +95,7 @@ import { SecuritiesAdministrationComponent }            from './security/securit
         TemplatesAdministrationComponent,
         TemplateAdministrationComponent,
         SecuritiesAdministrationComponent,
+        SendmailAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,

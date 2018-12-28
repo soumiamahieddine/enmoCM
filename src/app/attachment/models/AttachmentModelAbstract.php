@@ -23,7 +23,7 @@ abstract class AttachmentModelAbstract
     public static function getOnView(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy', 'groupBy']);
         ValidatorModel::intType($aArgs, ['limit']);
 
         $aAttachments = DatabaseModel::select([
@@ -31,6 +31,7 @@ abstract class AttachmentModelAbstract
             'table'     => ['res_view_attachments'],
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
             'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);

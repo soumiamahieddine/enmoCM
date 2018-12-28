@@ -462,7 +462,17 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
             {id:'chrono_number_tr', type:'tr', state:'hide'},
             {id:'folder_mandatory', type:'label', state:'hide'},
             {id:'sr_sender_span', type:'label', state:'hide'},
-            {id:'sr_recipient_span', type:'label', state:'display'}
+            {id:'sr_recipient_span', type:'label', state:'display'},
+            // NCH01
+            {id:'type_id_tr', type:'tr', state:'display'},
+            {id:'confidentiality_tr', type:'tr', state:'display'},
+            {id:'diff_list_tr', type:'tr', state:'display'},
+            {id:'priority_tr', type:'tr', state:'display'},
+            {id:'subject_tr', type:'tr', state:'display'},
+            {id:'initiator_tr', type:'tr', state:'display'},
+            {id:'sender_recipient_tr', type:'tr', state:'display'},
+            {id:'doc_date_tr', type:'tr', state:'display'}
+            // END NCH01
         ];
     }
     //Category = OUTGOING
@@ -524,7 +534,17 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
             {id:'chrono_number_mandatory', type:'label', state:'hide'},
             {id:'folder_mandatory', type:'label', state:'hide'},
             {id:'sr_sender_span', type:'label', state:'display'},
-            {id:'sr_recipient_span', type:'label', state:'hide'}
+            {id:'sr_recipient_span', type:'label', state:'hide'},
+            //NCH01
+            {id:'type_id_tr', type:'tr', state:'display'},
+            {id:'confidentiality_tr', type:'tr', state:'display'},
+            {id:'diff_list_tr', type:'tr', state:'display'},
+            {id:'priority_tr', type:'tr', state:'display'},
+            {id:'subject_tr', type:'tr', state:'display'},
+            {id:'initiator_tr', type:'tr', state:'display'},
+            {id:'sender_recipient_tr', type:'tr', state:'display'},
+            {id:'doc_date_tr', type:'tr', state:'display'}
+            // END NCH01
         ];
     }
     //Category = INTERNAL
@@ -582,7 +602,17 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
         {id:'folder_mandatory', type:'label', state:'hide'},
             {id:'sr_sender_span', type:'label', state:'hide'},
-            {id:'sr_recipient_span', type:'label', state:'display'}
+            {id:'sr_recipient_span', type:'label', state:'display'},
+            //NCH01
+            {id:'type_id_tr', type:'tr', state:'display'},
+            {id:'confidentiality_tr', type:'tr', state:'display'},
+            {id:'diff_list_tr', type:'tr', state:'display'},
+            {id:'priority_tr', type:'tr', state:'display'},
+            {id:'subject_tr', type:'tr', state:'display'},
+            {id:'initiator_tr', type:'tr', state:'display'},
+            {id:'sender_recipient_tr', type:'tr', state:'display'},
+            {id:'doc_date_tr', type:'tr', state:'display'}
+            // END NCH01
         ];
     }
     //Category = GED_DOC
@@ -641,7 +671,15 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'external_id_tr', type:'tr', state:'hide'},
         {id:'external_id_mandatory', type:'tr', state:'hide'},
             {id:'sr_sender_span', type:'label', state:'hide'},
-            {id:'sr_recipient_span', type:'label', state:'display'}
+            {id:'sr_recipient_span', type:'label', state:'display'},
+            //NCH01
+            {id:'type_id_tr', type:'tr', state:'display'},
+            {id:'confidentiality_tr', type:'tr', state:'display'},
+            {id:'subject_tr', type:'tr', state:'display'},
+            {id:'initiator_tr', type:'tr', state:'display'},
+            {id:'sender_recipient_tr', type:'tr', state:'display'},
+            {id:'doc_date_tr', type:'tr', state:'display'}
+            // END NCH01
         ];
     } else if(cat_id == 'attachment'){    // NCH01
         var category = [
@@ -651,7 +689,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
             {id:'external_id_tr', type:'tr', state:'hide'},
             {id:'external_id_mandatory', type:'tr', state:'hide'},
             {id:'doc_date_label', type:'label', state:'hide'},
-            {id:'doc_date_tr', type:'label', state:'hide'},
+            {id:'doc_date_tr', type:'tr', state:'hide'},
             {id:'mail_date_label', type:'label', state:'hide'},
             {id:'author_tr', type:'tr', state:'hide'},
             {id:'admission_date_tr', type:'tr', state:'hide'},
@@ -704,7 +742,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
             {id:'add_multi_contact_tr', type:'tr', state:'hide'},
             {id:'show_multi_contact_tr', type:'tr', state:'hide'},
             {id:'sr_sender_span', type:'label', state:'hide'},
-            {id:'sr_recipient_span', type:'label', state:'display'}
+            {id:'sr_recipient_span', type:'label', state:'hide'},
+            {id:'initiator_tr', type:'tr', state:'hide'},
+            {id:'sender_recipient_tr', type:'tr', state:'hide'}
         ];
     }
 
@@ -764,10 +804,14 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                         $('destination').value = destination;
                     }
 
-                    if(cat_id == 'ged_doc'){
+                    if(cat_id == 'ged_doc'){	// NCH01
+                        document.getElementById("diff_list_tr").style.display = 'none';
+                    }else if(cat_id == 'attachment'){
+                        document.getElementById("subject_tr").style.display = 'none';
                         document.getElementById("diff_list_tr").style.display = 'none';
                     }else{
                         document.getElementById("diff_list_tr").style.display = 'table-row';
+                        document.getElementById("subject_tr").style.display = 'table-row';
                     }
 
                     if(cat_id != 'outgoing'){
@@ -818,6 +862,33 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
             }
         });
     }
+
+    // NCH01
+    if(cat_id == 'attachment'){
+        if(document.getElementById("attachment_tr")){
+            document.getElementById("attachment_tr").style.display='table-row';
+            document.getElementById("attach_show").style.display='table-row';
+        }
+    }else{
+        if(document.getElementById("attachment_tr")){
+            document.getElementById("attachment_tr").style.diplay = 'none';
+            document.getElementById("attach_show").style.display='none';
+        }
+    }
+
+    var process_date_not_used = $('process_limit_date_use_no').checked;
+    if(process_date_not_used){
+        activate_process_date(false, 'none');
+    }
+
+    var div_indexes = $('comp_indexes');
+    if(div_indexes && cat_id == 'attachment')
+    {
+        document.getElementById("comp_indexes").style.display='none';
+    }else if(div_indexes && cat_id !== 'attachment'){
+        document.getElementById("comp_indexes").style.display='table-row';
+    }
+    // END NCH01
 }
 
 /**
@@ -1205,6 +1276,7 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
         }
         else if($(external_type ).checked == true || $(multi_external_type ).checked == true )
         {
+            var cat_id = $(category_id).options[$(category_id).selectedIndex].value; // NCH01
             Element.setStyle(create_contact, {display : 'inline'});
             //create_contact.style.display = 'inline';
 			if($(multi_external_type ).checked == true){
@@ -1212,7 +1284,10 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 				Element.setStyle(valid_multi_contact, {display : 'inline'});
 				Element.setStyle(to_multi_contact, {display : 'table-cell'});
 				Element.setStyle(to, {display : 'inline'});
-				Element.setStyle(show_multi_contact, {display : 'table-row'});
+                // NCH01
+				if(cat_id !== 'attachment'){
+                    Element.setStyle(show_multi_contact, {display : 'table-row'});
+                }
 				Element.setStyle(add_multi_contact, {display : 'table-row'});
 				Element.setStyle(contact_id_tr, {display : 'none'});
 			}else if ($(external_type ).checked == true){
@@ -1223,8 +1298,9 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 				Element.setStyle(show_multi_contact, {display : 'none'});
 				Element.setStyle(add_multi_contact, {display : 'none'});
 				// NCH01
-                var cat_id = $('category_id').options[$('category_id').selectedIndex].value;
-                if(cat_id != 'attachment') Element.setStyle(contact_id_tr, {display : 'table-row'});
+                if(cat_id !== 'attachment') {
+                    Element.setStyle(contact_id_tr, {display : 'table-row'});
+                }
 			}
         }
     }

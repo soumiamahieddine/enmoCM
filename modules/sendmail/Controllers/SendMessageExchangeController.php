@@ -376,9 +376,9 @@ class SendMessageExchangeController
         $contentObject->OriginatingSystemId                    = $aArgs['OriginatingSystemId'];
         $contentObject->OriginatingAgencyArchiveUnitIdentifier = $aArgs['OriginatingAgencyArchiveUnitIdentifier'];
         $contentObject->DocumentType                           = $aArgs['DocumentType'];
-        $contentObject->Status                                 = \Status\models\StatusModel::getById(['id' => $aArgs['Status']])[0]['label_status'];
+        $contentObject->Status                                 = \Status\models\StatusModel::getById(['id' => $aArgs['Status']])['label_status'];
 
-        $userInfos = \User\models\UserModel::getByUserId(['userId' => $aArgs['Writer']]);
+        $userInfos = \User\models\UserModel::getByLogin(['login' => $aArgs['Writer']]);
         $writer                = new stdClass();
         $writer->FirstName     = $userInfos['firstname'];
         $writer->BirthName     = $userInfos['lastname'];

@@ -85,7 +85,7 @@ class MaarchParapheurController
 
         $processingUser      = $aArgs['processingUser'];
         $priority            = \Priority\models\PriorityModel::getById(['select' => ['label'], 'id' => $mainResource[0]['priority']]);
-        $sender              = \User\models\UserModel::getByUserId(['select' => ['firstname', 'lastname'], 'userId' => $aArgs['userId']]);
+        $sender              = \User\models\UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $aArgs['userId']]);
         $senderPrimaryEntity = \User\models\UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         if ($aArgs['objectSent'] == 'attachment') {

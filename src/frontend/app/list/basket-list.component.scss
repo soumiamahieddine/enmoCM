@@ -63,19 +63,6 @@ mat-toolbar {
     }
 }
 
-.envFilter {
-    height: 40px;
-
-    mat-icon{
-        height: auto;
-    }
-
-    .mat-button-toggle-checked {
-        background-color: #F99830;
-        color: white;
-    }
-}
-
 .checkThis {
     width: 40px;
     text-align: center;
@@ -119,10 +106,4 @@ mat-toolbar {
 
 .longData {
     flex: 3;
-}
-
-.filterBadges>.label {
-    margin: 5px;
-    background: #F99830;
-    cursor: pointer;
 }

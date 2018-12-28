@@ -5073,3 +5073,6 @@ if (!defined('_MAIN_DOCUMENT')) {
 if (!defined('_DOWNLOAD_MAIN_DOCUMENT')) {
     define('_DOWNLOAD_MAIN_DOCUMENT', 'Download main document');
 }
+if (!defined('_SENDMAIL_PARAM')) {
+    define('_SENDMAIL_PARAM', 'Mail server');
+}

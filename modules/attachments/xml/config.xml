@@ -34,11 +34,5 @@
 			<delete_response_project>true</delete_response_project> <!-- Setting allowing, or not, the automatic deletion of the response project, thanks to his chrono number -->
 			<close_incoming>true</close_incoming> <!-- Setting allowing, or not, the possibility to close the incoming document, with a radio button-->
 		</CONFIG>
-		<TABLENAME>
-			<attachment>res_attachments</attachment>
-			<letterbox>res_letterbox</letterbox>
-			<contacts_v2>contacts_v2</contacts_v2>
-			<contact_addresses>contact_addresses</contact_addresses>
-		</TABLENAME>
 	</RECONCILIATION>
 </root>

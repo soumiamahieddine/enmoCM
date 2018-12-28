@@ -1,75 +1,119 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { FiltersListService } from '../../../service/filtersList.service';
-import { MatSelectionList, MatExpansionPanel } from '@angular/material';
+import { MatSelectionList, MatExpansionPanel, MatInput } from '@angular/material';
 
 declare function $j(selector: any): any;
-
-declare var angularGlobals: any;
 
 @Component({
     selector: 'app-filters-list',
     templateUrl: 'filters-list.component.html',
-    providers: [NotificationService]
+    styleUrls: ['filters-list.component.scss'],
+    providers: [NotificationService],
+    encapsulation: ViewEncapsulation.None
 })
 export class FiltersListComponent implements OnInit {
 
-    coreUrl: string;
     lang: any = LANG;
-    prioritiesList: any[] = [];
-    categoriesList: any[] = [];
+    priorities: any[] = [];
+    categories: any[] = [];
     entitiesList: any[] = [];
+    statuses: any[] = [];
+
+    loading: boolean = false;
 
     @Input('listProperties') listProperties: any;
 
-    @ViewChild('categoriesPan') categoriesPan: MatExpansionPanel;
-    @ViewChild('prioritiesPan') prioritiesPan: MatExpansionPanel;
-    @ViewChild('enetitiesPan') enetitiesPan: MatExpansionPanel;
+    @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
 
 
     constructor(public http: HttpClient, private filtersListService: FiltersListService) { }
 
     ngOnInit(): void {
+        this.loading = true;
         this.http.get("../../rest/priorities")
             .subscribe((data: any) => {
-                this.prioritiesList = data.priorities;
-                this.prioritiesList.forEach((element) => {
+                this.priorities = data.priorities;
+                this.priorities.forEach((element) => {
                     element.selected = false;
                     this.listProperties.priorities.forEach((listPropertyPrio: any) => {
                         if (element.id === listPropertyPrio.id) {
                             element.selected = true;
-                            this.prioritiesPan.open();
                         }
                     });
                 });
-                console.log(this.prioritiesList);
-            });
 
-        this.http.get("../../rest/categories")
-            .subscribe((data: any) => {
-                this.categoriesList = data.categories;
-                this.categoriesList.forEach(element => {
-                    element.selected = false;
-                    this.listProperties.categories.forEach((listPropertyCat: any) => {
-                        if (element.id === listPropertyCat.id) {
-                            element.selected = true;
-                            this.categoriesPan.open();
-                        }
+                this.http.get("../../rest/categories")
+                    .subscribe((data: any) => {
+                        this.categories = data.categories;
+                        this.categories.forEach(element => {
+                            element.selected = false;
+                            this.listProperties.categories.forEach((listPropertyCat: any) => {
+                                if (element.id === listPropertyCat.id) {
+                                    element.selected = true;
+                                }
+                            });
+                        });
+
+                        this.http.get("../../rest/statuses")
+                            .subscribe((data: any) => {
+                                this.statuses = data.statuses;
+                                this.statuses.forEach(element => {
+                                    element.selected = false;
+                                    this.listProperties.statuses.forEach((listPropertyStatus: any) => {
+                                        if (element.id === listPropertyStatus.id) {
+                                            element.selected = true;
+                                        }
+                                    });
+                                });
+
+                                this.loading = false;
+                                
+                            });
                     });
-                });
-                console.log(this.categoriesList);
             });
     }
-    updateFilters(e: MatSelectionList, id: string) {
+
+    setFilters(e: any, i: number, id: string) {
+        this[id][i].selected = e.source.checked;
         this.listProperties[id] = [];
-        e.selectedOptions.selected.forEach(element => {
+        this[id].forEach((element: any) => {
+            if (element.selected === true) {
+                this.listProperties[id].push({
+                    'id': element.id,
+                    'label': element.label
+                });
+            }
+            
+        });
+        this.updateFilters();
+    }
+
+    /*setFilters(e: any, elem: any, id: string) {
+        elem.selected = e.source.checked;
+        this.listProperties[id] = [];
+        elem.forEach(element => {
             this.listProperties[id].push({
-                'id' : element.value,
+                'id': element.value,
                 'label': element._text.nativeElement.innerText
             });
         });
+        this.updateFilters();
+    }*/
+
+    updateFilters() {
+        this.listProperties.page = 0;
+
         this.filtersListService.updateListsProperties(this.listProperties);
+
+        this.refreshEvent.emit();
+    }
+
+    setFocus(elem: MatInput) {
+        setTimeout(() => {
+            elem.focus();
+        }, 200);
     }
 }
