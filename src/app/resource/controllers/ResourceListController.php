@@ -145,17 +145,28 @@ class ResourceListController
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause']]);
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-
-        $wherePriorities = [$whereClause];
-        $whereCategories = [$whereClause];
-        $whereStatuses = [$whereClause];
-        $whereEntities = [$whereClause];
-        $dataPriorities = [];
-        $dataCategories = [];
-        $dataStatuses = [];
-        $dataEntities = [];
+        $where = [$whereClause];
+        $queryData = [];
 
         $data = $request->getQueryParams();
+        if (!empty($data['delayed']) && $data['delayed'] == 'true') {
+            $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
+        }
+        if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
+            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike ?)';
+            $queryData[] = "%{$data['search']}%";
+            $queryData[] = "%{$data['search']}%";
+        }
+
+        $wherePriorities = $where;
+        $whereCategories = $where;
+        $whereStatuses = $where;
+        $whereEntities = $where;
+        $dataPriorities = $queryData;
+        $dataCategories = $queryData;
+        $dataStatuses = $queryData;
+        $dataEntities = $queryData;
+
         if (!empty($data['priorities'])) {
             $whereCategories[] = 'priority in (?)';
             $dataCategories[] = explode(',', $data['priorities']);
