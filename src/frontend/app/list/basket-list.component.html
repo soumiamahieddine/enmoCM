@@ -100,8 +100,6 @@
                     </ng-container>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;" (click)="goTo(row);" style="cursor: pointer;"></tr>
                 </table>
-                <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{resultsLength}}
-                    {{lang.entries}}</div>
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 mode="over" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'

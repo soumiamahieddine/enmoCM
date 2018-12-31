@@ -4,7 +4,7 @@
     </button>
     <a href="#" title="{{lang.home}}" *ngIf="!mobileMode" style="margin-right: 30px;"><mat-icon class="maarchLogo" svgIcon="maarchLogo"></mat-icon></a>
     <h1 class="admin-toolbar-title" *ngIf="!mobileMode" [innerHTML]="headerService.headerMessage">
-    </h1>
+    </h1><span class="admin-toolbar-title-small">{{headerService.subHeaderMessage}}</span>
     <span style="flex: 1 1 auto;"></span>
     <search-home></search-home>
     <button mat-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" style="min-width:0px;width:65px;height: 40px;margin-left: 10px" matTooltip="{{lang.menu}}">

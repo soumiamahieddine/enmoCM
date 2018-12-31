@@ -142,7 +142,6 @@ export class BasketListComponent implements OnInit {
                 groupId: params['groupSerialId'],
                 basketId: params['basketId']
             };
-            //this.headerService.headerMessage = data.basketLabel;
             this.filtersListService.filterMode = false;
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
@@ -177,6 +176,7 @@ export class BasketListComponent implements OnInit {
                     this.isLoadingResults = false;
                     this.resultsLength = data.count;
                     this.headerService.headerMessage = data.basketLabel;
+                    this.headerService.subHeaderMessage = this.resultsLength + ' ' + this.lang.entries;
                     return data.resources;
                 }),
                 catchError((err: any) => {
