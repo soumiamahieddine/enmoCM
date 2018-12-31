@@ -56,6 +56,12 @@ mat-toolbar {
     text-align: right;
 }
 
+.paginatorResultList {
+    ::ng-deep.mat-paginator-container {
+        min-height: auto;
+    }
+}
+
 .chrono {
     color: #666;
     &-mobile {

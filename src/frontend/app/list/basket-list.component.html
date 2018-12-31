@@ -16,11 +16,9 @@
                     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
                 </div>
                 <div class="row" style="margin:0px;">
-                    <div class="col-md-9 col-xs-9">
-                        <app-filters-tool #filtersTool [currentBasketInfo]="currentBasketInfo" [listProperties]="this.listProperties" [snavR]="snav2" (refreshEvent)="refreshDao()"></app-filters-tool>
-                    </div>
-                    <div class="col-md-3 col-xs-3">
-                        <mat-paginator [length]="resultsLength" [pageSize]="10"></mat-paginator>
+                    <div class="col-md-12" style="display:flex;">
+                        <app-filters-tool style="flex:1;" #filtersTool [currentBasketInfo]="currentBasketInfo" [listProperties]="this.listProperties" [snavR]="snav2" (refreshEvent)="refreshDao()"></app-filters-tool>
+                        <mat-paginator [length]="resultsLength" [pageSize]="10" class="paginatorResultList"></mat-paginator>
                     </div>
                 </div>
 

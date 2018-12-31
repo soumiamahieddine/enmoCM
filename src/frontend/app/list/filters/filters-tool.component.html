@@ -1,6 +1,6 @@
 <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" multiple>
     <mat-checkbox color="primary" style="margin: 10px;" title="Sélectionner tous les courriers de la bannette"></mat-checkbox>
-    <form [formGroup]="stateForm" [style.width.px]="300">
+    <form [formGroup]="stateForm" [style.flex]="1">
         <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
             <input class="metaSearch" type="text" matInput placeholder="Recherche un document" formControlName="stateGroup"
                 [matAutocomplete]="autoGroup" (focus)="initFilters()" (keyup.enter)="metaSearch($event);">
@@ -27,7 +27,7 @@
         (change)="setFilters($event, 'delayed')">
         <mat-icon fontSet="fas" fontIcon="fa-stopwatch fa-2x"></mat-icon>
     </mat-button-toggle>
-    <mat-form-field appearance="outline" [style.fontSize.px]="10" style="width:200px !important;">
+    <mat-form-field appearance="outline" [style.fontSize.px]="10" style="flex: 1;">
         <mat-label>{{lang.orderBy}}</mat-label>
         <mat-select [(ngModel)]="this.listProperties.order" (selectionChange)="updateFilters()">
             <mat-option value="" style="text-align: center;">{{lang.defaultOrder}}</mat-option>
