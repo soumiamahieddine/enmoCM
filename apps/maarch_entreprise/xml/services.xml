@@ -258,9 +258,8 @@
     <name>_DOCSERVERS</name>
     <comment>_ADMIN_DOCSERVERS_DESC</comment>
     <servicepage>/administration/docservers</servicepage>
-    <!--<servicepage>index.php?page=admin_docservers&amp;admin=docservers&amp;mode=list</servicepage>-->
     <servicetype>admin</servicetype>
-    <category>supervision</category>
+    <category>technical_param</category>
     <system_service>false</system_service>
     <style>fa fa-hdd</style>
     <enabled>true</enabled>
@@ -358,7 +357,7 @@
     <comment>_PARAMETERS</comment>
     <servicepage>/administration/parameters</servicepage>
     <servicetype>admin</servicetype>
-    <category>supervision</category>
+    <category>technical_param</category>
     <style>fa fa-wrench</style>
     <system_service>false</system_service>
     <enabled>true</enabled>
@@ -416,7 +415,7 @@
     <comment>_SECURITIES</comment>
     <servicepage>/administration/securities</servicepage>
     <servicetype>admin</servicetype>
-    <category>supervision</category>
+    <category>technical_param</category>
     <system_service>false</system_service>
     <style>fas fa-lock</style>
     <enabled>true</enabled>
@@ -424,11 +423,23 @@
   </SERVICE>
   <SERVICE>
     <id>admin_technical_configuration</id>
+    <name>_PARAMETERS</name>
+    <comment>_PARAMETERS_DESC</comment>
+    <servicepage>/administration/technical</servicepage>
+    <servicetype>admin</servicetype>
+    <category>supervision</category>
+    <system_service>false</system_service>
+    <style>fas fa-cog</style>
+    <enabled>true</enabled>
+    <angular>true</angular>
+  </SERVICE>
+  <SERVICE>
+    <id>admin_sendmail</id>
     <name>_SENDMAIL_PARAM</name>
     <comment>_SENDMAIL_PARAM_DESC</comment>
     <servicepage>/administration/sendmail</servicepage>
     <servicetype>admin</servicetype>
-    <category>supervision</category>
+    <category>technical_param</category>
     <system_service>false</system_service>
     <style>fas fa-mail-bulk</style>
     <enabled>true</enabled>

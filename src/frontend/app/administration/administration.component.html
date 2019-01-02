@@ -42,16 +42,17 @@
                             <i class="{{modService.style}} fa-4x"></i>
                             <br/>{{modService.name}}</button>
                     </div>
-
                     <div class="col-md-6 adminArea_4" *ngIf="supervisionServices">
                         <div style="font-size: 20px;
                         font-weight: bolder;
                         opacity: 0.2;
                         text-align: center">{{lang.supervision}}</div>
-                        <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of supervisionServices"
+                        <ng-container>
+                            <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of supervisionServices"
                             (click)="goToSpecifiedAdministration(modService)">
                             <i class="{{modService.style}} fa-4x"></i>
                             <br/>{{modService.name}}</button>
+                        </ng-container>
                     </div>
                 </div>
             </mat-card>

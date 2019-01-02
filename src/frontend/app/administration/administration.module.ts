@@ -45,6 +45,8 @@ import { TemplateAdministrationComponent }              from './template/templat
 import { SecuritiesAdministrationComponent }            from './security/securities-administration.component';
 import { SendmailAdministrationComponent }            from './sendmail/sendmail-administration.component';
 
+import { TechnicalAdministrationComponent }            from './technical/technical-administration.component';
+
 @NgModule({
     imports:      [
         SharedModule,
@@ -95,7 +97,8 @@ import { SendmailAdministrationComponent }            from './sendmail/sendmail-
         TemplatesAdministrationComponent,
         TemplateAdministrationComponent,
         SecuritiesAdministrationComponent,
-        SendmailAdministrationComponent
+        SendmailAdministrationComponent,
+        TechnicalAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
@@ -104,7 +107,8 @@ import { SendmailAdministrationComponent }            from './sendmail/sendmail-
         GroupsAdministrationRedirectModalComponent,
         BasketAdministrationSettingsModalComponent,
         BasketAdministrationGroupListModalComponent,
-        DoctypesAdministrationRedirectModalComponent
+        DoctypesAdministrationRedirectModalComponent,
+        TechnicalAdministrationComponent
     ],
 })
 export class AdministrationModule {}
