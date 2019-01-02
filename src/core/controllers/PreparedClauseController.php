@@ -224,14 +224,14 @@ class PreparedClauseController
         if ($preg === 1) {
             return false;
         }
-        
-        $select = implode(" AND ", $aArgs['select']);
-        $preg = preg_match('#\b(?:abort|alter|copy|create|delete|disgard|drop|execute|grant|insert|load|lock|move|reset|truncate|update|select)\b#i', $select);
-        if ($preg === 1) {
-            return false;
-        }
 
-        if (empty($aArgs['select'])) {
+        if (!empty($aArgs['select'])) {
+            $select = implode(" AND ", $aArgs['select']);
+            $preg = preg_match('#\b(?:abort|alter|copy|create|delete|disgard|drop|execute|grant|insert|load|lock|move|reset|truncate|update|select)\b#i', $select);
+            if ($preg === 1) {
+                return false;
+            }
+        } else {
             $aArgs['select'] = [1];
         }
 
