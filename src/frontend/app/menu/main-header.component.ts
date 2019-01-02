@@ -31,7 +31,7 @@ export class MainHeaderComponent implements OnInit {
     snav2           : MatSidenav;
 
 
-    constructor(public http: HttpClient, private zone: NgZone, private _router: Router, private shortcut: ShortcutMenuService, private headerService: HeaderService, public dialog: MatDialog) {
+    constructor(public http: HttpClient, private zone: NgZone, private _router: Router, private shortcut: ShortcutMenuService, public headerService: HeaderService, public dialog: MatDialog) {
         this.router = _router;
         this.mobileMode = angularGlobals.mobileMode;
         window['MainHeaderComponent'] = {
