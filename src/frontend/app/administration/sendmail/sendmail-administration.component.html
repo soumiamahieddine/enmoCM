@@ -4,7 +4,7 @@
             fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-nav-list *ngIf="!creationMode">
+            <mat-nav-list>
                 <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item *ngIf="sendmail.host.length > 0" (click)="snav2.toggle()">
                     <mat-icon color="primary" mat-list-icon class="fas fa-signal"></mat-icon>
