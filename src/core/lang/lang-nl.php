@@ -406,6 +406,6 @@ define('_SVA', 'Stilzwijgende aanvaarding');
 define('_SVR', 'Stilzwijgende weigering');
 define('_REDACTOR', 'Opsteller');
 define('_ASSIGNEE', 'Toegekende persoon');
-define('_SENDMAIL_PARAM', '_TO_TRANSLATE');
-define('_SENDMAIL_PARAM_DESC', '_TO_TRANSLATE');
+define('_EMAILSERVER_PARAM', '_TO_TRANSLATE');
+define('_EMAILSERVER_PARAM_DESC', '_TO_TRANSLATE');
 define('_NOTE_ADDED', 'note added _TO_TRANSLATE');

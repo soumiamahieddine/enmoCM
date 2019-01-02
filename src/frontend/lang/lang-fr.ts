@@ -745,4 +745,10 @@ export const LANG_FR = {
     "undefinedStatus"                                   : "Statut non défini",
     "subEntities"                                       : "Entités (et sous-entités)",
     "category_id"                                       : "Catégorie",
+    "smtpRelay"                                         : "Relai stmp",
+    "smtpRelayDesc"                                     : "Utilisation d'un relai smtp du serveur (ssmtp par exemple), configuration externe à l'application",
+    "internalParam"                                     : "Configuration interne",
+    "internalParamDesc"                                 : "Utilisateur du module interne phpmailer de l'application",
+    "enableAuth"                                       : "Activer l'authentification",
+    "checkSendmail"                                     : "Vérifier l'état du serveur",
 };

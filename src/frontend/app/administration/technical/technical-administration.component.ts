@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LANG } from '../../translate.component';
+import { MatBottomSheet } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -22,7 +23,8 @@ export class TechnicalAdministrationComponent implements OnInit {
 
     technicalServices               : any[]     = [];
 
-    constructor(public http: HttpClient, private router: Router) {
+
+    constructor(public http: HttpClient, private router: Router, private bottomSheet: MatBottomSheet) {
         $j("link[href='merged_css.php']").remove();
     }
 
@@ -42,10 +44,7 @@ export class TechnicalAdministrationComponent implements OnInit {
     }
 
     goToSpecifiedAdministration(service: any): void {
-        if (service.angular == "true") {
-            this.router.navigate([service.servicepage]);
-        } else {
-            window.location.assign(service.servicepage);
-        }
+        this.router.navigate([service.servicepage]);
+        this.bottomSheet.dismiss();
     }
 }

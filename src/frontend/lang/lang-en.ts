@@ -719,4 +719,8 @@ export const LANG_EN = {
     "undefinedStatus"                                   : "Undefined status",
     "subEntities"                                       : "Entities (and sub-entities)",
     "category_id"                                       : "Category",
+    "smtpRelay"                                         : "Smtp relay",
+    "internalParam"                                     : "Internal configuration",
+    "enableAuth"                                        : "Activate authentication",
+    "checkSendmail"                                     : "Check mail server status",
 };
