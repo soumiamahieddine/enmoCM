@@ -258,7 +258,6 @@
     <name>_DOCSERVERS</name>
     <comment>_ADMIN_DOCSERVERS_DESC</comment>
     <servicepage>/administration/docservers</servicepage>
-    <!--<servicepage>index.php?page=admin_docservers&amp;admin=docservers&amp;mode=list</servicepage>-->
     <servicetype>admin</servicetype>
     <category>supervision</category>
     <system_service>false</system_service>
@@ -422,10 +421,23 @@
     <enabled>true</enabled>
     <angular>true</angular>
   </SERVICE>
-  <SERVICE>
+  <!-- TO DO : sub category (not implemented yet)-->
+  <!--<SERVICE>
     <id>admin_technical_configuration</id>
-    <name>_SENDMAIL_PARAM</name>
-    <comment>_SENDMAIL_PARAM_DESC</comment>
+    <name>_PARAMETERS</name>
+    <comment>_PARAMETERS_DESC</comment>
+    <servicepage>/administration/technical</servicepage>
+    <servicetype>admin</servicetype>
+    <category>supervision</category>
+    <system_service>false</system_service>
+    <style>fas fa-cog</style>
+    <enabled>true</enabled>
+    <angular>true</angular>
+  </SERVICE>-->
+  <SERVICE>
+    <id>admin_emailserver</id>
+    <name>_EMAILSERVER_PARAM</name>
+    <comment>_EMAILSERVER_PARAM_DESC</comment>
     <servicepage>/administration/sendmail</servicepage>
     <servicetype>admin</servicetype>
     <category>supervision</category>

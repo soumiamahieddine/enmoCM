@@ -85,7 +85,7 @@ class AuthenticationModel
         }
 
         $user = DatabaseModel::select([
-            'select'    => ['cookie_key'],
+            'select'    => ['id', 'cookie_key'],
             'table'     => ['users'],
             'where'     => ['user_id = ?', 'cookie_date > CURRENT_TIMESTAMP'],
             'data'      => [$args['userId']]
@@ -109,7 +109,7 @@ class AuthenticationModel
             'data'  => [$args['userId']]
         ]);
 
-        $cookieData = json_encode(['userId' => $args['userId'], 'cookieKey' => $cookieKey]);
+        $cookieData = json_encode(['id' => $user[0]['id'],'userId' => $args['userId'], 'cookieKey' => $cookieKey]);
         setcookie('maarchCourrierAuth', base64_encode($cookieData), $cookieTime, $cookiePath, '', false, false);
 
         return true;

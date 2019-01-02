@@ -57,7 +57,7 @@ class ResourceListController
             $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
         }
         if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
-            $where[] = '(alt_identifier ilike ? OR subject ilike ?)';
+            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike ?)';
             $queryData[] = "%{$data['search']}%";
             $queryData[] = "%{$data['search']}%";
         }
@@ -145,26 +145,59 @@ class ResourceListController
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause']]);
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-
         $where = [$whereClause];
         $queryData = [];
 
         $data = $request->getQueryParams();
+        if (!empty($data['delayed']) && $data['delayed'] == 'true') {
+            $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
+        }
+        if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
+            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike ?)';
+            $queryData[] = "%{$data['search']}%";
+            $queryData[] = "%{$data['search']}%";
+        }
+
+        $wherePriorities = $where;
+        $whereCategories = $where;
+        $whereStatuses = $where;
+        $whereEntities = $where;
+        $dataPriorities = $queryData;
+        $dataCategories = $queryData;
+        $dataStatuses = $queryData;
+        $dataEntities = $queryData;
+
         if (!empty($data['priorities'])) {
-            $where[] = 'priority in (?)';
-            $queryData[] = explode(',', $data['priorities']);
+            $whereCategories[] = 'priority in (?)';
+            $dataCategories[] = explode(',', $data['priorities']);
+            $whereStatuses[] = 'priority in (?)';
+            $dataStatuses[] = explode(',', $data['priorities']);
+            $whereEntities[] = 'priority in (?)';
+            $dataEntities[] = explode(',', $data['priorities']);
         }
         if (!empty($data['categories'])) {
-            $where[] = 'category_id in (?)';
-            $queryData[] = explode(',', $data['categories']);
+            $wherePriorities[] = 'category_id in (?)';
+            $dataPriorities[] = explode(',', $data['categories']);
+            $whereStatuses[] = 'category_id in (?)';
+            $dataStatuses[] = explode(',', $data['categories']);
+            $whereEntities[] = 'category_id in (?)';
+            $dataEntities[] = explode(',', $data['categories']);
         }
         if (!empty($data['statuses'])) {
-            $where[] = 'status in (?)';
-            $queryData[] = explode(',', $data['statuses']);
+            $wherePriorities[] = 'status in (?)';
+            $dataPriorities[] = explode(',', $data['statuses']);
+            $whereCategories[] = 'status in (?)';
+            $dataCategories[] = explode(',', $data['statuses']);
+            $whereEntities[] = 'status in (?)';
+            $dataEntities[] = explode(',', $data['statuses']);
         }
         if (!empty($data['entities'])) {
-            $where[] = 'destination in (?)';
-            $queryData[] = explode(',', $data['entities']);
+            $wherePriorities[] = 'destination in (?)';
+            $dataPriorities[] = explode(',', $data['entities']);
+            $whereCategories[] = 'destination in (?)';
+            $dataCategories[] = explode(',', $data['entities']);
+            $whereStatuses[] = 'destination in (?)';
+            $dataStatuses[] = explode(',', $data['entities']);
         }
         if (!empty($data['entitiesChildren'])) {
             $entities = explode(',', $data['entitiesChildren']);
@@ -174,16 +207,20 @@ class ResourceListController
                 $entitiesChildren = array_merge($entitiesChildren, $children);
             }
             if (!empty($entitiesChildren)) {
-                $where[] = 'destination in (?)';
-                $queryData[] = $entitiesChildren;
+                $wherePriorities[] = 'destination in (?)';
+                $dataPriorities[] = explode(',', $data['entities']);
+                $whereCategories[] = 'destination in (?)';
+                $dataCategories[] = explode(',', $data['entities']);
+                $whereStatuses[] = 'destination in (?)';
+                $dataStatuses[] = explode(',', $data['entities']);
             }
         }
 
         $entities = [];
         $rawEntities = ResModel::getOnView([
             'select'    => ['count(res_id)', 'destination'],
-            'where'     => $where,
-            'data'      => $queryData,
+            'where'     => $whereEntities,
+            'data'      => $dataEntities,
             'groupBy'   => ['destination']
         ]);
         foreach ($rawEntities as $key => $value) {
@@ -200,8 +237,8 @@ class ResourceListController
         $priorities = [];
         $rawPriorities = ResModel::getOnView([
             'select'    => ['count(res_id)', 'priority'],
-            'where'     => $where,
-            'data'      => $queryData,
+            'where'     => $wherePriorities,
+            'data'      => $dataPriorities,
             'groupBy'   => ['priority']
         ]);
         foreach ($rawPriorities as $key => $value) {
@@ -219,8 +256,8 @@ class ResourceListController
         $allCategories = ResModel::getCategories();
         $rawCategories = ResModel::getOnView([
             'select'    => ['count(res_id)', 'category_id'],
-            'where'     => $where,
-            'data'      => $queryData,
+            'where'     => $whereCategories,
+            'data'      => $dataCategories,
             'groupBy'   => ['category_id']
         ]);
         foreach ($rawCategories as $key => $value) {
@@ -238,8 +275,8 @@ class ResourceListController
         $statuses = [];
         $rawStatuses = ResModel::getOnView([
             'select'    => ['count(res_id)', 'status'],
-            'where'     => $where,
-            'data'      => $queryData,
+            'where'     => $whereStatuses,
+            'data'      => $dataStatuses,
             'groupBy'   => ['status']
         ]);
         foreach ($rawStatuses as $key => $value) {

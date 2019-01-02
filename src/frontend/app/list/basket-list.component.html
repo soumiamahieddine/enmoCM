@@ -16,11 +16,9 @@
                     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
                 </div>
                 <div class="row" style="margin:0px;">
-                    <div class="col-md-9 col-xs-9">
-                        <app-filters-tool #filtersTool [currentBasketInfo]="currentBasketInfo" [listProperties]="this.listProperties" [snavR]="snav2" (refreshEvent)="refreshDao()"></app-filters-tool>
-                    </div>
-                    <div class="col-md-3 col-xs-3">
-                        <mat-paginator [length]="resultsLength" [pageSize]="10"></mat-paginator>
+                    <div class="col-md-12" style="display:flex;">
+                        <app-filters-tool style="flex:1;" #filtersTool [currentBasketInfo]="currentBasketInfo" [listProperties]="this.listProperties" [snavR]="snav2" (refreshEvent)="refreshDao()"></app-filters-tool>
+                        <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="10" class="paginatorResultList"></mat-paginator>
                     </div>
                 </div>
 
@@ -98,10 +96,8 @@
                             </div>
                         </td>
                     </ng-container>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;" (click)="goTo(row);" style="cursor: pointer;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;" (swipeleft)="paginatorResultList.nextPage()" (swiperight)="paginatorResultList.previousPage()" (click)="goTo(row);" style="cursor: pointer;"></tr>
                 </table>
-                <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{resultsLength}}
-                    {{lang.entries}}</div>
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 mode="over" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'

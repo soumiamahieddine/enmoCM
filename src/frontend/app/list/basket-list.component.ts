@@ -8,7 +8,7 @@ import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet, MatBottom
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 import { NotesListComponent } from '../notes/notes.component';
@@ -107,16 +107,12 @@ export class BasketListComponent implements OnInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
-    constructor(changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService, private notify: NotificationService) {
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
-
-        route.params.forEach(params => {
-            this.basketUrl = '../../rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
-          });
     }
 
     ngOnInit(): void {
@@ -139,22 +135,24 @@ export class BasketListComponent implements OnInit {
         this.initResultList();
 
         this.route.params.subscribe(params => {
+            this.basketUrl = '../../rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
 
             this.currentBasketInfo = {
                 ownerId: params['userSerialId'],
                 groupId: params['groupSerialId'],
                 basketId: params['basketId']
             };
-            //this.headerService.headerMessage = data.basketLabel;
             this.filtersListService.filterMode = false;
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
-            
 
-            this.listProperties = this.filtersListService.initListsProperties('bbain', params['groupSerialId'], params['basketId']);
+            this.listProperties = this.filtersListService.initListsProperties(this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId);
 
             this.refreshDao();
 
+        },
+        (err : any) => {
+            this.notify.handleErrors(err);
         });
     }
 
@@ -178,9 +176,12 @@ export class BasketListComponent implements OnInit {
                     this.isLoadingResults = false;
                     this.resultsLength = data.count;
                     this.headerService.headerMessage = data.basketLabel;
+                    this.headerService.subHeaderMessage = this.resultsLength + ' ' + this.lang.entries;
                     return data.resources;
                 }),
-                catchError(() => {
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    this.router.navigate(['/home']);
                     this.isLoadingResults = false;
                     return observableOf([]);
                 })
@@ -245,7 +246,6 @@ export class ResultListHttpDao {
     constructor(private http: HttpClient, private filtersListService: FiltersListService) { }
 
     getRepoIssues(sort: string, order: string, page: number, href: string, filters: string): Observable<BasketList> {
-
         this.filtersListService.updateListsPropertiesPage(page);
         let offset = page * 10;
         const requestUrl = `${href}?limit=10&offset=${offset}${filters}`;

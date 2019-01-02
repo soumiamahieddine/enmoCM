@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'phpseclib\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'email\\' => array($baseDir . '/src/app/email'),
     'VersionUpdate\\' => array($baseDir . '/src/app/versionUpdate'),
     'User\\' => array($baseDir . '/src/app/user'),
     'Template\\' => array($baseDir . '/src/app/template'),
@@ -25,6 +26,7 @@ return array(
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Priority\\' => array($baseDir . '/src/app/priority'),
     'Parameter\\' => array($baseDir . '/src/app/parameter'),
+    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Notification\\' => array($baseDir . '/src/app/notification'),
     'Note\\' => array($baseDir . '/src/app/note'),
     'Link\\' => array($baseDir . '/src/app/link'),

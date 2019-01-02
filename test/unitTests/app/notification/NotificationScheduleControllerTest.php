@@ -81,7 +81,7 @@ class NotificationScheduleControllerTest extends TestCase
         $response = $NotificationScheduleController->create($fullRequest, new \Slim\Http\Response());
         $responseBodyFail = json_decode((string) $response->getBody());
 
-        $this->assertSame('wrong format for dom', $responseBodyFail->errors[0]);
+        $this->assertSame( 'wrong format for dom', $responseBodyFail->errors[ count($responseBodyFail->errors) - 1 ] );
 
         // CREATE
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);

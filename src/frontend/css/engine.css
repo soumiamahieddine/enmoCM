@@ -193,10 +193,11 @@ h1.admin-app-name {
     /*margin-left: 30px !important;*/
 }
 
-.admin-toolbar-title small {
+.admin-toolbar-title-small {
     color: #F99830 !important;
     opacity: 0.9;
     font-size: 72% !important;
+    padding-left: 10px;
 }
 
 .admin-sidenav-container {

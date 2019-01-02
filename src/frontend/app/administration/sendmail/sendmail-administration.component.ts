@@ -28,14 +28,28 @@ export class SendmailAdministrationComponent implements OnInit {
     loading     : boolean = false;
 
     sendmail: any = {
+        'smtpType': 'internalParam',
         'host': '',
-        'SMTPAuth': false,
+        'SMTPAuth': true,
         'username': '',
         'password': '',
         'SMTPSecure': 'ssl', //tls, ssl, starttls
-        'port': '',
+        'port': '465',
 
     };
+
+    smtpTypeList = [
+        {
+            id : 'internalParam',
+            label : this.lang.internalParam
+        }
+        ,{
+            id : 'smtpRelay',
+            label : this.lang.smtpRelay
+        }
+    ];
+    smtpTypeDesc = '';
+    smtpSecList = ['ssl', 'tls'];
     sendmailClone: any = {};
 
 
@@ -46,12 +60,8 @@ export class SendmailAdministrationComponent implements OnInit {
         this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
-    }
-
     ngOnInit(): void {
-        this.headerService.headerMessage = '???';
+        this.headerService.headerMessage = this.lang.sendmail;
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
@@ -69,5 +79,10 @@ export class SendmailAdministrationComponent implements OnInit {
 
     cancelModification() {
         this.sendmail = JSON.parse(JSON.stringify(this.sendmailClone));
+    }
+
+    changeDesc(e: any) {
+        this.smtpTypeDesc = this.lang[e.selected.value+'Desc'];
+        console.log(e.selected.value+'Desc');
     }
 }

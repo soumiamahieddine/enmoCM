@@ -190,8 +190,8 @@ define('_ADMIN_NOTIFICATIONS_DESC', " Create and manage users' notifications bas
 define('_TEMPLATES', 'Templates');
 define('_ADMIN_TEMPLATES_DESC', 'Manage templates for attachments, notifications, document generation, sendmail and notes');
 define('_SECURITIES', 'Securities');
-define('_SENDMAIL_PARAM', 'Mail server');
-define('_SENDMAIL_PARAM_DESC', 'Link your mail serveur with application in order to send emails.');
+define('_EMAILSERVER_PARAM', 'Mail server');
+define('_EMAILSERVER_PARAM_DESC', 'Link your mail serveur with application in order to send emails.');
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Redirect to an action');

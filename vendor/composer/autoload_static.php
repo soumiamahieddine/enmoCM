@@ -25,6 +25,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             'phpseclib\\' => 10,
         ),
+        'e' => 
+        array (
+            'email\\' => 6,
+        ),
         'V' => 
         array (
             'VersionUpdate\\' => 14,
@@ -59,6 +63,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
             'Psr\\Container\\' => 14,
             'Priority\\' => 9,
             'Parameter\\' => 10,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'N' => 
         array (
@@ -136,6 +141,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
+        'email\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/email',
+        ),
         'VersionUpdate\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/versionUpdate',
@@ -203,6 +212,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Parameter\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/parameter',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'Notification\\' => 
         array (

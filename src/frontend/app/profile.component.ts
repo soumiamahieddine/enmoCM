@@ -541,7 +541,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets/" + basket.id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets/" + basket.id)
                 .subscribe((data: any) => {
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
@@ -557,7 +557,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets/" + basket.id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets/" + basket.id)
                 .subscribe((data: any) => {
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];

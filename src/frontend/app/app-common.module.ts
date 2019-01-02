@@ -3,13 +3,14 @@ import { CommonModule }                         from '@angular/common';
 import { NgModule }                             from '@angular/core';
 
 /*CORE IMPORTS*/
-import { BrowserModule }                        from '@angular/platform-browser';
+import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG }   from '@angular/platform-browser';
 import { BrowserAnimationsModule }              from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 import { RouterModule }                         from '@angular/router';
 
 /*PLUGINS IMPORTS*/
+import { CookieService }                        from 'ngx-cookie-service';
 import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
 import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe';
 import { FilterListPipe }                       from '../plugins/filterList.pipe';
@@ -32,6 +33,13 @@ import { SearchHomeComponent }                        from './search/search-home
 /*SEARCH*/
 import { BasketHomeComponent }                        from './basket/basket-home.component';
 
+
+export class MyHammerConfig extends HammerGestureConfig {
+    overrides = <any> {
+        'pinch': { enable: false },
+        'rotate': { enable: false }
+    }
+}
 @NgModule({
     imports: [
         CommonModule,
@@ -78,6 +86,13 @@ import { BasketHomeComponent }                        from './basket/basket-home
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
+    ],
+    providers: [
+        CookieService,
+        {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: MyHammerConfig
+        }
     ],
     entryComponents: [
         IndexingGroupModalComponent

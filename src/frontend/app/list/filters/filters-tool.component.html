@@ -1,6 +1,6 @@
 <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" multiple>
     <mat-checkbox color="primary" style="margin: 10px;" title="Sélectionner tous les courriers de la bannette"></mat-checkbox>
-    <form [formGroup]="stateForm">
+    <form [formGroup]="stateForm" [style.flex]="1">
         <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
             <input class="metaSearch" type="text" matInput placeholder="Recherche un document" formControlName="stateGroup"
                 [matAutocomplete]="autoGroup" (focus)="initFilters()" (keyup.enter)="metaSearch($event);">
@@ -13,8 +13,8 @@
                         <mat-optgroup *ngIf="group.names.length > 0" [label]="group.letter">
                             <mat-option *ngFor="let name of group.names" [value]="name">
                                 <span [class.undefined]="name.label === '_UNDEFINED'" style="flex:1;overflow: hidden;text-overflow: ellipsis;">{{name.label}}</span>
-                                <span>
-                                    <span bgcolor="warn" class="badge" style="min-width:auto;">{{name.count}}</span>
+                                <span class="filterBadges">
+                                    <span class="badge badge-{{name.id}}" style="min-width:auto;">{{name.count}}</span>
                                 </span>
                             </mat-option>
                         </mat-optgroup>
@@ -27,7 +27,7 @@
         (change)="setFilters($event, 'delayed')">
         <mat-icon fontSet="fas" fontIcon="fa-stopwatch fa-2x"></mat-icon>
     </mat-button-toggle>
-    <mat-form-field appearance="outline" [style.fontSize.px]="10" style="width:200px !important;">
+    <mat-form-field appearance="outline" [style.fontSize.px]="10" style="flex: 1;">
         <mat-label>{{lang.orderBy}}</mat-label>
         <mat-select [(ngModel)]="this.listProperties.order" (selectionChange)="updateFilters()">
             <mat-option value="" style="text-align: center;">{{lang.defaultOrder}}</mat-option>
@@ -36,7 +36,7 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <button [disabled]="this.listProperties.order == ''" mat-icon-button [title]="this.listProperties.orderDir == 'DESC' ? lang.descOrder : lang.ascOrder"
+    <button [disabled]="this.listProperties.order == ''" [style.opacity]="this.listProperties.order == '' ? '0.2' : '1'" mat-icon-button [title]="this.listProperties.orderDir == 'DESC' ? lang.descOrder : lang.ascOrder"
         style="color: rgba(0,0,0,0.38);" (click)="changeOrderDir();">
         <mat-icon *ngIf="this.listProperties.orderDir == 'DESC'" fontSet="fas" fontIcon="fa-sort-amount-down fa-2x"></mat-icon>
         <mat-icon *ngIf="this.listProperties.orderDir == 'ASC'" fontSet="fas" fontIcon="fa-sort-amount-up fa-2x"></mat-icon>
@@ -60,14 +60,16 @@
     </mat-menu>
 </mat-button-toggle-group>
 <div class="filterBadges">
-    <span class="label badge-meta" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}">{{this.listProperties.search}}
+    <span class="label badge-search" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}">{{this.listProperties.search}}
         <i class="fa fa-times-circle" (click)="this.listProperties.search='';updateFilters();"></i></span>
-    <span class="label badge-cat" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index">{{category.label}}
+    <span class="label badge-categories" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index">{{category.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('categories', i)"></i></span>
-    <span class="label badge-prio" title="{{lang.priorities}}" *ngFor="let priority of this.listProperties.priorities; let i=index">{{priority.label}}
+    <span class="label badge-priorities" title="{{lang.priorities}}" *ngFor="let priority of this.listProperties.priorities; let i=index">{{priority.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('priorities', i)"></i></span>
-    <span class="label badge-stat" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index">{{status.label}}
+    <span class="label badge-statuses" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index">{{status.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('statuses', i)"></i></span>
-    <span class="label badge-ent" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}}
+    <span class="label badge-entities" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}}
         <i class="fa fa-times-circle" (click)="removeFilter('entities', i)"></i></span>
+    <span class="label badge-subEntities" title="{{lang.subEntities}}" *ngFor="let subEntity of this.listProperties.subEntities; let i=index">{{subEntity.label}}
+        <i class="fa fa-times-circle" (click)="removeFilter('subEntities', i)"></i></span>
 </div>

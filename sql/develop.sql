@@ -41,14 +41,39 @@ DO $$ BEGIN
 END$$;
 UPDATE history SET table_name = 'redirected_baskets' WHERE table_name = 'user_abs';
 
-DROP TABLE IF EXISTS configuration;
-CREATE TABLE configuration
+DROP TABLE IF EXISTS configurations;
+CREATE TABLE configurations
 (
 id serial NOT NULL,
-name character varying(64) NOT NULL,
+service character varying(64) NOT NULL,
 value json DEFAULT '{}' NOT NULL,
 CONSTRAINT configuration_pkey PRIMARY KEY (id),
 CONSTRAINT configuration_unique_key UNIQUE (name)
 )
 WITH (OIDS=FALSE);
-INSERT INTO configuration (name, value) VALUES ('mailer', '{"type" : "smtp", "host" : ""}');
+INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type" : "smtp", "host" : "ssl://smtp.gmail.com", "port" : 465, "user" : "", "password" : "", "auth" : true, "secure" : "tls", "from" : "notifications@maarch.org", "charset" : "utf-8"}');
+
+DROP TABLE IF EXISTS emails;
+CREATE TABLE emails
+(
+id serial NOT NULL,
+res_id INTEGER NOT NULL,
+user_id INTEGER NOT NULL,
+sender character varying(256) NOT NULL,
+"to" json DEFAULT '[]' NOT NULL,
+cc json DEFAULT '[]',
+cci json DEFAULT '[]',
+object character varying(256) NOT NULL,
+body text,
+document_linked boolean NOT NULL DEFAULT FALSE,
+attachments_id json DEFAULT '[]',
+version_attachments_id json DEFAULT '[]',
+notes_id json DEFAULT '[]',
+is_html boolean NOT NULL DEFAULT TRUE,
+status character varying(1) NOT NULL,
+message_exchange_id text,
+creation_date timestamp without time zone NOT NULL,
+send_date timestamp without time zone,
+CONSTRAINT emails_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);

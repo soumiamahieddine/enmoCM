@@ -746,4 +746,10 @@ export const LANG_NL = {
     "categories" : "_TO_TRANSLATE",
     "prioritiesAlt" : "_TO_TRANSLATE",
     "undefinedStatus" : "_TO_TRANSLATE",
+    "subEntities" : "_TO_TRANSLATE",
+    "category_id" : "_TO_TRANSLATE",
+    "smtpRelay" : "_TO_TRANSLATE",
+    "internalParam" : "_TO_TRANSLATE",
+    "enableAuth" : "_TO_TRANSLATE",
+    "checkSendmail" : "_TO_TRANSLATE",
 };

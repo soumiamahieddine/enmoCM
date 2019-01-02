@@ -234,30 +234,6 @@ while ($state <> 'END') {
                         }
                     }
                     
-                    //Other version of the document
-                    if (!empty($email->res_version_id_list)) {
-                        $version = explode(',', $email->res_version_id_list);
-                        foreach ($version as $version_id) {
-                            $GLOBALS['logger']->write("set attachment for version : " . $version_id, 'INFO');
-                            $versionFile = $sendmail_tools->getVersion(
-                                $GLOBALS['collections'],
-                                $email->coll_id,
-                                $email->res_id,
-                                $version_id
-                            );
-                            if (is_file($versionFile['file_path'])) {
-                                //Filename
-                                $versionFilename = $sendmail_tools->createFilename($versionFile['label'], $versionFile['ext']);
-                                $GLOBALS['logger']->write("set attachment filename for version : " . $versionFilename, 'INFO');
-
-                                //File content
-                                $file_content = $GLOBALS['mailer']->getFile($versionFile['file_path']);
-                                //Add file
-                                $GLOBALS['mailer']->addAttachment($file_content, $versionFilename, $versionFile['mime_type']);
-                            }
-                        }
-                    }
-                    
                     //Res attachment
                     if (!empty($email->res_attachment_id_list)) {
                         $attachments = explode(',', $email->res_attachment_id_list);
@@ -460,3 +436,8 @@ array_map('unlink', glob($_SESSION['config']['tmppath']."/*"));
 
 //unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
+
+
+
+
+

@@ -716,5 +716,11 @@ export const LANG_EN = {
     "defaultOrder"                                      : "Default order(s)",
     "categories"                                        : "Categories",
     "prioritiesAlt"                                     : "Priorities",
-    "undefinedStatus"                                    : "Undefined status",
+    "undefinedStatus"                                   : "Undefined status",
+    "subEntities"                                       : "Entities (and sub-entities)",
+    "category_id"                                       : "Category",
+    "smtpRelay"                                         : "Smtp relay",
+    "internalParam"                                     : "Internal configuration",
+    "enableAuth"                                        : "Activate authentication",
+    "checkSendmail"                                     : "Check mail server status",
 };

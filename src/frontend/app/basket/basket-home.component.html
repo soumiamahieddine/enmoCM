@@ -51,7 +51,7 @@
         </mat-nav-list>
     </ng-container>
     <ng-container *ngIf="homeData.assignedBaskets.length>0">
-        <span color="primary" style="font-weight:bold;">{{lang.othersBaskets}}</span>
+        <span color="primary" style="font-weight:bold;">{{lang.basketsAssigned}}</span>
         <mat-divider></mat-divider>
         <mat-nav-list>
             <!-- <a mat-list-item *ngFor="let basket of homeData.assignedBaskets | filterList:listFilter.value:'basket_name'">
@@ -64,7 +64,7 @@
             </a> -->
             <!-- TODO NEW BASKET LIST-->
             <a mat-list-item *ngFor="let basket of homeData.assignedBaskets | filterList:listFilter.value:'basket_name'" [ngClass]="{'selectedBasket': currentBasketInfo.basketId==basket.basket_id && currentBasketInfo.ownerId==basket.owner_user_id && currentBasketInfo.groupId==basket.group_id}" routerLink="/basketList/users/{{basket.owner_user_id}}/groups/{{basket.group_id}}/baskets/{{basket.basket_id}}">
-                <mat-icon *ngIf="!mobileMode" style="color:#666" mat-list-icon class="fa fa-inbox"></mat-icon>
+                <mat-icon *ngIf="!mobileMode" style="color:#666" mat-list-icon class="fa fa-paper-plane"></mat-icon>
                 <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                 <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                 <p mat-line title="{{basket.basket_name}}" style="color:#666">
