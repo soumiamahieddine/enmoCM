@@ -22,19 +22,31 @@ use Slim\Http\Response;
 
 class ConfigurationController
 {
-    public function update(Request $request, Response $response, array $aArgs)
+    public function getByService(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_technical_configuration', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => $aArgs['service'], 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (empty(ConfigurationModel::getByName(['name' => $aArgs['name']]))) {
+        $configuration = ConfigurationModel::getByService(['service' => $aArgs['service']]);
+        $configuration['value'] = (array)json_decode($configuration['value']);
+
+        return $response->withJson(['configuration' => $configuration]);
+    }
+
+    public function update(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => $aArgs['service'], 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (empty(ConfigurationModel::getByService(['service' => $aArgs['service'], 'select' => [1]]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Configuration does not exist']);
         }
 
         $data = $request->getParams();
 
-        if ($aArgs['name'] == 'mailer') {
+        if ($aArgs['service'] == 'admin_email_server') {
             $check = ConfigurationController::checkMailer($data);
             if (!empty($check['errors'])) {
                 return $response->withStatus($check['code'])->withJson(['errors' => $check['errors']]);
@@ -42,7 +54,7 @@ class ConfigurationController
         }
 
         $data = json_encode($data);
-        ConfigurationModel::update(['set' => ['value' => $data], 'where' => ['name = ?'], 'data' => [$aArgs['name']]]);
+        ConfigurationModel::update(['set' => ['value' => $data], 'where' => ['service = ?'], 'data' => [$aArgs['service']]]);
 
         return $response->withJson(['success' => 'success']);
     }

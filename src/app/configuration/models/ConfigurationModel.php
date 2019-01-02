@@ -19,17 +19,29 @@ use SrcCore\models\ValidatorModel;
 
 class ConfigurationModel
 {
-    public static function getByName(array $aArgs)
+    public static function get(array $aArgs = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['name']);
-        ValidatorModel::stringType($aArgs, ['name']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $configurations = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['configurations']
+        ]);
+
+        return $configurations;
+    }
+
+    public static function getByService(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['service']);
+        ValidatorModel::stringType($aArgs, ['service']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $configuration = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['configuration'],
-            'where'     => ['name = ?'],
-            'data'      => [$aArgs['name']],
+            'table'     => ['configurations'],
+            'where'     => ['service = ?'],
+            'data'      => [$aArgs['service']],
         ]);
 
         if (empty($configuration[0])) {
@@ -45,7 +57,7 @@ class ConfigurationModel
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'configuration',
+            'table' => 'configurations',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']

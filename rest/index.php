@@ -96,7 +96,8 @@ $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . '
 $app->get('/batchHistories', \History\controllers\BatchHistoryController::class . ':get');
 
 //Configurations
-$app->put('/configurations/{name}', \Configuration\controllers\ConfigurationController::class . ':update');
+$app->get('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':getByService');
+$app->put('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':update');
 
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
