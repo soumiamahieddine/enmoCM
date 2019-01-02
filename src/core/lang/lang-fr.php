@@ -190,8 +190,8 @@ define('_ADMIN_NOTIFICATIONS_DESC', "Créer et gérer des notifications aux util
 define('_TEMPLATES', 'Modèles de documents');
 define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les annotations");
 define('_SECURITIES', 'Sécurités');
-define('_EMAILSERVER_PARAM', 'Serveur mail');
-define('_EMAILSERVER_PARAM_DESC', 'Connecter votre serveur de mail à Maarch Courrier afin de pouvoir envoyer des courriels.');
+define('_EMAILSERVER_PARAM', 'Serveur e-mail');
+define('_EMAILSERVER_PARAM_DESC', 'Connecter votre serveur e-mail à Maarch Courrier afin de pouvoir envoyer des courriels.');
 
 
 
