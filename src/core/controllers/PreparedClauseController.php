@@ -119,7 +119,7 @@ class PreparedClauseController
             for ($i = 0; $i < $total; $i++) {
                 $aEntities = [];
                 $tmpImmediateChildrens = str_replace("'", '', $immediateChildrens[1][$i]);
-                if (preg_match('/,/' , $tmpImmediateChildrens)) {
+                if (preg_match('/,/', $tmpImmediateChildrens)) {
                     $aEntities = preg_split('/,/', $tmpImmediateChildrens);
                 } else {
                     $aEntities[] = $tmpImmediateChildrens;
@@ -221,6 +221,12 @@ class PreparedClauseController
         $clause = PreparedClauseController::getPreparedClause(['clause' => $aArgs['clause'], 'login' => $aArgs['userId']]);
 
         $preg = preg_match('#\b(?:abort|alter|copy|create|delete|disgard|drop|execute|grant|insert|load|lock|move|reset|truncate|update)\b#i', $clause);
+        if ($preg === 1) {
+            return false;
+        }
+        
+        $select = implode(" AND ", $aArgs['select']);
+        $preg = preg_match('#\b(?:abort|alter|copy|create|delete|disgard|drop|execute|grant|insert|load|lock|move|reset|truncate|update|select)\b#i', $select);
         if ($preg === 1) {
             return false;
         }
