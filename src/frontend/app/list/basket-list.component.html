@@ -21,7 +21,7 @@
                         <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="10" class="paginatorResultList"></mat-paginator>
                     </div>
                 </div>
-
+                <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;"><img src="{{thumbnailUrl}}"/></mat-card>
                 <table #tableBasketListSort="matSort" mat-table [dataSource]="data" matSort matSortActive="res_id"
                     matSortDisableClear matSortDirection="asc" style="width:100%;table-layout: fixed;">
                     <ng-container matColumnDef="res_id">
@@ -89,7 +89,7 @@
                                     <button color="primary" mat-icon-button title="{{lang.diffusionList}}" (click)="$event.stopPropagation();openDiffusionSheet(row)">
                                         <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button title="{{lang.linkDetails}}" (click)="$event.stopPropagation();goToDetail(row);">
+                                    <button color="primary" mat-icon-button title="{{lang.linkDetails}}" (click)="$event.stopPropagation();goToDetail(row);" (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();">
                                         <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
                                     </button>
                                 </mat-button-toggle-group>

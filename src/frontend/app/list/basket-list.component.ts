@@ -102,6 +102,7 @@ export class BasketListComponent implements OnInit {
     listProperties: any = {};
     currentBasketInfo: any = {};
     currentChrono: string = '';
+    thumbnailUrl: string = '';
 
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
 
@@ -231,6 +232,17 @@ export class BasketListComponent implements OnInit {
 
     filterThis(value: string) {
         this.filtersTool.setInputSearch(value);
+    }
+
+    viewThumbnail(row:any) {
+        this.thumbnailUrl = this.coreUrl+'rest/res/' + row.res_id + '/thumbnail';
+        $j('#viewThumbnail').show();
+        $j('#listContent').css({"overflow":"hidden"});
+    }
+
+    closeThumbnail() {
+        $j('#viewThumbnail').hide();
+        $j('#listContent').css({"overflow":"auto"});
     }
 }
 export interface BasketList {
