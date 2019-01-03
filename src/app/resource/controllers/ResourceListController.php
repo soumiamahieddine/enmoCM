@@ -230,7 +230,7 @@ class ResourceListController
             }
             $priorities[] = [
                 'id'        => empty($value['priority']) ? null : $value['priority'],
-                'label'     => empty($priority['label']) ? null : $priority['label'],
+                'label'     => empty($priority['label']) ? '_UNDEFINED' : $priority['label'],
                 'count'     => $value['count']
             ];
         }
@@ -254,7 +254,7 @@ class ResourceListController
             }
             $categories[] = [
                 'id'        => empty($value['category_id']) ? null : $value['category_id'],
-                'label'     => empty($label) ? null : $label,
+                'label'     => empty($label) ? '_UNDEFINED' : $label,
                 'count'     => $value['count']
             ];
         }
@@ -270,7 +270,7 @@ class ResourceListController
             $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
             $statuses[] = [
                 'id'        => $value['status'],
-                'label'     => empty($status['label_status']) ? null : $status['label_status'],
+                'label'     => empty($status['label_status']) ? '_UNDEFINED' : $status['label_status'],
                 'count'     => $value['count']
             ];
         }
@@ -289,7 +289,7 @@ class ResourceListController
             }
             $entities[] = [
                 'entityId'  => empty($value['destination']) ? null : $value['destination'],
-                'label'     => empty($entity['entity_label']) ? null : $entity['entity_label'],
+                'label'     => empty($entity['entity_label']) ? '_UNDEFINED' : $entity['entity_label'],
                 'count'     => $value['count']
             ];
         }
