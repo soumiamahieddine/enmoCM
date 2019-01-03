@@ -223,6 +223,7 @@ class ResourceListController
             'data'      => $dataPriorities,
             'groupBy'   => ['priority']
         ]);
+        
         foreach ($rawPriorities as $key => $value) {
             $priority = null;
             if (!empty($value['priority'])) {

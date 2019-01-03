@@ -755,4 +755,6 @@ export const LANG_FR = {
     "mustReconnect"                                     : "Veuillez vous reconnecter",
     "connectionFailed"                                  : "La connexion au serveur a échoué. Veuillez réessayer ultérieurement.",
     "searchMailInBasket"                                : "Rechercher des courriers dans la bannette",
+    "undefined"                                         : "Non défini",
+
 };

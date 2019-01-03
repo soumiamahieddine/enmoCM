@@ -165,13 +165,14 @@ export class FiltersToolComponent implements OnInit {
 
         this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/filters?init' + this.filtersListService.getUrlFilters())
             .subscribe((data: any) => {
+                console.log(data);
                 data.categories.forEach((element: any) => {
                     if (this.listProperties.categories.map((category: any) => (category.id)).indexOf(element.id) === -1) {
                         this.stateGroups[0].names.push(
                             {
                                 id: 'categories',
                                 value: element.id,
-                                label: (element.label !== null ? element.label : '_UNDEFINED'),
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
@@ -183,7 +184,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'priorities',
                                 value: element.id,
-                                label: (element.label !== null ? element.label : '_UNDEFINED'),
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
@@ -195,7 +196,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'statuses',
                                 value: element.id,
-                                label: (element.label !== null ? element.label : '_UNDEFINED') ,
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
@@ -204,12 +205,12 @@ export class FiltersToolComponent implements OnInit {
                 });
 
                 data.entities.forEach((element: any) => {
-                    if (this.listProperties.entities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1) {
+                    if (this.listProperties.entities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1 && this.listProperties.subEntities == 0) {
                         this.stateGroups[3].names.push(
                             {
                                 id: 'entities',
                                 value: element.entityId,
-                                label: (element.label !== null ? element.label : '_UNDEFINED') ,
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
@@ -217,18 +218,17 @@ export class FiltersToolComponent implements OnInit {
 
                 });
 
-                data.entities.forEach((element: any) => {
-                    if (this.listProperties.subEntities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1) {
+                data.entitiesChildren.forEach((element: any) => {
+                    if (this.listProperties.subEntities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1 && this.listProperties.entities == 0) {
                         this.stateGroups[4].names.push(
                             {
                                 id: 'subEntities',
                                 value: element.entityId,
-                                label: (element.label !== null ? element.label : '_UNDEFINED') ,
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
                     }
-
                 });
                 this.isLoading = false;
                 if (this.metaSearchInput.length > 0) {

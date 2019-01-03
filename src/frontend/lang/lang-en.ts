@@ -727,4 +727,5 @@ export const LANG_EN = {
     "mustReconnect"                                     : "Please reconnect",
     "connectionFailed"                                  : "Connection to server failed, please try later.",
     "searchMailInBasket"                                : "Search mails in basket",
+    "undefined"                                         : "Undefined",
 };

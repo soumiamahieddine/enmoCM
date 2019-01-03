@@ -756,4 +756,5 @@ export const LANG_NL = {
     "connectionFailed" : "_TO_TRANSLATE",
     "searchMailInBasket" : "_TO_TRANSLATE",
     "basketsAssignedShort" :  "_TO_TRANSLATE",
+    "undefined" : "_TO_TRANSLATE",
 };
