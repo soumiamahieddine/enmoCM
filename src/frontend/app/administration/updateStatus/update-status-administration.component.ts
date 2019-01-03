@@ -49,7 +49,7 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.updateStatus;
+        this.headerService.setHeader(this.lang.updateStatus);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

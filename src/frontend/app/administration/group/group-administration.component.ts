@@ -74,7 +74,7 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                this.headerService.headerMessage = this.lang.groupCreation;
+                this.headerService.setHeader(this.lang.groupCreation);
 
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
@@ -89,7 +89,7 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
                 this.http.get(this.coreUrl + "rest/groups/" + params['id'] + "/details")
                     .subscribe((data : any) => {
                         this.group = data['group'];
-                        this.headerService.headerMessage = this.lang.groupModification + " <small>" +  this.group['group_desc'] + "</small>";
+                        this.headerService.setHeader(this.lang.groupModification, this.group['group_desc']);
                         this.loading = false;
                         setTimeout(() => {
                             this.usersDataSource = new MatTableDataSource(this.group.users);

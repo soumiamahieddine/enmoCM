@@ -72,7 +72,8 @@ export class NotificationsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.notifications;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.notifications);
+
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

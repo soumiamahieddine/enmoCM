@@ -47,7 +47,7 @@ export class DocserversAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.docservers;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.docservers);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

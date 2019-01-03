@@ -102,7 +102,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                this.headerService.headerMessage = this.lang.contactGroupCreation;
+                this.headerService.setHeader(this.lang.contactGroupCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -123,7 +123,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
                 this.http.get(this.coreUrl + 'rest/contactsGroups/' + params['id'])
                 .subscribe((data: any) => {
                         this.contactsGroup = data.contactsGroup;
-                        this.headerService.headerMessage = this.lang.contactsGroupModification + " <small>" +  this.contactsGroup.label + "</small>";
+                        this.headerService.setHeader(this.lang.contactsGroupModification, this.contactsGroup.label);
                         this.nbContact = this.contactsGroup.nbContacts;
                         setTimeout(() => {
                             this.dataSourceAdded = new MatTableDataSource(this.contactsGroup.contacts);

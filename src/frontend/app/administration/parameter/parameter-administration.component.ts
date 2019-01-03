@@ -49,7 +49,7 @@ export class ParameterAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
-                this.headerService.headerMessage = this.lang.parameterCreation;
+                this.headerService.setHeader(this.lang.parameterCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -63,7 +63,7 @@ export class ParameterAdministrationComponent implements OnInit {
                 this.http.get(this.coreUrl + "rest/parameters/" + params['id'])
                     .subscribe((data: any) => {
                         this.parameter = data.parameter;
-                        this.headerService.headerMessage = this.lang.parameterModification + " <small>" +  this.parameter.id + "</small>";
+                        this.headerService.setHeader(this.lang.parameterModification, this.parameter.id);
                         if (typeof (this.parameter.param_value_int) == "number") {
                             this.type = "int";
                         } else if (this.parameter.param_value_date) {

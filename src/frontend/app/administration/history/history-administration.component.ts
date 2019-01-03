@@ -79,7 +79,7 @@ export class HistoryAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.history;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.history);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

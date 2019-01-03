@@ -40,7 +40,7 @@ export class AdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration;
+        this.headerService.setHeader(this.lang.administration);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

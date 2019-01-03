@@ -45,7 +45,7 @@ export class ReportsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.reports;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.reports);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

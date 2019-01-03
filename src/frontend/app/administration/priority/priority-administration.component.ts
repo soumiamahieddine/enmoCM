@@ -57,7 +57,7 @@ export class PriorityAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
-                this.headerService.headerMessage = this.lang.priorityCreation;
+                this.headerService.setHeader(this.lang.priorityCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -72,7 +72,7 @@ export class PriorityAdministrationComponent implements OnInit {
                 this.http.get(this.coreUrl + "rest/priorities/" + this.id)
                     .subscribe((data: any) => {
                         this.priority = data.priority;
-                        this.headerService.headerMessage = this.lang.priorityModification + " <small>" +  this.priority.label + "</small>";
+                        this.headerService.setHeader(this.lang.priorityModification, this.priority.label);
                         this.priority.useDoctypeDelay = this.priority.delays != null;
                         if (this.priority.working_days === true) {
                             this.priority.working_days = "true";

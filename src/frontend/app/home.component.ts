@@ -58,7 +58,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         if (this.mobileMode) {
             this.displayedColumns = ['res_id', 'subject'];
         }
-        this.headerService.headerMessage = this.lang.home;
+        this.headerService.setHeader(this.lang.home);
         window['MainHeaderComponent'].setSnav(this.snav);
         window['MainHeaderComponent'].setSnavRight(null);
 

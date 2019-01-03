@@ -395,7 +395,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.myProfile;
+        this.headerService.setHeader(this.lang.myProfile);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
         this.coreUrl = angularGlobals.coreUrl;

@@ -55,7 +55,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.diffusionModels;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.diffusionModels);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

@@ -78,7 +78,7 @@ export class BasketAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params: any) => {
             if (typeof params['id'] == "undefined") {
-                this.headerService.headerMessage = this.lang.basketCreation;
+                this.headerService.setHeader(this.lang.basketCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -95,7 +95,7 @@ export class BasketAdministrationComponent implements OnInit {
                 this.id = params['id'];
                 this.http.get(this.coreUrl + "rest/baskets/" + this.id)
                     .subscribe((data: any) => {
-                        this.headerService.headerMessage = this.lang.basketModification + " <small>" + data.basket.basket_name + "</small>";
+                        this.headerService.setHeader(this.lang.basketModification, data.basket.basket_name);
 
                         this.basket = data.basket;
                         this.basket.id = data.basket.basket_id;

@@ -61,7 +61,7 @@ export class SendmailAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.sendmail;
+        this.headerService.setHeader(this.lang.sendmail);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

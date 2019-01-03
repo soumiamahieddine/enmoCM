@@ -64,7 +64,7 @@ export class StatusAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params: any) => {
             if (typeof params['identifier'] == "undefined") {
-                this.headerService.headerMessage = this.lang.statusCreation;
+                this.headerService.setHeader(this.lang.statusCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -87,7 +87,7 @@ export class StatusAdministrationComponent implements OnInit {
                 this.http.get(this.coreUrl + 'rest/statuses/' + params['identifier'])
                     .subscribe((data: any) => {
                         this.status = data['status'][0];
-                        this.headerService.headerMessage = this.lang.statusModification + " <small>" + this.status['label_status'] + "</small>";
+                        this.headerService.setHeader(this.lang.statusModification, this.status['label_status']);
 
                         if (this.status.can_be_searched == 'Y') {
                             this.status.can_be_searched = true;

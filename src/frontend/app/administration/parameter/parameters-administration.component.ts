@@ -53,7 +53,7 @@ export class ParametersAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.parameters;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.parameters);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

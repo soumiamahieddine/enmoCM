@@ -105,7 +105,7 @@ export class ContactsFillingAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.headerService.headerMessage = this.lang.contactsFillingAdministration;
+        this.headerService.setHeader(this.lang.contactsFillingAdministration);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

@@ -175,8 +175,7 @@ export class BasketListComponent implements OnInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     this.resultsLength = data.count;
-                    this.headerService.headerMessage = data.basketLabel;
-                    this.headerService.subHeaderMessage = this.resultsLength + ' ' + this.lang.entries;
+                    this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;
                 }),
                 catchError((err: any) => {

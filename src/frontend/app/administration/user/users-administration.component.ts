@@ -63,7 +63,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.users;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.users);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

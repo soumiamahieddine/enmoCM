@@ -68,7 +68,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.entities;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.entities);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
