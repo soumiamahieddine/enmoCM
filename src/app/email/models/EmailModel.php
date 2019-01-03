@@ -41,9 +41,9 @@ class EmailModel
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'sender', 'to', 'cc', 'cci', 'object', 'attachmentsId', 'versionAttachmentsId', 'notesId', 'documentLinked', 'isHtml']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'sender', 'recipients', 'cc', 'cci', 'object', 'attachmentsId', 'versionAttachmentsId', 'notesId', 'documentLinked', 'isHtml']);
         ValidatorModel::intVal($aArgs, ['resId', 'userId']);
-        ValidatorModel::stringType($aArgs, ['sender', 'to', 'cc', 'cci', 'object', 'body', 'attachmentsId', 'versionAttachmentsId', 'notesId', 'messageExchangeId', 'documentLinked', 'isHtml']);
+        ValidatorModel::stringType($aArgs, ['sender', 'recipients', 'cc', 'cci', 'object', 'body', 'attachmentsId', 'versionAttachmentsId', 'notesId', 'messageExchangeId', 'documentLinked', 'isHtml']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'emails_id_seq']);
 
@@ -54,7 +54,7 @@ class EmailModel
                 'res_id'                    => $aArgs['resId'],
                 'user_id'                   => $aArgs['userId'],
                 'sender'                    => $aArgs['sender'],
-                'to'                        => $aArgs['to'],
+                'recipients'                => $aArgs['recipients'],
                 'cc'                        => $aArgs['cc'],
                 'cci'                       => $aArgs['cci'],
                 'object'                    => $aArgs['object'],

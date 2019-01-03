@@ -14,8 +14,11 @@
 
 namespace Email\controllers;
 
+use Configuration\models\ConfigurationModel;
 use Email\models\EmailModel;
 use Group\models\ServiceModel;
+use PHPMailer\PHPMailer\PHPMailer;
+use Resource\controllers\ResController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -33,17 +36,17 @@ class EmailController
         $data = $request->getParams();
         $check = Validator::intVal()->notEmpty()->validate($data['resId']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['sender']);
-        $check = $check && Validator::arrayType()->notEmpty()->validate($data['to']);
-        $check = $check && Validator::arrayType()->validate($data['cc']);
-        $check = $check && Validator::arrayType()->validate($data['cci']);
+        $check = $check && Validator::arrayType()->notEmpty()->validate($data['recipients']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['object']);
-        $check = $check && Validator::stringType()->validate($data['body']);
         $check = $check && Validator::boolType()->validate($data['documentLinked']);
         $check = $check && Validator::boolType()->validate($data['isHtml']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
+        if (!ResController::hasRightByResId(['resId' => $data['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
 
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
@@ -51,7 +54,7 @@ class EmailController
             'resId'                 => $data['resId'],
             'userId'                => $user['id'],
             'sender'                => $data['sender'],
-            'to'                    => json_encode($data['to']),
+            'recipients'            => json_encode($data['recipients']),
             'cc'                    => empty($data['cc']) ? '[]' : json_encode($data['cc']),
             'cci'                   => empty($data['cci']) ? '[]' : json_encode($data['cci']),
             'object'                => $data['object'],
@@ -64,6 +67,13 @@ class EmailController
             'messageExchangeId'     => $data['messageExchangeId'],
         ]);
 
+        $isSent = EmailController::sendEmail(['emailId' => $id]);
+
+        if (!empty($isSent['success'])) {
+            EmailModel::update(['set' => ['status' => 'S'], 'where' => ['id = ?'], 'data' => [$id]]);
+        } else {
+            EmailModel::update(['set' => ['status' => 'E'], 'where' => ['id = ?'], 'data' => [$id]]);
+        }
 
         return $response->withJson(['success' => 'success']);
     }
@@ -75,36 +85,46 @@ class EmailController
 
         $email = EmailModel::getById(['id' => $args['emailId']]);
 
-//        $mailerConfiguration = \Configuration\models\ConfigurationModel::getByName(['name' => 'mailer', 'select' => ['value']]);
-//        $mailerConfiguration = (array)json_decode($mailerConfiguration['value']);
-//        $phpmailer = new \PHPMailer\PHPMailer\PHPMailer();
-//        $phpmailer->isSMTP();
-//        $phpmailer->Host = $mailerConfiguration['host'];
-//        $phpmailer->Port = $mailerConfiguration['port'];
-//        $phpmailer->SMTPAuth = $mailerConfiguration['auth'];
-//        $phpmailer->SMTPSecure = $mailerConfiguration['secure'];
-//        $phpmailer->Username = $mailerConfiguration['user'];
-//        $phpmailer->Password = $mailerConfiguration['password'];
-//        $phpmailer->CharSet = $mailerConfiguration['charset'];
-//
-//        if (!empty($mailerConfiguration['from'])) {
-//            $phpmailer->setFrom($mailerConfiguration['from'], 'Mailer');
-//        }
-//
-//        $phpmailer->Subject = $email->email_object . 'phpmailer';
-//
-//        $phpmailer->isHTML(true);
-//        $phpmailer->Body = $body;
-//
-//        $phpmailer->addAttachment($resFile['file_path']);
-//
-//        foreach ($to as $value) {
-//            $phpmailer->addAddress($value);
-//        }
-//        $mailerSent = $phpmailer->send();
-//        if (!$mailerSent) {
-//            $GLOBALS['logger']->write("SENDING EMAIL ERROR ! (" . $phpmailer->ErrorInfo. ")", 'ERROR');
-//        }
+        $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
+        $configuration = (array)json_decode($configuration['value']);
 
+        $phpmailer = new PHPMailer();
+
+        if ($configuration['type'] == 'smtp') {
+            $phpmailer->isSMTP();
+            $phpmailer->Host = $configuration['host'];
+            $phpmailer->Port = $configuration['port'];
+            $phpmailer->SMTPSecure = $configuration['secure'];
+            $phpmailer->SMTPAuth = $configuration['auth'];
+            if ($configuration['auth']) {
+                $phpmailer->Username = $configuration['user'];
+                $phpmailer->Password = $configuration['password'];
+            }
+            if (!empty($configuration['from'])) {
+                $phpmailer->setFrom($configuration['from'], 'Mailer'); //TODO
+            }
+        }
+        $phpmailer->CharSet = $configuration['charset'];
+
+
+        $phpmailer->Subject = $email['object'];
+
+        $phpmailer->isHTML(true); //TODO
+        $phpmailer->Body = $email['body']; // TODO
+
+//        $phpmailer->addAttachment($resFile['file_path']); //TODO
+
+        $recipients = json_decode($email['recipients']);
+        foreach ($recipients as $recipient) {
+            $phpmailer->addAddress($recipient);
+        }
+
+        $isSent = $phpmailer->send();
+        if (!$isSent) {
+            //TODO
+            return ['errors' => 'errors'];
+        }
+
+        return ['success' => 'success'];
     }
 }

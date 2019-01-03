@@ -48,10 +48,10 @@ id serial NOT NULL,
 service character varying(64) NOT NULL,
 value json DEFAULT '{}' NOT NULL,
 CONSTRAINT configuration_pkey PRIMARY KEY (id),
-CONSTRAINT configuration_unique_key UNIQUE (name)
+CONSTRAINT configuration_unique_key UNIQUE (service)
 )
 WITH (OIDS=FALSE);
-INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type" : "smtp", "host" : "ssl://smtp.gmail.com", "port" : 465, "user" : "", "password" : "", "auth" : true, "secure" : "tls", "from" : "notifications@maarch.org", "charset" : "utf-8"}');
+INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type" : "smtp", "host" : "smtp.gmail.com", "port" : 465, "user" : "", "password" : "", "auth" : true, "secure" : "ssl", "from" : "notifications@maarch.org", "charset" : "utf-8"}');
 
 DROP TABLE IF EXISTS emails;
 CREATE TABLE emails
@@ -60,7 +60,7 @@ id serial NOT NULL,
 res_id INTEGER NOT NULL,
 user_id INTEGER NOT NULL,
 sender character varying(256) NOT NULL,
-"to" json DEFAULT '[]' NOT NULL,
+recipients json DEFAULT '[]' NOT NULL,
 cc json DEFAULT '[]',
 cci json DEFAULT '[]',
 object character varying(256) NOT NULL,

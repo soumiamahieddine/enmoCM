@@ -25,10 +25,6 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             'phpseclib\\' => 10,
         ),
-        'e' => 
-        array (
-            'email\\' => 6,
-        ),
         'V' => 
         array (
             'VersionUpdate\\' => 14,
@@ -107,6 +103,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'E' => 
         array (
             'Entity\\' => 7,
+            'Email\\' => 6,
         ),
         'D' => 
         array (
@@ -140,10 +137,6 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'phpseclib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
-        ),
-        'email\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/app/email',
         ),
         'VersionUpdate\\' => 
         array (
@@ -305,6 +298,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Entity\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/entity',
+        ),
+        'Email\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/email',
         ),
         'Doctype\\' => 
         array (
