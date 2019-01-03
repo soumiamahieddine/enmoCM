@@ -23,6 +23,7 @@ use Group\models\GroupModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Resource\models\ResourceListModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -49,6 +50,8 @@ class ResourceListController
         $data['offset'] = (empty($data['offset']) || !is_numeric($data['offset']) ? 0 : $data['offset']);
         $data['limit'] = (empty($data['limit']) || !is_numeric($data['limit']) ? 0 : $data['limit']);
 
+        $table = [];
+        $leftJoin = [];
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
         $where = [$whereClause];
         $queryData = [];
@@ -93,9 +96,16 @@ class ResourceListController
         if (!empty($data['order']) && strpos($data['order'], 'alt_identifier') !== false) {
             $data['order'] = 'order_alphanum(alt_identifier) ' . explode(' ', $data['order'])[1];
         }
+        if (!empty($data['order']) && strpos($data['order'], 'priority') !== false) {
+            $data['order'] = 'priorities.order ' . explode(' ', $data['order'])[1];
+            $table = ['priorities'];
+            $leftJoin = ['res_view_letterbox.priority = priorities.id'];
+        }
 
-        $rawResources = ResModel::getOnView([
+        $rawResources = ResourceListModel::getOnView([
             'select'    => ['count(1) OVER()', 'res_id'],
+            'table'     => $table,
+            'leftJoin'  => $leftJoin,
             'where'     => $where,
             'data'      => $queryData,
             'orderBy'   => empty($data['order']) ? [$basket['basket_res_order']] : [$data['order']],
@@ -127,6 +137,7 @@ class ResourceListController
                     }
                 }
                 $resources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $GLOBALS['userId']]);
+                $resources[$key]['resourceContacts'] = ResourceContactModel::getFormattedByResId(['resId' => $resource['res_id']]);
             }
         }
 
