@@ -13,6 +13,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "sendmail-administration.component.html",
+    styleUrls: ['sendmail-administration.component.scss'],
     providers: [NotificationService]
 })
 export class SendmailAdministrationComponent implements OnInit {
@@ -28,7 +29,7 @@ export class SendmailAdministrationComponent implements OnInit {
     loading     : boolean = false;
 
     sendmail: any = {
-        'type': 'internalParam',
+        'type': 'smtp',
         'host': '',
         'auth': true,
         'user': '',
@@ -41,18 +42,25 @@ export class SendmailAdministrationComponent implements OnInit {
 
     smtpTypeList = [
         {
-            id : 'internalParam',
-            label : this.lang.internalParam
-        }
-        ,{
-            id : 'smtpRelay',
-            label : this.lang.smtpRelay
+            id : 'smtp',
+            label : this.lang.smtp
+        },
+        {
+            id : 'sendmail',
+            label : 'Sendmail'
+        },
+        {
+            id : 'qmail',
+            label : 'Qmail'
         }
     ];
     smtpTypeDesc = '';
     smtpSecList = ['ssl', 'tls'];
     sendmailClone: any = {};
     hidePassword: boolean = true;
+    serverConnectionLoading: boolean = false;
+    emailSendLoading: boolean = false;
+    
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
@@ -101,5 +109,20 @@ export class SendmailAdministrationComponent implements OnInit {
 
     checkModif() {
         return (JSON.stringify(this.sendmailClone) === JSON.stringify(this.sendmail));
+    }
+
+
+    initServerConnection() {
+        this.serverConnectionLoading = true;
+        setTimeout(() => {
+            this.serverConnectionLoading = false;
+        }, 5000);
+    }
+
+    initEmailSend() {
+        this.emailSendLoading = true;
+        setTimeout(() => {
+            this.emailSendLoading = false;
+        }, 5000);
     }
 }
