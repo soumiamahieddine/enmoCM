@@ -482,8 +482,8 @@ class RequestSeda
                 'fileInfos'         => $aFileInfo['fileInfos']
             ]);
 
-            if(!empty($storeResult['error'])){
-                var_dump($storeResult['error']);
+            if (!empty($storeResult['errors'])) {
+                var_dump($storeResult['errors']);
             }
             $docserver_id = $storeResult['docserver_id'];
             $filepath     = $storeResult['destination_dir'];
@@ -498,7 +498,6 @@ class RequestSeda
                 'filePath' => $filePath,
                 'mode'     => $docserverType['fingerprint_mode'],
             ]);
-
         }
 
         try {
@@ -553,7 +552,6 @@ class RequestSeda
             $queryParams[] = $filesize;
 
             $res = $this->db->query($query, $queryParams);
-
         } catch (Exception $e) {
             return false;
         }
@@ -721,7 +719,6 @@ class RequestSeda
                 $_SESSION['data'],
                 $_SESSION['config']['databasetype']
             );
-
         }
         return true;
     }
@@ -746,7 +743,6 @@ class RequestSeda
 
     public function updateDataMessage($reference, $data)
     {
-
         $queryParams = [];
         $queryParams[] = $data;
         $queryParams[] = $reference;
@@ -877,7 +873,8 @@ class RequestSeda
         return $message;
     }
 
-    public function getEntitiesByBusinessId($businessId) {
+    public function getEntitiesByBusinessId($businessId)
+    {
         $queryParams = [];
 
         $queryParams[] = $businessId;
@@ -892,7 +889,8 @@ class RequestSeda
 
         return $entities;
     }
-    public function updateOperationDateMessage($aArgs = []){
+    public function updateOperationDateMessage($aArgs = [])
+    {
         $queryParams = [];
         $queryParams[] = $aArgs['operation_date'];
         $queryParams[] = $aArgs['message_id'];
@@ -908,7 +906,8 @@ class RequestSeda
         return true;
     }
 
-    public function updateReceptionDateMessage($aArgs = []){
+    public function updateReceptionDateMessage($aArgs = [])
+    {
         $queryParams = [];
         $queryParams[] = $aArgs['reception_date'];
         $queryParams[] = $aArgs['message_id'];
@@ -923,5 +922,4 @@ class RequestSeda
 
         return true;
     }
-
 }
