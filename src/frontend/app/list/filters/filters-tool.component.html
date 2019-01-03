@@ -60,16 +60,16 @@
     </mat-menu>
 </mat-button-toggle-group>
 <div class="filterBadges">
-    <span class="label badge-search" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}">{{this.listProperties.search}}
-        <i class="fa fa-times-circle" (click)="this.listProperties.search='';updateFilters();"></i></span>
-    <span class="label badge-categories" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index">{{category.label}}
-        <i class="fa fa-times-circle" (click)="removeFilter('categories', i)"></i></span>
-    <span class="label badge-priorities" title="{{lang.priorities}}" *ngFor="let priority of this.listProperties.priorities; let i=index">{{priority.label}}
-        <i class="fa fa-times-circle" (click)="removeFilter('priorities', i)"></i></span>
-    <span class="label badge-statuses" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index">{{status.label}}
-        <i class="fa fa-times-circle" (click)="removeFilter('statuses', i)"></i></span>
-    <span class="label badge-entities" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index">{{entity.label}}
-        <i class="fa fa-times-circle" (click)="removeFilter('entities', i)"></i></span>
-    <span class="label badge-subEntities" title="{{lang.subEntities}}" *ngFor="let subEntity of this.listProperties.subEntities; let i=index">{{subEntity.label}}
-        <i class="fa fa-times-circle" (click)="removeFilter('subEntities', i)"></i></span>
+    <span class="label badge-search" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}" (click)="this.listProperties.search='';updateFilters();">{{this.listProperties.search}}
+        <i class="fa fa-times-circle"></i></span>
+    <span class="label badge-categories" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index" (click)="removeFilter('categories', i)">{{category.label}}
+        <i class="fa fa-times-circle"></i></span>
+    <span class="label badge-priorities" title="{{lang.priorities}}" *ngFor="let priority of this.listProperties.priorities; let i=index" (click)="removeFilter('priorities', i)">{{priority.label}}
+        <i class="fa fa-times-circle"></i></span>
+    <span class="label badge-statuses" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index" (click)="removeFilter('statuses', i)">{{status.label}}
+        <i class="fa fa-times-circle"></i></span>
+    <span class="label badge-entities" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index" (click)="removeFilter('entities', i)">{{entity.label}}
+        <i class="fa fa-times-circle"></i></span>
+    <span class="label badge-subEntities" title="{{lang.subEntities}}" *ngFor="let subEntity of this.listProperties.subEntities; let i=index" (click)="removeFilter('subEntities', i)">{{subEntity.label}}
+        <i class="fa fa-times-circle"></i></span>
 </div>
