@@ -75,10 +75,10 @@ export class SendmailAdministrationComponent implements OnInit {
                 this.sendmail = data.configuration.value
                 this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
                 this.smtpTypeDesc = this.lang[this.sendmail.type+'Desc'];
+                this.loading = false;
             }, (err) => {
                 this.notify.handleErrors(err);
             });
-        this.loading = false;
     }
 
     cancelModification() {
