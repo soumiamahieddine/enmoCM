@@ -746,7 +746,7 @@ export const LANG_FR = {
     "undefinedStatus"                                   : "Statut non défini",
     "subEntities"                                       : "Entités (et sous-entités)",
     "category_id"                                       : "Catégorie",
-    "smtpRelay"                                         : "Relai stmp",
+    "smtpRelay"                                         : "Relai smtp",
     "smtpRelayDesc"                                     : "Utilisation d'un relai smtp du serveur (ssmtp par exemple), configuration externe à l'application",
     "internalParam"                                     : "Configuration interne",
     "internalParamDesc"                                 : "Utilisateur du module interne phpmailer de l'application",
@@ -756,5 +756,7 @@ export const LANG_FR = {
     "connectionFailed"                                  : "La connexion au serveur a échoué. Veuillez réessayer ultérieurement.",
     "searchMailInBasket"                                : "Rechercher des courriers dans la bannette",
     "undefined"                                         : "Non défini",
-
+    "configurationUpdated"                              : "Configuration mise à jour",
+    "port"                                              : "Port",
+    "mailFrom"                                          : "Adresse e-mail utilisée",
 };

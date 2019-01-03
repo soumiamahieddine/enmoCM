@@ -28,14 +28,15 @@ export class SendmailAdministrationComponent implements OnInit {
     loading     : boolean = false;
 
     sendmail: any = {
-        'smtpType': 'internalParam',
+        'type': 'internalParam',
         'host': '',
-        'SMTPAuth': true,
-        'username': '',
+        'auth': true,
+        'user': '',
         'password': '',
-        'SMTPSecure': 'ssl', //tls, ssl, starttls
+        'secure': 'ssl', //tls, ssl, starttls
         'port': '465',
-
+        'charset': 'utf-8',
+        'from': '',
     };
 
     smtpTypeList = [
@@ -51,6 +52,7 @@ export class SendmailAdministrationComponent implements OnInit {
     smtpTypeDesc = '';
     smtpSecList = ['ssl', 'tls'];
     sendmailClone: any = {};
+    hidePassword: boolean = true;
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
@@ -68,12 +70,14 @@ export class SendmailAdministrationComponent implements OnInit {
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
 
-        // this.http.get(this.coreUrl + 'rest/sendmail')
-        //     .subscribe((data: any) => {
-
-        //     }, (err) => {
-        //         this.notify.error(err.error.errors);
-        //     });
+        this.http.get(this.coreUrl + 'rest/configurations/admin_email_server')
+            .subscribe((data: any) => {
+                this.sendmail = data.configuration.value
+                this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
+                this.smtpTypeDesc = this.lang[this.sendmail.type+'Desc'];
+            }, (err) => {
+                this.notify.handleErrors(err);
+            });
         this.loading = false;
     }
 
@@ -83,6 +87,19 @@ export class SendmailAdministrationComponent implements OnInit {
 
     changeDesc(e: any) {
         this.smtpTypeDesc = this.lang[e.selected.value+'Desc'];
-        console.log(e.selected.value+'Desc');
+    }
+
+    onSubmit() {
+        this.http.put(this.coreUrl + 'rest/configurations/admin_email_server', this.sendmail)
+            .subscribe((data: any) => {
+                this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
+                this.notify.success(this.lang.configurationUpdated);
+            }, (err) => {
+                this.notify.handleErrors(err);
+            });
+    }
+
+    checkModif() {
+        return (JSON.stringify(this.sendmailClone) === JSON.stringify(this.sendmail));
     }
 }

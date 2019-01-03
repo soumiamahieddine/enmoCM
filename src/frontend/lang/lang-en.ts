@@ -728,4 +728,7 @@ export const LANG_EN = {
     "connectionFailed"                                  : "Connection to server failed, please try later.",
     "searchMailInBasket"                                : "Search mails in basket",
     "undefined"                                         : "Undefined",
+    "configurationUpdated"                              : "Configuration updated",
+    "port"                                              : "Port",
+    "mailFrom"                                          : "Mail address used",
 };

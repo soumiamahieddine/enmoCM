@@ -757,4 +757,7 @@ export const LANG_NL = {
     "searchMailInBasket" : "_TO_TRANSLATE",
     "basketsAssignedShort" :  "_TO_TRANSLATE",
     "undefined" : "_TO_TRANSLATE",
+    "configurationUpdated" : "_TO_TRANSLATE",
+    "port" : "_TO_TRANSLATE",
+    "mailFrom" : "_TO_TRANSLATE",
 };

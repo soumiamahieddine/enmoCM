@@ -435,7 +435,7 @@
     <angular>true</angular>
   </SERVICE>-->
   <SERVICE>
-    <id>admin_emailserver</id>
+    <id>admin_email_server</id>
     <name>_EMAILSERVER_PARAM</name>
     <comment>_EMAILSERVER_PARAM_DESC</comment>
     <servicepage>/administration/sendmail</servicepage>
