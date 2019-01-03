@@ -725,4 +725,5 @@ export const LANG_EN = {
     "checkSendmail"                                     : "Check mail server status",
     "mustReconnect"                                     : "Please reconnect",
     "connectionFailed"                                  : "Connection to server failed, please try later.",
+    "searchMailInBasket"                                : "Search mails in basket",
 };

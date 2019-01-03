@@ -89,7 +89,7 @@
                                     <button color="primary" mat-icon-button title="{{lang.diffusionList}}" (click)="$event.stopPropagation();openDiffusionSheet(row)">
                                         <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button title="{{lang.linkDetails}}" (click)="goToDetail(row);">
+                                    <button color="primary" mat-icon-button title="{{lang.linkDetails}}" (click)="$event.stopPropagation();goToDetail(row);">
                                         <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
                                     </button>
                                 </mat-button-toggle-group>
