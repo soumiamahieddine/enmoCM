@@ -66,7 +66,7 @@
                                     <ng-container *ngIf="data.id == 'date'">
                                         <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;{{row.creation_date
                                         | timeAgo}} - <i class="fa fa-stopwatch" title="{{lang.processLimitDate}}"></i>&nbsp;<span
-                                            [innerHTML]="row.process_limit_date | timeLimit" title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'></span>
+                                            [innerHTML]="row.process_limit_date | timeLimit" *ngIf="row.process_limit_date != null" title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'></span>
                                     </ng-container>
                                     <ng-container *ngIf="data.icon != ''">
                                         <i class="{{data.icon}}"></i>
