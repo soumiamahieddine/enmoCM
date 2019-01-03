@@ -41,12 +41,12 @@ export class FiltersToolComponent implements OnInit {
         { 'id': 'category_id' },
         { 'id': 'creation_date' },
         { 'id': 'process_limit_date' },
-        { 'id': 'destination' },
+        { 'id': 'entity_label' },
         { 'id': 'subject' },
         { 'id': 'alt_identifier' },
         { 'id': 'priority' },
         { 'id': 'status' },
-        { 'id': 'type_id' }
+        { 'id': 'type_label' }
     ];
 
     @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
