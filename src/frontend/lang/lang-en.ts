@@ -59,6 +59,7 @@ export const LANG_EN = {
     "basketNotification"                : "Toggle notification for this basket",
     "baskets"                           : "Baskets",
     "basketsAssigned"                   : "Assigned baskets",
+    "basketsAssignedShort"              : "Assigned baskets",
     "basketsColor"                      : "Baskets color",
     "basketsColorAdmin"                 : "Manage your baskets color",
     "basketsOrder"                      : "Manage baskets order",

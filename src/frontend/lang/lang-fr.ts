@@ -69,6 +69,7 @@ export const LANG_FR = {
     "basketNotification"                : "Activer / désactiver la notification de cette bannette",
     "baskets"                           : "Bannettes",
     "basketsAssigned"                   : "Bannettes assignées par un autre utilisateur",
+    "basketsAssignedShort"              : "Bannettes assignées",
     "basketsColor"                      : "Couleur des bannettes",
     "basketsColorAdmin"                 : "Gérer vos couleurs de bannettes",
     "basketsOrder"                      : "Gérer l'ordre des bannettes",

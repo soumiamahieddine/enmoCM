@@ -51,7 +51,7 @@
         </mat-nav-list>
     </ng-container>
     <ng-container *ngIf="homeData.assignedBaskets.length>0">
-        <span color="primary" style="font-weight:bold;">{{lang.basketsAssigned}}</span>
+        <span color="primary" style="font-weight:bold;" title="{{lang.basketsAssigned}}">{{lang.basketsAssignedShort}}</span>
         <mat-divider></mat-divider>
         <mat-nav-list>
             <!-- <a mat-list-item *ngFor="let basket of homeData.assignedBaskets | filterList:listFilter.value:'basket_name'">
