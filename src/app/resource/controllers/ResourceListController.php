@@ -57,7 +57,7 @@ class ResourceListController
             $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
         }
         if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
-            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike ?)';
+            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike translate(?, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\'))';
             $queryData[] = "%{$data['search']}%";
             $queryData[] = "%{$data['search']}%";
         }
@@ -153,7 +153,7 @@ class ResourceListController
             $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
         }
         if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
-            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike ?)';
+            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike translate(?, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\'))';
             $queryData[] = "%{$data['search']}%";
             $queryData[] = "%{$data['search']}%";
         }
@@ -216,24 +216,6 @@ class ResourceListController
             }
         }
 
-        $entities = [];
-        $rawEntities = ResModel::getOnView([
-            'select'    => ['count(res_id)', 'destination'],
-            'where'     => $whereEntities,
-            'data'      => $dataEntities,
-            'groupBy'   => ['destination']
-        ]);
-        foreach ($rawEntities as $key => $value) {
-            if (!empty($value['destination'])) {
-                $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
-                $entities[] = [
-                    'entityId'  => $value['destination'],
-                    'label'     => $entity['entity_label'],
-                    'count'     => $value['count']
-                ];
-            }
-        }
-
         $priorities = [];
         $rawPriorities = ResModel::getOnView([
             'select'    => ['count(res_id)', 'priority'],
@@ -242,14 +224,15 @@ class ResourceListController
             'groupBy'   => ['priority']
         ]);
         foreach ($rawPriorities as $key => $value) {
+            $priority = null;
             if (!empty($value['priority'])) {
                 $priority = PriorityModel::getById(['select' => ['label'], 'id' => $value['priority']]);
-                $priorities[] = [
-                    'id'        => $value['priority'],
-                    'label'     => $priority['label'],
-                    'count'     => $value['count']
-                ];
             }
+            $priorities[] = [
+                'id'        => empty($value['priority']) ? null : $value['priority'],
+                'label'     => empty($priority['label']) ? null : $priority['label'],
+                'count'     => $value['count']
+            ];
         }
 
         $categories = [];
@@ -261,15 +244,19 @@ class ResourceListController
             'groupBy'   => ['category_id']
         ]);
         foreach ($rawCategories as $key => $value) {
-            foreach ($allCategories as $category) {
-                if ($value['category_id'] == $category['id']) {
-                    $categories[] = [
-                        'id'        => $value['category_id'],
-                        'label'     => $category['label'],
-                        'count'     => $value['count']
-                    ];
+            $label = null;
+            if (!empty($value['category_id'])) {
+                foreach ($allCategories as $category) {
+                    if ($value['category_id'] == $category['id']) {
+                        $label = $category['label'];
+                    }
                 }
             }
+            $categories[] = [
+                'id'        => empty($value['category_id']) ? null : $value['category_id'],
+                'label'     => empty($label) ? null : $label,
+                'count'     => $value['count']
+            ];
         }
 
         $statuses = [];
@@ -280,22 +267,55 @@ class ResourceListController
             'groupBy'   => ['status']
         ]);
         foreach ($rawStatuses as $key => $value) {
-            if (!empty($value['status'])) {
-                $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
-                $statuses[] = [
-                    'id'        => $value['status'],
-                    'label'     => $status['label_status'],
-                    'count'     => $value['count']
-                ];
-            }
+            $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
+            $statuses[] = [
+                'id'        => $value['status'],
+                'label'     => empty($status['label_status']) ? null : $status['label_status'],
+                'count'     => $value['count']
+            ];
         }
 
-        $entities = (count($entities) >= 2) ? $entities : [];
+        $entities = [];
+        $rawEntities = ResModel::getOnView([
+            'select'    => ['count(res_id)', 'destination'],
+            'where'     => $whereEntities,
+            'data'      => $dataEntities,
+            'groupBy'   => ['destination']
+        ]);
+        foreach ($rawEntities as $key => $value) {
+            $entity = null;
+            if (!empty($value['destination'])) {
+                $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
+            }
+            $entities[] = [
+                'entityId'  => empty($value['destination']) ? null : $value['destination'],
+                'label'     => empty($entity['entity_label']) ? null : $entity['entity_label'],
+                'count'     => $value['count']
+            ];
+        }
+
         $priorities = (count($priorities) >= 2) ? $priorities : [];
         $categories = (count($categories) >= 2) ? $categories : [];
         $statuses = (count($statuses) >= 2) ? $statuses : [];
+        $entities = (count($entities) >= 2) ? $entities : [];
 
-        return $response->withJson(['entities' => $entities, 'priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses]);
+        $entitiesChildren = [];
+        foreach ($entities as $entity) {
+            $children = EntityModel::getEntityChildren(['entityId' => $entity['entityId']]);
+            $count = 0;
+            foreach ($entities as $value) {
+                if (in_array($value['entityId'], $children)) {
+                    $count += $value['count'];
+                }
+            }
+            $entitiesChildren[] = [
+                'entityId'  => $entity['entityId'],
+                'label'     => $entity['label'],
+                'count'     => $count
+            ];
+        }
+
+        return $response->withJson(['entities' => $entities, 'priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses, 'entitiesChildren' => $entitiesChildren]);
     }
 
     private static function listControl(array $aArgs)
