@@ -723,4 +723,6 @@ export const LANG_EN = {
     "internalParam"                                     : "Internal configuration",
     "enableAuth"                                        : "Activate authentication",
     "checkSendmail"                                     : "Check mail server status",
+    "mustReconnect"                                     : "Please reconnect",
+    "connectionFailed"                                  : "Connection to server failed, please try later.",
 };

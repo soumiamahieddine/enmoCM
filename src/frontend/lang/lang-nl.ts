@@ -752,4 +752,6 @@ export const LANG_NL = {
     "internalParam" : "_TO_TRANSLATE",
     "enableAuth" : "_TO_TRANSLATE",
     "checkSendmail" : "_TO_TRANSLATE",
+    "mustReconnect" : "_TO_TRANSLATE",
+    "connectionFailed" : "_TO_TRANSLATE",
 };

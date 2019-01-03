@@ -749,6 +749,8 @@ export const LANG_FR = {
     "smtpRelayDesc"                                     : "Utilisation d'un relai smtp du serveur (ssmtp par exemple), configuration externe à l'application",
     "internalParam"                                     : "Configuration interne",
     "internalParamDesc"                                 : "Utilisateur du module interne phpmailer de l'application",
-    "enableAuth"                                       : "Activer l'authentification",
+    "enableAuth"                                        : "Activer l'authentification",
     "checkSendmail"                                     : "Vérifier l'état du serveur",
+    "mustReconnect"                                     : "Veuillez vous reconnecter",
+    "connectionFailed"                                  : "La connexion au serveur a échoué. Veuillez réessayer ultérieurement.",
 };
