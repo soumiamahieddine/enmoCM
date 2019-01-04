@@ -485,6 +485,7 @@ class ResControllerTest extends TestCase
             $response     = $resController->createRes($fullRequest, new \Slim\Http\Response());
             $responseBody = json_decode((string)$response->getBody());
             $newId = $responseBody->resId;
+            $this->assertInternalType('int', $newId);
     
             $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
             $request        = \Slim\Http\Request::createFromEnvironment($environment);
@@ -503,7 +504,14 @@ class ResControllerTest extends TestCase
             ];
     
             $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-            $resController->createExt($fullRequest, new \Slim\Http\Response());
+            $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
+            $responseBody = json_decode((string)$response->getBody());
+            
+            $this->assertSame(true, $responseBody->status);
+
+            $ext = \Resource\models\ResModel::getExtById(['resId' => $newId, 'select' => ['category_id']]);
+    
+            $this->assertSame('incoming', $ext['category_id']);
         }
     }
 }
