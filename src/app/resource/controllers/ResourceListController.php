@@ -313,12 +313,16 @@ class ResourceListController
 
         $entitiesChildren = [];
         foreach ($entities as $entity) {
-            $children = EntityModel::getEntityChildren(['entityId' => $entity['entityId']]);
-            $count = 0;
-            foreach ($entities as $value) {
-                if (in_array($value['entityId'], $children)) {
-                    $count += $value['count'];
+            if (!empty($entity['entityId'])) {
+                $children = EntityModel::getEntityChildren(['entityId' => $entity['entityId']]);
+                $count = 0;
+                foreach ($entities as $value) {
+                    if (in_array($value['entityId'], $children)) {
+                        $count += $value['count'];
+                    }
                 }
+            } else {
+                $count = $entity['count'];
             }
             $entitiesChildren[] = [
                 'entityId'  => $entity['entityId'],
