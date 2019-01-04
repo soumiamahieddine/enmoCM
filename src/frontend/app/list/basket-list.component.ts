@@ -176,7 +176,7 @@ export class BasketListComponent implements OnInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
-                    console.log(data);
+                    //console.log(data);
                     this.resultsLength = data.count;
                     this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;

@@ -35,6 +35,7 @@ class ResourceListModel
                 'res_letterbox.res_id',
                 'res_letterbox.subject',
                 'res_letterbox.creation_date',
+                'res_letterbox.barcode',
                 'mlb_coll_ext.alt_identifier',
                 'mlb_coll_ext.category_id',
                 'mlb_coll_ext.closing_date',
