@@ -6,6 +6,7 @@ import { FiltersListService } from '../../../service/filtersList.service';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
+import { LatinisePipe } from 'ngx-pipes';
 
 declare function $j(selector: any): any;
 
@@ -14,19 +15,12 @@ export interface StateGroup {
     names: any[];
 }
 
-export const _filter = (opt: string[], value: string): string[] => {
-
-    if (typeof value === 'string') {
-        const filterValue = value.toLowerCase();
-
-        return opt.filter(item => item['label'].toLowerCase().indexOf(filterValue) != -1);
-    }
-};
 @Component({
     selector: 'app-filters-tool',
     templateUrl: 'filters-tool.component.html',
     styleUrls: ['filters-tool.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [LatinisePipe],
 })
 export class FiltersToolComponent implements OnInit {
 
@@ -69,16 +63,25 @@ export class FiltersToolComponent implements OnInit {
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
 
-    constructor(public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder) { }
+    constructor(public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder, private latinisePipe: LatinisePipe) { }
 
     ngOnInit(): void {
 
     }
 
+    private _filter = (opt: string[], value: string): string[] => {
+
+        if (typeof value === 'string') {
+            const filterValue = value.toLowerCase();
+                
+            return opt.filter(item => this.latinisePipe.transform(item['label'].toLowerCase()).indexOf(this.latinisePipe.transform(filterValue)) != -1);
+        }
+    };
+
     private _filterGroup(value: string): StateGroup[] {
         if (value && typeof value === 'string') {
             return this.stateGroups
-                .map(group => ({ letter: group.letter, names: _filter(group.names, value) }))
+                .map(group => ({ letter: group.letter, names: this._filter(group.names, value) }))
                 .filter(group => group.names.length > 0);
         }
 
