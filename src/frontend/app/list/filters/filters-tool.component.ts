@@ -134,6 +134,27 @@ export class FiltersToolComponent implements OnInit {
         this.updateFilters();
     }
 
+    removeFilters() {
+        Object.keys(this.listProperties).forEach((key) => {
+            if (Array.isArray(this.listProperties[key])) {
+                this.listProperties[key] = [];
+            } else if (key == 'search') {
+                this.listProperties[key] = '';
+            }
+        });
+        this.updateFilters();
+    }
+
+    haveFilters() {
+        let state = false;
+        Object.keys(this.listProperties).forEach((key) => {
+            if ((Array.isArray(this.listProperties[key]) && this.listProperties[key].length > 0) || (key == 'search' && this.listProperties[key] != '')) {
+                state = true;
+            }
+        });
+        return state;
+    }
+
     setInputSearch(value: string) {
         $j('.metaSearch').focus();
         this.metaSearchInput = value;
@@ -168,7 +189,6 @@ export class FiltersToolComponent implements OnInit {
 
         this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/filters?init' + this.filtersListService.getUrlFilters())
             .subscribe((data: any) => {
-                console.log(data);
                 data.categories.forEach((element: any) => {
                     if (this.listProperties.categories.map((category: any) => (category.id)).indexOf(element.id) === -1) {
                         this.stateGroups[0].names.push(

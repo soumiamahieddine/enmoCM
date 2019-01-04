@@ -18,6 +18,18 @@
     font-size: 11px;
 }
 
+.filterBadges>.badge-eraser {
+    margin: 5px;
+    background: none;
+    cursor: pointer;
+    color: red;
+    font-size: 20px;
+}
+
+.filterBadges>.label {
+    white-space: inherit;
+}
+
 .filterBadges>.badge-search {
     margin: 5px;
     background: #666;

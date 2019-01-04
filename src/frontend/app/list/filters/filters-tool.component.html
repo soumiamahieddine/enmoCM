@@ -60,6 +60,8 @@
     </mat-menu>
 </mat-button-toggle-group>
 <div class="filterBadges">
+    <span *ngIf="haveFilters()" class="label badge-eraser" title="{{lang.eraseAllFilters}}" (click)="this.listProperties.search='';removeFilters();"><i class="fas fa-eraser"></i></span>
+
     <span class="label badge-search" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}" (click)="this.listProperties.search='';updateFilters();">{{this.listProperties.search}}
         <i class="fa fa-times-circle"></i></span>
     <span class="label badge-categories" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index" (click)="removeFilter('categories', i)">{{category.label}}

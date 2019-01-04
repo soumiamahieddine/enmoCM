@@ -731,4 +731,5 @@ export const LANG_EN = {
     "configurationUpdated"                              : "Configuration updated",
     "port"                                              : "Port",
     "mailFrom"                                          : "Mail address used",
+    "eraseAllFilters"                                   : "Erase all filters",
 };

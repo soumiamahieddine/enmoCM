@@ -757,4 +757,7 @@ export const LANG_FR = {
     "configurationUpdated"                              : "Configuration mise à jour",
     "port"                                              : "Port",
     "mailFrom"                                          : "Adresse e-mail utilisée",
+    "eraseAllFilters"                                   : "Effacer tous les filtres",
 };
+
+

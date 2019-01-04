@@ -760,4 +760,5 @@ export const LANG_NL = {
     "configurationUpdated" : "_TO_TRANSLATE",
     "port" : "_TO_TRANSLATE",
     "mailFrom" : "_TO_TRANSLATE",
+    "eraseAllFilters" : "_TO_TRANSLATE",
 };
