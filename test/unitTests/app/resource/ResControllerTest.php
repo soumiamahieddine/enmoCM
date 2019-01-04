@@ -27,7 +27,7 @@ class ResControllerTest extends TestCase
         $data = [
             [
                 'column'    => 'subject',
-                'value'     => 'Breaking News : Superman is alive',
+                'value'     => 'Breaking News : Superman is alive - PHP unit',
                 'type'      => 'string',
             ],
             [
@@ -63,7 +63,7 @@ class ResControllerTest extends TestCase
 
         $this->assertInternalType('array', $res);
 
-        $this->assertSame('Breaking News : Superman is alive', $res['subject']);
+        $this->assertSame('Breaking News : Superman is alive - PHP unit', $res['subject']);
         $this->assertSame(null, $res['title']);
         $this->assertSame(null, $res['description']);
         $this->assertSame(102, $res['type_id']);

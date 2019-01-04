@@ -72,11 +72,13 @@ class HistoryControllerTest extends TestCase
 
     public function testRealDelete(){
         
-        //get notes
+        //get last notes
         $getResId = DatabaseModel::select([
             'select'    => ['res_id'],
             'table'     => ['res_letterbox'],
-            'limit'     => 1,
+            'where'     => ['subject = ?','status = ?'],
+            'data'      => ['Breaking News : Superman is alive - PHP unit', 'DEL'],
+            'order_by'  => ['res_id DESC']
         ]);
 
         $resID['resId'] = $getResId[0]['res_id'];
