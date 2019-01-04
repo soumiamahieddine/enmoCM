@@ -46,9 +46,9 @@ export class DiffusionsListComponent implements AfterViewInit {
                                 if (this.avisCircuit.length > 0) {
                                     this.tabAvisCircuit = true;
                                 }
-                                this.loading = false;
                             });
                     });
+                    this.loading = false;
             });
     }
 }
