@@ -407,9 +407,6 @@ class ResControllerTest extends TestCase
         $this->assertSame('DEL', $res['status']);
     }
 
-    /**
-    * @doesNotPerformAssertions
-    */
     public function testCreateMultipleDocument()
     {
         $resController = new \Resource\controllers\ResController();
