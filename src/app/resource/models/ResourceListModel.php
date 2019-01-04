@@ -39,6 +39,7 @@ class ResourceListModel
                 'mlb_coll_ext.category_id',
                 'mlb_coll_ext.closing_date',
                 'mlb_coll_ext.process_limit_date',
+                'mlb_coll_ext.is_multicontacts',
                 'entities.entity_label as entity_destination',
                 'doctypes.description as doctype_label',
                 'contacts_v2.firstname as contact_firstname',
