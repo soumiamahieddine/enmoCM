@@ -42,7 +42,7 @@ export class BasketListComponent implements OnInit {
     homeData: any;
 
     filtersChange = new EventEmitter();
-    
+
     @ViewChild('snav') sidenavLeft: MatSidenav;
     @ViewChild('snav2') sidenavRight: MatSidenav;
 
@@ -64,34 +64,34 @@ export class BasketListComponent implements OnInit {
     //displayedSecondaryData: any = [];
     displayedSecondaryData: any = [
         {
-            'id' : 'priority_label',
-            'class' : '',
-            'icon' : ''
+            'id': 'priority_label',
+            'class': '',
+            'icon': ''
         },
         {
-            'id' : 'category_id',
-            'class' : '',
-            'icon' : ''
+            'id': 'category_id',
+            'class': '',
+            'icon': ''
         },
         {
-            'id' : 'doctype_label',
-            'class' : '',
-            'icon' : 'fa fa-file'
+            'id': 'doctype_label',
+            'class': '',
+            'icon': 'fa fa-file'
         },
         {
-            'id' : 'contact_society',
-            'class' : '',
-            'icon' : ''
+            'id': 'contact_society',
+            'class': '',
+            'icon': ''
         },
         {
-            'id' : 'contact_society',
-            'class' : '',
-            'icon' : ''
+            'id': 'contact_society',
+            'class': '',
+            'icon': ''
         },
         {
-            'id' : 'date',
-            'class' : 'rightData',
-            'icon' : ''
+            'id': 'date',
+            'class': 'rightData',
+            'icon': ''
         },
     ];
 
@@ -152,9 +152,9 @@ export class BasketListComponent implements OnInit {
             this.refreshDao();
 
         },
-        (err : any) => {
-            this.notify.handleErrors(err);
-        });
+            (err: any) => {
+                this.notify.handleErrors(err);
+            });
     }
 
     initResultList() {
@@ -175,8 +175,9 @@ export class BasketListComponent implements OnInit {
                 map(data => {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
-                    this.resultsLength = data.count;
+                    data = this.processPostData(data);
                     console.log(data);
+                    this.resultsLength = data.count;
                     this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;
                 }),
@@ -235,15 +236,31 @@ export class BasketListComponent implements OnInit {
         this.filtersTool.setInputSearch(value);
     }
 
-    viewThumbnail(row:any) {
-        this.thumbnailUrl = this.coreUrl+'rest/res/' + row.res_id + '/thumbnail';
+    viewThumbnail(row: any) {
+        this.thumbnailUrl = this.coreUrl + 'rest/res/' + row.res_id + '/thumbnail';
         $j('#viewThumbnail').show();
-        $j('#listContent').css({"overflow":"hidden"});
+        $j('#listContent').css({ "overflow": "hidden" });
     }
 
     closeThumbnail() {
         $j('#viewThumbnail').hide();
-        $j('#listContent').css({"overflow":"auto"});
+        $j('#listContent').css({ "overflow": "auto" });
+    }
+
+    processPostData(data: any) {
+        data.resources.forEach((element: any) => {
+            Object.keys(element).forEach((key) => {
+                if (key == 'status_icon' && element[key] == null) {
+                    element[key] = 'fa-question undefined';
+                }
+                if ((element[key] == null || element[key] == '') && ['process_limit_date', 'creation_date', 'closing_date', 'countAttachments', 'countNotes'].indexOf(key) === -1) {
+                    element[key] = this.lang.undefined;
+                }
+
+            });
+        });
+
+        return data;
     }
 }
 export interface BasketList {

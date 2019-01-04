@@ -30,8 +30,7 @@
                             <mat-toolbar *ngIf="displayedSecondaryData.length > 0">
                                 <div class="resultCol {{data.class}}" *ngFor="let data of displayedSecondaryData">
                                     <span *ngIf="data.id == 'status_label'">
-                                        <mat-icon *ngIf="row.status_icon === null" title="{{lang.undefinedStatus}}" style="opacity: 0.5;color: #666" class="fas fa-question fa-2x"></mat-icon>
-                                        <mat-icon *ngIf="row.status_icon !== null" [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}} {{row.status_icon}} {{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}}-2x"
+                                        <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}} {{row.status_icon}} {{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}}-2x"
                                             title="{{row.status_label}} ({{row.status_id}})"></mat-icon><br />
                                     </span>
                                     <ng-container *ngIf="data.id == 'date'">
@@ -44,10 +43,11 @@
                                         &nbsp;
                                     </ng-container>
                                     <ng-container *ngIf="data.id == 'category_id'">
-                                        {{lang[row.category_id]}}
+                                        <span *ngIf="!lang[row.category_id]" style="opacity: 0.5" title="id: {{row.category_id}}">_UNDEFINED</span>
+                                        <span *ngIf="lang[row.category_id]">{{lang[row.category_id]}}</span>
                                     </ng-container>
                                     <ng-container *ngIf="data.id != 'status_label' && data.id != 'date' && data.id != 'category_id'">
-                                        {{row[data.id]}}
+                                        <span [class.undefined]="row[data.id] == lang.undefined">{{row[data.id]}}</span>
                                     </ng-container>
                                 </div>
                             </mat-toolbar>
@@ -58,8 +58,7 @@
                                 </div>
                                 <div class="resultCol {{data.class}}" *ngFor="let data of displayedMainData">
                                     <span *ngIf="data.id == 'alt_identifier'">
-                                        <mat-icon *ngIf="row.status_icon === null" title="{{lang.undefinedStatus}}" style="opacity: 0.5;color: #666" class="fas fa-question fa-2x"></mat-icon>
-                                        <mat-icon *ngIf="row.status_icon !== null" [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}} {{row.status_icon}} {{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}}-2x"
+                                        <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}} {{row.status_icon}} {{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}}-2x"
                                             title="{{row.status_label}} ({{row.status_id}})" style="cursor: crosshair;" (click)="$event.stopPropagation();filterThis(row.status_label)"></mat-icon><br />
                                         <span style="color: rgba(0,0,0,0.4);font-size: 90%;cursor: crosshair;" (click)="$event.stopPropagation();filterThis(row[data.id])">{{row[data.id]}}</span>
                                     </span>
