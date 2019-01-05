@@ -37,7 +37,7 @@ class ResourceListControllerTest extends TestCase
 
         $aArgs = [
             'limit'  => 2,
-            'offset' => 2,
+            'offset' => 1,
             'order'  => 'creation_date DESC'
         ];
         $fullRequest = $request->withQueryParams($aArgs);
