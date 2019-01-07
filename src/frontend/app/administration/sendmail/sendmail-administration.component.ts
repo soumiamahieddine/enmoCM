@@ -138,8 +138,8 @@ export class SendmailAdministrationComponent implements OnInit {
             "sender": { "email": this.currentUser.mail },
             "recipients": [this.currentUser.mail],
             "object": "test mail envoi",
+            "status": "SENDMAILTEST",
             "body": "test mail envoi",
-            "document": { "isLinked": false, "original": false },
             "isHtml": false
         }
         this.emailSendLoading = true;
