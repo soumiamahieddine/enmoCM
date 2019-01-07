@@ -758,6 +758,7 @@ export const LANG_FR = {
     "port"                                              : "Port",
     "mailFrom"                                          : "Adresse e-mail utilisée",
     "eraseAllFilters"                                   : "Effacer tous les filtres",
+    "isMulticontact"                                    : "Multi-contact",
 };
 
 

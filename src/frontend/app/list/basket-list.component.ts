@@ -176,7 +176,7 @@ export class BasketListComponent implements OnInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
-                    //console.log(data);
+                    console.log(data);
                     this.resultsLength = data.count;
                     this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;
@@ -250,11 +250,16 @@ export class BasketListComponent implements OnInit {
     processPostData(data: any) {
         data.resources.forEach((element: any) => {
             Object.keys(element).forEach((key) => {
-                if (key == 'status_icon' && element[key] == null) {
-                    element[key] = 'fa-question undefined';
-                }
                 if ((element[key] == null || element[key] == '') && ['process_limit_date', 'creation_date', 'closing_date', 'countAttachments', 'countNotes'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
+                } else if (["senders","recipients"].indexOf(key) > 0) {
+                    if (element[key].length > 0) {
+                        element[key] = this.lang.isMulticontact;
+                    } else {
+                        element[key] = element[key][0];
+                    }          
+                } else if (key == 'status_icon' && element[key] == null) {
+                    element[key] = 'fa-question undefined';
                 }
 
             });

@@ -761,4 +761,5 @@ export const LANG_NL = {
     "port" : "_TO_TRANSLATE",
     "mailFrom" : "_TO_TRANSLATE",
     "eraseAllFilters" : "_TO_TRANSLATE",
+    "isMulticontact" : "_TO_TRANSLATE",
 };
