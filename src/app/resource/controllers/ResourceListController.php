@@ -84,7 +84,7 @@ class ResourceListController
             } else {
                 $replace = preg_replace('/(^,)|(,$)/', '', $data['categories']);
                 $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['category_id']) {
+                if ($replace != $data['categories']) {
                     $where[] = '(category_id is null OR category_id in (?))';
                 } else {
                     $where[] = 'category_id in (?)';
