@@ -78,12 +78,12 @@ export class BasketListComponent implements OnInit {
             'icon': 'fa fa-file'
         },
         {
-            'id': 'contact_society',
+            'id': 'senders',
             'class': '',
             'icon': ''
         },
         {
-            'id': 'contact_society',
+            'id': 'recipients',
             'class': '',
             'icon': ''
         },
@@ -175,7 +175,6 @@ export class BasketListComponent implements OnInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
-                    //console.log(data);
                     this.resultsLength = data.count;
                     this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;
@@ -252,7 +251,8 @@ export class BasketListComponent implements OnInit {
                 if ((element[key] == null || element[key] == '') && ['process_limit_date', 'creation_date', 'closing_date', 'countAttachments', 'countNotes'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
                 } else if (["senders","recipients"].indexOf(key) > 0) {
-                    if (element[key].length > 0) {
+                    if (element[key].length > 1) {
+                        console.log(element[key]);
                         element[key] = this.lang.isMulticontact;
                     } else {
                         element[key] = element[key][0];
