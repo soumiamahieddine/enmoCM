@@ -41,9 +41,9 @@ class EmailModel
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'sender', 'recipients', 'cc', 'cci', 'object', 'attachments', 'notes', 'document', 'isHtml']);
-        ValidatorModel::intVal($aArgs, ['resId', 'userId']);
-        ValidatorModel::stringType($aArgs, ['sender', 'recipients', 'cc', 'cci', 'object', 'body', 'attachments', 'notes', 'messageExchangeId', 'document', 'isHtml']);
+        ValidatorModel::notEmpty($aArgs, ['userId', 'sender', 'recipients', 'cc', 'cci', 'object', 'isHtml', 'status']);
+        ValidatorModel::intVal($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['sender', 'recipients', 'cc', 'cci', 'object', 'body', 'messageExchangeId', 'document', 'isHtml', 'status']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'emails_id_seq']);
 
@@ -51,7 +51,6 @@ class EmailModel
             'table'         => 'emails',
             'columnsValues' => [
                 'id'                        => $nextSequenceId,
-                'res_id'                    => $aArgs['resId'],
                 'user_id'                   => $aArgs['userId'],
                 'sender'                    => $aArgs['sender'],
                 'recipients'                => $aArgs['recipients'],
@@ -60,10 +59,8 @@ class EmailModel
                 'object'                    => $aArgs['object'],
                 'body'                      => empty($aArgs['body']) ? null : $aArgs['body'],
                 'document'                  => $aArgs['document'],
-                'attachments'               => $aArgs['attachments'],
-                'notes'                     => $aArgs['notes'],
                 'is_html'                   => $aArgs['isHtml'],
-                'status'                    => 'W',
+                'status'                    => $aArgs['status'],
                 'message_exchange_id'       => empty($aArgs['messageExchangeId']) ? null : $aArgs['messageExchangeId'],
                 'creation_date'             => 'CURRENT_TIMESTAMP'
             ]

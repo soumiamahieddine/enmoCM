@@ -61,11 +61,9 @@ class ConfigurationController
 
     private static function checkMailer(array $aArgs)
     {
-        $check = Validator::stringType()->notEmpty()->validate($aArgs['type']);
-        if (!$check) {
-            return ['errors' => "configuration mode is missing", 'code' => 400];
+        if (!Validator::stringType()->notEmpty()->validate($aArgs['type'])) {
+            return ['errors' => 'configuration mode is missing', 'code' => 400];
         }
-
         
         if ($aArgs['type'] == 'smtp') {
             $check = Validator::stringType()->notEmpty()->validate($aArgs['host']);

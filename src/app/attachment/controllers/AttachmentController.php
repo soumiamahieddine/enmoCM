@@ -28,6 +28,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use Resource\controllers\StoreController;
+use SrcCore\models\ValidatorModel;
 use Template\controllers\TemplateController;
 use SrcCore\models\DatabaseModel;
 use Resource\models\ResModel;
@@ -187,7 +188,7 @@ class AttachmentController
         $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
         $isVersion = empty($attachmentTodisplay['res_id']);
 
-        $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+        $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
         if (empty($convertedAttachment['errors'])) {
             $attachmentTodisplay = $convertedAttachment;
         }
@@ -302,6 +303,56 @@ class AttachmentController
         ]);
 
         return $response->withHeader('Content-Type', $mimeType);
+    }
+
+    public static function getEncodedDocument(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::boolType($aArgs, ['original']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
+
+        $document = AttachmentModel::getById(['select' => ['docserver_id', 'path', 'filename', 'title'], 'id' => $aArgs['id'], 'isVersion' => $aArgs['isVersion']]);
+
+        if (empty($aArgs['original'])) {
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['id'], 'collId' => 'attachments_coll', 'isVersion' => $aArgs['isVersion']]);
+
+            if (empty($convertedDocument['errors'])) {
+                $document['docserver_id'] = $convertedDocument['docserver_id'];
+                $document['path'] = $convertedDocument['path'];
+                $document['filename'] = $convertedDocument['filename'];
+                $document['fingerprint'] = $convertedDocument['fingerprint'];
+            }
+        }
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return ['errors' => 'Docserver does not exist'];
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+        if (!file_exists($pathToDocument)) {
+            return ['errors' => 'Document not found on docserver'];
+        }
+
+        $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+            ['errors' => 'Fingerprints do not match'];
+        }
+
+        $fileContent = file_get_contents($pathToDocument);
+        if ($fileContent === false) {
+            return ['errors' => 'Document not found on docserver'];
+        }
+
+
+        $encodedDocument = base64_encode($fileContent);
+
+        $pathInfo = pathinfo($pathToDocument);
+        $fileName = (empty($document['title']) ? 'document' : $document['title']) . ".{$pathInfo['extension']}";
+
+        return ['encodedDocument' => $encodedDocument, 'fileName' => $fileName];
     }
 
     public function generateAttachForMailing(array $aArgs)
