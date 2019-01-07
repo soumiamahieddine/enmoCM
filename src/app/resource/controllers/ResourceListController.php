@@ -64,21 +64,51 @@ class ResourceListController
             $queryData[] = "%{$data['search']}%";
             $queryData[] = "%{$data['search']}%";
         }
-        if (!empty($data['priorities'])) {
-            $where[] = 'priority in (?)';
-            $queryData[] = explode(',', $data['priorities']);
+        if (isset($data['priorities'])) {
+            if (empty($data['priorities'])) {
+                $where[] = 'priority is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['priorities']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $data['priorities']) {
+                    $where[] = '(priority is null OR priority in (?))';
+                } else {
+                    $where[] = 'priority in (?)';
+                }
+                $queryData[] = explode(',', $replace);
+            }
         }
-        if (!empty($data['categories'])) {
-            $where[] = 'category_id in (?)';
-            $queryData[] = explode(',', $data['categories']);
+        if (isset($data['categories'])) {
+            if (empty($data['categories'])) {
+                $where[] = 'category_id is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['category_id']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $data['category_id']) {
+                    $where[] = '(category_id is null OR category_id in (?))';
+                } else {
+                    $where[] = 'category_id in (?)';
+                }
+                $queryData[] = explode(',', $replace);
+            }
         }
         if (!empty($data['statuses'])) {
             $where[] = 'status in (?)';
             $queryData[] = explode(',', $data['statuses']);
         }
-        if (!empty($data['entities'])) {
-            $where[] = 'destination in (?)';
-            $queryData[] = explode(',', $data['entities']);
+        if (isset($data['entities'])) {
+            if (empty($data['entities'])) {
+                $where[] = 'destination is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['entities']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $data['entities']) {
+                    $where[] = '(destination is null OR destination in (?))';
+                } else {
+                    $where[] = 'destination in (?)';
+                }
+                $queryData[] = explode(',', $replace);
+            }
         }
         if (!empty($data['entitiesChildren'])) {
             $entities = explode(',', $data['entitiesChildren']);
@@ -178,21 +208,45 @@ class ResourceListController
         $dataStatuses = $queryData;
         $dataEntities = $queryData;
 
-        if (!empty($data['priorities'])) {
-            $whereCategories[] = 'priority in (?)';
-            $dataCategories[] = explode(',', $data['priorities']);
-            $whereStatuses[] = 'priority in (?)';
-            $dataStatuses[] = explode(',', $data['priorities']);
-            $whereEntities[] = 'priority in (?)';
-            $dataEntities[] = explode(',', $data['priorities']);
+        if (isset($data['priorities'])) {
+            if (empty($data['priorities'])) {
+                $tmpWhere = 'priority is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['priorities']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $data['priorities']) {
+                    $tmpWhere = '(priority is null OR priority in (?))';
+                } else {
+                    $tmpWhere = 'priority in (?)';
+                }
+                $dataCategories[] = explode(',', $replace);
+                $dataStatuses[] = explode(',', $replace);
+                $dataEntities[] = explode(',', $replace);
+            }
+
+            $whereCategories[] = $tmpWhere;
+            $whereStatuses[] = $tmpWhere;
+            $whereEntities[] = $tmpWhere;
         }
-        if (!empty($data['categories'])) {
-            $wherePriorities[] = 'category_id in (?)';
-            $dataPriorities[] = explode(',', $data['categories']);
-            $whereStatuses[] = 'category_id in (?)';
-            $dataStatuses[] = explode(',', $data['categories']);
-            $whereEntities[] = 'category_id in (?)';
-            $dataEntities[] = explode(',', $data['categories']);
+        if (isset($data['categories'])) {
+            if (empty($data['categories'])) {
+                $tmpWhere = 'category_id is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['category_id']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $data['category_id']) {
+                    $tmpWhere = '(category_id is null OR category_id in (?))';
+                } else {
+                    $tmpWhere = 'category_id in (?)';
+                }
+                $dataPriorities[] = explode(',', $replace);
+                $dataStatuses[] = explode(',', $replace);
+                $dataEntities[] = explode(',', $replace);
+            }
+
+            $wherePriorities[] = $tmpWhere;
+            $whereStatuses[] = $tmpWhere;
+            $whereEntities[] = $tmpWhere;
         }
         if (!empty($data['statuses'])) {
             $wherePriorities[] = 'status in (?)';
@@ -202,13 +256,25 @@ class ResourceListController
             $whereEntities[] = 'status in (?)';
             $dataEntities[] = explode(',', $data['statuses']);
         }
-        if (!empty($data['entities'])) {
-            $wherePriorities[] = 'destination in (?)';
-            $dataPriorities[] = explode(',', $data['entities']);
-            $whereCategories[] = 'destination in (?)';
-            $dataCategories[] = explode(',', $data['entities']);
-            $whereStatuses[] = 'destination in (?)';
-            $dataStatuses[] = explode(',', $data['entities']);
+        if (isset($data['entities'])) {
+            if (empty($data['entities'])) {
+                $tmpWhere = 'destination is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['entities']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $data['entities']) {
+                    $tmpWhere = '(destination is null OR destination in (?))';
+                } else {
+                    $tmpWhere = 'destination in (?)';
+                }
+                $dataPriorities[] = explode(',', $replace);
+                $dataCategories[] = explode(',', $replace);
+                $dataStatuses[] = explode(',', $replace);
+            }
+
+            $wherePriorities[] = $tmpWhere;
+            $whereCategories[] = $tmpWhere;
+            $whereStatuses[] = $tmpWhere;
         }
         if (!empty($data['entitiesChildren'])) {
             $entities = explode(',', $data['entitiesChildren']);

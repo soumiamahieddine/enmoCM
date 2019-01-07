@@ -41,6 +41,7 @@ DO $$ BEGIN
 END$$;
 UPDATE history SET table_name = 'redirected_baskets' WHERE table_name = 'user_abs';
 
+/* CONFIGURATIONS */
 DROP TABLE IF EXISTS configurations;
 CREATE TABLE configurations
 (
@@ -53,6 +54,7 @@ CONSTRAINT configuration_unique_key UNIQUE (service)
 WITH (OIDS=FALSE);
 INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type" : "smtp", "host" : "smtp.gmail.com", "port" : 465, "user" : "", "password" : "", "auth" : true, "secure" : "ssl", "from" : "notifications@maarch.org", "charset" : "utf-8"}');
 
+/* EMAILS */
 DROP TABLE IF EXISTS emails;
 CREATE TABLE emails
 (
@@ -77,22 +79,18 @@ CONSTRAINT emails_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
-
+/* SERVICES */
 DO $$ BEGIN
   IF (SELECT count(group_id) FROM usergroups_services WHERE service_id IN ('edit_recipient_in_process', 'edit_recipient_outside_process')) = 0 THEN
     INSERT INTO usergroups_services (group_id, service_id) 
-    SELECT group_id, 'edit_recipient_in_process' FROM usergroups WHERE group_id NOT IN (
-      SELECT group_id
-      FROM usergroups_services 
-      WHERE service_id = 'add_copy_in_process'
-    );
+    SELECT usergroups.group_id, 'edit_recipient_in_process' FROM usergroups
+    LEFT JOIN usergroups_services ON usergroups.group_id = usergroups_services.group_id AND usergroups_services.service_id = 'add_copy_in_process'
+    WHERE service_id is null;
 
-    INSERT INTO usergroups_services (group_id, service_id) 
-    SELECT group_id, 'edit_recipient_outside_process' FROM usergroups WHERE group_id NOT IN (
-      SELECT group_id
-      FROM usergroups_services 
-      WHERE service_id = 'add_copy_in_indexing_validation'
-    );
+    INSERT INTO usergroups_services (group_id, service_id)
+    SELECT usergroups.group_id, 'edit_recipient_outside_process' FROM usergroups
+    LEFT JOIN usergroups_services ON usergroups.group_id = usergroups_services.group_id AND usergroups_services.service_id = 'add_copy_in_indexing_validation'
+    WHERE service_id is null;
 
     DELETE FROM usergroups_services WHERE service_id in ('add_copy_in_process', 'add_copy_in_indexing_validation');
   END IF;
