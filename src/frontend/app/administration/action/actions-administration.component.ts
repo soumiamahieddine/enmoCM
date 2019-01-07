@@ -62,7 +62,7 @@ export class ActionsAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/actions')
             .subscribe((data) => {
                 this.actions = data['actions'];
-                this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.actions;
+                this.headerService.setHeader(this.lang.administration + ' ' + this.lang.actions);
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.actions);

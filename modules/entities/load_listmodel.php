@@ -30,7 +30,7 @@ if ($objectId <> '') {
     $_SESSION[$origin]['difflist_object']['object_id'] = $objectId;
     if ($objectType == 'entity_id') {
         $query = "SELECT entity_label FROM entities WHERE entity_id = ?";
-        $stmt = $db->query($query,array($objectId));
+        $stmt = $db->query($query, array($objectId));
         $res = $stmt->fetchObject();
         if ($res->entity_label <> '') {
             $_SESSION[$origin]['difflist_object']['object_label'] = $res->entity_label;
@@ -41,13 +41,13 @@ if ($objectId <> '') {
 // Fill session with listmodel
 $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectId);
 //Permet de bloquer la liste diffusion avec celle de l'utilisateur qui enregistre le courrier.
-if($category == 'outgoing' && $origin == 'indexing' && $objectId == $_SESSION['user']['primaryentity']['id']){
+if ($category == 'outgoing' && $origin == 'indexing' && $objectId == $_SESSION['user']['primaryentity']['id']) {
     $_SESSION[$origin]['diff_list']['dest']['users'] = array();
 
     //Get the right primary entity
     $primaryEntityId = $_SESSION['user']['primaryentity']['id'];
-    foreach($_SESSION['user']['entities'] as $entity){
-        if($entity['ENTITY_ID']==$primaryEntityId){
+    foreach ($_SESSION['user']['entities'] as $entity) {
+        if ($entity['ENTITY_ID']==$primaryEntityId) {
             $primaryEntityLabel = $entity['ENTITY_LABEL'];
         }
     }
@@ -74,7 +74,7 @@ $content = '';
 if (! $onlyCC) {
     if (isset($_SESSION['validStep']) && $_SESSION['validStep'] == 'ok') {
         $content .= "";
-    } 
+    }
 }
 
 # Get content from buffer of difflist_display 
@@ -86,7 +86,7 @@ ob_end_clean();
 $labelButton = _UPDATE_LIST_DIFF;
 $arg = '&mode=up';
 
-if( $core->test_service('add_copy_in_indexing_validation', 'entities', false) && $origin == 'indexing' ){
+if (!$core->test_service('edit_recipient_outside_process', 'entities', false) && $origin == 'indexing') {
     $onlyCC = true;
 }
 
@@ -103,6 +103,6 @@ $content_standard .= '<small><input type="button" style="margin-top:0px;" class=
          . 'resizable=yes,width=1280,height=800,location=no\');"/></small>';
 $content_standard .= '</span></center>';
 
-echo "{status : 0, div_content : '" . addslashes($content_standard . $content . '<br>') 
+echo "{status : 0, div_content : '" . addslashes($content_standard . $content . '<br>')
     . "', div_content_action : '" . addslashes($content) . "'}";
 exit();

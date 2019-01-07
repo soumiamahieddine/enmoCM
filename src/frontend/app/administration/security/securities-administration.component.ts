@@ -54,7 +54,7 @@ export class SecuritiesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.securitiesAdministration;
+        this.headerService.setHeader(this.lang.securitiesAdministration);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

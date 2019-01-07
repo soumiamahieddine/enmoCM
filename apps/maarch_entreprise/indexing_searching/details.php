@@ -565,12 +565,8 @@ if ($stmt->rowCount() == 0) {
         $diffList_frame = '';
         $category = $data['category_id']['value'];
 
-        $onlyCC = '';
-        if ($core->test_service('add_copy_in_indexing_validation', 'entities', false) && $_SESSION['user']['UserId'] != 'superadmin') {
-            $onlyCC = '&only_cc';
-        }
         $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;
+                .'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str);
 
         $diffList_frame .= '<div class="fa fa-share-alt DetailsTabFunc" id="DetailsGearTab" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsGearTab\',true);"></div>';
         echo $diffList_frame;

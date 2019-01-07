@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject, EventEmitter, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { merge, Observable, of as observableOf } from 'rxjs';
 import { NotificationService } from '../notification.service';
-import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
+import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet } from '@angular/material';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError } from 'rxjs/operators';
@@ -17,7 +17,6 @@ import { DiffusionsListComponent } from '../diffusions/diffusions-list.component
 import { FiltersToolComponent } from './filters/filters-tool.component';
 
 
-
 declare function $j(selector: any): any;
 
 declare var angularGlobals: any;
@@ -25,7 +24,7 @@ declare var angularGlobals: any;
 @Component({
     templateUrl: "basket-list.component.html",
     styleUrls: ['basket-list.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService],
 })
 export class BasketListComponent implements OnInit {
 
@@ -42,7 +41,7 @@ export class BasketListComponent implements OnInit {
     homeData: any;
 
     filtersChange = new EventEmitter();
-    
+
     @ViewChild('snav') sidenavLeft: MatSidenav;
     @ViewChild('snav2') sidenavRight: MatSidenav;
 
@@ -64,34 +63,34 @@ export class BasketListComponent implements OnInit {
     //displayedSecondaryData: any = [];
     displayedSecondaryData: any = [
         {
-            'id' : 'priority_label',
-            'class' : '',
-            'icon' : ''
+            'id': 'priority_label',
+            'class': '',
+            'icon': ''
         },
         {
-            'id' : 'category_id',
-            'class' : '',
-            'icon' : ''
+            'id': 'category_id',
+            'class': '',
+            'icon': ''
         },
         {
-            'id' : 'doctype_label',
-            'class' : '',
-            'icon' : 'fa fa-file'
+            'id': 'doctype_label',
+            'class': '',
+            'icon': 'fa fa-file'
         },
         {
-            'id' : 'contact_society',
-            'class' : '',
-            'icon' : ''
+            'id': 'senders',
+            'class': '',
+            'icon': ''
         },
         {
-            'id' : 'contact_society',
-            'class' : '',
-            'icon' : ''
+            'id': 'recipients',
+            'class': '',
+            'icon': ''
         },
         {
-            'id' : 'date',
-            'class' : 'rightData',
-            'icon' : ''
+            'id': 'date',
+            'class': 'rightData',
+            'icon': ''
         },
     ];
 
@@ -102,6 +101,7 @@ export class BasketListComponent implements OnInit {
     listProperties: any = {};
     currentBasketInfo: any = {};
     currentChrono: string = '';
+    thumbnailUrl: string = '';
 
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
 
@@ -151,9 +151,9 @@ export class BasketListComponent implements OnInit {
             this.refreshDao();
 
         },
-        (err : any) => {
-            this.notify.handleErrors(err);
-        });
+            (err: any) => {
+                this.notify.handleErrors(err);
+            });
     }
 
     initResultList() {
@@ -174,9 +174,9 @@ export class BasketListComponent implements OnInit {
                 map(data => {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
+                    data = this.processPostData(data);
                     this.resultsLength = data.count;
-                    this.headerService.headerMessage = data.basketLabel;
-                    this.headerService.subHeaderMessage = this.resultsLength + ' ' + this.lang.entries;
+                    this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;
                 }),
                 catchError((err: any) => {
@@ -232,6 +232,39 @@ export class BasketListComponent implements OnInit {
 
     filterThis(value: string) {
         this.filtersTool.setInputSearch(value);
+    }
+
+    viewThumbnail(row: any) {
+        this.thumbnailUrl = this.coreUrl + 'rest/res/' + row.res_id + '/thumbnail';
+        $j('#viewThumbnail').show();
+        $j('#listContent').css({ "overflow": "hidden" });
+    }
+
+    closeThumbnail() {
+        $j('#viewThumbnail').hide();
+        $j('#listContent').css({ "overflow": "auto" });
+    }
+
+    processPostData(data: any) {
+        data.resources.forEach((element: any) => {
+            Object.keys(element).forEach((key) => {
+                if ((element[key] == null || element[key] == '') && ['process_limit_date', 'creation_date', 'closing_date', 'countAttachments', 'countNotes'].indexOf(key) === -1) {
+                    element[key] = this.lang.undefined;
+                } else if (["senders","recipients"].indexOf(key) > 0) {
+                    if (element[key].length > 1) {
+                        console.log(element[key]);
+                        element[key] = this.lang.isMulticontact;
+                    } else {
+                        element[key] = element[key][0];
+                    }          
+                } else if (key == 'status_icon' && element[key] == null) {
+                    element[key] = 'fa-question undefined';
+                }
+
+            });
+        });
+
+        return data;
     }
 }
 export interface BasketList {

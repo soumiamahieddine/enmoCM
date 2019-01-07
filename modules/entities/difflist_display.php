@@ -62,7 +62,7 @@ foreach ($roles as $role_id => $role_label) {
                 $contentDiffList .= '<td style="width:43%;">'.$user['entity_label'].'</td>';
                 $contentDiffList .= '<td class="movedest" style="width:5%;">';
 
-                if (empty($specific_role) && !empty($difflist['dest']['users'][0]) && $role_id != 'dest' && $origin != null && !$core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
+                if (empty($specific_role) && !empty($difflist['dest']['users'][0]) && $role_id != 'dest' && $origin != null && $core->test_service('edit_recipient_outside_process', 'entities', false)) {
                     $contentDiffList .= '<i class="fa fa-arrow-up" style="cursor:pointer;" title="'._DEST.'" onclick="moveToDest(\''.$user['user_id'].'\',\''.$role_id.'\',\''.$origin.'\');"></i>';
                 }
                 $contentDiffList .= '</td>';

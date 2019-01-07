@@ -204,10 +204,13 @@ class ReceiveMessageExchangeController
             }
         }
 
-        if (filter_var($aDefaultConfig['m2m_communication'][0], FILTER_VALIDATE_EMAIL)) {
-            $aDefaultConfig['m2m_communication_type'][0] = 'email';
-        } elseif (filter_var($aDefaultConfig['m2m_communication'][0], FILTER_VALIDATE_URL)) {
-            $aDefaultConfig['m2m_communication_type'][0] = 'url';
+        $aDefaultConfig['m2m_communication'] = explode(",", $aDefaultConfig['m2m_communication'][0]);
+        foreach ($aDefaultConfig['m2m_communication'] as $value) {
+            if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                $aDefaultConfig['m2m_communication_type']['email'] = $value;
+            } elseif (filter_var($value, FILTER_VALIDATE_URL)) {
+                $aDefaultConfig['m2m_communication_type']['url'] = $value;
+            }
         }
 
         return $aDefaultConfig;
@@ -292,8 +295,8 @@ class ReceiveMessageExchangeController
             'limit'     => 1
         ]);
         if (!empty($contactAlreadyCreated)) {
-            $contact['contactId'] = $contactAlreadyCreated['contact_id'];
-            $contact['addressId'] = $contactAlreadyCreated['ca_id'];
+            $contact['contactId'] = $contactAlreadyCreated[0]['contact_id'];
+            $contact['addressId'] = $contactAlreadyCreated[0]['ca_id'];
         } else {
             $contact = ContactModel::CreateContactM2M(['data' => $aDataContact, 'contactCommunication' => $transferringAgencyMetadata->Communication[0]->value]);
         }

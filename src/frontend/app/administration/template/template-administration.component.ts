@@ -65,7 +65,7 @@ export class TemplateAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                this.headerService.headerMessage = this.lang.templateCreation;
+                this.headerService.setHeader(this.lang.templateCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
@@ -88,7 +88,7 @@ export class TemplateAdministrationComponent implements OnInit {
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template = data.template;
-                        this.headerService.headerMessage = this.lang.templateModification + " <small>" +  this.template.template_label + "</small>";
+                        this.headerService.setHeader(this.lang.templateModification, this.template.template_label);
                         this.loading  = false;
                         if(this.template.template_type=='HTML'){
                             this.initMce();

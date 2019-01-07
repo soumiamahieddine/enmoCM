@@ -54,7 +54,7 @@ export class BasketsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.baskets;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.baskets);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

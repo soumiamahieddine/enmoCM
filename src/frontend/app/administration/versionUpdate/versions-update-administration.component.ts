@@ -40,7 +40,7 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.updateVersionControl;
+        this.headerService.setHeader(this.lang.updateVersionControl);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

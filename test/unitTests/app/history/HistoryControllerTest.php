@@ -70,27 +70,33 @@ class HistoryControllerTest extends TestCase
         $this->assertNotNull($responseBody->batchHistories);
     }
 
-    public function testRealDelete(){
-        
-        //get notes
-        $getResId = DatabaseModel::select([
+    public function testRealDelete()
+    {
+        $aResId = DatabaseModel::select([
             'select'    => ['res_id'],
             'table'     => ['res_letterbox'],
-            'limit'     => 1,
+            'where'     => ['subject like ?','typist = ?', 'dest_user = ?'],
+            'data'      => ['%Superman is alive - PHP unit', 'LLane', 'bbain'],
+            'order_by'  => ['res_id DESC']
         ]);
 
-        $resID['resId'] = $getResId[0]['res_id'];
+        $aNewResId = [];
+        foreach ($aResId as $value) {
+            $aNewResId[] = $value['res_id'];
+        }
         
         //  REAL DELETE
         \SrcCore\models\DatabaseModel::delete([
             'table' => 'res_letterbox',
-            'where' => ['res_id = ?'],
-            'data'  => [$resID['resId']]
+            'where' => ['res_id in (?)'],
+            'data'  => [$aNewResId]
         ]);
 
         //  READ
-        $res = \Resource\models\ResModel::getById(['resId' => $resID['resId']]);
-        $this->assertInternalType('array', $res);
-        $this->assertEmpty($res);
+        foreach ($aNewResId as $resId) {
+            $res = \Resource\models\ResModel::getById(['resId' => $resId]);
+            $this->assertInternalType('array', $res);
+            $this->assertEmpty($res);
+        }
     }
 }

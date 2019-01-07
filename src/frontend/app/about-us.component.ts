@@ -39,7 +39,7 @@ export class AboutUsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.aboutUs;
+        this.headerService.setHeader(this.lang.aboutUs);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

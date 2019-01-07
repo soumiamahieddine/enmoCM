@@ -47,7 +47,7 @@ export class DocserverAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.docserverCreation;
+        this.headerService.setHeader(this.lang.docserverCreation);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
         this.coreUrl = angularGlobals.coreUrl;

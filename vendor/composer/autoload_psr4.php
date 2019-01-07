@@ -8,7 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'phpseclib\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
-    'email\\' => array($baseDir . '/src/app/email'),
     'VersionUpdate\\' => array($baseDir . '/src/app/versionUpdate'),
     'User\\' => array($baseDir . '/src/app/user'),
     'Template\\' => array($baseDir . '/src/app/template'),
@@ -49,6 +48,7 @@ return array(
     'Folder\\' => array($baseDir . '/src/app/folder'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
     'Entity\\' => array($baseDir . '/src/app/entity'),
+    'Email\\' => array($baseDir . '/src/app/email'),
     'Doctype\\' => array($baseDir . '/src/app/doctype'),
     'Docserver\\' => array($baseDir . '/src/app/docserver'),
     'Convert\\' => array($baseDir . '/src/app/convert'),

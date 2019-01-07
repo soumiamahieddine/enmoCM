@@ -60,7 +60,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                this.headerService.headerMessage = this.lang.diffusionModelCreation;
+                this.headerService.setHeader(this.lang.diffusionModelCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
                 
@@ -77,7 +77,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
                 this.http.get(this.coreUrl + "rest/listTemplates/" + params['id'])
                 .subscribe((data: any) => {
                         this.diffusionModel = data['listTemplate'];
-                        this.headerService.headerMessage = this.lang.diffusionModelModification + " <small>" +  this.diffusionModel.title + "</small>";
+                        this.headerService.setHeader(this.lang.diffusionModelModification, this.diffusionModel.title);
                         if (this.diffusionModel.diffusionList[0]) {
                             this.idCircuit = this.diffusionModel.diffusionList[0].id;
                         }

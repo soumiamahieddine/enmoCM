@@ -63,7 +63,7 @@ export class ActionAdministrationComponent implements OnInit {
 
                         this.actionPagesList = data.action_pagesList;
                         this.keywordsList = data.keywordsList;
-                        this.headerService.headerMessage = this.lang.actionCreation;
+                        this.headerService.setHeader(this.lang.actionCreation);
                         this.loading = false;
                     });
             }
@@ -81,7 +81,7 @@ export class ActionAdministrationComponent implements OnInit {
 
                         this.actionPagesList = data.action_pagesList;
                         this.keywordsList = data.keywordsList;
-                        this.headerService.headerMessage = this.lang.actionModification + " <small>" + data.action.label_action + "</small>";
+                        this.headerService.setHeader(this.lang.actionCreation, data.action.label_action);
                         this.loading = false;
                     });
             }

@@ -52,7 +52,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.priorities;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.priorities);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

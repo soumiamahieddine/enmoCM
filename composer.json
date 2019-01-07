@@ -11,7 +11,7 @@
             "Convert\\"           : "src/app/convert/",
             "Docserver\\"         : "src/app/docserver/",
             "Doctype\\"           : "src/app/doctype/",
-            "email\\"             : "src/app/email/",
+            "Email\\"             : "src/app/email/",
             "Entity\\"            : "src/app/entity/",
             "Folder\\"            : "src/app/folder/",
             "Group\\"             : "src/app/group/",

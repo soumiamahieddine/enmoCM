@@ -49,7 +49,7 @@ export class SaveNumericPackageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.saveNumericPackage;
+        this.headerService.setHeader(this.lang.saveNumericPackage);
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = false;

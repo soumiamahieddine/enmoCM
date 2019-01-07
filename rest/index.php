@@ -145,6 +145,9 @@ $app->delete('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::cla
 $app->put('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeController::class . ':deleteRedirect');
 $app->get('/administration/doctypes/new', \Doctype\controllers\FirstLevelController::class . ':initDoctypes');
 
+//Emails
+$app->post('/emails', \Email\controllers\EmailController::class . ':create');
+
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
 $app->post('/entities', \Entity\controllers\EntityController::class . ':create');

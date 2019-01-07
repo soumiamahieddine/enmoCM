@@ -35,10 +35,12 @@ class ResourceListModel
                 'res_letterbox.res_id',
                 'res_letterbox.subject',
                 'res_letterbox.creation_date',
+                'res_letterbox.barcode',
                 'mlb_coll_ext.alt_identifier',
                 'mlb_coll_ext.category_id',
                 'mlb_coll_ext.closing_date',
                 'mlb_coll_ext.process_limit_date',
+                'mlb_coll_ext.is_multicontacts',
                 'entities.entity_label as entity_destination',
                 'doctypes.description as doctype_label',
                 'contacts_v2.firstname as contact_firstname',
@@ -71,5 +73,26 @@ class ResourceListModel
         ]);
 
         return $resources;
+    }
+
+    public static function getOnView(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'table', 'leftJoin', 'where', 'data', 'orderBy', 'groupBy']);
+        ValidatorModel::intType($aArgs, ['limit', 'offset']);
+
+        $aResources = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => array_merge(['res_view_letterbox'], $aArgs['table']),
+            'left_join' => empty($aArgs['leftJoin']) ? [] : $aArgs['leftJoin'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy'],
+            'offset'    => empty($aArgs['offset']) ? 0 : $aArgs['offset'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
+        return $aResources;
     }
 }

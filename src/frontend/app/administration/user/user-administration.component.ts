@@ -108,7 +108,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
-                this.headerService.headerMessage = this.lang.userCreation;
+                this.headerService.setHeader(this.lang.userCreation);
                 this.creationMode = true;
                 this.loading = false;
             } else {
@@ -124,7 +124,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                         this.data = data.history;
                         this.userId = data.user_id;
                         this.minDate = new Date(this.CurrentYear + '-' + this.currentMonth + '-01');
-                        this.headerService.headerMessage = this.lang.userModification + " <small>" +  data.firstname + " " + data.lastname + "</small>";
+                        this.headerService.setHeader(this.lang.userModification, data.firstname + " " + data.lastname);
                         this.loading = false;
                         setTimeout(() => {
                             this.dataSource = new MatTableDataSource(this.data);

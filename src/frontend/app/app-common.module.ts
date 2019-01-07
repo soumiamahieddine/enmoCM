@@ -10,6 +10,7 @@ import { HttpClientModule }                     from '@angular/common/http';
 import { RouterModule }                         from '@angular/router';
 
 /*PLUGINS IMPORTS*/
+import { NgStringPipesModule }                  from 'ngx-pipes';
 import { CookieService }                        from 'ngx-cookie-service';
 import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
 import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe';
@@ -48,6 +49,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         FormsModule,
         HttpClientModule,
         RouterModule,
+        NgStringPipesModule,
         AppMaterialModule,
     ],
     declarations: [
@@ -83,6 +85,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,
+        NgStringPipesModule,
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,

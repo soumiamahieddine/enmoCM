@@ -21,6 +21,7 @@
     "jquery.nicescroll": "~3.6.8",
     "jstree-bootstrap-theme": "^1.0.1",
     "ngx-cookie-service": "^2.1.0",
+    "ngx-pipes": "^2.3.6",
     "photoswipe": "^4.1.2",
     "tinymce": "^4.8.5",
     "tooltipster": "^4.2.6",

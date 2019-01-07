@@ -252,9 +252,6 @@ if (!defined('_NO_DIFF_LIST_ASSOCIATED')) {
 if (!defined('_PRINCIPAL_RECIPIENT')) {
     define('_PRINCIPAL_RECIPIENT', 'Main recipient');
 }
-if (!defined('_ADD_COPY_IN_PROCESS')) {
-    define('_ADD_COPY_IN_PROCESS', 'Add persons on copy in the handling');
-}
 if (!defined('_UPDATE_LIST_DIFF_IN_DETAILS')) {
     define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Update diffusion list from the detailed page');
 }
@@ -617,10 +614,6 @@ if (!defined('_ENTITIES_PRINT_SEP_MLB_GENERIC')) {
 if (!defined('_SELECT_BARCODE_TYPE')) {
     define('_SELECT_BARCODE_TYPE', 'Barecode type');
 }
-if (!defined('_ADD_COPY_IN_INDEXING_VALIDATION')) {
-    define('_ADD_COPY_IN_INDEXING_VALIDATION', 'Forbid recipient modification on the diffusion list');
-}
-
 if (!defined('_DEL_USER_LISTDIFF')) {
     define('_DEL_USER_LISTDIFF', 'Remove the user from the diffusion list');
 }

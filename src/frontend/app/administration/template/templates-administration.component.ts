@@ -61,7 +61,7 @@ export class TemplatesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.templates;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.templates);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

@@ -6,6 +6,7 @@ import { FiltersListService } from '../../../service/filtersList.service';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
+import { LatinisePipe } from 'ngx-pipes';
 
 declare function $j(selector: any): any;
 
@@ -14,19 +15,12 @@ export interface StateGroup {
     names: any[];
 }
 
-export const _filter = (opt: string[], value: string): string[] => {
-
-    if (typeof value === 'string') {
-        const filterValue = value.toLowerCase();
-
-        return opt.filter(item => item['label'].toLowerCase().indexOf(filterValue) != -1);
-    }
-};
 @Component({
     selector: 'app-filters-tool',
     templateUrl: 'filters-tool.component.html',
     styleUrls: ['filters-tool.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [LatinisePipe],
 })
 export class FiltersToolComponent implements OnInit {
 
@@ -41,12 +35,12 @@ export class FiltersToolComponent implements OnInit {
         { 'id': 'category_id' },
         { 'id': 'creation_date' },
         { 'id': 'process_limit_date' },
-        { 'id': 'destination' },
+        { 'id': 'entity_label' },
         { 'id': 'subject' },
         { 'id': 'alt_identifier' },
         { 'id': 'priority' },
         { 'id': 'status' },
-        { 'id': 'type_id' }
+        { 'id': 'type_label' }
     ];
 
     @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
@@ -69,16 +63,25 @@ export class FiltersToolComponent implements OnInit {
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
 
-    constructor(public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder) { }
+    constructor(public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder, private latinisePipe: LatinisePipe) { }
 
     ngOnInit(): void {
 
     }
 
+    private _filter = (opt: string[], value: string): string[] => {
+
+        if (typeof value === 'string') {
+            const filterValue = value.toLowerCase();
+                
+            return opt.filter(item => this.latinisePipe.transform(item['label'].toLowerCase()).indexOf(this.latinisePipe.transform(filterValue)) != -1);
+        }
+    };
+
     private _filterGroup(value: string): StateGroup[] {
         if (value && typeof value === 'string') {
             return this.stateGroups
-                .map(group => ({ letter: group.letter, names: _filter(group.names, value) }))
+                .map(group => ({ letter: group.letter, names: this._filter(group.names, value) }))
                 .filter(group => group.names.length > 0);
         }
 
@@ -131,6 +134,27 @@ export class FiltersToolComponent implements OnInit {
         this.updateFilters();
     }
 
+    removeFilters() {
+        Object.keys(this.listProperties).forEach((key) => {
+            if (Array.isArray(this.listProperties[key])) {
+                this.listProperties[key] = [];
+            } else if (key == 'search') {
+                this.listProperties[key] = '';
+            }
+        });
+        this.updateFilters();
+    }
+
+    haveFilters() {
+        let state = false;
+        Object.keys(this.listProperties).forEach((key) => {
+            if ((Array.isArray(this.listProperties[key]) && this.listProperties[key].length > 0) || (key == 'search' && this.listProperties[key] != '')) {
+                state = true;
+            }
+        });
+        return state;
+    }
+
     setInputSearch(value: string) {
         $j('.metaSearch').focus();
         this.metaSearchInput = value;
@@ -171,7 +195,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'categories',
                                 value: element.id,
-                                label: (element.label !== null ? element.label : '_UNDEFINED'),
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
@@ -183,7 +207,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'priorities',
                                 value: element.id,
-                                label: (element.label !== null ? element.label : '_UNDEFINED'),
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
@@ -195,7 +219,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'statuses',
                                 value: element.id,
-                                label: (element.label !== null ? element.label : '_UNDEFINED') ,
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
@@ -204,12 +228,12 @@ export class FiltersToolComponent implements OnInit {
                 });
 
                 data.entities.forEach((element: any) => {
-                    if (this.listProperties.entities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1) {
+                    if (this.listProperties.entities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1 && this.listProperties.subEntities == 0) {
                         this.stateGroups[3].names.push(
                             {
                                 id: 'entities',
                                 value: element.entityId,
-                                label: (element.label !== null ? element.label : '_UNDEFINED') ,
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
@@ -217,18 +241,17 @@ export class FiltersToolComponent implements OnInit {
 
                 });
 
-                data.entities.forEach((element: any) => {
-                    if (this.listProperties.subEntities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1) {
+                data.entitiesChildren.forEach((element: any) => {
+                    if (this.listProperties.subEntities.map((entity: any) => (entity.id)).indexOf(element.entityId) === -1 && this.listProperties.entities == 0) {
                         this.stateGroups[4].names.push(
                             {
                                 id: 'subEntities',
                                 value: element.entityId,
-                                label: (element.label !== null ? element.label : '_UNDEFINED') ,
+                                label: (element.id !== null ? element.label : this.lang.undefined) ,
                                 count: element.count
                             }
                         )
                     }
-
                 });
                 this.isLoading = false;
                 if (this.metaSearchInput.length > 0) {

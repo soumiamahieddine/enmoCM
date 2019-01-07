@@ -234,9 +234,6 @@ if (!defined('_NO_DIFF_LIST_ASSOCIATED')) {
 if (!defined('_PRINCIPAL_RECIPIENT')) {
     define('_PRINCIPAL_RECIPIENT', 'Hoofdbestemmeling');
 }
-if (!defined('_ADD_COPY_IN_PROCESS')) {
-    define('_ADD_COPY_IN_PROCESS', 'Personen in kopie toevoegen in de verwerking');
-}
 if (!defined('_UPDATE_LIST_DIFF_IN_DETAILS')) {
     define('_UPDATE_LIST_DIFF_IN_DETAILS', 'De verdelingslijst vanuit de detailpagina’s updaten');
 }
@@ -579,9 +576,6 @@ if (!defined('_ENTITIES_PRINT_SEP_MLB_GENERIC')) {
 if (!defined('_SELECT_BARCODE_TYPE')) {
     define('_SELECT_BARCODE_TYPE', 'Type barcode');
 }
-if (!defined('_ADD_COPY_IN_INDEXING_VALIDATION')) {
-    define('_ADD_COPY_IN_INDEXING_VALIDATION', 'De wijziging van bestemmeling in de verdelingslijst verbieden');
-}
 if (!defined('_DEL_USER_LISTDIFF')) {
     define('_DEL_USER_LISTDIFF', 'De gebruiker van de verdelingslijst halen');
 }
@@ -656,9 +650,6 @@ if (!defined('_CHOOSE_ENTITIES')) {
 }
 if (!defined('_ENTITIES_PRINT_SEP_MLB')) {
     define('_ENTITIES_PRINT_SEP_MLB', 'De separatoren per eenheid afdrukken');
-}
-if (!defined('_ADD_COPY_IN_INDEXING_VALIDATION')) {
-    define('_ADD_COPY_IN_INDEXING_VALIDATION', 'De wijziging van de toegekende persoon in de verdelingslijst verbieden');
 }
 if (!defined('_ARCHIVAL_AGENCY')) {
     define('_ARCHIVAL_AGENCY', 'Archiefeenheid');

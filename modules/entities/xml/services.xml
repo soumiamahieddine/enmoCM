@@ -103,8 +103,8 @@
         </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
-        <id>add_copy_in_process</id>
-        <name>_ADD_COPY_IN_PROCESS</name>
+        <id>edit_recipient_in_process</id>
+        <name>_EDIT_RECIPIENT_IN_PROCESS</name>
         <servicepage>add_copy_in_process.php</servicepage>
         <servicetype>use</servicetype>
         <system_service>false</system_service>
@@ -115,8 +115,8 @@
         </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
-        <id>add_copy_in_indexing_validation</id>
-        <name>_ADD_COPY_IN_INDEXING_VALIDATION</name>
+        <id>edit_recipient_outside_process</id>
+        <name>_EDIT_RECIPIENT_OUTSIDE_PROCESS</name>
         <servicepage>load_listinstance.php</servicepage>
         <servicetype>use</servicetype>
         <system_service>false</system_service>

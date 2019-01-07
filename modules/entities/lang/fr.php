@@ -252,12 +252,6 @@ if (!defined('_NO_DIFF_LIST_ASSOCIATED')) {
 if (!defined('_PRINCIPAL_RECIPIENT')) {
     define('_PRINCIPAL_RECIPIENT', 'Destinataire principal');
 }
-if (!defined('_ADD_COPY_IN_PROCESS')) {
-    define('_ADD_COPY_IN_PROCESS', 'Ajouter des personnes en copie dans le traitement');
-}
-if (!defined('_UPDATE_LIST_DIFF_IN_DETAILS')) {
-    define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la page de détails');
-}
 if (!defined('_UPDATE_LIST_DIFF')) {
     define('_UPDATE_LIST_DIFF', 'Modifier la liste de diffusion');
 }
@@ -627,10 +621,6 @@ if (!defined('_ENTITIES_PRINT_SEP_MLB_GENERIC')) {
 if (!defined('_SELECT_BARCODE_TYPE')) {
     define('_SELECT_BARCODE_TYPE', 'Type de code à barres');
 }
-if (!defined('_ADD_COPY_IN_INDEXING_VALIDATION')) {
-    define('_ADD_COPY_IN_INDEXING_VALIDATION', "Interdire la modification de l'attributaire dans la liste de diffusion");
-}
-
 if (!defined('_DEL_USER_LISTDIFF')) {
     define('_DEL_USER_LISTDIFF', "Retirer l'utilisateur de la liste de diffusion");
 }

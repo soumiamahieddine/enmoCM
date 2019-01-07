@@ -41,9 +41,9 @@ class EmailModel
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId', 'sender', 'to', 'cc', 'cci', 'object', 'attachmentsId', 'versionAttachmentsId', 'notesId', 'documentLinked', 'isHtml']);
-        ValidatorModel::intVal($aArgs, ['resId', 'userId']);
-        ValidatorModel::stringType($aArgs, ['sender', 'to', 'cc', 'cci', 'object', 'body', 'attachmentsId', 'versionAttachmentsId', 'notesId', 'messageExchangeId', 'documentLinked', 'isHtml']);
+        ValidatorModel::notEmpty($aArgs, ['userId', 'sender', 'recipients', 'cc', 'cci', 'object', 'isHtml', 'status']);
+        ValidatorModel::intVal($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['sender', 'recipients', 'cc', 'cci', 'object', 'body', 'messageExchangeId', 'document', 'isHtml', 'status']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'emails_id_seq']);
 
@@ -51,20 +51,16 @@ class EmailModel
             'table'         => 'emails',
             'columnsValues' => [
                 'id'                        => $nextSequenceId,
-                'res_id'                    => $aArgs['resId'],
                 'user_id'                   => $aArgs['userId'],
                 'sender'                    => $aArgs['sender'],
-                'to'                        => $aArgs['to'],
+                'recipients'                => $aArgs['recipients'],
                 'cc'                        => $aArgs['cc'],
                 'cci'                       => $aArgs['cci'],
                 'object'                    => $aArgs['object'],
                 'body'                      => empty($aArgs['body']) ? null : $aArgs['body'],
-                'document_linked'           => $aArgs['documentLinked'],
-                'attachments_id'            => $aArgs['attachmentsId'],
-                'version_attachments_id'    => $aArgs['versionAttachmentsId'],
-                'notes_id'                  => $aArgs['notesId'],
+                'document'                  => $aArgs['document'],
                 'is_html'                   => $aArgs['isHtml'],
-                'status'                    => 'W',
+                'status'                    => $aArgs['status'],
                 'message_exchange_id'       => empty($aArgs['messageExchangeId']) ? null : $aArgs['messageExchangeId'],
                 'creation_date'             => 'CURRENT_TIMESTAMP'
             ]

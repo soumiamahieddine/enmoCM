@@ -58,7 +58,7 @@ export class GroupsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.groups;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.groups);
 
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);

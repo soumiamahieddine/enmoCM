@@ -50,7 +50,7 @@ export class NotificationAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params: any) => {
             if (typeof params['identifier'] == "undefined") {
-                this.headerService.headerMessage = this.lang.notificationCreation;
+                this.headerService.setHeader(this.lang.notificationCreation);
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
@@ -70,7 +70,7 @@ export class NotificationAdministrationComponent implements OnInit {
                 this.creationMode = false;
                 this.http.get(this.coreUrl + 'rest/notifications/' + params['identifier'])
                     .subscribe((data: any) => {
-                        this.headerService.headerMessage = this.lang.notificationModification + " <small>" + data.notification.description + "</small>";
+                        this.headerService.setHeader(this.lang.notificationModification, data.notification.description);
 
                         this.notification = data.notification;
                         this.notification.attachfor_properties = [];

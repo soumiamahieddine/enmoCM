@@ -139,7 +139,6 @@ class ConvertPdfController
         ValidatorModel::notEmpty($aArgs, ['resId', 'collId']);
         ValidatorModel::intVal($aArgs, ['resId']);
         ValidatorModel::boolType($aArgs, ['isVersion']);
-        ValidatorModel::arrayType($aArgs, ['select']);
 
         $convertedDocument = AdrModel::getConvertedDocumentById([
             'select'    => ['docserver_id','path', 'filename', 'fingerprint'],

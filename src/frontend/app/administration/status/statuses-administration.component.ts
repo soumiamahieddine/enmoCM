@@ -51,7 +51,7 @@ export class StatusesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.headerMessage = this.lang.administration + ' ' + this.lang.statuses;
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.statuses);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 

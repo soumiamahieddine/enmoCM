@@ -499,6 +499,83 @@ class ResController
         return $response->withJson(NoteModel::countByResId(['resId' => $aArgs['resId'], 'login' => $GLOBALS['userId']]));
     }
 
+    public static function getEncodedDocument(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::boolType($aArgs, ['original']);
+
+        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'subject'], 'resId' => $aArgs['resId']]);
+        $extDocument = ResModel::getExtById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
+
+        if (empty($aArgs['original'])) {
+            if ($extDocument['category_id'] == 'outgoing') {
+                $attachment = AttachmentModel::getOnView([
+                    'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
+                    'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
+                    'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
+                    'limit'     => 1
+                ]);
+                if (!empty($attachment[0])) {
+                    $attachmentTodisplay = $attachment[0];
+                    $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
+                    $isVersion = empty($attachmentTodisplay['res_id']);
+                    if ($isVersion) {
+                        $collId = "attachments_version_coll";
+                    } else {
+                        $collId = "attachments_coll";
+                    }
+                    $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
+                    if (empty($convertedDocument['errors'])) {
+                        $attachmentTodisplay = $convertedDocument;
+                    }
+                    $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
+                    $document['path'] = $attachmentTodisplay['path'];
+                    $document['filename'] = $attachmentTodisplay['filename'];
+                    $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
+                }
+            } else {
+                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
+
+                if (empty($convertedDocument['errors'])) {
+                    $document['docserver_id'] = $convertedDocument['docserver_id'];
+                    $document['path'] = $convertedDocument['path'];
+                    $document['filename'] = $convertedDocument['filename'];
+                    $document['fingerprint'] = $convertedDocument['fingerprint'];
+                }
+            }
+        }
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return ['errors' => 'Docserver does not exist'];
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+        if (!file_exists($pathToDocument)) {
+            return ['errors' => 'Document not found on docserver'];
+        }
+
+        $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+            ['errors' => 'Fingerprints do not match'];
+        }
+
+        $fileContent = file_get_contents($pathToDocument);
+        if ($fileContent === false) {
+            return ['errors' => 'Document not found on docserver'];
+        }
+
+
+        $encodedDocument = base64_encode($fileContent);
+
+        $pathInfo = pathinfo($pathToDocument);
+        $fileName = (empty($document['subject']) ? 'document' : $document['subject']) . ".{$pathInfo['extension']}";
+
+        return ['encodedDocument' => $encodedDocument, 'fileName' => $fileName];
+    }
+
     public static function hasRightByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
