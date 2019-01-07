@@ -102,35 +102,22 @@
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
             fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;width:500px;"
-            (opened)="initServerConnection()">
+            (opened)="initEmailSend()">
             <mat-nav-list disableRipple="true">
-                <h3 mat-subheader>État du serveur</h3>
-                <mat-list-item *ngIf="serverConnectionLoading">
-                    <mat-icon mat-list-icon fontSet="far" fontIcon="fa-circle fa-2x"></mat-icon>
-                    <p mat-line> En cours de connexion... </p>
-                </mat-list-item>
-                <mat-list-item *ngIf="!serverConnectionLoading">
-                    <mat-icon mat-list-icon fontSet="fas" style="color:green" fontIcon="fa-circle fa-2x"></mat-icon>
-                    <p mat-line> Connexion établie </p>
-                </mat-list-item>
-                <h3 mat-subheader>Test d'envoi</h3>
+                <h3 mat-subheader>{{lang.emailSendTest}}</h3>
                 <div class="form-group" [style.opacity]="sendmail.type != 'smtp' ? '0.5' : '1'">
                     <div class="col-md-12">
                         <mat-form-field>
-                            <input matInput placeholder="Adresse d'envoi" [disabled]="serverConnectionLoading">
-                            <mat-icon *ngIf="!serverConnectionLoading" title="Commencer le test" (click)="initEmailSend()" color="primary" style="cursor: pointer;" matSuffix
+                            <input matInput placeholder="Adresse d'envoi" [(ngModel)]="currentUser.mail" [disabled]="serverConnectionLoading">
+                            <mat-icon *ngIf="!serverConnectionLoading" title="{{lang.beginSendTest}}" (click)="testEmailSend()" color="primary" style="cursor: pointer;" matSuffix
                                 class="fa fa-paper-plane fa-2x"></mat-icon>
                         </mat-form-field>
                     </div>
                 </div>
-                <mat-list-item *ngIf="emailSendLoading">
-                    <mat-icon mat-list-icon fontSet="fas" fontIcon="fa-paper-plane fa-2x"></mat-icon>
-                    <p mat-line> En cours d'envoi... </p>
+                <mat-list-item *ngIf="emailSendResult.msg != ''">
+                    <mat-icon mat-list-icon class= "fas {{emailSendResult.icon}} fa-2x"></mat-icon>
+                    <p mat-line> {{emailSendResult.msg}} </p>
                 </mat-list-item>
-                <mat-list-item *ngIf="!emailSendLoading">
-                        <mat-icon mat-list-icon fontSet="fas" style="color:green" fontIcon="fa-check fa-2x"></mat-icon>
-                        <p mat-line> Envoi réussi </p>
-                    </mat-list-item>
             </mat-nav-list>
         </mat-sidenav>
     </mat-sidenav-container>

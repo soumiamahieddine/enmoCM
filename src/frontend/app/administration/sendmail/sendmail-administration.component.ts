@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav } from '@angular/material';
 import { NotificationService } from '../../notification.service';
-import { HeaderService }        from '../../../service/header.service';
+import { HeaderService } from '../../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -18,15 +18,15 @@ declare var angularGlobals: any;
 })
 export class SendmailAdministrationComponent implements OnInit {
 
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
-    
-    mobileQuery                     : MediaQueryList;
-    private _mobileQueryListener    : () => void;
+    @ViewChild('snav') public sidenavLeft: MatSidenav;
+    @ViewChild('snav2') public sidenavRight: MatSidenav;
 
-    coreUrl     : string;
-    lang        : any = LANG;
-    loading     : boolean = false;
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+
+    coreUrl: string;
+    lang: any = LANG;
+    loading: boolean = false;
 
     sendmail: any = {
         'type': 'smtp',
@@ -42,16 +42,16 @@ export class SendmailAdministrationComponent implements OnInit {
 
     smtpTypeList = [
         {
-            id : 'smtp',
-            label : this.lang.smtp
+            id: 'smtp',
+            label: this.lang.smtp
         },
         {
-            id : 'sendmail',
-            label : 'Sendmail'
+            id: 'sendmail',
+            label: 'Sendmail'
         },
         {
-            id : 'qmail',
-            label : 'Qmail'
+            id: 'qmail',
+            label: 'Qmail'
         }
     ];
     smtpTypeDesc = '';
@@ -60,7 +60,12 @@ export class SendmailAdministrationComponent implements OnInit {
     hidePassword: boolean = true;
     serverConnectionLoading: boolean = false;
     emailSendLoading: boolean = false;
-    
+    emailSendResult = {
+        icon : '',
+        msg : ''
+    };
+    currentUser: any = {};
+
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
@@ -82,7 +87,7 @@ export class SendmailAdministrationComponent implements OnInit {
             .subscribe((data: any) => {
                 this.sendmail = data.configuration.value
                 this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
-                this.smtpTypeDesc = this.lang[this.sendmail.type+'Desc'];
+                this.smtpTypeDesc = this.lang[this.sendmail.type + 'Desc'];
                 this.loading = false;
             }, (err) => {
                 this.notify.handleErrors(err);
@@ -94,7 +99,7 @@ export class SendmailAdministrationComponent implements OnInit {
     }
 
     changeDesc(e: any) {
-        this.smtpTypeDesc = this.lang[e.selected.value+'Desc'];
+        this.smtpTypeDesc = this.lang[e.selected.value + 'Desc'];
     }
 
     onSubmit() {
@@ -111,18 +116,41 @@ export class SendmailAdministrationComponent implements OnInit {
         return (JSON.stringify(this.sendmailClone) === JSON.stringify(this.sendmail));
     }
 
-
-    initServerConnection() {
-        this.serverConnectionLoading = true;
-        setTimeout(() => {
-            this.serverConnectionLoading = false;
-        }, 5000);
+    initEmailSend() {
+        this.emailSendResult = {
+            icon : '',
+            msg : ''
+        };
+        if (this.currentUser.mail === undefined) {
+            this.http.get('../../rest/currentUser/profile')
+            .subscribe((data: any) => {
+                this.currentUser = data;
+            });
+        }  
     }
 
-    initEmailSend() {
+    testEmailSend() {
+        this.emailSendResult = {
+            icon : 'fa-paper-plane primary',
+            msg : this.lang.emailSendInProgress
+        };
+        let email = {
+            "sender": { "email": this.currentUser.mail },
+            "recipients": [this.currentUser.mail],
+            "object": "test mail envoi",
+            "body": "test mail envoi",
+            "document": { "isLinked": false, "original": false },
+            "isHtml": false
+        }
         this.emailSendLoading = true;
-        setTimeout(() => {
-            this.emailSendLoading = false;
-        }, 5000);
+
+        this.http.post('../../rest/emails', email)
+            .subscribe((data: any) => {
+                this.emailSendLoading = false;
+                this.emailSendResult = {
+                    icon : 'fa-check green',
+                    msg : this.lang.emailSendSuccess
+                };
+            });
     }
 }

@@ -759,6 +759,10 @@ export const LANG_FR = {
     "mailFrom"                                          : "Adresse e-mail utilisée",
     "eraseAllFilters"                                   : "Effacer tous les filtres",
     "isMulticontact"                                    : "Multi-contact",
+    "emailSendTest"                                     : "Test d'envoi",
+    "beginSendTest"                                     : "Commencer le test",
+    "emailSendSuccess"                                  : "Envoi réussi",
+    "emailSendInProgress"                               : "En cours d'envoi",
 };
 
 

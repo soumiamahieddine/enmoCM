@@ -762,4 +762,8 @@ export const LANG_NL = {
     "mailFrom" : "_TO_TRANSLATE",
     "eraseAllFilters" : "_TO_TRANSLATE",
     "isMulticontact" : "_TO_TRANSLATE",
+    "emailSendTest" : "_TO_TRANSLATE",
+    "beginSendTest" : "_TO_TRANSLATE",
+    "emailSendSuccess" : "_TO_TRANSLATE",
+    "emailSendInProgress" : "_TO_TRANSLATE",
 };
