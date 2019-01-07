@@ -237,9 +237,9 @@ class ResourceListController
             if (empty($data['categories'])) {
                 $tmpWhere = 'category_id is null';
             } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['category_id']);
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['categories']);
                 $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['category_id']) {
+                if ($replace != $data['categories']) {
                     $tmpWhere = '(category_id is null OR category_id in (?))';
                 } else {
                     $tmpWhere = 'category_id in (?)';
@@ -290,11 +290,11 @@ class ResourceListController
             }
             if (!empty($entitiesChildren)) {
                 $wherePriorities[] = 'destination in (?)';
-                $dataPriorities[] = explode(',', $data['entities']);
+                $dataPriorities[] = $entitiesChildren;
                 $whereCategories[] = 'destination in (?)';
-                $dataCategories[] = explode(',', $data['entities']);
+                $dataCategories[] = $entitiesChildren;
                 $whereStatuses[] = 'destination in (?)';
-                $dataStatuses[] = explode(',', $data['entities']);
+                $dataStatuses[] = $entitiesChildren;
             }
         }
 
