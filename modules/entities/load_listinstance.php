@@ -59,8 +59,8 @@ $specific_role = $_REQUEST['specific_role'];
 
 $onlyCC = false;
 
-if (($core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST['origin'] == 'process')
-    || ($core->test_service('add_copy_in_indexing_validation', 'entities', false) && ($_REQUEST['origin'] == 'indexing' || $_REQUEST['origin'] == 'redirect'))) {
+if ((!$core->test_service('edit_recipient_in_process', 'entities', false) && $_REQUEST['origin'] == 'process')
+    || (!$core->test_service('edit_recipient_outside_process', 'entities', false) && ($_REQUEST['origin'] == 'indexing' || $_REQUEST['origin'] == 'redirect'))) {
     $onlyCC = true;
 }
 

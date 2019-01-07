@@ -76,3 +76,24 @@ send_date timestamp without time zone,
 CONSTRAINT emails_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
+
+DO $$ BEGIN
+  IF (SELECT count(group_id) FROM usergroups_services WHERE service_id IN ('edit_recipient_in_process', 'edit_recipient_outside_process')) = 0 THEN
+    INSERT INTO usergroups_services (group_id, service_id) 
+    SELECT group_id, 'edit_recipient_in_process' FROM usergroups WHERE group_id NOT IN (
+      SELECT group_id
+      FROM usergroups_services 
+      WHERE service_id = 'add_copy_in_process'
+    );
+
+    INSERT INTO usergroups_services (group_id, service_id) 
+    SELECT group_id, 'edit_recipient_outside_process' FROM usergroups WHERE group_id NOT IN (
+      SELECT group_id
+      FROM usergroups_services 
+      WHERE service_id = 'add_copy_in_indexing_validation'
+    );
+
+    DELETE FROM usergroups_services WHERE service_id in ('add_copy_in_process', 'add_copy_in_indexing_validation');
+  END IF;
+END$$;

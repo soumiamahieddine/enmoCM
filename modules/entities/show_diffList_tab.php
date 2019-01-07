@@ -1,14 +1,21 @@
 <?php
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+*
+* @brief   show_diffList_tab
+*
+* @author  dev <dev@maarch.org>
+* @ingroup entities
+*/
 
 $s_id = $_REQUEST['resId'];
 $category = $_REQUEST['category'];
 $coll_id = $_REQUEST['collId'];
 
-if (isset($_REQUEST['only_cc'])) {
-    $onlyCC = '&only_cc';
-} else {
-    $onlyCC = '';
-}
+$onlyCC = '';
 $roles = json_decode(urldecode($_REQUEST['roles']));
 
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php';
@@ -34,7 +41,10 @@ if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == true) {
 }
 
 if ($from_detail == true) {
-    if ($core_tools->test_service('update_list_diff_in_details', 'entities', false) || $core_tools->test_service('add_copy_in_indexing_validation', 'entities', false)) {
+    if ($core_tools->test_service('update_list_diff_in_details', 'entities', false)) {
+        if (!$core->test_service('edit_recipient_outside_process', 'entities', false)) {
+            $onlyCC = '&only_cc';
+        }
         $frm_str .= '<br />';
         $frm_str .= '<div style="text-align:center;">';
 
@@ -49,13 +59,14 @@ if ($from_detail == true) {
     }
     $difflist = $_SESSION['details']['diff_list'];
 } else {
-    if ($core_tools->test_service('add_copy_in_process', 'entities', false)) {
-        $frm_str .= '<div style="text-align:center;"><input type="button" class="button" title="'._UPDATE_LIST_DIFF.'" value="'._UPDATE_LIST_DIFF.'" onclick="window.open(\''
-                .$_SESSION['config']['businessappurl']
-                .'index.php?display=true&module=entities&cat='.$category.'&page=manage_listinstance'
-                .'&origin=process'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,'
-                .'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" /></div>';
+    if (!$core->test_service('edit_recipient_in_process', 'entities', false)) {
+        $onlyCC = '&only_cc';
     }
+    $frm_str .= '<div style="text-align:center;"><input type="button" class="button" title="'._UPDATE_LIST_DIFF.'" value="'._UPDATE_LIST_DIFF.'" onclick="window.open(\''
+            .$_SESSION['config']['businessappurl']
+            .'index.php?display=true&module=entities&cat='.$category.'&page=manage_listinstance'
+            .'&origin=process'.$onlyCC.'\', \'\', \'scrollbars=yes,menubar=no,'
+            .'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" /></div>';
     // Get content from buffer of difflist_display
     $difflist = $_SESSION['process']['diff_list'];
 }

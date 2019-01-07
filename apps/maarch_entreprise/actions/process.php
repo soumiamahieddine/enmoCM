@@ -603,14 +603,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     //DIFFUSION LIST
     if ($core_tools->is_module_loaded('entities')) {
         $category = $data['category_id']['value'];
-        if ($core->test_service('add_copy_in_indexing_validation', 'entities', false)) {
-            $onlyCC = '&only_cc';
-        }
         json_encode($roles);
         $roles_str = json_encode($roles);
         $frm_str .= '<td>';
         $pathScriptTab = $_SESSION['config']['businessappurl']
-                    .'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$res_id.'&collId='.$coll_id.'&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;
+                    .'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$res_id.'&collId='.$coll_id.'&category='.$category.'&roles='.urlencode($roles_str);
         $frm_str .= '<span onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._DIFF_LIST_COPY.'\',\''.$pathScriptTab.'\',\'difflist\');return false;" '
             .'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="difflist_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span>'

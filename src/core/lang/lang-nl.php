@@ -352,8 +352,8 @@ define('_JOIN_RES_CASE_IN_PROCESS', 'Brieven aan de zaken koppelen (verwerkingsb
 define('_CLOSE_CASE', 'Zaken afsluiten');
 define('_ADD_CASES', 'Zaken aanmaken');
 define('_CHOOSE_ENTITY', 'Kies een eenheid');
-define('_ADD_COPY_IN_PROCESS', 'Personen in kopie toevoegen in de verwerking');
-define('_ADD_COPY_IN_INDEXING_VALIDATION', 'De wijziging van de toegekende persoon in de verdelingslijst verbieden');
+define('_EDIT_RECIPIENT_IN_PROCESS', '_TO_TRANSLATE in de verwerking');
+define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', '_TO_TRANSLATE in de verdelingslijst verbieden');
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'De verdelingslijst vanuit de detailpagina’s updaten');
 define('_ENTITIES_PRINT_SEP_MLB', 'De separatoren per dienst afdrukken');
 define('_EXPORT_SEDA_VIEW', 'Zie het borderel');

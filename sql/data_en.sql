@@ -66,9 +66,9 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'clos
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'modify_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'folder_freeze');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_folder');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_copy_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'entities_print_sep_mlb');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'reports');
@@ -107,11 +107,11 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_cas
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'associate_folder');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_copy_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_attachments_from_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'modify_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'delete_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_new_version');
@@ -150,7 +150,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'associate_folder');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_copy_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_recipient_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'use_mail_services');
@@ -184,7 +185,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'a
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'associate_folder');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_copy_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'edit_recipient_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'use_mail_services');
@@ -255,7 +257,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'manage_entities');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_difflist_types');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_listmodels');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'add_copy_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_recipient_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'entities_print_sep_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'sendmail');

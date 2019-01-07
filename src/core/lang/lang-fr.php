@@ -365,9 +365,9 @@ define("_JOIN_RES_CASE_IN_PROCESS", "Attacher des courriers aux affaires (bannet
 define("_CLOSE_CASE", "Clôturer des affaires");
 define("_ADD_CASES", "Créer des affaires");
 define('_CHOOSE_ENTITY', 'Choisissez une entité');
-define('_ADD_COPY_IN_PROCESS', 'Ajouter des personnes en copie dans le traitement');
-define('_ADD_COPY_IN_INDEXING_VALIDATION', "Interdire la modification de l'attributaire dans la liste de diffusion");
-define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la page de détails');
+define('_EDIT_RECIPIENT_IN_PROCESS', 'Modifier l\'attributaire dans le traitement');
+define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', "Modifier l'attributaire dans la liste de diffusion (hors traitement)");
+define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la fiche détaillée');
 define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par service');
 define('_EXPORT_SEDA_VIEW', 'Voir le bordereau');
 define('_PUT_DOC_IN_FILEPLAN', 'Classer des documents');
