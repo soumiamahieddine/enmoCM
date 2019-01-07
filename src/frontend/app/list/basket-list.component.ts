@@ -17,7 +17,6 @@ import { DiffusionsListComponent } from '../diffusions/diffusions-list.component
 import { FiltersToolComponent } from './filters/filters-tool.component';
 
 
-
 declare function $j(selector: any): any;
 
 declare var angularGlobals: any;
@@ -25,7 +24,7 @@ declare var angularGlobals: any;
 @Component({
     templateUrl: "basket-list.component.html",
     styleUrls: ['basket-list.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService],
 })
 export class BasketListComponent implements OnInit {
 
@@ -176,7 +175,7 @@ export class BasketListComponent implements OnInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
-                    console.log(data);
+                    //console.log(data);
                     this.resultsLength = data.count;
                     this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;

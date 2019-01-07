@@ -85,6 +85,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,
+        NgStringPipesModule,
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,

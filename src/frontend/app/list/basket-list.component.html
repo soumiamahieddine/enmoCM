@@ -51,10 +51,10 @@
                                     </ng-container>
                                     <ng-container *ngIf="data.id == 'category_id'">
                                         <span *ngIf="!lang[row.category_id]" style="opacity: 0.5" title="id: {{row.category_id}}">_UNDEFINED</span>
-                                        <span *ngIf="lang[row.category_id]">{{lang[row.category_id]}}</span>
+                                        <span *ngIf="lang[row.category_id]" title="{{row[data.id]}}">{{lang[row.category_id]}}</span>
                                     </ng-container>
                                     <ng-container *ngIf="data.id != 'status_label' && data.id != 'date' && data.id != 'category_id'">
-                                        <span [class.undefined]="row[data.id] == lang.undefined">{{row[data.id]}}</span>
+                                        <span [class.undefined]="row[data.id] == lang.undefined" title="{{row[data.id]}}" >{{row[data.id] | shorten: 150: '...'}}</span>
                                     </ng-container>
                                 </div>
                             </mat-toolbar>
@@ -84,10 +84,11 @@
                                         &nbsp;
                                     </ng-container>
                                     <ng-container *ngIf="data.id == 'category_id'">
-                                        {{lang[row.category_id]}}
+                                        <span *ngIf="!lang[row.category_id]" style="opacity: 0.5" title="id: {{row.category_id}}">_UNDEFINED</span>
+                                        <span *ngIf="lang[row.category_id]" title="{{row[data.id]}}">{{lang[row.category_id]}}</span>
                                     </ng-container>
                                     <ng-container *ngIf="data.id != 'status_label' && data.id != 'date' && data.id != 'category_id' && data.id != 'alt_identifier'">
-                                        {{row[data.id]}}
+                                        <span [class.undefined]="row[data.id] == lang.undefined" title="{{row[data.id]}}" >{{row[data.id] | shorten: 150: '...'}}</span>
                                     </ng-container>
                                 </div>
                                 <mat-button-toggle-group #group="matButtonToggleGroup" class="actions" multiple>
