@@ -2150,3 +2150,36 @@ CREATE TABLE resource_contacts
   CONSTRAINT resource_contacts_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
+CREATE TABLE configurations
+(
+id serial NOT NULL,
+service character varying(64) NOT NULL,
+value json DEFAULT '{}' NOT NULL,
+CONSTRAINT configuration_pkey PRIMARY KEY (id),
+CONSTRAINT configuration_unique_key UNIQUE (service)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE emails
+(
+id serial NOT NULL,
+res_id INTEGER NOT NULL,
+user_id INTEGER NOT NULL,
+sender json DEFAULT '{}' NOT NULL,
+recipients json DEFAULT '[]' NOT NULL,
+cc json DEFAULT '[]',
+cci json DEFAULT '[]',
+object character varying(256) NOT NULL,
+body text,
+document json DEFAULT '{}' NOT NULL,
+attachments json DEFAULT '[]',
+notes json DEFAULT '[]',
+is_html boolean NOT NULL DEFAULT TRUE,
+status character varying(16) NOT NULL,
+message_exchange_id text,
+creation_date timestamp without time zone NOT NULL,
+send_date timestamp without time zone,
+CONSTRAINT emails_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
