@@ -82,7 +82,7 @@ class ResourceListController
             if (empty($data['categories'])) {
                 $where[] = 'category_id is null';
             } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['category_id']);
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['categories']);
                 $replace = preg_replace('/(,,)/', ',', $replace);
                 if ($replace != $data['category_id']) {
                     $where[] = '(category_id is null OR category_id in (?))';
@@ -167,7 +167,12 @@ class ResourceListController
                     }
                 }
                 $resources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $GLOBALS['userId']]);
-                $resources[$key]['resourceContacts'] = ResourceContactModel::getFormattedByResId(['resId' => $resource['res_id']]);
+                $resources[$key]['senders'] = [];
+                $resources[$key]['recipients'] = [];
+                $resourceContacts = ResourceContactModel::getFormattedByResId(['resId' => $resource['res_id']]);
+                foreach ($resourceContacts as $resourceContact) {
+                    $resources[$key]["{$resourceContact['mode']}s"][] = $resourceContact['format'];
+                }
             }
         }
 
