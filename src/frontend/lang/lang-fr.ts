@@ -453,6 +453,7 @@ export const LANG_FR = {
     "selectAll"                         : "Sélectionner tout",
     "selectedDocumentStatus"            : "Statut du document à prendre en compte",
     "sendmail"                          : "Envoi de courriels et plis numériques",
+    "sendmailShort"                     : "Envoi de courriels",
     "sendTo"                            : "Envoyer à",
     "september"                         : "Septembre",
     "septemberShort"                    : "Sept.",
@@ -762,7 +763,8 @@ export const LANG_FR = {
     "emailSendTest"                                     : "Test d'envoi",
     "beginSendTest"                                     : "Commencer le test",
     "emailSendSuccess"                                  : "Envoi réussi",
-    "emailSendInProgress"                               : "En cours d'envoi",
+    "emailSendInProgress"                               : "En cours d'envoi...",
+    "smtpAuth"                                          : "Méthode d'authentification",
 };
 
 

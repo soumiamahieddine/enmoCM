@@ -65,6 +65,7 @@ export class SendmailAdministrationComponent implements OnInit {
         msg : ''
     };
     currentUser: any = {};
+    recipientTest: string = '';
 
 
 
@@ -76,7 +77,7 @@ export class SendmailAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.sendmail);
+        this.headerService.setHeader(this.lang.sendmailShort);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
@@ -125,6 +126,7 @@ export class SendmailAdministrationComponent implements OnInit {
             this.http.get('../../rest/currentUser/profile')
             .subscribe((data: any) => {
                 this.currentUser = data;
+                this.recipientTest = data.mail;
             });
         }  
     }
@@ -136,7 +138,7 @@ export class SendmailAdministrationComponent implements OnInit {
         };
         let email = {
             "sender": { "email": this.currentUser.mail },
-            "recipients": [this.currentUser.mail],
+            "recipients": [this.recipientTest],
             "object": "test mail envoi",
             "status": "SENDMAILTEST",
             "body": "test mail envoi",

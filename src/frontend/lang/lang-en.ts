@@ -363,6 +363,7 @@ export const LANG_EN = {
     "selectAll"                         : "Select all",
     "selectedDocumentStatus"            : "Document status selected",
     "sendmail"                          : "Sendmail",
+    "sendmailShort"                     : "Sendmail",
     "sendTo"                            : "Send to",
     "shortLabel"                        : "Short label",
     "signatures"                        : "Signatures",
@@ -735,6 +736,7 @@ export const LANG_EN = {
     "isMulticontact"                                    : "Multi-contact",
     "emailSendTest"                                     : "Email send test",
     "beginSendTest"                                     : "Begin send test",
-    "emailSendSuccess"                                   : "Email sent",
-    "emailSendInProgress"                                : "Sending email...",
+    "emailSendSuccess"                                  : "Email sent",
+    "emailSendInProgress"                               : "Sending email...",
+    "smtpAuth"                                          : "Authentication methode",
 };

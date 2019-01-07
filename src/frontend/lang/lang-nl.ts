@@ -766,4 +766,6 @@ export const LANG_NL = {
     "beginSendTest" : "_TO_TRANSLATE",
     "emailSendSuccess" : "_TO_TRANSLATE",
     "emailSendInProgress" : "_TO_TRANSLATE",
+    "smtpAuth" : "_TO_TRANSLATE",
+    "sendmailShort" : "_TO_TRANSLATE",
 };
