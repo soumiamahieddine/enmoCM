@@ -37,43 +37,10 @@ class EmailController
         }
 
         $data = $request->getParams();
-        $check = Validator::arrayType()->notEmpty()->validate($data['sender']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['sender']['email']);
-        $check = $check && Validator::arrayType()->notEmpty()->validate($data['recipients']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['object']);
-        $check = $check && Validator::boolType()->validate($data['isHtml']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['status']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
 
-        if (!empty($data['document'])) {
-            $check = Validator::intVal()->notEmpty()->validate($data['document']['id']);
-            $check = $check && Validator::boolType()->validate($data['document']['isLinked']);
-            $check = $check && Validator::boolType()->validate($data['document']['original']);
-            if (!$check) {
-                return $response->withStatus(400)->withJson(['errors' => 'Bad document data']);
-            }
-            if (!ResController::hasRightByResId(['resId' => $data['document']['id'], 'userId' => $GLOBALS['userId']])) {
-                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-            }
-            if (!empty($data['document']['attachments'])) {
-                if (!is_array($data['document']['attachments'])) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Document[attachments] is not an array']);
-                }
-                foreach ($data['document']['attachments'] as $attachment) {
-                    $check = Validator::intVal()->notEmpty()->validate($attachment['id']);
-                    $check = $check && Validator::boolType()->validate($attachment['isVersion']);
-                    $check = $check && Validator::boolType()->validate($attachment['original']);
-                    if (!$check) {
-                        return $response->withStatus(400)->withJson(['errors' => 'Bad document[attachments] data']);
-                    }
-                    $checkAttachment = AttachmentModel::getById(['id' => $attachment['id'], 'isVersion' => $attachment['isVersion'], 'select' => ['res_id_master']]);
-                    if (empty($checkAttachment) || $checkAttachment['res_id_master'] != $data['document']['id']) {
-                        return $response->withStatus(400)->withJson(['errors' => 'Bad document[attachments][id]']);
-                    }
-                }
-            }
+        $check = EmailController::controlCreateEmail(['login' => $GLOBALS['userId'], 'data' => $data]);
+        if (!empty($check['errors'])) {
+            return $response->withStatus($check['code'])->withJson(['errors' => $check['errors']]);
         }
 
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
@@ -115,6 +82,9 @@ class EmailController
 
         $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
         $configuration = (array)json_decode($configuration['value']);
+        if (empty($configuration)) {
+            return ['errors' => 'Configuration is missing'];
+        }
 
         $phpmailer = new PHPMailer();
 
@@ -189,6 +159,56 @@ class EmailController
         if (!$isSent) {
             //TODO
             return ['errors' => 'errors'];
+        }
+
+        return ['success' => 'success'];
+    }
+
+    private static function controlCreateEmail(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['login', 'data']);
+        ValidatorModel::stringType($args, ['login']);
+        ValidatorModel::arrayType($args, ['data']);
+
+        if (!Validator::arrayType()->notEmpty()->validate($args['data']['sender']) || !Validator::stringType()->notEmpty()->validate($args['data']['sender']['email'])) {
+            return ['errors' => 'Data sender email is not set', 'code' => 400];
+        } elseif (!Validator::arrayType()->notEmpty()->validate($args['data']['recipients'])) {
+            return ['errors' => 'Data recipients is not an array or empty', 'code' => 400];
+        } elseif (!Validator::stringType()->notEmpty()->validate($args['data']['object'])) {
+            return ['errors' => 'Data object is not a string or empty', 'code' => 400];
+        } elseif (!Validator::boolType()->validate($args['data']['isHtml'])) {
+            return ['errors' => 'Data isHtml is not a boolean or empty', 'code' => 400];
+        } elseif (!Validator::stringType()->notEmpty()->validate($args['data']['status'])) {
+            return ['errors' => 'Data status is not a string or empty', 'code' => 400];
+        }
+
+        if (!empty($args['data']['document'])) {
+            $check = Validator::intVal()->notEmpty()->validate($args['data']['document']['id']);
+            $check = $check && Validator::boolType()->validate($args['data']['document']['isLinked']);
+            $check = $check && Validator::boolType()->validate($args['data']['document']['original']);
+            if (!$check) {
+                return ['errors' => 'Data document errors', 'code' => 400];
+            }
+            if (!ResController::hasRightByResId(['resId' => $args['data']['document']['id'], 'userId' => $args['login']])) {
+                return ['errors' => 'Document out of perimeter', 'code' => 403];
+            }
+            if (!empty($args['data']['document']['attachments'])) {
+                if (!is_array($args['data']['document']['attachments'])) {
+                    return ['errors' => 'Data document[attachments] is not an array', 'code' => 400];
+                }
+                foreach ($args['data']['document']['attachments'] as $attachment) {
+                    $check = Validator::intVal()->notEmpty()->validate($attachment['id']);
+                    $check = $check && Validator::boolType()->validate($attachment['isVersion']);
+                    $check = $check && Validator::boolType()->validate($attachment['original']);
+                    if (!$check) {
+                        return ['errors' => 'Data document[attachments] errors', 'code' => 400];
+                    }
+                    $checkAttachment = AttachmentModel::getById(['id' => $attachment['id'], 'isVersion' => $attachment['isVersion'], 'select' => ['res_id_master']]);
+                    if (empty($checkAttachment) || $checkAttachment['res_id_master'] != $args['data']['document']['id']) {
+                        return ['errors' => 'Attachment out of perimeter', 'code' => 403];
+                    }
+                }
+            }
         }
 
         return ['success' => 'success'];
