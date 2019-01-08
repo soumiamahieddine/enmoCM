@@ -257,11 +257,15 @@ if (!empty($tab)) {
                     $query .= '( ';
                     $query .= 'item_id IN (';
 
-                    foreach ($_SESSION['user']['entities'] as $entitiestmpnote) {
-                        $query .= '?, ';
-                        $arrayPDOnotes = array_merge($arrayPDOnotes, array($entitiestmpnote['ENTITY_ID']));
+                   if(!empty($_SESSION['user']['entities'])){
+                        foreach ($_SESSION['user']['entities'] as $entitiestmpnote) {
+                            $query .= '?, ';
+                            $arrayPDOnotes = array_merge($arrayPDOnotes, array($entitiestmpnote['ENTITY_ID']));
+                        }
+                        $query = substr($query, 0, -2);
+                    } else {
+                        $query .= "''";
                     }
-                    $query = substr($query, 0, -2);
 
                     $query .= ') ';
                     $query .= 'OR ';
@@ -413,7 +417,7 @@ if (!empty($tab)) {
                     $tab[$i][$j]['show'] = false;
                     $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
                     if (!empty($tab[$i][$j]['value'])) {
-                        $user = \User\models\UserModel::getByLogin(['login' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
+                        $user = \User\models\UserModel::getByUserId(['userId' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
                         $dest = $tab[$i][$j]['value'];
                         $dest = $user['firstname'] . ' ' . $user['lastname'];
                     } else {
