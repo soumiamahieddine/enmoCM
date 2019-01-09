@@ -20,6 +20,9 @@ use Configuration\models\ConfigurationModel;
 use Email\models\EmailModel;
 use Entity\models\EntityModel;
 use Group\models\ServiceModel;
+use Note\controllers\NoteController;
+use Note\models\NoteEntityModel;
+use Note\models\NoteModel;
 use PHPMailer\PHPMailer\PHPMailer;
 use Resource\controllers\ResController;
 use Respect\Validation\Validator;
@@ -88,7 +91,7 @@ class EmailController
 
         $phpmailer = new PHPMailer();
 
-        if ($configuration['type'] == 'smtp') {
+        if ($configuration['type'] == 'smtp') { //TODO TYPE
             $phpmailer->isSMTP();
             $phpmailer->Host = $configuration['host'];
             $phpmailer->Port = $configuration['port'];
@@ -151,7 +154,13 @@ class EmailController
                     }
                 }
             }
-            //TODO NOTES
+            if (!empty($email['document']['notes'])) {
+                $email['document']['notes'] = (array)$email['document']['notes'];
+                $encodedDocument = NoteController::getEncodedPdfByIds(['ids' => $email['document']['notes']]);
+                if (empty($encodedDocument['errors'])) {
+                    $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), 'notes.pdf');
+                }
+            }
         }
 
 
@@ -206,6 +215,38 @@ class EmailController
                     $checkAttachment = AttachmentModel::getById(['id' => $attachment['id'], 'isVersion' => $attachment['isVersion'], 'select' => ['res_id_master']]);
                     if (empty($checkAttachment) || $checkAttachment['res_id_master'] != $args['data']['document']['id']) {
                         return ['errors' => 'Attachment out of perimeter', 'code' => 403];
+                    }
+                }
+            }
+            if (!empty($args['data']['document']['notes'])) {
+                if (!is_array($args['data']['document']['notes'])) {
+                    return ['errors' => 'Data document[notes] is not an array', 'code' => 400];
+                }
+                foreach ($args['data']['document']['notes'] as $note) {
+                    if (!Validator::intVal()->notEmpty()->validate($note)) {
+                        return ['errors' => 'Data document[notes] errors', 'code' => 400];
+                    }
+                    $checkNote = NoteModel::getById(['id' => $note, 'select' => ['identifier']]);
+                    if (empty($checkNote) || $checkNote['identifier'] != $args['data']['document']['id']) {
+                        return ['errors' => 'Note out of perimeter', 'code' => 403];
+                    }
+
+                    $rawUserEntities = EntityModel::getByLogin(['login' => $args['login'], 'select' => ['entity_id']]);
+                    $userEntities = [];
+                    foreach ($rawUserEntities as $rawUserEntity) {
+                        $userEntities[] = $rawUserEntity['entity_id'];
+                    }
+                    $noteEntities = NoteEntityModel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$note]]);
+                    if (!empty($noteEntities)) {
+                        $found = false;
+                        foreach ($noteEntities as $noteEntity) {
+                            if (in_array($noteEntity['item_id'], $userEntities)) {
+                                $found = true;
+                            }
+                        }
+                        if (!$found) {
+                            return ['errors' => 'Note out of perimeter', 'code' => 403];
+                        }
                     }
                 }
             }

@@ -19,6 +19,26 @@ use SrcCore\models\ValidatorModel;
 
 abstract class NoteModelAbstract
 {
+    public static function getById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $note = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['notes'],
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['id']],
+        ]);
+
+        if (empty($note[0])) {
+            return [];
+        }
+
+        return $note[0];
+    }
+
     public static function countByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'login']);

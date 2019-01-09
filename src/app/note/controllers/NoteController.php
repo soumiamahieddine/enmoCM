@@ -19,14 +19,17 @@ use Note\models\NoteModel;
 use Note\models\NoteEntityModel;
 use Entity\models\EntityModel;
 use Respect\Validation\Validator;
+use setasign\Fpdi\TcpdfFpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
+use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 class NoteController
 {
-    public function getByResId(Request $request, Response $response, $aArgs)
+    public function getByResId(Request $request, Response $response, array $aArgs)
     {
         $check = Validator::intVal()->validate($aArgs['resId']);
         if (!$check) {
@@ -38,22 +41,20 @@ class NoteController
         return $response->withJson($aNotes);
     }
 
-    public function create(Request $request, Response $response, $aArgs)
+    public function create(Request $request, Response $response, array $aArgs)
     {
         $data = $request->getParams();
 
-        //Check note text
         $check = Validator::stringType()->notEmpty()->validate($data['note_text']);
-
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request note text']);
         }
         
-        //Check entities chosen
         if (isset($data['entities_chosen'])) {
             
-            $check = $check && Validator::arrayType()->validate($data['entities_chosen']);
-            
+            if (!Validator::arrayType()->validate($data['entities_chosen'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
+            }
             foreach($data['entities_chosen'] as $entityId) {
 
                 if ($entityId == null) {
@@ -61,12 +62,9 @@ class NoteController
                 }
                 
                 $entity = entitymodel::getByEntityId(['select' => ['id'], 'entityId' => $entityId]);
-
-                $check = $check && Validator::intval()->notEmpty()->validate($entity['id']);
-            }
-
-            if (!$check) {
-                return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
+                if (empty($entity['id'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
+                }
             }
         }
 
@@ -76,7 +74,6 @@ class NoteController
         
         $data['identifier'] = $aArgs['resId'];
         
-        //Insert note in notes table and recover last insert ID
         $noteId = NoteModel::create($data);
     
         //Insert relation note with entities in note_entities_table
@@ -86,7 +83,6 @@ class NoteController
             }
         }
 
-        //Insert in history
         HistoryController::add( [
             'tableName' => "notes",
             'recordId'  => $noteId,
@@ -98,5 +94,30 @@ class NoteController
         );
 
         return $response->withJson(['noteId' => $noteId]);
+    }
+
+    public static function getEncodedPdfByIds(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['ids']);
+        ValidatorModel::arrayType($aArgs, ['ids']);
+
+        $pdf = new TcpdfFpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+        $pdf->AddPage();
+
+        foreach ($aArgs['ids'] as $noteId) {
+            $note = NoteModel::getById(['id' => $noteId, 'select' => ['note_text', 'date_note', 'user_id']]);
+
+            $user = UserModel::getByLogin(['login' => $note['user_id'], 'select' => ['firstname', 'lastname']]);
+            $date = new \DateTime($note['date_note']);
+            $date = $date->format('d-m-Y H:i');
+
+            $pdf->Cell(0, 20, "{$user['firstname']} {$user['lastname']} : {$date}", 1, 2, 'C', false);
+            $pdf->MultiCell(0, 20, $note['note_text'] ,1, 'L', false);
+            $pdf->SetY($pdf->GetY() + 40);
+        }
+        $fileContent = $pdf->Output('', 'S');
+
+        return ['encodedDocument' => base64_encode($fileContent)];
     }
 }

@@ -126,7 +126,7 @@ abstract class UserEntityModelAbstract
         ValidatorModel::stringType($aArgs, ['entityId']);
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        $entities = EntityModel::getByUserId(['userId' => $user['user_id']]);
+        $entities = EntityModel::getByLogin(['login' => $user['user_id']]);
         foreach ($entities as $entity) {
             if ($entity['primary_entity'] == 'Y') {
                 DatabaseModel::update([
@@ -157,7 +157,7 @@ abstract class UserEntityModelAbstract
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-        $entities = EntityModel::getByUserId(['userId' => $aArgs['userId']]);
+        $entities = EntityModel::getByLogin(['login' => $aArgs['userId']]);
         if (!empty($entities[0])) {
             DatabaseModel::update([
                 'table'     => 'users_entities',

@@ -36,7 +36,7 @@ class PreparedClauseController
             $clause = str_replace('@email', "'{$user['mail']}'", $clause);
         }
         if (preg_match('/@my_entities/', $clause)) {
-            $entities = EntityModel::getByUserId(['userId' => $aArgs['login'], 'select' => ['entity_id']]);
+            $entities = EntityModel::getByLogin(['login' => $aArgs['login'], 'select' => ['entity_id']]);
 
             $myEntitiesClause = '';
             foreach ($entities as $key => $entity) {
