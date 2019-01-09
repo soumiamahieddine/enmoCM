@@ -6,8 +6,15 @@
         height: auto;
     }
 
+    .processLimitButton {
+        color: #666;
+        .mat-button-toggle-label-content {
+            line-height: 38px;
+        }
+    }
+
     .mat-button-toggle-checked {
-        background-color: #F99830;
+        background-color: #F99830 !important;
         color: white;
         border-radius: 10px;
     }
