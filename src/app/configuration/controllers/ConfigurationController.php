@@ -41,7 +41,7 @@ class ConfigurationController
         }
 
         if (empty(ConfigurationModel::getByService(['service' => $aArgs['service'], 'select' => [1]]))) {
-            return $response->withStatus(400)->withJson(['errors' => 'Configuration does not exist']);
+            return $response->withStatus(400)->withJson(['errors' => 'Service configuration does not exist']);
         }
 
         $data = $request->getParams();
@@ -62,19 +62,21 @@ class ConfigurationController
     private static function checkMailer(array $aArgs)
     {
         if (!Validator::stringType()->notEmpty()->validate($aArgs['type'])) {
-            return ['errors' => 'configuration mode is missing', 'code' => 400];
+            return ['errors' => 'Configuration type is missing', 'code' => 400];
         }
         
         if ($aArgs['type'] == 'smtp') {
             $check = Validator::stringType()->notEmpty()->validate($aArgs['host']);
             $check = $check && Validator::intVal()->notEmpty()->validate($aArgs['port']);
-            $check = $check && Validator::stringType()->notEmpty()->validate($aArgs['user']);
-            $check = $check && Validator::stringType()->notEmpty()->validate($aArgs['password']);
             $check = $check && Validator::boolType()->validate($aArgs['auth']);
+            if ($aArgs['auth']) {
+                $check = $check && Validator::stringType()->notEmpty()->validate($aArgs['user']);
+                $check = $check && Validator::stringType()->notEmpty()->validate($aArgs['password']);
+            }
             $check = $check && Validator::stringType()->validate($aArgs['secure']);
             $check = $check && Validator::stringType()->validate($aArgs['from']);
             if (!$check) {
-                return ['errors' => "{$aArgs['mode']} configuration data is missing", 'code' => 400];
+                return ['errors' => "smtp configuration data is missing or not well formatted", 'code' => 400];
             }
         }
 
