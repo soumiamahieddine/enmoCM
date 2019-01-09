@@ -92,11 +92,11 @@
                                     </ng-container>
                                 </div>
                                 <mat-button-toggle-group #group="matButtonToggleGroup" class="actions" multiple>
-                                    <button color="primary" mat-icon-button title="{{lang.notes}}" (click)="$event.stopPropagation();openBottomSheet(row)">
+                                    <button color="primary" mat-icon-button title="{{lang.notes}}" (click)="$event.stopPropagation();openBottomSheet(row)" [class.noData]="row.countNotes == 0">
                                         <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas" matBadge="{{row.countNotes}}"
                                             fontIcon="fa-comments fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button title="{{lang.attachments}}" (click)="$event.stopPropagation();openAttachSheet(row)">
+                                    <button color="primary" mat-icon-button title="{{lang.attachments}}" (click)="$event.stopPropagation();openAttachSheet(row)" [class.noData]="row.countAttachments == 0">
                                         <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas" matBadge="{{row.countAttachments}}"
                                             fontIcon="fa-paperclip fa-2x"></mat-icon>
                                     </button>
