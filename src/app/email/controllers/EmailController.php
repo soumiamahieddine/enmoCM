@@ -81,7 +81,10 @@ class EmailController
         ValidatorModel::intVal($args, ['emailId', 'userId']);
 
         $email = EmailModel::getById(['id' => $args['emailId']]);
-        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname']]);
+        $email['sender']        = (array)json_decode($email['sender']);
+        $email['recipients']    = json_decode($email['recipients']);
+        $email['cc']            = json_decode($email['cc']);
+        $email['cci']           = json_decode($email['cci']);
 
         $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
         $configuration = (array)json_decode($configuration['value']);
@@ -91,7 +94,7 @@ class EmailController
 
         $phpmailer = new PHPMailer();
 
-        if ($configuration['type'] == 'smtp') { //TODO TYPE
+        if ($configuration['type'] == 'smtp') {
             $phpmailer->isSMTP();
             $phpmailer->Host = $configuration['host'];
             $phpmailer->Port = $configuration['port'];
@@ -102,7 +105,7 @@ class EmailController
                 $phpmailer->Password = $configuration['password'];
             }
 
-            $email['sender'] = (array)json_decode($email['sender']);
+            $user = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname']]);
             $emailFrom = empty($configuration['from']) ? $email['sender']['email'] : $configuration['from'];
             if (empty($email['sender']['entityId'])) {
                 $phpmailer->setFrom($emailFrom, "{$user['firstname']} {$user['lastname']}");
@@ -110,28 +113,45 @@ class EmailController
                 $entity = EntityModel::getById(['id' => $email['sender']['entityId'], 'select' => ['short_label']]);
                 $phpmailer->setFrom($emailFrom, $entity['short_label']);
             }
-            $phpmailer->addReplyTo($email['sender']['email']);
+        } elseif ($configuration['type'] == 'sendmail') {
+            $phpmailer->isSendmail();
+        } elseif ($configuration['type'] == 'qmail') {
+            $phpmailer->isQmail();
         }
+
+        $phpmailer->addReplyTo($email['sender']['email']);
         $phpmailer->CharSet = $configuration['charset'];
 
-        $email['recipients'] = json_decode($email['recipients']);
         foreach ($email['recipients'] as $recipient) {
             $phpmailer->addAddress($recipient);
         }
-        $email['cc'] = json_decode($email['cc']);
         foreach ($email['cc'] as $recipient) {
             $phpmailer->addCC($recipient);
         }
-        $email['cci'] = json_decode($email['cci']);
         foreach ($email['cci'] as $recipient) {
             $phpmailer->addBCC($recipient);
         }
 
-        $phpmailer->Subject = $email['object'];
         if ($email['is_html']) {
             $phpmailer->isHTML(true);
+
+            $dom = new \DOMDocument();
+            $dom->loadHTML($email['body'], LIBXML_NOWARNING);
+            $images = $dom->getElementsByTagName('img');
+
+            foreach ($images as $key => $image) {
+                $originalSrc = $image->getAttribute('src');
+                if (preg_match('/^data:image\/(\w+);base64,/', $originalSrc)) {
+                    $encodedImage = substr($originalSrc, strpos($originalSrc, ',') + 1);
+                    $imageFormat = substr($originalSrc, 11, strpos($originalSrc, ';') - 11);
+                    $phpmailer->addStringEmbeddedImage(base64_decode($encodedImage), "embeded{$key}", "embeded{$key}.{$imageFormat}");
+                    $email['body'] = str_replace($originalSrc, "cid:embeded{$key}", $email['body']);
+                }
+            }
         }
-        $phpmailer->Body = $email['body']; // TODO IMAGE
+
+        $phpmailer->Subject = $email['object'];
+        $phpmailer->Body = $email['body'];
 
         //TODO M2M
 
