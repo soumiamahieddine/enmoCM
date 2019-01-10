@@ -416,15 +416,24 @@ class UserController
 
         $data = $request->getQueryParams();
 
+        DatabaseModel::beginTransaction();
+
         $check = Validator::notEmpty()->arrayType()->validate($data['redirectedBasketIds']);
         if (!$check) {
+            DatabaseModel::rollbackTransaction();
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request : redirectedBasketIds is empty or not an array']);
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+        if (empty($user)) {
+            DatabaseModel::rollbackTransaction();
+            return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+        }
+
         foreach($data['redirectedBasketIds'] as $redirectedBasketId) {
             $redirectedBasket = RedirectBasketModel::get(['select' => ['actual_user_id', 'owner_user_id', 'basket_id'], 'where' => ['id = ?'], 'data' => [$redirectedBasketId]]);
             if (empty($redirectedBasket[0]) || ($redirectedBasket[0]['actual_user_id'] != $aArgs['id'] && $redirectedBasket[0]['owner_user_id'] != $aArgs['id'])) {
+                DatabaseModel::rollbackTransaction();
                 return $response->withStatus(403)->withJson(['errors' => 'Redirected basket out of perimeter']);
             }
 
@@ -438,6 +447,8 @@ class UserController
                 'info'         => _BASKET_REDIRECTION_SUPPRESSION . " {$user['user_id']} : " . $redirectedBasket[0]['basket_id']
             ]);
         }
+
+        DatabaseModel::commitTransaction();
 
         return $response->withJson([
             'baskets'   => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
