@@ -870,13 +870,27 @@ class UserControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
+       
+        //DELETE OK
+        $aArgs = [
+            'redirectedBasketIds' => [ self::$redirectId ]
+        ];
 
-        $response     = $userController->deleteRedirectedBasket($request, new \Slim\Http\Response(), ['id' => $user_id['id'], 'redirectBasketid' => self::$redirectId]);
+        $fullRequest = $request->withQueryParams($aArgs);
+
+        $response  = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->baskets);
 
-        $response     = $userController->deleteRedirectedBasket($request, new \Slim\Http\Response(), ['id' => $user_id['id'], 'redirectBasketid' => -1]);
+        //DELETE NOT OK
+        $aArgs = [
+            'redirectedBasketIds' => [ -1 ]
+        ];
+
+        $fullRequest = $request->withQueryParams($aArgs);
+
+        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Redirected basket out of perimeter', $responseBody->errors);
