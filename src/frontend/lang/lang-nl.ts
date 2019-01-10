@@ -769,4 +769,6 @@ export const LANG_NL = {
     "emailSendInProgress" : "_TO_TRANSLATE",
     "smtpAuth" : "_TO_TRANSLATE",
     "sendmailShort" : "_TO_TRANSLATE",
+    "emailSendFailed" : "_TO_TRANSLATE",
+    "doNotReply" : "_TO_TRANSLATE",
 };

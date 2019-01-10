@@ -38,8 +38,8 @@
                             <div class="form-group" [style.opacity]="sendmail.type != 'smtp' ? '0.5' : '1'">
                                 <div class="col-md-2">
                                     <mat-form-field>
-                                        <mat-select name="SMTPSecure" placeholder="{{lang.smtpAuth}}"
-                                            [disabled]="sendmail.type != 'smtp'" [(ngModel)]="sendmail.secure" required>
+                                        <mat-select name="SMTPSecure" placeholder="{{lang.smtpAuth}}" [disabled]="sendmail.type != 'smtp'"
+                                            [(ngModel)]="sendmail.secure" required>
                                             <mat-option *ngFor="let security of smtpSecList" [value]="security">
                                                 {{security}}
                                             </mat-option>
@@ -48,8 +48,8 @@
                                 </div>
                                 <div class="col-md-9">
                                     <mat-form-field>
-                                        <input matInput name="host" [disabled]="sendmail.type != 'smtp'"
-                                            [(ngModel)]="sendmail.host" placeholder="{{lang.host}}" required>
+                                        <input matInput name="host" [disabled]="sendmail.type != 'smtp'" [(ngModel)]="sendmail.host"
+                                            placeholder="{{lang.host}}" required>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-1">
@@ -75,8 +75,7 @@
                                 <div class="col-md-12">
                                     <mat-form-field>
                                         <input name="password" [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="sendmail.password"
-                                            [disabled]="!sendmail.auth || sendmail.type != 'smtp'" matInput
-                                            placeholder="{{lang.password}}" required>
+                                            [disabled]="!sendmail.auth || sendmail.type != 'smtp'" matInput placeholder="{{passwordLabel}}">
                                         <mat-icon color="primary" style="cursor: pointer;" matSuffix (click)="hidePassword = !hidePassword"
                                             class="fa fa-2x" [ngClass]="[hidePassword ? 'fa-eye-slash' : 'fa-eye']"></mat-icon>
                                     </mat-form-field>
@@ -103,22 +102,25 @@
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
             fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;width:500px;"
             (opened)="onSubmit();initEmailSend()">
-            <mat-nav-list disableRipple="true">
+            <mat-nav-list disableRipple="true" style="display: flex;flex-direction: column;">
                 <h3 mat-subheader>{{lang.emailSendTest}}</h3>
                 <div class="form-group" [style.opacity]="sendmail.type != 'smtp' ? '0.5' : '1'">
                     <div class="col-md-12">
                         <mat-form-field>
                             <input matInput placeholder="{{lang.mailTo}}" [(ngModel)]="recipientTest" [disabled]="emailSendLoading">
-                            <mat-icon *ngIf="!emailSendLoading" title="{{lang.beginSendTest}}" (click)="testEmailSend()" color="primary" style="cursor: pointer;" matSuffix
-                                class="fa fa-paper-plane fa-2x"></mat-icon>
+                            <mat-icon *ngIf="!emailSendLoading" title="{{lang.beginSendTest}}" (click)="testEmailSend()"
+                                color="primary" style="cursor: pointer;" matSuffix class="fa fa-paper-plane fa-2x"></mat-icon>
                         </mat-form-field>
                     </div>
                 </div>
                 <mat-list-item *ngIf="emailSendResult.msg != ''">
-                    <mat-icon mat-list-icon class= "fas {{emailSendResult.icon}} fa-2x"></mat-icon>
+                    <mat-icon mat-list-icon class="fas {{emailSendResult.icon}} fa-2x"></mat-icon>
                     <p mat-line> {{emailSendResult.msg}} </p>
                 </mat-list-item>
             </mat-nav-list>
+            <div class="bash" *ngIf="this.emailSendResult.msg === lang.emailSendFailed">
+                {{this.emailSendResult.debug}}
+            </div>
         </mat-sidenav>
     </mat-sidenav-container>
 </div>

@@ -740,4 +740,6 @@ export const LANG_EN = {
     "emailSendSuccess"                                  : "Email sent",
     "emailSendInProgress"                               : "Sending email...",
     "smtpAuth"                                          : "Authentication methode",
+    "emailSendFailed"                                   : "Email send failed",
+    "doNotReply"                                        : "Do not reply",
 };

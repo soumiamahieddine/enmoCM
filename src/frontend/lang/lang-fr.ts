@@ -766,6 +766,8 @@ export const LANG_FR = {
     "emailSendSuccess"                                  : "Envoi réussi",
     "emailSendInProgress"                               : "En cours d'envoi...",
     "smtpAuth"                                          : "Méthode d'authentification",
+    "emailSendFailed"                                   : "Échec d'envoi",
+    "doNotReply"                                        : "Ne pas répondre",
 };
 
 
