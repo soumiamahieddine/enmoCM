@@ -418,7 +418,7 @@ class UserController
 
         $check = Validator::notEmpty()->arrayType()->validate($data['redirectedBasketIds']);
         if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request : redirectedBasketIds is empty or not an array']);
         }
 
         foreach($data['redirectedBasketIds'] as $redirectedBasketId) {
