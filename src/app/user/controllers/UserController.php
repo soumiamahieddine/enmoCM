@@ -414,21 +414,30 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $redirectedBasket = RedirectBasketModel::get(['select' => ['actual_user_id', 'owner_user_id'], 'where' => ['id = ?'], 'data' => [$aArgs['redirectBasketid']]]);
-        if (empty($redirectedBasket[0]) || ($redirectedBasket[0]['actual_user_id'] != $aArgs['id'] && $redirectedBasket[0]['owner_user_id'] != $aArgs['id'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Redirected basket out of perimeter']);
+        $data = $request->getQueryParams();
+
+        $check = Validator::notEmpty()->arrayType()->validate($data['redirectedBasketIds']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        RedirectBasketModel::delete(['where' => ['id = ?'], 'data' => [$aArgs['redirectBasketid']]]);
+        foreach($data['redirectedBasketIds'] as $redirectedBasketId) {
+            $redirectedBasket = RedirectBasketModel::get(['select' => ['actual_user_id', 'owner_user_id', 'basket_id'], 'where' => ['id = ?'], 'data' => [$redirectedBasketId]]);
+            if (empty($redirectedBasket[0]) || ($redirectedBasket[0]['actual_user_id'] != $aArgs['id'] && $redirectedBasket[0]['owner_user_id'] != $aArgs['id'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Redirected basket out of perimeter']);
+            }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        HistoryController::add([
-            'tableName'    => 'redirected_baskets',
-            'recordId'     => $GLOBALS['userId'],
-            'eventType'    => 'DEL',
-            'eventId'      => 'basketRedirection',
-            'info'         => _BASKET_REDIRECTION_SUPPRESSION . " {$user['user_id']}"
-        ]);
+            RedirectBasketModel::delete(['where' => ['id = ?'], 'data' => [$redirectedBasketId]]);
+
+            $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+            HistoryController::add([
+                'tableName'    => 'redirected_baskets',
+                'recordId'     => $GLOBALS['userId'],
+                'eventType'    => 'DEL',
+                'eventId'      => 'basketRedirection',
+                'info'         => _BASKET_REDIRECTION_SUPPRESSION . " {$user['user_id']} : " . $redirectedBasket[0]['basket_id']
+            ]);
+        }
 
         return $response->withJson([
             'baskets'   => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
