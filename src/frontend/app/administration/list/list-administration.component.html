@@ -1,0 +1,51 @@
+<h1 mat-dialog-title>Exporter les données de la bannette</h1>
+<div mat-dialog-content>
+    <div *ngIf="loadingExport" class="loader">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <mat-form-field appearance="outline">
+                <mat-label>Délimiteur</mat-label>
+                <input matInput placeholder="Délimiteur" value=";">
+            </mat-form-field>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <mat-form-field appearance="outline">
+                <input matInput placeholder="Rechercher une donnée" #listFilter>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row exportList">
+        <div class="col-md-6 available-data">
+            <h2>Donnée(s) disponible(s)</h2>
+            <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="dataAvailable"
+                [cdkDropListConnectedTo]="[dataExportList]" class="cdk-list" (cdkDropListDropped)="drop($event)">
+                <div class="columns" *ngFor="let item of dataAvailable | filterList:listFilter.value:'label'" cdkDrag id="{{item.id}}" >{{item.label}}</div>
+                <div *ngIf="dataAvailable.length == 0" class="noData">Aucune donnée disponible</div>
+            </div>
+        </div>
+        <div style="display: flex;align-items: center;">
+            <i class="fas fa-arrow-right"></i>
+        </div>
+
+        <div class="col-md-6 active-data">
+            <h2>Donnée(s) exportée(s)</h2>
+            <div cdkDropList #dataExportList="cdkDropList" [cdkDropListData]="dataExport" [cdkDropListConnectedTo]="[dataAvailableList]"
+                class="cdk-list" (cdkDropListDropped)="drop($event)">
+                <div class="columns" *ngFor="let item of dataExport" cdkDrag>{{item.label}}</div>
+                <div *ngIf="dataExport.length == 0" class="noData">Aucune donnée sélectionnée</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button mat-button color="primary" [disabled]="dataExport.length == 0" (click)="exportData();">Exporter</button>
+    <button mat-raised-button mat-button [mat-dialog-close]="">Annuler</button>
+</div>

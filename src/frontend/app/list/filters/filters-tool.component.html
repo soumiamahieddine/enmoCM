@@ -49,7 +49,7 @@
             <mat-icon fontSet="fas" fontIcon="fa-print fa-2x"></mat-icon>
             <span>{{lang.printResultList}}</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="openListAdmin();">
             <mat-icon fontSet="fas" fontIcon="fa-file-export fa-2x"></mat-icon>
             <span>{{lang.exportDatas}}</span>
         </button>

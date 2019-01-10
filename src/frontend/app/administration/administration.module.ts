@@ -46,6 +46,7 @@ import { SecuritiesAdministrationComponent }            from './security/securit
 import { SendmailAdministrationComponent }            from './sendmail/sendmail-administration.component';
 
 import { TechnicalAdministrationComponent }            from './technical/technical-administration.component';
+import { ListAdministrationComponent }            from './list/list-administration.component';
 
 @NgModule({
     imports:      [
@@ -98,7 +99,8 @@ import { TechnicalAdministrationComponent }            from './technical/technic
         TemplateAdministrationComponent,
         SecuritiesAdministrationComponent,
         SendmailAdministrationComponent,
-        TechnicalAdministrationComponent
+        TechnicalAdministrationComponent,
+        ListAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
@@ -108,7 +110,8 @@ import { TechnicalAdministrationComponent }            from './technical/technic
         BasketAdministrationSettingsModalComponent,
         BasketAdministrationGroupListModalComponent,
         DoctypesAdministrationRedirectModalComponent,
-        TechnicalAdministrationComponent
+        TechnicalAdministrationComponent,
+        ListAdministrationComponent
     ],
 })
 export class AdministrationModule {}
