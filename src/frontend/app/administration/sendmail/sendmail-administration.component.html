@@ -106,11 +106,14 @@
                 <h3 mat-subheader>{{lang.emailSendTest}}</h3>
                 <div class="form-group" [style.opacity]="sendmail.type != 'smtp' ? '0.5' : '1'">
                     <div class="col-md-12">
-                        <mat-form-field>
-                            <input matInput placeholder="{{lang.mailTo}}" [(ngModel)]="recipientTest" [disabled]="emailSendLoading">
-                            <mat-icon *ngIf="!emailSendLoading" title="{{lang.beginSendTest}}" (click)="testEmailSend()"
-                                color="primary" style="cursor: pointer;" matSuffix class="fa fa-paper-plane fa-2x"></mat-icon>
-                        </mat-form-field>
+                        <form #testSendmailForm="ngForm">
+                            <mat-form-field>
+                                <input name="recipientTest" matInput placeholder="{{lang.mailTo}}" [(ngModel)]="recipientTest" [disabled]="emailSendLoading"
+                                    pattern="(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)">
+                                <mat-icon *ngIf="!emailSendLoading && testSendmailForm.valid" title="{{lang.beginSendTest}}" (click)="testEmailSend()"
+                                    color="primary" style="cursor: pointer;" matSuffix class="fa fa-paper-plane fa-2x"></mat-icon>
+                            </mat-form-field>
+                        </form>
                     </div>
                 </div>
                 <mat-list-item *ngIf="emailSendResult.msg != ''">
