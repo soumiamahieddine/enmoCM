@@ -751,11 +751,6 @@ class Install extends functions
         $connect .= 'password='.$_SESSION['config']['databasepassword'].' ';
         $connect .= 'dbname=postgres';
 
-        if (!$this->setConfig_sendmail()) {
-            return false;
-            exit;
-        }
-
         if (!$this->setConfigXml()) {
             return false;
             exit;
@@ -772,11 +767,6 @@ class Install extends functions
         }
 
         if (!$this->setScriptNotificationNctNccAndAncSh()) {
-            return false;
-            exit;
-        }
-
-        if (!$this->setScriptSendmailSendmailSh()) {
             return false;
             exit;
         }
@@ -802,11 +792,6 @@ class Install extends functions
         }
 
         if (!$this->setConfig_batch_XmlNotifications()) {
-            return false;
-            exit;
-        }
-
-        if (!$this->setConfig_batch_XmlSendmail()) {
             return false;
             exit;
         }
@@ -868,11 +853,6 @@ class Install extends functions
             exit;
         }
 
-        if (!$this->setConfig_sendmail()) {
-            return false;
-            exit;
-        }
-
         if (!$this->setConfigXml()) {
             return false;
             exit;
@@ -889,11 +869,6 @@ class Install extends functions
         }
 
         if (!$this->setScriptNotificationNctNccAndAncSh()) {
-            return false;
-            exit;
-        }
-
-        if (!$this->setScriptSendmailSendmailSh()) {
             return false;
             exit;
         }
@@ -919,11 +894,6 @@ class Install extends functions
         }
 
         if (!$this->setConfig_batch_XmlNotifications()) {
-            return false;
-            exit;
-        }
-
-        if (!$this->setConfig_batch_XmlSendmail()) {
             return false;
             exit;
         }
@@ -1128,78 +1098,6 @@ class Install extends functions
 
         $res = $xmlconfig->asXML();
         $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/config/config.xml', 'w+');
-        if (!$fp) {
-            return false;
-            exit;
-        }
-        $write = fwrite($fp, $res);
-        if (!$write) {
-            return false;
-            exit;
-        }
-
-        return true;
-    }
-
-    private function setConfig_batch_XmlSendmail()
-    {
-        $xmlconfig = simplexml_load_file('modules/sendmail/batch/config/config.xml.default');
-
-        $CONFIG = $xmlconfig->CONFIG;
-
-        $chemin_core = realpath('.').'/core/';
-
-        if ($_SERVER['SERVER_ADDR'] == '::1') {
-            $SERVER_ADDR = 'localhost';
-        } else {
-            $SERVER_ADDR = $_SERVER['SERVER_ADDR'];
-        }
-        $CONFIG->MaarchDirectory = realpath('.').'/';
-        $chemin = $SERVER_ADDR.dirname($_SERVER['PHP_SELF'].'cs_'.$_SESSION['config']['databasename']);
-        $maarchUrl = rtrim($chemin, 'install');
-        $maarchUrl = $maarchUrl.'cs_'.$_SESSION['config']['databasename'].'/';
-        $CONFIG->MaarchUrl = $maarchUrl;
-        $CONFIG->MaarchApps = 'maarch_entreprise';
-        $CONFIG->TmpDirectory = realpath('.').'/modules/sendmail/batch/tmp/';
-
-        $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
-        $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
-        $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
-        $CONFIG_BASE->databasename = $_SESSION['config']['databasename'];
-        $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
-        $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
-
-        $LOG4PHP = $xmlconfig->LOG4PHP;
-        $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
-
-        $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/config/config.xml', 'w+');
-        if (!$fp) {
-            return false;
-            exit;
-        }
-        $write = fwrite($fp, $res);
-        if (!$write) {
-            return false;
-            exit;
-        }
-
-        return true;
-    }
-
-    private function setConfig_sendmail()
-    {
-        $xmlconfig = simplexml_load_file('modules/sendmail/batch/config/config.xml.default');
-        //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
-        $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
-
-        $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
-        $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
-        $CONFIG_BASE->databasename = $_SESSION['config']['databasename'];
-        $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
-        $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
-        $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/config/config.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1622,83 +1520,6 @@ class Install extends functions
 
             return true;
         }
-    }
-
-    private function setScriptSendmailSendmailSh()
-    {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $res = 'cd '.realpath('.')."\modules\\sendmail\\";
-            $res .= "\n";
-            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\sendmail\batch\process_emails.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\sendmail\batch\config\config.xml';
-
-            $fp = fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.bat', 'w+');
-            if (!$fp) {
-                //var_dump('FALSE');
-                return false;
-                exit;
-            }
-            $write = fwrite($fp, $res);
-            if (!$write) {
-                return false;
-                exit;
-            }
-
-            return true;
-        } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
-            $res = '#!/bin/bash';
-            $res .= "\n";
-            $res .= 'cd '.realpath('.').'/modules/sendmail/batch/';
-            $res .= "\n";
-            $res .= "emailStackPath='".realpath('.')."/modules/sendmail/batch/process_emails.php'";
-            $res .= "\n";
-            $res .= 'php $emailStackPath -c '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/config/config.xml';
-
-            $fp = fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.sh', 'w+');
-            if (!$fp) {
-                //var_dump('FALSE');
-                //exit;
-                return false;
-                exit;
-            }
-            $write = fwrite($fp, $res);
-            if (!$write) {
-                return false;
-                exit;
-            }
-
-            return true;
-        }
-    }
-
-    private function setDatasourcesXsd()
-    {
-        $Fnm = 'apps/maarch_entreprise/xml/datasources.xsd.default';
-        $inF = fopen($Fnm, 'r');
-        while (!feof($inF)) {
-            $contentFile .= fgets($inF, 4096);
-        }
-        $contentFile = str_replace('##databaseserver##', $_SESSION['config']['databaseserver'], $contentFile);
-        $contentFile = str_replace('##databaseserverport##', $_SESSION['config']['databaseserverport'], $contentFile);
-        $contentFile = str_replace('##databasename##', $_SESSION['config']['databasename'], $contentFile);
-        $contentFile = str_replace('##databaseuser##', $_SESSION['config']['databaseuser'], $contentFile);
-        $contentFile = str_replace('##databasepassword##', $_SESSION['config']['databasepassword'], $contentFile);
-        fclose($inF);
-        if (file_exists('apps/maarch_entreprise/xml/datasources.xsd')) {
-            unlink('apps/maarch_entreprise/xml/datasources.xsd');
-        }
-        copy('apps/maarch_entreprise/xml/datasources.xsd.default', 'apps/maarch_entreprise/xml/datasources.xsd');
-        $fp = fopen('apps/maarch_entreprise/xml/datasources.xsd', 'w+');
-        if (!$fp) {
-            return false;
-            exit;
-        }
-        $write = fwrite($fp, $contentFile);
-        if (!$write) {
-            return false;
-            exit;
-        }
-
-        return true;
     }
 
     public function getDataList()

@@ -421,6 +421,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request : redirectedBasketIds is empty or not an array']);
         }
 
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         foreach($data['redirectedBasketIds'] as $redirectedBasketId) {
             $redirectedBasket = RedirectBasketModel::get(['select' => ['actual_user_id', 'owner_user_id', 'basket_id'], 'where' => ['id = ?'], 'data' => [$redirectedBasketId]]);
             if (empty($redirectedBasket[0]) || ($redirectedBasket[0]['actual_user_id'] != $aArgs['id'] && $redirectedBasket[0]['owner_user_id'] != $aArgs['id'])) {
@@ -429,7 +430,6 @@ class UserController
 
             RedirectBasketModel::delete(['where' => ['id = ?'], 'data' => [$redirectedBasketId]]);
 
-            $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
             HistoryController::add([
                 'tableName'    => 'redirected_baskets',
                 'recordId'     => $GLOBALS['userId'],
