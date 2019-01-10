@@ -58,7 +58,7 @@ class HistoryController
     public static function add(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['tableName', 'recordId', 'eventType', 'info', 'eventId']);
-        ValidatorModel::stringType($aArgs, ['tableName', 'eventType', 'info', 'eventId', 'moduleId', 'level']);
+        ValidatorModel::stringType($aArgs, ['tableName', 'eventType', 'info', 'eventId', 'moduleId', 'level', 'userId']);
 
         if (empty($aArgs['isTech'])) {
             $aArgs['isTech'] = false;

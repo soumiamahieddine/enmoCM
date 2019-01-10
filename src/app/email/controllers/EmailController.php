@@ -20,6 +20,8 @@ use Configuration\models\ConfigurationModel;
 use Email\models\EmailModel;
 use Entity\models\EntityModel;
 use Group\models\ServiceModel;
+use History\controllers\HistoryController;
+use History\models\HistoryModel;
 use Note\controllers\NoteController;
 use Note\models\NoteEntityModel;
 use Note\models\NoteModel;
@@ -62,6 +64,14 @@ class EmailController
             'messageExchangeId'     => $data['messageExchangeId']
         ]);
 
+        HistoryController::add([
+            'tableName'    => 'emails',
+            'recordId'     => $id,
+            'eventType'    => 'ADD',
+            'eventId'      => 'emailCreation',
+            'info'         => _EMAIL_ADDED
+        ]);
+
         if ($data['status'] != 'DRAFT') {
             $isSent = EmailController::sendEmail(['emailId' => $id, 'userId' => $user['id']]);
 
@@ -69,13 +79,14 @@ class EmailController
                 EmailModel::update(['set' => ['status' => 'SENT', 'send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$id]]);
             } else {
                 EmailModel::update(['set' => ['status' => 'ERROR'], 'where' => ['id = ?'], 'data' => [$id]]);
+                return $response->withStatus(409)->withJson(['errors' => $isSent['errors']]);
             }
         }
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withStatus(204);
     }
 
-    public static function sendEmail(array $args) //TODO LOGS
+    public static function sendEmail(array $args)
     {
         ValidatorModel::notEmpty($args, ['emailId', 'userId']);
         ValidatorModel::intVal($args, ['emailId', 'userId']);
@@ -92,6 +103,8 @@ class EmailController
             return ['errors' => 'Configuration is missing'];
         }
 
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname', 'user_id']]);
+
         $phpmailer = new PHPMailer();
 
         if ($configuration['type'] == 'smtp') {
@@ -105,7 +118,6 @@ class EmailController
                 $phpmailer->Password = $configuration['password'];
             }
 
-            $user = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname']]);
             $emailFrom = empty($configuration['from']) ? $email['sender']['email'] : $configuration['from'];
             if (empty($email['sender']['entityId'])) {
                 $phpmailer->setFrom($emailFrom, "{$user['firstname']} {$user['lastname']}");
@@ -183,11 +195,34 @@ class EmailController
             }
         }
 
+        $phpmailer->Timeout = 30;
+        $phpmailer->SMTPDebug = 1;
+        $phpmailer->Debugoutput = function($str) {
+            if (strpos($str, 'SMTP ERROR') !== false) {
+                HistoryController::add([
+                    'tableName'    => 'emails',
+                    'recordId'     => 'email',
+                    'eventType'    => 'ERROR',
+                    'eventId'      => 'sendEmail',
+                    'info'         => $str
+                ]);
+            }
+        };
 
         $isSent = $phpmailer->send();
         if (!$isSent) {
-            //TODO
-            return ['errors' => 'errors'];
+            $history = HistoryModel::get([
+                'select'    => ['info'],
+                'where'     => ['user_id = ?', 'event_id = ?', 'event_type = ?'],
+                'data'      => [$user['user_id'], 'sendEmail', 'ERROR'],
+                'orderBy'   => ['event_date DESC'],
+                'limit'     => 1
+            ]);
+            if (!empty($history[0]['info'])) {
+                return ['errors' => $history[0]['info']];
+            }
+
+            return ['errors' => $phpmailer->ErrorInfo];
         }
 
         return ['success' => 'success'];
