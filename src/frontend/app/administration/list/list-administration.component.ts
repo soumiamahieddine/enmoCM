@@ -17,53 +17,62 @@ export class ListAdministrationComponent implements OnInit {
     loading: boolean = false;
     loadingExport: boolean = false;
 
-    @ViewChild('listFilter') private listFilter   : any;
+    @ViewChild('listFilter') private listFilter: any;
+
+    delimiters = [';', ',',':','_TAB_'];
+    encodings = ['UTF-8', 'ANSI'];
+
+    exportModel: any = {
+        delimiter : ';',
+        encoding : 'UTF-8',
+        datas : []
+    };
 
     dataAvailable = [
         {
-            label : 'Numéro GED',
-            id : 'res_id'
-        },{
-            label : 'Numéro Chrono',
-            id : 'alt_identifier'
-        },{
-            label : 'Categorie',
-            id : 'category'
-        },{
-            label : 'Date d\'arrivée',
-            id : 'doc_date'
-        },{
-            label : 'Date limite de traitement',
-            id : 'process_limit_date'
-        },{
-            label : 'Prénom de l\'expéditeur',
-            id : 'contact_firstname'
-        },{
-            label : 'Nom de l\'expéditeur',
-            id : 'contact_lastname'
+            label: 'Numéro GED',
+            id: 'res_id'
+        }, {
+            label: 'Numéro Chrono',
+            id: 'alt_identifier'
+        }, {
+            label: 'Categorie',
+            id: 'category'
+        }, {
+            label: 'Date d\'arrivée',
+            id: 'doc_date'
+        }, {
+            label: 'Date limite de traitement',
+            id: 'process_limit_date'
+        }, {
+            label: 'Prénom de l\'expéditeur',
+            id: 'contact_firstname'
+        }, {
+            label: 'Nom de l\'expéditeur',
+            id: 'contact_lastname'
         }
     ];
 
     dataExport = [
         {
-            label : 'Société de l\'expéditeur',
-            id : 'contact_society'
+            label: 'Société de l\'expéditeur',
+            id: 'contact_society'
         },
         {
-            label : 'Service destinataire',
-            id : 'destination'
+            label: 'Service destinataire',
+            id: 'destination'
         },
         {
-            label : 'Destinataire',
-            id : 'dest_user'
+            label: 'Destinataire',
+            id: 'dest_user'
         },
         {
-            label : 'Objet',
-            id : 'subject'
+            label: 'Objet',
+            id: 'subject'
         },
         {
-            label : 'Type de courrier',
-            id : 'type_id'
+            label: 'Type de courrier',
+            id: 'type_id'
         }
     ];
 
@@ -100,5 +109,35 @@ export class ListAdministrationComponent implements OnInit {
             }, (err: any) => {
                 this.notify.handleErrors(err);
             });*/
+    }
+
+    addData(item: any, i: number) {
+        const fakeIndex = $j('.available-data .columns')[i].id;
+        const realIndex = this.dataAvailable.map((dataAv: any) => (dataAv.id)).indexOf(fakeIndex);
+
+        transferArrayItem(this.dataAvailable,
+            this.dataExport,
+            realIndex,
+            this.dataExport.length);
+
+        this.listFilter.nativeElement.value = '';
+    }
+
+    removeData(i: number) {
+        transferArrayItem(this.dataExport,
+            this.dataAvailable,
+            i,
+            this.dataAvailable.length);
+    }
+
+    removeAllData() {
+        this.dataAvailable = this.dataAvailable.concat(this.dataExport);
+        this.dataExport = [];
+    }
+
+    addAllData() {
+        this.dataExport = this.dataExport.concat(this.dataAvailable);
+        this.dataAvailable = [];
+        this.listFilter.nativeElement.value = '';
     }
 }

@@ -272,9 +272,8 @@ export class FiltersToolComponent implements OnInit {
     }
 
     openListAdmin(): void {
-        console.log('toto');
         const dialogRef = this.dialog.open(ListAdministrationComponent, {
-          /*width: '250px',*/
+          width: '800px',
           data: {}
         });
     
