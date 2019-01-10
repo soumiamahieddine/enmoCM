@@ -14,7 +14,6 @@
 
 namespace SrcCore\models;
 
-use SrcCore\models\CoreConfigModel;
 
 class PasswordModel
 {

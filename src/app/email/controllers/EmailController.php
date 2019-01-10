@@ -30,6 +30,7 @@ use Resource\controllers\ResController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\PasswordModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
@@ -79,7 +80,7 @@ class EmailController
                 EmailModel::update(['set' => ['status' => 'SENT', 'send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$id]]);
             } else {
                 EmailModel::update(['set' => ['status' => 'ERROR'], 'where' => ['id = ?'], 'data' => [$id]]);
-                return $response->withStatus(409)->withJson(['errors' => $isSent['errors']]);
+                return $response->withStatus(502)->withJson(['errors' => $isSent['errors']]);
             }
         }
 
@@ -115,7 +116,7 @@ class EmailController
             $phpmailer->SMTPAuth = $configuration['auth'];
             if ($configuration['auth']) {
                 $phpmailer->Username = $configuration['user'];
-                $phpmailer->Password = $configuration['password'];
+                $phpmailer->Password = PasswordModel::decrypt(['cryptedPassword' => $configuration['password']]);
             }
 
             $emailFrom = empty($configuration['from']) ? $email['sender']['email'] : $configuration['from'];
