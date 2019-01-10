@@ -19,6 +19,7 @@ use Group\models\ServiceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\PasswordModel;
 
 class ConfigurationController
 {
@@ -30,6 +31,12 @@ class ConfigurationController
 
         $configuration = ConfigurationModel::getByService(['service' => $aArgs['service']]);
         $configuration['value'] = (array)json_decode($configuration['value']);
+        if (isset($configuration['value']['password'])) {
+            unset($configuration['value']['password']);
+            $configuration['value']['passwordAlreadyExists'] = true;
+        } else {
+            $configuration['value']['passwordAlreadyExists'] = false;
+        }
 
         return $response->withJson(['configuration' => $configuration]);
     }
@@ -47,6 +54,14 @@ class ConfigurationController
         $data = $request->getParams();
 
         if ($aArgs['service'] == 'admin_email_server') {
+            if ($data['auth'] && empty($data['password'])) {
+                $configuration = ConfigurationModel::getByService(['service' => $aArgs['service']]);
+                if (!empty($configuration['value']->password)) {
+                    $data['password'] = $configuration['value']->password;
+                }
+            } elseif ($data['auth'] && !empty($data['password'])) {
+                $data['password'] = PasswordModel::encrypt(['password' => $data['password']]);
+            }
             $check = ConfigurationController::checkMailer($data);
             if (!empty($check['errors'])) {
                 return $response->withStatus($check['code'])->withJson(['errors' => $check['errors']]);

@@ -14,6 +14,8 @@
 
 namespace SrcCore\models;
 
+use SrcCore\models\CoreConfigModel;
+
 class PasswordModel
 {
     public static function getRules(array $aArgs = [])
@@ -149,5 +151,32 @@ class PasswordModel
         ]);
 
         return true;
+    }
+
+    public static function encrypt(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['password']);
+ 
+        $enc_key = CoreConfigModel::getEncryptKey();
+        
+        $cipher_method = 'AES-128-CTR';
+        $enc_iv        = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher_method));
+        $crypted_token = openssl_encrypt($aArgs['password'], $cipher_method, $enc_key, 0, $enc_iv) . "::" . bin2hex($enc_iv);
+
+        return $crypted_token;
+    }
+
+    public static function decrypt(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['cryptedPassword']);
+ 
+        $enc_key = CoreConfigModel::getEncryptKey();
+        
+        $cipher_method = 'AES-128-CTR';
+
+        list($crypted_token, $enc_iv) = explode("::", $aArgs['cryptedPassword']);
+        $token = openssl_decrypt($crypted_token, $cipher_method, $enc_key, 0, hex2bin($enc_iv));
+
+        return $token;
     }
 }

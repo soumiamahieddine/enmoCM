@@ -16,7 +16,7 @@ class ConfigurationControllerTest extends TestCase
         $configurationController = new \Configuration\controllers\ConfigurationController();
 
         //  UPDATE
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -55,17 +55,17 @@ class ConfigurationControllerTest extends TestCase
                 'port'       => '45',
                 'auth'       => true,
                 'user'       => 'user@test.com',
-                'password'   => '12345',
                 'secure'     => 'ssl',
                 'from'       => 'info@maarch.org',
                 'charset'    => 'utf-8',
+                'passwordAlreadyExists' => true
             ]
         );
 
         $this->assertJsonStringEqualsJsonString($jsonTest, json_encode($responseBody->configuration->value));
 
         //  UPDATE auth false
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -103,10 +103,10 @@ class ConfigurationControllerTest extends TestCase
                 'port'       => '231',
                 'auth'       => false,
                 'user'       => '',
-                'password'   => '',
                 'secure'     => 'tls',
                 'from'       => 'info@maarch.org',
                 'charset'    => 'utf-8',
+                'passwordAlreadyExists' => true
             ]
         );
 
@@ -114,7 +114,7 @@ class ConfigurationControllerTest extends TestCase
 
 
         //  UPDATE SENDMAIL
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -139,14 +139,15 @@ class ConfigurationControllerTest extends TestCase
 
         $jsonTest = json_encode(
             [
-                'type'       => 'sendmail'
+                'type'       => 'sendmail',
+                'passwordAlreadyExists' => false
             ]
         );
 
         $this->assertJsonStringEqualsJsonString($jsonTest, json_encode($responseBody->configuration->value));
 
         //  UPDATE ERROR
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -160,7 +161,7 @@ class ConfigurationControllerTest extends TestCase
         $this->assertSame('Service configuration does not exist', $responseBody->errors);
 
         //  UPDATE ERROR
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -173,7 +174,7 @@ class ConfigurationControllerTest extends TestCase
         $this->assertSame('Configuration type is missing', $responseBody->errors);
 
         //  UPDATE ERROR
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -199,7 +200,7 @@ class ConfigurationControllerTest extends TestCase
         $configurationController = new \Configuration\controllers\ConfigurationController();
 
         //  UPDATE
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -238,10 +239,10 @@ class ConfigurationControllerTest extends TestCase
                 'port'       => '465',
                 'auth'       => true,
                 'user'       => 'name@maarch.org',
-                'password'   => '12345',
                 'secure'     => 'ssl',
                 'from'       => 'notifications@maarch.org',
                 'charset'    => 'utf-8',
+                'passwordAlreadyExists' => true
             ]
         );
 
