@@ -250,5 +250,55 @@ class ConfigurationControllerTest extends TestCase
         );
 
         $this->assertJsonStringEqualsJsonString($jsonTest, json_encode($responseBody->configuration->value));
+
+        //  UPDATE TEST REST WITHOUT PASSWORD
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'type'       => 'smtp',
+            'host'       => 'smtp.gmail.com',
+            'port'       => '465',
+            'auth'       => true,
+            'user'       => 'name@maarch.org',
+            'password'   => '',
+            'secure'     => 'ssl',
+            'from'       => 'notifications@maarch.org',
+            'charset'    => 'utf-8',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $configurationController->update($fullRequest, new \Slim\Http\Response(), ['service' => 'admin_email_server']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $configurationController->getByService($request, new \Slim\Http\Response(), ['service' => 'admin_email_server']);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->configuration);
+        $this->assertInternalType('int', $responseBody->configuration->id);
+        $this->assertSame('admin_email_server', $responseBody->configuration->service);
+        $this->assertNotNull($responseBody->configuration->value);
+
+        $jsonTest = json_encode(
+            [
+                'type'       => 'smtp',
+                'host'       => 'smtp.gmail.com',
+                'port'       => '465',
+                'auth'       => true,
+                'user'       => 'name@maarch.org',
+                'password'       => '',
+                'secure'     => 'ssl',
+                'from'       => 'notifications@maarch.org',
+                'charset'    => 'utf-8',
+                'passwordAlreadyExists' => true
+            ]
+        );
+
+        $this->assertJsonStringEqualsJsonString($jsonTest, json_encode($responseBody->configuration->value));
     }
 }

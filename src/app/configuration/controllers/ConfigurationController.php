@@ -56,8 +56,9 @@ class ConfigurationController
         if ($aArgs['service'] == 'admin_email_server') {
             if ($data['auth'] && empty($data['password'])) {
                 $configuration = ConfigurationModel::getByService(['service' => $aArgs['service']]);
-                if (!empty($configuration['value']->password)) {
-                    $data['password'] = $configuration['value']->password;
+                $configuration['value'] = (array)json_decode($configuration['value']);
+                if (!empty($configuration['value']['password'])) {
+                    $data['password'] = $configuration['value']['password'];
                 }
             } elseif ($data['auth'] && !empty($data['password'])) {
                 $data['password'] = PasswordModel::encrypt(['password' => $data['password']]);
