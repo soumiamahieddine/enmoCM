@@ -269,7 +269,7 @@ class StoreController
                 if (!empty($user[0]['user_id'])) {
                     $toAddressFound = true;
                     $destUser = $user[0]['user_id'];
-                    $entity = EntityModel::getByUserId(['userId' => $destUser, 'select' => ['entity_id']]);
+                    $entity = EntityModel::getByLogin(['login' => $destUser, 'select' => ['entity_id']]);
                     if (!empty($entity[0]['entity_id'])) {
                         $userEntity = $entity[0]['entity_id'];
                         $userPrimaryEntity = true;

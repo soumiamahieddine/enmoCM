@@ -391,6 +391,10 @@ h1.admin-app-name {
     width: 400px;
 }
 
+.mat-slide-toggle-label {
+    font-weight: normal;
+}
+
 /* FIX BUG CSS WITH CHROME */
 .mat-dialog-container,
 .mat-tab-body-content {

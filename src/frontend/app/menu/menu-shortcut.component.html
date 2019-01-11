@@ -37,7 +37,7 @@
                     <mat-icon class="fa {{shortcut.style}}" style="height:auto;font-size:22px;"></mat-icon>
                 </button>
             </span>
-            <span style="flex:1;text-align: left;padding: 5px;" *ngIf="shortcut.id=='index_mlb' && shortcut.shortcut == 'true' && speedDialFabButtons.length>1">
+            <span style="flex:1;text-align: left;padding: 5px;position: relative;" *ngIf="shortcut.id=='index_mlb' && shortcut.shortcut == 'true' && speedDialFabButtons.length>1">
                 <smd-fab-speed-dial #myFab direction="down" animationMode="fling" fixed="false" (mouseenter)="myFab.open = true"
                     (mouseleave)="myFab.open = false">
                     <smd-fab-trigger spin="true">

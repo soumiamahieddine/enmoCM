@@ -49,6 +49,7 @@ define('_DOCTYPE_SECONDLEVEL_ADDED', 'Doctype second level added');
 define('_DOCTYPE_SECONDLEVEL_DELETED', 'Doctype second level deleted');
 define('_DOCTYPE_SECONDLEVEL_UPDATED', 'Doctype second level edited');
 define('_DOCUMENT_NOT_FOUND', 'Document not found');
+define('_EMAIL_ADDED', 'Email added');
 define('_ENTITY_CREATION', 'Entity creation');
 define('_ENTITY_MODIFICATION', 'Entity modification');
 define('_ENTITY_SUPPRESSION', 'Entity suppression');

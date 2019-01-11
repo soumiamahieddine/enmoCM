@@ -61,11 +61,13 @@ export class SendmailAdministrationComponent implements OnInit {
     serverConnectionLoading: boolean = false;
     emailSendLoading: boolean = false;
     emailSendResult = {
-        icon : '',
-        msg : ''
+        icon: '',
+        msg: '',
+        debug : ''
     };
     currentUser: any = {};
     recipientTest: string = '';
+    passwordLabel: string = '';
 
 
 
@@ -89,6 +91,12 @@ export class SendmailAdministrationComponent implements OnInit {
                 this.sendmail = data.configuration.value
                 this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
                 this.smtpTypeDesc = this.lang[this.sendmail.type + 'Desc'];
+                if (this.sendmail.passwordAlreadyExists === true) {
+                    this.passwordLabel = this.lang.passwordModification;
+                } else {
+                    this.passwordLabel = this.lang.password;
+                }
+                
                 this.loading = false;
             }, (err) => {
                 this.notify.handleErrors(err);
@@ -119,29 +127,31 @@ export class SendmailAdministrationComponent implements OnInit {
 
     initEmailSend() {
         this.emailSendResult = {
-            icon : '',
-            msg : ''
+            icon: '',
+            msg: '',
+            debug: '',
         };
         if (this.currentUser.mail === undefined) {
             this.http.get('../../rest/currentUser/profile')
-            .subscribe((data: any) => {
-                this.currentUser = data;
-                this.recipientTest = data.mail;
-            });
-        }  
+                .subscribe((data: any) => {
+                    this.currentUser = data;
+                    this.recipientTest = data.mail;
+                });
+        }
     }
 
     testEmailSend() {
         this.emailSendResult = {
-            icon : 'fa-paper-plane primary',
-            msg : this.lang.emailSendInProgress
+            icon: 'fa-paper-plane primary',
+            msg: this.lang.emailSendInProgress,
+            debug: ''
         };
         let email = {
             "sender": { "email": this.currentUser.mail },
             "recipients": [this.recipientTest],
-            "object": "test mail envoi",
+            "object": "[" + this.lang.doNotReply +"] " + this.lang.emailSendTest,
             "status": "SENDMAILTEST",
-            "body": "test mail envoi",
+            "body": this.lang.emailSendTest,
             "isHtml": false
         }
         this.emailSendLoading = true;
@@ -150,8 +160,16 @@ export class SendmailAdministrationComponent implements OnInit {
             .subscribe((data: any) => {
                 this.emailSendLoading = false;
                 this.emailSendResult = {
-                    icon : 'fa-check green',
-                    msg : this.lang.emailSendSuccess
+                    icon: 'fa-check green',
+                    msg: this.lang.emailSendSuccess,
+                    debug: ''
+                };
+            }, (err) => {
+                this.emailSendLoading = false;
+                this.emailSendResult = {
+                    icon: 'fa-times red',
+                    msg: this.lang.emailSendFailed,
+                    debug: err.error.errors
                 };
             });
     }

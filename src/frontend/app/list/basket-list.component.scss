@@ -62,6 +62,10 @@ mat-toolbar {
     }
 }
 
+.noData {
+    opacity : 0.5;
+}
+
 .chrono {
     color: #666;
     &-mobile {
@@ -86,6 +90,7 @@ mat-toolbar {
 
 .actions {
     box-shadow: none;
+    border: none;
     flex: 1;
     justify-content: flex-end;
     overflow: inherit;

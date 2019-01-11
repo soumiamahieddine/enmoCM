@@ -15,6 +15,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "basket-administration.component.html",
+    styleUrls: ['basket-administration.component.scss'],
     providers: [NotificationService]
 })
 export class BasketAdministrationComponent implements OnInit {

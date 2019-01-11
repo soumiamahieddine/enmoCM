@@ -732,6 +732,7 @@ export const LANG_EN = {
     "configurationUpdated"                              : "Configuration updated",
     "port"                                              : "Port",
     "mailFrom"                                          : "Mail address used",
+    "mailTo"                                            : "Mail address destination",
     "eraseAllFilters"                                   : "Erase all filters",
     "isMulticontact"                                    : "Multi-contact",
     "emailSendTest"                                     : "Email send test",
@@ -739,4 +740,6 @@ export const LANG_EN = {
     "emailSendSuccess"                                  : "Email sent",
     "emailSendInProgress"                               : "Sending email...",
     "smtpAuth"                                          : "Authentication methode",
+    "emailSendFailed"                                   : "Email send failed",
+    "doNotReply"                                        : "Do not reply",
 };

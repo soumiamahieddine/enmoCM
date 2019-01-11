@@ -133,6 +133,24 @@ class CoreConfigModel
         return $tmpDir . '/';
     }
 
+    /**
+     * Get the Encrypt Key
+     *
+     * @return string
+     */
+    public static function getEncryptKey()
+    {
+        if (isset($_SERVER['MAARCH_ENCRYPT_KEY'])) {
+            $enc_key = $_SERVER['MAARCH_ENCRYPT_KEY'];
+        } elseif (isset($_SERVER['REDIRECT_MAARCH_ENCRYPT_KEY'])) {
+            $enc_key = $_SERVER['REDIRECT_MAARCH_ENCRYPT_KEY'];
+        } else {
+            $enc_key = "Security Key Maarch Courrier #2008";
+        }
+
+        return $enc_key;
+    }
+
     public static function getLoggingMethod()
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/login_method.xml']);

@@ -39,6 +39,7 @@ define('_DOCTYPE_SECONDLEVEL_ADDED', 'Submap toegevoegd');
 define('_DOCTYPE_SECONDLEVEL_DELETED', 'Submap verwijderd');
 define('_DOCTYPE_SECONDLEVEL_UPDATED', 'Submap gewijzigd');
 define('_DOCUMENT_NOT_FOUND', 'Document onvindbaar');
+define('_EMAIL_ADDED', 'TO_TRANSLATE : Email added');
 define('_ENTITY_CREATION', 'Aanmaak eenheid');
 define('_ENTITY_MODIFICATION', 'Wijziging eenheid');
 define('_ENTITY_SUPPRESSION', 'Verwijdering eenheid');

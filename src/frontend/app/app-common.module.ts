@@ -8,8 +8,10 @@ import { BrowserAnimationsModule }              from '@angular/platform-browser/
 import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 import { RouterModule }                         from '@angular/router';
+import { DragDropModule }                         from '@angular/cdk/drag-drop';
 
 /*PLUGINS IMPORTS*/
+
 import { NgStringPipesModule }                  from 'ngx-pipes';
 import { CookieService }                        from 'ngx-cookie-service';
 import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
@@ -51,6 +53,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         RouterModule,
         NgStringPipesModule,
         AppMaterialModule,
+        DragDropModule
     ],
     declarations: [
         MainHeaderComponent,
@@ -89,6 +92,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
+        DragDropModule
     ],
     providers: [
         CookieService,

@@ -178,17 +178,17 @@ abstract class EntityModelAbstract
         return $aReturn;
     }
 
-    public static function getByUserId(array $aArgs)
+    public static function getByLogin(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['login']);
+        ValidatorModel::stringType($aArgs, ['login']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $aEntities = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users_entities'],
             'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
+            'data'      => [$aArgs['login']]
         ]);
 
         return $aEntities;
@@ -277,7 +277,7 @@ abstract class EntityModelAbstract
             $entitiesAllowedForAdministrator = EntityModel::getAllEntitiesByUserId(['userId' => $aArgs['administratorUserId']]);
         }
 
-        $rawUserEntities = EntityModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['entity_id']]);
+        $rawUserEntities = EntityModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['entity_id']]);
 
         $userEntities = [];
         foreach ($rawUserEntities as $value) {

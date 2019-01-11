@@ -2,54 +2,25 @@
 
  function setConfigSendmail_batch_config_Xml($from, $to, $host, $user, $pass, $type, $port, $auth, $charset, $smtpSecure, $mailfrom, $smtpDomains)
  {
-     $xmlconfig = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/config/config.xml');
+     \SrcCore\models\DatabasePDO::reset();
+     new \SrcCore\models\DatabasePDO(['customId' => 'cs_'.$_SESSION['config']['databasename']]);
 
-     $CONFIG = $xmlconfig->CONFIG;
-
-     $CONFIG->MaarchDirectory = realpath('.')."/";
-     if ($_SERVER['REMOTE_ADDR'] == '::1') {
-         $REMOTE_ADDR = 'localhost';
-     } else {
-         $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
+     if (!empty($pass)) {
+        $pass = \SrcCore\models\PasswordModel::encrypt(['password' => $pass]);
      }
-     $chemin = $REMOTE_ADDR . dirname($_SERVER['PHP_SELF']);
-     $maarchUrl = rtrim($chemin, "install");
-     $maarchUrl = $maarchUrl . 'cs_'.$_SESSION['config']['databasename'].'/';
-     $CONFIG->MaarchUrl    = $maarchUrl;
-     $CONFIG->MaarchApps   = 'maarch_entreprise';
-     $CONFIG->TmpDirectory = realpath('.').'/modules/sendmail/batch/tmp/';
 
-     $MAILER = $xmlconfig->MAILER;
-     $MAILER->type          = $type;
-     $MAILER->smtp_port     = $port;
-     $MAILER->smtp_host     = $host;
-     $MAILER->smtp_user     = $user;
-     $MAILER->smtp_password = $pass;
-     //$MAILER->mailfrom      = $mailfrom;
-     $MAILER->domains       = $smtpDomains;
-     if ($auth == 1) {
-         $MAILER->smtp_auth = "true";
-     } else {
-         $MAILER->smtp_auth = "false";
-     }
-        
-
-
-     $LOG4PHP = $xmlconfig->LOG4PHP;
-     $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
-
-
-     $res = $xmlconfig->asXML();
-     $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/sendmail/batch/config/config.xml", "w+");
-     if (!$fp) {
-         return false;
-         exit;
-     }
-     $write = fwrite($fp, $res);
-     if (!$write) {
-         return false;
-         exit;
-     }
+     $data = [
+         'type'     => $type,
+         'host'     => $host,
+         'port'     => $port,
+         'user'     => $user,
+         'password' => $pass,
+         'auth'     => $auth == 1,
+         'secure'   => 'ssl',
+         'charset'  => 'utf-8'
+     ];
+     $data = json_encode($data);
+     \Configuration\models\ConfigurationModel::update(['set' => ['value' => $data], 'where' => ['service = ?'], 'data' => ['admin_email_server']]);
  }
 
 

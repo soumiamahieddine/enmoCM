@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewEncapsulation, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { MatSidenav, MatMenu, MatMenuTrigger, MatAutocompleteSelectedEvent, MatInput, MatAutocompleteTrigger } from '@angular/material';
+import { MatSidenav, MatMenu, MatMenuTrigger, MatAutocompleteSelectedEvent, MatInput, MatAutocompleteTrigger, MatDialog } from '@angular/material';
 import { FiltersListService } from '../../../service/filtersList.service';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
+import { ListAdministrationComponent } from '../../administration/list/list-administration.component';
+
 
 declare function $j(selector: any): any;
 
@@ -63,7 +65,7 @@ export class FiltersToolComponent implements OnInit {
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
 
-    constructor(public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder, private latinisePipe: LatinisePipe) { }
+    constructor(public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder, private latinisePipe: LatinisePipe, public dialog: MatDialog) { }
 
     ngOnInit(): void {
 
@@ -268,4 +270,15 @@ export class FiltersToolComponent implements OnInit {
                 map(value => this._filterGroup(value))
             );
     }
+
+    openListAdmin(): void {
+        const dialogRef = this.dialog.open(ListAdministrationComponent, {
+          width: '800px',
+          data: {}
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+          console.log('The dialog was closed');
+        });
+      }
 }
