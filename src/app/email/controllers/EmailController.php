@@ -112,7 +112,9 @@ class EmailController
             $phpmailer->isSMTP();
             $phpmailer->Host = $configuration['host'];
             $phpmailer->Port = $configuration['port'];
-            $phpmailer->SMTPSecure = $configuration['secure'];
+            if (!empty($configuration['secure'])) {
+                $phpmailer->SMTPSecure = $configuration['secure'];
+            }
             $phpmailer->SMTPAuth = $configuration['auth'];
             if ($configuration['auth']) {
                 $phpmailer->Username = $configuration['user'];
@@ -231,7 +233,7 @@ class EmailController
 
     private static function controlCreateEmail(array $args)
     {
-        ValidatorModel::notEmpty($args, ['login', 'data']);
+        ValidatorModel::notEmpty($args, ['login']);
         ValidatorModel::stringType($args, ['login']);
         ValidatorModel::arrayType($args, ['data']);
 

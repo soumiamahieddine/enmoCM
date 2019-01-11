@@ -567,8 +567,11 @@ class ResController
             return ['errors' => 'Document not found on docserver'];
         }
 
-
         $encodedDocument = base64_encode($fileContent);
+
+        if (!empty($document['subject'])) {
+            $document['subject'] = preg_replace(utf8_decode('@[^a-zA-Z0-9_-s.]@i'), '_', substr($document['subject'], 0, 30));
+        }
 
         $pathInfo = pathinfo($pathToDocument);
         $fileName = (empty($document['subject']) ? 'document' : $document['subject']) . ".{$pathInfo['extension']}";
