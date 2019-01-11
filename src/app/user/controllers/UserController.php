@@ -430,7 +430,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'User not found']);
         }
 
-        foreach($data['redirectedBasketIds'] as $redirectedBasketId) {
+        foreach ($data['redirectedBasketIds'] as $redirectedBasketId) {
             $redirectedBasket = RedirectBasketModel::get(['select' => ['actual_user_id', 'owner_user_id', 'basket_id'], 'where' => ['id = ?'], 'data' => [$redirectedBasketId]]);
             if (empty($redirectedBasket[0]) || ($redirectedBasket[0]['actual_user_id'] != $aArgs['id'] && $redirectedBasket[0]['owner_user_id'] != $aArgs['id'])) {
                 DatabaseModel::rollbackTransaction();

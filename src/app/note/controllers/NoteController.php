@@ -51,12 +51,10 @@ class NoteController
         }
         
         if (isset($data['entities_chosen'])) {
-            
             if (!Validator::arrayType()->validate($data['entities_chosen'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
             }
-            foreach($data['entities_chosen'] as $entityId) {
-
+            foreach ($data['entities_chosen'] as $entityId) {
                 if ($entityId == null) {
                     return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
                 }
@@ -78,12 +76,13 @@ class NoteController
     
         //Insert relation note with entities in note_entities_table
         if (!empty($noteId) && !empty($data['entities_chosen'])) {
-            foreach($data['entities_chosen'] as $entity) {  
-               NoteEntityModel::create( ['item_id' => $entity, 'note_id' => $noteId ]);
+            foreach ($data['entities_chosen'] as $entity) {
+                NoteEntityModel::create(['item_id' => $entity, 'note_id' => $noteId ]);
             }
         }
 
-        HistoryController::add( [
+        HistoryController::add(
+            [
             'tableName' => "notes",
             'recordId'  => $noteId,
             'eventType' => "ADD",
@@ -113,7 +112,7 @@ class NoteController
             $date = $date->format('d-m-Y H:i');
 
             $pdf->Cell(0, 20, "{$user['firstname']} {$user['lastname']} : {$date}", 1, 2, 'C', false);
-            $pdf->MultiCell(0, 20, $note['note_text'] ,1, 'L', false);
+            $pdf->MultiCell(0, 20, $note['note_text'], 1, 'L', false);
             $pdf->SetY($pdf->GetY() + 40);
         }
         $fileContent = $pdf->Output('', 'S');
