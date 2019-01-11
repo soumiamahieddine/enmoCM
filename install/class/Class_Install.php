@@ -339,19 +339,6 @@ class Install extends functions
                 $cheminCustomMaarchCourrierModulesNotificationsScripts = realpath('.')."/custom/cs_$databasename/modules/notifications/batch/scripts";
                 mkdir($cheminCustomMaarchCourrierModulesNotificationsScripts, 0755);
 
-                /** Création répertoire sendmail dans le custom **/
-                $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
-                mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
-
-                $cheminCustomMaarchCourrierModulesSendmailBatch = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch";
-                mkdir($cheminCustomMaarchCourrierModulesSendmailBatch, 0755);
-
-                $cheminCustomMaarchCourrierModulesSendmailBatchConfig = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/config";
-                mkdir($cheminCustomMaarchCourrierModulesSendmailBatchConfig, 0755);
-
-                $cheminCustomMaarchCourrierModulesSendmailBatchScripts = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/scripts";
-                mkdir($cheminCustomMaarchCourrierModulesSendmailBatchScripts, 0755);
-
                 /** Création répertoire LDAP dans le custom **/
                 $cheminCustomMaarchCourrierModulesLdap = realpath('.')."/custom/cs_$databasename/modules/ldap";
                 mkdir($cheminCustomMaarchCourrierModulesLdap, 0755);
@@ -391,25 +378,6 @@ class Install extends functions
                 if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/batch/scripts/")) {
                     $cheminCustomMaarchCourrierModulesNotificationsScripts = realpath('.')."/custom/cs_$databasename/modules/notifications/batch/scripts";
                     mkdir($cheminCustomMaarchCourrierModulesNotificationsScripts, 0755);
-                }
-
-                /* Création répertoire sendmail dans le custom **/
-                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/")) {
-                    $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
-                    mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
-                }
-
-                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/")) {
-                    $cheminCustomMaarchCourrierModulesSendmailBatch = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch";
-                    mkdir($cheminCustomMaarchCourrierModulesSendmailBatch, 0755);
-                }
-                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/config/")) {
-                    $cheminCustomMaarchCourrierModulesSendmailBatchConfig = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/config";
-                    mkdir($cheminCustomMaarchCourrierModulesSendmailBatchConfig, 0755);
-                }
-                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/scripts/")) {
-                    $cheminCustomMaarchCourrierModulesSendmailBatchScripts = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/scripts";
-                    mkdir($cheminCustomMaarchCourrierModulesSendmailBatchScripts, 0755);
                 }
 
                 if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/ldap/")) {
@@ -559,19 +527,6 @@ class Install extends functions
 
             $cheminCustomMaarchCourrierModulesNotificationsScripts = realpath('.')."/custom/cs_$databasename/modules/notifications/batch/scripts";
             mkdir($cheminCustomMaarchCourrierModulesNotificationsScripts, 0755);
-
-            /** Création répertoire sendmail dans le custom **/
-            $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
-            mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
-
-            $cheminCustomMaarchCourrierModulesSendmailBatch = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch";
-            mkdir($cheminCustomMaarchCourrierModulesSendmailBatch, 0755);
-
-            $cheminCustomMaarchCourrierModulesSendmailBatchConfig = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/config";
-            mkdir($cheminCustomMaarchCourrierModulesSendmailBatchConfig, 0755);
-
-            $cheminCustomMaarchCourrierModulesSendmailBatchScripts = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/scripts";
-            mkdir($cheminCustomMaarchCourrierModulesSendmailBatchScripts, 0755);
 
             /** Création répertoire LDAP dans le custom **/
             $cheminCustomMaarchCourrierModulesLdap = realpath('.')."/custom/cs_$databasename/modules/ldap";
@@ -961,12 +916,6 @@ class Install extends functions
 
 10 12 * * 0        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_event_stack/*.log
 11 12 * * 0        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_email_stack/*.log
-######################sendmail####################################################
-
-*/2 * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
-
-0 12 * * 0     rm -Rf '.realpath('.').'/modules/sendmail/batch/logs/*.log
-
 
 ######################fulltext###################################################
 
