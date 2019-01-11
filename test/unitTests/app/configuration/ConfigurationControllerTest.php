@@ -108,7 +108,7 @@ class ConfigurationControllerTest extends TestCase
                 'secure'     => 'tls',
                 'from'       => 'info@maarch.org',
                 'charset'    => 'utf-8',
-                'passwordAlreadyExists' => true
+                'passwordAlreadyExists' => false
             ]
         );
 
