@@ -742,4 +742,5 @@ export const LANG_EN = {
     "smtpAuth"                                          : "Authentication methode",
     "emailSendFailed"                                   : "Email send failed",
     "doNotReply"                                        : "Do not reply",
+    "none"                                              : "None",
 };

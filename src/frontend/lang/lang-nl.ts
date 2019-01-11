@@ -771,4 +771,5 @@ export const LANG_NL = {
     "sendmailShort" : "_TO_TRANSLATE",
     "emailSendFailed" : "_TO_TRANSLATE",
     "doNotReply" : "_TO_TRANSLATE",
+    "none" : "_TO_TRANSLATE",
 };

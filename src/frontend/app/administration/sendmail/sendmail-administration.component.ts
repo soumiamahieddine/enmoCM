@@ -55,7 +55,20 @@ export class SendmailAdministrationComponent implements OnInit {
         }
     ];
     smtpTypeDesc = '';
-    smtpSecList = ['ssl', 'tls'];
+    smtpSecList = [
+        {
+            id : '',
+            label : this.lang.none
+        },
+        {
+            id : 'ssl',
+            label : 'ssl'
+        },
+        {
+            id : 'tls',
+            label : 'tls'
+        }
+    ];
     sendmailClone: any = {};
     hidePassword: boolean = true;
     serverConnectionLoading: boolean = false;
@@ -141,6 +154,9 @@ export class SendmailAdministrationComponent implements OnInit {
     }
 
     testEmailSend() {
+        if (JSON.stringify(this.sendmailClone) !== JSON.stringify(this.sendmail)) {
+            this.onSubmit();
+        }
         this.emailSendResult = {
             icon: 'fa-paper-plane primary',
             msg: this.lang.emailSendInProgress,
@@ -172,5 +188,10 @@ export class SendmailAdministrationComponent implements OnInit {
                     debug: err.error.errors
                 };
             });
+    }
+
+    cleanAuthInfo() {
+        this.sendmail.user = '';
+        this.sendmail.password = '';
     }
 }
