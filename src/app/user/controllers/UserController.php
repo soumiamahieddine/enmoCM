@@ -421,7 +421,7 @@ class UserController
         $check = Validator::notEmpty()->arrayType()->validate($data['redirectedBasketIds']);
         if (!$check) {
             DatabaseModel::rollbackTransaction();
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request : redirectedBasketIds is empty or not an array']);
+            return $response->withStatus(400)->withJson(['errors' => 'RedirectedBasketIds is empty or not an array']);
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
