@@ -104,11 +104,6 @@ export class SendmailAdministrationComponent implements OnInit {
                 this.sendmail = data.configuration.value
                 this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
                 this.smtpTypeDesc = this.lang[this.sendmail.type + 'Desc'];
-                if (this.sendmail.passwordAlreadyExists === true) {
-                    this.passwordLabel = this.lang.passwordModification;
-                } else {
-                    this.passwordLabel = this.lang.password;
-                }
                 
                 this.loading = false;
             }, (err) => {
@@ -190,7 +185,9 @@ export class SendmailAdministrationComponent implements OnInit {
             });
     }
 
-    cleanAuthInfo() {
+    cleanAuthInfo(event: any) {
+        this.sendmail.passwordAlreadyExists = false;
+
         this.sendmail.user = '';
         this.sendmail.password = '';
     }
