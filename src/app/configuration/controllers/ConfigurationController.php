@@ -67,9 +67,10 @@ class ConfigurationController
             if (!empty($check['errors'])) {
                 return $response->withStatus($check['code'])->withJson(['errors' => $check['errors']]);
             }
+            $data['charset'] = 'utf-8';
+            unset($data['passwordAlreadyExists']);
         }
 
-        unset($data['passwordAlreadyExists']);
         $data = json_encode($data);
         ConfigurationModel::update(['set' => ['value' => $data], 'where' => ['service = ?'], 'data' => [$aArgs['service']]]);
 
