@@ -1,35 +1,20 @@
 <?php
 
-/*
-*
-*   Copyright 2015 Maarch
-*
-*   This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ */
 
 /**
-* Types Class
-*
-* Contains all the function to manage the doctypes
+ * @brief Contains all the function to manage the doctypes
+ *
+ * @author dev@maarch.org
 *
 * @package  Maarch
 * @version 2.0
 * @since 10/2005
 * @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
 *
 */
 
@@ -41,550 +26,6 @@ require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
 
 abstract class types_Abstract extends database
 {
-
-    /**
-    * Form to add, modify or propose a doc type
-    *
-    * @param string $mode val, up or prop
-    * @param integer $id type identifier, empty by default
-    */
-    public function formtype($mode, $id="")
-    {
-        // form to add, modify or proposale a doc type
-        $func = new functions();
-        $core = new core_tools();
-        $sec = new security();
-        $db = new Database();
-        $state = true;
-        if (! isset($_SESSION['m_admin']['doctypes'])) {
-            $this->cleartypeinfos();
-        }
-        if ($mode <> "prop" && $mode <> "add") {
-            $stmt = $db->query(
-                "SELECT * FROM " . DOCTYPES_TABLE . " WHERE type_id = ?", array($id)
-            );
-            if ($stmt->rowCount() == 0) {
-                $_SESSION['error'] = _DOCTYPE . ' ' . _ALREADY_EXISTS;
-                $state = false;
-            } else {
-                $_SESSION['m_admin']['doctypes'] = array();
-                $line = $stmt->fetchObject();
-                $_SESSION['m_admin']['doctypes']['TYPE_ID'] = $line->type_id;
-                $_SESSION['m_admin']['doctypes']['COLL_ID'] = $line->coll_id;
-                $_SESSION['m_admin']['doctypes']['COLL_LABEL'] = $_SESSION['m_admin']['doctypes']['COLL_ID'];
-                for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
-                    if ($_SESSION['collections'][$i]['id'] == $_SESSION['m_admin']['doctypes']['COLL_ID']) {
-                        $_SESSION['m_admin']['doctypes']['COLL_LABEL'] = $_SESSION['collections'][$i]['label'];
-                        break;
-                    }
-                }
-                $_SESSION['m_admin']['doctypes']['LABEL'] = $this->show_string(
-                    $line->description
-                );
-                $_SESSION['m_admin']['doctypes']['RETENTION_RULE'] = $line->retention_rule;
-                $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'] = $line->retention_final_disposition;
-                $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'] = $line->duration_current_use;
-                $_SESSION['m_admin']['doctypes']['SUB_FOLDER'] = $line->doctypes_second_level_id;
-                $_SESSION['m_admin']['doctypes']['VALIDATE'] = $line->enabled;
-                $_SESSION['m_admin']['doctypes']['TABLE'] = $line->coll_id;
-                $_SESSION['m_admin']['doctypes']['ACTUAL_COLL_ID'] = $line->coll_id;
-                $_SESSION['m_admin']['doctypes']['indexes'] = $this->get_indexes(
-                    $line->type_id, $line->coll_id, 'minimal'
-                );
-                $_SESSION['m_admin']['doctypes']['mandatory_indexes'] = $this->get_mandatory_indexes(
-                    $line->type_id, $line->coll_id
-                );
-                $_SESSION['service_tag'] = 'doctype_up';
-                $core->execute_modules_services(
-                    $_SESSION['modules_services'], 'doctype_up', "include"
-                );
-                $core->execute_app_services($_SESSION['app_services'], 'doctype_up', 'include');
-            }
-        } else {// mode = add
-            $_SESSION['m_admin']['doctypes']['indexes'] = array();
-            $_SESSION['m_admin']['doctypes']['mandatory_indexes'] = array();
-            $_SESSION['service_tag'] = 'doctype_add';
-            echo $core->execute_modules_services(
-                $_SESSION['modules_services'], 'doctype_up', "include"
-            );
-            $core->execute_app_services(
-                $_SESSION['app_services'], 'doctype_up', 'include'
-            );
-            $_SESSION['service_tag'] = '';
-        }
-        ?>
-        <h1><i class="fa fa-files-o fa-2x"></i>
-        <?php
-        if ($mode == "up") {
-            echo _DOCTYPE_MODIFICATION;
-        } else if ($mode == "add") {
-            echo _ADD_DOCTYPE;
-        }
-        ?>
-        </h1>
-        <div id="inner_content" class="clearfix">
-        <?php
-        if ($state == false) {
-            echo "<br /><br /><br /><br />" . _DOCTYPE . ' ' . _UNKOWN
-                . "<br /><br /><br /><br />";
-        } else {
-            $arrayColl = $sec->retrieve_insert_collections();
-            ?>
-            <br/><br/>
-            <form name="frmtype" id="frmtype" method="post" action="<?php
-            echo $_SESSION['config']['businessappurl'];
-            ?>index.php?page=types_up_db" class="forms">
-            <input type="hidden" name="order" id="order" value="<?php
-            functions::xecho($_REQUEST['order']);
-            ?>" />
-            <input type="hidden" name="order_field" id="order_field" value="<?php
-            functions::xecho($_REQUEST['order_field']);
-            ?>" />
-            <input type="hidden" name="what" id="what" value="<?php
-            functions::xecho($_REQUEST['what']);
-            ?>" />
-            <input type="hidden" name="start" id="start" value="<?php
-            functions::xecho($_REQUEST['start']);
-            ?>" />
-            <div class="block">
-                <input  type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
-                <p>
-                <label><?php echo _ATTACH_SUBFOLDER;?> : </label>
-                <select name="sous_dossier" id="sous_dossier" class="listext" onchange="">
-                    <option value=""><?php echo _CHOOSE_SUBFOLDER;?></option>
-                    <?php
-            for ($i = 0; $i < count($_SESSION['sous_dossiers']); $i ++) {
-                ?>
-                <option value="<?php
-                functions::xecho($_SESSION['sous_dossiers'][$i]['ID']);
-                ?>" <?php
-                if (isset($_SESSION['m_admin']['doctypes']['SUB_FOLDER'])
-                    && $_SESSION['sous_dossiers'][$i]['ID'] == $_SESSION['m_admin']['doctypes']['SUB_FOLDER']
-                ) {
-                    echo "selected=\"selected\" " ;
-                }
-                echo 'class="' . $_SESSION['sous_dossiers'][$i]['STYLE'] . '"';
-                ?>><?php
-                functions::xecho($_SESSION['sous_dossiers'][$i]['LABEL']);
-                ?></option>
-                <?php
-            }
-            ?>
-            </select>
-            </p>
-            <p>
-                <label for="collection"><?php echo _COLLECTION;?> : </label>
-                <select name="collection" id="collection" onchange="get_opt_index('<?php
-            echo $_SESSION['config']['businessappurl'];
-            ?>index.php?display=true&page=get_index', this.options[this.options.selectedIndex].value);">
-                    <option value="" ><?php echo _CHOOSE_COLLECTION;?></option>
-            <?php
-            for ($i = 0; $i < count($arrayColl); $i ++) {
-                ?>
-                <option value="<?php
-                functions::xecho($arrayColl[$i]['id']);
-                ?>" <?php
-                if (isset($_SESSION['m_admin']['doctypes']['COLL_ID'])
-                    && $_SESSION['m_admin']['doctypes']['COLL_ID'] == $arrayColl[$i]['id']
-                ) {
-                    echo 'selected="selected"';
-                }
-                ?> ><?php functions::xecho($arrayColl[$i]['label']);?></option>
-                <?php
-            }
-             ?>
-            </select>
-            </p>
-            <p>
-                <label for="retention_final_disposition"><?php echo _FINAL_DISPOSITION;?> : </label>
-                <select name="retention_final_disposition" id="retention_final_disposition">
-                    <option value =""><?php echo _CHOOSE_FINAL_DISPOSITION ?></option>
-                    <?php if (!$_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION']) { ?>
-                    <option value="<?php echo strtolower(_DESTROY) ?>"><?php echo _DESTROY ?></option>
-                    <option value="<?php echo strtolower(_KEEP) ?>"><?php echo _KEEP ?></option>
-                    <?php } else {
-                        if ($_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'] == strtolower(_DESTROY)) { ?>
-                            <option value="<?php echo strtolower(_DESTROY) ?>" selected="selected" ><?php echo _DESTROY ?></option>
-                            <option value="<?php echo strtolower(_KEEP) ?>"><?php echo _KEEP ?></option>
-                    <?php } else { ?>
-                            <option value="<?php echo strtolower(_DESTROY) ?>"><?php echo _DESTROY ?></option>
-                            <option value="<?php echo strtolower(_KEEP) ?>" selected="selected"><?php echo _KEEP ?></option>
-                    <?php }
-                    } ?>
-                </select>
-            </p>
-            <p>
-                <label for="retention_rule"><?php echo _RETENTION_RULE;?> : </label>
-                <?php if ($_SESSION['m_admin']['doctypes']['RETENTION_RULE']) {
-                    ?>
-                   <input type="text" name="retention_rule" value="<?php echo $_SESSION['m_admin']['doctypes']['RETENTION_RULE'] ?>">
-                <?php } else { ?>
-                    <input type="text" name="retention_rule">
-                <?php } ?>
-
-            </p>
-            <p>
-                <label for="duration_current_use"><?php echo _DURATION_CURRENT_USE;?> : </label>
-                <?php if ($_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE']) {
-                    ?>
-                    <input type="text" name="duration_current_use" value="<?php echo $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'] ?>"><?php echo _MONTH;?>
-                <?php } else { ?>
-                    <input type="text" name="duration_current_use"> <?php echo _MONTH;?>
-                <?php } ?>
-
-            </p>
-            <?php
-            if ($mode == "up") {
-                ?>
-                <p>
-                    <label for="id"><?php echo _ID;?> : </label>
-                    <input type="text" class="readonly" name="idbis" value="<?php
-                functions::xecho($id);
-                ?>" readonly="readonly" />
-                    <input type="hidden" name="id" value="<?php functions::xecho($id);?>" />
-                </p>
-                <?php
-            }
-            ?>
-            <p>
-                <label for="label"><?php echo _WORDING;?> : </label>
-                <input name="label" type="text" class="textbox" id="label" value="<?php
-            if (isset($_SESSION['m_admin']['doctypes']['LABEL'])) {
-                functions::xecho($func->show_str($_SESSION['m_admin']['doctypes']['LABEL']));
-            }
-            ?>"/>
-            </p>
-            <?php
-            $_SESSION['service_tag'] = 'frm_doctype';
-            $core->execute_app_services(
-                $_SESSION['app_services'], 'doctype_up', 'include'
-            );
-            ?>
-            <div class="block_end">&nbsp;</div>
-            <br/>
-            <?php
-            $core->execute_modules_services(
-                $_SESSION['modules_services'], 'doctype_up', "include"
-            );
-            $_SESSION['service_tag'] = '';
-            ?>
-            <br>
-            <div id="opt_index"></div>
-                <p class="buttons">
-            <?php
-            if ($mode == "up") {
-                ?>
-                <input class="button" type="submit" name="Submit" value="<?php
-                echo _MODIFY_DOCTYPE;
-                ?>"/>
-                <?php
-            } else if ($mode == "add") {
-                ?>
-                <input type="submit" class="button"  name="Submit" value="<?php
-                echo _ADD_DOCTYPE;
-                ?>" />
-                <?php
-            }
-            ?>
-            <input type="button" class="button"  name="cancel" value="<?php
-            echo _CANCEL;
-            ?>" onclick="javascript:window.location.href='<?php
-            echo $_SESSION['config']['businessappurl'];
-            ?>index.php?page=types';"/>
-            </p>
-            </div>
-            </form>
-            </div>
-                <script type="text/javascript">
-                var coll_list = $('collection');
-                get_opt_index('<?php
-            echo $_SESSION['config']['businessappurl'];
-            ?>index.php?display=true&page=get_index', coll_list.options[coll_list.options.selectedIndex].value);
-                </script>
-                <script type="text/javascript">
-            
-                </script>
-            <?php
-         }
-         ?>
-    <?php
-    }
-
-    /**
-    * Checks the formtype data
-    */
-    protected function typesinfo()
-    {
-        $db = new Database();
-        $core = new core_tools();
-        $func = new functions();
-        if (! isset($_REQUEST['mode'])) {
-            $_SESSION['error'] = _UNKNOWN_PARAM . "<br />";
-        }
-
-        if (isset($_REQUEST['label']) && ! empty($_REQUEST['label'])) {
-            $_SESSION['m_admin']['doctypes']['LABEL'] = $func->wash(
-                $_REQUEST['label'], "no", _THE_WORDING, 'yes', 0, 255
-            );
-        } else {
-            $_SESSION['error'] .= _WORDING . ' ' . _IS_EMPTY;
-        }
-
-        $_SESSION['service_tag'] = "doctype_info";
-        echo $core->execute_modules_services(
-            $_SESSION['modules_services'], 'doctype_info', "include"
-        );
-        $core->execute_app_services(
-            $_SESSION['app_services'], 'doctype_up', 'include'
-        );
-        $_SESSION['service_tag'] = '';
-        if (! isset($_REQUEST['collection']) || empty($_REQUEST['collection'])) {
-            $_SESSION['error'] .= _COLLECTION . ' ' . _IS_MANDATORY;
-        } else {
-            $_SESSION['m_admin']['doctypes']['COLL_ID'] = $_REQUEST['collection'];
-            $_SESSION['m_admin']['doctypes']['indexes'] = array();
-            $_SESSION['m_admin']['doctypes']['mandatory_indexes'] = array();
-            $_SESSION['m_admin']['doctypes']['RETENTION_RULE'] = $_REQUEST['retention_rule'];
-            $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'] = $_REQUEST['retention_final_disposition'];
-            $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'] = $_REQUEST['duration_current_use'];
-            if (isset($_REQUEST['fields'])) {
-                for ($i = 0; $i < count($_REQUEST['fields']); $i ++) {
-                    array_push(
-                        $_SESSION['m_admin']['doctypes']['indexes'],
-                        $_REQUEST['fields'][$i]
-                    );
-                }
-            }
-            if (isset($_REQUEST['mandatory_fields'])) {
-                for ($i = 0; $i < count($_REQUEST['mandatory_fields']); $i ++) {
-                    if (! in_array(
-                        $_REQUEST['mandatory_fields'][$i],
-                        $_SESSION['m_admin']['doctypes']['indexes']
-                    )
-                    ) {
-                        $_SESSION['error'] .= _IF_CHECKS_MANDATORY_MUST_CHECK_USE;
-                    }
-                    array_push(
-                        $_SESSION['m_admin']['doctypes']['mandatory_indexes'],
-                        $_REQUEST['mandatory_fields'][$i]
-                    );
-                }
-            }
-        }
-        if (! isset($_REQUEST['sous_dossier'])
-            || empty($_REQUEST['sous_dossier'])
-        ) {
-            $_SESSION['error'] .= _THE_SUBFOLDER . ' ' . _IS_MANDATORY;
-        } else {
-            $_SESSION['m_admin']['doctypes']['SUB_FOLDER'] = $func->wash(
-                $_REQUEST['sous_dossier'], "no", _THE_SUBFOLDER
-            );
-
-            $stmt = $db->query(
-                "SELECT doctypes_first_level_id as id FROM "
-                . $_SESSION['tablename']['doctypes_second_level']
-                . " WHERE doctypes_second_level_id = ?",
-                 array($_REQUEST['sous_dossier'])
-            );
-            $res = $stmt->fetchObject();
-            $_SESSION['m_admin']['doctypes']['STRUCTURE'] = $res->id;
-        }
-        $_SESSION['m_admin']['doctypes']['order'] = $_REQUEST['order'];
-        $_SESSION['m_admin']['doctypes']['order_field'] = $_REQUEST['order_field'];
-        $_SESSION['m_admin']['doctypes']['what'] = $_REQUEST['what'];
-        $_SESSION['m_admin']['doctypes']['start'] = $_REQUEST['start'];
-    }
-
-    /**
-    * Modify, add or validate a doctype
-    */
-    public function uptypes()
-    {
-        $db = new Database();
-        // modify, add or validate a doctype
-        $core = new core_tools();
-        $this->typesinfo();
-        $order = $_SESSION['m_admin']['doctypes']['order'];
-        $orderField = $_SESSION['m_admin']['doctypes']['order_field'];
-        $what = $_SESSION['m_admin']['doctypes']['what'];
-        $start = $_SESSION['m_admin']['doctypes']['start'];
-
-        if (! empty($_SESSION['error'])) {
-            if ($_REQUEST['mode'] == "up") {
-                if (! empty($_SESSION['m_admin']['doctypes']['TYPE_ID'])) {
-                    ?><script type="text/javascript">window.top.location.href='<?php
-                    echo $_SESSION['config']['businessappurl']
-                        . "index.php?page=types_up&id="
-                        . $_SESSION['m_admin']['doctypes']['TYPE_ID'];
-                    ?>';</script>
-                    <?php
-                    exit();
-                } else {
-                    ?>
-                    <script type="text/javascript">window.top.location.href='<?php
-                    echo $_SESSION['config']['businessappurl']
-                        . "index.php?page=types&order=" . $order
-                        . "&order_field=" . $orderField . "&start="
-                        . $start . "&what=" . $what;
-                    ?>';</script>
-                    <?php
-                    exit();
-                }
-            } else if ($_REQUEST['mode'] == "add") {
-                ?> <script type="text/javascript">window.top.location.href='<?php
-                echo $_SESSION['config']['businessappurl']
-                    . "index.php?page=types_add";
-                ?>';</script>
-                <?php
-                exit();
-            }
-        } else {
-            if ($_REQUEST['mode'] <> "prop" && $_REQUEST['mode'] <> "add") {
-                $db->query(
-                    "UPDATE " . DOCTYPES_TABLE . " SET description = ? , doctypes_first_level_id = ?, doctypes_second_level_id = ?, retention_final_disposition = ?, retention_rule = ?, duration_current_use = ?, enabled = 'Y', coll_id = ?  
-                    WHERE type_id = ?",
-                    array($_SESSION['m_admin']['doctypes']['LABEL'], $_SESSION['m_admin']['doctypes']['STRUCTURE'], $_SESSION['m_admin']['doctypes']['SUB_FOLDER'],
-                        $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'], $_SESSION['m_admin']['doctypes']['RETENTION_RULE'],
-                        (int) $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'], $_SESSION['m_admin']['doctypes']['COLL_ID'],
-                        $_SESSION['m_admin']['doctypes']['TYPE_ID'] )
-                );
-
-                $db->query(
-                    "DELETE FROM " . DOCTYPES_INDEXES_TABLE . " WHERE coll_id = ? and type_id = ?",
-                    array($_SESSION['m_admin']['doctypes']['COLL_ID'], $_SESSION['m_admin']['doctypes']['TYPE_ID'])
-                );
-
-                for ($i = 0; $i < count(
-                    $_SESSION['m_admin']['doctypes']['indexes']
-                ); $i ++
-                ) {
-                    $mandatory = 'N';
-                    if (in_array(
-                        $_SESSION['m_admin']['doctypes']['indexes'][$i],
-                        $_SESSION['m_admin']['doctypes']['mandatory_indexes']
-                    )
-                    ) {
-                        $mandatory = 'Y';
-                    }
-                    $db->query(
-                        "INSERT INTO " . DOCTYPES_INDEXES_TABLE
-                        . " (coll_id, type_id, field_name, mandatory) values(?, ?, ?, ?)",
-                    array($_SESSION['m_admin']['doctypes']['COLL_ID'], $_SESSION['m_admin']['doctypes']['TYPE_ID'], 
-                        $_SESSION['m_admin']['doctypes']['indexes'][$i], $mandatory)
-                    );
-                }
-                $_SESSION['service_tag'] = "doctype_updatedb";
-                $core->execute_modules_services(
-                    $_SESSION['modules_services'], 'doctype_load_db', "include"
-                );
-                $core->execute_app_services(
-                    $_SESSION['app_services'], 'doctype_up', 'include'
-                );
-                $_SESSION['service_tag'] = '';
-                if ($_REQUEST['mode'] == "up") {
-                    $_SESSION['info'] = _DOCTYPE_MODIFICATION;
-                    if ($_SESSION['history']['doctypesup'] == "true") {
-                        $hist = new history();
-                        $hist->add(
-                            DOCTYPES_TABLE,
-                            $_SESSION['m_admin']['doctypes']['TYPE_ID'], "UP",'doctypesup',
-                            _DOCTYPE_MODIFICATION . " : "
-                            . $_SESSION['m_admin']['doctypes']['LABEL'],
-                            $_SESSION['config']['databasetype']
-                        );
-                    }
-                }
-                $this->cleartypeinfos();
-                ?>
-                <script type="text/javascript">window.top.location.href='<?php
-                echo $_SESSION['config']['businessappurl']
-                    . "index.php?page=types&order=" . $order . "&order_field="
-                    . $orderField . "&start=" . $start . "&what=" . $what;
-                ?>';</script>
-                <?php
-                exit();
-            } else {
-                $hist = new history();
-                if ($_REQUEST['mode'] == "add") {
-                    $tmp = $this->protect_string_db(
-                        $_SESSION['m_admin']['doctypes']['LABEL']
-                    );
-                    $db->query(
-                        "INSERT INTO " . DOCTYPES_TABLE . " (coll_id, "
-                        ." description, doctypes_first_level_id, "
-                        . "doctypes_second_level_id, retention_final_disposition, retention_rule, duration_current_use, enabled ) VALUES (?, ?, ?, ?, ?, ?, ?, 'Y')",
-                        array($_SESSION['m_admin']['doctypes']['COLL_ID'], $tmp, $_SESSION['m_admin']['doctypes']['STRUCTURE'], $_SESSION['m_admin']['doctypes']['SUB_FOLDER'],
-                            $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'], $_SESSION['m_admin']['doctypes']['RETENTION_RULE'], (int)$_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'])
-                    );
-
-                    $stmt = $db->query(
-                        "SELECT type_id FROM " . DOCTYPES_TABLE
-                        . " WHERE coll_id = ? and description = ? and doctypes_first_level_id = ? and doctypes_second_level_id = ?",
-                        array($_SESSION['m_admin']['doctypes']['COLL_ID'], $tmp, $_SESSION['m_admin']['doctypes']['STRUCTURE']
-                            , $_SESSION['m_admin']['doctypes']['SUB_FOLDER'])
-                    );
-
-                    $res = $stmt->fetchObject();
-                    $_SESSION['m_admin']['doctypes']['TYPE_ID'] = $res->type_id;
-                    for ($i = 0; $i < count(
-                        $_SESSION['m_admin']['doctypes']['indexes']
-                    ); $i ++
-                    ) {
-                        $mandatory = 'N';
-                        if (in_array(
-                            $_SESSION['m_admin']['doctypes']['indexes'][$i],
-                            $_SESSION['m_admin']['doctypes']['mandatory_indexes']
-                        )
-                        ) {
-                            $mandatory = 'Y';
-                        }
-                        $db->query(
-                            "INSERT INTO " . DOCTYPES_INDEXES_TABLE
-                            . " (coll_id, type_id, field_name, mandatory) "
-                            . "values(?, ?, ?, ?)",
-                            array($_SESSION['m_admin']['doctypes']['COLL_ID'], $_SESSION['m_admin']['doctypes']['TYPE_ID'],  $_SESSION['m_admin']['doctypes']['indexes'][$i], $mandatory)
-                        );
-                    }
-
-                    $_SESSION['service_tag'] = "doctype_insertdb";
-                    echo $core->execute_modules_services(
-                        $_SESSION['modules_services'], 'doctype_load_db', "include"
-                    );
-                    $core->execute_app_services(
-                        $_SESSION['app_services'], 'doctype_up', 'include'
-                    );
-                    $_SESSION['service_tag'] = '';
-
-                    if ($_SESSION['history']['doctypesadd'] == "true") {
-                        $hist->add(
-                            DOCTYPES_TABLE, $res->type_id, "ADD", 'doctypesadd', _DOCTYPE_ADDED
-                            . " : " . $_SESSION['m_admin']['doctypes']['LABEL'],
-                            $_SESSION['config']['databasetype']
-                        );
-                    }
-                }
-                $this->cleartypeinfos();
-
-                ?> <script  type="text/javascript">window.top.location.href='<?php
-                echo $_SESSION['config']['businessappurl']
-                    . "index.php?page=types&order=" . $order . "&order_field="
-                    . $orderField . "&start=" . $start . "&what=" . $what;
-                ?>';</script>
-                <?php
-                exit();
-            }
-        }
-    }
-
-    /**
-    * Clear the session variable for the doctypes
-    */
-    protected function cleartypeinfos()
-    {
-        // clear the session variable for the doctypes
-        unset($_SESSION['m_admin']);
-    }
-
 
     /**
     * Return in an array all enabled doctypes for a given collection
@@ -617,64 +58,6 @@ abstract class types_Abstract extends database
         return $types;
     }
 
-
-    /**
-    * Return architecture for one doctype
-    *
-    * @param string $doctype
-    */
-    public function GetFullStructure($doctype)
-    {
-        $db = new Database();
-        $structure = array();
-        $levelQuery = "SELECT doctypes_first_level_id, "
-            . "doctypes_second_level_id FROM " . DOCTYPES_TABLE
-            . " WHERE type_id = ?";
-
-        $stmt = $db->query($levelQuery, array($doctype));
-        $result = $stmt->fetchObject();
-        if ($stmt->rowCount() == 0) {
-            return false;
-        } else {
-            array_push(
-                $structure,
-                array(
-                    "doctype" => $doctype,
-                    "first_level" => $result->doctypes_first_level_id,
-                    "second_level" => $result->doctypes_second_level_id
-                )
-            );
-            return $structure;
-        }
-    }
-
-    /**
-    * Return in an array all enabled doctypes_second_level
-    *
-    * @param string
-    */
-    public function getArrayDoctypesSecondLevel()
-    {
-        $secondLevel = array();
-        $db = new Database();
-        $stmt = $this->query(
-            "SELECT doctypes_second_level_id, doctypes_second_level_label, "
-            . "css_style FROM "
-            . $_SESSION['tablename']['doctypes_second_level']
-            . " WHERE enabled = 'Y' order by doctypes_second_level_label"
-        );
-        while ($res = $stmt->fetchObject()) {
-            array_push(
-                $secondLevel,
-                array(
-                    'ID' => $res->doctypes_second_level_id,
-                    'LABEL' => $this->show_string($res->doctypes_second_level_label),
-                    'STYLE' => $res->css_style,
-                )
-            );
-        }
-        return $secondLevel;
-    }
     /**
     * Returns in an array all enabled doctypes for a given collection with the
     * structure
@@ -732,7 +115,7 @@ abstract class types_Abstract extends database
                 $nbLevel1 ++;
                 $lastLevel2 = $res->doctypes_second_level_id;
                 $nbLevel2 = 1;
-            } else if ($lastLevel2 <> $res->doctypes_second_level_id) {
+            } elseif ($lastLevel2 <> $res->doctypes_second_level_id) {
                 array_push(
                     $level1[$nbLevel1 - 1]['level2'],
                     array(
@@ -806,14 +189,14 @@ abstract class types_Abstract extends database
         $indexes = array();
         foreach ($xmlfile->INDEX as $item) {
             $label = (string) $item->label;
-            if (!empty($label) && defined($label) && constant($label) <> NULL) {
+            if (!empty($label) && defined($label) && constant($label) <> null) {
                 $label = constant($label);
             }
             $img = (string) $item->img;
             if (isset($item->default_value) && ! empty($item->default_value)) {
                 $default = (string) $item->default_value;
-                if (!empty($default) && defined($default) 
-                    && constant($default) <> NULL
+                if (!empty($default) && defined($default)
+                    && constant($default) <> null
                 ) {
                     $default = constant($default);
                 }
@@ -825,8 +208,8 @@ abstract class types_Abstract extends database
                 $list = $item->values_list ;
                 foreach ($list->value as $val) {
                     $labelVal = (string) $val->label;
-                    if (!empty($labelVal) && defined($labelVal) 
-                        && constant($labelVal) <> NULL
+                    if (!empty($labelVal) && defined($labelVal)
+                        && constant($labelVal) <> null
                     ) {
                         $labelVal = constant($labelVal);
                     }
@@ -848,7 +231,7 @@ abstract class types_Abstract extends database
                     'values' => $values,
                     'default_value' => $default
                 );
-            } else if (isset($item->table)) {
+            } elseif (isset($item->table)) {
                 $values = array();
                 $tableXml = $item->table;
                 //$this->show_array($tableXml);
@@ -868,7 +251,7 @@ abstract class types_Abstract extends database
                 
                 $stmt = $db->query($query);
                 while ($res = $stmt->fetch()) {
-                     array_push(
+                    array_push(
                          $values,
                          array(
                              'id' => (string) $res[0],
@@ -964,8 +347,8 @@ abstract class types_Abstract extends database
                   . $_SESSION['config']['lang'] . '.php';
         foreach ($xmlfile->INDEX as $item) {
             $label = (string) $item->label;
-            if (!empty($label) && defined($label) 
-                && constant($label) <> NULL
+            if (!empty($label) && defined($label)
+                && constant($label) <> null
             ) {
                 $label = constant($label);
             }
@@ -974,8 +357,8 @@ abstract class types_Abstract extends database
             $img = (string) $item->img;
             if (isset($item->default_value) && ! empty($item->default_value)) {
                 $default = (string) $item->default_value;
-                if (!empty($default) && defined($default) 
-                    && constant($default) <> NULL
+                if (!empty($default) && defined($default)
+                    && constant($default) <> null
                 ) {
                     $default = constant($default);
                 }
@@ -988,8 +371,8 @@ abstract class types_Abstract extends database
                     $list = $item->values_list ;
                     foreach ($list->value as $val) {
                         $labelVal = (string) $val->label;
-                        if (!empty($labelVal) && defined($labelVal) 
-                            && constant($labelVal) <> NULL
+                        if (!empty($labelVal) && defined($labelVal)
+                            && constant($labelVal) <> null
                         ) {
                             $labelVal = constant($labelVal);
                         }
@@ -1012,7 +395,7 @@ abstract class types_Abstract extends database
                         'origin'        => 'document',
                         'only_detail'   => $item->only_detail
                     );
-                } else if (isset($item->table)) {
+                } elseif (isset($item->table)) {
                     $values = array();
                     $tableXml = $item->table;
                     //$this->show_array($tableXml);
@@ -1032,7 +415,7 @@ abstract class types_Abstract extends database
                     
                     $stmt = $db->query($query);
                     while ($res = $stmt->fetchObject()) {
-                         array_push(
+                        array_push(
                              $values,
                              array(
                                  'id' => (string) $res->{$foreignKey},
@@ -1064,7 +447,7 @@ abstract class types_Abstract extends database
             }
         }
 
-        foreach(array_keys($indexes) as $key) {
+        foreach (array_keys($indexes) as $key) {
             if (is_array($indexes[$key])) {
                 $indexes[$key]['label']         = functions::xssafe($indexes[$key]['label']);
                 $indexes[$key]['type']          = functions::xssafe($indexes[$key]['type']);
@@ -1149,21 +532,26 @@ abstract class types_Abstract extends database
                 && trim($values[$key]) <> ''
             ) {
                 $fieldValue = $this->wash(
-                    $values[$key], "no", $indexes[$key]['label']
+                    $values[$key],
+                    "no",
+                    $indexes[$key]['label']
                 );
             } elseif ($indexes[$key]['type'] == 'float'
                 && preg_match("/^[0-9.,]+$/", $values[$key]) == 1
-            ) {     
-                    $values[$key] = str_replace( ",", ".", $values[$key] );
-                    $fieldValue = $this->wash(
-                    $values[$key], "float", $indexes[$key]['label']
+            ) {
+                $values[$key] = str_replace(",", ".", $values[$key]);
+                $fieldValue = $this->wash(
+                    $values[$key],
+                        "float",
+                        $indexes[$key]['label']
                 );
-
             } elseif ($indexes[$key]['type'] == 'integer'
                 && preg_match("/^[0-9]+$/", $values[$key]) == 1
             ) {
                 $fieldValue = $this->wash(
-                    $values[$key], "num", $indexes[$key]['label']
+                    $values[$key],
+                    "num",
+                    $indexes[$key]['label']
                 );
             } elseif (!empty($values[$key])) {
                 $_SESSION['error'] .= $indexes[$key]['label']
@@ -1175,7 +563,7 @@ abstract class types_Abstract extends database
                 && count($indexes[$key]['values']) > 0
             ) {
                 $found = false;
-                for ($i = 0; $i < count($indexes[$key]['values']); $i++ ) {
+                for ($i = 0; $i < count($indexes[$key]['values']); $i++) {
                     if ($values[$key] == $indexes[$key]['values'][$i]['id']) {
                         $found = true;
                         break;
@@ -1213,16 +601,16 @@ abstract class types_Abstract extends database
             if ($indexes[$key]['type'] == 'date' && ! empty($values[$key])) {
                 $req .= ", " . $key . " = '"
                      . $this->format_date_db($values[$key]) . "'";
-            } else if ($indexes[$key]['type'] == 'string'
+            } elseif ($indexes[$key]['type'] == 'string'
                 && ! empty($values[$key])
             ) {
                 $req .= ", " . $key . " = '"
                      . $this->protect_string_db($values[$key]) . "'";
-            } else if ($indexes[$key]['type'] == 'float'
+            } elseif ($indexes[$key]['type'] == 'float'
                 && ! empty($values[$key])
             ) {
                 $req .= ", " . $key . " = " . $values[$key] . "";
-            } else if ($indexes[$key]['type'] == 'integer'
+            } elseif ($indexes[$key]['type'] == 'integer'
                 && ! empty($values[$key])
             ) {
                 $req .= ", " . $key . " = " . $values[$key] . "";
@@ -1254,7 +642,7 @@ abstract class types_Abstract extends database
                         'type' => "date",
                     )
                 );
-            } else if ($indexes[$key]['type'] == 'string'
+            } elseif ($indexes[$key]['type'] == 'string'
                 && trim($values[$key]) <> ''
             ) {
                 array_push(
@@ -1265,10 +653,10 @@ abstract class types_Abstract extends database
                         'type' => "string",
                     )
                 );
-            } else if ($indexes[$key]['type'] == 'float'
+            } elseif ($indexes[$key]['type'] == 'float'
                 && preg_match("/^[0-9.,]+$/", $values[$key]) == 1
             ) {
-                $values[$key] = str_replace( ",", ".", $values[$key] );
+                $values[$key] = str_replace(",", ".", $values[$key]);
                 array_push(
                     $data,
                     array(
@@ -1277,7 +665,7 @@ abstract class types_Abstract extends database
                         'type' => "float",
                     )
                 );
-            } else if ($indexes[$key]['type'] == 'integer'
+            } elseif ($indexes[$key]['type'] == 'integer'
                 && preg_match("/^[0-9]+$/", $values[$key]) == 1
             ) {
                 array_push(
@@ -1327,7 +715,7 @@ abstract class types_Abstract extends database
     * @return array ['json_txt'] : json used in the search
     *               ['where'] : where query
     */
-    public function search_checks($indexes, $fieldName, $val )
+    public function search_checks($indexes, $fieldName, $val)
     {
         $func = new functions();
         $whereRequest = '';
@@ -1343,21 +731,19 @@ abstract class types_Abstract extends database
                 if ($indexes[$j]['column'] == $fieldName
                     || 'doc_' . $indexes[$j]['column'] == $fieldName
                 ) {
-					if ( $indexes[$j]['type'] == 'float' || $indexes[$j]['type'] == 'integer' )
-					{
-						       $jsonTxt .= " '" . $fieldName . "' : ['"
+                    if ($indexes[$j]['type'] == 'float' || $indexes[$j]['type'] == 'integer') {
+                        $jsonTxt .= " '" . $fieldName . "' : ['"
                              . addslashes(trim($val)) . "'],";
-					$whereRequest .= " (" . $column . ") = ('"
+                        $whereRequest .= " (" . $column . ") = ('"
                                       . $val . "') and ";
-						
-					} else {
-                    $jsonTxt .= " '" . $fieldName . "' : ['"
+                    } else {
+                        $jsonTxt .= " '" . $fieldName . "' : ['"
                              . addslashes(trim($val)) . "'],";
-					$whereRequest .= " lower(" . $column . ") like lower('%"
+                        $whereRequest .= " lower(" . $column . ") like lower('%"
                                       . $this->protect_string_db($val) . "%') and ";
-					}
+                    }
                     break;
-                } else if (($indexes[$j]['column'] . '_from' == $fieldName
+                } elseif (($indexes[$j]['column'] . '_from' == $fieldName
                     || $indexes[$j]['column'] . '_to' == $fieldName
                     || 'doc_' . $indexes[$j]['column'] . '_from' == $fieldName
                     || 'doc_' . $indexes[$j]['column'] . '_to' == $fieldName)
@@ -1379,7 +765,7 @@ abstract class types_Abstract extends database
                                  . "'],";
                     }
                     break;
-                } else if ($indexes[$j]['column'] . '_min' == $fieldName
+                } elseif ($indexes[$j]['column'] . '_min' == $fieldName
                     || 'doc_' . $indexes[$j]['column'] . '_min' == $fieldName
                 ) {
                     if ($indexes[$j]['type'] == 'integer'
@@ -1387,11 +773,17 @@ abstract class types_Abstract extends database
                     ) {
                         if ($indexes[$j]['type'] == 'integer') {
                             $valCheck = $func->wash(
-                                $val, "num", $indexes[$j]['label'], "no"
+                                $val,
+                                "num",
+                                $indexes[$j]['label'],
+                                "no"
                             );
                         } else {
                             $valCheck = $func->wash(
-                                $val, "float", $indexes[$j]['label'], "no"
+                                $val,
+                                "float",
+                                $indexes[$j]['label'],
+                                "no"
                             );
                         }
                         if (empty($_SESSION['error'])) {
@@ -1402,7 +794,7 @@ abstract class types_Abstract extends database
                         }
                     }
                     break;
-                } else if ($indexes[$j]['column'] . '_max' == $fieldName
+                } elseif ($indexes[$j]['column'] . '_max' == $fieldName
                     || 'doc_' . $indexes[$j]['column'] . '_max' == $fieldName
                 ) {
                     if ($indexes[$j]['type'] == 'integer'
@@ -1410,11 +802,17 @@ abstract class types_Abstract extends database
                     ) {
                         if ($indexes[$j]['type'] == 'integer') {
                             $valCheck = $func->wash(
-                                $val, "num", $indexes[$j]['label'], "no"
+                                $val,
+                                "num",
+                                $indexes[$j]['label'],
+                                "no"
                             );
                         } else {
                             $valCheck = $func->wash(
-                                $val, "float", $indexes[$j]['label'], "no"
+                                $val,
+                                "float",
+                                $indexes[$j]['label'],
+                                "no"
                             );
                         }
                         if (empty($_SESSION['error'])) {
