@@ -241,8 +241,6 @@ class EmailController
             return ['errors' => 'Data sender email is not set', 'code' => 400];
         } elseif (!Validator::arrayType()->notEmpty()->validate($args['data']['recipients'])) {
             return ['errors' => 'Data recipients is not an array or empty', 'code' => 400];
-        } elseif (!Validator::stringType()->notEmpty()->validate($args['data']['object'])) {
-            return ['errors' => 'Data object is not a string or empty', 'code' => 400];
         } elseif (!Validator::boolType()->validate($args['data']['isHtml'])) {
             return ['errors' => 'Data isHtml is not a boolean or empty', 'code' => 400];
         } elseif (!Validator::stringType()->notEmpty()->validate($args['data']['status'])) {

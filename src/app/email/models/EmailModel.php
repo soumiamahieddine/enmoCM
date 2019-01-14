@@ -41,7 +41,7 @@ class EmailModel
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId', 'sender', 'recipients', 'cc', 'cci', 'object', 'isHtml', 'status']);
+        ValidatorModel::notEmpty($aArgs, ['userId', 'sender', 'recipients', 'cc', 'cci', 'isHtml', 'status']);
         ValidatorModel::intVal($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['sender', 'recipients', 'cc', 'cci', 'object', 'body', 'messageExchangeId', 'document', 'isHtml', 'status']);
 
@@ -56,7 +56,7 @@ class EmailModel
                 'recipients'                => $aArgs['recipients'],
                 'cc'                        => $aArgs['cc'],
                 'cci'                       => $aArgs['cci'],
-                'object'                    => $aArgs['object'],
+                'object'                    => empty($aArgs['object']) ? null : $aArgs['object'],
                 'body'                      => empty($aArgs['body']) ? null : $aArgs['body'],
                 'document'                  => $aArgs['document'],
                 'is_html'                   => $aArgs['isHtml'],
