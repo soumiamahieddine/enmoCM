@@ -94,6 +94,18 @@ DO $$ BEGIN
   END IF;
 END$$;
 
+DROP TABLE IF EXISTS exports_templates;
+CREATE TABLE exports_templates
+(
+id serial NOT NULL,
+user_id INTEGER NOT NULL,
+delimiter character varying(3) NOT NULL,
+data json DEFAULT '[]' NOT NULL,
+CONSTRAINT exports_templates_pkey PRIMARY KEY (id),
+CONSTRAINT exports_templates_unique_key UNIQUE (user_id)
+)
+WITH (OIDS=FALSE);
+
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
  SELECT r.tablename,
