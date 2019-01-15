@@ -67,7 +67,7 @@ class ConfigurationController
             if (!empty($check['errors'])) {
                 return $response->withStatus($check['code'])->withJson(['errors' => $check['errors']]);
             }
-            $data['charset'] = 'utf-8';
+            $data['charset'] = empty($data['charset']) ? 'utf-8' : $data['charset'];
             unset($data['passwordAlreadyExists']);
         }
 
