@@ -142,7 +142,8 @@ class ConfigurationControllerTest extends TestCase
         $jsonTest = json_encode(
             [
                 'type'       => 'sendmail',
-                'passwordAlreadyExists' => false
+                'passwordAlreadyExists' => false,
+                'charset'   => 'utf-8'
             ]
         );
 
