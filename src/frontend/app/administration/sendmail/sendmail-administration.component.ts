@@ -55,7 +55,20 @@ export class SendmailAdministrationComponent implements OnInit {
         }
     ];
     smtpTypeDesc = '';
-    smtpSecList = ['ssl', 'tls'];
+    smtpSecList = [
+        {
+            id : '',
+            label : this.lang.none
+        },
+        {
+            id : 'ssl',
+            label : 'ssl'
+        },
+        {
+            id : 'tls',
+            label : 'tls'
+        }
+    ];
     sendmailClone: any = {};
     hidePassword: boolean = true;
     serverConnectionLoading: boolean = false;
@@ -91,11 +104,6 @@ export class SendmailAdministrationComponent implements OnInit {
                 this.sendmail = data.configuration.value
                 this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
                 this.smtpTypeDesc = this.lang[this.sendmail.type + 'Desc'];
-                if (this.sendmail.passwordAlreadyExists === true) {
-                    this.passwordLabel = this.lang.passwordModification;
-                } else {
-                    this.passwordLabel = this.lang.password;
-                }
                 
                 this.loading = false;
             }, (err) => {
@@ -141,6 +149,9 @@ export class SendmailAdministrationComponent implements OnInit {
     }
 
     testEmailSend() {
+        if (JSON.stringify(this.sendmailClone) !== JSON.stringify(this.sendmail)) {
+            this.onSubmit();
+        }
         this.emailSendResult = {
             icon: 'fa-paper-plane primary',
             msg: this.lang.emailSendInProgress,
@@ -172,5 +183,12 @@ export class SendmailAdministrationComponent implements OnInit {
                     debug: err.error.errors
                 };
             });
+    }
+
+    cleanAuthInfo(event: any) {
+        this.sendmail.passwordAlreadyExists = false;
+
+        this.sendmail.user = '';
+        this.sendmail.password = '';
     }
 }

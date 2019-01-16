@@ -112,7 +112,9 @@ class EmailController
             $phpmailer->isSMTP();
             $phpmailer->Host = $configuration['host'];
             $phpmailer->Port = $configuration['port'];
-            $phpmailer->SMTPSecure = $configuration['secure'];
+            if (!empty($configuration['secure'])) {
+                $phpmailer->SMTPSecure = $configuration['secure'];
+            }
             $phpmailer->SMTPAuth = $configuration['auth'];
             if ($configuration['auth']) {
                 $phpmailer->Username = $configuration['user'];
@@ -231,7 +233,7 @@ class EmailController
 
     private static function controlCreateEmail(array $args)
     {
-        ValidatorModel::notEmpty($args, ['login', 'data']);
+        ValidatorModel::notEmpty($args, ['login']);
         ValidatorModel::stringType($args, ['login']);
         ValidatorModel::arrayType($args, ['data']);
 
@@ -239,8 +241,6 @@ class EmailController
             return ['errors' => 'Data sender email is not set', 'code' => 400];
         } elseif (!Validator::arrayType()->notEmpty()->validate($args['data']['recipients'])) {
             return ['errors' => 'Data recipients is not an array or empty', 'code' => 400];
-        } elseif (!Validator::stringType()->notEmpty()->validate($args['data']['object'])) {
-            return ['errors' => 'Data object is not a string or empty', 'code' => 400];
         } elseif (!Validator::boolType()->validate($args['data']['isHtml'])) {
             return ['errors' => 'Data isHtml is not a boolean or empty', 'code' => 400];
         } elseif (!Validator::stringType()->notEmpty()->validate($args['data']['status'])) {

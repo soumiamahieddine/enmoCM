@@ -405,7 +405,7 @@ class ResourceListController
         return $response->withJson(['entities' => $entities, 'priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses, 'entitiesChildren' => $entitiesChildren]);
     }
 
-    private static function listControl(array $aArgs)
+    public static function listControl(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId', 'userId', 'basketId', 'currentUserId']);
         ValidatorModel::intVal($aArgs, ['groupId', 'userId', 'currentUserId']);

@@ -65,7 +65,7 @@ sender json DEFAULT '{}' NOT NULL,
 recipients json DEFAULT '[]' NOT NULL,
 cc json DEFAULT '[]' NOT NULL,
 cci json DEFAULT '[]' NOT NULL,
-object character varying(256) NOT NULL,
+object character varying(256),
 body text,
 document json,
 is_html boolean NOT NULL DEFAULT TRUE,
@@ -93,6 +93,18 @@ DO $$ BEGIN
     DELETE FROM usergroups_services WHERE service_id in ('add_copy_in_process', 'add_copy_in_indexing_validation');
   END IF;
 END$$;
+
+DROP TABLE IF EXISTS exports_templates;
+CREATE TABLE exports_templates
+(
+id serial NOT NULL,
+user_id INTEGER NOT NULL,
+delimiter character varying(3) NOT NULL,
+data json DEFAULT '[]' NOT NULL,
+CONSTRAINT exports_templates_pkey PRIMARY KEY (id),
+CONSTRAINT exports_templates_unique_key UNIQUE (user_id)
+)
+WITH (OIDS=FALSE);
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS

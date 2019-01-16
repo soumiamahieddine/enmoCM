@@ -108,7 +108,7 @@ class ConfigurationControllerTest extends TestCase
                 'secure'     => 'tls',
                 'from'       => 'info@maarch.org',
                 'charset'    => 'utf-8',
-                'passwordAlreadyExists' => true
+                'passwordAlreadyExists' => false
             ]
         );
 
@@ -142,7 +142,8 @@ class ConfigurationControllerTest extends TestCase
         $jsonTest = json_encode(
             [
                 'type'       => 'sendmail',
-                'passwordAlreadyExists' => false
+                'passwordAlreadyExists' => false,
+                'charset'   => 'utf-8'
             ]
         );
 

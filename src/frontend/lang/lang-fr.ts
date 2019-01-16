@@ -768,6 +768,7 @@ export const LANG_FR = {
     "smtpAuth"                                          : "Méthode d'authentification",
     "emailSendFailed"                                   : "Échec d'envoi",
     "doNotReply"                                        : "Ne pas répondre",
+    "none"                                              : "Aucune",
 };
 
 

@@ -871,6 +871,18 @@ class UserControllerTest extends TestCase
 
         $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
        
+        //DELETE MANY WITH ONE ON ERROR
+         $aArgs = [
+            'redirectedBasketIds' => [ self::$redirectId, -1 ]
+        ];
+
+        $fullRequest = $request->withQueryParams($aArgs);
+
+        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Redirected basket out of perimeter', $responseBody->errors);
+
         //DELETE OK
         $aArgs = [
             'redirectedBasketIds' => [ self::$redirectId ]

@@ -31,7 +31,7 @@ class ConfigurationController
 
         $configuration = ConfigurationModel::getByService(['service' => $aArgs['service']]);
         $configuration['value'] = (array)json_decode($configuration['value']);
-        if (isset($configuration['value']['password'])) {
+        if (!empty($configuration['value']['password'])) {
             $configuration['value']['password'] = '';
             $configuration['value']['passwordAlreadyExists'] = true;
         } else {
@@ -67,6 +67,8 @@ class ConfigurationController
             if (!empty($check['errors'])) {
                 return $response->withStatus($check['code'])->withJson(['errors' => $check['errors']]);
             }
+            $data['charset'] = empty($data['charset']) ? 'utf-8' : $data['charset'];
+            unset($data['passwordAlreadyExists']);
         }
 
         $data = json_encode($data);
