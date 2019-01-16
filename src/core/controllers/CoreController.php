@@ -59,6 +59,7 @@ class CoreController
                 }
             }
         }
+        unset($aInit['scriptsInjected']);
 
         for ($i = 0; $i < count($scriptsToInject); $i++) {
             foreach ($scriptsToInject as $value) {
