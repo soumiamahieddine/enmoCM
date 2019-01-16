@@ -23,16 +23,16 @@ class VersionUpdateControllerTest extends TestCase
 
         $this->assertInternalType('string', $responseBody->currentVersion);
         $this->assertNotNull($responseBody->currentVersion);
-        $this->assertRegExp('/^[0-9]{2}.[0-9]{2}.[0-9]{1,2}$/', $responseBody->currentVersion, 'Invalid current version');
+        $this->assertRegExp('/^\d{2}\.\d{2}\.\d+$/', $responseBody->currentVersion, 'Invalid current version');
 
         if( $responseBody->lastAvailableMinorVersion != null ) {
             $this->assertInternalType('string', $responseBody->lastAvailableMinorVersion);
-            $this->assertRegExp('/^[0-9]{2}.[0-9]{2}.[0-9]{1,2}$/', $responseBody->lastAvailableMinorVersion, 'Invalid available minor version');
+            $this->assertRegExp('/^\d{2}\.\d{2}\.\d+$/', $responseBody->lastAvailableMinorVersion, 'Invalid available minor version');
         }
 
         if( $responseBody->lastAvailableMajorVersion != null ) {
             $this->assertInternalType('string', $responseBody->lastAvailableMajorVersion);
-            $this->assertRegExp('/^[0-9]{2}.[0-9]{2}.[0-9]{1,2}$/', $responseBody->lastAvailableMajorVersion, 'Invalid available major version');
+            $this->assertRegExp('/^\d{2}\.\d{2}\.\d+$/', $responseBody->lastAvailableMajorVersion, 'Invalid available major version');
         }
 
         $this->assertNotNull($responseBody->lastAvailableMinorVersion);
