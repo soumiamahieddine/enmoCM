@@ -258,6 +258,8 @@ $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::c
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/filters', \Resource\controllers\ResourceListController::class . ':getFilters');
 
+$app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplate');
+
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
 $app->get('/res/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getAttachmentsListById');

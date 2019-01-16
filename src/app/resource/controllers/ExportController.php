@@ -36,6 +36,21 @@ use User\models\UserModel;
 
 class ExportController
 {
+    public function getExportTemplate(Request $request, Response $response)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $template     = ExportTemplateModel::getByUserId(['userId' => $currentUser['id']]);
+        $delimiter    = "";
+        $templateData = "";
+        if (!empty($template)) {
+            $delimiter    = $template['delimiter'];
+            $templateData = (array)json_decode($template['data']);
+        }
+
+        return $response->withJson(['template' => $templateData, 'delimiter' => $delimiter]);
+    }
+
     public function getExport(Request $request, Response $response, array $aArgs)
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
@@ -192,41 +207,25 @@ class ExportController
         }
 
         if ($value['value'] == 'getStatus') {
-
         } elseif ($value['value'] == 'getPriority') {
-
         } elseif ($value['value'] == 'getCopyEntities') {
-
         } elseif ($value['value'] == 'getDetailLink') {
-
         } elseif ($value['value'] == 'getParentFolder') {
-
         } elseif ($value['value'] == 'getCategory') {
-
         } elseif ($value['value'] == 'getInitiatorEntity') {
-
         } elseif ($value['value'] == 'getDestinationEntity') {
-
         } elseif ($value['value'] == 'getContactType') {
-
         } elseif ($value['value'] == 'getContactCivility') {
-
         } elseif ($value['value'] == 'getContactFunction') {
-
         } elseif ($value['value'] == 'getTags') {
-
         } elseif ($value['value'] == 'getSignatories') {
-
         } elseif ($value['value'] == 'getSignatureDates') {
-
         }
 
 
         $resources = [];
         if (!empty($resIds)) {
-
             $resources = ResourceListModel::get(['resIds' => $resIds]);
-
         }
 
         return $response->withJson(['resources' => $resources, 'basketLabel' => $basket['basket_name']]);
