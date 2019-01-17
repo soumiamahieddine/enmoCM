@@ -349,6 +349,10 @@ class AttachmentController
 
         $encodedDocument = base64_encode($fileContent);
 
+        if (!empty($document['title'])) {
+            $document['title'] = preg_replace(utf8_decode('@[\\/:*?"<>|]@i'), '_', substr($document['title'], 0, 30));
+        }
+
         $pathInfo = pathinfo($pathToDocument);
         $fileName = (empty($document['title']) ? 'document' : $document['title']) . ".{$pathInfo['extension']}";
 
