@@ -34,7 +34,37 @@ foreach ($customs as $custom) {
 
         if (!empty($xmlfile->letterbox_coll->FUNCTIONS->FUNCTION)) {
             foreach ($xmlfile->letterbox_coll->FUNCTIONS->FUNCTION as $value) {
-                $aData[] = json_encode(['value' => (string)$value->CALL, 'label' => (string)$value->LIBELLE, 'isFunction' => true]);
+                $functionName = (string)$value->CALL;
+                if ($functionName == 'get_status') {
+                    $functionName = 'getStatus';
+                } elseif ($functionName == 'get_priority') {
+                    $functionName = 'getPriority';
+                } elseif ($functionName == 'retrieve_copies') {
+                    $functionName = 'getCopyEntities';
+                } elseif ($functionName == 'makeLink_detail') {
+                    $functionName = 'getDetailLink';
+                } elseif ($functionName == 'get_parent_folder') {
+                    $functionName = 'getParentFolder';
+                } elseif ($functionName == 'get_category_label') {
+                    $functionName = 'getCategory';
+                } elseif ($functionName == 'get_entity_initiator_short_label') {
+                    $functionName = 'getInitiatorEntity';
+                } elseif ($functionName == 'get_entity_dest_short_label') {
+                    $functionName = 'getDestinationEntity';
+                } elseif ($functionName == 'get_contact_type') {
+                    $functionName = 'getContactType';
+                } elseif ($functionName == 'get_contact_civility') {
+                    $functionName = 'getContactCivility';
+                } elseif ($functionName == 'get_contact_function') {
+                    $functionName = 'getContactFunction';
+                } elseif ($functionName == 'get_tags') {
+                    $functionName = 'getTags';
+                } elseif ($functionName == 'get_signatory_name') {
+                    $functionName = 'getSignatories';
+                } elseif ($functionName == 'get_signatory_date') {
+                    $functionName = 'getSignatureDates';
+                }
+                $aData[] = json_encode(['value' => $functionName, 'label' => (string)$value->LIBELLE, 'isFunction' => true]);
             }
         }
 
@@ -44,126 +74,25 @@ foreach ($customs as $custom) {
             }
         }
 
-        // $data = [
-        //     'type'     => (string)$xmlfile->MAILER->type,
-        //     'host'     => (string)$xmlfile->MAILER->smtp_host,
-        //     'port'     => (int)$xmlfile->MAILER->smtp_port,
-        //     'user'     => (string)$xmlfile->MAILER->smtp_user,
-        //     'password' => $pass,
-        //     'auth'     => (string)$xmlfile->MAILER->smtp_auth == 'true' ? true : false,
-        //     'from'     => (string)$xmlfile->MAILER->mailfrom,
-        //     'secure'   => 'ssl',
-        //     'charset'  => 'utf-8'
-        // ];
-        // $data = json_encode($data);
-        // \Configuration\models\ConfigurationModel::update(['set' => ['value' => $data], 'where' => ['service = ?'], 'data' => ['admin_email_server']]);
+        $users = \User\models\UserModel::get([
+            'select' => ['id'],
+            'where'  => ['status != ?'],
+            'data'   => ['DEL']
+            ]);
+
+        $aValues = [];
+        foreach ($users as $user) {
+            $aValues[] = [$user['id'], $delimiter, json_encode($aData)];
+        }
+
+        \SrcCore\models\DatabaseModel::insertMultiple([
+            'table'         => 'exports_templates',
+            'columnsValues' => ['user_id', 'delimiter', 'data'],
+            'values'        => $aValues
+        ]);
 
         $migrated++;
     }
-
-    // $sendmails = \SrcCore\models\DatabaseModel::select([
-    //     'select'    => ['*'],
-    //     'table'     => ['sendmail'],
-    //     'order_by'  => ['creation_date']
-    // ]);
-
-    // foreach ($sendmails as $sendmail) {
-    //     $user = \User\models\UserModel::getByLogin(['login' => $sendmail['user_id'], 'select' => ['id']]);
-    //     $sender = explode(',', $sendmail['sender_email']);
-    //     if (empty($sender[1])) {
-    //         $sender = ['email' => $sender[0]];
-    //     } else {
-    //         $sender = ['email' => $sender[1], 'entityId' => $sender[0]];
-    //     }
-    //     $recipients = explode(',', $sendmail['to_list']);
-    //     $cc = explode(',', $sendmail['cc_list']);
-    //     $cc = empty($cc[0]) ? [] : $cc;
-    //     $cci = explode(',', $sendmail['cci_list']);
-    //     $cci = empty($cci[0]) ? [] : $cci;
-
-    //     $document = [
-    //         'id'        => $sendmail['res_id'],
-    //         'isLinked'  => $sendmail['is_res_master_attached'] == 'Y',
-    //         'original'  => false,
-    //     ];
-
-    //     $attachments = [];
-
-    //     $rawAttachments = explode(',', $sendmail['res_attachment_id_list']);
-    //     if (!empty($rawAttachments[0])) {
-    //         foreach ($rawAttachments as $rawAttachment) {
-    //             $id = $rawAttachment;
-    //             $original = true;
-    //             if (strpos($rawAttachment, '#') !== false) {
-    //                 $id = substr($rawAttachment, 0, strpos($rawAttachment, '#'));
-    //                 $original = false;
-    //             }
-    //             $attachments[] = [
-    //                 'id'        => (int)$id,
-    //                 'isVersion' => false,
-    //                 'original'  => $original,
-    //             ];
-    //         }
-    //     }
-
-    //     $rawVersionAttachments = explode(',', $sendmail['res_version_att_id_list']);
-    //     if (!empty($rawVersionAttachments[0])) {
-    //         foreach ($rawVersionAttachments as $rawAttachment) {
-    //             $id = $rawAttachment;
-    //             $original = true;
-    //             if (strpos($rawAttachment, '#') !== false) {
-    //                 $id = substr($rawAttachment, 0, strpos($rawAttachment, '#'));
-    //                 $original = false;
-    //             }
-    //             $attachments[] = [
-    //                 'id'        => (int)$id,
-    //                 'isVersion' => true,
-    //                 'original'  => $original,
-    //             ];
-    //         }
-    //     }
-    //     if (!empty($attachments)) {
-    //         $document['attachments'] = $attachments;
-    //     }
-    //     $notes = explode(',', $sendmail['note_id_list']);
-    //     if (!empty($notes[0])) {
-    //         $document['notes'] = [];
-    //         foreach ($notes as $note) {
-    //             $document['notes'][] = (int)$note;
-    //         }
-    //     }
-
-    //     if ($sendmail['email_status'] == 'S') {
-    //         $status = 'SENT';
-    //     } elseif ($sendmail['email_status'] == 'D') {
-    //         $status = 'DRAFT';
-    //     } elseif ($sendmail['email_status'] == 'W') {
-    //         $status = 'WAITING';
-    //     } else {
-    //         $status = 'ERROR';
-    //     }
-
-    //     \SrcCore\models\DatabaseModel::insert([
-    //         'table'         => 'emails',
-    //         'columnsValues' => [
-    //             'user_id'                   => $user['id'],
-    //             'sender'                    => json_encode($sender),
-    //             'recipients'                => json_encode($recipients),
-    //             'cc'                        => empty($cc) ? '[]' : json_encode($cc),
-    //             'cci'                       => empty($cci) ? '[]' : json_encode($cci),
-    //             'object'                    => empty($sendmail['email_object']) ? null : $sendmail['email_object'],
-    //             'body'                      => empty($sendmail['email_body']) ? null : $sendmail['email_body'],
-    //             'document'                  => empty($document) ? null : json_encode($document),
-    //             'is_html'                   => $sendmail['is_html'] == 'Y' ? 'true' : 'false',
-    //             'status'                    => $status,
-    //             'message_exchange_id'       => empty($sendmail['message_exchange_id']) ? null : $sendmail['message_exchange_id'],
-    //             'creation_date'             => $sendmail['creation_date'],
-    //             'send_date'                 => empty($sendmail['send_date']) ? null : $sendmail['send_date']
-    //         ]
-    //     ]);
-    // }
-
-    printf(count($sendmails) . " email(s) migré(s) du custom {$custom} vers la nouvelle table.\n");
 }
 
-printf($migrated . " custom(s) avec une configuration sendmail trouvé(s) et migré(s).\n");
+printf($migrated . " custom(s) avec une configuration export trouvé(s) et migré(s).\n");
