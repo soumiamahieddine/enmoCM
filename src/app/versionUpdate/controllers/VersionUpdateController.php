@@ -68,10 +68,22 @@ class VersionUpdateController
         natcasesort($availableMinorVersions);
         natcasesort($availableMajorVersions);
 
+        if (empty($availableMinorVersions)) {
+            $lastAvailableMinorVersion = null;
+        } else {
+            $lastAvailableMinorVersion = $availableMinorVersions[0];
+        }
+
+        if (empty($availableMajorVersions)) {
+            $lastAvailableMajorVersion = null;
+        } else {
+            $lastAvailableMajorVersion = $availableMajorVersions[0];
+        }
+
         return $response->withJson([
-            'lastAvailableMinorVersion'   => $availableMinorVersions[0],
-            'lastAvailableMajorVersion'    => $availableMajorVersions[0],
-            'currentVersion'           => $parameter['param_value_string']
+            'lastAvailableMinorVersion' => $lastAvailableMinorVersion,
+            'lastAvailableMajorVersion' => $lastAvailableMajorVersion,
+            'currentVersion'            => $parameter['param_value_string']
         ]);
     }
 }
