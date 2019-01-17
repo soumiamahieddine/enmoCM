@@ -12,17 +12,19 @@
             <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <div *ngIf="!loading" class="text-center" style="margin-top: 50px;">
-                {{lang.missingAdvert}}<br>
-                {{lang.missingAdvert2}}<br>
-                {{lang.missingChoose}}<br>
-                <br>
-                Sélectionner les banettes que vous souhaitez réactiver avec votre compte.<br>
-            </div>
-            <mat-card *ngIf="!loading" class="card-app-content">         
+            <div *ngIf="!loading" class="card-app-content">         
+                <div class="text-center" style="margin-top: 50px;">
+                    {{lang.missingAdvert}}<br>
+                    {{lang.missingAdvert2}}<br>
+                    {{lang.missingChoose}}<br>
+                    <ng-container *ngIf="user.redirectedBaskets.length > 0">
+                        <br>
+                        {{lang.missingBasket}}<br>
+                    </ng-container>
+                </div>
                 <div class="col-sm-4" style="overflow:hidden;"></div>
                 <div class="col-sm-4" style="overflow:hidden;">
-                    <mat-list>
+                    <mat-list *ngIf="user.redirectedBaskets.length > 0">
                         <mat-list-item>
                             <mat-icon mat-list-icon color="primary">
                                 <mat-checkbox color="primary" (change)="$event ? masterToggleBaskets($event) : null" [checked]="selectionBaskets.hasValue()"
@@ -64,7 +66,7 @@
                     <button mat-raised-button color="primary" type="button" (click)="logout()">{{lang.cancel}}</button>
                 </div>
 
-            </mat-card>
+            </div>
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>

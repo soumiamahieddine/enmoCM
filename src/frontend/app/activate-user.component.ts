@@ -1,22 +1,14 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild, QueryList, ViewChildren } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
-import { HeaderService }        from '../service/header.service';
-import { MatDialog, MatDialogRef, MatSidenav, MatExpansionPanel } from '@angular/material';
+import { Router } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormBuilder } from '@angular/forms';
 
 declare var angularGlobals: any;
 declare function $j(selector: any): any;
-declare var angularGlobals: any;
-
-declare function $j(selector: any): any;
-
-declare var tinymce: any;
-declare var angularGlobals: any;
 
 @Component({
     templateUrl: "activate-user.component.html",
@@ -24,12 +16,8 @@ declare var angularGlobals: any;
 })
 
 export class ActivateUserComponent implements OnInit {
-
-    
     private _mobileQueryListener: () => void;
     mobileQuery: MediaQueryList;
-    dialogRef: MatDialogRef<any>;
-    mobileMode                      : boolean   = false;
     coreUrl: string;
     lang: any = LANG;
 
@@ -43,9 +31,6 @@ export class ActivateUserComponent implements OnInit {
     loading: boolean = false;
     selectedIndex: number = 0;
 
-    @ViewChild('snav2') sidenavRight: MatSidenav;
-    @ViewChild('snav') sidenavLeft: MatSidenav;
-
     //Redirect Baskets
     selectionBaskets = new SelectionModel<Element>(true, []);
     myBasketExpansionPanel: boolean = false;
@@ -57,14 +42,9 @@ export class ActivateUserComponent implements OnInit {
         } else {
             this.selectionBaskets.clear();
         }
-
-        console.log(this.selectionBaskets);
     }
 
-    @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
-
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog, private _formBuilder: FormBuilder, private headerService: HeaderService) {
-        this.mobileMode = angularGlobals.mobileMode;
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private router: Router) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -72,7 +52,6 @@ export class ActivateUserComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.myProfile);
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
@@ -81,11 +60,10 @@ export class ActivateUserComponent implements OnInit {
             .subscribe((data: any) => {
                 this.user = data;
 
-
                 this.user.baskets.forEach((value: any, index: number) => {
                     this.user.baskets[index]['disabled'] = false;
-                    this.user.redirectedBaskets.forEach((value2: any) => {
-                        if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
+                    this.user.redirectedBaskets.forEach((redirectedBasket: any) => {
+                        if (value.basket_id == redirectedBasket.basket_id && value.basket_owner == redirectedBasket.basket_owner) {
                             this.user.baskets[index]['disabled'] = true;
                         }
                     });
@@ -123,15 +101,16 @@ export class ActivateUserComponent implements OnInit {
             if(basketsRedirectedIds != "") {
                 this.http.delete(this.coreUrl + "rest/users/" + angularGlobals.user.id + "/redirectedBaskets?redirectedBasketIds[]=" + basketsRedirectedIds)
                 .subscribe((data: any) => {
-                    this.notify.success(this.lang.basketUpdated);
-                    location.href = "index.php";
+                    this.router.navigate(['/home']);
+                    this.notify.success(this.lang.absOff);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
+            } else {
+                this.router.navigate(['/home']);
+                this.notify.success(this.lang.absOff);
             }
 
-            this.notify.success(this.lang.absOff);
-            location.href = "index.php";
 
         }, (err : any) => {
             this.notify.error(err.error.errors);

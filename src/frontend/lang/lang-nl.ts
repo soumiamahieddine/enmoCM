@@ -772,4 +772,5 @@ export const LANG_NL = {
     "emailSendFailed" : "_TO_TRANSLATE",
     "doNotReply" : "_TO_TRANSLATE",
     "none" : "_TO_TRANSLATE",
+    "missingBasket" : "_TO_TRANSLATE",
 };

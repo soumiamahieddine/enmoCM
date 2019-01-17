@@ -722,7 +722,7 @@ export const LANG_EN = {
     "subEntities"                                       : "Entities (and sub-entities)",
     "category_id"                                       : "Category",
     "smtp"                                              : "Internal configuration",
-    "smtpDesc"                                              : "Internal configuration",
+    "smtpDesc"                                          : "Internal configuration",
     "enableAuth"                                        : "Activate authentication",
     "checkSendmail"                                     : "Check mail server status",
     "mustReconnect"                                     : "Please reconnect",
@@ -743,4 +743,5 @@ export const LANG_EN = {
     "emailSendFailed"                                   : "Email send failed",
     "doNotReply"                                        : "Do not reply",
     "none"                                              : "None",
+    "missingBasket"                                     : "Select the baskets you would like reactivate with your account.",
 };

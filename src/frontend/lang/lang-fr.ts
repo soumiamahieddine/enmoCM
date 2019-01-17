@@ -769,6 +769,7 @@ export const LANG_FR = {
     "emailSendFailed"                                   : "Échec d'envoi",
     "doNotReply"                                        : "Ne pas répondre",
     "none"                                              : "Aucune",
+    "missingBasket"                                     : "Sélectionner les bannettes que vous souhaitez réactiver avec votre compte.",
 };
 
 
