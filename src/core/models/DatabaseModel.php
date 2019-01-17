@@ -187,6 +187,46 @@ class DatabaseModel
     }
 
     /**
+     * Database Insert Multiple Function
+     * @param array $args
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public static function insertMultiple(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['table', 'columnsValues', 'values']);
+        ValidatorModel::stringType($args, ['table']);
+        ValidatorModel::arrayType($args, ['values', 'columnsValues']);
+
+        $data    = [];
+        $aValues = [];
+
+        foreach ($args['values'] as $values) {
+            $aValue = [];
+            foreach ($values as $value) {
+                if ($value == 'SYSDATE' || $value == 'CURRENT_TIMESTAMP') {
+                    $aValue[] = $value;
+                } else {
+                    $aValue[] = '?';
+                    $data[]   = $value;
+                }
+            }
+            $aValues[] = '(' . implode(',', $aValue) . ')';
+        }
+
+        $valuesString  = implode(', ', $aValues);
+        $columnsValues = implode(', ', $args['columnsValues']);
+
+        $query = "INSERT INTO {$args['table']} ({$columnsValues}) VALUES {$valuesString}";
+
+        $db = new DatabasePDO();
+        $db->query($query, $data);
+
+        return true;
+    }
+
+    /**
      * Database Update Function
      * @param array $args
      *
