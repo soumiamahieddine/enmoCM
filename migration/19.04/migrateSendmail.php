@@ -139,7 +139,7 @@ foreach ($customs as $custom) {
                 'document'                  => empty($document) ? null : json_encode($document),
                 'is_html'                   => $sendmail['is_html'] == 'Y' ? 'true' : 'false',
                 'status'                    => $status,
-                'message_exchange_id'       => empty($sendmail['messageExchangeId']) ? null : $sendmail['messageExchangeId'],
+                'message_exchange_id'       => empty($sendmail['message_exchange_id']) ? null : $sendmail['message_exchange_id'],
                 'creation_date'             => $sendmail['creation_date'],
                 'send_date'                 => empty($sendmail['send_date']) ? null : $sendmail['send_date']
             ]
