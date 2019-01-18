@@ -52,11 +52,12 @@ foreach ($customs as $custom) {
                 } elseif ($functionName == 'get_entity_dest_short_label') {
                     $functionName = 'getDestinationEntity';
                 } elseif ($functionName == 'get_contact_type') {
-                    $functionName = 'getContactType';
+                    printf("La fonction get_contact_type a été trouvé et non migré car non maintenue\n");
+                    continue;
                 } elseif ($functionName == 'get_contact_civility') {
-                    $functionName = 'getContactCivility';
+                    $functionName = 'getSenderCivility';
                 } elseif ($functionName == 'get_contact_function') {
-                    $functionName = 'getContactFunction';
+                    $functionName = 'getSenderFunction';
                 } elseif ($functionName == 'get_tags') {
                     $functionName = 'getTags';
                 } elseif ($functionName == 'get_signatory_name') {
