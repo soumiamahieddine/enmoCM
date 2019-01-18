@@ -63,13 +63,13 @@ class ExportController
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['delimiter']) || !in_array($body['delimiter'], [',', ';', 'TAB'])) {
-            return ['errors' => 'Delimiter is not set or not set well', 'code' => 400];
+            return $response->withStatus(400)->withJson(['errors' => 'Delimiter is not set or not set well']);
         } elseif (!Validator::arrayType()->notEmpty()->validate($body['data'])) {
-            return ['errors' => 'Data is not an array or empty', 'code' => 400];
+            return $response->withStatus(400)->withJson(['errors' => 'Data is not an array or empty']);
         }
         foreach ($body['data'] as $value) {
             if (!isset($value['value']) || !Validator::stringType()->notEmpty()->validate($value['label']) || !Validator::boolType()->validate($value['isFunction'])) {
-                return ['errors' => 'One data is not set well', 'code' => 400];
+                return $response->withStatus(400)->withJson(['errors' => 'One data is not set well']);
             }
         }
 
@@ -202,10 +202,13 @@ class ExportController
                         $csvContent[] = $resource['entwo.short_label'];
                     } elseif ($value['value'] == 'getContactType') {
                         //TODO
+                        $csvContent[] = '';
                     } elseif ($value['value'] == 'getContactCivility') {
                         //TODO
+                        $csvContent[] = '';
                     } elseif ($value['value'] == 'getContactFunction') {
                         //TODO
+                        $csvContent[] = '';
                     } elseif ($value['value'] == 'getTags') {
                         $csvContent[] = ExportController::getTags(['resId' => $resource['res_id']]);
                     } elseif ($value['value'] == 'getSignatories') {
@@ -229,7 +232,6 @@ class ExportController
 
     private static function getCategory(array $args)
     {
-        ValidatorModel::notEmpty($args, ['categoryId']);
         ValidatorModel::stringType($args, ['categoryId']);
 
         static $categories;

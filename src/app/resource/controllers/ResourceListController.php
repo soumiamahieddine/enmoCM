@@ -330,7 +330,7 @@ class ResourceListController
 
     public static function getResourcesListQueryData(array $args)
     {
-        ValidatorModel::notEmpty($args, ['data', 'basketClause', 'login']);
+        ValidatorModel::notEmpty($args, ['basketClause', 'login']);
         ValidatorModel::stringType($args, ['basketClause', 'login']);
         ValidatorModel::arrayType($args, ['data']);
 

@@ -151,7 +151,7 @@ foreach ($customs as $custom) {
         if ($countMail % 50 == 0) {
             \SrcCore\models\DatabaseModel::insertMultiple([
                 'table'         => 'emails',
-                'columnsValues' => ['user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'is_html', 'status', 'message_exchange_id', 'creation_date', 'send_date'],
+                'columns'       => ['user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'is_html', 'status', 'message_exchange_id', 'creation_date', 'send_date'],
                 'values'        => $aValues
             ]);
             $aValues = [];
@@ -161,7 +161,7 @@ foreach ($customs as $custom) {
     if (!empty($aValues)) {
         \SrcCore\models\DatabaseModel::insertMultiple([
             'table'         => 'emails',
-            'columnsValues' => ['user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'is_html', 'status', 'message_exchange_id', 'creation_date', 'send_date'],
+            'columns'       => ['user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'is_html', 'status', 'message_exchange_id', 'creation_date', 'send_date'],
             'values'        => $aValues
         ]);
     }
