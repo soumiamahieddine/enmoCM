@@ -11,6 +11,7 @@ return array(
     'VersionUpdate\\' => array($baseDir . '/src/app/versionUpdate'),
     'User\\' => array($baseDir . '/src/app/user'),
     'Template\\' => array($baseDir . '/src/app/template'),
+    'Tag\\' => array($baseDir . '/src/app/tag'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
     'Status\\' => array($baseDir . '/src/app/status'),

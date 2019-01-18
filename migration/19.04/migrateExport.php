@@ -86,9 +86,9 @@ foreach ($customs as $custom) {
         }
 
         \SrcCore\models\DatabaseModel::insertMultiple([
-            'table'         => 'exports_templates',
-            'columnsValues' => ['user_id', 'delimiter', 'data'],
-            'values'        => $aValues
+            'table'     => 'exports_templates',
+            'columns'   => ['user_id', 'delimiter', 'data'],
+            'values'    => $aValues
         ]);
 
         $migrated++;

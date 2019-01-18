@@ -16,23 +16,19 @@ namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
-use Basket\models\GroupBasketModel;
-use Basket\models\RedirectBasketModel;
 use Entity\models\EntityModel;
-use Group\models\GroupModel;
-use Note\models\NoteModel;
-use Priority\models\PriorityModel;
+use Entity\models\ListInstanceModel;
 use Resource\models\ExportTemplateModel;
 use Resource\models\ResModel;
-use Resource\models\ResourceContactModel;
 use Resource\models\ResourceListModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
-use Status\models\StatusModel;
+use Tag\models\TagModel;
 use User\models\UserModel;
+
+require_once 'core/class/Url.php';
 
 class ExportController
 {
@@ -51,7 +47,7 @@ class ExportController
         return $response->withJson(['template' => $templateData, 'delimiter' => $delimiter]);
     }
 
-    public function getExport(Request $request, Response $response, array $aArgs)
+    public function updateExport(Request $request, Response $response, array $aArgs)
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
@@ -63,126 +59,88 @@ class ExportController
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
-        $data = $request->getQueryParams();
+        $queryParamsData = $request->getQueryParams();
+        $body = $request->getParsedBody();
 
-        if (!Validator::stringType()->notEmpty()->validate($data['delimiter'])) {
-            return ['errors' => 'Delimiter is not set', 'code' => 400];
-        } elseif (!Validator::arrayType()->notEmpty()->validate($data['data'])) {
+        if (!Validator::stringType()->notEmpty()->validate($body['delimiter']) || !in_array($body['delimiter'], [',', ';', 'TAB'])) {
+            return ['errors' => 'Delimiter is not set or not set well', 'code' => 400];
+        } elseif (!Validator::arrayType()->notEmpty()->validate($body['data'])) {
             return ['errors' => 'Data is not an array or empty', 'code' => 400];
         }
-        foreach ($data['data'] as $value) {
-            if (!Validator::stringType()->notEmpty()->validate($value['value'])) {
-                return ['errors' => 'Value is not set', 'code' => 400];
-            } elseif (!Validator::boolType()->validate($value['isFunction'])) {
-                return ['errors' => 'Data is not an array or empty', 'code' => 400];
+        foreach ($body['data'] as $value) {
+            if (!isset($value['value']) || !Validator::stringType()->notEmpty()->validate($value['label']) || !Validator::boolType()->validate($value['isFunction'])) {
+                return ['errors' => 'One data is not set well', 'code' => 400];
             }
         }
 
         $template = ExportTemplateModel::getByUserId(['select' => [1], 'userId' => $currentUser['id']]);
         if (empty($template)) {
-            //create
+            ExportTemplateModel::create([
+                'userId'    => $currentUser['id'],
+                'delimiter' => $body['delimiter'],
+                'data'      => json_encode($body['data'])
+            ]);
         } else {
-            //update
-        }
-        $table = [];
-        $leftJoin = [];
-        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-        $where = [$whereClause];
-        $queryData = [];
-
-        if (!empty($data['delayed']) && $data['delayed'] == 'true') {
-            $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
-        }
-        if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
-            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike translate(?, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\'))';
-            $queryData[] = "%{$data['search']}%";
-            $queryData[] = "%{$data['search']}%";
-        }
-        if (isset($data['priorities'])) {
-            if (empty($data['priorities'])) {
-                $where[] = 'priority is null';
-            } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['priorities']);
-                $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['priorities']) {
-                    $where[] = '(priority is null OR priority in (?))';
-                } else {
-                    $where[] = 'priority in (?)';
-                }
-                $queryData[] = explode(',', $replace);
-            }
-        }
-        if (isset($data['categories'])) {
-            if (empty($data['categories'])) {
-                $where[] = 'category_id is null';
-            } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['categories']);
-                $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['categories']) {
-                    $where[] = '(category_id is null OR category_id in (?))';
-                } else {
-                    $where[] = 'category_id in (?)';
-                }
-                $queryData[] = explode(',', $replace);
-            }
-        }
-        if (!empty($data['statuses'])) {
-            $where[] = 'status in (?)';
-            $queryData[] = explode(',', $data['statuses']);
-        }
-        if (isset($data['entities'])) {
-            if (empty($data['entities'])) {
-                $where[] = 'destination is null';
-            } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['entities']);
-                $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['entities']) {
-                    $where[] = '(destination is null OR destination in (?))';
-                } else {
-                    $where[] = 'destination in (?)';
-                }
-                $queryData[] = explode(',', $replace);
-            }
-        }
-        if (!empty($data['entitiesChildren'])) {
-            $entities = explode(',', $data['entitiesChildren']);
-            $entitiesChildren = [];
-            foreach ($entities as $entity) {
-                $children = EntityModel::getEntityChildren(['entityId' => $entity]);
-                $entitiesChildren = array_merge($entitiesChildren, $children);
-            }
-            if (!empty($entitiesChildren)) {
-                $where[] = 'destination in (?)';
-                $queryData[] = $entitiesChildren;
-            }
+            ExportTemplateModel::update([
+                'set'   => [
+                    'delimiter' => $body['delimiter'],
+                    'data'      => json_encode($body['data'])
+                ],
+                'where' => ['user_id = ?'],
+                'data'  => [$currentUser['id']]
+            ]);
         }
 
-        if (!empty($data['order']) && strpos($data['order'], 'alt_identifier') !== false) {
-            $data['order'] = 'order_alphanum(alt_identifier) ' . explode(' ', $data['order'])[1];
+        $allQueryData = ResourceListController::getResourcesListQueryData(['data' => $queryParamsData, 'basketClause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        if (!empty($allQueryData['order'])) {
+            $queryParamsData['order'] = $allQueryData['order'];
         }
-        if (!empty($data['order']) && strpos($data['order'], 'priority') !== false) {
-            $data['order'] = 'priorities.order ' . explode(' ', $data['order'])[1];
-            $table = ['priorities'];
-            $leftJoin = ['res_view_letterbox.priority = priorities.id'];
+        $rawResources = ResourceListModel::getOnView([
+            'select'    => ['res_id'],
+            'table'     => $allQueryData['table'],
+            'leftJoin'  => $allQueryData['leftJoin'],
+            'where'     => $allQueryData['where'],
+            'data'      => $allQueryData['queryData'],
+            'orderBy'   => empty($queryParamsData['order']) ? [$basket['basket_res_order']] : [$queryParamsData['order']]
+        ]);
+
+        $resIds = [];
+        foreach ($rawResources as $resource) {
+            $resIds[] = $resource['res_id'];
         }
 
         $select = ['res_id'];
-        foreach ($data['data'] as $value) {
-            if (!$value['isFunction']) {
-                $select[] = $value['value'];
-            } else {
+        $tableFunction = [];
+        $leftJoinFunction = [];
+        $csvHead = [];
+        foreach ($body['data'] as $value) {
+            $csvHead[] = $value['label'];
+            if (empty($value['value'])) {
+                continue;
+            }
+            if ($value['isFunction']) {
                 if ($value['value'] == 'getStatus') {
-                    $select[] = 'status';
+                    $select[] = 'status.label_status AS "status.label_status"';
+                    $tableFunction[] = 'status';
+                    $leftJoinFunction[] = 'res_view_letterbox.status = status.id';
                 } elseif ($value['value'] == 'getPriority') {
-                    $select[] = 'priority';
+                    $select[] = 'priorities.label AS "priorities.label"';
+                    $tableFunction[] = 'priorities';
+                    $leftJoinFunction[] = 'res_view_letterbox.priority = priorities.id';
                 } elseif ($value['value'] == 'getParentFolder') {
-                    $select[] = 'fold_parent_id';
+                    $select[] = 'folders.folder_name AS "folders.folder_name"';
+                    $tableFunction[] = 'folders';
+                    $leftJoinFunction[] = 'res_view_letterbox.fold_parent_id = folders.folders_system_id';
                 } elseif ($value['value'] == 'getCategory') {
-                    $select[] = 'category_id';
+                    $select[] = 'res_view_letterbox.category_id';
                 } elseif ($value['value'] == 'getInitiatorEntity') {
-                    $select[] = 'initiator';
+                    $select[] = 'enone.short_label AS "enone.short_label"';
+                    $tableFunction[] = 'entities enone';
+                    $leftJoinFunction[] = 'res_view_letterbox.initiator = enone.entity_id';
                 } elseif ($value['value'] == 'getDestinationEntity') {
-                    $select[] = 'destination';
+                    $select[] = 'entwo.short_label AS "entwo.short_label"';
+                    $tableFunction[] = 'entities entwo';
+                    $leftJoinFunction[] = 'res_view_letterbox.destination = entwo.entity_id';
                 } elseif ($value['value'] == 'getContactType') {
                     //TODO
                 } elseif ($value['value'] == 'getContactCivility') {
@@ -190,44 +148,195 @@ class ExportController
                 } elseif ($value['value'] == 'getContactFunction') {
                     //TODO
                 }
+            } else {
+                $select[] = "res_view_letterbox.{$value['value']}";
             }
         }
 
-        $rawResources = ResourceListModel::getOnView([
-            'select'    => $select,
-            'table'     => $table,
-            'leftJoin'  => $leftJoin,
-            'where'     => $where,
-            'data'      => $queryData,
-            'orderBy'   => empty($data['order']) ? [$basket['basket_res_order']] : [$data['order']]
-        ]);
-        $resIds = [];
-        foreach ($rawResources as $resource) {
-            $resIds[] = $resource['res_id'];
-        }
-
-        if ($value['value'] == 'getStatus') {
-        } elseif ($value['value'] == 'getPriority') {
-        } elseif ($value['value'] == 'getCopyEntities') {
-        } elseif ($value['value'] == 'getDetailLink') {
-        } elseif ($value['value'] == 'getParentFolder') {
-        } elseif ($value['value'] == 'getCategory') {
-        } elseif ($value['value'] == 'getInitiatorEntity') {
-        } elseif ($value['value'] == 'getDestinationEntity') {
-        } elseif ($value['value'] == 'getContactType') {
-        } elseif ($value['value'] == 'getContactCivility') {
-        } elseif ($value['value'] == 'getContactFunction') {
-        } elseif ($value['value'] == 'getTags') {
-        } elseif ($value['value'] == 'getSignatories') {
-        } elseif ($value['value'] == 'getSignatureDates') {
-        }
-
-
         $resources = [];
         if (!empty($resIds)) {
-            $resources = ResourceListModel::get(['resIds' => $resIds]);
+            $order = 'CASE res_view_letterbox.res_id ';
+            foreach ($resIds as $key => $resId) {
+                $order .= "WHEN {$resId} THEN {$key} ";
+            }
+            $order .= 'END';
+
+            $resources = ResourceListModel::getOnView([
+                'select'    => $select,
+                'table'     => $tableFunction,
+                'leftJoin'  => $leftJoinFunction,
+                'where'     => ['res_view_letterbox.res_id in (?)'],
+                'data'      => [$resIds],
+                'orderBy'   => [$order]
+            ]);
         }
 
-        return $response->withJson(['resources' => $resources, 'basketLabel' => $basket['basket_name']]);
+        $file = fopen('php://memory', 'w');
+        $delimiter = ($body['delimiter'] == 'TAB' ? "\t" : $body['delimiter']);
+
+        fputcsv($file, $csvHead, $delimiter);
+
+        foreach ($resources as $resource) {
+            $csvContent = [];
+            foreach ($body['data'] as $value) {
+                if (empty($value['value'])) {
+                    $csvContent[] = '';
+                    continue;
+                }
+                if ($value['isFunction']) {
+                    if ($value['value'] == 'getStatus') {
+                        $csvContent[] = $resource['status.label_status'];
+                    } elseif ($value['value'] == 'getPriority') {
+                        $csvContent[] = $resource['priorities.label'];
+                    } elseif ($value['value'] == 'getCopyEntities') {
+                        $csvContent[] = ExportController::getCopyEntities(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getDetailLink') {
+                        $csvContent[] = str_replace('rest/', "apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id={$resource['res_id']}", \Url::coreurl());
+                    } elseif ($value['value'] == 'getParentFolder') {
+                        $csvContent[] = $resource['folders.folder_name'];
+                    } elseif ($value['value'] == 'getCategory') {
+                        $csvContent[] = ExportController::getCategory(['categoryId' => $resource['category_id']]);
+                    } elseif ($value['value'] == 'getInitiatorEntity') {
+                        $csvContent[] = $resource['enone.short_label'];
+                    } elseif ($value['value'] == 'getDestinationEntity') {
+                        $csvContent[] = $resource['entwo.short_label'];
+                    } elseif ($value['value'] == 'getContactType') {
+                        //TODO
+                    } elseif ($value['value'] == 'getContactCivility') {
+                        //TODO
+                    } elseif ($value['value'] == 'getContactFunction') {
+                        //TODO
+                    } elseif ($value['value'] == 'getTags') {
+                        $csvContent[] = ExportController::getTags(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getSignatories') {
+                        $csvContent[] = ExportController::getSignatories(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getSignatureDates') {
+                        $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
+                    }
+                } else {
+                    $csvContent[] = $resource[$value['value']];
+                }
+            }
+            fputcsv($file, $csvContent, $delimiter);
+        }
+
+        rewind($file);
+        $response->write(stream_get_contents($file));
+        $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=export_maarch.csv');
+
+        return $response->withHeader('Content-Type', 'application/vnd.ms-excel');
+    }
+
+    private static function getCategory(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['categoryId']);
+        ValidatorModel::stringType($args, ['categoryId']);
+
+        static $categories;
+        if (empty($categories)) {
+            $categories = ResModel::getCategories();
+        }
+
+        foreach ($categories as $category) {
+            if ($category['id'] == $args['categoryId']) {
+                return $category['label'];
+            }
+        }
+
+        return '';
+    }
+
+    private static function getCopyEntities(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $listInstances = ListInstanceModel::get([
+            'select'    => ['item_id'],
+            'where'     => ['res_id = ?', 'item_type = ?', 'item_mode = ?'],
+            'data'      => [$args['resId'], 'entity_id', 'cc']
+        ]);
+
+        $copyEntities = '';
+        foreach ($listInstances as $listInstance) {
+            $entity = EntityModel::getByEntityId(['entityId' => $listInstance['item_id'], 'select' => ['short_label']]);
+            if (!empty($copyEntities)) {
+                $copyEntities .= ' ; ';
+            }
+            $copyEntities .= $entity['short_label'];
+        }
+
+        return $copyEntities;
+    }
+
+    private static function getTags(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $tagsRes = TagModel::getTagRes([
+            'select'    => ['tag_id'],
+            'where'     => ['res_id = ?'],
+            'data'      => [$args['resId']],
+        ]);
+
+        $tags = '';
+        foreach ($tagsRes as $value) {
+            $tag = TagModel::getById(['id' => $value['tag_id'], 'select' => ['tag_label']]);
+            if (!empty($tags)) {
+                $tags .= ' ; ';
+            }
+            $tags .= $tag['tag_label'];
+        }
+
+        return $tags;
+    }
+
+    private static function getSignatories(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $listInstances = ListInstanceModel::get([
+            'select'    => ['item_id'],
+            'where'     => ['res_id = ?', 'item_type = ?', 'signatory = ?'],
+            'data'      => [$args['resId'], 'user_id', true]
+        ]);
+
+        $signatories = '';
+        foreach ($listInstances as $listInstance) {
+            $user = UserModel::getByLogin(['login' => $listInstance['item_id'], 'select' => ['firstname', 'lastname']]);
+            if (!empty($signatories)) {
+                $signatories .= ' ; ';
+            }
+            $signatories .= "{$user['firstname']} {$user['lastname']}";
+        }
+
+        return $signatories;
+    }
+
+    private static function getSignatureDates(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $attachments = AttachmentModel::getOnView([
+            'select'    => ['creation_date'],
+            'where'     => ['res_id = ?', 'attachment_type = ?', 'status = ?'],
+            'data'      => [$args['resId'], 'signed_response', 'TRA']
+        ]);
+
+        $dates = '';
+        foreach ($attachments as $attachment) {
+            $date = new \DateTime($attachment['creation_date']);
+            $date = $date->format('d-m-Y H:i');
+
+            if (!empty($dates)) {
+                $dates .= ' ; ';
+            }
+            $dates .= $date;
+        }
+
+        return $dates;
     }
 }

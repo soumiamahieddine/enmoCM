@@ -26,6 +26,7 @@
             "Resource\\"          : "src/app/resource/",
             "SignatureBook\\"     : "src/app/signatureBook/",
             "Status\\"            : "src/app/status/",
+            "Tag\\"               : "src/app/tag/",
             "Template\\"          : "src/app/template/",
             "User\\"              : "src/app/user/",
             "VersionUpdate\\"     : "src/app/versionUpdate/",

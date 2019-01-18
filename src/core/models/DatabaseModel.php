@@ -195,9 +195,9 @@ class DatabaseModel
      */
     public static function insertMultiple(array $args)
     {
-        ValidatorModel::notEmpty($args, ['table', 'columnsValues', 'values']);
+        ValidatorModel::notEmpty($args, ['table', 'columns', 'values']);
         ValidatorModel::stringType($args, ['table']);
-        ValidatorModel::arrayType($args, ['values', 'columnsValues']);
+        ValidatorModel::arrayType($args, ['values', 'columns']);
 
         $data    = [];
         $aValues = [];
@@ -216,9 +216,9 @@ class DatabaseModel
         }
 
         $valuesString  = implode(', ', $aValues);
-        $columnsValues = implode(', ', $args['columnsValues']);
+        $columns = implode(', ', $args['columns']);
 
-        $query = "INSERT INTO {$args['table']} ({$columnsValues}) VALUES {$valuesString}";
+        $query = "INSERT INTO {$args['table']} ({$columns}) VALUES {$valuesString}";
 
         $db = new DatabasePDO();
         $db->query($query, $data);

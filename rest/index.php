@@ -67,6 +67,12 @@ $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':de
 //Administration
 $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
 
+//Attachments
+$app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
+$app->get('/res/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getAttachmentsListById');
+$app->get('/res/{resIdMaster}/attachments/{resId}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
+$app->get('/res/{resIdMaster}/attachments/{resId}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
+
 //AutoComplete
 $app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
 $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
@@ -257,14 +263,8 @@ $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::c
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/filters', \Resource\controllers\ResourceListController::class . ':getFilters');
-
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplate');
-
-//Attachments
-$app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
-$app->get('/res/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getAttachmentsListById');
-$app->get('/res/{resIdMaster}/attachments/{resId}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
-$app->get('/res/{resIdMaster}/attachments/{resId}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
+$app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/exports', \Resource\controllers\ExportController::class . ':updateExport');
 
 //SignatureBook
 $app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');

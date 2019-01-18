@@ -50,94 +50,17 @@ class ResourceListController
         $data['offset'] = (empty($data['offset']) || !is_numeric($data['offset']) ? 0 : $data['offset']);
         $data['limit'] = (empty($data['limit']) || !is_numeric($data['limit']) ? 0 : $data['limit']);
 
-        $table = [];
-        $leftJoin = [];
-        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-        $where = [$whereClause];
-        $queryData = [];
-
-        if (!empty($data['delayed']) && $data['delayed'] == 'true') {
-            $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
-        }
-        if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
-            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike translate(?, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\'))';
-            $queryData[] = "%{$data['search']}%";
-            $queryData[] = "%{$data['search']}%";
-        }
-        if (isset($data['priorities'])) {
-            if (empty($data['priorities'])) {
-                $where[] = 'priority is null';
-            } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['priorities']);
-                $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['priorities']) {
-                    $where[] = '(priority is null OR priority in (?))';
-                } else {
-                    $where[] = 'priority in (?)';
-                }
-                $queryData[] = explode(',', $replace);
-            }
-        }
-        if (isset($data['categories'])) {
-            if (empty($data['categories'])) {
-                $where[] = 'category_id is null';
-            } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['categories']);
-                $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['categories']) {
-                    $where[] = '(category_id is null OR category_id in (?))';
-                } else {
-                    $where[] = 'category_id in (?)';
-                }
-                $queryData[] = explode(',', $replace);
-            }
-        }
-        if (!empty($data['statuses'])) {
-            $where[] = 'status in (?)';
-            $queryData[] = explode(',', $data['statuses']);
-        }
-        if (isset($data['entities'])) {
-            if (empty($data['entities'])) {
-                $where[] = 'destination is null';
-            } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['entities']);
-                $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['entities']) {
-                    $where[] = '(destination is null OR destination in (?))';
-                } else {
-                    $where[] = 'destination in (?)';
-                }
-                $queryData[] = explode(',', $replace);
-            }
-        }
-        if (!empty($data['entitiesChildren'])) {
-            $entities = explode(',', $data['entitiesChildren']);
-            $entitiesChildren = [];
-            foreach ($entities as $entity) {
-                $children = EntityModel::getEntityChildren(['entityId' => $entity]);
-                $entitiesChildren = array_merge($entitiesChildren, $children);
-            }
-            if (!empty($entitiesChildren)) {
-                $where[] = 'destination in (?)';
-                $queryData[] = $entitiesChildren;
-            }
-        }
-
-        if (!empty($data['order']) && strpos($data['order'], 'alt_identifier') !== false) {
-            $data['order'] = 'order_alphanum(alt_identifier) ' . explode(' ', $data['order'])[1];
-        }
-        if (!empty($data['order']) && strpos($data['order'], 'priority') !== false) {
-            $data['order'] = 'priorities.order ' . explode(' ', $data['order'])[1];
-            $table = ['priorities'];
-            $leftJoin = ['res_view_letterbox.priority = priorities.id'];
+        $allQueryData = ResourceListController::getResourcesListQueryData(['data' => $data, 'basketClause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        if (!empty($allQueryData['order'])) {
+            $data['order'] = $allQueryData['order'];
         }
 
         $rawResources = ResourceListModel::getOnView([
             'select'    => ['count(1) OVER()', 'res_id'],
-            'table'     => $table,
-            'leftJoin'  => $leftJoin,
-            'where'     => $where,
-            'data'      => $queryData,
+            'table'     => $allQueryData['table'],
+            'leftJoin'  => $allQueryData['leftJoin'],
+            'where'     => $allQueryData['where'],
+            'data'      => $allQueryData['queryData'],
             'orderBy'   => empty($data['order']) ? [$basket['basket_res_order']] : [$data['order']],
             'offset'    => (int)$data['offset'],
             'limit'     => (int)$data['limit']
@@ -403,6 +326,98 @@ class ResourceListController
         }
 
         return $response->withJson(['entities' => $entities, 'priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses, 'entitiesChildren' => $entitiesChildren]);
+    }
+
+    public static function getResourcesListQueryData(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['data', 'basketClause', 'login']);
+        ValidatorModel::stringType($args, ['basketClause', 'login']);
+        ValidatorModel::arrayType($args, ['data']);
+
+        $table = [];
+        $leftJoin = [];
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $args['basketClause'], 'login' => $args['login']]);
+        $where = [$whereClause];
+        $queryData = [];
+        $order = null;
+
+        if (!empty($args['data']['delayed']) && $args['data']['delayed'] == 'true') {
+            $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
+        }
+        if (!empty($args['data']['search']) && mb_strlen($args['data']['search']) >= 2) {
+            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike translate(?, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\'))';
+            $queryData[] = "%{$args['data']['search']}%";
+            $queryData[] = "%{$args['data']['search']}%";
+        }
+        if (isset($args['data']['priorities'])) {
+            if (empty($args['data']['priorities'])) {
+                $where[] = 'priority is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $args['data']['priorities']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $args['data']['priorities']) {
+                    $where[] = '(priority is null OR priority in (?))';
+                } else {
+                    $where[] = 'priority in (?)';
+                }
+                $queryData[] = explode(',', $replace);
+            }
+        }
+        if (isset($args['data']['categories'])) {
+            if (empty($args['data']['categories'])) {
+                $where[] = 'category_id is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $args['data']['categories']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $args['data']['categories']) {
+                    $where[] = '(category_id is null OR category_id in (?))';
+                } else {
+                    $where[] = 'category_id in (?)';
+                }
+                $queryData[] = explode(',', $replace);
+            }
+        }
+        if (!empty($args['data']['statuses'])) {
+            $where[] = 'status in (?)';
+            $queryData[] = explode(',', $args['data']['statuses']);
+        }
+        if (isset($args['data']['entities'])) {
+            if (empty($args['data']['entities'])) {
+                $where[] = 'destination is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $args['data']['entities']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $args['data']['entities']) {
+                    $where[] = '(destination is null OR destination in (?))';
+                } else {
+                    $where[] = 'destination in (?)';
+                }
+                $queryData[] = explode(',', $replace);
+            }
+        }
+        if (!empty($args['data']['entitiesChildren'])) {
+            $entities = explode(',', $args['data']['entitiesChildren']);
+            $entitiesChildren = [];
+            foreach ($entities as $entity) {
+                $children = EntityModel::getEntityChildren(['entityId' => $entity]);
+                $entitiesChildren = array_merge($entitiesChildren, $children);
+            }
+            if (!empty($entitiesChildren)) {
+                $where[] = 'destination in (?)';
+                $queryData[] = $entitiesChildren;
+            }
+        }
+
+        if (!empty($args['data']['order']) && strpos($args['data']['order'], 'alt_identifier') !== false) {
+            $order = 'order_alphanum(alt_identifier) ' . explode(' ', $args['data']['order'])[1];
+        }
+        if (!empty($args['data']['order']) && strpos($args['data']['order'], 'priority') !== false) {
+            $order = 'priorities.order ' . explode(' ', $args['data']['order'])[1];
+            $table = ['priorities'];
+            $leftJoin = ['res_view_letterbox.priority = priorities.id'];
+        }
+
+        return ['table' => $table, 'leftJoin' => $leftJoin, 'where' => $where, 'queryData' => $queryData, 'order' => $order];
     }
 
     public static function listControl(array $aArgs)
