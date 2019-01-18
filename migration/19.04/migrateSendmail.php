@@ -49,8 +49,12 @@ foreach ($customs as $custom) {
         'order_by'  => ['creation_date']
     ]);
 
+    $aValues = [];
+    $countMail = 0;
     foreach ($sendmails as $sendmail) {
-
+        if (empty($sendmail['user_id'])) {
+            continue;
+        }
         $user = \User\models\UserModel::getByLogin(['login' => $sendmail['user_id'], 'select' => ['id']]);
         $sender = explode(',', $sendmail['sender_email']);
         if (empty($sender[1])) {
@@ -126,27 +130,43 @@ foreach ($customs as $custom) {
             $status = 'ERROR';
         }
 
-        \SrcCore\models\DatabaseModel::insert([
+        $aValues[] = [
+            $user['id'],
+            json_encode($sender),
+            json_encode($recipients),
+            empty($cc) ? '[]' : json_encode($cc),
+            empty($cci) ? '[]' : json_encode($cci),
+            empty($sendmail['email_object']) ? null : $sendmail['email_object'],
+            empty($sendmail['email_body']) ? null : $sendmail['email_body'],
+            empty($document) ? null : json_encode($document),
+            $sendmail['is_html'] == 'Y' ? 'true' : 'false',
+            $status,
+            empty($sendmail['message_exchange_id']) ? null : $sendmail['message_exchange_id'],
+            $sendmail['creation_date'],
+            empty($sendmail['send_date']) ? null : $sendmail['send_date']
+        ];
+
+        $countMail++;
+
+        if ($countMail % 50 == 0) {
+            \SrcCore\models\DatabaseModel::insertMultiple([
+                'table'         => 'emails',
+                'columnsValues' => ['user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'is_html', 'status', 'message_exchange_id', 'creation_date', 'send_date'],
+                'values'        => $aValues
+            ]);
+            $aValues = [];
+        }
+    }
+
+    if (!empty($aValues)) {
+        \SrcCore\models\DatabaseModel::insertMultiple([
             'table'         => 'emails',
-            'columnsValues' => [
-                'user_id'                   => $user['id'],
-                'sender'                    => json_encode($sender),
-                'recipients'                => json_encode($recipients),
-                'cc'                        => empty($cc) ? '[]' : json_encode($cc),
-                'cci'                       => empty($cci) ? '[]' : json_encode($cci),
-                'object'                    => empty($sendmail['email_object']) ? null : $sendmail['email_object'],
-                'body'                      => empty($sendmail['email_body']) ? null : $sendmail['email_body'],
-                'document'                  => empty($document) ? null : json_encode($document),
-                'is_html'                   => $sendmail['is_html'] == 'Y' ? 'true' : 'false',
-                'status'                    => $status,
-                'message_exchange_id'       => empty($sendmail['message_exchange_id']) ? null : $sendmail['message_exchange_id'],
-                'creation_date'             => $sendmail['creation_date'],
-                'send_date'                 => empty($sendmail['send_date']) ? null : $sendmail['send_date']
-            ]
+            'columnsValues' => ['user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'is_html', 'status', 'message_exchange_id', 'creation_date', 'send_date'],
+            'values'        => $aValues
         ]);
     }
 
-    printf(count($sendmails) . " email(s) migré(s) du custom {$custom} vers la nouvelle table.\n");
+    printf($countMail . " email(s) migré(s) du custom {$custom} vers la nouvelle table.\n");
 }
 
 printf($migrated . " custom(s) avec une configuration sendmail trouvé(s) et migré(s).\n");
