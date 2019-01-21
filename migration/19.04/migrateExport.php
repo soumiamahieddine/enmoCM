@@ -28,11 +28,78 @@ foreach ($customs as $custom) {
         $aData = [];
         if (!empty($xmlfile->letterbox_coll->FIELD)) {
             foreach ($xmlfile->letterbox_coll->FIELD as $value) {
-                $aData[] = json_encode(['value' => (string)$value->DATABASE_FIELD, 'label' => (string)$value->LIBELLE, 'isFunction' => false]);
+                $field = (string)$value->DATABASE_FIELD;
+                if (strpos($field, ".") !== false) {
+                    $aField = explode(".", $field);
+                    $field  = $aField[1];
+                }
+                if ($field == 'typist') {
+                    printf("La valeur typist a été remplacé par la fonction getTypist\n");
+                    $function  = $xmlfile->letterbox_coll->FUNCTIONS->addChild('FUNCTION');
+                    $function->addChild('CALL', 'getTypist');
+                    $function->addChild('LIBELLE', 'Rédacteur');
+                    continue;
+                } elseif ($field == 'dest_user') {
+                    printf("La valeur dest_user a été remplacé par la fonction getAssignee\n");
+                    $function  = $xmlfile->letterbox_coll->FUNCTIONS->addChild('FUNCTION');
+                    $function->addChild('CALL', 'getAssignee');
+                    $function->addChild('LIBELLE', 'Attributaire');
+                    continue;
+                } elseif ($field == 'destination') {
+                    printf("La valeur destination a été remplacé par la fonction getDestinationEntity\n");
+                    $function  = $xmlfile->letterbox_coll->FUNCTIONS->addChild('FUNCTION');
+                    $function->addChild('CALL', 'getDestinationEntity');
+                    $function->addChild('LIBELLE', 'Libellé de l\'entité traitante');
+                    continue;
+                } elseif ($field == 'entitytype') {
+                    printf("La valeur entitytype a été remplacé par la fonction getDestinationEntityType\n");
+                    $function  = $xmlfile->letterbox_coll->FUNCTIONS->addChild('FUNCTION');
+                    $function->addChild('CALL', 'getDestinationEntityType');
+                    $function->addChild('LIBELLE', 'Type de l\'entité traitante');
+                    continue;
+                } elseif (in_array($field, ['contact_firstname', 'contact_lastname', 'contact_society'])) {
+                    printf("La valeur ".$field." a été remplacé par la fonction getSender\n");
+                    continue;
+                }
+
+                if (!in_array($field, [
+                    'res_id',
+                    'type_label',
+                    'doctypes_first_level_label',
+                    'doctypes_second_level_label',
+                    'format',
+                    'doc_date',
+                    'reference_number',
+                    'departure_date',
+                    'department_number_id',
+                    'barcode',
+                    'fold_status',
+                    'folder_name',
+                    'confidentiality',
+                    'nature_id',
+                    'alt_identifier',
+                    'admission_date',
+                    'process_limit_date',
+                    'recommendation_limit_date',
+                    'closing_date',
+                    'sve_start_date',
+                    'subject',
+                    'case_label'])) {
+                    printf("Le champ " . $field . " a été trouvé mais non migré car non maintenue\n");
+                    continue;
+                }
+                $aData[] = json_encode(['value' => $field, 'label' => (string)$value->LIBELLE, 'isFunction' => false]);
             }
         }
 
         if (!empty($xmlfile->letterbox_coll->FUNCTIONS->FUNCTION)) {
+            $sender  = $xmlfile->letterbox_coll->FUNCTIONS->addChild('FUNCTION');
+            $sender->addChild('CALL', 'getSender');
+            $sender->addChild('LIBELLE', 'Expéditeur');
+            $recipient  = $xmlfile->letterbox_coll->FUNCTIONS->addChild('FUNCTION');
+            $recipient->addChild('CALL', 'getRecipient');
+            $recipient->addChild('LIBELLE', 'Destinataire');
+
             foreach ($xmlfile->letterbox_coll->FUNCTIONS->FUNCTION as $value) {
                 $functionName = (string)$value->CALL;
                 if ($functionName == 'get_status') {
@@ -50,29 +117,33 @@ foreach ($customs as $custom) {
                 } elseif ($functionName == 'get_entity_initiator_short_label') {
                     $functionName = 'getInitiatorEntity';
                 } elseif ($functionName == 'get_entity_dest_short_label') {
-                    $functionName = 'getDestinationEntity';
+                    printf("La fonction get_entity_dest_short_label a été remplacé par getDestinationEntity\n");
+                    continue;
                 } elseif ($functionName == 'get_contact_type') {
-                    printf("La fonction get_contact_type a été trouvé et non migré car non maintenue\n");
+                    printf("La fonction get_contact_type a été remplacé par getSender\n");
                     continue;
                 } elseif ($functionName == 'get_contact_civility') {
-                    $functionName = 'getSenderCivility';
+                    printf("La fonction get_contact_civility a été remplacé par getSender\n");
+                    continue;
                 } elseif ($functionName == 'get_contact_function') {
-                    $functionName = 'getSenderFunction';
+                    printf("La fonction get_contact_function a été remplacé par getSender\n");
+                    continue;
                 } elseif ($functionName == 'get_tags') {
                     $functionName = 'getTags';
                 } elseif ($functionName == 'get_signatory_name') {
                     $functionName = 'getSignatories';
                 } elseif ($functionName == 'get_signatory_date') {
                     $functionName = 'getSignatureDates';
+                } elseif (!in_array($functionName, ['getTypist', 'getAssignee', 'getDestinationEntity', 'getDestinationEntityType', 'getSender', 'getRecipient'])) {
+                    printf("La fonction " . $functionName . " a été trouvé mais non migré car non maintenue.\n");
+                    continue;
                 }
                 $aData[] = json_encode(['value' => $functionName, 'label' => (string)$value->LIBELLE, 'isFunction' => true]);
             }
         }
 
         if (!empty($xmlfile->letterbox_coll->EMPTYS->EMPTY)) {
-            foreach ($xmlfile->letterbox_coll->EMPTYS->EMPTY as $value) {
-                $aData[] = json_encode(['label' => (string)$value->LIBELLE, 'isFunction' => false]);
-            }
+            $aData[] = json_encode(['value' => '', 'label' => "Commentaire", 'isFunction' => true]);
         }
 
         $users = \User\models\UserModel::get([
