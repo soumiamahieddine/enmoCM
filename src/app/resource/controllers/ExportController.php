@@ -143,7 +143,7 @@ class ExportController
                     $tableFunction[] = 'entities entwo';
                     $leftJoinFunction[] = 'res_view_letterbox.destination = entwo.entity_id';
                 } elseif ($value['value'] == 'getDestinationEntityType') {
-                    $select[] = 'enthree.entitytype AS "enthree.entitytype"';
+                    $select[] = 'enthree.entity_type AS "enthree.entity_type"';
                     $tableFunction[] = 'entities enthree';
                     $leftJoinFunction[] = 'res_view_letterbox.destination = enthree.entity_id';
                 } elseif ($value['value'] == 'getTypist') {
@@ -204,7 +204,7 @@ class ExportController
                     } elseif ($value['value'] == 'getDestinationEntity') {
                         $csvContent[] = $resource['entwo.short_label'];
                     } elseif ($value['value'] == 'getDestinationEntityType') {
-                        $csvContent[] = $resource['enthree.entitytype'];
+                        $csvContent[] = $resource['enthree.entity_type'];
                     } elseif ($value['value'] == 'getSender') {
                         //TODO
                         $csvContent[] = '';

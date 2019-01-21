@@ -22,7 +22,7 @@ class ExportControllerTest extends TestCase
         $response     = $ExportController->getExportTemplate($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->template);
+        $this->assertInternalType('array', $responseBody->template);
         $this->assertInternalType('string', $responseBody->delimiter);
     }
 
@@ -76,6 +76,11 @@ class ExportControllerTest extends TestCase
                 ],
                 [
                     "value" => "getDestinationEntity",
+                    "label" => "Entité traitante",
+                    "isFunction" => true
+                ],
+                [
+                    "value" => "getDestinationEntityType",
                     "label" => "Entité traitante",
                     "isFunction" => true
                 ],
