@@ -267,18 +267,19 @@ export class FiltersToolComponent implements OnInit {
         this.stateGroupOptions = this.stateForm.get('stateGroup')!.valueChanges
             .pipe(
                 startWith(''),
-                map(value => this._filterGroup(value))
+                map((value: any) => this._filterGroup(value))
             );
     }
 
     openListAdmin(): void {
-        const dialogRef = this.dialog.open(ListAdministrationComponent, {
+        this.dialog.open(ListAdministrationComponent, {
           width: '800px',
-          data: {}
+          data: {
+              ownerId   : this.currentBasketInfo.ownerId,
+              groupId   : this.currentBasketInfo.groupId,
+              basketId  : this.currentBasketInfo.basketId,
+              filters   : this.filtersListService.getUrlFilters()
+          }
         });
-    
-        dialogRef.afterClosed().subscribe(result => {
-          console.log('The dialog was closed');
-        });
-      }
+    }
 }

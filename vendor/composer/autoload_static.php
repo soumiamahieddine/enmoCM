@@ -36,6 +36,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'T' => 
         array (
             'Template\\' => 9,
+            'Tag\\' => 4,
         ),
         'S' => 
         array (
@@ -149,6 +150,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Template\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/template',
+        ),
+        'Tag\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/tag',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (

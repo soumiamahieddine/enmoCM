@@ -113,7 +113,7 @@ if (!isset($_SESSION['user']['UserId'])
     exit();
 }
 
-if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
+if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
     //V1
     $started = MaarchIVS::start(__DIR__ . '/xml/IVS/requests_definitions.xml', 'xml');
     $valid = MaarchIVS::run('silent');
@@ -340,9 +340,6 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
     //HTML CONTENT OF ANGULAR
     echo \SrcCore\models\CoreConfigModel::initAngularStructure();
 
-    if ($user['status'] == 'ABS') {
-        $_REQUEST['triggerAngular'] = 'activateUser';
-    }
     $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
     if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
         $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
@@ -357,6 +354,9 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
                 $_REQUEST['triggerAngular'] = 'changePass';
             }
         }
+    }
+    if ($user['status'] == 'ABS') {
+        $_REQUEST['triggerAngular'] = 'activateUser';
     }
 
 
@@ -374,7 +374,7 @@ if ($_REQUEST['page'] && empty($_REQUEST['triggerAngular'])) {
         ?><script>triggerAngular('#/activate-user')</script><?php
     } elseif ($cookie['userId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
         ?><script>triggerAngular('#/administration')</script><?php
-    } elseif (!$_REQUEST['page']) {
+    } elseif (empty($_REQUEST['page'])) {
         ?><script>triggerAngular('#/home')</script><?php
     }
 }

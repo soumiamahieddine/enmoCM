@@ -650,7 +650,7 @@ export const LANG_FR = {
     "maarchLicence"                     : "Maarch Courrier est diffusé sous les termes de la",
     "groupeCompany"                     : "société du groupe Archiveco",
     "welcomeInGEC"                      : "Bienvenue dans votre <b>G</b>estion <b>E</b>lectronique de <b>C</b>ourriers,<br/><br/>nous sommes le",
-    "myLastResources"                   : "Mes derniers courriers",
+    "myLastResources"                   : "Mes derniers courriers consultés",
     "shortcut"                          : "Raccourcis",
     "searchMails"                       : "Rechercher des courriers",
     "noAvailableBasket"                 : "Aucune bannette disponible",
@@ -769,6 +769,7 @@ export const LANG_FR = {
     "emailSendFailed"                                   : "Échec d'envoi",
     "doNotReply"                                        : "Ne pas répondre",
     "none"                                              : "Aucune",
+    "missingBasket"                                     : "Sélectionner les bannettes que vous souhaitez réactiver avec votre compte.",
 };
 
 

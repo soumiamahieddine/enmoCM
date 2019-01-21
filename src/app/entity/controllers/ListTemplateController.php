@@ -55,7 +55,7 @@ class ListTemplateController
                 $listTemplates[$key]['idToDisplay'] = entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
                 $listTemplates[$key]['descriptionToDisplay'] = '';
             } else {
-                $listTemplates[$key]['idToDisplay'] = UserModel::getLabelledUserById(['userId' => $value['item_id']]);
+                $listTemplates[$key]['idToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                 $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
             }
         }

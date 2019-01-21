@@ -621,7 +621,7 @@ if ($mode == 'normal') {
                     if (!empty($_SESSION['searching']['where_request_parameters'][':destinataireChosen'])) {
                         foreach ($_SESSION['searching']['where_request_parameters'][':destinataireChosen'] as $key => $value) {
                             if ($value == $tab[$i][$j]['value']) {
-                                $user = \User\models\UserModel::getByUserId(['userId' => $value, 'select' => ['firstname', 'lastname']]);
+                                $user = \User\models\UserModel::getByLogin(['login' => $value, 'select' => ['firstname', 'lastname']]);
                                 $target_dest = $value;
                                 $target_dest = str_replace('%', '', $target_dest);
                                 $dest = $tab[$i][$j]['value'];
@@ -631,7 +631,7 @@ if ($mode == 'normal') {
                         }
                     } else {
                         if (!empty($tab[$i][$j]['value'])) {
-                            $user = \User\models\UserModel::getByUserId(['userId' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
+                            $user = \User\models\UserModel::getByLogin(['login' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
                             $dest = $tab[$i][$j]['value'];
                             $dest = $user['firstname'] . ' ' . $user['lastname'];
                         } else {

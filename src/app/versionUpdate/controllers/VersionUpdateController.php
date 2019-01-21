@@ -19,6 +19,7 @@ use Group\models\ServiceModel;
 use Parameter\models\ParameterModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
 
 class VersionUpdateController
 {
@@ -35,12 +36,18 @@ class VersionUpdateController
             return $response->withJson(['errors' => $e->getMessage()]);
         }
 
-        $parameter = ParameterModel::getById(['select' => ['param_value_string'], 'id' => 'database_version']);
+        $applicationVersion = CoreConfigModel::getApplicationVersion();
 
-        $currentVersionBranch = substr($parameter['param_value_string'], 0, 5);
-        $currentVersionBranchYear = substr($parameter['param_value_string'], 0, 2);
-        $currentVersionBranchMonth = substr($parameter['param_value_string'], 3, 2);
-        $currentVersionTag = substr($parameter['param_value_string'], 6);
+        if(!$applicationVersion) {
+            return $response->withStatus(400)->withJson(['errors' => "Can't load xml applicationVersion"]);
+        } else {
+            $currentVersion = $applicationVersion['applicationMinorVersion'];
+        }
+
+        $currentVersionBranch = substr($currentVersion, 0, 5);
+        $currentVersionBranchYear = substr($currentVersion, 0, 2);
+        $currentVersionBranchMonth = substr($currentVersion, 3, 2);
+        $currentVersionTag = substr($currentVersion, 6);
 
         $availableMinorVersions = [];
         $availableMajorVersions = [];
@@ -68,10 +75,22 @@ class VersionUpdateController
         natcasesort($availableMinorVersions);
         natcasesort($availableMajorVersions);
 
+        if (empty($availableMinorVersions)) {
+            $lastAvailableMinorVersion = null;
+        } else {
+            $lastAvailableMinorVersion = $availableMinorVersions[0];
+        }
+
+        if (empty($availableMajorVersions)) {
+            $lastAvailableMajorVersion = null;
+        } else {
+            $lastAvailableMajorVersion = $availableMajorVersions[0];
+        }
+
         return $response->withJson([
-            'lastAvailableMinorVersion'   => $availableMinorVersions[0],
-            'lastAvailableMajorVersion'    => $availableMajorVersions[0],
-            'currentVersion'           => $parameter['param_value_string']
+            'lastAvailableMinorVersion' => $lastAvailableMinorVersion,
+            'lastAvailableMajorVersion' => $lastAvailableMajorVersion,
+            'currentVersion'            => $currentVersion
         ]);
     }
 }

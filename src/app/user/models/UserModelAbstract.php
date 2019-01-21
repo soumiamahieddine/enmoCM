@@ -306,12 +306,12 @@ abstract class UserModelAbstract
     public static function getLabelledUserById(array $aArgs)
     {
         ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['login']);
 
         if (!empty($aArgs['id'])) {
             $rawUser = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname']]);
-        } elseif (!empty($aArgs['userId'])) {
-            $rawUser = UserModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['firstname', 'lastname']]);
+        } elseif (!empty($aArgs['login'])) {
+            $rawUser = UserModel::getByLogin(['login' => $aArgs['login'], 'select' => ['firstname', 'lastname']]);
         }
 
         $labelledUser = '';
