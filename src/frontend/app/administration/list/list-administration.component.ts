@@ -67,7 +67,7 @@ export class ListAdministrationComponent implements OnInit {
         },
         {
             value : 'department_number_id',
-            label : 'Départements',
+            label : 'Département',
             isFunction : false
         },
         {
@@ -77,7 +77,7 @@ export class ListAdministrationComponent implements OnInit {
         },
         {
             value : 'fold_status',
-            label : 'Status du dossier',
+            label : 'Statut du dossier',
             isFunction : false
         },
         {
@@ -137,7 +137,7 @@ export class ListAdministrationComponent implements OnInit {
         },
         {
             value : 'getStatus',
-            label : 'Status',
+            label : 'Statut',
             isFunction : true
         },
         {
@@ -152,7 +152,7 @@ export class ListAdministrationComponent implements OnInit {
         },
         {
             value : 'getDetailLink',
-            label : 'Lien vers la fiche détaillé',
+            label : 'Lien vers la fiche détaillée',
             isFunction : true
         },
         {
