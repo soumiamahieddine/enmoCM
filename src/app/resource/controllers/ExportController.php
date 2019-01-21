@@ -24,6 +24,7 @@ use Resource\models\ResourceListModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Http\Stream;
 use SrcCore\models\ValidatorModel;
 use Tag\models\TagModel;
 use User\models\UserModel;
@@ -37,8 +38,8 @@ class ExportController
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
         $template     = ExportTemplateModel::getByUserId(['userId' => $currentUser['id']]);
-        $delimiter    = "";
-        $templateData = "";
+        $delimiter    = '';
+        $templateData = [];
         if (!empty($template)) {
             $delimiter    = $template['delimiter'];
             $templateData = (array)json_decode($template['data']);
@@ -141,12 +142,14 @@ class ExportController
                     $select[] = 'entwo.short_label AS "entwo.short_label"';
                     $tableFunction[] = 'entities entwo';
                     $leftJoinFunction[] = 'res_view_letterbox.destination = entwo.entity_id';
-                } elseif ($value['value'] == 'getContactType') {
-                    //TODO
-                } elseif ($value['value'] == 'getContactCivility') {
-                    //TODO
-                } elseif ($value['value'] == 'getContactFunction') {
-                    //TODO
+                } elseif ($value['value'] == 'getDestinationEntityType') {
+                    $select[] = 'enthree.entitytype AS "enthree.entitytype"';
+                    $tableFunction[] = 'entities enthree';
+                    $leftJoinFunction[] = 'res_view_letterbox.destination = enthree.entity_id';
+                } elseif ($value['value'] == 'getTypist') {
+                    $select[] = 'res_view_letterbox.typist';
+                } elseif ($value['value'] == 'getAssignee') {
+                    $select[] = 'res_view_letterbox.dest_user';
                 }
             } else {
                 $select[] = "res_view_letterbox.{$value['value']}";
@@ -200,15 +203,18 @@ class ExportController
                         $csvContent[] = $resource['enone.short_label'];
                     } elseif ($value['value'] == 'getDestinationEntity') {
                         $csvContent[] = $resource['entwo.short_label'];
-                    } elseif ($value['value'] == 'getContactType') {
+                    } elseif ($value['value'] == 'getDestinationEntityType') {
+                        $csvContent[] = $resource['enthree.entitytype'];
+                    } elseif ($value['value'] == 'getSender') {
                         //TODO
                         $csvContent[] = '';
-                    } elseif ($value['value'] == 'getContactCivility') {
+                    } elseif ($value['value'] == 'getRecipient') {
                         //TODO
                         $csvContent[] = '';
-                    } elseif ($value['value'] == 'getContactFunction') {
-                        //TODO
-                        $csvContent[] = '';
+                    } elseif ($value['value'] == 'getTypist') {
+                        $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['typist']]);
+                    } elseif ($value['value'] == 'getAssignee') {
+                        $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['dest_user']]);
                     } elseif ($value['value'] == 'getTags') {
                         $csvContent[] = ExportController::getTags(['resId' => $resource['res_id']]);
                     } elseif ($value['value'] == 'getSignatories') {

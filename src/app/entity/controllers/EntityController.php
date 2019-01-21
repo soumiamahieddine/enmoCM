@@ -134,7 +134,7 @@ class EntityController
                     'sequence'              => $listTemplate['sequence'],
                     'title'                 => $listTemplate['title'],
                     'description'           => $listTemplate['description'],
-                    'idToDisplay'           => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
+                    'idToDisplay'           => UserModel::getLabelledUserById(['login' => $listTemplate['item_id']]),
                     'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
                 ];
             }
