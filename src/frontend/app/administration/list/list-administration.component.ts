@@ -277,8 +277,16 @@ export class ListAdministrationComponent implements OnInit {
             });
     }
 
-    addData(i: number) {
-        transferArrayItem(this.dataAvailable, this.exportModel.data, i, this.exportModel.data.length);
+    addData(item: any) {
+        var realIndex = 0;
+
+        this.dataAvailable.forEach((value : any, index : number) => {
+            if (value.value == item.value) {
+                realIndex = index;
+            }
+        });
+
+        transferArrayItem(this.dataAvailable, this.exportModel.data, realIndex, this.exportModel.data.length);
         this.listFilter.nativeElement.value = '';
     }
 

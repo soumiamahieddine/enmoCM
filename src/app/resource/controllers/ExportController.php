@@ -24,7 +24,6 @@ use Resource\models\ResourceListModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Http\Stream;
 use SrcCore\models\ValidatorModel;
 use Tag\models\TagModel;
 use User\models\UserModel;

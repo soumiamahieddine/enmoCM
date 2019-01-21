@@ -34,9 +34,9 @@
                 <div class="col-md-6 available-data">
                     <h2><span class="title">Donnée(s) disponible(s)</span> <i class="fa fa-plus-circle removeAllDatas" color="primary" title="Ajouter toutes les données disponibles" (click)="addAllData()"></i></h2>
                     <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="dataAvailable" [cdkDropListConnectedTo]="[dataExportList]" class="cdk-list" (cdkDropListDropped)="drop($event)">
-                        <div class="columns" *ngFor="let item of dataAvailable | filterList:listFilter.value:'label';let i = index"
+                        <div class="columns" *ngFor="let item of dataAvailable | filterList:listFilter.value:'label'"
                             cdkDrag>{{item.label}} <i class="fa fa-plus" color="primary" style="cursor:pointer;"
-                                (click)="addData(i)"></i></div>
+                                (click)="addData(item)"></i></div>
                         <div *ngIf="dataAvailable.length == 0" class="noData">Aucune donnée disponible</div>
                     </div>
                 </div>

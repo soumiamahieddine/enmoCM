@@ -340,9 +340,6 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
     //HTML CONTENT OF ANGULAR
     echo \SrcCore\models\CoreConfigModel::initAngularStructure();
 
-    if ($user['status'] == 'ABS') {
-        $_REQUEST['triggerAngular'] = 'activateUser';
-    }
     $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
     if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
         $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
@@ -357,6 +354,9 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
                 $_REQUEST['triggerAngular'] = 'changePass';
             }
         }
+    }
+    if ($user['status'] == 'ABS') {
+        $_REQUEST['triggerAngular'] = 'activateUser';
     }
 
 
