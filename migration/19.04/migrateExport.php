@@ -117,16 +117,16 @@ foreach ($customs as $custom) {
                 } elseif ($functionName == 'get_entity_initiator_short_label') {
                     $functionName = 'getInitiatorEntity';
                 } elseif ($functionName == 'get_entity_dest_short_label') {
-                    printf("La fonction get_entity_dest_short_label a été remplacé par getDestinationEntity\n");
+                    printf("La fonction get_entity_dest_short_label a été remplacé par la fonction getDestinationEntity\n");
                     continue;
                 } elseif ($functionName == 'get_contact_type') {
-                    printf("La fonction get_contact_type a été remplacé par getSender\n");
+                    printf("La fonction get_contact_type a été remplacé par la fonction getSender\n");
                     continue;
                 } elseif ($functionName == 'get_contact_civility') {
-                    printf("La fonction get_contact_civility a été remplacé par getSender\n");
+                    printf("La fonction get_contact_civility a été remplacé par la fonction getSender\n");
                     continue;
                 } elseif ($functionName == 'get_contact_function') {
-                    printf("La fonction get_contact_function a été remplacé par getSender\n");
+                    printf("La fonction get_contact_function a été remplacé par la fonction getSender\n");
                     continue;
                 } elseif ($functionName == 'get_tags') {
                     $functionName = 'getTags';
