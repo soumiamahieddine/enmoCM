@@ -16,7 +16,7 @@
         </div>
     </div>
     <mat-accordion>
-        <mat-expansion-panel>
+        <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     Donnée(s) d'exportation
@@ -60,5 +60,5 @@
 
 <div mat-dialog-actions class="actions">
     <button mat-raised-button mat-button color="primary" [disabled]="exportModel.data.length == 0" (click)="exportData();">Exporter</button>
-    <button mat-raised-button mat-button [mat-dialog-close]="">Annuler</button>
+    <button mat-raised-button mat-button [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>
