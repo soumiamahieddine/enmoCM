@@ -16,7 +16,7 @@
     "bootstrap": "^3.3.7",
     "chart.js": "1.1.1",
     "chosen-js": "^1.8.7",
-    "core-js": "^2.6.1",
+    "core-js": "^2.6.3",
     "jquery": "^3.3.1",
     "jquery-typeahead": "^2.10.6",
     "jquery.nicescroll": "~3.6.8",
