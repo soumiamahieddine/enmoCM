@@ -33,20 +33,13 @@ class TextFormatModel
 
     public static function formatDate($date)
     {
-        $last_date = '';
-
-        if (!empty($date)) {
-            if (strpos($date, " ")) {
-                $date_ex    = explode(" ", $date);
-                $the_date   = explode("-", $date_ex[0]);
-                $last_date  = $the_date[2]."-".$the_date[1]."-".$the_date[0];
-            } else {
-                $the_date   = explode("-", $date);
-                $last_date  = $the_date[2]."-".$the_date[1]."-".$the_date[0];
-            }
+        if (empty($date)) {
+            return '';
         }
 
-        return $last_date;
+        $date = new \DateTime($date);
+
+        return $date->format('d-m-Y H:i');
     }
 
     public static function removeAccent(array $aArgs)

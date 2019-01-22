@@ -15,13 +15,19 @@
 
 namespace SrcCore\models;
 
-//This model is not customizable
 class CoreConfigModel
 {
     public static function getCustomId()
     {
+        static $customId = null;
+
+        if ($customId !== null) {
+            return $customId;
+        }
+
         if (!file_exists('custom/custom.xml') || empty($_SERVER['SCRIPT_NAME']) || empty($_SERVER['SERVER_ADDR'])) {
-            return '';
+            $customId = '';
+            return $customId;
         }
 
         $explodeUrl = explode('/', $_SERVER['SCRIPT_NAME']);
@@ -39,15 +45,19 @@ class CoreConfigModel
         $xmlfile = simplexml_load_file('custom/custom.xml');
         foreach ($xmlfile->custom as $value) {
             if (!empty($value->path) && $value->path == $path) {
-                return (string)$value->custom_id;
+                $customId = (string)$value->custom_id;
+                return $customId;
             } elseif ($value->ip == $_SERVER['SERVER_ADDR']) {
-                return (string)$value->custom_id;
+                $customId = (string)$value->custom_id;
+                return $customId;
             } elseif ($value->external_domain == $_SERVER['HTTP_HOST'] || $value->domain == $_SERVER['HTTP_HOST']) {
-                return (string)$value->custom_id;
+                $customId = (string)$value->custom_id;
+                return $customId;
             }
         }
 
-        return '';
+        $customId = '';
+        return $customId;
     }
 
     public static function getApplicationName()
