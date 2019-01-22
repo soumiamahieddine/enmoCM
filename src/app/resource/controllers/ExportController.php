@@ -222,7 +222,12 @@ class ExportController
                         $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
                     }
                 } else {
-                    $csvContent[] = $resource[$value['value']];
+                    if (strpos($value['value'], 'date') !== false && !empty($resource[$value['value']])) {
+                        $date = new \DateTime($resource[$value['value']]);
+                        $csvContent[] = $date->format('d-m-Y H:i');
+                    } else {
+                        $csvContent[] = $resource[$value['value']];
+                    }
                 }
             }
             fputcsv($file, $csvContent, $delimiter);
