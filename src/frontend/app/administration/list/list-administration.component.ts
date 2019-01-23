@@ -251,11 +251,9 @@ export class ListAdministrationComponent implements OnInit {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            const fakeIndex = $j('.available-data .columns')[event.previousIndex].id;
-            const realIndex = this.dataAvailable.map((dataAv: any) => (dataAv.id)).indexOf(fakeIndex);
             transferArrayItem(event.previousContainer.data,
                 event.container.data,
-                realIndex,
+                event.previousIndex,
                 event.currentIndex);
             this.listFilter.nativeElement.value = '';
         }

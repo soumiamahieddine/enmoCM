@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="col-md-6 active-data">
-                    <h2><span class="title">{{lang.chosenDatas}}</span> <i class="fa fa-eraser removeAllDatas" color="warn" title="{{lang.removeAllDatas}}" (click)="removeAllData()"></i></h2>
+                    <h2><span class="title">{{lang.chosenDatas}}</span> <i class="fa fa-minus-circle removeAllDatas" color="warn" title="{{lang.removeAllDatas}}" (click)="removeAllData()"></i></h2>
                     <div cdkDropList #dataExportList="cdkDropList" [cdkDropListData]="exportModel.data"
                         [cdkDropListConnectedTo]="[dataAvailableList]" class="cdk-list" (cdkDropListDropped)="drop($event)">
                         <div class="columns" *ngFor="let item of exportModel.data;let i = index" cdkDrag>{{item.label}} <i
