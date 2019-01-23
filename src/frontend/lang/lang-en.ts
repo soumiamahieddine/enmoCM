@@ -743,7 +743,7 @@ export const LANG_EN = {
     "emailSendFailed"                                   : "Email send failed",
     "doNotReply"                                        : "Do not reply",
     "none"                                              : "None",
-    "missingBasket"                                     : "Select the baskets you would like reactivate with your account.",
+    "missingBasket"                                     : "Select the baskets wish you want to delete the redirection.",
     "docDate"                                     : "Document date",
     "reference"                                     : "Reference",
     "departureDate"                                     : "Departure date",
