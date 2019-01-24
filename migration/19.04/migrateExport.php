@@ -88,7 +88,11 @@ foreach ($customs as $custom) {
                     printf("Le champ " . $field . " a été trouvé mais non migré car non maintenue\n");
                     continue;
                 }
-                $aData[] = json_encode(['value' => $field, 'label' => (string)$value->LIBELLE, 'isFunction' => false]);
+                $oData             = new stdClass();
+                $oData->value      = $field;
+                $oData->label      = (string)$value->LIBELLE;
+                $oData->isFunction = false;
+                $aData[] = $oData;
             }
         }
 
@@ -138,12 +142,20 @@ foreach ($customs as $custom) {
                     printf("La fonction " . $functionName . " a été trouvé mais non migré car non maintenue.\n");
                     continue;
                 }
-                $aData[] = json_encode(['value' => $functionName, 'label' => (string)$value->LIBELLE, 'isFunction' => true]);
+                $oData             = new stdClass();
+                $oData->value      = $functionName;
+                $oData->label      = (string)$value->LIBELLE;
+                $oData->isFunction = true;
+                $aData[] = $oData;
             }
         }
 
         if (!empty($xmlfile->letterbox_coll->EMPTYS->EMPTY)) {
-            $aData[] = json_encode(['value' => '', 'label' => "Commentaire", 'isFunction' => true]);
+            $oData             = new stdClass();
+            $oData->value      = '';
+            $oData->label      = 'Commentaire';
+            $oData->isFunction = true;
+            $aData[] = $oData;
         }
 
         $users = \User\models\UserModel::get([

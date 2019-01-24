@@ -16,7 +16,6 @@
                 <div class="text-center" style="margin-top: 50px;">
                     {{lang.missingAdvert}}<br>
                     {{lang.missingAdvert2}}<br>
-                    {{lang.missingChoose}}<br>
                     <ng-container *ngIf="user.redirectedBaskets.length > 0">
                         <br>
                         {{lang.missingBasket}}<br>
@@ -51,6 +50,7 @@
                                     <span (click)="selectionBaskets.toggle(basket);" matTooltip="{{basket.basket_name}} [{{basket.group_desc}}]" style="flex: 2;overflow: hidden;text-overflow: ellipsis;">
                                         {{basket.basket_name}}
                                         <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
+                                        <span style="opacity: 0.5;font-style: italic;font-size: 80%;"> {{lang.redirectedTo}} {{basket.userToDisplay}}</span>
                                     </span>
                                 </h4>
                             </mat-list-item>
@@ -62,6 +62,8 @@
                 <div style="clear:both;"></div>
                 
                 <div *ngIf="!loading" class="text-center" style="position:relative; top:50px;">
+                    {{lang.missingChoose}}<br>
+                    <br>
                     <button mat-raised-button color="primary" type="button" (click)="activateUser()">{{lang.validate}}</button>
                     <button mat-raised-button color="primary" type="button" (click)="logout()">{{lang.cancel}}</button>
                 </div>

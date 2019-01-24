@@ -24,6 +24,7 @@ use Resource\models\ResourceListModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Tag\models\TagModel;
 use User\models\UserModel;
@@ -222,7 +223,11 @@ class ExportController
                         $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
                     }
                 } else {
-                    $csvContent[] = $resource[$value['value']];
+                    if (strpos($value['value'], 'date') !== false) {
+                        $csvContent[] = TextFormatModel::formatDate($resource[$value['value']]);
+                    } else {
+                        $csvContent[] = $resource[$value['value']];
+                    }
                 }
             }
             fputcsv($file, $csvContent, $delimiter);

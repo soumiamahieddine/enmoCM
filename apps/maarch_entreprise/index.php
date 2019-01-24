@@ -339,6 +339,9 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
 
     //HTML CONTENT OF ANGULAR
     echo \SrcCore\models\CoreConfigModel::initAngularStructure();
+    if ($user['status'] == 'ABS') {
+        $_REQUEST['triggerAngular'] = 'activateUser';
+    }
 
     $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
     if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
@@ -355,11 +358,7 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
             }
         }
     }
-    if ($user['status'] == 'ABS') {
-        $_REQUEST['triggerAngular'] = 'activateUser';
-    }
-
-
+    
     if (isset($_SESSION['HTTP_REFERER'])) {
         $url = $_SESSION['HTTP_REFERER'];
         unset($_SESSION['HTTP_REFERER']);

@@ -27,197 +27,197 @@ export class ListAdministrationComponent implements OnInit {
     dataAvailable : any[] = [
         {
             value : 'res_id',
-            label : 'Identifiant du document',
+            label : this.lang.resId,
             isFunction : false
         },
         {
             value : 'type_label',
-            label : 'Typologie du document',
+            label : this.lang.doctype,
             isFunction : false
         },
         {
             value : 'doctypes_first_level_label',
-            label : 'Premier niveau typologique du document',
+            label : this.lang.firstLevelDoctype,
             isFunction : false
         },
         {
             value : 'doctypes_second_level_label',
-            label : 'Second niveau typologique du document',
+            label : this.lang.secondLevelDoctype,
             isFunction : false
         },
         {
             value : 'format',
-            label : 'Format',
+            label : this.lang.format,
             isFunction : false
         },
         {
             value : 'doc_date',
-            label : 'Date du document',
+            label : this.lang.docDate,
             isFunction : false
         },
         {
             value : 'reference_number',
-            label : 'Référence',
+            label : this.lang.reference,
             isFunction : false
         },
         {
             value : 'departure_date',
-            label : 'Date de départ',
+            label : this.lang.departureDate,
             isFunction : false
         },
         {
             value : 'department_number_id',
-            label : 'Départements',
+            label : this.lang.department,
             isFunction : false
         },
         {
             value : 'barcode',
-            label : 'Code barre',
+            label : this.lang.barcode,
             isFunction : false
         },
         {
             value : 'fold_status',
-            label : 'Status du dossier',
+            label : this.lang.folderStatus,
             isFunction : false
         },
         {
             value : 'folder_name',
-            label : 'Libellé du dossier',
+            label : this.lang.folderName,
             isFunction : false
         },
         {
             value : 'confidentiality',
-            label : 'Confidentialité',
+            label : this.lang.confidentiality,
             isFunction : false
         },
         {
             value : 'nature_id',
-            label : 'Nature du courrier',
+            label : this.lang.nature,
             isFunction : false
         },
         {
             value : 'alt_identifier',
-            label : 'Numéro chrono',
+            label : this.lang.chronoNumber,
             isFunction : false
         },
         {
             value : 'admission_date',
-            label : 'Date d\'admission',
+            label : this.lang.admissionDate,
             isFunction : false
         },
         {
             value : 'process_limit_date',
-            label : 'Date limite de traitement',
+            label : this.lang.processLimitDate,
             isFunction : false
         },
         {
             value : 'recommendation_limit_date',
-            label : 'Date limite de demande d\'avis',
+            label : this.lang.recommendationLimitDate,
             isFunction : false
         },
         {
             value : 'closing_date',
-            label : 'Date de clôture',
+            label : this.lang.closingDate,
             isFunction : false
         },
         {
             value : 'sve_start_date',
-            label : 'Date de début SVE',
+            label : this.lang.sveStartDate,
             isFunction : false
         },
         {
             value : 'subject',
-            label : 'Sujet',
+            label : this.lang.subject,
             isFunction : false
         },
         {
             value : 'case_label',
-            label : 'Libellé de l\'affaire du courrier',
+            label : this.lang.caseLabel,
             isFunction : false
         },
         {
             value : 'getStatus',
-            label : 'Status',
+            label : this.lang.status,
             isFunction : true
         },
         {
             value : 'getPriority',
-            label : 'Priorité',
+            label : this.lang.priority,
             isFunction : true
         },
         {
             value : 'getCopyEntities',
-            label : 'Entités en copie',
+            label : this.lang.copyEntities,
             isFunction : true
         },
         {
             value : 'getDetailLink',
-            label : 'Lien vers la fiche détaillé',
+            label : this.lang.detailLink,
             isFunction : true
         },
         {
             value : 'getParentFolder',
-            label : 'Dossier parent',
+            label : this.lang.parentFolder,
             isFunction : true
         },
         {
             value : 'getCategory',
-            label : 'Catégorie',
+            label : this.lang.category_id,
             isFunction : true
         },
         {
             value : 'getInitiatorEntity',
-            label : 'Libellé de l\'entité initiatrice',
+            label : this.lang.initiatorEntity,
             isFunction : true
         },
         {
             value : 'getDestinationEntity',
-            label : 'Libellé de l\'entité traitante',
+            label : this.lang.destinationEntity,
             isFunction : true
         },
         {
             value : 'getDestinationEntityType',
-            label : 'Type de l\'entité traitante',
+            label : this.lang.destinationEntityType,
             isFunction : true
         },
         {
             value : 'getSender',
-            label : 'Expéditeur',
+            label : this.lang.sender,
             isFunction : true
         },
         {
             value : 'getRecipient',
-            label : 'Destinataire',
+            label : this.lang.recipient,
             isFunction : true
         },
         {
             value : 'getTypist',
-            label : 'Rédacteur',
+            label : this.lang.typist,
             isFunction : true
         },
         {
             value : 'getAssignee',
-            label : 'Attributaire',
+            label : this.lang.dest_user,
             isFunction : true
         },
         {
             value : 'getTags',
-            label : 'Mots-clés',
+            label : this.lang.tags,
             isFunction : true
         },
         {
             value : 'getSignatories',
-            label : 'Signataires',
+            label : this.lang.signUser,
             isFunction : true
         },
         {
             value : 'getSignatureDates',
-            label : 'Dates de signature',
+            label : this.lang.signatureDate,
             isFunction : true
         },
         {
             value : '',
-            label : 'Commentaires',
+            label : this.lang.comment,
             isFunction : true
         }
     ];
@@ -251,11 +251,9 @@ export class ListAdministrationComponent implements OnInit {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            const fakeIndex = $j('.available-data .columns')[event.previousIndex].id;
-            const realIndex = this.dataAvailable.map((dataAv: any) => (dataAv.id)).indexOf(fakeIndex);
             transferArrayItem(event.previousContainer.data,
                 event.container.data,
-                realIndex,
+                event.previousIndex,
                 event.currentIndex);
             this.listFilter.nativeElement.value = '';
         }

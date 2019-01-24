@@ -846,7 +846,7 @@ class UserControllerTest extends TestCase
         $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('Bad Request', $responseBody->errors);
+        $this->assertSame('Some data are empty', $responseBody->errors);
 
         $aArgs = [
             [
