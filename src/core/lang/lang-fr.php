@@ -194,9 +194,7 @@ define('_SECURITIES', 'Sécurités');
 define('_EMAILSERVER_PARAM', 'Serveur e-mail');
 define('_EMAILSERVER_PARAM_DESC', 'Connecter votre serveur e-mail à Maarch Courrier afin de pouvoir envoyer des courriels.');
 
-
-
-//SERVICES
+// SERVICES
 define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
 define('_ADMIN', 'Administration');
 define('_ADV_SEARCH_MLB', 'Rechercher');
@@ -424,5 +422,22 @@ define('_SVA', 'SVA');
 define('_SVR', 'SVR');
 define('_REDACTOR', 'Rédacteur');
 define('_ASSIGNEE', 'Attributaire');
+
+define('_SUMMARY_SHEET', 'Fiche de liaison');
+define('_CATEGORY', 'Catégorie');
+define('_CHRONO_NUMBER', 'Numéro chrono');
+define('_INITIATOR_ENTITY', 'Entité initiatrice');
+define('_DESTINATION_ENTITY', 'Entité traitante');
+define('_PRIORITY', 'Priorité');
+define('_STATUS', 'Statut');
+define('_NATURE', 'Nature');
+define('_DOCTYPE', 'Type de document');
+define('_TYPIST', 'Opérateur');
+define('_CREATED', 'Créé le');
+define('_DOC_DATE', 'Date du courrier');
+define('_ADMISSION_DATE', 'Date d\'arrivée');
+define('_PROCESS_LIMIT_DATE', 'Date limite de traitement');
+define('_CLOSING_DATE', 'Date de clôture');
+define('_ACTION_DATE', 'Date d\'action');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'Utilisateur créé dans Maarch Parapheur');

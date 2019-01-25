@@ -122,7 +122,7 @@ class SummarySheetController
 
         $pdf->SetY($pdf->GetY() + 10);
         $pdf->SetFont('', 'B', 18);
-        $pdf->Cell(0, 20, "Fiche de liaison", 1, 2, 'C', false);
+        $pdf->Cell(0, 20, _SUMMARY_SHEET, 1, 2, 'C', false);
 
         $pdf->SetY($pdf->GetY() + 30);
         $pdf->SetFont('', 'I', 14);
@@ -170,20 +170,20 @@ class SummarySheetController
                 $pdf->SetY($pdf->GetY() + 2);
 
                 $pdf->SetFont('', '', 10);
-                $pdf->Cell($widthNoMargins / 2, 20, "Catégorie : {$category}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Numéro chrono : {$resource['alt_identifier']}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Entité initiatrice : {$initiatorEntity}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Entité traitante : {$destinationEntity}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Créé le : {$creationdate}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Date du courrier : {$docDate}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Date d'arrivée : {$admissionDate}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Date limite de traitement : {$processLimitDate}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Priorité : {$priority}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Statut : {$status['label_status']}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Type de document : {$resource['type_label']}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Nature : {$nature}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Opérateur : {$typist}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, "Date de clôture : {$closingDate}", 1, 1, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _CATEGORY . " : {$category}", 1, 0, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _CHRONO_NUMBER . " : {$resource['alt_identifier']}", 1, 1, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _INITIATOR_ENTITY . " : {$initiatorEntity}", 1, 0, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _DESTINATION_ENTITY . " : {$destinationEntity}", 1, 1, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _CREATED . " : {$creationdate}", 1, 0, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _DOC_DATE . " : {$docDate}", 1, 1, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _ADMISSION_DATE . " : {$admissionDate}", 1, 0, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 1, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _PRIORITY . " : {$priority}", 1, 0, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _STATUS . " : {$status['label_status']}", 1, 1, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _DOCTYPE . " : {$resource['type_label']}", 1, 0, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _NATURE . " : {$nature}", 1, 1, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _TYPIST . " : {$typist}", 1, 0, 'L', false);
+                $pdf->Cell($widthNoMargins / 2, 20, _CLOSING_DATE . " : {$closingDate}", 1, 1, 'L', false);
             } elseif ($unit['unit'] == 'diffusionList') {
                 $assignee = '';
                 $copies = [];
@@ -216,10 +216,10 @@ class SummarySheetController
                 $pdf->SetY($pdf->GetY() + 2);
 
                 $pdf->SetFont('', '', 10);
-                $pdf->MultiCell($widthNoMargins / 6, 20, "Attributaire", 1, 'C', false, 0, '', '', true, 0, false, true, 20, 'M');
+                $pdf->MultiCell($widthNoMargins / 6, 20, _ASSIGNEE, 1, 'C', false, 0, '', '', true, 0, false, true, 20, 'M');
                 $pdf->Cell($widthNoMargins / 6 * 5, 20, "- {$assignee}", 1, 1, 'L', false);
                 if (!empty($copies)) {
-                    $pdf->MultiCell($widthNoMargins / 6, count($copies) * 20, "En copie", 1, 'C', false, 0, '', '', true, 0, false, true, count($copies) * 20, 'M');
+                    $pdf->MultiCell($widthNoMargins / 6, count($copies) * 20, _TO_CC, 1, 'C', false, 0, '', '', true, 0, false, true, count($copies) * 20, 'M');
                     foreach ($copies as $copy) {
                         $pdf->Cell($widthNoMargins / 6 * 5, 20, "- {$copy}", 1, 2, 'L', false);
                     }
@@ -245,8 +245,8 @@ class SummarySheetController
                     $pdf->SetY($pdf->GetY() + 2);
 
                     $pdf->SetFont('', '', 10);
-                    $pdf->Cell($widthNoMargins / 4 * 3, 20, "Utilisateurs", 1, 0, 'L', false);
-                    $pdf->Cell($widthNoMargins / 4, 20, "Date d'action", 1, 1, 'L', false);
+                    $pdf->Cell($widthNoMargins / 4 * 3, 20, _USERS, 1, 0, 'L', false);
+                    $pdf->Cell($widthNoMargins / 4, 20, _ACTION_DATE, 1, 1, 'L', false);
                     foreach ($users as $key => $user) {
                         $pdf->Cell($widthNoMargins / 4 * 3, 20, $key + 1 . ". {$user['user']} ({$user['mode']})", 1, 0, 'L', false);
                         $pdf->Cell($widthNoMargins / 4, 20, $user['date'], 1, 1, 'L', false);

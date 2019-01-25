@@ -142,6 +142,8 @@ define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
 define('_ATTACH_DISPLAYING', 'Weergave van de bijlage');
+
+// ADMINISTRATION
 define('_USERS', 'Gebruikers');
 define('_ADMIN_USERS_DESC', 'Gebruikersprofielen toevoegen, opschorten of wijzigen. De gebruikers in de groepen plaatsen waartoe ze behoren en hun primaire groep bepalen.');
 define('_GROUPS', 'Gebruikersgroepen');
@@ -186,6 +188,8 @@ define('_ADMIN_NOTIFICATIONS_DESC', 'Meldingen voor de gebruikers aanmaken en be
 define('_TEMPLATES', 'Documentmodellen');
 define('_ADMIN_TEMPLATES_DESC', 'De modellen die voor de bijlagen gebruikt worden, de meldingen, de aanmaak van brieven, het verzenden van e-mails en de opmerkingen beheren');
 define('_SECURITIES', 'Veiligheden');
+
+//SERVICES
 define('_REDIRECT_TO_ACTION', 'Doorsturen naar een andere actie');
 define('_ADMIN', 'Beheer');
 define('_ADV_SEARCH_MLB', 'Opzoeken');
@@ -280,6 +284,8 @@ define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Nuttig indien het vloeiboek als co
 define('_PRINT_FOLDER_DOC', 'De volledige map afdrukken');
 define('_USE_DATE_IN_SIGNBLOCK', 'De datum in de handtekening insluiten');
 define('_USE_DATE_IN_SIGNBLOCK_DESC', 'De datum van ondertekening zal bovenaan de handtekening verschijnen (met de gemeente indien deze in de rootservice van de applicatie werd ingeschreven)');
+
+// ACTIONS
 define('_REDIRECTION', 'Doorsturen');
 define('_REDIRECTION_DESC', 'Opent een modaliteit waarmee een nieuwe verwerkende gebruiker gekozen kan worden OF die de verwerkende dienst met een nieuwe distributielijst opnieuw kan instellen.');
 define('_REDIRECTION_VISA_SIGN', 'Doorsturen voor ondertekening');
@@ -410,3 +416,22 @@ define('_ASSIGNEE', 'Toegekende persoon');
 define('_EMAILSERVER_PARAM', '_TO_TRANSLATE');
 define('_EMAILSERVER_PARAM_DESC', '_TO_TRANSLATE');
 define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
+
+define('_SUMMARY_SHEET', 'Summary sheet_TO_TRANSLATE');
+define('_CATEGORY', 'Category_TO_TRANSLATE');
+define('_CHRONO_NUMBER', 'Chrono number_TO_TRANSLATE');
+define('_INITIATOR_ENTITY', 'Initiator entity_TO_TRANSLATE');
+define('_DESTINATION_ENTITY', 'Destination entity_TO_TRANSLATE');
+define('_PRIORITY', 'Priority_TO_TRANSLATE');
+define('_STATUS', 'Status_TO_TRANSLATE');
+define('_NATURE', 'Nature_TO_TRANSLATE');
+define('_DOCTYPE', 'Doctype_TO_TRANSLATE');
+define('_TYPIST', 'Typist_TO_TRANSLATE');
+define('_CREATED', 'Created_TO_TRANSLATE');
+define('_DOC_DATE', 'Document date_TO_TRANSLATE');
+define('_ADMISSION_DATE', 'Admission date_TO_TRANSLATE');
+define('_PROCESS_LIMIT_DATE', 'Process limit date_TO_TRANSLATE');
+define('_CLOSING_DATE', 'Closing date_TO_TRANSLATE');
+define('_ACTION_DATE', 'Action date_TO_TRANSLATE');
+
+define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'User created in Maarch Parapheur_TO_TRANSLATE');
