@@ -37,6 +37,7 @@ use Http\Discovery\UriFactoryDiscovery;
  * @property-read \Gitlab\Api\Users $users
  * @property-read \Gitlab\Api\Keys $keys
  * @property-read \Gitlab\Api\Tags $tags
+ * @property-read \Gitlab\Api\Version $version
  */
 class Client
 {
@@ -150,6 +151,14 @@ class Client
     }
 
     /**
+     * @return Api\IssueLinks
+     */
+    public function issueLinks()
+    {
+        return new Api\IssueLinks($this);
+    }
+
+    /**
      * @return Api\Jobs
      */
     public function jobs()
@@ -246,6 +255,30 @@ class Client
     }
 
     /**
+     * @return Api\Version
+     */
+    public function version()
+    {
+        return new Api\Version($this);
+    }
+
+    /**
+     * @return Api\Deployments
+     */
+    public function deployments()
+    {
+        return new Api\Deployments($this);
+    }
+
+    /**
+     * @return Api\Environments
+     */
+    public function environments()
+    {
+        return new Api\Environments($this);
+    }
+
+    /**
      * @param string $name
      *
      * @return AbstractApi|mixed
@@ -267,6 +300,10 @@ class Client
             case 'board':
             case 'issue_boards':
                 return $this->issueBoards();
+
+            case 'issue_links':
+                return $this->issueLinks();
+
             case 'jobs':
                 return $this->jobs();
 
@@ -289,6 +326,9 @@ class Client
             case 'repositories':
                 return $this->repositories();
 
+            case 'repositoryFiles':
+                return $this->repositoryFiles();
+                
             case 'snippets':
                 return $this->snippets();
 
@@ -304,6 +344,15 @@ class Client
 
             case 'tags':
                 return $this->tags();
+
+            case 'version':
+                return $this->version();
+
+            case 'environments':
+                return $this->environments();
+
+            case 'deployments':
+                return $this->deployments();
 
             default:
                 throw new InvalidArgumentException('Invalid endpoint: "'.$name.'"');
