@@ -198,7 +198,7 @@ class ExportController
                     } elseif ($value['value'] == 'getParentFolder') {
                         $csvContent[] = $resource['folders.folder_name'];
                     } elseif ($value['value'] == 'getCategory') {
-                        $csvContent[] = ExportController::getCategory(['categoryId' => $resource['category_id']]);
+                        $csvContent[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
                         $csvContent[] = $resource['enone.short_label'];
                     } elseif ($value['value'] == 'getDestinationEntity') {
@@ -238,24 +238,6 @@ class ExportController
         $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=export_maarch.csv');
 
         return $response->withHeader('Content-Type', 'application/vnd.ms-excel');
-    }
-
-    private static function getCategory(array $args)
-    {
-        ValidatorModel::stringType($args, ['categoryId']);
-
-        static $categories;
-        if (empty($categories)) {
-            $categories = ResModel::getCategories();
-        }
-
-        foreach ($categories as $category) {
-            if ($category['id'] == $args['categoryId']) {
-                return $category['label'];
-            }
-        }
-
-        return '';
     }
 
     private static function getCopyEntities(array $args)

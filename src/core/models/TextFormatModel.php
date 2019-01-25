@@ -31,13 +31,17 @@ class TextFormatModel
         return utf8_encode($string);
     }
 
-    public static function formatDate($date)
+    public static function formatDate($date, $format = null)
     {
         if (empty($date)) {
             return '';
         }
 
         $date = new \DateTime($date);
+
+        if (!empty($format)) {
+            return $date->format($format);
+        }
 
         return $date->format('d-m-Y H:i');
     }

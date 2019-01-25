@@ -344,10 +344,15 @@ abstract class ResModelAbstract
 
     public static function getCategories()
     {
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
+        static $categories;
+
+        if (!empty($categories)) {
+            return $categories;
+        }
 
         $categories = [];
 
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
         if ($loadedXml) {
             foreach ($loadedXml->COLLECTION as $collection) {
                 $collection = (array)$collection;
@@ -369,12 +374,31 @@ abstract class ResModelAbstract
         return $categories;
     }
 
+    public static function getCategoryLabel(array $args)
+    {
+        ValidatorModel::stringType($args, ['categoryId']);
+
+        $categories = ResModel::getCategories();
+        foreach ($categories as $category) {
+            if ($category['id'] == $args['categoryId']) {
+                return $category['label'];
+            }
+        }
+
+        return '';
+    }
+
     public static function getNatures()
     {
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
+        static $natures;
+
+        if (!empty($natures)) {
+            return $natures;
+        }
 
         $natures = [];
 
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
         if ($loadedXml) {
             foreach ($loadedXml->mail_natures->nature as $nature) {
                 $withReference = (string)$nature['with_reference'] == 'true' ? true : false;
@@ -390,6 +414,20 @@ abstract class ResModelAbstract
         }
 
         return $natures;
+    }
+
+    public static function getNatureLabel(array $args)
+    {
+        ValidatorModel::stringType($args, ['natureId']);
+
+        $natures = ResModel::getNatures();
+        foreach ($natures as $nature) {
+            if ($nature['id'] == $args['natureId']) {
+                return $nature['label'];
+            }
+        }
+
+        return '';
     }
 
     public static function getNbContactsByResId(array $aArgs)

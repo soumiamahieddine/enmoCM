@@ -19,6 +19,23 @@ use SrcCore\models\ValidatorModel;
 
 abstract class NoteModelAbstract
 {
+    public static function get(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
+
+        $notes = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['notes'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
+        return $notes;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
