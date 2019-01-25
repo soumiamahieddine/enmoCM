@@ -362,7 +362,7 @@ class UserController
                 return $response->withStatus(400)->withJson(['errors' => 'User not found']);
             }
 
-            $check = RedirectBasketModel::get([ 'select' => [ 'id' ], 
+            $check = RedirectBasketModel::get([ 'select' => [1], 
                                                 'where'  => [ 'actual_user_id = ?', 'owner_user_id = ?', 'basket_id = ?', 'group_id = ?' ], 
                                                 'data'   => [ $value['actual_user_id'], $aArgs['id'], $value['basket_id'], $value['group_id'] ] 
                                             ]);
