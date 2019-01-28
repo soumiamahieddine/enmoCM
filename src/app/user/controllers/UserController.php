@@ -1050,7 +1050,7 @@ class UserController
 
         foreach ($data['baskets'] as $basketContainer) {
             $group = GroupModel::getById(['id' => $basketContainer['groupSerialId'], 'select' => ['group_id']]);
-            $basket = BasketModel::getById(['id' => $basketContainer['basketId'], 'select' => [1]]);
+            $basket = BasketModel::getByBasketId(['basketId' => $basketContainer['basketId'], 'select' => [1]]);
             if (empty($group) || empty($basket)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
             }

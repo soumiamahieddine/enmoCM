@@ -423,11 +423,10 @@ class ResourceListController
     public static function listControl(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId', 'userId', 'basketId', 'currentUserId']);
-        ValidatorModel::intVal($aArgs, ['groupId', 'userId', 'currentUserId']);
-        ValidatorModel::stringType($aArgs, ['basketId']);
+        ValidatorModel::intVal($aArgs, ['groupId', 'userId', 'basketId', 'currentUserId']);
 
         $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
-        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_id', 'basket_clause', 'basket_res_order', 'basket_name']]);
         if (empty($group) || empty($basket)) {
             return ['errors' => 'Group or basket does not exist', 'code' => 400];
         }
@@ -436,7 +435,7 @@ class ResourceListController
             $redirectedBasket = RedirectBasketModel::get([
                 'select'    => [1],
                 'where'     => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],
-                'data'      => [$aArgs['userId'], $aArgs['basketId'], $aArgs['groupId']]
+                'data'      => [$aArgs['userId'], $basket['basket_id'], $aArgs['groupId']]
             ]);
             if (!empty($redirectedBasket[0])) {
                 return ['errors' => 'Basket out of perimeter (redirected)', 'code' => 403];
@@ -445,7 +444,7 @@ class ResourceListController
             $redirectedBasket = RedirectBasketModel::get([
                 'select'    => ['actual_user_id'],
                 'where'     => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],
-                'data'      => [$aArgs['userId'], $aArgs['basketId'], $aArgs['groupId']]
+                'data'      => [$aArgs['userId'], $basket['basket_id'], $aArgs['groupId']]
             ]);
             if (empty($redirectedBasket[0]) || $redirectedBasket[0]['actual_user_id'] != $aArgs['currentUserId']) {
                 return ['errors' => 'Basket out of perimeter', 'code' => 403];
@@ -464,7 +463,7 @@ class ResourceListController
             return ['errors' => 'Group is not linked to this user', 'code' => 400];
         }
 
-        $isBasketLinked = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$aArgs['basketId'], $group['group_id']]]);
+        $isBasketLinked = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
         if (empty($isBasketLinked)) {
             return ['errors' => 'Group is not linked to this basket', 'code' => 400];
         }
