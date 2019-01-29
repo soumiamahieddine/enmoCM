@@ -1,0 +1,49 @@
+<div mat-dialog-content>
+    <div *ngIf="loading" class="loader">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="row" style="font-size:10px;padding: 10px;">
+        <div class="col-md-4" style="text-align: left;">
+            QrCode
+        </div>
+        <div class="col-md-4" style="text-align: center;">
+            Fiche de liaison <br/> Numéro chrono
+        </div>
+        <div class="col-md-4" style="text-align: right;">
+            Nom de l'application / Date d'impression
+        </div>
+    </div>
+    <div class="row" style="text-align: center;font-weight: bold;font-size: 24px;padding: 10px;">
+        <div class="col-md-12" style="border: solid 1px black;">
+            Objet
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="dataAvailable" class="cdk-list"
+                (cdkDropListDropped)="drop($event)">
+                <ng-container *ngFor="let item of dataAvailable">
+                <div class="columns" [class.disabled]="!item.enabled"  *ngIf="item.unit !== 'qrcode'" cdkDrag id="{{item.unit}}"
+                    style="position: relative;">
+                    
+                        <div style="position: absolute;top: 0;">
+                            {{item.label}}
+                        </div>
+                        <div class="row" style="padding-top: 20px;width: 100%;opacity:0.5;">
+                            <div class="{{item.css}}" *ngFor="let itemData of item.desc">
+                                {{itemData}}
+                            </div>
+                        </div>
+                        <mat-slide-toggle [(ngModel)]="item.enabled" color="primary" style="position: absolute;right:10px;"></mat-slide-toggle>
+                    
+                </div>
+            </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button mat-button color="primary" (click)="genSummarySheets();">Générer les fiches de liaisons</button>
+    <button mat-raised-button mat-button [mat-dialog-close]="">{{lang.cancel}}</button>
+</div>

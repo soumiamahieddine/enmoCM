@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { ListAdministrationComponent } from '../../administration/list/list-administration.component';
+import { SummarySheetComponent } from '../summarySheet/summary-sheet.component';
 
 
 declare function $j(selector: any): any;
@@ -273,6 +274,18 @@ export class FiltersToolComponent implements OnInit {
 
     openListAdmin(): void {
         this.dialog.open(ListAdministrationComponent, {
+          width: '800px',
+          data: {
+              ownerId   : this.currentBasketInfo.ownerId,
+              groupId   : this.currentBasketInfo.groupId,
+              basketId  : this.currentBasketInfo.basketId,
+              filters   : this.filtersListService.getUrlFilters()
+          }
+        });
+    }
+
+    openSummarySheet(): void {
+        this.dialog.open(SummarySheetComponent, {
           width: '800px',
           data: {
               ownerId   : this.currentBasketInfo.ownerId,
