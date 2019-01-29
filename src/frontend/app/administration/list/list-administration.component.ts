@@ -146,7 +146,7 @@ export class ListAdministrationComponent implements OnInit {
             isFunction : true
         },
         {
-            value : 'getCopyEntities',
+            value : 'getCopies',
             label : this.lang.copyEntities,
             isFunction : true
         },
@@ -251,11 +251,19 @@ export class ListAdministrationComponent implements OnInit {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
+            const fakeIndex = $j('.available-data .columns')[event.previousIndex].id;
+            const realIndex = this.dataAvailable.map((dataAv: any) => (dataAv.value)).indexOf(fakeIndex);
+    
             transferArrayItem(event.previousContainer.data,
                 event.container.data,
-                event.previousIndex,
+                realIndex,
                 event.currentIndex);
+            const curFilter = this.listFilter.nativeElement.value;
             this.listFilter.nativeElement.value = '';
+            setTimeout(() => {
+                this.listFilter.nativeElement.value = curFilter;
+            }, 10);
+            
         }
     }
 

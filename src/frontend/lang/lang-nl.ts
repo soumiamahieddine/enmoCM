@@ -786,7 +786,7 @@ export const LANG_NL = {
     "recommendationLimitDate"                                     : "_TO_TRANSLATE",
     "sveStartDate"                                     : "_TO_TRANSLATE",
     "caseLabel"                                     : "_TO_TRANSLATE",
-    "copyEntities"                                     : "_TO_TRANSLATE",
+    "copyUsersEntities"                                     : "_TO_TRANSLATE",
     "detailLink"                                     : "_TO_TRANSLATE",
     "parentFolder"                                     : "_TO_TRANSLATE",
     "initiatorEntity"                                     : "_TO_TRANSLATE",

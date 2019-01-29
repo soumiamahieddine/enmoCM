@@ -783,7 +783,7 @@ export const LANG_FR = {
     "recommendationLimitDate"                                     : "Date limite de demande d'avis",
     "sveStartDate"                                     : "Date de début SVE",
     "caseLabel"                                     : "Libellé de l'affaire du courrier",
-    "copyEntities"                                     : "Entités en copie",
+    "copyUsersEntities"                                     : "Utilistaeurs / Entités en copie",
     "detailLink"                                     : "Lien vers la fiche détaillée",
     "parentFolder"                                     : "Dossier parent",
     "initiatorEntity"                                     : "Libellé de l'entité initiatrice",

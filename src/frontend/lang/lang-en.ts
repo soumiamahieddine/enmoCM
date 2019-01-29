@@ -757,7 +757,7 @@ export const LANG_EN = {
     "recommendationLimitDate"                                     : "Recommendation limit dateDate",
     "sveStartDate"                                     : "SVE start date",
     "caseLabel"                                     : "Case label",
-    "copyEntities"                                     : "Entities in copy",
+    "copyUsersEntities"                                     : "Users / Entities in copy",
     "detailLink"                                     : "Detail link",
     "parentFolder"                                     : "Parent folder",
     "initiatorEntity"                                     : "Initiator entity name",
