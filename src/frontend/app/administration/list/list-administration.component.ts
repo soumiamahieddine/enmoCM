@@ -147,7 +147,7 @@ export class ListAdministrationComponent implements OnInit {
         },
         {
             value : 'getCopies',
-            label : this.lang.copyEntities,
+            label : this.lang.copyUsersEntities,
             isFunction : true
         },
         {
