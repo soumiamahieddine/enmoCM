@@ -44,15 +44,16 @@ class SummarySheetController
         }
 
         $queryParamsData = $request->getQueryParams();
-//        $queryParamsData['units'] = base64_encode(json_encode([
-//            ['label' => 'Informations sur le courrier', 'unit' => 'informations'],
-//            ['label' => 'Liste de diffusion', 'unit' => 'diffusionList'],
-//            ['label' => 'Ptit avis les potos.', 'unit' => 'freeField'],
-//            ['label' => 'Circuit de visa', 'unit' => 'visaWorkflow'],
-//            ['label' => 'Annotation(s)', 'unit' => 'notes'],
-//            ['label' => 'Commentaires', 'unit' => 'freeField'],
-//            ['unit' => 'qrcode']
-//        ]));
+        $queryParamsData['units'] = base64_encode(json_encode([
+            ['label' => 'Informations', 'unit' => 'primaryInformations'],
+            ['label' => 'Informations Secondaires', 'unit' => 'secondaryInformations'],
+            ['label' => 'Liste de diffusion', 'unit' => 'diffusionList'],
+            ['label' => 'Ptit avis les potos.', 'unit' => 'freeField'],
+            ['label' => 'Annotation(s)', 'unit' => 'notes'],
+            ['label' => 'Circuit de visa', 'unit' => 'visaWorkflow'],
+            ['label' => 'Commentaires', 'unit' => 'freeField'],
+            ['unit' => 'qrcode']
+        ]));
         $units = empty($queryParamsData['units']) ? [] : (array)json_decode(base64_decode($queryParamsData['units']));
 
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
@@ -63,14 +64,17 @@ class SummarySheetController
             $queryParamsData['order'] = $allQueryData['order'];
         }
 
-        $select = ['res_id', 'subject'];
+        $select = ['res_id', 'subject', 'alt_identifier'];
         foreach ($units as $unit) {
             $unit = (array)$unit;
-            if ($unit['unit'] == 'informations') {
-                $informations = [
-                    'alt_identifier', 'category_id', 'priority', 'admission_date', 'process_limit_date', 'creation_date', 'nature_id',
-                    'doc_date', 'type_label', 'status', 'subject', 'initiator', 'destination', 'typist', 'closing_date'
-                ];
+            if ($unit['unit'] == 'primaryInformations') {
+                $informations = ['admission_date', 'creation_date', 'nature_id', 'doc_date', 'type_label', 'initiator', 'typist'];
+                $select = array_merge($select, $informations);
+            } elseif ($unit['unit'] == 'secondaryInformations') {
+                $informations = ['category_id', 'priority', 'process_limit_date', 'status'];
+                $select = array_merge($select, $informations);
+            } elseif ($unit['unit'] == 'diffusionList') {
+                $informations = ['destination'];
                 $select = array_merge($select, $informations);
             }
         }
@@ -115,18 +119,16 @@ class SummarySheetController
         $bottomHeight = $dimensions['h'] - $dimensions['bm'];
 
         $appName = CoreConfigModel::getApplicationName();
-        $pdf->SetFont('', '', 8);
-        $pdf->Cell(0, 20, $appName, 0, 2, 'C', false);
+        $pdf->SetFont('', 'B', 12);
+        $pdf->Cell(0, 20, _SUMMARY_SHEET, 0, 2, 'C', false);
         $pdf->SetY($pdf->GetY() - 20);
-        $pdf->Cell(0, 20, date('d-m-Y'), 0, 2, 'R', false);
+        $pdf->SetFont('', '', 8);
+        $pdf->Cell(0, 20, "$appName / " . date('d-m-Y'), 0, 2, 'R', false);
+        $pdf->Cell(0, 1, $resource['alt_identifier'], 0, 2, 'C', false);
 
-        $pdf->SetY($pdf->GetY() + 10);
-        $pdf->SetFont('', 'B', 18);
-        $pdf->Cell(0, 20, _SUMMARY_SHEET, 1, 2, 'C', false);
-
-        $pdf->SetY($pdf->GetY() + 30);
-        $pdf->SetFont('', 'I', 14);
-        $pdf->MultiCell(0, 1, $resource['subject'], 0, 'L', false);
+        $pdf->SetY($pdf->GetY() + 15);
+        $pdf->SetFont('', 'B', 16);
+        $pdf->MultiCell(0, 1, $resource['subject'], 1, 'C', false);
 
         foreach ($units as $unit) {
             $unit = (array)$unit;
@@ -140,29 +142,42 @@ class SummarySheetController
         foreach ($units as $unit) {
             $unit = (array)$unit;
 
-            if ($unit['unit'] == 'informations') {
-                $category = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
+            if ($unit['unit'] == 'primaryInformations') {
                 $nature = ResModel::getNatureLabel(['natureId' => $resource['nature_id']]);
+                $admissionDate = TextFormatModel::formatDate($resource['admission_date'], 'd-m-Y');
+                $creationdate = TextFormatModel::formatDate($resource['creation_date'], 'd-m-Y');
+                $docDate = TextFormatModel::formatDate($resource['doc_date'], 'd-m-Y');
+                $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['short_label']]);
+                $initiatorEntity = empty($initiator) ? '' : "({$initiator['short_label']})";
+                $typist = UserModel::getLabelledUserById(['login' => $resource['typist']]);
+
+                $pdf->SetY($pdf->GetY() + 40);
+                if (($pdf->GetY() + 77) > $bottomHeight) {
+                    $pdf->AddPage();
+                }
+//                $pdf->SetFont('', 'B', 11);
+//                $pdf->Cell(0, 15, $unit['label'], 0, 2, 'L', false);
+//                $pdf->SetY($pdf->GetY() + 2);
+
+                $pdf->SetFont('', '', 10);
+                $pdf->MultiCell($widthNoMargins / 2, 15, _DOC_DATE . " : <b>{$docDate}</b>", 0, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 15, _ADMISSION_DATE . " : <b>{$admissionDate}</b>", 0, 'R', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 15, _NATURE . " : <b>{$nature}</b>", 0, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 15, _CREATED . " : <b>{$creationdate}</b>", 0, 'R', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 15, _DOCTYPE . " : <b>{$resource['type_label']}</b>", 0, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 15, _TYPIST . " : <b>{$typist}</b>", 0, 'R', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell(0, 15, "<b>{$initiatorEntity}</b>", 0, 'R', false, 1, '', '', true, 0, true);
+            } elseif ($unit['unit'] == 'secondaryInformations') {
+                $category = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
                 $status = StatusModel::getById(['id' => $resource['status'], 'select' => ['label_status']]);
                 $priority = '';
                 if (!empty($resource['priority'])) {
                     $priority = PriorityModel::getById(['id' => $resource['priority'], 'select' => ['label']])['label'];
                 }
-
-                $admissionDate = TextFormatModel::formatDate($resource['admission_date'], 'd-m-Y');
                 $processLimitDate = TextFormatModel::formatDate($resource['process_limit_date'], 'd-m-Y');
-                $creationdate = TextFormatModel::formatDate($resource['creation_date'], 'd-m-Y');
-                $docDate = TextFormatModel::formatDate($resource['doc_date'], 'd-m-Y');
-                $closingDate = TextFormatModel::formatDate($resource['closing_date'], 'd-m-Y');
-
-                $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['short_label']]);
-                $initiatorEntity = empty($initiator) ? '' : $initiator['short_label'];
-                $destination = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['short_label']]);
-                $destinationEntity = empty($destination) ? '' : $destination['short_label'];
-                $typist = UserModel::getLabelledUserById(['login' => $resource['typist']]);
 
                 $pdf->SetY($pdf->GetY() + 40);
-                if (($pdf->GetY() + 157) > $bottomHeight) {
+                if (($pdf->GetY() + 57) > $bottomHeight) {
                     $pdf->AddPage();
                 }
                 $pdf->SetFont('', 'B', 11);
@@ -170,20 +185,10 @@ class SummarySheetController
                 $pdf->SetY($pdf->GetY() + 2);
 
                 $pdf->SetFont('', '', 10);
-                $pdf->Cell($widthNoMargins / 2, 20, _CATEGORY . " : {$category}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _CHRONO_NUMBER . " : {$resource['alt_identifier']}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _INITIATOR_ENTITY . " : {$initiatorEntity}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _DESTINATION_ENTITY . " : {$destinationEntity}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _CREATED . " : {$creationdate}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _DOC_DATE . " : {$docDate}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _ADMISSION_DATE . " : {$admissionDate}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _PRIORITY . " : {$priority}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _STATUS . " : {$status['label_status']}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _DOCTYPE . " : {$resource['type_label']}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _NATURE . " : {$nature}", 1, 1, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _TYPIST . " : {$typist}", 1, 0, 'L', false);
-                $pdf->Cell($widthNoMargins / 2, 20, _CLOSING_DATE . " : {$closingDate}", 1, 1, 'L', false);
+                $pdf->MultiCell($widthNoMargins / 2, 20, _CATEGORY . " : <b>{$category}</b>", 1, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 20, _STATUS . " : <b>{$status['label_status']}</b>", 1, 'L', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 20, _PRIORITY . " : <b>{$priority}</b>", 1, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 20, _PROCESS_LIMIT_DATE . " : <b>{$processLimitDate}</b>", 1, 'L', false, 1, '', '', true, 0, true);
             } elseif ($unit['unit'] == 'diffusionList') {
                 $assignee = '';
                 $copies = [];
@@ -206,6 +211,8 @@ class SummarySheetController
                         $copies[] = $item;
                     }
                 }
+                $destination = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['short_label']]);
+                $destinationEntity = empty($destination) ? '' : "({$destination['short_label']})";
 
                 $pdf->SetY($pdf->GetY() + 40);
                 if (($pdf->GetY() + 37 + count($copies) * 20) > $bottomHeight) {
@@ -217,7 +224,7 @@ class SummarySheetController
 
                 $pdf->SetFont('', '', 10);
                 $pdf->MultiCell($widthNoMargins / 6, 20, _ASSIGNEE, 1, 'C', false, 0, '', '', true, 0, false, true, 20, 'M');
-                $pdf->Cell($widthNoMargins / 6 * 5, 20, "- {$assignee}", 1, 1, 'L', false);
+                $pdf->Cell($widthNoMargins / 6 * 5, 20, "- {$assignee} {$destinationEntity}", 1, 1, 'L', false);
                 if (!empty($copies)) {
                     $pdf->MultiCell($widthNoMargins / 6, count($copies) * 20, _TO_CC, 1, 'C', false, 0, '', '', true, 0, false, true, count($copies) * 20, 'M');
                     foreach ($copies as $copy) {
