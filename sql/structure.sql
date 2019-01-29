@@ -336,6 +336,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE baskets
 (
+  id serial NOT NULL,
   coll_id character varying(32) NOT NULL,
   basket_id character varying(32) NOT NULL,
   basket_name character varying(255) NOT NULL,
@@ -347,7 +348,8 @@ CREATE TABLE baskets
   color character varying(16),
   basket_res_order character varying(255) NOT NULL DEFAULT 'res_id',
   flag_notif character varying(1),
-  CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
+  CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id),
+  CONSTRAINT baskets_unique_key UNIQUE (id)
 )
 WITH (OIDS=FALSE);
 
