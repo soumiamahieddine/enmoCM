@@ -223,7 +223,14 @@ class ExportController
                         $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
                     }
                 } else {
-                    if (strpos($value['value'], 'date') !== false) {
+                    if (in_array($value['value'], ['doc_date', 
+                                                    'departure_date', 
+                                                    'admission_date', 
+                                                    'process_limit_date', 
+                                                    'recommendation_limit_date', 
+                                                    'closing_date', 
+                                                    'sve_start_date', 
+                                                    'getSignatureDates'])) {
                         $csvContent[] = TextFormatModel::formatDate($resource[$value['value']]);
                     } else {
                         $csvContent[] = $resource[$value['value']];
