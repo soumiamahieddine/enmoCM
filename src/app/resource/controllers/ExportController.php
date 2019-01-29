@@ -254,7 +254,7 @@ class ExportController
 
         $copies = '';
         foreach ($listInstances as $listInstance) {
-            if (!empty($copyEntities)) {
+            if (!empty($copies)) {
                 $copies .= ' ; ';
             }
             if ($listInstance['item_type'] == 'user_id') {
