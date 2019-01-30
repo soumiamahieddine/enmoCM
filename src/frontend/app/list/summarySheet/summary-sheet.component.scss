@@ -14,6 +14,42 @@
     padding-bottom: 50px;
 }
 
+::ng-deep.mat-slide-toggle-content {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.summarySheet {
+    .header {
+        font-size: 10px;
+        padding: 10px;
+    }
+
+    .title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border: solid 1px black;
+    }
+
+    .unitTitle {
+        position: absolute;
+        top: 0;
+    }
+
+    .unitData {
+        padding-top: 20px;
+        width: 100%;
+        opacity: 0.5;
+    }
+
+    .unitToggle {
+        position: absolute;
+        right: 10px;
+    }
+}
+
 .cdk-list {
     width: 100%;
     max-width: 100%;

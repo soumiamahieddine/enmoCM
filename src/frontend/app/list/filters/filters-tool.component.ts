@@ -76,7 +76,7 @@ export class FiltersToolComponent implements OnInit {
 
         if (typeof value === 'string') {
             const filterValue = value.toLowerCase();
-                
+
             return opt.filter(item => this.latinisePipe.transform(item['label'].toLowerCase()).indexOf(this.latinisePipe.transform(filterValue)) != -1);
         }
     };
@@ -198,7 +198,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'categories',
                                 value: element.id,
-                                label: (element.id !== null ? element.label : this.lang.undefined) ,
+                                label: (element.id !== null ? element.label : this.lang.undefined),
                                 count: element.count
                             }
                         )
@@ -210,7 +210,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'priorities',
                                 value: element.id,
-                                label: (element.id !== null ? element.label : this.lang.undefined) ,
+                                label: (element.id !== null ? element.label : this.lang.undefined),
                                 count: element.count
                             }
                         )
@@ -222,7 +222,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'statuses',
                                 value: element.id,
-                                label: (element.id !== null ? element.label : this.lang.undefined) ,
+                                label: (element.id !== null ? element.label : this.lang.undefined),
                                 count: element.count
                             }
                         )
@@ -236,7 +236,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'entities',
                                 value: element.entityId,
-                                label: (element.id !== null ? element.label : this.lang.undefined) ,
+                                label: (element.id !== null ? element.label : this.lang.undefined),
                                 count: element.count
                             }
                         )
@@ -250,7 +250,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'subEntities',
                                 value: element.entityId,
-                                label: (element.id !== null ? element.label : this.lang.undefined) ,
+                                label: (element.id !== null ? element.label : this.lang.undefined),
                                 count: element.count
                             }
                         )
@@ -262,7 +262,7 @@ export class FiltersToolComponent implements OnInit {
                         this.stateForm.controls['stateGroup'].setValue(this.metaSearchInput);
                         this.metaSearchInput = '';
                     }, 200);
-                } 
+                }
             });
 
         this.stateGroupOptions = this.stateForm.get('stateGroup')!.valueChanges
@@ -274,25 +274,26 @@ export class FiltersToolComponent implements OnInit {
 
     openListAdmin(): void {
         this.dialog.open(ListAdministrationComponent, {
-          width: '800px',
-          data: {
-              ownerId   : this.currentBasketInfo.ownerId,
-              groupId   : this.currentBasketInfo.groupId,
-              basketId  : this.currentBasketInfo.basketId,
-              filters   : this.filtersListService.getUrlFilters()
-          }
+            width: '800px',
+            data: {
+                ownerId: this.currentBasketInfo.ownerId,
+                groupId: this.currentBasketInfo.groupId,
+                basketId: this.currentBasketInfo.basketId,
+                filters: this.filtersListService.getUrlFilters()
+            }
         });
     }
 
     openSummarySheet(): void {
         this.dialog.open(SummarySheetComponent, {
-          width: '800px',
-          data: {
-              ownerId   : this.currentBasketInfo.ownerId,
-              groupId   : this.currentBasketInfo.groupId,
-              basketId  : this.currentBasketInfo.basketId,
-              filters   : this.filtersListService.getUrlFilters()
-          }
+            autoFocus: false,
+            width: '800px',
+            data: {
+                ownerId: this.currentBasketInfo.ownerId,
+                groupId: this.currentBasketInfo.groupId,
+                basketId: this.currentBasketInfo.basketId,
+                filters: this.filtersListService.getUrlFilters()
+            }
         });
     }
 }
