@@ -34,7 +34,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     config                          : any       = {};
     serialId                        : number;
     userId                          : string;
-    mode                            : string    = '';;
+    mode                            : string    = '';
     user                            : any       = {};
     _search                         : string    = '';
     creationMode                    : boolean;
@@ -500,7 +500,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets/" + basket.id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
                 .subscribe((data: any) => {
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
