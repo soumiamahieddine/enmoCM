@@ -58,7 +58,7 @@ export class SummarySheetComponent implements OnInit {
         },
         {
             unit: 'diffusionList',
-            label: this.data.lang.diffusionList,
+            label: this.lang.diffusionList,
             css: 'col-md-6 text-center',
             desc: [
                 this.lang.dest_user, 
