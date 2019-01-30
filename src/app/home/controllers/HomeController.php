@@ -77,7 +77,8 @@ class HomeController
 
         $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         foreach ($assignedBaskets as $key => $assignedBasket) {
-            $basket = BasketModel::getByBasketId(['select' => ['basket_clause'], 'basketId' => $assignedBasket['basket_id']]);
+            $basket = BasketModel::getByBasketId(['select' => ['id', 'basket_clause'], 'basketId' => $assignedBasket['basket_id']]);
+            $assignedBaskets[$key]['id'] = $basket['id'];
             $assignedBaskets[$key]['resourceNumber'] = BasketModel::getResourceNumberByClause(['userId' => $assignedBasket['owner_user_id'], 'clause' => $basket['basket_clause']]);
             $assignedBaskets[$key]['uselessGroupId'] = GroupModel::getById(['id' => $assignedBasket['group_id'], 'select' => ['group_id']])['group_id'];
             $assignedBaskets[$key]['ownerLogin'] = UserModel::getById(['id' => $assignedBasket['owner_user_id'], 'select' => ['user_id']])['user_id'];

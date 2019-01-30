@@ -63,7 +63,7 @@
                 </p>
             </a> -->
             <!-- TODO NEW BASKET LIST-->
-            <a mat-list-item *ngFor="let basket of homeData.assignedBaskets | filterList:listFilter.value:'basket_name'" [ngClass]="{'selectedBasket': currentBasketInfo.basketId==basket.basket_id && currentBasketInfo.ownerId==basket.owner_user_id && currentBasketInfo.groupId==basket.group_id}" routerLink="/basketList/users/{{basket.owner_user_id}}/groups/{{basket.group_id}}/baskets/{{basket.basket_id}}">
+            <a mat-list-item *ngFor="let basket of homeData.assignedBaskets | filterList:listFilter.value:'basket_name'" [ngClass]="{'selectedBasket': currentBasketInfo.basketId==basket.id && currentBasketInfo.ownerId==basket.owner_user_id && currentBasketInfo.groupId==basket.group_id}" routerLink="/basketList/users/{{basket.owner_user_id}}/groups/{{basket.group_id}}/baskets/{{basket.id}}">
                 <mat-icon *ngIf="!mobileMode" style="color:#666" mat-list-icon class="fa fa-paper-plane"></mat-icon>
                 <span *ngIf="basket.resourceNumber==0" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
                 <span *ngIf="basket.resourceNumber!=0" bgcolor="warn" class="badge" style="min-width:auto;">{{basket.resourceNumber}}</span>
