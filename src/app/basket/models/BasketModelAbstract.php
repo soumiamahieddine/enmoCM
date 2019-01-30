@@ -42,14 +42,34 @@ abstract class BasketModelAbstract
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aBasket = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['baskets'],
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        if (empty($aBasket[0])) {
+            return [];
+        }
+
+        return $aBasket[0];
+    }
+
+    public static function getByBasketId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['basketId']);
+        ValidatorModel::stringType($aArgs, ['basketId']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $aBasket = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['baskets'],
             'where'     => ['basket_id = ?'],
-            'data'      => [$aArgs['id']]
+            'data'      => [$aArgs['basketId']]
         ]);
 
         if (empty($aBasket[0])) {

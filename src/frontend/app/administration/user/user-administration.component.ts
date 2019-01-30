@@ -72,7 +72,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     masterToggleBaskets(event: any) {
         if (event.checked) {  
             this.user.baskets.forEach((basket: any) => {
-                if (basket.userToDisplay == null) {
+                if (!basket.userToDisplay) {
                     this.selectionBaskets.select(basket); 
                 }      
             });
@@ -429,18 +429,18 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
 
     addBasketRedirection(newUser:any) {
         let basketsRedirect:any[] = [];
-        this.user.baskets.forEach((elem: any) => {
-            if (this.selectionBaskets.selected.map((e:any) => { return e.basket_id; }).indexOf(elem.basket_id) != -1 && this.selectionBaskets.selected.map((e:any) => { return e.group_id; }).indexOf(elem.group_id) != -1 && elem.allowed) {
-                basketsRedirect.push(
-                    {
-                        actual_user_id: newUser.serialId,
-                        basket_id:elem.basket_id,
-                        group_id:elem.groupSerialId,
-                        originalOwner: null
-                    }
-                )
-            }
+        
+        this.selectionBaskets.selected.forEach((elem: any) => {
+            basketsRedirect.push(
+                {
+                    actual_user_id: newUser.serialId,
+                    basket_id:elem.basket_id,
+                    group_id:elem.groupSerialId,
+                    originalOwner: null
+                }
+            )
         });
+
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {

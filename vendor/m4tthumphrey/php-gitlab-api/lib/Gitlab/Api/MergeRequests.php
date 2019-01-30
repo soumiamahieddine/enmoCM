@@ -1,5 +1,6 @@
 <?php namespace Gitlab\Api;
 
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
@@ -36,7 +37,7 @@ class MergeRequests extends AbstractApi
     public function all($project_id, array $parameters = [])
     {
         $resolver = $this->createOptionsResolver();
-        $datetimeNormalizer = function (\DateTimeInterface $value) {
+        $datetimeNormalizer = function (Options $resolver, \DateTimeInterface $value) {
             return $value->format('c');
         };
         $resolver->setDefined('iids')
@@ -67,6 +68,28 @@ class MergeRequests extends AbstractApi
             ->setAllowedTypes('created_before', \DateTimeInterface::class)
             ->setNormalizer('created_before', $datetimeNormalizer)
         ;
+
+        $resolver->setDefined('updated_after')
+            ->setAllowedTypes('updated_after', \DateTimeInterface::class)
+            ->setNormalizer('updated_after', $datetimeNormalizer)
+        ;
+        $resolver->setDefined('updated_before')
+            ->setAllowedTypes('updated_before', \DateTimeInterface::class)
+            ->setNormalizer('updated_before', $datetimeNormalizer)
+        ;
+
+        $resolver->setDefined('scope')
+            ->setAllowedValues('scope', ['created_by_me', 'assigned_to_me', 'all'])
+        ;
+        $resolver->setDefined('author_id')
+            ->setAllowedTypes('author_id', 'integer');
+
+        $resolver->setDefined('assignee_id')
+            ->setAllowedTypes('assignee_id', 'integer');
+
+        $resolver->setDefined('search');
+        $resolver->setDefined('source_branch');
+        $resolver->setDefined('target_branch');
 
         return $this->get($this->getProjectPath($project_id, 'merge_requests'), $resolver->resolve($parameters));
     }
@@ -156,6 +179,18 @@ class MergeRequests extends AbstractApi
     }
 
     /**
+     * @param int $projectId
+     * @param int $mrId
+     * @param int $noteId
+     *
+     * @return mixed
+     */
+    public function removeNote($projectId, $mrId, $noteId)
+    {
+        return $this->delete($this->getProjectPath($projectId, 'merge_requests/'.$this->encodePath($mrId).'/notes/'.$this->encodePath($noteId)));
+    }
+
+    /**
      * @param int $project_id
      * @param int $mr_id
      * @return mixed
@@ -178,6 +213,91 @@ class MergeRequests extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 9.1 and will be removed in 10.0. Use the addNote() method instead.', __METHOD__), E_USER_DEPRECATED);
 
         return $this->addNote($project_id, $mr_id, $note);
+    }
+
+    /**
+     * @param int $project_id
+     * @param int $mr_iid
+     * @return mixed
+     */
+    public function showDiscussions($project_id, $mr_iid)
+    {
+        return $this->get($this->getProjectPath($project_id, 'merge_requests/'.$this->encodePath($mr_iid)).'/discussions');
+    }
+
+    /**
+     * @param int $project_id
+     * @param int $mr_iid
+     * @param string $discussion_id
+     * @return mixed
+     */
+    public function showDiscussion($project_id, $mr_iid, $discussion_id)
+    {
+        return $this->get($this->getProjectPath($project_id, 'merge_requests/'.$this->encodePath($mr_iid)).'/discussions/'.$this->encodePath($discussion_id));
+    }
+
+    /**
+     * @param int $project_id
+     * @param int $mr_iid
+     * @param array $params
+     * @return mixed
+     */
+    public function addDiscussion($project_id, $mr_iid, array $params)
+    {
+        return $this->post($this->getProjectPath($project_id, 'merge_requests/'.$this->encodePath($mr_iid).'/discussions'), $params);
+    }
+
+    /**
+     * @param int $project_id
+     * @param int $mr_iid
+     * @param string $discussion_id
+     * @param bool $resolved
+     * @return mixed
+     */
+    public function resolveDiscussion($project_id, $mr_iid, $discussion_id, $resolved = true)
+    {
+        return $this->put($this->getProjectPath($project_id, 'merge_requests/'.$this->encodePath($mr_iid).'/discussions/'.$this->encodePath($discussion_id)), array(
+            'resolved' => $resolved
+        ));
+    }
+
+    /**
+     * @param int $project_id
+     * @param int $mr_iid
+     * @param string $discussion_id
+     * @param string $body
+     * @return mixed
+     */
+    public function addDiscussionNote($project_id, $mr_iid, $discussion_id, $body)
+    {
+        return $this->post($this->getProjectPath($project_id, 'merge_requests/'.$this->encodePath($mr_iid).'/discussions/'.$this->encodePath($discussion_id).'/notes'), array(
+            'body' => $body
+        ));
+    }
+
+    /**
+     * @param int $project_id
+     * @param int $mr_iid
+     * @param string $discussion_id
+     * @param int $note_id
+     * @param array $params
+     * @return mixed
+     */
+    public function updateDiscussionNote($project_id, $mr_iid, $discussion_id, $note_id, array $params)
+    {
+        return $this->put($this->getProjectPath($project_id, 'merge_requests/'.$this->encodePath($mr_iid).'/discussions/'.$this->encodePath($discussion_id).'/notes/'.$this->encodePath($note_id)), $params);
+    }
+
+    /**
+     * @param int $project_id
+     * @param int $mr_iid
+     * @param string $discussion_id
+     * @param int $note_id
+     * @return mixed
+     */
+    public function removeDiscussionNote($project_id, $mr_iid, $discussion_id, $note_id)
+    {
+        return $this->delete($this->getProjectPath($project_id, 'merge_requests/'.$this->encodePath($mr_iid).'/discussions/'.$this->encodePath($discussion_id).'/notes/'.$this->encodePath($note_id)));
     }
 
     /**

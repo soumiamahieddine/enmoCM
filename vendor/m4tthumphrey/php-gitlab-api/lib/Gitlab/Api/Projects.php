@@ -1,7 +1,9 @@
 <?php namespace Gitlab\Api;
 
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Projects extends AbstractApi
 {
@@ -32,7 +34,7 @@ class Projects extends AbstractApi
     public function all(array $parameters = [])
     {
         $resolver = $this->createOptionsResolver();
-        $booleanNormalizer = function ($value) {
+        $booleanNormalizer = function (Options $resolver, $value) {
             return $value ? 'true' : 'false';
         };
         $resolver->setDefined('archived')
@@ -82,12 +84,29 @@ class Projects extends AbstractApi
     }
 
     /**
-     * @param int $project_id
+     * @param int|string $project_id
+     * @param array $parameters {
+     *
+     *     @var bool   $statistics                    Include project statistics.
+     *     @var bool   $with_custom_attributes        Include project custom attributes.
+     * }
      * @return mixed
      */
-    public function show($project_id)
+    public function show($project_id, array $parameters = [])
     {
-        return $this->get('projects/'.$this->encodePath($project_id));
+        $resolver = $this->createOptionsResolver();
+        $booleanNormalizer = function (Options $resolver, $value) {
+            return $value ? true : false;
+        };
+        $resolver->setDefined('statistics')
+            ->setAllowedTypes('statistics', 'bool')
+            ->setNormalizer('statistics', $booleanNormalizer)
+        ;
+        $resolver->setDefined('with_custom_attributes')
+            ->setAllowedTypes('with_custom_attributes', 'bool')
+            ->setNormalizer('with_custom_attributes', $booleanNormalizer)
+        ;
+        return $this->get('projects/'.$this->encodePath($project_id), $resolver->resolve($parameters));
     }
 
     /**
@@ -170,7 +189,7 @@ class Projects extends AbstractApi
     public function pipelines($project_id, array $parameters = [])
     {
         $resolver = $this->createOptionsResolver();
-        $booleanNormalizer = function ($value) {
+        $booleanNormalizer = function (Options $resolver, $value) {
             return $value ? 'true' : 'false';
         };
 
@@ -240,14 +259,33 @@ class Projects extends AbstractApi
 
     /**
      * @param int $project_id
-     * @param string $username_query
+     * @param array $parameters (
+     *
+     *     @var string $query           The query you want to search members for.
+     * )
+     *
+     * @throws MissingOptionsException  If a required option is not provided
+     *
      * @return mixed
      */
-    public function members($project_id, $username_query = null)
+    public function members($project_id, $parameters = [])
     {
-        return $this->get($this->getProjectPath($project_id, 'members'), array(
-            'query' => $username_query
-        ));
+        if (!is_array($parameters)) {
+            @trigger_error("Deprecated: String parameter of the members() function is deprecated.", E_USER_NOTICE);
+            $username_query = $parameters;
+            $parameters = array();
+            if (!empty($username_query)) {
+                $parameters['query'] = $username_query;
+            }
+        }
+
+        $resolver = $this->createOptionsResolver();
+
+        $resolver->setDefined('query')
+            ->setAllowedTypes('query', 'string')
+        ;
+
+        return $this->get($this->getProjectPath($project_id, 'members'), $resolver->resolve($parameters));
     }
 
     /**
@@ -360,6 +398,16 @@ class Projects extends AbstractApi
 
     /**
      * @param int $project_id
+     * @param mixed $namespace
+     * @return mixed
+     */
+    public function transfer($project_id, $namespace)
+    {
+        return $this->put($this->getProjectPath($project_id, 'transfer'), ['namespace' => $namespace]);
+    }
+
+    /**
+     * @param int $project_id
      * @return mixed
      */
     public function deployKeys($project_id)
@@ -429,7 +477,7 @@ class Projects extends AbstractApi
     public function events($project_id, array $parameters = [])
     {
         $resolver = $this->createOptionsResolver();
-        $datetimeNormalizer = function (\DateTimeInterface $value) {
+        $datetimeNormalizer = function (Options $resolver, \DateTimeInterface $value) {
             return $value->format('Y-m-d');
         };
 
@@ -455,11 +503,14 @@ class Projects extends AbstractApi
 
     /**
      * @param int $project_id
+     * @param array $parameters
      * @return mixed
      */
-    public function labels($project_id)
+    public function labels($project_id, array $parameters = [])
     {
-        return $this->get($this->getProjectPath($project_id, 'labels'));
+        $resolver = $this->createOptionsResolver();
+
+        return $this->get($this->getProjectPath($project_id, 'labels'), $resolver->resolve($parameters));
     }
 
     /**
@@ -495,12 +546,32 @@ class Projects extends AbstractApi
     }
 
     /**
+     * Get languages used in a project with percentage value.
+     *
      * @param int $project_id
      * @return mixed
      */
-    public function fork($project_id)
+    public function languages($project_id)
     {
-        return $this->post('projects/'.$this->encodePath($project_id).'/fork');
+        return $this->get($this->getProjectPath($project_id, 'languages'));
+    }
+
+    /**
+     * @param int $project_id
+     * @param array $params (
+     *
+     *     @var string $namespace      The ID or path of the namespace that the project will be forked to
+     * )
+     * @return mixed
+     */
+    public function fork($project_id, array $parameters = [])
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefined('namespace');
+
+        $resolved = $resolver->resolve($parameters);
+
+        return $this->post($this->getProjectPath($project_id, 'fork'), $resolved);
     }
 
     /**
@@ -545,11 +616,15 @@ class Projects extends AbstractApi
 
     /**
      * @param int $project_id
+     * @param array $parameters
+     *
      * @return mixed
      */
-    public function variables($project_id)
+    public function variables($project_id, array $parameters = [])
     {
-        return $this->get($this->getProjectPath($project_id, 'variables'));
+        $resolver = $this->createOptionsResolver();
+
+        return $this->get($this->getProjectPath($project_id, 'variables'), $resolver->resolve($parameters));
     }
 
     /**
@@ -654,5 +729,43 @@ class Projects extends AbstractApi
     public function deployment($project_id, $deployment_id)
     {
         return $this->get($this->getProjectPath($project_id, 'deployments/'.$this->encodePath($deployment_id)));
+    }
+    
+    /**
+     * @param mixed $project_id
+     * @param array $parameters
+     * @return mixed
+     */
+    public function addShare($project_id, array $parameters = [])
+    {
+        $resolver = $this->createOptionsResolver();
+
+        $datetimeNormalizer = function (OptionsResolver $optionsResolver, \DateTimeInterface $value) {
+            return $value->format('Y-m-d');
+        };
+
+        $resolver->setRequired('group_id')
+            ->setAllowedTypes('group_id', 'int');
+
+        $resolver->setRequired('group_access')
+            ->setAllowedTypes('group_access', 'int')
+            ->setAllowedValues('group_access', [0,10,20,30,40,50]);
+
+        $resolver->setDefined('expires_at')
+            ->setAllowedTypes('expires_at', \DateTimeInterface::class)
+            ->setNormalizer('expires_at', $datetimeNormalizer)
+        ;
+
+        return $this->post($this->getProjectPath($project_id, 'share'), $resolver->resolve($parameters));
+    }
+    
+    /**
+     * @param mixed $project_id
+     * @param int $group_id
+     * @return mixed
+     */
+    public function removeShare($project_id, $group_id)
+    {
+        return $this->delete($this->getProjectPath($project_id, 'services/'.$group_id));
     }
 }

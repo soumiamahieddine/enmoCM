@@ -781,7 +781,7 @@ abstract class basket_Abstract extends Database
         $sec = new security();
         $secCtrl = new SecurityControler();
 
-        $basket = \Basket\models\BasketModel::getById(['select' => ['basket_id', 'coll_id', 'basket_name', 'basket_desc', 'basket_clause', 'is_visible'], 'id' => $basketId]);
+        $basket = \Basket\models\BasketModel::getByBasketId(['select' => ['basket_id', 'coll_id', 'basket_name', 'basket_desc', 'basket_clause', 'is_visible'], 'basketId' => $basketId]);
 
         $tab['id'] = $basket['basket_id'];
         $tab['coll_id'] = $basket['coll_id'];

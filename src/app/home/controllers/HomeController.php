@@ -37,7 +37,7 @@ class HomeController
         $groups = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
         foreach ($groups as $group) {
             $baskets = BasketModel::getAvailableBasketsByGroupUser([
-                'select'        => ['baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc', 'baskets.basket_clause', 'baskets.color', 'users_baskets_preferences.color as pcolor'],
+                'select'        => ['baskets.id', 'baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc', 'baskets.basket_clause', 'baskets.color', 'users_baskets_preferences.color as pcolor'],
                 'userSerialId'  => $user['id'],
                 'groupId'       => $group['group_id'],
                 'groupSerialId' => $group['id']
@@ -77,7 +77,8 @@ class HomeController
 
         $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         foreach ($assignedBaskets as $key => $assignedBasket) {
-            $basket = BasketModel::getById(['select' => ['basket_clause'], 'id' => $assignedBasket['basket_id']]);
+            $basket = BasketModel::getByBasketId(['select' => ['id', 'basket_clause'], 'basketId' => $assignedBasket['basket_id']]);
+            $assignedBaskets[$key]['id'] = $basket['id'];
             $assignedBaskets[$key]['resourceNumber'] = BasketModel::getResourceNumberByClause(['userId' => $assignedBasket['owner_user_id'], 'clause' => $basket['basket_clause']]);
             $assignedBaskets[$key]['uselessGroupId'] = GroupModel::getById(['id' => $assignedBasket['group_id'], 'select' => ['group_id']])['group_id'];
             $assignedBaskets[$key]['ownerLogin'] = UserModel::getById(['id' => $assignedBasket['owner_user_id'], 'select' => ['user_id']])['user_id'];

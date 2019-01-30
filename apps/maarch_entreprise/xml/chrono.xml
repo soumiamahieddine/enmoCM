@@ -73,7 +73,6 @@ For developper :
             <value>chr_by_category</value>
         </ELEMENT>
     </CHRONO>
-
     <CHRONO>
         <id>outgoing</id>
         <separator></separator>
@@ -98,24 +97,6 @@ For developper :
             <value>chr_by_category</value>
         </ELEMENT>
     </CHRONO>
-
-    <CHRONO>
-        <id>market_document</id>
-        <separator>/</separator>
-        <ELEMENT>
-            <type>text</type>
-            <value>market</value>
-        </ELEMENT>
-        <ELEMENT>
-            <type>date</type>
-            <value>full_date</value>
-        </ELEMENT>
-        <ELEMENT>
-            <type>maarch_functions</type>
-            <value>chr_by_category</value>
-        </ELEMENT>
-    </CHRONO>
-
     <CHRONO>
         <id>internal</id>
         <separator>/</separator>
@@ -132,5 +113,4 @@ For developper :
             <value>chr_by_category</value>
         </ELEMENT>
     </CHRONO>
-
 </root>

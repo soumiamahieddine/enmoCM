@@ -138,6 +138,8 @@ class BasketControllerTest extends TestCase
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('TEST-BASKET123', $responseBody->groups[0]->basket_id);
         $this->assertSame('redirect_to_action', $responseBody->groups[0]->result_page);
+        $this->assertInternalType('array', $responseBody->groups[0]->list_display);
+        $this->assertEmpty($responseBody->groups[0]->list_display);
         $this->assertInternalType('array', $responseBody->groups[0]->groupActions);
         $this->assertNotNull($responseBody->groups[0]->groupActions);
         foreach ($responseBody->groups[0]->groupActions as $groupAction) {
@@ -187,9 +189,10 @@ class BasketControllerTest extends TestCase
 
         $aArgs = [
             'result_page'   => 'list_with_attachments',
+            'list_display'  => ['subject', 'res_id'],
             'groupActions'  => [
                 [
-                    'id'             => '1',
+                    'id'                    => '1',
                     'where_clause'          => '1=1',
                     'used_in_basketlist'    => true,
                     'used_in_action_page'   => true,
@@ -207,7 +210,7 @@ class BasketControllerTest extends TestCase
                     ]
                 ],
                 [
-                    'id'             => '4',
+                    'id'                    => '4',
                     'where_clause'          => '1=4',
                     'used_in_basketlist'    => false,
                     'used_in_action_page'   => true,
@@ -248,6 +251,8 @@ class BasketControllerTest extends TestCase
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('TEST-BASKET123', $responseBody->groups[0]->basket_id);
         $this->assertSame('list_with_attachments', $responseBody->groups[0]->result_page);
+        $this->assertSame('subject', $responseBody->groups[0]->list_display[0]);
+        $this->assertSame('res_id', $responseBody->groups[0]->list_display[1]);
         $this->assertInternalType('array', $responseBody->groups[0]->groupActions);
         $this->assertNotNull($responseBody->groups[0]->groupActions);
 

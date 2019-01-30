@@ -58,7 +58,9 @@
   display: block;
   background: white;
   border-radius: 4px;
-  overflow: hidden;
+  max-height: 310px;
+  min-height: 310px;
+  overflow: auto;
 }
 
 .columns {

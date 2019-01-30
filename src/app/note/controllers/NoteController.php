@@ -19,7 +19,7 @@ use Note\models\NoteModel;
 use Note\models\NoteEntityModel;
 use Entity\models\EntityModel;
 use Respect\Validation\Validator;
-use setasign\Fpdi\TcpdfFpdi;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use History\controllers\HistoryController;
@@ -100,7 +100,7 @@ class NoteController
         ValidatorModel::notEmpty($aArgs, ['ids']);
         ValidatorModel::arrayType($aArgs, ['ids']);
 
-        $pdf = new TcpdfFpdi('P', 'pt');
+        $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
         $pdf->AddPage();
 

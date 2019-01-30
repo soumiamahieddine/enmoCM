@@ -1,0 +1,47 @@
+<div mat-dialog-content class="summarySheet">
+    <div *ngIf="loading" class="loader">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="row header">
+        <div class="col-md-4 text-left" [class.disabled]="!withQrcode">
+            <mat-slide-toggle [(ngModel)]="withQrcode" color="primary">res_id (QrCode)</mat-slide-toggle>
+        </div>
+        <div class="col-md-4 text-center">
+            {{lang.summarySheet}} - {{lang.chronoNumber}}
+        </div>
+        <div class="col-md-4 text-right">
+            {{lang.appName}} / {{lang.printDate}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 title">
+            {{lang.object}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="dataAvailable" class="cdk-list"
+                (cdkDropListDropped)="drop($event)">
+                <ng-container *ngFor="let item of dataAvailable">
+                    <div class="columns" [class.disabled]="!item.enabled" *ngIf="item.unit !== 'qrcode'" cdkDrag id="{{item.unit}}"
+                        style="position: relative;">
+                        <div class="unitTitle">
+                            {{item.label}}
+                        </div>
+                        <div class="row" class="unitData">
+                            <div class="{{item.css}}" *ngFor="let itemData of item.desc">
+                                {{itemData}}
+                            </div>
+                        </div>
+                        <mat-slide-toggle [(ngModel)]="item.enabled" color="primary" class="unitToggle"></mat-slide-toggle>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button mat-button color="primary" (click)="genSummarySheets();">{{lang.genSummarySheets}}</button>
+    <button mat-raised-button mat-button [mat-dialog-close]="">{{lang.cancel}}</button>
+</div>

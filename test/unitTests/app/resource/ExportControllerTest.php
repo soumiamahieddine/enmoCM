@@ -93,7 +93,7 @@ class ExportControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(null, $responseBody);
@@ -119,19 +119,19 @@ class ExportControllerTest extends TestCase
 
         unset($aArgs['data'][2]['label']);
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('One data is not set well', $responseBody->errors);
 
         unset($aArgs['data']);
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Data is not an array or empty', $responseBody->errors);
 
         $aArgs['delimiter'] = 't';
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Delimiter is not set or not set well', $responseBody->errors);
 

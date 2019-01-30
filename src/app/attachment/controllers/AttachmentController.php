@@ -23,7 +23,7 @@ use Docserver\models\DocserverTypeModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Respect\Validation\Validator;
-use setasign\Fpdi\TcpdfFpdi;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
@@ -258,7 +258,7 @@ class AttachmentController
                 }
 
                 try {
-                    $pdf = new TcpdfFpdi('P', 'pt');
+                    $pdf = new Fpdi('P', 'pt');
                     $nbPages = $pdf->setSourceFile($pathToDocument);
                     $pdf->setPrintHeader(false);
                     for ($i = 1; $i <= $nbPages; $i++) {

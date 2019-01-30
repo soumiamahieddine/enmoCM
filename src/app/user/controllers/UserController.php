@@ -362,7 +362,7 @@ class UserController
                 return $response->withStatus(400)->withJson(['errors' => 'User not found']);
             }
 
-            $check = RedirectBasketModel::get([ 'select' => [ 'id' ], 
+            $check = RedirectBasketModel::get([ 'select' => [1], 
                                                 'where'  => [ 'actual_user_id = ?', 'owner_user_id = ?', 'basket_id = ?', 'group_id = ?' ], 
                                                 'data'   => [ $value['actual_user_id'], $aArgs['id'], $value['basket_id'], $value['group_id'] ] 
                                             ]);
@@ -1050,7 +1050,7 @@ class UserController
 
         foreach ($data['baskets'] as $basketContainer) {
             $group = GroupModel::getById(['id' => $basketContainer['groupSerialId'], 'select' => ['group_id']]);
-            $basket = BasketModel::getById(['id' => $basketContainer['basketId'], 'select' => [1]]);
+            $basket = BasketModel::getByBasketId(['basketId' => $basketContainer['basketId'], 'select' => [1]]);
             if (empty($group) || empty($basket)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
             }

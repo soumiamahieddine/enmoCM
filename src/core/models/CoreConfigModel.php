@@ -19,7 +19,7 @@ class CoreConfigModel
 {
     public static function getCustomId()
     {
-        static $customId = null;
+        static $customId;
 
         if ($customId !== null) {
             return $customId;

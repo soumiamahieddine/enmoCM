@@ -5,6 +5,8 @@
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
+UPDATE parameters SET param_value_string = '19.04.1' WHERE id = 'database_version';
+
 DROP VIEW IF EXISTS res_view_letterbox;
 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
@@ -105,6 +107,17 @@ CONSTRAINT exports_templates_pkey PRIMARY KEY (id),
 CONSTRAINT exports_templates_unique_key UNIQUE (user_id)
 )
 WITH (OIDS=FALSE);
+
+ALTER TABLE baskets DROP COLUMN IF EXISTS id;
+ALTER TABLE baskets ADD COLUMN id serial;
+ALTER TABLE baskets ADD UNIQUE (id);
+
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS id;
+ALTER TABLE groupbasket ADD COLUMN id serial;
+ALTER TABLE groupbasket ADD UNIQUE (id);
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_display;
+ALTER TABLE groupbasket ADD COLUMN list_display json DEFAULT '[]';
+
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS

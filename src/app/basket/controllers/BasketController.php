@@ -44,7 +44,7 @@ class BasketController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['id']]);
+        $basket = BasketModel::getByBasketId(['basketId' => $aArgs['id']]);
         if (empty($basket)) {
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
@@ -68,7 +68,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingBasket = BasketModel::getById(['id' => $data['id'], 'select' => ['1']]);
+        $existingBasket = BasketModel::getByBasketId(['basketId' => $data['id'], 'select' => ['1']]);
         if (!empty($existingBasket)) {
             return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
         }
@@ -98,7 +98,7 @@ class BasketController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        $basket = BasketModel::getByBasketId(['basketId' => $aArgs['id'], 'select' => [1]]);
         if (empty($basket)) {
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
@@ -137,7 +137,7 @@ class BasketController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        $basket = BasketModel::getByBasketId(['basketId' => $aArgs['id'], 'select' => [1]]);
         if (empty($basket)) {
             return $response->withStatus(400)->withJson(['errors' => 'Basket does not exist']);
         }
@@ -210,7 +210,7 @@ class BasketController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        $basket = BasketModel::getByBasketId(['basketId' => $aArgs['id'], 'select' => [1]]);
         if (empty($basket)) {
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
@@ -226,6 +226,7 @@ class BasketController
                     $groups[$key]['group_desc'] = $value['group_desc'];
                 }
             }
+            $groups[$key]['list_display'] = json_decode($group['list_display']);
             $actionsForGroup = $allActions;
             $actions = BasketModel::getActionsForGroupById([
                 'id'        => $aArgs['id'],
@@ -302,7 +303,7 @@ class BasketController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        $basket = BasketModel::getByBasketId(['basketId' => $aArgs['id'], 'select' => [1]]);
         if (empty($basket)) {
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
@@ -392,12 +393,12 @@ class BasketController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        $basket = BasketModel::getByBasketId(['basketId' => $aArgs['id'], 'select' => [1]]);
         if (empty($basket)) {
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
-        $data = $request->getParams();
+        $data = $request->getParsedBody();
 
         $check = Validator::stringType()->notEmpty()->validate($data['result_page']);
         $check = $check && Validator::arrayType()->notEmpty()->validate($data['groupActions']);
@@ -413,9 +414,20 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Group does not exist for this basket']);
         }
 
+        if (!empty($data['list_display'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($data['list_display'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'List display is not an array']);
+            }
+            $data['list_display'] = json_encode($data['list_display']);
+        }
         GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'preferences' => false]);
 
-        GroupBasketModel::createGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'resultPage' => $data['result_page']]);
+        GroupBasketModel::createGroupBasket([
+            'basketId'      => $aArgs['id'],
+            'groupId'       => $aArgs['groupId'],
+            'resultPage'    => $data['result_page'],
+            'listDisplay'   => $data['list_display']
+        ]);
         foreach ($data['groupActions'] as $groupAction) {
             if ($groupAction['checked']) {
                 BasketModel::createGroupAction([
@@ -471,7 +483,7 @@ class BasketController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['id']]);
+        $basket = BasketModel::getByBasketId(['basketId' => $aArgs['id']]);
         if (empty($basket)) {
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }

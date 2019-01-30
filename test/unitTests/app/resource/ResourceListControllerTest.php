@@ -25,7 +25,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('int', $responseBody->count);
@@ -42,7 +42,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(2, count($responseBody->resources));
@@ -61,7 +61,7 @@ class ResourceListControllerTest extends TestCase
             ];
         $fullRequest = $request->withQueryParams($aArgs);
     
-        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
     
         $this->assertGreaterThanOrEqual(1, count($responseBody->resources));
@@ -91,21 +91,21 @@ class ResourceListControllerTest extends TestCase
             ];
         $fullRequest = $request->withQueryParams($aArgs);
     
-        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
     
         $this->assertGreaterThanOrEqual(1, count($responseBody->resources));
 
         //  ERRORS
-        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 777, 'basketId' => 'MyBasket']);
+        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 777, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Group or basket does not exist', $responseBody->errors);
 
-        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'basketNoExist777']);
+        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 9999]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Group or basket does not exist', $responseBody->errors);
 
-        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 777, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 777, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Basket out of perimeter', $responseBody->errors);
 
@@ -125,7 +125,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody->entities);
@@ -144,7 +144,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertGreaterThanOrEqual(2, count($responseBody->priorities));
@@ -169,7 +169,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 'MyBasket']);
+        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody->entities);

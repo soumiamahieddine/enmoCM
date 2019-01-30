@@ -16,7 +16,6 @@ namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
-use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
@@ -26,13 +25,12 @@ use Docserver\models\DocserverTypeModel;
 use Docserver\models\ResDocserverModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\GroupController;
-use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
-use setasign\Fpdi\TcpdfFpdi;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
@@ -335,7 +333,7 @@ class ResController
                 }
 
                 try {
-                    $pdf = new TcpdfFpdi('P', 'pt');
+                    $pdf = new Fpdi('P', 'pt');
                     $nbPages = $pdf->setSourceFile($pathToDocument);
                     $pdf->setPrintHeader(false);
                     for ($i = 1; $i <= $nbPages; $i++) {

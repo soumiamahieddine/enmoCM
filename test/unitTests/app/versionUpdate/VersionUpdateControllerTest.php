@@ -34,8 +34,5 @@ class VersionUpdateControllerTest extends TestCase
             $this->assertInternalType('string', $responseBody->lastAvailableMajorVersion);
             $this->assertRegExp('/^\d{2}\.\d{2}\.\d+$/', $responseBody->lastAvailableMajorVersion, 'Invalid available major version');
         }
-
-        $this->assertNotNull($responseBody->lastAvailableMinorVersion);
-        
     }
 }

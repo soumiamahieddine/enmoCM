@@ -191,14 +191,14 @@ class ExportController
                         $csvContent[] = $resource['status.label_status'];
                     } elseif ($value['value'] == 'getPriority') {
                         $csvContent[] = $resource['priorities.label'];
-                    } elseif ($value['value'] == 'getCopyEntities') {
-                        $csvContent[] = ExportController::getCopyEntities(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getCopies') {
+                        $csvContent[] = ExportController::getCopies(['resId' => $resource['res_id']]);
                     } elseif ($value['value'] == 'getDetailLink') {
                         $csvContent[] = str_replace('rest/', "apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id={$resource['res_id']}", \Url::coreurl());
                     } elseif ($value['value'] == 'getParentFolder') {
                         $csvContent[] = $resource['folders.folder_name'];
                     } elseif ($value['value'] == 'getCategory') {
-                        $csvContent[] = ExportController::getCategory(['categoryId' => $resource['category_id']]);
+                        $csvContent[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
                         $csvContent[] = $resource['enone.short_label'];
                     } elseif ($value['value'] == 'getDestinationEntity') {
@@ -223,7 +223,8 @@ class ExportController
                         $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
                     }
                 } else {
-                    if (strpos($value['value'], 'date') !== false) {
+                    $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'recommendation_limit_date', 'closing_date', 'sve_start_date'];
+                    if (in_array($value['value'], $allDates)) {
                         $csvContent[] = TextFormatModel::formatDate($resource[$value['value']]);
                     } else {
                         $csvContent[] = $resource[$value['value']];
@@ -240,45 +241,31 @@ class ExportController
         return $response->withHeader('Content-Type', 'application/vnd.ms-excel');
     }
 
-    private static function getCategory(array $args)
-    {
-        ValidatorModel::stringType($args, ['categoryId']);
-
-        static $categories;
-        if (empty($categories)) {
-            $categories = ResModel::getCategories();
-        }
-
-        foreach ($categories as $category) {
-            if ($category['id'] == $args['categoryId']) {
-                return $category['label'];
-            }
-        }
-
-        return '';
-    }
-
-    private static function getCopyEntities(array $args)
+    private static function getCopies(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
         $listInstances = ListInstanceModel::get([
-            'select'    => ['item_id'],
-            'where'     => ['res_id = ?', 'item_type = ?', 'item_mode = ?'],
+            'select'    => ['item_id', 'item_type'],
+            'where'     => ['res_id = ?', 'difflist_type = ?', 'item_mode = ?'],
             'data'      => [$args['resId'], 'entity_id', 'cc']
         ]);
 
-        $copyEntities = '';
+        $copies = '';
         foreach ($listInstances as $listInstance) {
-            $entity = EntityModel::getByEntityId(['entityId' => $listInstance['item_id'], 'select' => ['short_label']]);
-            if (!empty($copyEntities)) {
-                $copyEntities .= ' ; ';
+            if (!empty($copies)) {
+                $copies .= ' ; ';
             }
-            $copyEntities .= $entity['short_label'];
+            if ($listInstance['item_type'] == 'user_id') {
+                $copies .= UserModel::getLabelledUserById(['login' => $listInstance['item_id']]);
+            } elseif ($listInstance['item_type'] == 'entity_id') {
+                $entity = EntityModel::getByEntityId(['entityId' => $listInstance['item_id'], 'select' => ['short_label']]);
+                $copies .= $entity['short_label'];
+            }
         }
 
-        return $copyEntities;
+        return $copies;
     }
 
     private static function getTags(array $args)

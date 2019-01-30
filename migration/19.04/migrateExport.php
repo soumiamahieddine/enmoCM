@@ -111,7 +111,7 @@ foreach ($customs as $custom) {
                 } elseif ($functionName == 'get_priority') {
                     $functionName = 'getPriority';
                 } elseif ($functionName == 'retrieve_copies') {
-                    $functionName = 'getCopyEntities';
+                    $functionName = 'getCopies';
                 } elseif ($functionName == 'makeLink_detail') {
                     $functionName = 'getDetailLink';
                 } elseif ($functionName == 'get_parent_folder') {
