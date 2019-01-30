@@ -40,14 +40,15 @@ abstract class GroupBasketModelAbstract
     public static function createGroupBasket(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['basketId', 'groupId', 'resultPage']);
-        ValidatorModel::stringType($aArgs, ['basketId', 'groupId', 'resultPage']);
+        ValidatorModel::stringType($aArgs, ['basketId', 'groupId', 'resultPage', 'list_display']);
 
         DatabaseModel::insert([
             'table'         => 'groupbasket',
             'columnsValues' => [
                 'basket_id'         => $aArgs['basketId'],
                 'group_id'          => $aArgs['groupId'],
-                'result_page'       => $aArgs['resultPage']
+                'result_page'       => $aArgs['resultPage'],
+                'list_display'      => empty($aArgs['listDisplay']) ? '[]' : $aArgs['listDisplay']
             ]
         ]);
 

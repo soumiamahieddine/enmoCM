@@ -112,6 +112,13 @@ ALTER TABLE baskets DROP COLUMN IF EXISTS id;
 ALTER TABLE baskets ADD COLUMN id serial;
 ALTER TABLE baskets ADD UNIQUE (id);
 
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS id;
+ALTER TABLE groupbasket ADD COLUMN id serial;
+ALTER TABLE groupbasket ADD UNIQUE (id);
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_display;
+ALTER TABLE groupbasket ADD COLUMN list_display json DEFAULT '[]';
+
+
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
  SELECT r.tablename,

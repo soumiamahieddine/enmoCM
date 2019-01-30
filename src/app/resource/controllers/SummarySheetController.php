@@ -44,6 +44,16 @@ class SummarySheetController
         }
 
         $queryParamsData = $request->getQueryParams();
+//        $queryParamsData['units'] = base64_encode(json_encode([
+//            ['label' => 'Informations', 'unit' => 'primaryInformations'],
+//            ['label' => 'Informations Secondaires', 'unit' => 'secondaryInformations'],
+//            ['label' => 'Liste de diffusion', 'unit' => 'diffusionList'],
+//            ['label' => 'Ptit avis les potos.', 'unit' => 'freeField'],
+//            ['label' => 'Annotation(s)', 'unit' => 'notes'],
+//            ['label' => 'Circuit de visa', 'unit' => 'visaWorkflow'],
+//            ['label' => 'Commentaires', 'unit' => 'freeField'],
+//            ['unit' => 'qrcode']
+//        ]));
         
         $units = empty($queryParamsData['units']) ? [] : (array)json_decode(base64_decode($queryParamsData['units']));
 
