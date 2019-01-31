@@ -22,90 +22,88 @@ export class SummarySheetComponent implements OnInit {
 
     dataAvailable: any[] = [
         {
+            id: 'primaryInformations',
             unit: 'primaryInformations',
             label: this.lang.primaryInformations,
             css: 'col-md-6 text-left',
             desc: [
-                this.lang.mailDate, 
-                this.lang.arrivalDate, 
-                this.lang.nature, 
-                this.lang.creation_date, 
-                this.lang.mailType, 
+                this.lang.mailDate,
+                this.lang.arrivalDate,
+                this.lang.nature,
+                this.lang.creation_date,
+                this.lang.mailType,
                 this.lang.initiator
             ],
             enabled: true
         },
         {
+            id: 'senderRecipientInformations',
             unit: 'senderRecipientInformations',
             label: this.lang.senderRecipientInformations,
             css: 'col-md-6 text-left',
             desc: [
-                this.lang.senders, 
+                this.lang.senders,
                 this.lang.recipients
             ],
             enabled: true
         },
         {
+            id: 'secondaryInformations',
             unit: 'secondaryInformations',
             label: this.lang.secondaryInformations,
             css: 'col-md-6 text-left',
             desc: [
                 this.lang.category_id,
                 this.lang.status,
-                this.lang.priority, 
+                this.lang.priority,
                 this.lang.processLimitDate
             ],
             enabled: true
         },
         {
+            id: 'diffusionList',
             unit: 'diffusionList',
             label: this.lang.diffusionList,
             css: 'col-md-6 text-left',
             desc: [
-                this.lang.dest_user, 
+                this.lang.dest_user,
                 this.lang.copyUsersEntities
             ],
             enabled: true
         },
         {
+            id: 'avisWorkflow',
             unit: 'avisWorkflow',
             label: this.lang.avis,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + ' ('+ this.lang.destinationEntity +')', 
-                this.lang.role, 
+                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destinationEntity + ')',
+                this.lang.role,
                 this.lang.processDate
             ],
             enabled: true
         },
         {
+            id: 'visaWorkflow',
             unit: 'visaWorkflow',
             label: this.lang.visaWorkflow,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + ' ('+ this.lang.destinationEntity +')', 
-                this.lang.role, 
+                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destinationEntity + ')',
+                this.lang.role,
                 this.lang.processDate
             ],
             enabled: true
         },
         {
+            id: 'notes',
             unit: 'notes',
             label: this.lang.notes,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname, 
-                this.lang.creation_date, 
+                this.lang.firstname + ' ' + this.lang.lastname,
+                this.lang.creation_date,
                 this.lang.content
-            ],
-            enabled: true
-        },
-        {
-            unit: 'freeField',
-            label: this.lang.comments,
-            css: 'col-md-12 text-left',
-            desc: [
-                this.lang.freeNote
             ],
             enabled: true
         }
@@ -139,6 +137,8 @@ export class SummarySheetComponent implements OnInit {
                 });
             }
         });
+
+        console.log(this.dataAvailable);
         this.http.get('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets?units=' + btoa(JSON.stringify(currElemData)) + '&init' + this.data.filters, { responseType: "blob" })
             .subscribe((data) => {
                 let downloadLink = document.createElement('a');
@@ -155,5 +155,22 @@ export class SummarySheetComponent implements OnInit {
 
     toggleQrcode() {
         this.withQrcode = !this.withQrcode;
+    }
+
+    addCustomUnit() {
+        this.dataAvailable.push({
+            id: 'freeField_' + this.dataAvailable.length,
+            unit: 'freeField',
+            label: this.lang.comments,
+            css: 'col-md-12 text-left',
+            desc: [
+                this.lang.freeNote
+            ],
+            enabled: true
+        });
+    }
+
+    removeCustomUnit(i: number) {
+        this.dataAvailable.splice(i, 1);
     }
 }

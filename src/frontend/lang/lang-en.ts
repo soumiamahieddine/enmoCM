@@ -794,4 +794,6 @@ export const LANG_EN = {
     "content"                            : "Content",
     "freeNote"                            : "Free note",
     "toggleQrcode"                            : "Display / Hide mail identifier (qrcode)",
+    "deleteUnit"                            : "Delete unit",
+    "addCustomUnit"                            : "Add custom unit",
 };

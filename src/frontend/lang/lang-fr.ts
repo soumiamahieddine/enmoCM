@@ -796,7 +796,7 @@ export const LANG_FR = {
     "typist"                                     : "Rédacteur",
     "signatureDate"                                     : "Date de signature",
     "comment"                                     : "Commentaire",
-    "comments"                                     : "Commentaires",
+    "comments"                                     : "Commentaire(s)",
     "delimiter"                                     : "Délimiteur",
     "datasToExport"                                     : "Données à exporter",
     "searchDatas"                                     : "Rechercher une donnée",
@@ -820,4 +820,6 @@ export const LANG_FR = {
     "content"                            : "Contenu",
     "freeNote"                            : "Note libre",
     "toggleQrcode"                            : "Afficher / cacher l'identifiant courrier (qrcode)",
+    "deleteUnit"                            : "Supprimer le bloc",
+    "addCustomUnit"                            : "Ajouter un bloc custom",
 };

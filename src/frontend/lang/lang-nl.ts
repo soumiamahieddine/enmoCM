@@ -823,4 +823,6 @@ export const LANG_NL = {
     "content"                                     : "_TO_TRANSLATE",
     "freeNote"                                     : "_TO_TRANSLATE",
     "toggleQrcode"                                     : "_TO_TRANSLATE",
+    "deleteUnit"                                     : "_TO_TRANSLATE",
+    "addCustomUnit"                                     : "_TO_TRANSLATE",
 };
