@@ -255,7 +255,7 @@ class ExportController
         $copies = '';
         foreach ($listInstances as $listInstance) {
             if (!empty($copies)) {
-                $copies .= ' ; ';
+                $copies .= "\n";
             }
             if ($listInstance['item_type'] == 'user_id') {
                 $copies .= UserModel::getLabelledUserById(['login' => $listInstance['item_id']]);
@@ -283,7 +283,7 @@ class ExportController
         foreach ($tagsRes as $value) {
             $tag = TagModel::getById(['id' => $value['tag_id'], 'select' => ['tag_label']]);
             if (!empty($tags)) {
-                $tags .= ' ; ';
+                $tags .= "\n";
             }
             $tags .= $tag['tag_label'];
         }
@@ -306,7 +306,7 @@ class ExportController
         foreach ($listInstances as $listInstance) {
             $user = UserModel::getByLogin(['login' => $listInstance['item_id'], 'select' => ['firstname', 'lastname']]);
             if (!empty($signatories)) {
-                $signatories .= ' ; ';
+                $signatories .= "\n";
             }
             $signatories .= "{$user['firstname']} {$user['lastname']}";
         }
@@ -331,7 +331,7 @@ class ExportController
             $date = $date->format('d-m-Y H:i');
 
             if (!empty($dates)) {
-                $dates .= ' ; ';
+                $dates .= "\n";
             }
             $dates .= $date;
         }
