@@ -793,7 +793,9 @@ export const LANG_NL = {
     "destinationEntity"                                     : "_TO_TRANSLATE",
     "destinationEntityType"                                     : "_TO_TRANSLATE",
     "sender"                                     : "_TO_TRANSLATE",
+    "senders"                                     : "_TO_TRANSLATE",
     "recipient"                                     : "_TO_TRANSLATE",
+    "recipients"                                     : "_TO_TRANSLATE",
     "typist"                                     : "_TO_TRANSLATE",
     "signatureDate"                                     : "_TO_TRANSLATE",
     "comment"                                     : "_TO_TRANSLATE",
@@ -820,4 +822,5 @@ export const LANG_NL = {
     "processDate"                                     : "_TO_TRANSLATE",
     "content"                                     : "_TO_TRANSLATE",
     "freeNote"                                     : "_TO_TRANSLATE",
+    "toggleQrcode"                                     : "_TO_TRANSLATE",
 };

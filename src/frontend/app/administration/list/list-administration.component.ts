@@ -251,9 +251,17 @@ export class ListAdministrationComponent implements OnInit {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            const fakeIndex = $j('.available-data .columns')[event.previousIndex].id;
-            const realIndex = this.dataAvailable.map((dataAv: any) => (dataAv.value)).indexOf(fakeIndex);
-    
+            let realIndex = event.previousIndex;
+
+            if (event.container.id == 'cdk-drop-list-1') {
+                realIndex = 0
+                if ($j('.available-data .columns')[event.previousIndex] !== undefined) {
+                    const fakeIndex = $j('.available-data .columns')[event.previousIndex].id;
+                    realIndex = this.dataAvailable.map((dataAv: any) => (dataAv.value)).indexOf(fakeIndex);
+                }
+            }
+            
+            
             transferArrayItem(event.previousContainer.data,
                 event.container.data,
                 realIndex,
@@ -293,7 +301,11 @@ export class ListAdministrationComponent implements OnInit {
         });
 
         transferArrayItem(this.dataAvailable, this.exportModel.data, realIndex, this.exportModel.data.length);
+        const curFilter = this.listFilter.nativeElement.value;
         this.listFilter.nativeElement.value = '';
+        setTimeout(() => {
+            this.listFilter.nativeElement.value = curFilter;
+        }, 10);
     }
 
     removeData(i: number) {

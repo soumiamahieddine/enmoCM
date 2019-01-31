@@ -4,7 +4,12 @@
     </div>
     <div class="row header">
         <div class="col-md-4 text-left" [class.disabled]="!withQrcode">
-            <mat-slide-toggle [(ngModel)]="withQrcode" color="primary">res_id (QrCode)</mat-slide-toggle>
+            <mat-button-toggle-group style="position: absolute;top:-9px;left:0px;" multiple (change)="toggleQrcode()">
+                <mat-button-toggle style="width: 40px;height: 40px;" class="qrcode" [checked]="withQrcode" title="{{lang.toggleQrcode}}">
+                    <mat-icon fontSet="fas" fontIcon="fa-qrcode" style="height: auto;font-size: 30px;"></mat-icon>
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+            <!--<mat-slide-toggle [(ngModel)]="withQrcode" color="primary">res_id (QrCode)</mat-slide-toggle>-->
         </div>
         <div class="col-md-4 text-center">
             {{lang.summarySheet}} - {{lang.chronoNumber}}
@@ -24,8 +29,14 @@
                 (cdkDropListDropped)="drop($event)">
                 <ng-container *ngFor="let item of dataAvailable">
                     <div class="columns" [class.disabled]="!item.enabled" *ngIf="item.unit !== 'qrcode'" cdkDrag id="{{item.unit}}"
-                        style="position: relative;">
-                        <div class="unitTitle">
+                        style="position: relative;" (click)="item.enabled = !item.enabled">
+                        <div class="unitTitle" cdkDragHandle>
+                                <div class="handleDrag">
+                                        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                                          <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                                          <path d="M0 0h24v24H0z" fill="none"></path>
+                                        </svg>
+                                      </div>
                             {{item.label}}
                         </div>
                         <div class="row" class="unitData">
@@ -33,7 +44,7 @@
                                 {{itemData}}
                             </div>
                         </div>
-                        <mat-slide-toggle [(ngModel)]="item.enabled" color="primary" class="unitToggle"></mat-slide-toggle>
+                        <mat-slide-toggle [(ngModel)]="item.enabled" color="primary" class="unitToggle"></mat-slide-toggle>   
                     </div>
                 </ng-container>
             </div>

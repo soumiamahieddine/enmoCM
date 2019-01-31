@@ -764,7 +764,9 @@ export const LANG_EN = {
     "destinationEntity"                                     : "Destination entity name",
     "destinationEntityType"                                     : "Destination entity type",
     "sender"                                     : "Sender",
+    "senders"                                     : "Sender(s)",
     "recipient"                                     : "Recipient",
+    "recipients"                                     : "Recipient(s)",
     "typist"                                     : "Typist",
     "signatureDate"                                     : "Signature date",
     "comment"                                     : "Comment",
@@ -791,4 +793,5 @@ export const LANG_EN = {
     "processDate"                            : "Process date",
     "content"                            : "Content",
     "freeNote"                            : "Free note",
+    "toggleQrcode"                            : "Display / Hide mail identifier (qrcode)",
 };

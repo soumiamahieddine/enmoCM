@@ -286,7 +286,7 @@ export class FiltersToolComponent implements OnInit {
 
     openSummarySheet(): void {
         this.dialog.open(SummarySheetComponent, {
-            autoFocus: false,
+            panelClass: 'summary-sheet-dialog',
             width: '800px',
             data: {
                 ownerId: this.currentBasketInfo.ownerId,

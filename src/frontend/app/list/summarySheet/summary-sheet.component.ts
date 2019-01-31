@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
@@ -11,6 +11,7 @@ declare function $j(selector: any): any;
     templateUrl: "summary-sheet.component.html",
     styleUrls: ['summary-sheet.component.scss'],
     providers: [NotificationService],
+    encapsulation: ViewEncapsulation.None
 })
 export class SummarySheetComponent implements OnInit {
 
@@ -23,7 +24,7 @@ export class SummarySheetComponent implements OnInit {
         {
             unit: 'primaryInformations',
             label: this.lang.primaryInformations,
-            css: 'col-md-6 text-center',
+            css: 'col-md-6 text-left',
             desc: [
                 this.lang.mailDate, 
                 this.lang.arrivalDate, 
@@ -37,17 +38,17 @@ export class SummarySheetComponent implements OnInit {
         {
             unit: 'senderRecipientInformations',
             label: this.lang.senderRecipientInformations,
-            css: 'col-md-6 text-center',
+            css: 'col-md-6 text-left',
             desc: [
-                this.lang.sender, 
-                this.lang.recipient
+                this.lang.senders, 
+                this.lang.recipients
             ],
             enabled: true
         },
         {
             unit: 'secondaryInformations',
             label: this.lang.secondaryInformations,
-            css: 'col-md-6 text-center',
+            css: 'col-md-6 text-left',
             desc: [
                 this.lang.category_id,
                 this.lang.status,
@@ -59,7 +60,7 @@ export class SummarySheetComponent implements OnInit {
         {
             unit: 'diffusionList',
             label: this.lang.diffusionList,
-            css: 'col-md-6 text-center',
+            css: 'col-md-6 text-left',
             desc: [
                 this.lang.dest_user, 
                 this.lang.copyUsersEntities
@@ -71,7 +72,7 @@ export class SummarySheetComponent implements OnInit {
             label: this.lang.avis,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + '('+ this.lang.destinationEntity +')', 
+                this.lang.firstname + ' ' + this.lang.lastname + ' ('+ this.lang.destinationEntity +')', 
                 this.lang.role, 
                 this.lang.processDate
             ],
@@ -79,10 +80,10 @@ export class SummarySheetComponent implements OnInit {
         },
         {
             unit: 'visaWorkflow',
-            label: this.lang.visa,
+            label: this.lang.visaWorkflow,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + '('+ this.lang.destinationEntity +')', 
+                this.lang.firstname + ' ' + this.lang.lastname + ' ('+ this.lang.destinationEntity +')', 
                 this.lang.role, 
                 this.lang.processDate
             ],
@@ -102,7 +103,7 @@ export class SummarySheetComponent implements OnInit {
         {
             unit: 'freeField',
             label: this.lang.comments,
-            css: 'col-md-12 text-center',
+            css: 'col-md-12 text-left',
             desc: [
                 this.lang.freeNote
             ],
@@ -112,9 +113,7 @@ export class SummarySheetComponent implements OnInit {
 
     constructor(public http: HttpClient, private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-    ngOnInit(): void {
-        //TO DO GET PARAM SUMMARY SHEET
-    }
+    ngOnInit(): void { }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
@@ -152,5 +151,9 @@ export class SummarySheetComponent implements OnInit {
             }, (err: any) => {
                 this.notify.handleErrors(err);
             });
+    }
+
+    toggleQrcode() {
+        this.withQrcode = !this.withQrcode;
     }
 }
