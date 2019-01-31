@@ -44,16 +44,17 @@ class SummarySheetController
         }
 
         $queryParamsData = $request->getQueryParams();
-//        $queryParamsData['units'] = base64_encode(json_encode([
-//            ['label' => 'Informations', 'unit' => 'primaryInformations'],
-//            ['label' => 'Informations Secondaires', 'unit' => 'secondaryInformations'],
-//            ['label' => 'Liste de diffusion', 'unit' => 'diffusionList'],
-//            ['label' => 'Ptit avis les potos.', 'unit' => 'freeField'],
-//            ['label' => 'Annotation(s)', 'unit' => 'notes'],
-//            ['label' => 'Circuit de visa', 'unit' => 'visaWorkflow'],
-//            ['label' => 'Commentaires', 'unit' => 'freeField'],
-//            ['unit' => 'qrcode']
-//        ]));
+        $queryParamsData['units'] = base64_encode(json_encode([
+            ['label' => 'Informations', 'unit' => 'primaryInformations'],
+            ['label' => 'Informations Secondaires', 'unit' => 'secondaryInformations'],
+            ['label' => 'Liste de diffusion', 'unit' => 'diffusionList'],
+            ['label' => 'Ptit avis les potos.', 'unit' => 'freeField'],
+            ['label' => 'Annotation(s)', 'unit' => 'notes'],
+            ['label' => 'Circuit de visa', 'unit' => 'visaWorkflow'],
+            ['label' => 'Circuit d\'avis', 'unit' => 'opinionWorkflow'],
+            ['label' => 'Commentaires', 'unit' => 'freeField'],
+            ['unit' => 'qrcode'],
+        ]));
         
         $units = empty($queryParamsData['units']) ? [] : (array)json_decode(base64_decode($queryParamsData['units']));
 
@@ -131,7 +132,8 @@ class SummarySheetController
         $pdf->SetFont('', 'B', 16);
         $pdf->MultiCell(0, 1, $resource['subject'], 1, 'C', false);
 
-        foreach ($units as $unit) {
+        foreach ($units as $key => $unit) {
+            $units[$key] = (array)$unit;
             $unit = (array)$unit;
             if ($unit['unit'] == 'qrcode') {
                 $qrcode = new QRCode();
@@ -140,42 +142,53 @@ class SummarySheetController
                 $pdf->Image($qrcodePath, 21, 10, 50, 50);
             }
         }
-        foreach ($units as $unit) {
-            $unit = (array)$unit;
-
+        foreach ($units as $key => $unit) {
             if ($unit['unit'] == 'primaryInformations') {
                 $nature = ResModel::getNatureLabel(['natureId' => $resource['nature_id']]);
+                $nature = empty($nature) ? '<i>'._UNDEFINED.'</i>' : "<b>{$nature}</b>";
                 $admissionDate = TextFormatModel::formatDate($resource['admission_date'], 'd-m-Y');
+                $admissionDate = empty($admissionDate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$admissionDate}</b>";
                 $creationdate = TextFormatModel::formatDate($resource['creation_date'], 'd-m-Y');
+                $creationdate = empty($creationdate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$creationdate}</b>";
                 $docDate = TextFormatModel::formatDate($resource['doc_date'], 'd-m-Y');
+                $docDate = empty($docDate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$docDate}</b>";
                 $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['short_label']]);
                 $initiatorEntity = empty($initiator) ? '' : "({$initiator['short_label']})";
                 $typist = UserModel::getLabelledUserById(['login' => $resource['typist']]);
+                $doctype = empty($resource['type_label']) ? '<i>'._UNDEFINED.'</i>' : "<b>{$resource['type_label']}</b>";
 
                 $pdf->SetY($pdf->GetY() + 40);
                 if (($pdf->GetY() + 77) > $bottomHeight) {
                     $pdf->AddPage();
                 }
-//                $pdf->SetFont('', 'B', 11);
-//                $pdf->Cell(0, 15, $unit['label'], 0, 2, 'L', false);
-//                $pdf->SetY($pdf->GetY() + 2);
+                if (!($key == 0 || ($key == 1 && $units[0]['unit'] == 'qrcode'))) {
+                    $pdf->SetFont('', 'B', 11);
+                    $pdf->Cell(0, 15, $unit['label'], 0, 2, 'L', false);
+                    $pdf->SetY($pdf->GetY() + 2);
+                }
 
                 $pdf->SetFont('', '', 10);
-                $pdf->MultiCell($widthNoMargins / 2, 15, _DOC_DATE . " : <b>{$docDate}</b>", 0, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 15, _ADMISSION_DATE . " : <b>{$admissionDate}</b>", 0, 'R', false, 1, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 15, _NATURE . " : <b>{$nature}</b>", 0, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 15, _CREATED . " : <b>{$creationdate}</b>", 0, 'R', false, 1, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 15, _DOCTYPE . " : <b>{$resource['type_label']}</b>", 0, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 15, _TYPIST . " : <b>{$typist}</b>", 0, 'R', false, 1, '', '', true, 0, true);
-                $pdf->MultiCell(0, 15, "<b>{$initiatorEntity}</b>", 0, 'R', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 10 * 4.5, 15, _DOC_DATE . " : {$docDate}", 0, 'L', false, 0, '', '', true, 0, true);
+                $pdf->Cell($widthNoMargins / 10, 15, '', 0, 0, 'L', false);
+                $pdf->MultiCell($widthNoMargins / 10 * 4.5, 15, _ADMISSION_DATE . " : {$admissionDate}", 0, 'L', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 10 * 4.5, 15, _NATURE . " : {$nature}", 0, 'L', false, 0, '', '', true, 0, true);
+                $pdf->Cell($widthNoMargins / 10, 15, '', 0, 0, 'L', false);
+                $pdf->MultiCell($widthNoMargins / 10 * 4.5, 15, _CREATED . " : {$creationdate}", 0, 'L', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 10 * 4.5, 15, _DOCTYPE . " : {$doctype}", 0, 'L', false, 0, '', '', true, 0, true);
+                $pdf->Cell($widthNoMargins / 10, 15, '', 0, 0, 'L', false);
+                $pdf->MultiCell($widthNoMargins / 10 * 4.5, 15, _TYPIST . " : <b>{$typist} {$initiatorEntity}</b>", 0, 'L', false, 1, '', '', true, 0, true);
             } elseif ($unit['unit'] == 'secondaryInformations') {
                 $category = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
+                $category = empty($category) ? '<i>'._UNDEFINED.'</i>' : "<b>{$category}</b>";
                 $status = StatusModel::getById(['id' => $resource['status'], 'select' => ['label_status']]);
+                $status = empty($status['label_status']) ? '<i>'._UNDEFINED.'</i>' : "<b>{$status['label_status']}</b>";
                 $priority = '';
                 if (!empty($resource['priority'])) {
-                    $priority = PriorityModel::getById(['id' => $resource['priority'], 'select' => ['label']])['label'];
+                    $priority = PriorityModel::getById(['id' => $resource['priority'], 'select' => ['label']]);
                 }
+                $priority = empty($priority['label']) ? '<i>'._UNDEFINED.'</i>' : "<b>{$priority['label']}</b>";
                 $processLimitDate = TextFormatModel::formatDate($resource['process_limit_date'], 'd-m-Y');
+                $processLimitDate = empty($processLimitDate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$processLimitDate}</b>";
 
                 $pdf->SetY($pdf->GetY() + 40);
                 if (($pdf->GetY() + 57) > $bottomHeight) {
@@ -186,10 +199,10 @@ class SummarySheetController
                 $pdf->SetY($pdf->GetY() + 2);
 
                 $pdf->SetFont('', '', 10);
-                $pdf->MultiCell($widthNoMargins / 2, 20, _CATEGORY . " : <b>{$category}</b>", 1, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 20, _STATUS . " : <b>{$status['label_status']}</b>", 1, 'L', false, 1, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 20, _PRIORITY . " : <b>{$priority}</b>", 1, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 20, _PROCESS_LIMIT_DATE . " : <b>{$processLimitDate}</b>", 1, 'L', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 20, _CATEGORY . " : {$category}", 1, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 20, _STATUS . " : {$status}", 1, 'L', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 20, _PRIORITY . " : {$priority}", 1, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 20, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, 1, '', '', true, 0, true);
             } elseif ($unit['unit'] == 'diffusionList') {
                 $assignee = '';
                 $copies = [];
@@ -225,8 +238,10 @@ class SummarySheetController
 
                 $pdf->SetFont('', '', 10);
                 $pdf->MultiCell($widthNoMargins / 6, 20, _ASSIGNEE, 1, 'C', false, 0, '', '', true, 0, false, true, 20, 'M');
+                $pdf->SetFont('', 'B', 10);
                 $pdf->Cell($widthNoMargins / 6 * 5, 20, "- {$assignee} {$destinationEntity}", 1, 1, 'L', false);
                 if (!empty($copies)) {
+                    $pdf->SetFont('', '', 10);
                     $pdf->MultiCell($widthNoMargins / 6, count($copies) * 20, _TO_CC, 1, 'C', false, 0, '', '', true, 0, false, true, count($copies) * 20, 'M');
                     foreach ($copies as $copy) {
                         $pdf->Cell($widthNoMargins / 6 * 5, 20, "- {$copy}", 1, 2, 'L', false);
@@ -234,7 +249,12 @@ class SummarySheetController
                 }
             } elseif ($unit['unit'] == 'visaWorkflow') {
                 $users = [];
-                $listInstances = ListInstanceModel::get(['select' => ['item_id', 'requested_signature', 'process_date'], 'where' => ['difflist_type = ?', 'res_id = ?'], 'data' => ['VISA_CIRCUIT', $resource['res_id']]]);
+                $listInstances = ListInstanceModel::get([
+                    'select'    => ['item_id', 'requested_signature', 'process_date'],
+                    'where'     => ['difflist_type = ?', 'res_id = ?'],
+                    'data'      => ['VISA_CIRCUIT', $resource['res_id']],
+                    'orderBy'   => ['listinstance_id']
+                ]);
                 foreach ($listInstances as $listInstance) {
                     $users[] = [
                         'user'  => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
@@ -255,8 +275,40 @@ class SummarySheetController
                     $pdf->SetFont('', '', 10);
                     $pdf->Cell($widthNoMargins / 4 * 3, 20, _USERS, 1, 0, 'L', false);
                     $pdf->Cell($widthNoMargins / 4, 20, _ACTION_DATE, 1, 1, 'L', false);
-                    foreach ($users as $key => $user) {
-                        $pdf->Cell($widthNoMargins / 4 * 3, 20, $key + 1 . ". {$user['user']} ({$user['mode']})", 1, 0, 'L', false);
+                    foreach ($users as $keyUser => $user) {
+                        $pdf->Cell($widthNoMargins / 4 * 3, 20, $keyUser + 1 . ". {$user['user']} ({$user['mode']})", 1, 0, 'L', false);
+                        $pdf->Cell($widthNoMargins / 4, 20, $user['date'], 1, 1, 'L', false);
+                    }
+                }
+            } elseif ($unit['unit'] == 'opinionWorkflow') {
+                $users = [];
+                $listInstances = ListInstanceModel::get([
+                    'select'    => ['item_id', 'process_date'],
+                    'where'     => ['difflist_type = ?', 'res_id = ?'],
+                    'data'      => ['AVIS_CIRCUIT', $resource['res_id']],
+                    'orderBy'   => ['listinstance_id']
+                ]);
+                foreach ($listInstances as $listInstance) {
+                    $users[] = [
+                        'user'  => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
+                        'date'  => TextFormatModel::formatDate($listInstance['process_date']),
+                    ];
+                }
+
+                if (!empty($users)) {
+                    $pdf->SetY($pdf->GetY() + 40);
+                    if (($pdf->GetY() + 37 + count($users) * 20) > $bottomHeight) {
+                        $pdf->AddPage();
+                    }
+                    $pdf->SetFont('', 'B', 11);
+                    $pdf->Cell(0, 15, $unit['label'], 0, 2, 'L', false);
+                    $pdf->SetY($pdf->GetY() + 2);
+
+                    $pdf->SetFont('', '', 10);
+                    $pdf->Cell($widthNoMargins / 4 * 3, 20, _USERS, 1, 0, 'L', false);
+                    $pdf->Cell($widthNoMargins / 4, 20, _ACTION_DATE, 1, 1, 'L', false);
+                    foreach ($users as $keyUser => $user) {
+                        $pdf->Cell($widthNoMargins / 4 * 3, 20, $keyUser + 1 . ". {$user['user']}", 1, 0, 'L', false);
                         $pdf->Cell($widthNoMargins / 4, 20, $user['date'], 1, 1, 'L', false);
                     }
                 }
@@ -312,7 +364,9 @@ class SummarySheetController
                         if (($pdf->GetY() + 65) > $bottomHeight) {
                             $pdf->AddPage();
                         }
+                        $pdf->SetFont('', 'B', 10);
                         $pdf->Cell($widthNoMargins / 2, 20, $note['user'], 1, 0, 'L', false);
+                        $pdf->SetFont('', '', 10);
                         $pdf->Cell($widthNoMargins / 2, 20, $note['date'], 1, 1, 'L', false);
                         $pdf->MultiCell(0, 40, $note['note'], 1, 'L', false);
                         $pdf->SetY($pdf->GetY() + 5);

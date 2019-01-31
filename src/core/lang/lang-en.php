@@ -424,6 +424,7 @@ define('_REDACTOR', 'Redactor');
 define('_ASSIGNEE', 'Assignee');
 
 define('_SUMMARY_SHEET', 'Summary sheet');
+define('_UNDEFINED', 'Undefined');
 define('_CATEGORY', 'Category');
 define('_CHRONO_NUMBER', 'Chrono number');
 define('_INITIATOR_ENTITY', 'Initiator entity');

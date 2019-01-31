@@ -418,6 +418,7 @@ define('_EMAILSERVER_PARAM_DESC', '_TO_TRANSLATE');
 define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
 
 define('_SUMMARY_SHEET', 'Summary sheet_TO_TRANSLATE');
+define('_UNDEFINED', 'Undefined_TO_TRANSLATE');
 define('_CATEGORY', 'Category_TO_TRANSLATE');
 define('_CHRONO_NUMBER', 'Chrono number_TO_TRANSLATE');
 define('_INITIATOR_ENTITY', 'Initiator entity_TO_TRANSLATE');
