@@ -12,7 +12,8 @@
 
 namespace chillerlan\QRCodeTest\Output;
 
-use chillerlan\QRCode\{QRCode, Output\QRString};
+use chillerlan\QRCode\Output\QRString;
+use chillerlan\QRCode\QRCode;
 
 class QRStringTest extends QROutputTestAbstract{
 
@@ -20,8 +21,8 @@ class QRStringTest extends QROutputTestAbstract{
 
 	public function types(){
 		return [
-			'json' => [QRCode::OUTPUT_STRING_JSON],
-			'text' => [QRCode::OUTPUT_STRING_TEXT],
+			[QRCode::OUTPUT_STRING_JSON],
+			[QRCode::OUTPUT_STRING_TEXT],
 		];
 	}
 

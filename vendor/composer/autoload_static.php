@@ -28,7 +28,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         ),
         'c' => 
         array (
-            'chillerlan\\Settings\\' => 20,
+            'chillerlan\\Traits\\' => 18,
             'chillerlan\\QRCode\\' => 18,
         ),
         'V' => 
@@ -145,9 +145,9 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
-        'chillerlan\\Settings\\' => 
+        'chillerlan\\Traits\\' => 
         array (
-            0 => __DIR__ . '/..' . '/chillerlan/php-settings-container/src',
+            0 => __DIR__ . '/..' . '/chillerlan/php-traits/src',
         ),
         'chillerlan\\QRCode\\' => 
         array (

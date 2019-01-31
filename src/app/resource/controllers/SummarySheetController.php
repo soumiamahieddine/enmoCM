@@ -16,6 +16,7 @@ namespace Resource\controllers;
 
 use Basket\models\BasketModel;
 use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Note\models\NoteEntityModel;
@@ -136,10 +137,12 @@ class SummarySheetController
             $units[$key] = (array)$unit;
             $unit = (array)$unit;
             if ($unit['unit'] == 'qrcode') {
-                $qrcode = new QRCode();
-                $qrcodePath = CoreConfigModel::getTmpPath() . rand() . '_qr.png';
-                $qrcode->render($resource['res_id'], $qrcodePath);
-                $pdf->Image($qrcodePath, 21, 10, 50, 50);
+                $options = new QROptions([
+                    'imageBase64'    => false,
+                ]);
+                $qrcode = new QRCode($options);
+                $qrcodeBlob = $qrcode->render($resource['res_id']);
+                $pdf->Image('@'.$qrcodeBlob, 21, 10, 50, 50);
             }
         }
         foreach ($units as $key => $unit) {

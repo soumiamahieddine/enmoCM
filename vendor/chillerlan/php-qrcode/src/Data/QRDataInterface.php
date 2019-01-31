@@ -17,22 +17,10 @@ namespace chillerlan\QRCode\Data;
  */
 interface QRDataInterface{
 
-	const NUMBER_CHAR_MAP = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-	const ALPHANUM_CHAR_MAP = [
-		'0', '1', '2', '3', '4', '5', '6', '7',
-		'8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
-		'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-		'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
-		'W', 'X', 'Y', 'Z', ' ', '$', '%', '*',
-		'+', '-', '.', '/', ':',
-	];
-
 	/**
 	 * @link http://www.qrcode.com/en/about/version.html
 	 */
-	const MAX_LENGTH =[
-		null, // start at 1
+	const MAX_LENGTH =[ null, // start at 1
 	//	[NUMERIC => [L, M, Q, H ], ALPHANUM => [L, M, Q, H], BINARY => [L, M, Q, H  ], KANJI => [L, M, Q, H   ]]  // modules
 		[[  41,   34,   27,   17], [  25,   20,   16,   10], [  17,   14,   11,    7], [  10,    8,    7,    4]], //  21
 		[[  77,   63,   48,   34], [  47,   38,   29,   20], [  32,   26,   20,   14], [  20,   16,   12,    8]], //  25
@@ -76,8 +64,7 @@ interface QRDataInterface{
 		[[7089, 5596, 3993, 3057], [4296, 3391, 2420, 1852], [2953, 2331, 1663, 1273], [1817, 1435, 1024,  784]], // 177
 	];
 
-	const MAX_BITS = [
-		null, // start at 1
+	const MAX_BITS = [ null, // start at 1
 		// MAX_BITS => [L, M, Q, H ]
 		[  152,   128,   104,    72],
 		[  272,   224,   176,   128],
@@ -124,8 +111,7 @@ interface QRDataInterface{
 	/**
 	 * @link http://www.thonky.com/qr-code-tutorial/error-correction-table
 	 */
-	const RSBLOCKS = [
-		null, // start at 1
+	const RSBLOCKS = [ null, // start at 1
 		[[ 1,  0,  26,  19], [ 1,  0, 26, 16], [ 1,  0, 26, 13], [ 1,  0, 26,  9]], //  1
 		[[ 1,  0,  44,  34], [ 1,  0, 44, 28], [ 1,  0, 44, 22], [ 1,  0, 44, 16]], //
 		[[ 1,  0,  70,  55], [ 1,  0, 70, 44], [ 2,  0, 35, 17], [ 2,  0, 35, 13]], //
@@ -173,7 +159,7 @@ interface QRDataInterface{
 	 *
 	 * @return \chillerlan\QRCode\Data\QRDataInterface
 	 */
-	public function setData(string $data):QRDataInterface;
+	public function setData(string $data);
 
 	/**
 	 * @param int  $maskPattern

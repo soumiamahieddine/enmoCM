@@ -12,6 +12,10 @@
 
 namespace chillerlan\QRCode\Helpers;
 
+/**
+ * @property int[] $buffer
+ * @property int   $length
+ */
 class BitBuffer{
 
 	/**
