@@ -4,6 +4,7 @@ import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MAT_DIALOG_DATA } from '@angular/material';
+import { formatDate } from '@angular/common';
 
 declare function $j(selector: any): any;
 
@@ -138,11 +139,29 @@ export class SummarySheetComponent implements OnInit {
             }
         });
 
-        this.http.get('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets?units=' + btoa(JSON.stringify(currElemData)), { responseType: "blob" })
+        this.http.post('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets', { units: currElemData, resources: this.data.selectedRes }, { responseType: "blob" })
             .subscribe((data) => {
                 let downloadLink = document.createElement('a');
                 downloadLink.href = window.URL.createObjectURL(data);
-                downloadLink.setAttribute('download', this.lang.summarySheet.replace(' ','_') + ".pdf");
+
+                let today: any;
+                let dd: any;
+                let mm: any;
+                let yyyy: any;
+
+                today = new Date();
+                dd = today.getDate();
+                mm = today.getMonth() + 1;
+                yyyy = today.getFullYear();
+
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                today = dd + '/' + mm + '/' + yyyy;
+                downloadLink.setAttribute('download', this.lang.summarySheets + " (" + today + ").pdf");
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
 
