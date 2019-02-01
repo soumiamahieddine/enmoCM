@@ -46,20 +46,7 @@ class SummarySheetController
         }
 
         $bodyData = $request->getParsedBody();
-//        $queryParamsData['units'] = base64_encode(json_encode([
-//            ['label' => 'Informations', 'unit' => 'primaryInformations'],
-//            ['label' => 'Informations Secondaires', 'unit' => 'secondaryInformations'],
-//            ['label' => 'Liste de diffusion', 'unit' => 'diffusionList'],
-//            ['label' => 'Ptit avis les potos.', 'unit' => 'freeField'],
-//            ['label' => 'Annotation(s)', 'unit' => 'notes'],
-//            ['label' => 'Circuit de visa', 'unit' => 'visaWorkflow'],
-//            ['label' => 'Circuit d\'avis', 'unit' => 'opinionWorkflow'],
-//            ['label' => 'Commentaires', 'unit' => 'freeField'],
-//            ['unit' => 'qrcode'],
-//        ]));
-//        $queryParamsData['resources'] = [237, 352];
-
-        $units = empty($bodyData['units']) ? [] : (array)json_decode(base64_decode($bodyData['units']));
+        $units = empty($bodyData['units']) ? [] : $bodyData['units'];
 
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
