@@ -24,6 +24,7 @@ use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceListModel;
+use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -47,6 +48,10 @@ class SummarySheetController
 
         $bodyData = $request->getParsedBody();
         $units = empty($bodyData['units']) ? [] : $bodyData['units'];
+
+        if (!Validator::arrayType()->notEmpty()->validate($bodyData['resources'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+        }
 
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);

@@ -24,6 +24,7 @@ use Resource\models\ResourceListModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Tag\models\TagModel;
@@ -57,22 +58,43 @@ class ExportController
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
-        $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
-
-        $queryParamsData = $request->getQueryParams();
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['delimiter']) || !in_array($body['delimiter'], [',', ';', 'TAB'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Delimiter is not set or not set well']);
         } elseif (!Validator::arrayType()->notEmpty()->validate($body['data'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data is not an array or empty']);
+        } elseif (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
         }
+
         foreach ($body['data'] as $value) {
             if (!isset($value['value']) || !Validator::stringType()->notEmpty()->validate($value['label']) || !Validator::boolType()->validate($value['isFunction'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'One data is not set well']);
             }
         }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
+        $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $rawResourcesInBasket = ResModel::getOnView([
+            'select'    => ['res_id'],
+            'where'     => [$whereClause]
+        ]);
+        $allResourcesInBasket = [];
+        foreach ($rawResourcesInBasket as $resource) {
+            $allResourcesInBasket[] = $resource['res_id'];
+        }
+
+        $order = 'CASE res_view_letterbox.res_id ';
+        foreach ($body['resources'] as $key => $resId) {
+            if (!in_array($resId, $allResourcesInBasket)) {
+                return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+            }
+            $order .= "WHEN {$resId} THEN {$key} ";
+        }
+        $order .= 'END';
 
         $template = ExportTemplateModel::getByUserId(['select' => [1], 'userId' => $currentUser['id']]);
         if (empty($template)) {
@@ -90,24 +112,6 @@ class ExportController
                 'where' => ['user_id = ?'],
                 'data'  => [$currentUser['id']]
             ]);
-        }
-
-        $allQueryData = ResourceListController::getResourcesListQueryData(['data' => $queryParamsData, 'basketClause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-        if (!empty($allQueryData['order'])) {
-            $queryParamsData['order'] = $allQueryData['order'];
-        }
-        $rawResources = ResourceListModel::getOnView([
-            'select'    => ['res_id'],
-            'table'     => $allQueryData['table'],
-            'leftJoin'  => $allQueryData['leftJoin'],
-            'where'     => $allQueryData['where'],
-            'data'      => $allQueryData['queryData'],
-            'orderBy'   => empty($queryParamsData['order']) ? [$basket['basket_res_order']] : [$queryParamsData['order']]
-        ]);
-
-        $resIds = [];
-        foreach ($rawResources as $resource) {
-            $resIds[] = $resource['res_id'];
         }
 
         $select = ['res_id'];
@@ -156,23 +160,14 @@ class ExportController
             }
         }
 
-        $resources = [];
-        if (!empty($resIds)) {
-            $order = 'CASE res_view_letterbox.res_id ';
-            foreach ($resIds as $key => $resId) {
-                $order .= "WHEN {$resId} THEN {$key} ";
-            }
-            $order .= 'END';
-
-            $resources = ResourceListModel::getOnView([
-                'select'    => $select,
-                'table'     => $tableFunction,
-                'leftJoin'  => $leftJoinFunction,
-                'where'     => ['res_view_letterbox.res_id in (?)'],
-                'data'      => [$resIds],
-                'orderBy'   => [$order]
-            ]);
-        }
+        $resources = ResourceListModel::getOnView([
+            'select'    => $select,
+            'table'     => $tableFunction,
+            'leftJoin'  => $leftJoinFunction,
+            'where'     => ['res_view_letterbox.res_id in (?)'],
+            'data'      => [$body['resources']],
+            'orderBy'   => [$order]
+        ]);
 
         $file = fopen('php://memory', 'w');
         $delimiter = ($body['delimiter'] == 'TAB' ? "\t" : $body['delimiter']);
