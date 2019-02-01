@@ -281,7 +281,7 @@ export class FiltersToolComponent implements OnInit {
                 ownerId: this.currentBasketInfo.ownerId,
                 groupId: this.currentBasketInfo.groupId,
                 basketId: this.currentBasketInfo.basketId,
-                filters: this.filtersListService.getUrlFilters()
+                selectedRes: this.selectedRes
             }
         });
     }
@@ -294,7 +294,7 @@ export class FiltersToolComponent implements OnInit {
                 ownerId: this.currentBasketInfo.ownerId,
                 groupId: this.currentBasketInfo.groupId,
                 basketId: this.currentBasketInfo.basketId,
-                selectedRes: this.selectedRes,
+                selectedRes: this.selectedRes
             }
         });
     }
