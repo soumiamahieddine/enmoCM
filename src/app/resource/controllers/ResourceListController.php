@@ -47,8 +47,8 @@ class ResourceListController
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
         $data = $request->getQueryParams();
-        $data['offset'] = (empty($data['offset']) || !is_numeric($data['offset']) ? 0 : $data['offset']);
-        $data['limit'] = (empty($data['limit']) || !is_numeric($data['limit']) ? 0 : $data['limit']);
+        $data['offset'] = (empty($data['offset']) || !is_numeric($data['offset']) ? 0 : (int)$data['offset']);
+        $data['limit'] = (empty($data['limit']) || !is_numeric($data['limit']) ? 10 : (int)$data['limit']);
 
         $allQueryData = ResourceListController::getResourcesListQueryData(['data' => $data, 'basketClause' => $basket['basket_clause'], 'login' => $user['user_id']]);
         if (!empty($allQueryData['order'])) {
@@ -56,19 +56,28 @@ class ResourceListController
         }
 
         $rawResources = ResourceListModel::getOnView([
-            'select'    => ['count(1) OVER()', 'res_id'],
+            'select'    => ['res_id'],
             'table'     => $allQueryData['table'],
             'leftJoin'  => $allQueryData['leftJoin'],
             'where'     => $allQueryData['where'],
             'data'      => $allQueryData['queryData'],
-            'orderBy'   => empty($data['order']) ? [$basket['basket_res_order']] : [$data['order']],
-            'offset'    => (int)$data['offset'],
-            'limit'     => (int)$data['limit']
+            'orderBy'   => empty($data['order']) ? [$basket['basket_res_order']] : [$data['order']]
         ]);
-        $count = empty($rawResources[0]['count']) ? 0 : $rawResources[0]['count'];
+        $count = count($rawResources);
+
         $resIds = [];
+        if (!empty($rawResources[$data['offset']])) {
+            $start = $data['offset'];
+            $i = 0;
+            while ($i < $data['limit'] && !empty($rawResources[$start])) {
+                $resIds[] = $rawResources[$start]['res_id'];
+                ++$start;
+                ++$i;
+            }
+        }
+        $allResources = [];
         foreach ($rawResources as $resource) {
-            $resIds[] = $resource['res_id'];
+            $allResources[] = $resource['res_id'];
         }
 
         $resources = [];
@@ -99,7 +108,7 @@ class ResourceListController
             }
         }
 
-        return $response->withJson(['resources' => $resources, 'count' => $count, 'basketLabel' => $basket['basket_name']]);
+        return $response->withJson(['resources' => $resources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'allResources' => $allResources]);
     }
 
     public function getFilters(Request $request, Response $response, array $aArgs)
