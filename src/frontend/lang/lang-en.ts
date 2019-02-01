@@ -781,6 +781,7 @@ export const LANG_EN = {
     "removeAllDatas"                                     : "Remove all datas",
     "toExport"                                     : "Export",
     "summarySheet"                                     : "Summary sheet",
+    "summarySheets"                                     : "Summary sheet(s)",
     "appName"                                     : "Application name",
     "printDate"                                     : "Print date",
     "genSummarySheets"                                     : "Generate Summary sheets",
@@ -796,4 +797,5 @@ export const LANG_EN = {
     "toggleQrcode"                            : "Display / Hide mail identifier (qrcode)",
     "deleteUnit"                            : "Delete unit",
     "addCustomUnit"                            : "Add custom unit",
+    "selectedElements"                            : "selected element(s)",
 };

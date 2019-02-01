@@ -807,6 +807,7 @@ export const LANG_FR = {
     "removeAllDatas"                                     : "Enlever toutes les données",
     "toExport"                                     : "Exporter",
     "summarySheet"                                     : "Fiche de liaison",
+    "summarySheets"                                     : "Fiche(s) de liaison(s)",
     "appName"                                     : "Nom de l'application",
     "printDate"                                     : "Date d'impression",
     "genSummarySheets"                                     : "Générer les fiches de liaisons",
@@ -822,4 +823,5 @@ export const LANG_FR = {
     "toggleQrcode"                            : "Afficher / cacher l'identifiant courrier (qrcode)",
     "deleteUnit"                            : "Supprimer le bloc",
     "addCustomUnit"                            : "Ajouter un bloc custom",
+    "selectedElements"                            : "élément(s) sélectionné(s)",
 };

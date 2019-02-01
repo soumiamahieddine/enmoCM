@@ -63,8 +63,10 @@ export class FiltersToolComponent implements OnInit {
     @Input('currentBasketInfo') currentBasketInfo: any;
 
     @Input('snavR') sidenavRight: MatSidenav;
+    @Input('nbSelectedRes') nbSelectedRes: number;
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
+    @Output('toggleAllRes') toggleAllRes = new EventEmitter<string>();
 
     constructor(public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder, private latinisePipe: LatinisePipe, public dialog: MatDialog) { }
 
@@ -295,5 +297,9 @@ export class FiltersToolComponent implements OnInit {
                 filters: this.filtersListService.getUrlFilters()
             }
         });
+    }
+
+    toggleAll(e: any) {
+        this.toggleAllRes.emit(e);
     }
 }

@@ -810,6 +810,7 @@ export const LANG_NL = {
     "removeAllDatas"                                     : "_TO_TRANSLATE",
     "toExport"                                     : "_TO_TRANSLATE",
     "summarySheet"                                     : "_TO_TRANSLATE",
+    "summarySheets"                                     : "_TO_TRANSLATE",
     "appName"                                     : "_TO_TRANSLATE",
     "printDate"                                     : "_TO_TRANSLATE",
     "genSummarySheets"                                     : "_TO_TRANSLATE",
@@ -825,4 +826,5 @@ export const LANG_NL = {
     "toggleQrcode"                                     : "_TO_TRANSLATE",
     "deleteUnit"                                     : "_TO_TRANSLATE",
     "addCustomUnit"                                     : "_TO_TRANSLATE",
+    "selectedElements"                                     : "_TO_TRANSLATE",
 };
