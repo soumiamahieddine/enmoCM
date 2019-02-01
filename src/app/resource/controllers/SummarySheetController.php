@@ -27,6 +27,7 @@ use Resource\models\ResourceListModel;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
@@ -45,27 +46,42 @@ class SummarySheetController
         }
 
         $queryParamsData = $request->getQueryParams();
-        /*$queryParamsData['units'] = base64_encode(json_encode([
-            ['label' => 'Informations', 'unit' => 'primaryInformations'],
-            ['label' => 'Informations Secondaires', 'unit' => 'secondaryInformations'],
-            ['label' => 'Liste de diffusion', 'unit' => 'diffusionList'],
-            ['label' => 'Ptit avis les potos.', 'unit' => 'freeField'],
-            ['label' => 'Annotation(s)', 'unit' => 'notes'],
-            ['label' => 'Circuit de visa', 'unit' => 'visaWorkflow'],
-            ['label' => 'Circuit d\'avis', 'unit' => 'opinionWorkflow'],
-            ['label' => 'Commentaires', 'unit' => 'freeField'],
-            ['unit' => 'qrcode'],
-        ]));*/
-        
+//        $queryParamsData['units'] = base64_encode(json_encode([
+//            ['label' => 'Informations', 'unit' => 'primaryInformations'],
+//            ['label' => 'Informations Secondaires', 'unit' => 'secondaryInformations'],
+//            ['label' => 'Liste de diffusion', 'unit' => 'diffusionList'],
+//            ['label' => 'Ptit avis les potos.', 'unit' => 'freeField'],
+//            ['label' => 'Annotation(s)', 'unit' => 'notes'],
+//            ['label' => 'Circuit de visa', 'unit' => 'visaWorkflow'],
+//            ['label' => 'Circuit d\'avis', 'unit' => 'opinionWorkflow'],
+//            ['label' => 'Commentaires', 'unit' => 'freeField'],
+//            ['unit' => 'qrcode'],
+//        ]));
+//        $queryParamsData['resources'] = [237, 352];
+
         $units = empty($queryParamsData['units']) ? [] : (array)json_decode(base64_decode($queryParamsData['units']));
 
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
-        $allQueryData = ResourceListController::getResourcesListQueryData(['data' => $queryParamsData, 'basketClause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-        if (!empty($allQueryData['order'])) {
-            $queryParamsData['order'] = $allQueryData['order'];
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $rawResourcesInBasket = ResModel::getOnView([
+            'select'    => ['res_id'],
+            'where'     => [$whereClause]
+        ]);
+        $allResourcesInBasket = [];
+        foreach ($rawResourcesInBasket as $resource) {
+            $allResourcesInBasket[] = $resource['res_id'];
         }
+
+        $order = 'CASE res_view_letterbox.res_id ';
+        foreach ($queryParamsData['resources'] as $key => $resId) {
+            if (!in_array($resId, $allResourcesInBasket)) {
+                return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+            }
+            $order .= "WHEN {$resId} THEN {$key} ";
+        }
+        $order .= 'END';
 
         $select = ['res_id', 'subject', 'alt_identifier'];
         foreach ($units as $unit) {
@@ -81,13 +97,12 @@ class SummarySheetController
                 $select = array_merge($select, $informations);
             }
         }
-        $resources = ResourceListModel::getOnView([
+
+        $resources = ResModel::getOnView([
             'select'    => $select,
-            'table'     => $allQueryData['table'],
-            'leftJoin'  => $allQueryData['leftJoin'],
-            'where'     => $allQueryData['where'],
-            'data'      => $allQueryData['queryData'],
-            'orderBy'   => empty($queryParamsData['order']) ? [$basket['basket_res_order']] : [$queryParamsData['order']]
+            'where'     => ['res_view_letterbox.res_id in (?)'],
+            'data'      => [$queryParamsData['resources']],
+            'orderBy'   => [$order]
         ]);
 
         $pdf = new Fpdi('P', 'pt');
