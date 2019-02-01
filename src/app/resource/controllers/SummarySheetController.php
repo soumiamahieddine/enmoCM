@@ -36,7 +36,7 @@ use User\models\UserModel;
 
 class SummarySheetController
 {
-    public function getList(Request $request, Response $response, array $aArgs)
+    public function createList(Request $request, Response $response, array $aArgs)
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
@@ -45,7 +45,7 @@ class SummarySheetController
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
 
-        $queryParamsData = $request->getQueryParams();
+        $bodyData = $request->getParsedBody();
 //        $queryParamsData['units'] = base64_encode(json_encode([
 //            ['label' => 'Informations', 'unit' => 'primaryInformations'],
 //            ['label' => 'Informations Secondaires', 'unit' => 'secondaryInformations'],
@@ -59,7 +59,7 @@ class SummarySheetController
 //        ]));
 //        $queryParamsData['resources'] = [237, 352];
 
-        $units = empty($queryParamsData['units']) ? [] : (array)json_decode(base64_decode($queryParamsData['units']));
+        $units = empty($bodyData['units']) ? [] : (array)json_decode(base64_decode($bodyData['units']));
 
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
@@ -75,7 +75,7 @@ class SummarySheetController
         }
 
         $order = 'CASE res_view_letterbox.res_id ';
-        foreach ($queryParamsData['resources'] as $key => $resId) {
+        foreach ($bodyData['resources'] as $key => $resId) {
             if (!in_array($resId, $allResourcesInBasket)) {
                 return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
             }
@@ -101,7 +101,7 @@ class SummarySheetController
         $resources = ResModel::getOnView([
             'select'    => $select,
             'where'     => ['res_view_letterbox.res_id in (?)'],
-            'data'      => [$queryParamsData['resources']],
+            'data'      => [$bodyData['resources']],
             'orderBy'   => [$order]
         ]);
 

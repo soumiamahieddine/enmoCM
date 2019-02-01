@@ -265,7 +265,7 @@ $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/filters', \Resource\controllers\ResourceListController::class . ':getFilters');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplate');
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/exports', \Resource\controllers\ExportController::class . ':updateExport');
-$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/summarySheets', \Resource\controllers\SummarySheetController::class . ':getList');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/summarySheets', \Resource\controllers\SummarySheetController::class . ':createList');
 
 //SignatureBook
 $app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');
