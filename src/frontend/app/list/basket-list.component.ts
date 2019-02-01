@@ -146,6 +146,7 @@ export class BasketListComponent implements OnInit {
                 basketId: params['basketId']
             };
             this.filtersListService.filterMode = false;
+            this.selectedRes = [];
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
