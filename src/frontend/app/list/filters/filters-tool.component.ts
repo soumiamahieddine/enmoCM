@@ -63,7 +63,7 @@ export class FiltersToolComponent implements OnInit {
     @Input('currentBasketInfo') currentBasketInfo: any;
 
     @Input('snavR') sidenavRight: MatSidenav;
-    @Input('nbSelectedRes') nbSelectedRes: number;
+    @Input('selectedRes') selectedRes: any;
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     @Output('toggleAllRes') toggleAllRes = new EventEmitter<string>();
@@ -294,7 +294,7 @@ export class FiltersToolComponent implements OnInit {
                 ownerId: this.currentBasketInfo.ownerId,
                 groupId: this.currentBasketInfo.groupId,
                 basketId: this.currentBasketInfo.basketId,
-                filters: this.filtersListService.getUrlFilters()
+                selectedRes: this.selectedRes,
             }
         });
     }

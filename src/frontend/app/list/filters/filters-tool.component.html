@@ -44,19 +44,19 @@
     <button mat-icon-button [matMenuTriggerFor]="menuParamList">
         <mat-icon color="primary" fontSet="fas" fontIcon="fa-cog fa-2x"></mat-icon>
     </button>
-    <mat-menu #menuParamList="matMenu">
+    <mat-menu class="actionsTool" #menuParamList="matMenu">
         <div style="text-align: center;font-size: 10px;opacity: 0.5;margin-top:-10px;">
-            {{nbSelectedRes}} {{lang.selectedElements}}
+            {{selectedRes.length}} {{lang.selectedElements}}
         </div>
-        <button mat-menu-item [disabled]="nbSelectedRes == 0">
+        <button mat-menu-item [disabled]="selectedRes.length == 0">
             <mat-icon fontSet="fas" fontIcon="fa-print fa-2x"></mat-icon>
             <span>{{lang.printResultList}}</span>
         </button>
-        <button mat-menu-item (click)="openSummarySheet();" [disabled]="nbSelectedRes == 0">
+        <button mat-menu-item (click)="openSummarySheet();" [disabled]="selectedRes.length == 0">
             <mat-icon fontSet="fas" fontIcon="fa-link fa-2x"></mat-icon>
             <span>{{lang.summarySheets}}</span>
         </button>
-        <button mat-menu-item (click)="openListAdmin();" [disabled]="nbSelectedRes == 0">
+        <button mat-menu-item (click)="openListAdmin();" [disabled]="selectedRes.length == 0">
             <mat-icon fontSet="fas" fontIcon="fa-file-export fa-2x"></mat-icon>
             <span>{{lang.exportDatas}}</span>
         </button>

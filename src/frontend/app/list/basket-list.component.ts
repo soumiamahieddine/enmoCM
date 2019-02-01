@@ -256,7 +256,6 @@ export class BasketListComponent implements OnInit {
                     element[key] = this.lang.undefined;
                 } else if (["senders", "recipients"].indexOf(key) > 0) {
                     if (element[key].length > 1) {
-                        console.log(element[key]);
                         element[key] = this.lang.isMulticontact;
                     } else {
                         element[key] = element[key][0];

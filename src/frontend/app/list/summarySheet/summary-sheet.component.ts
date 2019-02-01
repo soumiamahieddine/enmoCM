@@ -138,12 +138,11 @@ export class SummarySheetComponent implements OnInit {
             }
         });
 
-        console.log(this.dataAvailable);
-        this.http.get('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets?units=' + btoa(JSON.stringify(currElemData)) + '&init' + this.data.filters, { responseType: "blob" })
+        this.http.get('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets?units=' + btoa(JSON.stringify(currElemData)), { responseType: "blob" })
             .subscribe((data) => {
                 let downloadLink = document.createElement('a');
                 downloadLink.href = window.URL.createObjectURL(data);
-                downloadLink.setAttribute('download', "summary_sheet.pdf");
+                downloadLink.setAttribute('download', this.lang.summarySheet.replace(' ','_') + ".pdf");
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
 

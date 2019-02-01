@@ -18,7 +18,7 @@
                 <div class="row" style="margin:0px;">
                     <div class="col-md-12" style="display:flex;">
                         <app-filters-tool style="flex:1;" #filtersTool [currentBasketInfo]="currentBasketInfo"
-                            [listProperties]="this.listProperties" [snavR]="snav2" [nbSelectedRes]="selectedRes.length" (toggleAllRes)="toggleAllRes($event)" (refreshEvent)="refreshDao()"></app-filters-tool>
+                            [listProperties]="this.listProperties" [snavR]="snav2" [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)" (refreshEvent)="refreshDao()"></app-filters-tool>
                         <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="10" class="paginatorResultList"></mat-paginator>
                     </div>
                 </div>

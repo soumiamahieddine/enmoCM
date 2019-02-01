@@ -104,3 +104,9 @@
 .mat-menu-content:not(:empty) {
     padding-top: 18px;
 }
+
+.actionsTool {
+    .mat-icon {
+        height: auto;
+    }
+}
