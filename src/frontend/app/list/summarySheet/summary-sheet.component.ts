@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MAT_DIALOG_DATA } from '@angular/material';
+import { formatDate } from '@angular/common';
 
 declare function $j(selector: any): any;
 
@@ -11,6 +12,7 @@ declare function $j(selector: any): any;
     templateUrl: "summary-sheet.component.html",
     styleUrls: ['summary-sheet.component.scss'],
     providers: [NotificationService],
+    encapsulation: ViewEncapsulation.None
 })
 export class SummarySheetComponent implements OnInit {
 
@@ -21,90 +23,88 @@ export class SummarySheetComponent implements OnInit {
 
     dataAvailable: any[] = [
         {
+            id: 'primaryInformations',
             unit: 'primaryInformations',
             label: this.lang.primaryInformations,
-            css: 'col-md-6 text-center',
+            css: 'col-md-6 text-left',
             desc: [
-                this.lang.mailDate, 
-                this.lang.arrivalDate, 
-                this.lang.nature, 
-                this.lang.creation_date, 
-                this.lang.mailType, 
+                this.lang.mailDate,
+                this.lang.arrivalDate,
+                this.lang.nature,
+                this.lang.creation_date,
+                this.lang.mailType,
                 this.lang.initiator
             ],
             enabled: true
         },
         {
+            id: 'senderRecipientInformations',
             unit: 'senderRecipientInformations',
             label: this.lang.senderRecipientInformations,
-            css: 'col-md-6 text-center',
+            css: 'col-md-6 text-left',
             desc: [
-                this.lang.sender, 
-                this.lang.recipient
+                this.lang.senders,
+                this.lang.recipients
             ],
             enabled: true
         },
         {
+            id: 'secondaryInformations',
             unit: 'secondaryInformations',
             label: this.lang.secondaryInformations,
-            css: 'col-md-6 text-center',
+            css: 'col-md-6 text-left',
             desc: [
                 this.lang.category_id,
                 this.lang.status,
-                this.lang.priority, 
+                this.lang.priority,
                 this.lang.processLimitDate
             ],
             enabled: true
         },
         {
+            id: 'diffusionList',
             unit: 'diffusionList',
             label: this.lang.diffusionList,
-            css: 'col-md-6 text-center',
+            css: 'col-md-6 text-left',
             desc: [
-                this.lang.dest_user, 
+                this.lang.dest_user,
                 this.lang.copyUsersEntities
             ],
             enabled: true
         },
         {
-            unit: 'avisWorkflow',
+            id: 'opinionWorkflow',
+            unit: 'opinionWorkflow',
             label: this.lang.avis,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + '('+ this.lang.destinationEntity +')', 
-                this.lang.role, 
+                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destination + ')',
+                this.lang.role,
                 this.lang.processDate
             ],
             enabled: true
         },
         {
+            id: 'visaWorkflow',
             unit: 'visaWorkflow',
-            label: this.lang.visa,
+            label: this.lang.visaWorkflow,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + '('+ this.lang.destinationEntity +')', 
-                this.lang.role, 
+                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destination + ')',
+                this.lang.role,
                 this.lang.processDate
             ],
             enabled: true
         },
         {
+            id: 'notes',
             unit: 'notes',
             label: this.lang.notes,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname, 
-                this.lang.creation_date, 
+                this.lang.firstname + ' ' + this.lang.lastname,
+                this.lang.creation_date,
                 this.lang.content
-            ],
-            enabled: true
-        },
-        {
-            unit: 'freeField',
-            label: this.lang.comments,
-            css: 'col-md-12 text-center',
-            desc: [
-                this.lang.freeNote
             ],
             enabled: true
         }
@@ -112,9 +112,7 @@ export class SummarySheetComponent implements OnInit {
 
     constructor(public http: HttpClient, private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-    ngOnInit(): void {
-        //TO DO GET PARAM SUMMARY SHEET
-    }
+    ngOnInit(): void { }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
@@ -140,11 +138,30 @@ export class SummarySheetComponent implements OnInit {
                 });
             }
         });
-        this.http.get('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets?units=' + btoa(JSON.stringify(currElemData)) + '&init' + this.data.filters, { responseType: "blob" })
+
+        this.http.post('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets', { units: currElemData, resources: this.data.selectedRes }, { responseType: "blob" })
             .subscribe((data) => {
                 let downloadLink = document.createElement('a');
                 downloadLink.href = window.URL.createObjectURL(data);
-                downloadLink.setAttribute('download', "summary_sheet.pdf");
+
+                let today: any;
+                let dd: any;
+                let mm: any;
+                let yyyy: any;
+
+                today = new Date();
+                dd = today.getDate();
+                mm = today.getMonth() + 1;
+                yyyy = today.getFullYear();
+
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                today = dd + '-' + mm + '-' + yyyy;
+                downloadLink.setAttribute('download', this.lang.summarySheetsAlt + "_" + today + ".pdf");
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
 
@@ -152,5 +169,26 @@ export class SummarySheetComponent implements OnInit {
             }, (err: any) => {
                 this.notify.handleErrors(err);
             });
+    }
+
+    toggleQrcode() {
+        this.withQrcode = !this.withQrcode;
+    }
+
+    addCustomUnit() {
+        this.dataAvailable.push({
+            id: 'freeField_' + this.dataAvailable.length,
+            unit: 'freeField',
+            label: this.lang.comments,
+            css: 'col-md-12 text-left',
+            desc: [
+                this.lang.freeNote
+            ],
+            enabled: true
+        });
+    }
+
+    removeCustomUnit(i: number) {
+        this.dataAvailable.splice(i, 1);
     }
 }

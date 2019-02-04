@@ -19,43 +19,19 @@ use chillerlan\QRCode\QRCode;
  */
 class QRMarkup extends QROutputAbstract{
 
-	/**
-	 * @var string
-	 */
 	protected $defaultMode = QRCode::OUTPUT_MARKUP_SVG;
 
 	/**
-	 * @return void
+	 * @return string|bool
 	 */
-	protected function setModuleValues():void{
-
-		foreach($this::DEFAULT_MODULE_VALUES as $M_TYPE => $defaultValue){
-			$v = $this->options->moduleValues[$M_TYPE] ?? null;
-
-			if(!is_string($v)){
-				$this->moduleValues[$M_TYPE] = $defaultValue
-					? $this->options->markupDark
-					: $this->options->markupLight;
-			}
-			else{
-				$this->moduleValues[$M_TYPE] = trim(strip_tags($v), '\'"');
-			}
-
-		}
-
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function html():string{
+	protected function html(){
 		$html = '';
 
 		foreach($this->matrix->matrix() as $row){
 			$html .= '<div>';
 
-			foreach($row as $M_TYPE){
-				$html .= '<span style="background: '.$this->moduleValues[$M_TYPE].';"></span>';
+			foreach($row as $pixel){
+				$html .= '<span style="background: '.($this->options->moduleValues[$pixel] ?: 'lightgrey').';"></span>';
 			}
 
 			$html .= '</div>'.$this->options->eol;
@@ -71,9 +47,9 @@ class QRMarkup extends QROutputAbstract{
 	/**
 	 * @link https://github.com/codemasher/php-qrcode/pull/5
 	 *
-	 * @return string
+	 * @return string|bool
 	 */
-	protected function svg():string{
+	protected function svg(){
 		$scale  = $this->options->scale;
 		$length = $this->moduleCount * $scale;
 		$matrix = $this->matrix->matrix();
@@ -83,7 +59,13 @@ class QRMarkup extends QROutputAbstract{
 		       .'<defs>'.$this->options->svgDefs.'</defs>'
 		       .$this->options->eol;
 
-		foreach($this->moduleValues as $M_TYPE => $value){
+		foreach($this->options->moduleValues as $M_TYPE => $value){
+
+			// fallback
+			if(is_bool($value)){
+				$value = $value ? '#000' : '#fff';
+			}
+
 			$path = '';
 
 			foreach($matrix as $y => $row){

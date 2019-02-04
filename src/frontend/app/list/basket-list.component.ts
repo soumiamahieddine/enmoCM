@@ -95,13 +95,16 @@ export class BasketListComponent implements OnInit {
     ];
 
     resultListDatabase: ResultListHttpDao | null;
-    data: any[] = [];
+    data: any;
     resultsLength = 0;
     isLoadingResults = true;
     listProperties: any = {};
     currentBasketInfo: any = {};
     currentChrono: string = '';
     thumbnailUrl: string = '';
+
+    selectedRes: number[] = [];
+    allResInBasket: number[] = [];
 
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
 
@@ -143,6 +146,7 @@ export class BasketListComponent implements OnInit {
                 basketId: params['basketId']
             };
             this.filtersListService.filterMode = false;
+            this.selectedRes = [];
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
@@ -176,6 +180,7 @@ export class BasketListComponent implements OnInit {
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
                     this.resultsLength = data.count;
+                    this.allResInBasket = data.allResources;
                     this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;
                 }),
@@ -250,27 +255,58 @@ export class BasketListComponent implements OnInit {
             Object.keys(element).forEach((key) => {
                 if ((element[key] == null || element[key] == '') && ['process_limit_date', 'creation_date', 'closing_date', 'countAttachments', 'countNotes'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
-                } else if (["senders","recipients"].indexOf(key) > 0) {
+                } else if (["senders", "recipients"].indexOf(key) > 0) {
                     if (element[key].length > 1) {
-                        console.log(element[key]);
                         element[key] = this.lang.isMulticontact;
                     } else {
                         element[key] = element[key][0];
-                    }          
+                    }
                 } else if (key == 'status_icon' && element[key] == null) {
                     element[key] = 'fa-question undefined';
                 }
 
             });
+
+            if (this.selectedRes.indexOf(element['res_id']) === -1) {
+                element['checked'] = false;
+            } else {
+                element['checked'] = true;
+            }
         });
 
         return data;
+    }
+
+    toggleRes(e: any, resId: any) {
+        if (e.checked) {
+            if (this.selectedRes.indexOf(resId) === -1) {
+                this.selectedRes.push(resId);
+            }
+        } else {
+            let index = this.selectedRes.indexOf(resId);
+            this.selectedRes.splice(index, 1);
+        }
+    }
+
+    toggleAllRes(e: any) {
+        this.selectedRes = [];
+        if (e.checked) {
+            this.data.forEach((element: any) => {
+                element['checked'] = true;
+            });
+            this.selectedRes = this.allResInBasket;
+        } else {
+            this.data.forEach((element: any) => {
+                element['checked'] = false;
+            });
+        }
     }
 }
 export interface BasketList {
     resources: any[];
     count: number;
-    basketLabel: string
+    basketLabel: string,
+    allResources: number[]
 }
 
 

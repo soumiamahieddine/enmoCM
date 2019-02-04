@@ -19,31 +19,7 @@ use chillerlan\QRCode\QRCode;
  */
 class QRString extends QROutputAbstract{
 
-	/**
-	 * @var string
-	 */
 	protected $defaultMode = QRCode::OUTPUT_STRING_TEXT;
-
-	/**
-	 * @return void
-	 */
-	protected function setModuleValues():void{
-
-		foreach($this::DEFAULT_MODULE_VALUES as $M_TYPE => $defaultValue){
-			$v = $this->options->moduleValues[$M_TYPE] ?? null;
-
-			if(!is_string($v)){
-				$this->moduleValues[$M_TYPE] = $defaultValue
-					? $this->options->textDark
-					: $this->options->textLight;
-			}
-			else{
-				$this->moduleValues[$M_TYPE] = $v;
-			}
-
-		}
-
-	}
 
 	/**
 	 * @return string
@@ -54,8 +30,17 @@ class QRString extends QROutputAbstract{
 		foreach($this->matrix->matrix() as $row){
 			$r = [];
 
-			foreach($row as $M_TYPE){
-				$r[] = $this->moduleValues[$M_TYPE];
+			foreach($row as $col){
+				$col = $this->options->moduleValues[$col];
+
+				// fallback
+				if(is_bool($col) || !is_string($col)){
+					$col = $col
+						? $this->options->textDark
+						: $this->options->textLight;
+				}
+
+				$r[] = $col;
 			}
 
 			$str[] = implode('', $r);

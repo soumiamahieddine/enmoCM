@@ -1,7 +1,9 @@
-::ng-deep.mat-dialog-container {
-    position: relative;
-    height: 99vh !important;
-    padding-top: 0px;
+.summary-sheet-dialog {
+    .mat-dialog-container {
+        position: relative;
+        height: 99vh !important;
+        padding-top: 0px;
+    }
 }
 
 .mat-dialog-content {
@@ -34,12 +36,17 @@
     }
 
     .unitTitle {
+        display: flex;
+        cursor: initial;
         position: absolute;
-        top: 0;
+        top: 2px;
+        left: 5px;
+        width: 50%;
     }
 
     .unitData {
-        padding-top: 20px;
+        cursor: pointer;
+        margin-top: 30px;
         width: 100%;
         opacity: 0.5;
     }
@@ -72,7 +79,6 @@
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
-    cursor: move;
     background: white;
     font-size: 14px;
 }
@@ -119,5 +125,24 @@
 }
 
 .disabled {
+    opacity: 0.5;
+}
+
+.qrcode {    
+    .mat-button-toggle-label-content {
+        padding-left: 7px;
+        line-height: 40px;
+    }
+}
+
+.qrcode.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+    background-color: #135f7f;
+    color: white;
+}
+
+.handleDrag {
+    padding-right: 5px;
+    cursor: move;
+    display:inline-block;
     opacity: 0.5;
 }

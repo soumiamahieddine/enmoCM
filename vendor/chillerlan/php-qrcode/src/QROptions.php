@@ -12,7 +12,7 @@
 
 namespace chillerlan\QRCode;
 
-use chillerlan\Settings\SettingsContainerAbstract;
+use chillerlan\Traits\ContainerAbstract;
 
 /**
  * @property int    $version
@@ -37,20 +37,14 @@ use chillerlan\Settings\SettingsContainerAbstract;
  * @property string $textDark
  * @property string $textLight
  *
- * @property string $markupDark
- * @property string $markupLight
- *
  * @property bool   $imageBase64
  * @property bool   $imageTransparent
  * @property array  $imageTransparencyBG
  * @property int    $pngCompression
  * @property int    $jpegQuality
  *
- * @property string $imagickFormat
- * @property string $imagickBG
- *
  * @property array  $moduleValues
  */
-class QROptions extends SettingsContainerAbstract{
+class QROptions extends ContainerAbstract{
 	use QROptionsTrait;
 }

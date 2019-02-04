@@ -424,6 +424,7 @@ define('_REDACTOR', 'Rédacteur');
 define('_ASSIGNEE', 'Attributaire');
 
 define('_SUMMARY_SHEET', 'Fiche de liaison');
+define('_UNDEFINED', 'Non définie');
 define('_CATEGORY', 'Catégorie');
 define('_CHRONO_NUMBER', 'Numéro chrono');
 define('_INITIATOR_ENTITY', 'Entité initiatrice');

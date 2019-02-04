@@ -12,11 +12,13 @@
 
 namespace chillerlan\QRCode\Output;
 
-use chillerlan\QRCode\{Data\QRMatrix, QRCode};
-use chillerlan\Settings\SettingsContainerInterface;
+use chillerlan\QRCode\{
+	Data\QRMatrix, QRCode
+};
+use chillerlan\Traits\ContainerInterface;
 
 /**
- * common output abstract
+ *
  */
 abstract class QROutputAbstract implements QROutputInterface{
 
@@ -46,32 +48,15 @@ abstract class QROutputAbstract implements QROutputInterface{
 	protected $defaultMode;
 
 	/**
-	 * @var int
-	 */
-	protected $scale;
-
-	/**
-	 * @var int
-	 */
-	protected $length;
-
-	/**
-	 * @var array
-	 */
-	protected $moduleValues;
-
-	/**
 	 * QROutputAbstract constructor.
 	 *
-	 * @param \chillerlan\Settings\SettingsContainerInterface $options
+	 * @param \chillerlan\Traits\ContainerInterface $options
 	 * @param \chillerlan\QRCode\Data\QRMatrix      $matrix
 	 */
-	public function __construct(SettingsContainerInterface $options, QRMatrix $matrix){
+	public function __construct(ContainerInterface $options, QRMatrix $matrix){
 		$this->options     = $options;
 		$this->matrix      = $matrix;
 		$this->moduleCount = $this->matrix->size();
-		$this->scale       = $this->options->scale;
-		$this->length      = $this->moduleCount * $this->scale;
 
 		$class = get_called_class();
 
@@ -79,45 +64,33 @@ abstract class QROutputAbstract implements QROutputInterface{
 			$this->outputMode = $this->options->outputType;
 		}
 
-		$this->setModuleValues();
 	}
-
-	/**
-	 * Sets the initial module values (clean-up & defaults)
-	 *
-	 * @return void
-	 */
-	abstract protected function setModuleValues():void;
 
 	/**
 	 * @see file_put_contents()
 	 *
 	 * @param string $data
-	 * @param string $file
 	 *
-	 * @return bool
+	 * @return bool|int
 	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 */
-	protected function saveToFile(string $data, string $file):bool{
+	protected function saveToFile(string $data) {
 
-		if(!is_writable(dirname($file))){
-			throw new QRCodeOutputException('Could not write data to cache file: '.$file);
+		if(!is_writable(dirname($this->options->cachefile))){
+			throw new QRCodeOutputException('Could not write data to cache file: '.$this->options->cachefile);
 		}
 
-		return (bool)file_put_contents($file, $data);
+		return file_put_contents($this->options->cachefile, $data);
 	}
 
 	/**
-	 * @param string|null $file
-	 *
-	 * @return string|mixed
+	 * @return string
 	 */
-	public function dump(string $file = null){
+	public function dump(){
 		$data = call_user_func([$this, $this->outputMode ?? $this->defaultMode]);
-		$file = $file ?? $this->options->cachefile;
 
-		if($file !== null){
-			$this->saveToFile($data, $file);
+		if($this->options->cachefile !== null){
+			$this->saveToFile($data);
 		}
 
 		return $data;

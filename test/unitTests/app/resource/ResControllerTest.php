@@ -483,7 +483,10 @@ class ResControllerTest extends TestCase
             $responseBody = json_decode((string)$response->getBody());
             $newId = $responseBody->resId;
             $this->assertInternalType('int', $newId);
-    
+            if ($key < 2) {
+                $GLOBALS['resources'][] = $newId;
+            }
+
             $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
             $request        = \Slim\Http\Request::createFromEnvironment($environment);
             

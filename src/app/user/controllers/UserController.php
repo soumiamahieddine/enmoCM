@@ -86,9 +86,9 @@ class UserController
 
         foreach ($users as $key => $value) {
             if (in_array($value['user_id'], $usersListModels)) {
-                $users[$key]['inDiffListDest'] = 'Y';
+                $users[$key]['inDiffListDest'] = true;
             } else {
-                $users[$key]['inDiffListDest'] = 'N';
+                $users[$key]['inDiffListDest'] = false;
             }
         }
 

@@ -12,7 +12,8 @@
 
 namespace chillerlan\QRCodeTest\Output;
 
-use chillerlan\QRCode\{QRCode, Output\QRMarkup};
+use chillerlan\QRCode\Output\QRMarkup;
+use chillerlan\QRCode\QRCode;
 
 class QRMarkupTest extends QROutputTestAbstract{
 
@@ -20,8 +21,8 @@ class QRMarkupTest extends QROutputTestAbstract{
 
 	public function types(){
 		return [
-			'html' => [QRCode::OUTPUT_MARKUP_HTML],
-			'svg'  => [QRCode::OUTPUT_MARKUP_SVG],
+			[QRCode::OUTPUT_MARKUP_HTML],
+			[QRCode::OUTPUT_MARKUP_SVG],
 		];
 	}
 

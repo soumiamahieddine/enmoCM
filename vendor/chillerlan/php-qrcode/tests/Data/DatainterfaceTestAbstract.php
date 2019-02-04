@@ -12,7 +12,9 @@
 
 namespace chillerlan\QRCodeTest\Data;
 
-use chillerlan\QRCode\{QROptions, Data\QRDataInterface, Data\QRMatrix};
+use chillerlan\QRCode\Data\QRDataInterface;
+use chillerlan\QRCode\Data\QRMatrix;
+use chillerlan\QRCode\QROptions;
 use chillerlan\QRCodeTest\QRTestAbstract;
 
 abstract class DatainterfaceTestAbstract extends QRTestAbstract{

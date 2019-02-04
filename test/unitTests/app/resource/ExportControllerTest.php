@@ -13,13 +13,13 @@ class ExportControllerTest extends TestCase
 {
     public function testGetExportTemplate()
     {
-        $ExportController = new \Resource\controllers\ExportController();
+        $exportController = new \Resource\controllers\ExportController();
 
         //  GET
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $ExportController->getExportTemplate($request, new \Slim\Http\Response());
+        $response     = $exportController->getExportTemplate($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody->template);
@@ -37,6 +37,7 @@ class ExportControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
+            "resources" => $GLOBALS['resources'],
             "delimiter" => ';',
             "data" => [
                 [

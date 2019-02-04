@@ -63,8 +63,10 @@ export class FiltersToolComponent implements OnInit {
     @Input('currentBasketInfo') currentBasketInfo: any;
 
     @Input('snavR') sidenavRight: MatSidenav;
+    @Input('selectedRes') selectedRes: any;
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
+    @Output('toggleAllRes') toggleAllRes = new EventEmitter<string>();
 
     constructor(public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder, private latinisePipe: LatinisePipe, public dialog: MatDialog) { }
 
@@ -279,21 +281,25 @@ export class FiltersToolComponent implements OnInit {
                 ownerId: this.currentBasketInfo.ownerId,
                 groupId: this.currentBasketInfo.groupId,
                 basketId: this.currentBasketInfo.basketId,
-                filters: this.filtersListService.getUrlFilters()
+                selectedRes: this.selectedRes
             }
         });
     }
 
     openSummarySheet(): void {
         this.dialog.open(SummarySheetComponent, {
-            autoFocus: false,
+            panelClass: 'summary-sheet-dialog',
             width: '800px',
             data: {
                 ownerId: this.currentBasketInfo.ownerId,
                 groupId: this.currentBasketInfo.groupId,
                 basketId: this.currentBasketInfo.basketId,
-                filters: this.filtersListService.getUrlFilters()
+                selectedRes: this.selectedRes
             }
         });
+    }
+
+    toggleAll(e: any) {
+        this.toggleAllRes.emit(e);
     }
 }

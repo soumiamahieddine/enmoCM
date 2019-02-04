@@ -12,9 +12,9 @@
 
 namespace chillerlan\QRCodeTest\Data;
 
-use chillerlan\QRCode\{QRCode, Data\QRMatrix};
+use chillerlan\QRCode\Data\QRMatrix;
+use chillerlan\QRCode\QRCode;
 use chillerlan\QRCodeTest\QRTestAbstract;
-use ReflectionClass;
 
 class QRMatrixTest extends QRTestAbstract{
 
@@ -104,7 +104,7 @@ class QRMatrixTest extends QRTestAbstract{
 	public function testVersionPattern() {
 		foreach (self::VERSION_REF as $version => $mask) {
 			$hexRef = base_convert(self::VERSION_REF[$version],2 ,16);
-			$hexImpl = dechex((new ReflectionClass(QRMatrix::class))->getConstant('versionPattern')[$version]);
+			$hexImpl = dechex(QRMatrix::versionPattern[$version]);
 
 			$this->assertEquals($hexRef, $hexImpl);
 		}
@@ -157,7 +157,7 @@ class QRMatrixTest extends QRTestAbstract{
 			->setAlignmentPattern()
 		;
 
-		$alignmentPattern = (new ReflectionClass(QRMatrix::class))->getConstant('alignmentPattern')[$this->version];
+		$alignmentPattern = QRMatrix::alignmentPattern[$this->version];
 
 		foreach($alignmentPattern as $py){
 			foreach($alignmentPattern as $px){

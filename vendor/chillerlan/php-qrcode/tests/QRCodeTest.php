@@ -50,13 +50,13 @@ class QRCodeTest extends QRTestAbstract{
 
 	public function typeDataProvider(){
 		return [
-			'png'  => [QRCode::OUTPUT_IMAGE_PNG, 'data:image/png;base64,'],
-			'gif'  => [QRCode::OUTPUT_IMAGE_GIF, 'data:image/gif;base64,'],
-			'jpg'  => [QRCode::OUTPUT_IMAGE_JPG, 'data:image/jpg;base64,'],
-			'svg'  => [QRCode::OUTPUT_MARKUP_SVG, '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="'],
-			'html' => [QRCode::OUTPUT_MARKUP_HTML, '<div><span style="background:'],
-			'text' => [QRCode::OUTPUT_STRING_TEXT, '⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕'.PHP_EOL],
-			'json' => [QRCode::OUTPUT_STRING_JSON, '[[18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18],'],
+			[QRCode::OUTPUT_IMAGE_PNG, 'data:image/png;base64,'],
+			[QRCode::OUTPUT_IMAGE_GIF, 'data:image/gif;base64,'],
+			[QRCode::OUTPUT_IMAGE_JPG, 'data:image/jpg;base64,'],
+			[QRCode::OUTPUT_MARKUP_SVG, '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="'],
+			[QRCode::OUTPUT_MARKUP_HTML, '<div><span style="background:'],
+			[QRCode::OUTPUT_STRING_TEXT, '⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕'.PHP_EOL],
+			[QRCode::OUTPUT_STRING_JSON, '[[18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18],'],
 		];
 	}
 
@@ -71,11 +71,19 @@ class QRCodeTest extends QRTestAbstract{
 	}
 
 	/**
+	 * @expectedException \chillerlan\QRCode\QRCodeException
+	 * @expectedExceptionMessage Invalid error correct level: 42
+	 */
+	public function testSetOptionsException(){
+		$this->qrcode->setOptions(new QROptions(['eccLevel' => 42]));
+	}
+
+	/**
 	 * @expectedException \chillerlan\QRCode\Output\QRCodeOutputException
 	 * @expectedExceptionMessage invalid output type
 	 */
 	public function testInitDataInterfaceException(){
-		(new QRCode(new QROptions(['outputType' => 'foo'])))->render('test');
+		$this->qrcode->setOptions(new QROptions(['outputType' => 'foo']))->render('test');
 	}
 
 	/**
