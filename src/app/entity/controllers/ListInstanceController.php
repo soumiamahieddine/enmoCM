@@ -20,6 +20,9 @@ use Slim\Http\Response;
 use Respect\Validation\Validator;
 use Resource\controllers\ResController;
 use Entity\models\EntityModel;
+use SrcCore\models\DatabaseModel;
+use User\models\UserModel;
+use Resource\models\ResModel;
 
 class ListInstanceController
 {
@@ -67,5 +70,91 @@ class ListInstanceController
         $listinstances = ListInstanceModel::getAvisCircuitByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment'], 'id' => $aArgs['resId']]);
         
         return $response->withJson($listinstances);
+    }
+
+    public function getListWhereUserIsDest(Request $request, Response $response, array $aArgs) {
+        
+        $data = ListInstanceModel::getListWhereUserIsDest(['select' => ['li.*'], 'id' => $aArgs['itemId']]);
+
+        if($data) {
+            $res_id = 0;
+            $array=[];
+            foreach($data as $value) {
+                if($res_id == 0) {
+                    $res_id = $value['res_id'];
+                } else if( $res_id != $value['res_id']) {
+                    $listinstances[] = ['resId' => $res_id, "listinstances" => $array];
+                    $res_id = $value['res_id'];
+                    $array = [];
+                }
+                array_push($array, $value);
+            }
+            $listinstances[] = ['resId' => $res_id, "listinstances" => $array];
+        }
+            
+        return $response->withJson(['listinstances' => $listinstances]);   
+    }
+
+    public function updateListInstance(Request $request, Response $response)
+    {
+        $data = $request->getParams();
+
+        DatabaseModel::beginTransaction();
+
+        foreach ($data['listinstances'] as $ListInstanceByRes) {
+
+            foreach($ListInstanceByRes['listinstances'] as $instance) {
+
+                //check if basic data is empty
+                if( empty($instance['res_id']) || empty($instance['item_id']) || empty($instance['item_type']) || empty($instance['item_mode']) || empty($instance['difflist_type']) ) {
+                    DatabaseModel::rollbackTransaction();
+                    return $response->withStatus(400)->withJson(['errors' => 'Some data are empty']);
+                }
+                
+                //delete in database if exist
+                if( isset($instance['listinstance_id']) && !empty($instance['listinstance_id']) ) {
+                    $check = ListInstanceModel::getById(['select' => ['listinstance_id'], 'id' => $instance['listinstance_id']]);
+                    if( !$check) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'listinstance_id is not correct']);
+                    }
+    
+                    ListInstanceModel::delete(['listinstance_id' => $instance['listinstance_id']]);
+                }
+
+                //check if redirect login already exist
+                $user = UserModel::getByLogin(['login' => $instance['item_id']]);
+                if (empty($user)) {
+                    DatabaseModel::rollbackTransaction();
+                    return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+                }
+
+                //Create in database
+                if( isset($instance['listinstance_id'])) {
+                    unset($instance['listinstance_id']);
+                }
+                if( isset($instance['requested_signature'])) {
+                    unset($instance['requested_signature']);
+                }
+                if( isset($instance['signatory'])) {
+                    unset($instance['signatory']);
+                }
+                ListInstanceModel::create($instance);
+
+                //update res_letterbox
+                if($instance['item_mode'] == 'dest') {
+                    ResModel::update([
+                        'set'   => ['dest_user' => $instance['item_id']],
+                        'where' => ['res_id = ?'],
+                        'data'  => [$instance['res_id']]
+                    ]);
+                 }
+            }
+            
+        }
+
+        DatabaseModel::commitTransaction();
+
+        return $response->withJson(['success' => 'success']);
     }
 }

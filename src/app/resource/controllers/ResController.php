@@ -720,4 +720,26 @@ class ResController
 
         return $response->withJson(['isAllowed' => true]);
     }
+
+    public function updateDestUser(Request $request, Response $response, array $aArgs)
+    {
+        $data = $request->getParams();
+
+        foreach ($data as $listInstance) {
+
+            $user = UserModel::getByLogin(['login' => $listInstance['redirectUserId']]);
+            if (empty($user)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+            }
+
+            ListInstanceModel::update([
+                'set'   => ['item_id' => $listInstance['redirectUserId']],
+                'where' => ['item_id = ?', 'res_id = ?', 'item_mode = ?', 'process_date IS NULL'],
+                'data'  => [$aArgs['user_id'], $listInstance['res_id'], $listInstance['item_mode']]
+            ]);
+        }
+
+        return $response->withJson(['success' => 'success']);
+    }
+
 }
