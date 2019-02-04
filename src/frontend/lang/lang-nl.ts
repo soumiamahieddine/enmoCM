@@ -829,4 +829,5 @@ export const LANG_NL = {
     "addCustomUnit"                                     : "_TO_TRANSLATE",
     "selectedElements"                                     : "_TO_TRANSLATE",
     "destination"                                     : "_TO_TRANSLATE",
+    "selectAllResInBasket"                                     : "_TO_TRANSLATE",
 };

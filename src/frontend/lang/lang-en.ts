@@ -800,4 +800,5 @@ export const LANG_EN = {
     "addCustomUnit"                            : "Add custom unit",
     "selectedElements"                            : "selected element(s)",
     "destination"                           : "entity destination",
+    "selectAllResInBasket"                    : "Select all mails in basket",
 };

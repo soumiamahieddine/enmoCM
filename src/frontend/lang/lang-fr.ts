@@ -821,10 +821,11 @@ export const LANG_FR = {
     "processDate"                            : "Date de traitement",
     "content"                            : "Contenu",
     "freeNote"                            : "Note libre",
-    "toggleQrcode"                            : "Afficher / cacher l'identifiant courrier (qrcode)",
+    "toggleQrcode"                            : "Afficher / cacher le QRCode (identifiant courrier)",
     "deleteUnit"                            : "Supprimer la zone",
     "addCustomUnit"                            : "Ajouter une zone libre",
     "selectedElements"                            : "élément(s) sélectionné(s)",
     "destination"                           : "entité traitante",
+    "selectAllResInBasket"                    : "Sélectionner tous les courriers de la bannette",
 
 };

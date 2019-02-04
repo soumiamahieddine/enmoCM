@@ -74,7 +74,7 @@ export class SummarySheetComponent implements OnInit {
         },
         {
             id: 'opinionWorkflow',
-            unit: 'avisWorkflow',
+            unit: 'opinionWorkflow',
             label: this.lang.avis,
             css: 'col-md-4 text-center',
             desc: [
