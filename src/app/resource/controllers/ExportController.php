@@ -65,7 +65,7 @@ class ExportController
         } elseif (!Validator::arrayType()->notEmpty()->validate($body['data'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data is not an array or empty']);
         } elseif (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'Resources is not set or empty']);
         }
 
         foreach ($body['data'] as $value) {

@@ -50,7 +50,7 @@ class SummarySheetController
         $units = empty($bodyData['units']) ? [] : $bodyData['units'];
 
         if (!Validator::arrayType()->notEmpty()->validate($bodyData['resources'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'Resources is not set or empty']);
         }
 
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
