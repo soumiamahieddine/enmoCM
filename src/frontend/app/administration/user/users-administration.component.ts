@@ -92,7 +92,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 
     suspendUser(user: any) {
-        if (user.inDiffListDest == 'Y') {
+        if (user.inDiffListDest) {
             user.mode = 'up';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
@@ -114,7 +114,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                         //then suspend user
                                         this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                                             .subscribe(() => {
-                                                user.inDiffListDest = 'N';
+                                                user.inDiffListDest = false;
                                                 this.notify.success(this.lang.userSuspended);
                                                 if (this.quota.userQuota) {
                                                     this.quota.inactives++;
@@ -180,7 +180,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 
     deleteUser(user: any) {
-        if (user.inDiffListDest == 'Y') {
+        if (user.inDiffListDest) {
             user.mode = 'del';
             this.userDestRedirect = user;
 
