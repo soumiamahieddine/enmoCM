@@ -47,7 +47,7 @@
                                         color="primary"></mat-checkbox>
                                 </mat-icon>
                                 <h4 mat-line color="primary" style="display: flex;align-items: center;">
-                                    <span (click)="selectionBaskets.toggle(basket);" matTooltip="{{basket.basket_name}} [{{basket.group_desc}}]" style="flex: 2;overflow: hidden;text-overflow: ellipsis;">
+                                    <span (click)="selectionBaskets.toggle(basket);" matTooltip="{{basket.basket_name}} [{{basket.group_desc}}] {{lang.redirectedTo}} {{basket.userToDisplay}}" style="flex: 2;overflow: hidden;text-overflow: ellipsis;">
                                         {{basket.basket_name}}
                                         <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
                                         <span style="opacity: 0.5;font-style: italic;font-size: 80%;"> {{lang.redirectedTo}} {{basket.userToDisplay}}</span>
