@@ -720,5 +720,4 @@ class ResController
 
         return $response->withJson(['isAllowed' => true]);
     }
-    
 }
