@@ -162,7 +162,9 @@ class SummarySheetController
                 $creationdate = empty($creationdate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$creationdate}</b>";
                 $docDate = TextFormatModel::formatDate($resource['doc_date'], 'd-m-Y');
                 $docDate = empty($docDate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$docDate}</b>";
-                $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['short_label']]);
+                if (!empty($resource['initiator'])) {
+                    $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['short_label']]);
+                }
                 $initiatorEntity = empty($initiator) ? '' : "({$initiator['short_label']})";
                 $typist = UserModel::getLabelledUserById(['login' => $resource['typist']]);
                 $doctype = empty($resource['type_label']) ? '<i>'._UNDEFINED.'</i>' : "<b>{$resource['type_label']}</b>";
