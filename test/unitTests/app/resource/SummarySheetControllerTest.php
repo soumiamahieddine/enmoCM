@@ -31,7 +31,8 @@ class SummarySheetControllerTest extends TestCase
                 ['label' => 'Annotation(s)', 'unit' => 'notes'],
                 ['label' => 'Circuit de visa', 'unit' => 'visaWorkflow'],
                 ['label' => 'Circuit d\'avis', 'unit' => 'opinionWorkflow'],
-                ['label' => 'Commentaires', 'unit' => 'freeField']
+                ['label' => 'Commentaires', 'unit' => 'freeField'],
+                ['unit' => 'qrcode']
             ],
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
