@@ -811,6 +811,7 @@ export const LANG_NL = {
     "toExport"                                     : "_TO_TRANSLATE",
     "summarySheet"                                     : "_TO_TRANSLATE",
     "summarySheets"                                     : "_TO_TRANSLATE",
+    "summarySheetsAlt"                                     : "_TO_TRANSLATE",
     "appName"                                     : "_TO_TRANSLATE",
     "printDate"                                     : "_TO_TRANSLATE",
     "genSummarySheets"                                     : "_TO_TRANSLATE",
@@ -827,4 +828,5 @@ export const LANG_NL = {
     "deleteUnit"                                     : "_TO_TRANSLATE",
     "addCustomUnit"                                     : "_TO_TRANSLATE",
     "selectedElements"                                     : "_TO_TRANSLATE",
+    "destination"                                     : "_TO_TRANSLATE",
 };

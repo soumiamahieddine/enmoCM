@@ -782,6 +782,7 @@ export const LANG_EN = {
     "toExport"                                     : "Export",
     "summarySheet"                                     : "Summary sheet",
     "summarySheets"                                     : "Summary sheet(s)",
+    "summarySheetsAlt"                                     : "Summary sheets",
     "appName"                                     : "Application name",
     "printDate"                                     : "Print date",
     "genSummarySheets"                                     : "Generate Summary sheets",
@@ -798,4 +799,5 @@ export const LANG_EN = {
     "deleteUnit"                            : "Delete unit",
     "addCustomUnit"                            : "Add custom unit",
     "selectedElements"                            : "selected element(s)",
+    "destination"                           : "entity destination",
 };

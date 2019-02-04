@@ -299,7 +299,7 @@ export class ListAdministrationComponent implements OnInit {
                 if (mm < 10) {
                     mm = '0' + mm;
                 }
-                today = dd + '_' + mm + '_' + yyyy;
+                today = dd + '-' + mm + '-' + yyyy;
                 downloadLink.setAttribute('download', "export_maarch_" + today + ".csv");
                 document.body.appendChild(downloadLink);
                 downloadLink.click();

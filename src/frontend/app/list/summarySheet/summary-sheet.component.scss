@@ -37,7 +37,7 @@
 
     .unitTitle {
         display: flex;
-        cursor: move;
+        cursor: initial;
         position: absolute;
         top: 2px;
         left: 5px;
@@ -45,6 +45,7 @@
     }
 
     .unitData {
+        cursor: pointer;
         margin-top: 30px;
         width: 100%;
         opacity: 0.5;
@@ -78,7 +79,6 @@
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
-    cursor: pointer;
     background: white;
     font-size: 14px;
 }

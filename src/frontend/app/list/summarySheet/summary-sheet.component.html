@@ -4,7 +4,7 @@
     </div>
     <div class="row header">
         <div class="col-md-4 text-left" [class.disabled]="!withQrcode">
-            <mat-button-toggle-group style="position: absolute;top:-9px;left:0px;" multiple (change)="toggleQrcode()">
+            <mat-button-toggle-group style="position: absolute;top:-2px;left:0px;" multiple (change)="toggleQrcode()">
                 <mat-button-toggle style="width: 40px;height: 40px;" class="qrcode" [checked]="withQrcode" title="{{lang.toggleQrcode}}">
                     <mat-icon fontSet="fas" fontIcon="fa-qrcode" style="height: auto;font-size: 30px;"></mat-icon>
                 </mat-button-toggle>
@@ -28,7 +28,7 @@
                 (cdkDropListDropped)="drop($event)">
                 <ng-container *ngFor="let item of dataAvailable; let i=index">
                     <div class="columns" [class.disabled]="!item.enabled" *ngIf="item.unit !== 'qrcode'" cdkDrag id="{{item.id}}"
-                        style="position: relative;" (click)="item.enabled = !item.enabled">
+                        style="position: relative;">
                         <div class="unitTitle">
                             <div class="handleDrag" cdkDragHandle>
                                 <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@
                                 <input matInput placeholder="Libellé" [(ngModel)]="item.label" (click)="$event.stopPropagation();">
                             </mat-form-field>
                         </div>
-                        <div class="row" class="unitData">
+                        <div class="row" class="unitData" (click)="item.enabled = !item.enabled">
                             <div class="{{item.css}}" *ngFor="let itemData of item.desc">
                                 {{itemData}}
                             </div>

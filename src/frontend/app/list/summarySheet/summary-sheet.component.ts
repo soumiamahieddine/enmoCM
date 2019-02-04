@@ -73,12 +73,12 @@ export class SummarySheetComponent implements OnInit {
             enabled: true
         },
         {
-            id: 'avisWorkflow',
+            id: 'opinionWorkflow',
             unit: 'avisWorkflow',
             label: this.lang.avis,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destinationEntity + ')',
+                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destination + ')',
                 this.lang.role,
                 this.lang.processDate
             ],
@@ -90,7 +90,7 @@ export class SummarySheetComponent implements OnInit {
             label: this.lang.visaWorkflow,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destinationEntity + ')',
+                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destination + ')',
                 this.lang.role,
                 this.lang.processDate
             ],
@@ -160,8 +160,8 @@ export class SummarySheetComponent implements OnInit {
                 if (mm < 10) {
                     mm = '0' + mm;
                 }
-                today = dd + '/' + mm + '/' + yyyy;
-                downloadLink.setAttribute('download', this.lang.summarySheets + " (" + today + ").pdf");
+                today = dd + '-' + mm + '-' + yyyy;
+                downloadLink.setAttribute('download', this.lang.summarySheetsAlt + "_" + today + ".pdf");
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
 
