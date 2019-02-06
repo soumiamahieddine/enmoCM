@@ -384,7 +384,7 @@ class SummarySheetController
                         $pdf->SetY($pdf->GetY() + 5);
                     }
                 }
-            } elseif (strpos($unit['unit'], 'freeField') !== false) {
+            } elseif ($unit['unit'] == 'freeField') {
                 $pdf->SetY($pdf->GetY() + 40);
                 if (($pdf->GetY() + 77) > $bottomHeight) {
                     $pdf->AddPage();
