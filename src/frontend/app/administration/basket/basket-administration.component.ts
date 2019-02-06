@@ -5,9 +5,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { HeaderService }        from '../../../service/header.service';
+import { HeaderService } from '../../../service/header.service';
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { FormControl } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -20,37 +21,130 @@ declare var angularGlobals: any;
 })
 export class BasketAdministrationComponent implements OnInit {
 
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
-    
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-    dialogRef                       : MatDialogRef<any>;
+    @ViewChild('snav') public sidenavLeft: MatSidenav;
+    @ViewChild('snav2') public sidenavRight: MatSidenav;
 
-    selectedIndex                   : number    = 0;
+    private _mobileQueryListener: () => void;
+    mobileQuery: MediaQueryList;
+    dialogRef: MatDialogRef<any>;
 
-    coreUrl                         : string;
-    lang                            : any       = LANG;
-    loading                         : boolean   = false;
+    selectedIndex: number = 0;
 
-    config                          : any       = {};
-    id                              : string;
-    basket                          : any       = {};
-    basketClone                     : any       = {};
-    basketGroups                    : any[]     = [];
-    allGroups                       : any[]     = [];
-    basketIdAvailable               : boolean;
-    actionsList                     : any[]     = [];
-    resultPages                     : any[]     = [];
-    creationMode                    : boolean;
+    coreUrl: string;
+    lang: any = LANG;
+    loading: boolean = false;
 
-    displayedColumns        = ['label_action', 'actions'];
-    orderColumns            = ['alt_identifier', 'creation_date', 'process_limit_date', 'res_id', 'priority'];
-    orderByColumns          = ['asc', 'desc'];
-    langVarName             = [this.lang.chrono, this.lang.creationDate, this.lang.processLimitDate, this.lang.id, this.lang.priority];
-    langOrderName           = [this.lang.ascending, this.lang.descending];
-    orderColumnsSelected    : any[] = [{"column":"res_id", "order":"asc"}];
-    dataSource              : any;
+    config: any = {};
+    id: string;
+    basket: any = {};
+    basketClone: any = {};
+    basketGroups: any[] = [];
+    allGroups: any[] = [];
+    basketIdAvailable: boolean;
+    actionsList: any[] = [];
+    resultPages: any[] = [];
+    list_display: any[] = [];
+    creationMode: boolean;
+    availableData: any = [
+        {
+            'id': 'priority_label',
+            'label': 'Priorité',
+            'sample': 'normal',
+            'class': [],
+            'icon': ''
+        },
+        {
+            'id': 'category',
+            'label': 'Catégorie',
+            'sample': 'courrier arrivée',
+            'class': [],
+            'icon': 'fa fa-file'
+        },
+        {
+            'id': 'type',
+            'label': 'Type de courrier',
+            'sample': 'Réclamation',
+            'class': [],
+            'icon': 'fa-suitcase'
+        },
+        {
+            'id': 'attribution',
+            'label': 'Attributaire (entité destinatrice)',
+            'sample': 'Barbara BAIN (Pôle Jeunesse et Sport)',
+            'class': [],
+            'icon': 'fa-sitemap'
+        },
+        {
+            'id': 'senders',
+            'label': 'Destinataire',
+            'sample': 'Patricia PETIT',
+            'class': [],
+            'icon': 'fa-user'
+        },
+        {
+            'id': 'recipients',
+            'label': 'Expéditeur',
+            'sample': 'Alain DUBOIS (MAARCH)',
+            'class': [],
+            'icon': 'fa-book'
+        },
+        {
+            'id': 'creation_limit_date',
+            'label': 'Date de création - Date limite',
+            'sample': '<i class="fa fa-calendar"></i>&nbsp;1er mai - <i class="fa fa-stopwatch"></i>&nbsp;<b color="warn">3 jour(s)</b>',
+            'class': [],
+            'icon': ''
+        },
+        {
+            'id': 'workflow_visa',
+            'label': 'Circuit de visa',
+            'sample': '<i color="accent" class="fa fa-check"></i> Barbara BAIN -> <i class="fa fa-hourglass-half"></i> <b>Bruno BOULE</b> -> <i class="fa fa-hourglass-half"></i> Patricia PETIT',
+            'class': [],
+            'icon': ''
+        },
+        {
+            'id': 'workflow_avis',
+            'label': 'Nombre d\'avis donné',
+            'sample': '<b>3</b> avis donné(s)',
+            'class': [],
+            'icon': 'fa-comment-alt'
+        },
+    ];
+    displayedMainData: any = [];
+    displayedSecondaryData: any = [{
+        'id': 'priority_label',
+            'class': [],
+        },
+        {
+            'id': 'category',
+            'class': [],
+        },
+        {
+            'id': 'type',
+            'class': [],
+        },
+        {
+            'id': 'senders',
+            'class': [],
+        },
+        {
+            'id': 'recipients',
+            'class': [],
+        },
+        {
+            'id': 'creation_limit_date',
+            'class': [],
+        }
+    ];
+    displayMode: string = 'label';
+
+    displayedColumns = ['label_action', 'actions'];
+    orderColumns = ['alt_identifier', 'creation_date', 'process_limit_date', 'res_id', 'priority'];
+    orderByColumns = ['asc', 'desc'];
+    langVarName = [this.lang.chrono, this.lang.creationDate, this.lang.processLimitDate, this.lang.id, this.lang.priority];
+    langOrderName = [this.lang.ascending, this.lang.descending];
+    orderColumnsSelected: any[] = [{ "column": "res_id", "order": "asc" }];
+    dataSource: any;
 
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -90,7 +184,7 @@ export class BasketAdministrationComponent implements OnInit {
                 this.orderColumnsSelected = [];
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
-                
+
                 this.creationMode = false;
                 this.basketIdAvailable = true;
                 this.id = params['id'];
@@ -115,7 +209,7 @@ export class BasketAdministrationComponent implements OnInit {
                                 if (!value[1]) {
                                     value[1] = 'desc';
                                 }
-                                this.orderColumnsSelected.push({"column":value[0],"order":value[1]});
+                                this.orderColumnsSelected.push({ "column": value[0], "order": value[1] });
                             }
                         }
 
@@ -198,7 +292,7 @@ export class BasketAdministrationComponent implements OnInit {
             this.basket.basket_res_order = tmpBasketResOrder.join(', ')
         } else {
             this.basket.basket_res_order = '';
-        }        
+        }
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/baskets", this.basket)
                 .subscribe(() => {
@@ -336,12 +430,103 @@ export class BasketAdministrationComponent implements OnInit {
         if (r) {
             action.checked = false;
             this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
-            .subscribe(() => {
-                this.notify.success(this.lang.actionsGroupBasketUpdated);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
+                .subscribe(() => {
+                    this.notify.success(this.lang.actionsGroupBasketUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
         }
+    }
+
+    toggleData() {
+        if (this.displayMode == 'label') {
+            this.displayMode = 'sample';
+        } else {
+            this.displayMode = 'label';
+        }
+
+    }
+
+    initResultList(e: any, indexGroup: any) {
+
+        if (e.index == 1) {
+            console.log('init');
+
+            let indexData: number = 0;
+
+            if (this.basketGroups[indexGroup].list_display.length > 0) {
+                this.displayedSecondaryData = [];
+                this.basketGroups[indexGroup].list_display.forEach((element: any) => {
+                    indexData = this.availableData.map((e: any) => { return e.id; }).indexOf(element.id);
+                    this.availableData[indexData].class = element.class;
+                    this.displayedSecondaryData.push(this.availableData[indexData]);
+                    this.availableData.splice(indexData, 1);
+                });
+            }
+            
+            this.displayedMainData = [
+                {
+                    'id': 'status_chrono',
+                    'label': 'N°Chrono',
+                    'sample': 'MAARCH/2018A/1',
+                    'class': ['centerData', 'normalData'],
+                    'icon': ''
+                },
+                {
+                    'id': 'subject',
+                    'label': 'Objet',
+                    'sample': 'Plainte concernant des nuisances sonore nocturne (le 20/12/2018)',
+                    'class': ['longData'],
+                    'icon': ''
+                },
+            ];
+        }
+
+    }
+
+    setFont(item: any, value: string) {
+        const index = item.class.indexOf(value);
+
+        if (index === -1) {
+            item.class.push(value);
+        } else {
+            item.class.splice(index, 1);
+        }
+    }
+
+    addData(data: any, i: number) {
+        this.displayedSecondaryData.push(data);
+        this.availableData.splice(i, 1);
+    }
+
+    removeData(data: any, i: number) {
+        this.availableData.push(data);
+        this.displayedSecondaryData.splice(i, 1);
+    }
+
+    removeAllData() {
+        this.availableData = this.availableData.concat(this.displayedSecondaryData);
+        this.displayedSecondaryData = [];
+    }
+
+    drop(event: CdkDragDrop<string[]>) {
+        if (event.previousContainer === event.container) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        }
+    }
+
+    saveTemplate() {
+        let template: any = [];
+        this.displayedSecondaryData.forEach((element: any) => {
+            template.push(
+                {
+                    'id': element.id,
+                    'class': element.class,
+                }
+            );
+        });
+
+        console.log(template);
     }
 }
 
@@ -441,7 +626,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                         this.selectedStatuses[this.data.action.statuses.indexOf(status.id)] = { idToDisplay: status.label_status, id: status.id };
                     }
                 });
-            });            
+            });
     }
 
     remove(index: number): void {
@@ -471,7 +656,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
             this.data.action.redirects.forEach((keyword: any) => {
                 if ((entity.id == keyword.keyword && keyword.redirect_mode == 'ENTITY') || (entity.id == keyword.entity_id && keyword.redirect_mode == 'ENTITY')) {
                     entity.state = { "opened": true, "selected": true };
-                } 
+                }
             });
         });
 
