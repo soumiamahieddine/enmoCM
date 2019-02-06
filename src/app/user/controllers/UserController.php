@@ -78,7 +78,7 @@ class UserController
         }
 
         $listModels = ListTemplateModel::get(['select' => ['item_id'], 'where' => ['item_id in (?)', 'object_type = ?', 'item_mode = ?'], 'data' => [$usersIds, 'entity_id', 'dest']]);
-        $listInstances = ResModel::get(['select' => ['dest_user'], 'where' => ['dest_user in (?)'], 'data' => [$usersIds]]);
+        $listInstances = ListInstanceModel::get(['select' => ['item_id'], 'where' => ['item_id in (?)', 'item_mode = ?'], 'data' => [$usersIds, 'dest'], 'groupBy' => ['item_id']]);
 
         $usersListModels = [];
         foreach ($listModels as $value) {
@@ -87,7 +87,7 @@ class UserController
 
         $usersListInstances = [];
         foreach ($listInstances as $value) {
-            $usersListInstances[] = $value['dest_user'];
+            $usersListInstances[] = $value['item_id'];
         }
 
         foreach ($users as $key => $value) {

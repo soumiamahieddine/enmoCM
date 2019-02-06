@@ -278,16 +278,9 @@ class ListTemplateController
         foreach ($data['redirectListModels'] as $listModel) {
             //check if user exist
             $user = UserModel::getByLogin(['login' => $listModel['redirectUserId']]);
-            if (empty($user)) {
+            if (empty($user) || $user['status'] != "OK") {
                 DatabaseModel::rollbackTransaction();
-                return $response->withStatus(400)->withJson(['errors' => 'User not found']);
-            }
-
-            //check if user is active
-            $status = UserModel::get(['select' => ['status'], 'where' => ['user_id = ?'], 'data' => [$listModel['redirectUserId']]]);
-            if ($status[0]['status'] != "OK") {
-                DatabaseModel::rollbackTransaction();
-                return $response->withStatus(400)->withJson(['errors' => 'User is not active']);
+                return $response->withStatus(400)->withJson(['errors' => 'User not found or not active']);
             }
 
             ListTemplateModel::update([

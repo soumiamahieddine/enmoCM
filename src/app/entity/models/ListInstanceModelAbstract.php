@@ -31,6 +31,7 @@ abstract class ListInstanceModelAbstract
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data'],
             'order_by'  => $aArgs['orderBy'],
+            'groupBy'   => $aArgs['groupBy'],
             'limit'     => $aArgs['limit']
         ]);
 
