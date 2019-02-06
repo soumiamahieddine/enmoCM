@@ -99,6 +99,14 @@ class ListInstanceController
     {
         $data = $request->getParams();
 
+        if(!$data['listinstances']) {
+            return $response->withStatus(400)->withJson(['errors' => 'listinstance is missing']);
+        }
+
+        if(empty($data['listinstances'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'listinstance is empty']);
+        }
+
         DatabaseModel::beginTransaction();
 
         foreach ($data['listinstances'] as $ListInstanceByRes) {
@@ -127,6 +135,13 @@ class ListInstanceController
                 if (empty($user)) {
                     DatabaseModel::rollbackTransaction();
                     return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+                }
+
+                //check if user is active
+                $status = UserModel::get(['select' => ['status'], 'where' => ['user_id = ?'], 'data' => [$instance['item_id']]]);
+                if ($status[0]['status'] != "OK") {
+                    DatabaseModel::rollbackTransaction();
+                    return $response->withStatus(400)->withJson(['errors' => 'User is not active']);
                 }
 
                 //Create in database

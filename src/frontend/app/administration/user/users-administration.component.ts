@@ -30,6 +30,8 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     coreUrl                                 : string;
     lang                                    : any                   = LANG;
     loading                                 : boolean               = false;
+    updateListModel                         : boolean               = true;
+    updateListInstance                      : boolean               = true;
 
     data                                    : any[]                 = [];
     config                                  : any                   = {};
@@ -180,144 +182,182 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 
     deleteUser(user: any) {
-        if (user.inDiffListDest) {
+            
             user.mode = 'del';
             this.userDestRedirect = user;
 
-            //get listModel
-            this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
-                .subscribe((data: any) => {
+            this.config = { 
+                data: { 
+                    userDestRedirect: this.userDestRedirect
+                } 
+            };
 
-                    this.userDestRedirectModels = data.listTemplates;
-                    this.config = { 
-                        data: { 
-                            userDestRedirect: this.userDestRedirect, 
-                            userDestRedirectModels: this.userDestRedirectModels
-                        } 
-                    };
+            //open modale
+            this.dialogRef = this.dialog.open(UsersAdministrationRedirectModalComponent, this.config);
+            this.dialogRef.afterClosed().subscribe((result: any) => {
 
-                    //open modal
-                    this.dialogRef = this.dialog.open(UsersAdministrationRedirectModalComponent, this.config);
-                    this.dialogRef.afterClosed().subscribe((result: any) => {
+                if(result) {
 
-                        if (result) {
-                            user.redirectListModels     = result.userDestRedirectModels;
-                            user.redirectDestResUserId  = result.userDestRedirect.redirectDestResUserId;
+                    if (result.userDestRedirectModels) {
+                        user.redirectListModels = result.userDestRedirectModels;
+                    }
 
-                            //first, update listModels
-                            this.http.put(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
+                    if (result.redirectDestResUserId) {
+                        user.redirectDestResUserId = result.redirectDestResUserId;
+
+                        this.listinstances = result.listinstances;
+                        this.listinstances.forEach((list: any) => {
+                            list.listinstances.forEach((element:any) => {
+                                if(element.item_mode == 'dest') {
+                                    element.item_id = user.redirectDestResUserId;
+                                }
+                            });
+                        });
+
+                        user.listinstances = this.listinstances;
+                    }
+
+                    //if user inDiffListDest and isResDestUser
+                    if (user.inDiffListDest && user.isResDestUser) {
+                       
+                        //update listModels
+                        this.updateListModel = false;
+                        this.http.put(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
+                        .subscribe((data: any) => {
+                            if (data.errors) {
+                                this.notify.error(data.errors);
+                            } else {
+
+                                //update listInstances
+                                this.updateListInstance = false;
+                                this.http.put(this.coreUrl + 'rest/listinstances', user)
                                 .subscribe((data: any) => {
                                     if (data.errors) {
                                         this.notify.error(data.errors);
                                     } else {
 
-                                        //secund get listInstances where user is dest
-                                        this.http.get(this.coreUrl + 'rest/listinstances/dest/itemId/' + user.user_id)
-                                            .subscribe((data: any) => {
-                                                
-                                                if (data.listinstances){
-                                                    this.listinstances = data.listinstances;
-                                                    this.listinstances.forEach((list: any) => {
-                                                        list.listinstances.forEach((element:any) => {
-                                                            if(element.item_mode == 'dest') {
-                                                                element.item_id = user.redirectDestResUserId;
-                                                            }
-                                                        });
-                                                    });
-
-                                                    user.listinstances = this.listinstances;
-
-                                                    //third update listinstances and res_letterbox
-                                                    this.http.put(this.coreUrl + 'rest/listinstances', user)
-                                                        .subscribe((data: any) => {
-                                                            if (data.errors) {
-                                                                this.notify.error(data.errors);
-                                                            } else {
-                                                                //then delete user
-                                                                this.http.delete(this.coreUrl + 'rest/users/' + user.id)
-                                                                .subscribe(() => {
-                                                                    for (let i in this.data) {
-                                                                        if (this.data[i].id == user.id) {
-                                                                            this.data.splice(Number(i), 1);
-                                                                        }
-                                                                    }
-                                                                    this.dataSource = new MatTableDataSource(this.data);
-                                                                    this.dataSource.paginator = this.paginator;
-                                                                    this.dataSource.sort = this.sort;
-
-                                                                    if (this.quota.userQuota && user.enabled == 'Y') {
-                                                                        this.quota.actives--;
-                                                                    } else if (this.quota.userQuota && user.enabled == 'N') {
-                                                                        this.quota.inactives--;
-                                                                    }
-
-                                                                    this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
-                                                                    
-                                                                //end delete user
-                                                                }, (err) => {
-                                                                    this.notify.error(err.error.errors);
-                                                                });
-                                                            }   
-
-                                                        //end update listinstances and res_letterbox 
-                                                        }, (err) => {
-                                                            this.notify.error(err.error.errors);
-                                                        });
-                                                
-                                                } else {
-                                                   //delete user
-                                                   this.http.delete(this.coreUrl + 'rest/users/' + user.id)
-                                                   .subscribe(() => {
-                                                       for (let i in this.data) {
-                                                           if (this.data[i].id == user.id) {
-                                                               this.data.splice(Number(i), 1);
-                                                           }
-                                                       }
-                                                       this.dataSource = new MatTableDataSource(this.data);
-                                                       this.dataSource.paginator = this.paginator;
-                                                       this.dataSource.sort = this.sort;
-
-                                                       if (this.quota.userQuota && user.enabled == 'Y') {
-                                                           this.quota.actives--;
-                                                       } else if (this.quota.userQuota && user.enabled == 'N') {
-                                                           this.quota.inactives--;
-                                                       }
-
-                                                       this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
-
-                                                    //end delete user
-                                                    }, (err) => {
-                                                        this.notify.error(err.error.errors);
-                                                    });
+                                        //delete user
+                                        this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                                        .subscribe(() => {
+                                            for (let i in this.data) {
+                                                if (this.data[i].id == user.id) {
+                                                    this.data.splice(Number(i), 1);
                                                 }
-                                                                                            
-                                        //end get listinstances
+                                            }
+                                            this.dataSource = new MatTableDataSource(this.data);
+                                            this.dataSource.paginator = this.paginator;
+                                            this.dataSource.sort = this.sort;
+
+                                            if (this.quota.userQuota && user.enabled == 'Y') {
+                                                this.quota.actives--;
+                                            } else if (this.quota.userQuota && user.enabled == 'N') {
+                                                this.quota.inactives--;
+                                            }
+
+                                            this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
+                                            
+                                        //end delete user
                                         }, (err) => {
                                             this.notify.error(err.error.errors);
                                         });
-
                                     }
+                                //end update listInstances
+                                }, (err) => {
+                                    this.notify.error(err.error.errors);
+                                });
+                            }
+                        //end update listModels
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+                
+                //user inDiffListDest
+                } else if (user.inDiffListDest && !user.isResDestUser) {
+                    
+                    //update listModels
+                    this.updateListModel = false;
+                    this.http.put(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
+                    .subscribe((data: any) => {
+                        if (data.errors) {
+                            this.notify.error(data.errors);
+                        } else {
 
-                            //end update listModels
+                            //delete user
+                            this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                            .subscribe(() => {
+                                for (let i in this.data) {
+                                    if (this.data[i].id == user.id) {
+                                        this.data.splice(Number(i), 1);
+                                    }
+                                }
+                                this.dataSource = new MatTableDataSource(this.data);
+                                this.dataSource.paginator = this.paginator;
+                                this.dataSource.sort = this.sort;
+
+                                if (this.quota.userQuota && user.enabled == 'Y') {
+                                    this.quota.actives--;
+                                } else if (this.quota.userQuota && user.enabled == 'N') {
+                                    this.quota.inactives--;
+                                }
+
+                                this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
+                                
+                            //end delete user
                             }, (err) => {
                                 this.notify.error(err.error.errors);
                             });
-
                         }
-
-                    //end modal
+                    //end update listModels
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
                     });
 
-            //end listModel
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
+                //user isResDestUser
+                } else if (!user.inDiffListDest && user.isResDestUser) {
 
-        } else {
-            let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + user.user_id + ' »');
+                    //update listInstances
+                    this.http.put(this.coreUrl + 'rest/listinstances', user)
+                    .subscribe((data: any) => {
+                        if (data.errors) {
+                            this.notify.error(data.errors);
+                        } else {
 
-            if (r) {
-                this.http.delete(this.coreUrl + 'rest/users/' + user.id, user)
+                            //delete user
+                            this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                            .subscribe(() => {
+                                for (let i in this.data) {
+                                    if (this.data[i].id == user.id) {
+                                        this.data.splice(Number(i), 1);
+                                    }
+                                }
+                                this.dataSource = new MatTableDataSource(this.data);
+                                this.dataSource.paginator = this.paginator;
+                                this.dataSource.sort = this.sort;
+
+                                if (this.quota.userQuota && user.enabled == 'Y') {
+                                    this.quota.actives--;
+                                } else if (this.quota.userQuota && user.enabled == 'N') {
+                                    this.quota.inactives--;
+                                }
+
+                                this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
+                                
+                            //end delete user
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
+                        }
+                    //end update listInstances
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+
+                    
+                //user is not inDiffListDest and is not isResDestUser
+                } else if (!user.inDiffListDest && !user.isResDestUser) {                    
+                    
+                    //delete user
+                    this.http.delete(this.coreUrl + 'rest/users/' + user.id)
                     .subscribe(() => {
                         for (let i in this.data) {
                             if (this.data[i].id == user.id) {
@@ -327,39 +367,77 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                         this.dataSource = new MatTableDataSource(this.data);
                         this.dataSource.paginator = this.paginator;
                         this.dataSource.sort = this.sort;
-                        this.notify.success(this.lang.userDeleted);
+
                         if (this.quota.userQuota && user.enabled == 'Y') {
                             this.quota.actives--;
                         } else if (this.quota.userQuota && user.enabled == 'N') {
                             this.quota.inactives--;
                         }
+
+                        this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
+                        
+                    //end delete user
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
+                }
             }
-        }
+   
+        //close modale
+        });
     }
 }
 @Component({
     templateUrl: "users-administration-redirect-modal.component.html",
-    styles: [".mat-dialog-content{max-height: 80vh;}"]
+    styleUrls: ['users-administration-redirect-modal.scss']
 })
 export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugin {
-    lang: any = LANG;
+    lang: any               = LANG;
+    loadModel: boolean      = false;
+    loadInstance: boolean   = false;
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UsersAdministrationRedirectModalComponent>) {
         super(http, ['users']);
     }
+
+    ngOnInit(): void {
+        
+        //get listModel
+        if(this.data.userDestRedirect.inDiffListDest) {
+            this.loadModel      = true;
+            this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + this.data.userDestRedirect.user_id)
+            .subscribe((dataDiff: any) => {
+                this.data.userDestRedirectModels = dataDiff.listTemplates;
+                this.loadModel = false;
+            });
+        }
+
+        //get listInstances
+        if(this.data.userDestRedirect.isResDestUser) {
+            this.loadInstance   = true;
+            this.http.get(this.coreUrl + 'rest/listinstances/dest/itemId/' + this.data.userDestRedirect.user_id)
+                .subscribe((dataInstance: any) => {
+                this.data.listinstances = dataInstance.listinstances;
+                this.loadInstance = false;
+            });
+        }
+    }
+
     sendFunction() {
         var valid = true;
-        this.data.userDestRedirectModels.forEach((element: any) => {
-            if (!element.redirectUserId) {
+
+        if(this.data.userDestRedirect.inDiffListDest) {
+            this.data.userDestRedirectModels.forEach((element: any) => {
+                if (!element.redirectUserId) {
+                    valid = false;
+                }
+            });
+        }
+
+        if(this.data.userDestRedirect.isResDestUser) {
+            if(!this.data.redirectDestResUserId) {
                 valid = false;
             }
-        });
-
-        if(!this.data.userDestRedirect.redirectDestResUserId) {
-            valid = false;
         }
 
         return valid;
