@@ -32,6 +32,9 @@ define('_BASKETS_SORT_MODIFICATION', 'Wijziging volgorde bakje');
 define('_BY_DEFAULT', 'standaard');
 define('_DELETE_NOTIFICATIONS', 'Melding verwijderd');
 define('_DEST_USER', 'Ontvanger');
+define('_DOCTYPE_UPDATED', 'Documenttype gewijzigd');
+define('_DOCTYPE_ADDED', 'Documenttype toegevoegd');
+define('_DOCTYPE_DELETED', 'Documenttype verwijderd');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Map toegevoegd');
 define('_DOCTYPE_FIRSTLEVEL_DELETED', 'Map verwijderd');
 define('_DOCTYPE_FIRSTLEVEL_UPDATED', 'Map gewijzigd');
@@ -81,15 +84,6 @@ define('_USER_ENTITY_SUPPRESSION', 'Verwijderde eenheid voor gebruiker');
 define('_VISA_USER', 'Voor goedkeuring');
 define('_WRONG_FILE_TYPE', 'Dit bestandstype is niet toegelaten');
 define('_CAN_NOT_MOVE_IN_CHILD_ENTITY', 'De bovenliggende eenheid mag niet in een onderliggende eenheid zitten');
-define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Lijst met filters en antwoorden');
-define('_DOCUMENTS_LIST_WITH_AVIS', 'Lijst van de documenten met berichten');
-define('_DOCUMENTS_LIST_COPIES', 'Lijst van de kopieën');
-define('_CASES_LIST', 'Lijst van de zaken');
-define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Lijst van de documenten met ondertekenaar');
-define('_FOLDERS_LIST', 'Lijst van de mappen');
-define('_DOCTYPE_UPDATED', 'Documenttype gewijzigd');
-define('_DOCTYPE_ADDED', 'Documenttype toegevoegd');
-define('_DOCTYPE_DELETED', 'Documenttype verwijderd');
 define('_QUOTA_EXCEEDED', 'Quota overschreden');
 define('_CONTACTS_GROUP_ADDED', 'Toegevoegde contactengroep');
 define('_CONTACTS_GROUP_UPDATED', 'Gewijzigde contactengroep');
@@ -142,6 +136,15 @@ define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
 define('_ATTACH_DISPLAYING', 'Weergave van de bijlage');
+define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
+
+// LISTS
+define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Lijst met filters en antwoorden');
+define('_DOCUMENTS_LIST_WITH_AVIS', 'Lijst van de documenten met berichten');
+define('_DOCUMENTS_LIST_COPIES', 'Lijst van de kopieën');
+define('_CASES_LIST', 'Lijst van de zaken');
+define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Lijst van de documenten met ondertekenaar');
+define('_FOLDERS_LIST', 'Lijst van de mappen');
 
 // ADMINISTRATION
 define('_USERS', 'Gebruikers');
@@ -188,6 +191,8 @@ define('_ADMIN_NOTIFICATIONS_DESC', 'Meldingen voor de gebruikers aanmaken en be
 define('_TEMPLATES', 'Documentmodellen');
 define('_ADMIN_TEMPLATES_DESC', 'De modellen die voor de bijlagen gebruikt worden, de meldingen, de aanmaak van brieven, het verzenden van e-mails en de opmerkingen beheren');
 define('_SECURITIES', 'Veiligheden');
+define('_EMAILSERVER_PARAM', '_TO_TRANSLATE');
+define('_EMAILSERVER_PARAM_DESC', '_TO_TRANSLATE');
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Doorsturen naar een andere actie');
@@ -383,6 +388,8 @@ define('_CHECK_REPLY', 'Controle van het antwoord op de transfer');
 define('_PURGE_LETTER', 'De brief vrijmaken na de archivering');
 define('_RESET_LETTER', 'Reset van het verwerkingscircuit');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Bevestiging en bijwerking van de vertrekdatum');
+
+// REPORTS
 define('_FOLDER_VIEW_STAT', 'Aantal geraadpleegde mappen');
 define('_ENTITY_VOL_STAT', 'Briefvolume per eenheid');
 define('_ENTITY_VOL_STAT_DESC', 'Om het aantal brieven weer te geven dat per dienst bewaard wordt.');
@@ -399,6 +406,8 @@ define('_MAIL_TYPOLOGY_REPORT', 'Briefvolume per typologie');
 define('_MAIL_TYPOLOGY_REPORT_DESC', 'Om het aantal brieven weer te geven dat per documenttype bewaard wordt.');
 define('_MAIL_VOL_BY_CAT_REPORT', 'Briefvolume per categorie');
 define('_MAIL_VOL_BY_CAT_REPORT_DESC', 'Om het aantal brieven weer te geven dat per categorie (inkomend, uitgaand enz.) bewaard wordt.');
+
+//ATTACHMENT TYPES
 define('_RESPONSE_PROJECT', 'Antwoordontwerp');
 define('_SIGNED_RESPONSE', 'Ondertekend antwoord');
 define('_OUTGOING_MAIL_SIGNED', 'Brief vertrek ondertekend');
@@ -413,13 +422,12 @@ define('_SVA', 'Stilzwijgende aanvaarding');
 define('_SVR', 'Stilzwijgende weigering');
 define('_REDACTOR', 'Opsteller');
 define('_ASSIGNEE', 'Toegekende persoon');
-define('_EMAILSERVER_PARAM', '_TO_TRANSLATE');
-define('_EMAILSERVER_PARAM_DESC', '_TO_TRANSLATE');
-define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
 
 define('_SUMMARY_SHEET', 'Summary sheet_TO_TRANSLATE');
 define('_UNDEFINED', 'Undefined_TO_TRANSLATE');
 define('_CATEGORY', 'Category_TO_TRANSLATE');
+define('_SENDERS', 'Sender(s)_TO_TRANSLATE');
+define('_RECIPIENTS', 'Recipient(s)_TO_TRANSLATE');
 define('_CHRONO_NUMBER', 'Chrono number_TO_TRANSLATE');
 define('_INITIATOR_ENTITY', 'Initiator entity_TO_TRANSLATE');
 define('_DESTINATION_ENTITY', 'Destination entity_TO_TRANSLATE');

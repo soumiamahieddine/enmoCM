@@ -17,19 +17,23 @@ namespace Resource\controllers;
 use Basket\models\BasketModel;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
+use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Note\models\NoteEntityModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Resource\models\ResourceListModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\AutoCompleteController;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
@@ -215,6 +219,77 @@ class SummarySheetController
                 $pdf->MultiCell($widthNoMargins / 2, 20, _STATUS . " : {$status}", 1, 'L', false, 1, '', '', true, 0, true);
                 $pdf->MultiCell($widthNoMargins / 2, 20, _PRIORITY . " : {$priority}", 1, 'L', false, 0, '', '', true, 0, true);
                 $pdf->MultiCell($widthNoMargins / 2, 20, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, 1, '', '', true, 0, true);
+            } elseif ($unit['unit'] == 'senderRecipientInformations') {
+                $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $resource['res_id']]);
+
+                if (!empty($ext)) {
+                    $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $resource['res_id']]);
+                    $oldContacts = [];
+                    $rawContacts = [];
+                    if ($ext['is_multicontacts'] == 'Y') {
+                        $multiContacts = DatabaseModel::select([
+                            'select'    => ['contact_id', 'address_id'],
+                            'table'     => ['contacts_res'],
+                            'where'     => ['res_id = ?', 'mode = ?'],
+                            'data'      => [$resource['res_id'], 'multi']
+                        ]);
+                        foreach ($multiContacts as $multiContact) {
+                            $rawContacts[] = [
+                                'login'         => $multiContact['contact_id'],
+                                'address_id'    => $multiContact['address_id'],
+                            ];
+                        }
+                    } else {
+                        $rawContacts[] = [
+                            'login'         => $ext['dest_user_id'],
+                            'address_id'    => $ext['address_id'],
+                        ];
+                    }
+                    foreach ($rawContacts as $rawContact) {
+                        if (!empty($rawContact['address_id'])) {
+                            $contact = ContactModel::getOnView([
+                                'select' => [
+                                    'is_corporate_person', 'lastname', 'firstname', 'address_num', 'address_street', 'address_town', 'address_postal_code',
+                                    'ca_id', 'society', 'contact_firstname', 'contact_lastname', 'address_country'
+                                ],
+                                'where' => ['ca_id = ?'],
+                                'data' => [$rawContact['address_id']]
+                            ]);
+                            if (isset($contact[0])) {
+                                $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
+                                $oldContacts[] = ['format' => $contact['contact']['otherInfo']];
+                            }
+
+                        } else {
+                            $oldContacts[] = ['format' => UserModel::getLabelledUserById(['login' => $rawContact['login']])];
+                        }
+                    }
+                    if ($ext['category_id'] == 'outgoing') {
+                        $senders = $resourcesContacts;
+                        $recipients = $oldContacts;
+                    } else {
+                        $senders = $oldContacts;
+                        $recipients = $resourcesContacts;
+                    }
+
+                    $pdf->SetY($pdf->GetY() + 40);
+                    if (($pdf->GetY() + 57) > $bottomHeight) {
+                        $pdf->AddPage();
+                    }
+                    $pdf->SetFont('', 'B', 11);
+                    $pdf->Cell(0, 15, $unit['label'], 0, 2, 'L', false);
+                    $pdf->SetY($pdf->GetY() + 2);
+
+                    $pdf->SetFont('', '', 10);
+                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, _SENDERS, 1, 0, 'C', false);
+                    $pdf->Cell($widthNoMargins / 10, 15, '', 0, 0, 'C', false);
+                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, _RECIPIENTS, 1, 1, 'C', false);
+                    for ($i = 0; !empty($senders[$i]) || !empty($recipients[$i]); $i++) {
+                        $pdf->MultiCell($widthNoMargins / 10 * 4.5, 40, empty($senders[$i]['format']) ? '' : $senders[$i]['format'], empty($senders[$i]['format']) ? 0 : 1, 'L', false, 0, '', '', true, 0, true);
+                        $pdf->MultiCell($widthNoMargins / 10, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
+                        $pdf->MultiCell($widthNoMargins / 10 * 4.5, 40, empty($recipients[$i]['format']) ? '' : $recipients[$i]['format'], empty($recipients[$i]['format']) ? 0 : 1, 'L', false, 1, '', '', true, 0, true);
+                    }
+                }
             } elseif ($unit['unit'] == 'diffusionList') {
                 $assignee = '';
                 $copies = [];

@@ -42,6 +42,9 @@ define('_DOCSERVER_ADDED', 'Docserver added');
 define('_DOCSERVER_UPDATED', 'Docserver updated');
 define('_DOCSERVER_DELETED', 'Docserver deleted');
 define('_DOCSERVER_ACTIVATED_EXISTS', 'A docserver with this type and this collection is already activated');
+define('_DOCTYPE_UPDATED', 'Document type updated');
+define('_DOCTYPE_ADDED', 'Document type added');
+define('_DOCTYPE_DELETED', 'Document type deleted');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Doctype first level added');
 define('_DOCTYPE_FIRSTLEVEL_DELETED', 'Doctype first level deleted');
 define('_DOCTYPE_FIRSTLEVEL_UPDATED', 'Doctype first level edited');
@@ -142,9 +145,6 @@ define('_DOCUMENTS_LIST_COPIES', 'List of copies');
 define('_CASES_LIST', 'Cases list');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Documents list with signatory');
 define('_FOLDERS_LIST', 'folders list');
-define('_DOCTYPE_UPDATED', 'Document type updated');
-define('_DOCTYPE_ADDED', 'Document type added');
-define('_DOCTYPE_DELETED', 'Document type deleted');
 
 // ADMINISTRATION
 define('_USERS', 'Users');
@@ -426,6 +426,8 @@ define('_ASSIGNEE', 'Assignee');
 define('_SUMMARY_SHEET', 'Summary sheet');
 define('_UNDEFINED', 'Undefined');
 define('_CATEGORY', 'Category');
+define('_SENDERS', 'Sender(s)');
+define('_RECIPIENTS', 'Recipient(s)');
 define('_CHRONO_NUMBER', 'Chrono number');
 define('_INITIATOR_ENTITY', 'Initiator entity');
 define('_DESTINATION_ENTITY', 'Destination entity');

@@ -287,8 +287,6 @@ function get_value_fields($values, $field)
 
 function hasAttachmentError()
 {
-    $isMailingAttach = \Attachment\controllers\AttachmentController::isMailingAttach(["resIdMaster" => $_SESSION['doc_id'], "userId" => $_SESSION['user']['UserId']]);
-
     if (!empty($_SESSION['stockCheckbox'])) {
         $resIds = $_SESSION['stockCheckbox'];
     } else {

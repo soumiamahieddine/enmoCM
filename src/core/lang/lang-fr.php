@@ -42,6 +42,9 @@ define('_DOCSERVER_ADDED', 'Zone de stockage ajoutée');
 define('_DOCSERVER_UPDATED', 'Zone de stockage modifiée');
 define('_DOCSERVER_DELETED', 'Zone de stockage supprimée');
 define('_DOCSERVER_ACTIVATED_EXISTS', 'Une zone de stockage avec le même type et la même collection est déjà activée');
+define('_DOCTYPE_UPDATED', 'Type de document modifié');
+define('_DOCTYPE_ADDED', 'Type de document ajouté');
+define('_DOCTYPE_DELETED', 'Type de document supprimé');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
 define('_DOCTYPE_FIRSTLEVEL_DELETED', 'Chemise supprimée');
 define('_DOCTYPE_FIRSTLEVEL_UPDATED', 'Chemise modifiée');
@@ -142,9 +145,6 @@ define('_DOCUMENTS_LIST_COPIES', 'Liste des copies');
 define('_CASES_LIST', 'Liste des affaires');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Liste des documents avec signataire');
 define('_FOLDERS_LIST', 'Liste de dossiers');
-define('_DOCTYPE_UPDATED', 'Type de document modifié');
-define('_DOCTYPE_ADDED', 'Type de document ajouté');
-define('_DOCTYPE_DELETED', 'Type de document supprimé');
 
 // ADMINISTRATION
 define('_USERS', 'Utilisateurs');
@@ -426,6 +426,8 @@ define('_ASSIGNEE', 'Attributaire');
 define('_SUMMARY_SHEET', 'Fiche de liaison');
 define('_UNDEFINED', 'Non définie');
 define('_CATEGORY', 'Catégorie');
+define('_SENDERS', 'Expéditeur(s)');
+define('_RECIPIENTS', 'Destinataire(s)');
 define('_CHRONO_NUMBER', 'Numéro chrono');
 define('_INITIATOR_ENTITY', 'Entité initiatrice');
 define('_DESTINATION_ENTITY', 'Entité traitante');
