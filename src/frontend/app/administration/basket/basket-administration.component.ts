@@ -9,6 +9,8 @@ import { HeaderService } from '../../../service/header.service';
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { FormControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -51,14 +53,14 @@ export class BasketAdministrationComponent implements OnInit {
             'label': 'Priorité',
             'sample': 'normal',
             'class': [],
-            'icon': ''
+            'icon': 'fa-traffic-light '
         },
         {
             'id': 'category',
             'label': 'Catégorie',
             'sample': 'courrier arrivée',
             'class': [],
-            'icon': 'fa fa-file'
+            'icon': 'fa-file'
         },
         {
             'id': 'type',
@@ -91,16 +93,16 @@ export class BasketAdministrationComponent implements OnInit {
         {
             'id': 'creation_limit_date',
             'label': 'Date de création - Date limite',
-            'sample': '<i class="fa fa-calendar"></i>&nbsp;1er mai - <i class="fa fa-stopwatch"></i>&nbsp;<b color="warn">3 jour(s)</b>',
+            'sample': '1er mai - <i class="fa fa-stopwatch"></i>&nbsp;<b color="warn">3 jour(s)</b>',
             'class': [],
-            'icon': ''
+            'icon': 'fa-calendar'
         },
         {
             'id': 'workflow_visa',
             'label': 'Circuit de visa',
             'sample': '<i color="accent" class="fa fa-check"></i> Barbara BAIN -> <i class="fa fa-hourglass-half"></i> <b>Bruno BOULE</b> -> <i class="fa fa-hourglass-half"></i> Patricia PETIT',
             'class': [],
-            'icon': ''
+            'icon': 'fa-list-ol'
         },
         {
             'id': 'workflow_avis',
@@ -137,6 +139,9 @@ export class BasketAdministrationComponent implements OnInit {
         }
     ];
     displayMode: string = 'label';
+    dataControl = new FormControl();
+    filteredDataOptions: Observable<string[]>;
+    resultListLoaded: boolean = false;
 
     displayedColumns = ['label_action', 'actions'];
     orderColumns = ['alt_identifier', 'creation_date', 'process_limit_date', 'res_id', 'priority'];
@@ -448,12 +453,82 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     initResultList(e: any, indexGroup: any) {
-
         if (e.index == 1) {
             console.log('init');
 
+            this.filteredDataOptions = this.dataControl.valueChanges
+            .pipe(
+            startWith(''),
+            map(value => this._filterData(value))
+            );
+
             let indexData: number = 0;
 
+            this.availableData = [
+                {
+                    'id': 'priority_label',
+                    'label': 'Priorité',
+                    'sample': 'normal',
+                    'class': [],
+                    'icon': 'fa-traffic-light '
+                },
+                {
+                    'id': 'category',
+                    'label': 'Catégorie',
+                    'sample': 'courrier arrivée',
+                    'class': [],
+                    'icon': 'fa-file'
+                },
+                {
+                    'id': 'type',
+                    'label': 'Type de courrier',
+                    'sample': 'Réclamation',
+                    'class': [],
+                    'icon': 'fa-suitcase'
+                },
+                {
+                    'id': 'attribution',
+                    'label': 'Attributaire (entité destinatrice)',
+                    'sample': 'Barbara BAIN (Pôle Jeunesse et Sport)',
+                    'class': [],
+                    'icon': 'fa-sitemap'
+                },
+                {
+                    'id': 'senders',
+                    'label': 'Destinataire',
+                    'sample': 'Patricia PETIT',
+                    'class': [],
+                    'icon': 'fa-user'
+                },
+                {
+                    'id': 'recipients',
+                    'label': 'Expéditeur',
+                    'sample': 'Alain DUBOIS (MAARCH)',
+                    'class': [],
+                    'icon': 'fa-book'
+                },
+                {
+                    'id': 'creation_limit_date',
+                    'label': 'Date de création - Date limite',
+                    'sample': '1er mai - <i class="fa fa-stopwatch"></i>&nbsp;<b color="warn">3 jour(s)</b>',
+                    'class': [],
+                    'icon': 'fa-calendar'
+                },
+                {
+                    'id': 'workflow_visa',
+                    'label': 'Circuit de visa',
+                    'sample': '<i color="accent" class="fa fa-check"></i> Barbara BAIN -> <i class="fa fa-hourglass-half"></i> <b>Bruno BOULE</b> -> <i class="fa fa-hourglass-half"></i> Patricia PETIT',
+                    'class': [],
+                    'icon': 'fa-list-ol'
+                },
+                {
+                    'id': 'workflow_avis',
+                    'label': 'Nombre d\'avis donné',
+                    'sample': '<b>3</b> avis donné(s)',
+                    'class': [],
+                    'icon': 'fa-comment-alt'
+                },
+            ];
             if (this.basketGroups[indexGroup].list_display.length > 0) {
                 this.displayedSecondaryData = [];
                 this.basketGroups[indexGroup].list_display.forEach((element: any) => {
@@ -480,6 +555,8 @@ export class BasketAdministrationComponent implements OnInit {
                     'icon': ''
                 },
             ];
+
+            this.resultListLoaded = true;
         }
 
     }
@@ -494,19 +571,23 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    addData(data: any, i: number) {
+    addData(data: any) {
+        let i = this.availableData.map((e: any) => { return e.id; }).indexOf(data.id);
         this.displayedSecondaryData.push(data);
         this.availableData.splice(i, 1);
+        this.dataControl.setValue('');
     }
 
     removeData(data: any, i: number) {
         this.availableData.push(data);
         this.displayedSecondaryData.splice(i, 1);
+        this.dataControl.setValue('');
     }
 
     removeAllData() {
         this.availableData = this.availableData.concat(this.displayedSecondaryData);
         this.displayedSecondaryData = [];
+        this.dataControl.setValue('');
     }
 
     drop(event: CdkDragDrop<string[]>) {
@@ -527,6 +608,12 @@ export class BasketAdministrationComponent implements OnInit {
         });
 
         console.log(template);
+    }
+
+    private _filterData(value: string): string[] {
+        const filterValue = value.toLowerCase();
+    
+        return this.availableData.filter((option:any) => option.label.toLowerCase().includes(filterValue));
     }
 }
 
