@@ -188,8 +188,40 @@ class BasketControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'result_page'   => 'list_with_attachments',
-            'list_display'  => ['subject', 'res_id'],
+            'list_display'  => [['value' => 'subject', 'cssClasses' => ['class1', 'class2']], ['value' => 'res_id', 'cssClasses' => ['class3', 'class4']]],
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $basketController->updateGroup($fullRequest, new \Slim\Http\Response(), ['id' => 'TEST-BASKET123', 'groupId' => 'AGENT']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $basketController->getGroups($request, new \Slim\Http\Response(), ['id' => 'TEST-BASKET123']);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
+        $this->assertSame('TEST-BASKET123', $responseBody->groups[0]->basket_id);
+        $this->assertSame('subject', $responseBody->groups[0]->list_display[0]->value);
+        $this->assertSame('class1', $responseBody->groups[0]->list_display[0]->cssClasses[0]);
+        $this->assertSame('class2', $responseBody->groups[0]->list_display[0]->cssClasses[1]);
+        $this->assertSame('res_id', $responseBody->groups[0]->list_display[1]->value);
+        $this->assertSame('class3', $responseBody->groups[0]->list_display[1]->cssClasses[0]);
+        $this->assertSame('class4', $responseBody->groups[0]->list_display[1]->cssClasses[1]);
+    }
+
+    public function testUpdateGroupActions()
+    {
+        $basketController = new \Basket\controllers\BasketController();
+
+        //  CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
             'groupActions'  => [
                 [
                     'id'                    => '1',
@@ -237,7 +269,7 @@ class BasketControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $basketController->updateGroup($fullRequest, new \Slim\Http\Response(), ['id' => 'TEST-BASKET123', 'groupId' => 'AGENT']);
+        $response     = $basketController->updateGroupActions($fullRequest, new \Slim\Http\Response(), ['id' => 'TEST-BASKET123', 'groupId' => 'AGENT']);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('success', $responseBody->success);
@@ -250,9 +282,6 @@ class BasketControllerTest extends TestCase
 
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('TEST-BASKET123', $responseBody->groups[0]->basket_id);
-        $this->assertSame('list_with_attachments', $responseBody->groups[0]->result_page);
-        $this->assertSame('subject', $responseBody->groups[0]->list_display[0]);
-        $this->assertSame('res_id', $responseBody->groups[0]->list_display[1]);
         $this->assertInternalType('array', $responseBody->groups[0]->groupActions);
         $this->assertNotNull($responseBody->groups[0]->groupActions);
 

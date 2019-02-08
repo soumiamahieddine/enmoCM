@@ -309,9 +309,8 @@ class DatabaseModel
     public static function beginTransaction()
     {
         $db = new DatabasePDO();
-        $db->query('BEGIN');
 
-        return true;
+        return $db->beginTransaction();
     }
 
     /**
@@ -323,9 +322,8 @@ class DatabaseModel
     public static function commitTransaction()
     {
         $db = new DatabasePDO();
-        $db->query('COMMIT');
 
-        return true;
+        return $db->commitTransaction();
     }
 
     /**
@@ -337,8 +335,7 @@ class DatabaseModel
     public static function rollbackTransaction()
     {
         $db = new DatabasePDO();
-        $db->query('ROLLBACK');
 
-        return true;
+        return $db->rollbackTransaction();
     }
 }
