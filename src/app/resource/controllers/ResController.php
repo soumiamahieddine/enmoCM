@@ -69,15 +69,15 @@ class ResController
         if (empty($data)) {
             return $response->withStatus(400)->withJson(['errors' => 'Data is not set or empty']);
         } elseif (!Validator::notEmpty()->validate($data['encodedFile'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[encodedFile] is empty']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data encodedFile is empty']);
         } elseif (!Validator::stringType()->notEmpty()->validate($data['format'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[format] is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data format is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($data['status'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[status] is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data status is empty or not a string']);
         } elseif (!Validator::intVal()->notEmpty()->validate($data['type_id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[type_id] is empty or not an integer']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data type_id is empty or not an integer']);
         } elseif (!Validator::stringType()->notEmpty()->validate($data['category_id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[category_id] is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data category_id is empty or not a string']);
         }
 
         $resId = StoreController::storeResource($data);
