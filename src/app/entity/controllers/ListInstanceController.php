@@ -129,10 +129,18 @@ class ListInstanceController
                     ListInstanceModel::delete(['listinstance_id' => $instance['listinstance_id']]);
                 }
                 
-                $user = UserModel::getByLogin(['login' => $instance['item_id']]);
-                if (empty($user) || $user['status'] != "OK") {
-                    DatabaseModel::rollbackTransaction();
-                    return $response->withStatus(400)->withJson(['errors' => 'User not found or not active']);
+                if ($instance['item_type'] == 'user_id') {
+                    $user = UserModel::getByLogin(['login' => $instance['item_id']]);
+                    if (empty($user) || $user['status'] != "OK") {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'User not found or not active']);
+                    }
+                } elseif ($instance['item_type'] == 'entity_id') {
+                    $entity = EntityModel::getByEntityId( ['entityId' => $instance['item_id']] );
+                    if (empty($entity) || $entity['enabled'] != "Y") {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'Entity not found or not active']);
+                    }
                 }
 
                 unset($instance['listinstance_id']);
