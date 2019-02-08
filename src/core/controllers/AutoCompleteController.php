@@ -529,11 +529,14 @@ class AutoCompleteController
             if (!empty($aArgs['contact']['address_street'])) {
                 $address.= $aArgs['contact']['address_street'] . ' ';
             }
+            if (!empty($aArgs['contact']['address_postal_code'])) {
+                $address.= $aArgs['contact']['address_postal_code'] . ' ';
+            }
             if (!empty($aArgs['contact']['address_town'])) {
                 $address.= $aArgs['contact']['address_town'] . ' ';
             }
-            if (!empty($aArgs['contact']['address_postal_code'])) {
-                $address.= $aArgs['contact']['address_postal_code'] . ' ';
+            if (!empty($aArgs['contact']['address_country'])) {
+                $address.= $aArgs['contact']['address_country'];
             }
             $otherInfo = empty($address) ? "{$aArgs['contact']['society']}" : "{$aArgs['contact']['society']} - {$address}";
             $contact = [
@@ -552,11 +555,14 @@ class AutoCompleteController
             if (!empty($aArgs['contact']['address_street'])) {
                 $address.= $aArgs['contact']['address_street'] . ' ';
             }
+            if (!empty($aArgs['contact']['address_postal_code'])) {
+                $address.= $aArgs['contact']['address_postal_code'] . ' ';
+            }
             if (!empty($aArgs['contact']['address_town'])) {
                 $address.= $aArgs['contact']['address_town'] . ' ';
             }
-            if (!empty($aArgs['contact']['address_postal_code'])) {
-                $address.= $aArgs['contact']['address_postal_code'] . ' ';
+            if (!empty($aArgs['contact']['address_country'])) {
+                $address.= $aArgs['contact']['address_country'];
             }
             $contactToDisplay = "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']}";
             if (!empty($aArgs['contact']['society'])) {

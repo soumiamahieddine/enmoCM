@@ -5079,3 +5079,6 @@ if (!defined('_SENDMAIL_PARAM')) {
 if (!defined('_ACCESS_SMARTPHONE')) {
     define('_ACCESS_SMARTPHONE', 'Go to mobile mode ?');
 }
+if (!defined('_MAILING_CONFIRMATION')) {
+    define('_MAILING_CONFIRMATION', 'Do you want to generate all attachments ?');
+}

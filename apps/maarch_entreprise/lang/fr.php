@@ -5241,3 +5241,6 @@ if (!defined('_SENDMAIL_PARAM')) {
 if (!defined('_ACCESS_SMARTPHONE')) {
     define('_ACCESS_SMARTPHONE', 'Accéder à la version mobile ?');
 }
+if (!defined('_MAILING_CONFIRMATION')) {
+    define('_MAILING_CONFIRMATION', 'Voulez-vous générer toutes les pièces jointes ?');
+}

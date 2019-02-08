@@ -493,7 +493,7 @@ class AttachmentController
         return ['success' => 'success'];
     }
 
-    public function isMailingAttach(array $aArgs)
+    public static function isMailingAttach(array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => $aArgs['resIdMaster'], 'userId' => $aArgs['userId']])) {
             return ['errors' => 'Document out of perimeter'];

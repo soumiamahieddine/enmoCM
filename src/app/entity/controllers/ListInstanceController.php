@@ -95,9 +95,13 @@ class ListInstanceController
         return $response->withJson(['listinstances' => $listinstances]);   
     }
 
-    public function updateListInstance(Request $request, Response $response)
+    public function update(Request $request, Response $response)
     {
         $data = $request->getParams();
+
+        if(empty($data['listinstances'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'listinstance is missing or is empty']);
+        }
 
         DatabaseModel::beginTransaction();
 
@@ -105,13 +109,11 @@ class ListInstanceController
 
             foreach($ListInstanceByRes['listinstances'] as $instance) {
 
-                //check if basic data is empty
                 if( empty($instance['res_id']) || empty($instance['item_id']) || empty($instance['item_type']) || empty($instance['item_mode']) || empty($instance['difflist_type']) ) {
                     DatabaseModel::rollbackTransaction();
                     return $response->withStatus(400)->withJson(['errors' => 'Some data are empty']);
                 }
                 
-                //delete in database if exist
                 if( isset($instance['listinstance_id']) && !empty($instance['listinstance_id']) ) {
                     $check = ListInstanceModel::getById(['select' => ['listinstance_id'], 'id' => $instance['listinstance_id']]);
                     if( !$check) {
@@ -121,27 +123,19 @@ class ListInstanceController
     
                     ListInstanceModel::delete(['listinstance_id' => $instance['listinstance_id']]);
                 }
-
-                //check if redirect login already exist
+                
                 $user = UserModel::getByLogin(['login' => $instance['item_id']]);
-                if (empty($user)) {
+                if (empty($user) || $user['status'] != "OK") {
                     DatabaseModel::rollbackTransaction();
-                    return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+                    return $response->withStatus(400)->withJson(['errors' => 'User not found or not active']);
                 }
 
-                //Create in database
-                if( isset($instance['listinstance_id'])) {
-                    unset($instance['listinstance_id']);
-                }
-                if( isset($instance['requested_signature'])) {
-                    unset($instance['requested_signature']);
-                }
-                if( isset($instance['signatory'])) {
-                    unset($instance['signatory']);
-                }
+                unset($instance['listinstance_id']);
+                unset($instance['requested_signature']);
+                unset($instance['signatory']);
+                
                 ListInstanceModel::create($instance);
 
-                //update res_letterbox
                 if($instance['item_mode'] == 'dest') {
                     ResModel::update([
                         'set'   => ['dest_user' => $instance['item_id']],
@@ -150,7 +144,6 @@ class ListInstanceController
                     ]);
                  }
             }
-            
         }
 
         DatabaseModel::commitTransaction();

@@ -827,5 +827,9 @@ export const LANG_FR = {
     "selectedElements"                            : "élément(s) sélectionné(s)",
     "destination"                           : "entité traitante",
     "selectAllResInBasket"                    : "Sélectionner tous les courriers de la bannette",
-
+    "redirectUserListInstances"                 : "Changement de destinataire pour les courriers en cours de traitement",
+    "isResDest"                                 : "est destinataire de courriers en cours de traitement",
+    "chooseNewDestUser"                         : "veuillez choisir un utilisateur de remplacement", 
+    "newDest"                                   : "Nouveau destinataire pour",
+    "newDestRes"                                : "Nouveau destinataire pour les courriers"
 };

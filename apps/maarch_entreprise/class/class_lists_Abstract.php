@@ -1057,20 +1057,22 @@ abstract class lists_Abstract extends Database
             return _WRONG_PARAM_FOR_LOAD_VALUE;
         } else {
             $column = $my_explode[1];
-            for ($i = 0; $i <= count($resultTheLine); ++$i) {
-                if ($resultTheLine[$i]['column'] == $column) {
-                    if (is_bool($resultTheLine[$i]['value'])) {
-                        //If boolean (convert to string)
-                        if ($resultTheLine[$i]['value']) {
-                            return 'true';
+            if (is_array($resultTheLine)) {
+                for ($i = 0; $i <= count($resultTheLine); ++$i) {
+                    if ($resultTheLine[$i]['column'] == $column) {
+                        if (is_bool($resultTheLine[$i]['value'])) {
+                            //If boolean (convert to string)
+                            if ($resultTheLine[$i]['value']) {
+                                return 'true';
+                            } else {
+                                return 'false';
+                            }
                         } else {
-                            return 'false';
-                        }
-                    } else {
-                        if ($resultTheLine[$i]['column'] == 'subject') {
-                            return preg_replace('/\s+/', ' ', $resultTheLine[$i]['value']);
-                        } else {
-                            return $resultTheLine[$i]['value'];
+                            if ($resultTheLine[$i]['column'] == 'subject') {
+                                return preg_replace('/\s+/', ' ', $resultTheLine[$i]['value']);
+                            } else {
+                                return $resultTheLine[$i]['value'];
+                            }
                         }
                     }
                 }
@@ -1089,9 +1091,11 @@ abstract class lists_Abstract extends Database
     {
         //Get the ListKey value
         $keyValue = '';
-        for ($i = 0; $i <= count($resultTheLine); ++$i) {
-            if ($resultTheLine[$i]['column'] == $listKey) {
-                $keyValue = $resultTheLine[$i]['value'];
+        if (is_array($resultTheLine)) {
+            for ($i = 0; $i <= count($resultTheLine); ++$i) {
+                if ($resultTheLine[$i]['column'] == $listKey) {
+                    $keyValue = $resultTheLine[$i]['value'];
+                }
             }
         }
 
@@ -1144,9 +1148,11 @@ abstract class lists_Abstract extends Database
 
         //Get the ListKey value
         $keyValue = '';
-        for ($i = 0; $i <= count($resultTheLine); ++$i) {
-            if ($resultTheLine[$i]['column'] == $listKey) {
-                $keyValue = $resultTheLine[$i]['value'];
+        if (is_array($resultTheLine)) {
+            for ($i = 0; $i <= count($resultTheLine); ++$i) {
+                if ($resultTheLine[$i]['column'] == $listKey) {
+                    $keyValue = $resultTheLine[$i]['value'];
+                }
             }
         }
         //If radio button is activated (is it important if template???)
@@ -1176,20 +1182,23 @@ abstract class lists_Abstract extends Database
 
     protected function _tmplt_showIconDocument($resultTheLine, $listKey)
     {
-        $core = new core_tools();
         $return = '';
         //Show document icon
-        foreach ($resultTheLine as $r) {
-            if (isset($r['res_id'])) {
-                $res_id = $r['res_id'];
-                break;
+        if (is_array($resultTheLine)) {
+            foreach ($resultTheLine as $r) {
+                if (isset($r['res_id'])) {
+                    $res_id = $r['res_id'];
+                    break;
+                }
             }
         }
         $isAttachment = false;
-        foreach ($resultTheLine as $r) {
-            if ($r['column'] === 'attachment_type') {
-                $isAttachment = true;
-                break;
+        if (is_array($resultTheLine)) {
+            foreach ($resultTheLine as $r) {
+                if ($r['column'] === 'attachment_type') {
+                    $isAttachment = true;
+                    break;
+                }
             }
         }
 
@@ -1413,9 +1422,11 @@ abstract class lists_Abstract extends Database
         ) {
             //Get the ListKey value
             $keyValue = '';
-            for ($i = 0; $i <= count($resultTheLine); ++$i) {
-                if ($resultTheLine[$i]['column'] == $listKey) {
-                    $keyValue = $resultTheLine[$i]['value'];
+            if (is_array($resultTheLine)) {
+                for ($i = 0; $i <= count($resultTheLine); ++$i) {
+                    if ($resultTheLine[$i]['column'] == $listKey) {
+                        $keyValue = $resultTheLine[$i]['value'];
+                    }
                 }
             }
             $sAction = \Action\models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
@@ -1633,7 +1644,7 @@ abstract class lists_Abstract extends Database
     public function tmplt_func_bool_see_multi_contacts($resultTheLine)
     {
         $return = '';
-        $nbresult_I = count($resultTheLine);
+        $nbresult_I = is_array($resultTheLine) ? count($resultTheLine) : 0;
 
         for ($iresults = 0; $iresults < $nbresult_I; ++$iresults) {
             if ($resultTheLine[$iresults]['is_multi_contacts']) {
@@ -1956,9 +1967,11 @@ abstract class lists_Abstract extends Database
         if (!empty($listKey)) {
             //Get the ListKey value
             $keyValue = '';
-            for ($i = 0; $i <= count($resultTheLine); ++$i) {
-                if ($resultTheLine[$i]['column'] == $listKey) {
-                    $keyValue = $resultTheLine[$i]['value'];
+            if (is_array($resultTheLine)) {
+                for ($i = 0; $i <= count($resultTheLine); ++$i) {
+                    if ($resultTheLine[$i]['column'] == $listKey) {
+                        $keyValue = $resultTheLine[$i]['value'];
+                    }
                 }
             }
             $link .= '&id='.$keyValue;
