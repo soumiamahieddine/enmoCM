@@ -1720,3 +1720,6 @@ if (!defined('_SENDMAIL_PARAM')) {
 if (!defined('_ACCESS_SMARTPHONE')) {
     define('_ACCESS_SMARTPHONE', '_TO_TRANSLATE');
 }
+if (!defined('_MAILING_CONFIRMATION')) {
+    define('_MAILING_CONFIRMATION', 'Do you want to generate all attachments ? TO TRANSLATE');
+}
