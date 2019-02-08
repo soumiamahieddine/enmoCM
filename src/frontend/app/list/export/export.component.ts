@@ -8,11 +8,11 @@ import { MAT_DIALOG_DATA } from '@angular/material';
 declare function $j(selector: any): any;
 
 @Component({
-    templateUrl: "list-administration.component.html",
-    styleUrls: ['list-administration.component.scss'],
+    templateUrl: "export.component.html",
+    styleUrls: ['export.component.scss'],
     providers: [NotificationService],
 })
-export class ListAdministrationComponent implements OnInit {
+export class ExportComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;

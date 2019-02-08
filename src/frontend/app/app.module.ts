@@ -24,6 +24,7 @@ import { ActivateUserComponent }                from './activate-user.component'
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
 import { SummarySheetComponent }                from './list/summarySheet/summary-sheet.component';
+import { ExportComponent }                      from './list/export/export.component';
 
 import { NotesListComponent }                   from './notes/notes.component';
 import { AttachmentsListComponent }             from './attachments/attachments-list.component';
@@ -56,7 +57,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         DiffusionsListComponent,
         FiltersListComponent,
         FiltersToolComponent,
-        SummarySheetComponent
+        SummarySheetComponent,
+        ExportComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
@@ -65,7 +67,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         NotesListComponent,
         AttachmentsListComponent,
         DiffusionsListComponent,
-        SummarySheetComponent
+        SummarySheetComponent,
+        ExportComponent
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]

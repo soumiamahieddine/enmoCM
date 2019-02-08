@@ -46,9 +46,7 @@ import { SecuritiesAdministrationComponent }            from './security/securit
 import { SendmailAdministrationComponent }            from './sendmail/sendmail-administration.component';
 
 import { TechnicalAdministrationComponent }            from './technical/technical-administration.component';
-// TO DO CHANGE COMPONENT NAME
-import { ListAdministrationComponent }            from './list/list-administration.component';
-import { ListAdministrationComponent2 }            from './basket/list/list-administration.component';
+import { ListAdministrationComponent }            from './basket/list/list-administration.component';
 
 @NgModule({
     imports:      [
@@ -103,7 +101,7 @@ import { ListAdministrationComponent2 }            from './basket/list/list-admi
         SendmailAdministrationComponent,
         TechnicalAdministrationComponent,
         ListAdministrationComponent,
-        ListAdministrationComponent2
+        ListAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
@@ -115,7 +113,7 @@ import { ListAdministrationComponent2 }            from './basket/list/list-admi
         DoctypesAdministrationRedirectModalComponent,
         TechnicalAdministrationComponent,
         ListAdministrationComponent,
-        ListAdministrationComponent2
+        ListAdministrationComponent
     ],
 })
 export class AdministrationModule {}

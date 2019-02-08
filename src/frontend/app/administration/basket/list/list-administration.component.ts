@@ -13,7 +13,7 @@ import { startWith, map } from 'rxjs/operators';
     styleUrls: ['list-administration.component.scss'],
     providers: [NotificationService],
 })
-export class ListAdministrationComponent2 implements OnInit {
+export class ListAdministrationComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
