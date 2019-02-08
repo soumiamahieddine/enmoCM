@@ -281,9 +281,9 @@ class SummarySheetController
                     $pdf->SetY($pdf->GetY() + 2);
 
                     $pdf->SetFont('', '', 10);
-                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, _SENDERS, 1, 0, 'C', false);
+                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, empty($senders) ? '' : _SENDERS, empty($senders) ? 0 : 1, 0, 'C', false);
                     $pdf->Cell($widthNoMargins / 10, 15, '', 0, 0, 'C', false);
-                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, _RECIPIENTS, 1, 1, 'C', false);
+                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, empty($recipients) ? '' : _RECIPIENTS, empty($recipients) ? 0 : 1, 1, 'C', false);
                     for ($i = 0; !empty($senders[$i]) || !empty($recipients[$i]); $i++) {
                         $pdf->MultiCell($widthNoMargins / 10 * 4.5, 40, empty($senders[$i]['format']) ? '' : $senders[$i]['format'], empty($senders[$i]['format']) ? 0 : 1, 'L', false, 0, '', '', true, 0, true);
                         $pdf->MultiCell($widthNoMargins / 10, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
