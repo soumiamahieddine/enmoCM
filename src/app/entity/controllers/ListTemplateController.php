@@ -218,7 +218,6 @@ class ListTemplateController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-
         $listTemplates = ListTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['object_id', 'object_type']]);
         
         if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && !strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') && !strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_')) {
@@ -271,12 +270,15 @@ class ListTemplateController
 
     public function updateByUserWithEntityDest(Request $request, Response $response)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+        
         $data = $request->getParams();
 
         DatabaseModel::beginTransaction();
 
         foreach ($data['redirectListModels'] as $listModel) {
-            //check if user exist
             $user = UserModel::getByLogin(['login' => $listModel['redirectUserId']]);
             if (empty($user) || $user['status'] != "OK") {
                 DatabaseModel::rollbackTransaction();

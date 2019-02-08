@@ -802,8 +802,7 @@ export const LANG_EN = {
     "destination"                           : "entity destination",
     "selectAllResInBasket"                    : "Select all mails in basket",
     "redirectUserListInstances"                 : "Change of recipient for mail being processed",
-    "isResDest"                                 : "is the recipient of mail being processed",
-    "chooseNewDestUser"                         : "please select a replacement user", 
+    "chooseNewDestUser"                         : "is the <b>recipient</b> of mail being processed, please select a <b>replacement user</b>",
     "newDest"                                   : "New recipient for",
     "newDestRes"                                : "New recipient for mails"
 };

@@ -831,8 +831,7 @@ export const LANG_NL = {
     "destination"                                     : "_TO_TRANSLATE",
     "selectAllResInBasket"                                     : "_TO_TRANSLATE",
     "redirectUserListInstances"                 : "_TO_TRANSLATE_Change of recipient for mail being processed",
-    "isResDest"                                 : "_TO_TRANSLATE_is the recipient of mail being processed",
-    "chooseNewDestUser"                         : "_TO_TRANSLATE_please select a replacement user", 
-    "newDest"                                   : "_TO_TRANSLATE_New recipient for",
-    "newDestRes"                                : "_TO_TRANSLATE_New recipient for mails"
+    "chooseNewDestUser"                         : "is the <b>recipient</b> of mail being processed, please select a <b>replacement user</b>", //_TO_TRANSLATE_
+    "newDest"                                   : "New recipient for", //_TO_TRANSLATE_
+    "newDestRes"                                : "New recipient for mails" //_TO_TRANSLATE_
 };
