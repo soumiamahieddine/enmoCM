@@ -40,7 +40,7 @@
                     <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v fa-2x"></mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item style="text-align: center;" (click)="removeData(item,itData)">
+                    <button mat-menu-item (click)="removeData(item,itData)">
                         <mat-icon style="height: auto;" color="warn" fontSet="fas" fontIcon="fa-trash fa-2x"></mat-icon>
                         <span>{{lang.delete}}</span>
                     </button>
@@ -55,7 +55,7 @@
                     </button>
                     <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_rightData') > 0" mat-menu-item (click)="setStyle(item,'align_rightData')">
                         <mat-icon style="height: auto;" fontSet="fas" fontIcon="fa-align-right fa-2x"></mat-icon>
-                        <span>{{lang.AlignRight}}</span>
+                        <span>{{lang.alignRight}}</span>
                     </button>
                     <button [class.isSelectedMenu]="item.cssClasses.indexOf('bigFontData') > 0" mat-menu-item (click)="setStyle(item,'bigFontData')">
                         <mat-icon style="height: auto;" fontSet="fas" fontIcon="fa-text-height fa-2x"></mat-icon>
