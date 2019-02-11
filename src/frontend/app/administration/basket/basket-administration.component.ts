@@ -161,7 +161,7 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef = this.dialog.open(BasketAdministrationSettingsModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
-                this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + result.group.group_id, { 'result_page': result.group.result_page, 'groupActions': result.group.groupActions })
+                this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + result.group.group_id + "/actions", { 'result_page': result.group.result_page, 'groupActions': result.group.groupActions })
                     .subscribe(() => {
                         this.dialogRef = null;
                         this.notify.success(this.lang.basketUpdated);
@@ -246,7 +246,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     updateResultPage(group: any) {
-        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'result_page': group.result_page, 'groupActions': group.groupActions })
             .subscribe(() => {
                 this.notify.success(this.lang.resultPageUpdated);
             }, (err) => {
@@ -299,7 +299,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     addAction(group: any) {
-        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'result_page': group.result_page, 'groupActions': group.groupActions })
             .subscribe(() => {
                 this.notify.success(this.lang.actionsGroupBasketUpdated);
             }, (err) => {
