@@ -52,11 +52,13 @@ class ResourceContactModel
 
         foreach ($aContacts as $key => $aContact) {
             if ($aContact['type'] == 'user') {
-                $aContacts[$key]['format'] = UserModel::getLabelledUserById(['id' => $aContact['item_id']]);
+                $user = UserModel::getLabelledUserById(['id' => $aContact['item_id']]);
+                $aContacts[$key]['format'] = $user;
+                $aContacts[$key]['restrictedFormat'] = $user;
             } elseif ($aContact['type'] == 'contact') {
                 $contact = ContactModel::getOnView([
                     'select' => [
-                        'is_corporate_person', 'lastname', 'firstname', 'address_num', 'address_street', 'address_town', 'address_postal_code',
+                        'is_corporate_person', 'lastname', 'firstname',
                         'ca_id', 'society', 'contact_firstname', 'contact_lastname'
                     ],
                     'where' => ['ca_id = ?'],
@@ -65,10 +67,12 @@ class ResourceContactModel
                 if (isset($contact[0])) {
                     $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
                     $aContacts[$key]['format'] = $contact['contact']['otherInfo'];
+                    $aContacts[$key]['restrictedFormat'] = $contact['contact']['contact'];
                 }
             } elseif ($aContact['type'] == 'entity') {
                 $entity = EntityModel::getById(['id' => $aContact['item_id'], 'select' => ['entity_label']]);
                 $aContacts[$key]['format'] = $entity['entity_label'];
+                $aContacts[$key]['restrictedFormat'] = $entity['entity_label'];
             }
         }
 
