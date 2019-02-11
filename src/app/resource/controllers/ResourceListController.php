@@ -566,7 +566,7 @@ class ResourceListController
         $listInstances = ListInstanceModel::get([
             'select'    => ['item_id'],
             'where'     => ['difflist_type = ?', 'res_id = ?', 'item_mode = ?'],
-            'data'      => ['entity_id', $args['res_id'], 'dest']
+            'data'      => ['entity_id', $args['resId'], 'dest']
         ]);
 
         if (empty($listInstances[0])) {
@@ -584,7 +584,7 @@ class ResourceListController
         $listInstances = ListInstanceModel::get([
             'select'    => ['item_id', 'requested_signature', 'process_date'],
             'where'     => ['difflist_type = ?', 'res_id = ?'],
-            'data'      => ['VISA_CIRCUIT', $args['res_id']],
+            'data'      => ['VISA_CIRCUIT', $args['resId']],
             'orderBy'   => ['listinstance_id']
         ]);
 
@@ -605,12 +605,12 @@ class ResourceListController
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['res_id']]);
+        $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
 
         $senders = [];
         if (!empty($ext)) {
             if ($ext['category_id'] == 'outgoing') {
-                $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $args['res_id']]);
+                $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $args['resId']]);
                 foreach ($resourcesContacts as $resourcesContact) {
                     $senders[] = $resourcesContact['restrictedFormat'];
                 }
@@ -621,7 +621,7 @@ class ResourceListController
                         'select'    => ['contact_id', 'address_id'],
                         'table'     => ['contacts_res'],
                         'where'     => ['res_id = ?', 'mode = ?'],
-                        'data'      => [$args['res_id'], 'multi']
+                        'data'      => [$args['resId'], 'multi']
                     ]);
                     foreach ($multiContacts as $multiContact) {
                         $rawContacts[] = [
@@ -662,7 +662,7 @@ class ResourceListController
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['res_id']]);
+        $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
 
         $recipients = [];
         if (!empty($ext)) {
@@ -673,7 +673,7 @@ class ResourceListController
                         'select'    => ['contact_id', 'address_id'],
                         'table'     => ['contacts_res'],
                         'where'     => ['res_id = ?', 'mode = ?'],
-                        'data'      => [$args['res_id'], 'multi']
+                        'data'      => [$args['resId'], 'multi']
                     ]);
                     foreach ($multiContacts as $multiContact) {
                         $rawContacts[] = [
@@ -704,7 +704,7 @@ class ResourceListController
                     }
                 }
             } else {
-                $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $args['res_id']]);
+                $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $args['resId']]);
                 foreach ($resourcesContacts as $resourcesContact) {
                     $recipients[] = $resourcesContact['restrictedFormat'];
                 }
