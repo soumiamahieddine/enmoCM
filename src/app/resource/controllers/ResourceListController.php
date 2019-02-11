@@ -98,7 +98,10 @@ class ResourceListController
             $listDisplay = GroupBasketModel::get(['select' => ['list_display'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
             $listDisplay = json_decode($listDisplay[0]['list_display']);
 
-            $select = ['res_letterbox.res_id', 'res_letterbox.subject', 'mlb_coll_ext.alt_identifier', 'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"'];
+            $select = [
+                'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'mlb_coll_ext.alt_identifier',
+                'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"'
+            ];
             $tableFunction = ['status', 'mlb_coll_ext'];
             $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id'];
             foreach ($listDisplay as $value) {
@@ -137,6 +140,7 @@ class ResourceListController
             foreach ($resources as $key => $resource) {
                 $formattedResources[$key]['res_id'] = $resource['res_id'];
                 $formattedResources[$key]['alt_identifier'] = $resource['alt_identifier'];
+                $formattedResources[$key]['barcode'] = $resource['barcode'];
                 $formattedResources[$key]['subject'] = $resource['subject'];
                 $formattedResources[$key]['statusLabel'] = $resource['status.label_status'];
                 $formattedResources[$key]['statusImage'] = $resource['status.img_filename'];
