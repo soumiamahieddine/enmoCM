@@ -36,57 +36,57 @@ export class ListAdministrationComponent implements OnInit {
 
     availableData: any = [
         {
-            'value': 'priority',
-            'label': this.lang.priority,
-            'sample': this.lang.prioritySample,
+            'value': 'getPriority',
+            'label': this.lang.getPriority,
+            'sample': this.lang.getPrioritySample,
             'cssClasses': [],
-            'icon': 'fa-traffic-light '
+            'icon': 'fa-traffic-light'
         },
         {
-            'value': 'category_id',
-            'label': this.lang.category_id,
+            'value': 'getCategory',
+            'label': this.lang.getCategory,
             'sample': this.lang.incoming,
             'cssClasses': [],
             'icon': 'fa-exchange-alt'
         },
         {
-            'value': 'mailType',
-            'label': this.lang.mailType,
-            'sample': this.lang.mailTypeSample,
+            'value': 'getDoctype',
+            'label': this.lang.getDoctype,
+            'sample': this.lang.getDoctypeSample,
             'cssClasses': [],
             'icon': 'fa-suitcase'
         },
         {
-            'value': 'destInformations',
-            'label': this.lang.destInformations,
-            'sample': this.lang.destInformationsSample,
+            'value': 'getAssignee',
+            'label': this.lang.getAssignee,
+            'sample': this.lang.getAssigneeSample,
             'cssClasses': [],
             'icon': 'fa-sitemap'
         },
         {
-            'value': 'sender',
-            'label': this.lang.sender,
+            'value': 'getSenders',
+            'label': this.lang.getSenders,
             'sample': 'Patricia PETIT',
             'cssClasses': [],
             'icon': 'fa-user'
         },
         {
-            'value': 'recipient',
-            'label': this.lang.recipient,
+            'value': 'getRecipients',
+            'label': this.lang.getRecipients,
             'sample': 'Alain DUBOIS (MAARCH)',
             'cssClasses': [],
             'icon': 'fa-book'
         },
         {
-            'value': 'creationLimitDate',
-            'label': this.lang.creationLimitDate,
-            'sample': this.lang.creationLimitDateSample,
+            'value': 'getCreationAndProcessLimitDates',
+            'label': this.lang.getCreationAndProcessLimitDates,
+            'sample': this.lang.getCreationAndProcessLimitDatesSample,
             'cssClasses': [],
             'icon': 'fa-calendar'
         },
         {
-            'value': 'visaWorkflow',
-            'label': this.lang.visaWorkflow,
+            'value': 'getVisaWorkflow',
+            'label': this.lang.getVisaWorkflow,
             'sample': '<i color="accent" class="fa fa-check"></i> Barbara BAIN -> <i class="fa fa-hourglass-half"></i> <b>Bruno BOULE</b> -> <i class="fa fa-hourglass-half"></i> Patricia PETIT',
             'cssClasses': [],
             'icon': 'fa-list-ol'
@@ -213,6 +213,7 @@ export class ListAdministrationComponent implements OnInit {
                 {
                     'value': element.value,
                     'cssClasses': element.cssClasses,
+                    'icon': element.icon,
                 }
             );
         });

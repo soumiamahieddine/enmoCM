@@ -843,12 +843,18 @@ export const LANG_NL = {
     "fontBig"                                : "Big", //_TO_TRANSLATE
     "chronoNumberShort"                      : "Chrono Num", //_TO_TRANSLATE
     "objectSample"                      : "Subject sample", //_TO_TRANSLATE
+    "getPriority"                      : "Priority", //_TO_TRANSLATE
+    "getCategory"                      : "Category", //_TO_TRANSLATE
     "prioritySample"                      : "Hight", //_TO_TRANSLATE
-    "mailTypeSample"                      : "Reclamation", //_TO_TRANSLATE
-    "destInformations"                      : "User destination (entity destination)", //_TO_TRANSLATE 
-    "destInformationsSample"                      : "Barbara BAIN (Finance division)", //_TO_TRANSLATE
-    "creationLimitDate"                      : "Creation date - Process limit date", //_TO_TRANSLATE
-    "creationLimitDateSample"                      : "1st jan. - <i class=\"fa fa-stopwatch\"></i>&nbsp;<b color=\"warn\">3 day(s)</b>", //_TO_TRANSLATE
+    "getDoctype"                      : "Mail type", //_TO_TRANSLATE
+    "getDoctypeSample"                      : "Reclamation", //_TO_TRANSLATE
+    "getAssignee"                      : "User destination (entity destination)", //_TO_TRANSLATE 
+    "getAssigneeSample"                      : "Barbara BAIN (Finance division)", //_TO_TRANSLATE
+    "getSenders"                      : "Sender", //_TO_TRANSLATE
+    "getRecipients"                      : "Recipient", //_TO_TRANSLATE
+    "getVisaWorkflow"                      : "Visa workflow", //_TO_TRANSLATE
+    "getCreationAndProcessLimitDates"                      : "Creation date - Process limit date", //_TO_TRANSLATE
+    "getCreationAndProcessLimitDatesSample"                      : "1st jan. - <i class=\"fa fa-stopwatch\"></i>&nbsp;<b color=\"warn\">3 day(s)</b>", //_TO_TRANSLATE
     "nbAvisSent"                      : "Number of opinion sent", //_TO_TRANSLATE 
     "nbAvisSentSample"                      : "<b>3</b> opinion(s) sent", //_TO_TRANSLATE 
     "warnMaxDataList"                      : "Maximum of displayed datas is reached", //_TO_TRANSLATE

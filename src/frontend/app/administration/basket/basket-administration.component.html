@@ -37,7 +37,7 @@
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
-                <mat-tab-group [selectedIndex]="selectedIndex">
+                <mat-tab-group [(selectedIndex)]="selectedIndex">
                     <mat-tab label="{{lang.informations}}">
                         <form class="form-horizontal" (ngSubmit)="onSubmit()" #basketForm="ngForm">
                             <mat-form-field>
@@ -113,7 +113,7 @@
                             <span>{{group.group_desc}}</span>
                             <mat-icon color="warn" class="fa fa-times" matTooltip="{{lang.unlinkGroup}}" (click)="unlinkGroup(i)"></mat-icon>
                         </ng-template>
-                        <mat-tab-group>
+                        <mat-tab-group *ngIf="selectedIndex > 0">
                             <mat-tab label="{{lang.actions}}">
                                 <div class="col-md-6">
                                     <mat-form-field style="margin-top:5px;">
