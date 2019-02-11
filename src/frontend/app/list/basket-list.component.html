@@ -28,33 +28,23 @@
                     <ng-container matColumnDef="res_id">
                         <td mat-cell *matCellDef="let row" class="resultContainer" [class.resultContainer-mobile]="mobileMode">
                             <!-- Secondary Info Line -->
-                            <mat-toolbar *ngIf="displayedSecondaryData.length > 0">
-                                <div class="resultCol {{data.class}}" *ngFor="let data of displayedSecondaryData">
-                                    <span *ngIf="data.id == 'status_label'">
-                                        <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}} {{row.status_icon}} {{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}}-2x"
-                                            title="{{row.status_label}} ({{row.status_id}})"></mat-icon><br />
-                                    </span>
-                                    <span *ngIf="data.id == 'alt_identifier'">
-                                        <span *ngIf="row[data.id] == lang.undefined && row.barcode != null" style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
-                                                class="fas fa-barcode"></i> {{row.barcode}}</span>
-                                        <span *ngIf="row[data.id] != lang.undefined" style="color: rgba(0,0,0,0.4);font-size: 90%;cursor: crosshair;"
-                                            (click)="$event.stopPropagation();filterThis(row[data.id])">{{row[data.id]}}</span>
-                                    </span>
-                                    <ng-container *ngIf="data.id == 'date'">
-                                        <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;{{row.creation_date
+                            <mat-toolbar *ngIf="row.display.length > 0">
+                                <div class="resultCol" style="flex:1" [class]="data.cssClasses.join(' ')" *ngFor="let data of row.display">
+                                    <ng-container *ngIf="data.value == 'getCreationAndProcessLimitDates'">
+                                        <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;{{data.displayValue[0]
                                         | timeAgo}} - <i class="fa fa-stopwatch" title="{{lang.processLimitDate}}"></i>&nbsp;<span
-                                            [innerHTML]="row.process_limit_date | timeLimit" title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'></span>
+                                            [innerHTML]="data.displayValue[1] | timeLimit" title='{{data.displayValue[1] | date : "le dd/MM/y à HH:mm"}}'></span>
                                     </ng-container>
                                     <ng-container *ngIf="data.icon != ''">
-                                        <i class="{{data.icon}}"></i>
+                                        <i class="fa {{data.icon}}" title="{{data.label}}"></i>
                                         &nbsp;
                                     </ng-container>
-                                    <ng-container *ngIf="data.id == 'category_id'">
-                                        <span *ngIf="!lang[row.category_id]" style="opacity: 0.5" title="id: {{row.category_id}}">_UNDEFINED</span>
-                                        <span *ngIf="lang[row.category_id]" title="{{row[data.id]}}">{{lang[row.category_id]}}</span>
+                                    <ng-container *ngIf="data.value == 'getCategory'">
+                                        <span *ngIf="!lang[data.displayValue]" style="opacity: 0.5" title="id: {{data.displayValue}}">_UNDEFINED</span>
+                                        <span *ngIf="lang[data.displayValue]">{{lang[data.displayValue]}}</span>
                                     </ng-container>
-                                    <ng-container *ngIf="data.id != 'status_label' && data.id != 'date' && data.id != 'category_id'">
-                                        <span [class.undefined]="row[data.id] == lang.undefined" title="{{row[data.id]}}" >{{row[data.id] | shorten: 150: '...'}}</span>
+                                    <ng-container *ngIf="data.value != 'getCategory' && data.value != 'getCreationAndProcessLimitDates'">
+                                        <span *ngIf="lang[row.category_id]">{{data.displayValue}}</span>
                                     </ng-container>
                                 </div>
                             </mat-toolbar>
@@ -63,32 +53,18 @@
                                 <div *ngIf="!mobileMode" class="checkThis">
                                     <mat-checkbox color="primary" [checked]="row.checked" (change)="toggleRes($event,row.res_id)" (click)="$event.stopPropagation();"></mat-checkbox>
                                 </div>
-                                <div class="resultCol {{data.class}}" *ngFor="let data of displayedMainData">
-                                    <span *ngIf="data.id == 'alt_identifier'">
-                                        <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}} {{row.status_icon}} {{row.status_icon.charAt(0)}}{{row.status_icon.charAt(1)}}-2x"
-                                            title="{{row.status_label}} ({{row.status_id}})" style="cursor: crosshair;"
+                                <div class="resultCol" [class]="data.cssClasses.join(' ')" *ngFor="let data of displayedMainData">
+                                    <span *ngIf="data.value == 'alt_identifier'">
+                                        <mat-icon [ngStyle]="{'color': row.priority_color}" color="primary" class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x"
+                                            title="{{row.statusLabel}}" style="cursor: crosshair;"
                                             (click)="$event.stopPropagation();filterThis(row.status_label)"></mat-icon><br />
-                                        <span *ngIf="row[data.id] == lang.undefined && row.barcode != null" style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
+                                        <span *ngIf="row[data.value] == lang.undefined && row.barcode != null" style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
                                                 class="fas fa-barcode"></i> {{row.barcode}}</span>
-                                        <span *ngIf="row[data.id] != lang.undefined" style="color: rgba(0,0,0,0.4);font-size: 90%;cursor: crosshair;"
-                                            (click)="$event.stopPropagation();filterThis(row[data.id])">{{row[data.id]}}</span>
+                                        <span *ngIf="row[data.value] != lang.undefined" style="color: rgba(0,0,0,0.4);font-size: 90%;cursor: crosshair;"
+                                            (click)="$event.stopPropagation();filterThis(row[data.value])">{{row[data.value]}}</span>
                                     </span>
-                                    <ng-container *ngIf="data.id == 'date'">
-                                        <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;{{row.creation_date
-                                        | timeAgo}} - <i class="fa fa-stopwatch" title="{{lang.processLimitDate}}"></i>&nbsp;<span
-                                            [innerHTML]="row.process_limit_date | timeLimit" *ngIf="row.process_limit_date != null"
-                                            title='{{row.process_limit_date | date : "le dd/MM/y à HH:mm"}}'></span>
-                                    </ng-container>
-                                    <ng-container *ngIf="data.icon != ''">
-                                        <i class="{{data.icon}}"></i>
-                                        &nbsp;
-                                    </ng-container>
-                                    <ng-container *ngIf="data.id == 'category_id'">
-                                        <span *ngIf="!lang[row.category_id]" style="opacity: 0.5" title="id: {{row.category_id}}">_UNDEFINED</span>
-                                        <span *ngIf="lang[row.category_id]" title="{{row[data.id]}}">{{lang[row.category_id]}}</span>
-                                    </ng-container>
-                                    <ng-container *ngIf="data.id != 'status_label' && data.id != 'date' && data.id != 'category_id' && data.id != 'alt_identifier'">
-                                        <span [class.undefined]="row[data.id] == lang.undefined" title="{{row[data.id]}}" >{{row[data.id] | shorten: 150: '...'}}</span>
+                                    <ng-container *ngIf="data.value != 'alt_identifier'">
+                                        <span [class.undefined]="row[data.value] == lang.undefined" title="{{row[data.value]}}" >{{row[data.value] | shorten: 150: '...'}}</span>
                                     </ng-container>
                                 </div>
                                 <mat-button-toggle-group #group="matButtonToggleGroup" class="actions" multiple>

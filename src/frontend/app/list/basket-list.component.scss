@@ -99,22 +99,34 @@ mat-toolbar {
     background: #F99830;   
 }
 
-.smallFontData {
-    font-size: 10px;
-}
-
-.centerData {
+.align_centerData {
     text-align: center;
-}
-
-.rightData {
+  }
+  
+  .align_rightData {
     text-align: right;
-}
+  }
+  
+  .boldFontData {
+    font-weight: bold;
+  }
+  
+  .bigFontData {
+    font-size: 14px;
+  }
+  
+  .smallFontData {
+    font-size: 10px;
+  }
+  
+  .normalData {
+    flex: 1;
+  }
 
-.softColorData {
-    color: #666;
-}
-
-.longData {
+  .chronoData {
+      width: 150px;
+  }
+  
+  .longData {
     flex: 3;
-}
+  }

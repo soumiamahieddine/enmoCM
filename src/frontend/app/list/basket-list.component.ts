@@ -49,50 +49,17 @@ export class BasketListComponent implements OnInit {
 
     displayedMainData: any = [
         {
-            'id': 'alt_identifier',
-            'class': 'softColorData centerData',
+            'value': 'alt_identifier',
+            'cssClasses': ['softColorData', 'align_centerData', 'chronoData'],
             'icon': ''
         },
         {
-            'id': 'subject',
-            'class': 'longData',
+            'value': 'subject',
+            'cssClasses': ['longData'],
             'icon': ''
         }
     ];
-
-    //displayedSecondaryData: any = [];
-    displayedSecondaryData: any = [
-        {
-            'id': 'priority_label',
-            'class': '',
-            'icon': ''
-        },
-        {
-            'id': 'category_id',
-            'class': '',
-            'icon': ''
-        },
-        {
-            'id': 'doctype_label',
-            'class': '',
-            'icon': 'fa fa-file'
-        },
-        {
-            'id': 'senders',
-            'class': '',
-            'icon': ''
-        },
-        {
-            'id': 'recipients',
-            'class': '',
-            'icon': ''
-        },
-        {
-            'id': 'date',
-            'class': 'rightData',
-            'icon': ''
-        },
-    ];
+    displayedSecondaryData: any = [];
 
     resultListDatabase: ResultListHttpDao | null;
     data: any;
@@ -251,20 +218,33 @@ export class BasketListComponent implements OnInit {
     }
 
     processPostData(data: any) {
+        this.displayedSecondaryData = [];
         data.resources.forEach((element: any) => {
             Object.keys(element).forEach((key) => {
-                if ((element[key] == null || element[key] == '') && ['process_limit_date', 'creation_date', 'closing_date', 'countAttachments', 'countNotes'].indexOf(key) === -1) {
-                    element[key] = this.lang.undefined;
-                } else if (["senders", "recipients"].indexOf(key) > 0) {
-                    if (element[key].length > 1) {
-                        element[key] = this.lang.isMulticontact;
-                    } else {
-                        element[key] = element[key][0];
-                    }
-                } else if (key == 'status_icon' && element[key] == null) {
+                 if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
+                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display'].indexOf(key) === -1) {
+                    element[key] = this.lang.undefined;
                 }
+            });
+            element.display.forEach((key: any) => {
+                if ((key.displayValue == null || key.displayValue == '') && ['getCreationAndProcessLimitDates'].indexOf(key.value) === -1) {
+                    key.displayValue = this.lang.undefined;
 
+                } else if (["getSenders", "getRecipients"].indexOf(key.value) > 0) {
+                    if (key.displayValue.length > 1) {
+                        key.displayValue = this.lang.isMulticontact;
+                    } else {
+                        key.displayValue = key.displayValue[0];
+                    }
+                } else if(key.value == 'getCreationAndProcessLimitDates') {
+                    key.icon = '';
+                    key.displayValue = [
+                        '2019-02-10',
+                        '2019-02-13'
+                    ]
+                }
+                key.label = this.lang[key.value];
             });
 
             if (this.selectedRes.indexOf(element['res_id']) === -1) {
