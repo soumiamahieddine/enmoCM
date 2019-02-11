@@ -48,23 +48,19 @@
         <div style="text-align: center;font-size: 10px;opacity: 0.5;margin-top:-10px;">
             {{selectedRes.length}} {{lang.selectedElements}}
         </div>
-        <button mat-menu-item [disabled]="selectedRes.length == 0">
-            <mat-icon fontSet="fas" fontIcon="fa-print fa-2x"></mat-icon>
-            <span>{{lang.printResultList}}</span>
+        <button mat-menu-item (click)="openListAdmin();" [disabled]="selectedRes.length == 0">
+            <mat-icon fontSet="fas" fontIcon="fa-file-export fa-2x"></mat-icon>
+            <span>{{lang.exportDatas}}</span>
         </button>
         <button mat-menu-item (click)="openSummarySheet();" [disabled]="selectedRes.length == 0">
             <mat-icon fontSet="fas" fontIcon="fa-link fa-2x"></mat-icon>
             <span>{{lang.summarySheets}}</span>
         </button>
-        <button mat-menu-item (click)="openListAdmin();" [disabled]="selectedRes.length == 0">
-            <mat-icon fontSet="fas" fontIcon="fa-file-export fa-2x"></mat-icon>
-            <span>{{lang.exportDatas}}</span>
-        </button>
     </mat-menu>
 </mat-button-toggle-group>
 <div class="filterBadges">
     <span *ngIf="haveFilters()" class="label badge-eraser" title="{{lang.eraseAllFilters}}" (click)="this.listProperties.search='';removeFilters();"><i class="fas fa-eraser"></i></span>
-
+    
     <span class="label badge-search" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}" (click)="this.listProperties.search='';updateFilters();">{{this.listProperties.search}}
         <i class="fa fa-times-circle"></i></span>
     <span class="label badge-categories" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index" (click)="removeFilter('categories', i)">{{category.label}}

@@ -19,8 +19,10 @@ export class ExportComponent implements OnInit {
     loadingExport: boolean = false;
 
     delimiters = [';', ',', 'TAB'];
+    formats = ['CSV', 'PDF'];
     exportModel: any = {
         delimiter: ';',
+        format: 'CSV',
         data: [],
         resources: []
     };
@@ -300,7 +302,7 @@ export class ExportComponent implements OnInit {
                     mm = '0' + mm;
                 }
                 today = dd + '-' + mm + '-' + yyyy;
-                downloadLink.setAttribute('download', "export_maarch_" + today + ".csv");
+                downloadLink.setAttribute('download', "export_maarch_" + today + "." + this.exportModel.format.toLowerCase());
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
 

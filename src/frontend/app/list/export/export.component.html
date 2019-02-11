@@ -4,10 +4,20 @@
         <mat-spinner></mat-spinner>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div [class.col-md-12]="exportModel.format != 'CSV'" [class.col-md-3]="exportModel.format == 'CSV'">
+            <mat-form-field appearance="outline">
+                <mat-label>{{lang.format}}</mat-label>
+                <mat-select placeholder="{{lang.format}}" [(ngModel)]="exportModel.format">
+                    <mat-option *ngFor="let format of formats" [value]="format">
+                        {{format}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-md-9" *ngIf="exportModel.format == 'CSV'">
             <mat-form-field appearance="outline">
                 <mat-label>{{lang.delimiter}}</mat-label>
-                <mat-select placeholder="{{lang.delimiter}}" [(ngModel)]="exportModel.delimiter">
+                <mat-select placeholder="{{lang.delimiter}}" [(ngModel)]="exportModel.delimiter" [disabled]="exportModel.format != 'CSV'">
                     <mat-option *ngFor="let delimiter of delimiters" [value]="delimiter">
                         {{delimiter}}
                     </mat-option>
