@@ -86,7 +86,7 @@ class ResourceListController
             $allResources[] = $resource['res_id'];
         }
 
-        $resources = [];
+        $formattedResources = [];
         if (!empty($resIds)) {
             $attachments = AttachmentModel::getOnView([
                 'select'    => ['COUNT(res_id)', 'res_id_master'],
@@ -96,29 +96,26 @@ class ResourceListController
             ]);
 
             $listDisplay = GroupBasketModel::get(['select' => ['list_display'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
-            $listDisplay = json_decode($listDisplay[0]);
+            $listDisplay = json_decode($listDisplay[0]['list_display']);
 
-            $select = ['res_letterbox.res_id', 'res_letterbox.subject', 'status.label_status AS "status.label_status"'];
-            $tableFunction = ['status'];
-            $leftJoinFunction = ['res_letterbox.status = status.id'];
+            $select = ['res_letterbox.res_id', 'res_letterbox.subject', 'mlb_coll_ext.alt_identifier', 'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"'];
+            $tableFunction = ['status', 'mlb_coll_ext'];
+            $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id'];
             foreach ($listDisplay as $value) {
+                $value = (array)$value;
                 if ($value['value'] == 'getPriority') {
                     $select[] = 'priorities.label AS "priorities.label"';
                     $tableFunction[] = 'priorities';
-                    $leftJoinFunction[] = 'res_view_letterbox.priority = priorities.id';
+                    $leftJoinFunction[] = 'res_letterbox.priority = priorities.id';
                 } elseif ($value['value'] == 'getCategory') {
-                    $select[] = 'mlbone.category_id AS "mlbone.category_id"';
-                    $tableFunction[] = 'mlb_coll_ext mlbone';
-                    $leftJoinFunction[] = 'res_letterbox.res_id = mlbone.res_id';
+                    $select[] = 'mlb_coll_ext.category_id';
                 } elseif ($value['value'] == 'getDoctype') {
                     $select[] = 'doctypes.description AS "doctypes.description"';
                     $tableFunction[] = 'doctypes';
                     $leftJoinFunction[] = 'res_letterbox.type_id = doctypes.type_id';
                 } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
                     $select[] = 'res_letterbox.creation_date';
-                    $select[] = 'mlbtwo.process_limit_date AS "mlbtwo.process_limit_date"';
-                    $tableFunction[] = 'mlb_coll_ext mlbtwo';
-                    $leftJoinFunction[] = 'res_letterbox.res_id = mlbtwo.res_id';
+                    $select[] = 'mlb_coll_ext.process_limit_date AS "mlb_coll_ext.process_limit_date"';
                 }
             }
 
@@ -138,39 +135,54 @@ class ResourceListController
             ]);
 
             foreach ($resources as $key => $resource) {
-                $resources[$key]['countAttachments'] = 0;
+                $formattedResources[$key]['res_id'] = $resource['res_id'];
+                $formattedResources[$key]['alt_identifier'] = $resource['alt_identifier'];
+                $formattedResources[$key]['subject'] = $resource['subject'];
+                $formattedResources[$key]['statusLabel'] = $resource['status.label_status'];
+                $formattedResources[$key]['statusImage'] = $resource['status.img_filename'];
+                $formattedResources[$key]['countAttachments'] = 0;
                 foreach ($attachments as $attachment) {
                     if ($attachment['res_id_master'] == $resource['res_id']) {
-                        $resources[$key]['countAttachments'] = $attachment['count'];
+                        $formattedResources[$key]['countAttachments'] = $attachment['count'];
                     }
                 }
-                $resources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $GLOBALS['userId']]);
+                $formattedResources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $GLOBALS['userId']]);
 
                 $display = [];
                 foreach ($listDisplay as $value) {
+                    $value = (array)$value;
                     if ($value['value'] == 'getPriority') {
-                        $display[] = ['value' => $resource['priorities.label'], 'cssClasses' => $value['cssClasses']];
+                        $value['displayValue'] = $resource['priorities.label'];
+                        $display[] = $value;
                     } elseif ($value['value'] == 'getCategory') {
-                        $display[] = ['value' => $resource['mlbone.category_id'], 'cssClasses' => $value['cssClasses']];
+                        $value['displayValue'] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
+                        $display[] = $value;
                     } elseif ($value['value'] == 'getDoctype') {
-                        $display[] = ['value' => $resource['doctypes.description'], 'cssClasses' => $value['cssClasses']];
+                        $value['displayValue'] = $resource['doctypes.description'];
+                        $display[] = $value;
                     } elseif ($value['value'] == 'getAssignee') {
-                        $display[] = ['value' => ResourceListController::getAssignee(['resId' => $resource['res_id']]), 'cssClasses' => $value['cssClasses']];
+                        $value['displayValue'] = ResourceListController::getAssignee(['resId' => $resource['res_id']]);
+                        $display[] = $value;
                     } elseif ($value['value'] == 'getSenders') {
-                        $display[] = ['value' => ResourceListController::getSenders(['resId' => $resource['res_id']]), 'cssClasses' => $value['cssClasses']];
+                        $value['displayValue'] = ResourceListController::getSenders(['resId' => $resource['res_id']]);
+                        $display[] = $value;
                     } elseif ($value['value'] == 'getRecipients') {
-                        $display[] = ['value' => ResourceListController::getRecipients(['resId' => $resource['res_id']]), 'cssClasses' => $value['cssClasses']];
+                        $value['displayValue'] = ResourceListController::getRecipients(['resId' => $resource['res_id']]);
+                        $display[] = $value;
                     } elseif ($value['value'] == 'getVisaWorkflow') {
-                        $display[] = ['value' => ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]), 'cssClasses' => $value['cssClasses']];
+                        $value['displayValue'] = ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]);
+                        $display[] = $value;
                     } elseif ($value['value'] == 'getOpinionWorkflow') {
                     } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
-                        $display[] = ['value' => "{$resource['creation_date']} - {$resource['mlbtwo.process_limit_date']}", 'cssClasses' => $value['cssClasses']];
+                        $value['displayValue'] = "{$resource['creation_date']} - {$resource['process_limit_date']}";
+                        $display[] = $value;
                     }
                 }
+                $formattedResources[$key]['display'] = $display;
             }
         }
 
-        return $response->withJson(['resources' => $resources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'allResources' => $allResources]);
+        return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'allResources' => $allResources]);
     }
 
     public function getFilters(Request $request, Response $response, array $aArgs)
