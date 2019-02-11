@@ -67,7 +67,7 @@ abstract class UserModelAbstract
         DatabaseModel::insert([
             'table'         => 'users',
             'columnsValues' => [
-                'user_id'                       => $aArgs['user']['userId'],
+                'user_id'                       => strtolower($aArgs['user']['userId']),
                 'firstname'                     => $aArgs['user']['firstname'],
                 'lastname'                      => $aArgs['user']['lastname'],
                 'mail'                          => $aArgs['user']['mail'],
