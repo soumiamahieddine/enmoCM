@@ -819,8 +819,10 @@ export const LANG_EN = {
     "destInformations"                      : "User destination (entity destination)", 
     "destInformationsSample"                      : "Barbara BAIN (Finance division)", 
     "creationLimitDate"                      : "Creation date - Process limit date",
-    "creationLimitDateSample"                      : "1st may - <i class=\"fa fa-stopwatch\"></i>&nbsp;<b color=\"warn\">3 day(s)</b>",
+    "creationLimitDateSample"                      : "1st jan. - <i class=\"fa fa-stopwatch\"></i>&nbsp;<b color=\"warn\">3 day(s)</b>",
     "nbAvisSent"                      : "Number of opinion sent",
     "nbAvisSentSample"                      : "<b>3</b> opinion(s) sent",
     "warnMaxDataList"                      : "Maximum of displayed datas is reached",
+    "opinionLimitDate"                      : "Opinion limit date",
+    "modificationDate"                      : "Modification date",
 };

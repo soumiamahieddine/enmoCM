@@ -45,19 +45,19 @@
                         <span>{{lang.delete}}</span>
                     </button>
                     <mat-divider></mat-divider>
-                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('boldFontData') > 0" mat-menu-item (click)="setStyle(item,'boldFontData')">
+                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('boldFontData') > -1" mat-menu-item (click)="setStyle(item,'boldFontData')">
                         <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-bold fa-2x"></mat-icon>
                         <span>{{lang.fontBold}}</span>
                     </button>
-                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_centerData') > 0" mat-menu-item (click)="setStyle(item,'align_centerData')">
+                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_centerData') > -1" mat-menu-item (click)="setStyle(item,'align_centerData')">
                         <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-center fa-2x"></mat-icon>
                         <span>{{lang.alignCenter}}</span>
                     </button>
-                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_rightData') > 0" mat-menu-item (click)="setStyle(item,'align_rightData')">
+                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_rightData') > -1" mat-menu-item (click)="setStyle(item,'align_rightData')">
                         <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-right fa-2x"></mat-icon>
                         <span>{{lang.alignRight}}</span>
                     </button>
-                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('bigFontData') > 0" mat-menu-item (click)="setStyle(item,'bigFontData')">
+                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('bigFontData') > -1" mat-menu-item (click)="setStyle(item,'bigFontData')">
                         <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-text-height fa-2x"></mat-icon>
                         <span>{{lang.fontBig}}</span>
                     </button>

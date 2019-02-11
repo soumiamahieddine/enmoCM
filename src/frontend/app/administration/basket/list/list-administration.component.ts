@@ -20,14 +20,14 @@ export class ListAdministrationComponent implements OnInit {
 
     displayedMainData: any = [
         {
-            'value': 'status_chrono',
+            'value': 'chronoNumberShort',
             'label': this.lang.chronoNumberShort,
-            'sample': 'MAARCH/2018A/1',
+            'sample': 'MAARCH/2019A/1',
             'cssClasses': ['align_centerData', 'normalData'],
             'icon': ''
         },
         {
-            'value': 'subject',
+            'value': 'object',
             'label': this.lang.object,
             'sample': this.lang.objectSample,
             'cssClasses': ['longData'],
@@ -36,63 +36,77 @@ export class ListAdministrationComponent implements OnInit {
 
     availableData: any = [
         {
-            'value': 'priority_label',
+            'value': 'priority',
             'label': this.lang.priority,
             'sample': this.lang.prioritySample,
             'cssClasses': [],
             'icon': 'fa-traffic-light '
         },
         {
-            'value': 'category',
+            'value': 'category_id',
             'label': this.lang.category_id,
             'sample': this.lang.incoming,
             'cssClasses': [],
             'icon': 'fa-exchange-alt'
         },
         {
-            'value': 'type',
+            'value': 'mailType',
             'label': this.lang.mailType,
             'sample': this.lang.mailTypeSample,
             'cssClasses': [],
             'icon': 'fa-suitcase'
         },
         {
-            'value': 'attribution',
+            'value': 'destInformations',
             'label': this.lang.destInformations,
             'sample': this.lang.destInformationsSample,
             'cssClasses': [],
             'icon': 'fa-sitemap'
         },
         {
-            'value': 'senders',
+            'value': 'sender',
             'label': this.lang.sender,
             'sample': 'Patricia PETIT',
             'cssClasses': [],
             'icon': 'fa-user'
         },
         {
-            'value': 'recipients',
+            'value': 'recipient',
             'label': this.lang.recipient,
             'sample': 'Alain DUBOIS (MAARCH)',
             'cssClasses': [],
             'icon': 'fa-book'
         },
         {
-            'value': 'creation_limit_date',
+            'value': 'creationLimitDate',
             'label': this.lang.creationLimitDate,
             'sample': this.lang.creationLimitDateSample,
             'cssClasses': [],
             'icon': 'fa-calendar'
         },
         {
-            'value': 'workflow_visa',
+            'value': 'visaWorkflow',
             'label': this.lang.visaWorkflow,
             'sample': '<i color="accent" class="fa fa-check"></i> Barbara BAIN -> <i class="fa fa-hourglass-half"></i> <b>Bruno BOULE</b> -> <i class="fa fa-hourglass-half"></i> Patricia PETIT',
             'cssClasses': [],
             'icon': 'fa-list-ol'
         },
         {
-            'value': 'workflow_avis',
+            'value': 'modificationDate',
+            'label': this.lang.modificationDate,
+            'sample': '01-01-2019',
+            'cssClasses': [],
+            'icon': 'fa-calendar-check'
+        },
+        {
+            'value': 'opinionLimitDate',
+            'label': this.lang.opinionLimitDate,
+            'sample': '01-01-2019',
+            'cssClasses': [],
+            'icon': 'fa-stopwatch'
+        },
+        {
+            'value': 'nbAvisSent',
             'label': this.lang.nbAvisSent,
             'sample': this.lang.nbAvisSentSample,
             'cssClasses': [],

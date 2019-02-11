@@ -848,9 +848,11 @@ export const LANG_NL = {
     "destInformations"                      : "User destination (entity destination)", //_TO_TRANSLATE 
     "destInformationsSample"                      : "Barbara BAIN (Finance division)", //_TO_TRANSLATE
     "creationLimitDate"                      : "Creation date - Process limit date", //_TO_TRANSLATE
-    "creationLimitDateSample"                      : "1st may - <i class=\"fa fa-stopwatch\"></i>&nbsp;<b color=\"warn\">3 day(s)</b>", //_TO_TRANSLATE
+    "creationLimitDateSample"                      : "1st jan. - <i class=\"fa fa-stopwatch\"></i>&nbsp;<b color=\"warn\">3 day(s)</b>", //_TO_TRANSLATE
     "nbAvisSent"                      : "Number of opinion sent", //_TO_TRANSLATE 
     "nbAvisSentSample"                      : "<b>3</b> opinion(s) sent", //_TO_TRANSLATE 
     "warnMaxDataList"                      : "Maximum of displayed datas is reached", //_TO_TRANSLATE
+    "opinionLimitDate"                      : "Opinion limit date", //_TO_TRANSLATE
+    "modificationDate"                      : "Modification date", //_TO_TRANSLATE
 
 };
