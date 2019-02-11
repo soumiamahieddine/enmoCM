@@ -8,6 +8,14 @@
   font-size: 10px;
   height: 30px;
   color: #666;
+
+  &_icon {
+    height: auto;
+  }
+
+  &_label {
+    width: 100%;
+  }
 }
 
 .resultRow {
@@ -29,6 +37,11 @@
     overflow: inherit;
     text-overflow: inherit;
     word-break: break-all;
+  }
+
+  &_chrono {
+    color: rgba(0,0,0,0.4);
+    font-size: 90%;
   }
 }
 
@@ -130,6 +143,10 @@
 
   .area {
     flex: 1;
+
+    form {
+      width: 100%;
+    }
   }
 
   .separator {
