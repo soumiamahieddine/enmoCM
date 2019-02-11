@@ -114,7 +114,7 @@
                             <mat-icon color="warn" class="fa fa-times" matTooltip="{{lang.unlinkGroup}}" (click)="unlinkGroup(i)"></mat-icon>
                         </ng-template>
                         <mat-tab-group>
-                            <mat-tab label="Action(s)">
+                            <mat-tab label="{{lang.actions}}">
                                 <div class="col-md-6">
                                     <mat-form-field style="margin-top:5px;">
                                         <mat-select id="actionPages" name="actionPages" placeholder="{{lang.resultPage}}"
@@ -194,7 +194,7 @@
                                     </mat-accordion>
                                 </div>
                             </mat-tab>
-                            <mat-tab label="Page de résultats">
+                            <mat-tab label="{{lang.resultPage}}">
                                 <list-administration [currentBasketGroup]="group"></list-administration>
                             </mat-tab>
                         </mat-tab-group>

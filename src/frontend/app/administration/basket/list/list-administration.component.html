@@ -1,16 +1,16 @@
 <mat-toolbar class="editorTool">
     <span>
-        <button color="primary" *ngIf="displayMode=='label'" mat-icon-button (click)="toggleData()" title="Prévisualisation">
-            <mat-icon fontSet="fas" fontIcon="fa-eye" title="Mode données"></mat-icon>
+        <button color="primary" *ngIf="displayMode=='label'" mat-icon-button (click)="toggleData()" title="{{lang.preview}}">
+            <mat-icon fontSet="fas" fontIcon="fa-eye"></mat-icon>
         </button>
-        <button color="primary" *ngIf="displayMode=='sample'" mat-icon-button (click)="toggleData()" title="Édition">
-            <mat-icon fontSet="fas" fontIcon="fa-edit" title="Mode édition"></mat-icon>
+        <button color="primary" *ngIf="displayMode=='sample'" mat-icon-button (click)="toggleData()" title="{{lang.edition}}">
+            <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>
         </button>
     </span>
     <span class="area">
         <form style="width:100%;">
             <mat-form-field appearance="outline" floatLabel="never">
-                <input name="availableData" type="text" matInput [formControl]="dataControl" placeholder="Données disponibles"
+                <input name="availableData" type="text" matInput [formControl]="dataControl" placeholder="{{lang.availableDatas}}"
                     [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addData($event)">
                     <mat-option *ngFor="let item of filteredDataOptions | async" [value]="item" class="dataList">
@@ -27,7 +27,7 @@
     </span>
     <span>
         <button color="warn" mat-button (click)="removeAllData()" style="float:right;" [disabled]="displayMode=='sample'">
-            Tout effacer
+            {{lang.eraseAll}}
         </button>
     </span>
 </mat-toolbar>
@@ -47,19 +47,19 @@
                     <mat-divider></mat-divider>
                     <button [class.isSelectedMenu]="item.cssClasses.indexOf('boldFontData') > 0" mat-menu-item (click)="setStyle(item,'boldFontData')">
                         <mat-icon style="height: auto;" fontSet="fas" fontIcon="fa-bold fa-2x"></mat-icon>
-                        <span>Gras</span>
+                        <span>{{lang.fontBold}}</span>
                     </button>
                     <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_centerData') > 0" mat-menu-item (click)="setStyle(item,'align_centerData')">
                         <mat-icon style="height: auto;" fontSet="fas" fontIcon="fa-align-center fa-2x"></mat-icon>
-                        <span>Centré</span>
+                        <span>{{lang.alignCenter}}</span>
                     </button>
                     <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_rightData') > 0" mat-menu-item (click)="setStyle(item,'align_rightData')">
                         <mat-icon style="height: auto;" fontSet="fas" fontIcon="fa-align-right fa-2x"></mat-icon>
-                        <span>Droite</span>
+                        <span>{{lang.AlignRight}}</span>
                     </button>
                     <button [class.isSelectedMenu]="item.cssClasses.indexOf('bigFontData') > 0" mat-menu-item (click)="setStyle(item,'bigFontData')">
                         <mat-icon style="height: auto;" fontSet="fas" fontIcon="fa-text-height fa-2x"></mat-icon>
-                        <span>Grand</span>
+                        <span>{{lang.fontBig}}</span>
                     </button>
                 </mat-menu>
                 <span style="width:100%;" [class]="item.cssClasses.join(' ')">

@@ -21,15 +21,15 @@ export class ListAdministrationComponent implements OnInit {
     displayedMainData: any = [
         {
             'value': 'status_chrono',
-            'label': 'N°Chrono',
+            'label': this.lang.chronoNumberShort,
             'sample': 'MAARCH/2018A/1',
             'cssClasses': ['align_centerData', 'normalData'],
             'icon': ''
         },
         {
             'value': 'subject',
-            'label': 'Objet',
-            'sample': 'Plainte concernant des nuisances sonore nocturne (le 20/12/2018)',
+            'label': this.lang.object,
+            'sample': this.lang.objectSample,
             'cssClasses': ['longData'],
             'icon': ''
         },];
@@ -37,64 +37,64 @@ export class ListAdministrationComponent implements OnInit {
     availableData: any = [
         {
             'value': 'priority_label',
-            'label': 'Priorité',
-            'sample': 'normal',
+            'label': this.lang.priority,
+            'sample': this.lang.prioritySample,
             'cssClasses': [],
             'icon': 'fa-traffic-light '
         },
         {
             'value': 'category',
-            'label': 'Catégorie',
-            'sample': 'courrier arrivée',
+            'label': this.lang.category_id,
+            'sample': this.lang.incoming,
             'cssClasses': [],
             'icon': 'fa-exchange-alt'
         },
         {
             'value': 'type',
-            'label': 'Type de courrier',
-            'sample': 'Réclamation',
+            'label': this.lang.mailType,
+            'sample': this.lang.mailTypeSample,
             'cssClasses': [],
             'icon': 'fa-suitcase'
         },
         {
             'value': 'attribution',
-            'label': 'Attributaire (entité destinatrice)',
-            'sample': 'Barbara BAIN (Pôle Jeunesse et Sport)',
+            'label': this.lang.destInformations,
+            'sample': this.lang.destInformationsSample,
             'cssClasses': [],
             'icon': 'fa-sitemap'
         },
         {
             'value': 'senders',
-            'label': 'Destinataire',
+            'label': this.lang.sender,
             'sample': 'Patricia PETIT',
             'cssClasses': [],
             'icon': 'fa-user'
         },
         {
             'value': 'recipients',
-            'label': 'Expéditeur',
+            'label': this.lang.recipient,
             'sample': 'Alain DUBOIS (MAARCH)',
             'cssClasses': [],
             'icon': 'fa-book'
         },
         {
             'value': 'creation_limit_date',
-            'label': 'Date de création - Date limite',
-            'sample': '1er mai - <i class="fa fa-stopwatch"></i>&nbsp;<b color="warn">3 jour(s)</b>',
+            'label': this.lang.creationLimitDate,
+            'sample': this.lang.creationLimitDateSample,
             'cssClasses': [],
             'icon': 'fa-calendar'
         },
         {
             'value': 'workflow_visa',
-            'label': 'Circuit de visa',
+            'label': this.lang.visaWorkflow,
             'sample': '<i color="accent" class="fa fa-check"></i> Barbara BAIN -> <i class="fa fa-hourglass-half"></i> <b>Bruno BOULE</b> -> <i class="fa fa-hourglass-half"></i> Patricia PETIT',
             'cssClasses': [],
             'icon': 'fa-list-ol'
         },
         {
             'value': 'workflow_avis',
-            'label': 'Nombre d\'avis donné',
-            'sample': '<b>3</b> avis donné(s)',
+            'label': this.lang.nbAvisSent,
+            'sample': this.lang.nbAvisSentSample,
             'cssClasses': [],
             'icon': 'fa-comment-alt'
         },
@@ -165,7 +165,7 @@ export class ListAdministrationComponent implements OnInit {
     addData(event: any) {
         if (this.displayedSecondaryData.length >= 7) {
             this.dataControl.setValue('');
-            alert("Le nombre maximal d'élements affichés a été atteint");
+            alert(this.lang.warnMaxDataList);
         } else {
             let i = this.availableData.map((e: any) => { return e.value; }).indexOf(event.option.value.value);
             this.displayedSecondaryData.push(event.option.value);
@@ -206,7 +206,7 @@ export class ListAdministrationComponent implements OnInit {
         this.http.put("../../rest/baskets/" + this.basketGroup.basket_id + "/groups/" + this.basketGroup.group_id, { 'list_display': template })
             .subscribe(() => {
                 this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
-                this.notify.success(this.lang.actionsGroupBasketUpdated);
+                this.notify.success(this.lang.resultPageUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
