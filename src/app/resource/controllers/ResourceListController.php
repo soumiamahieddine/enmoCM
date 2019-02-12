@@ -181,8 +181,8 @@ class ResourceListController
                     } elseif ($value['value'] == 'getVisaWorkflow') {
                         $value['displayValue'] = ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]);
                         $display[] = $value;
-                    } elseif ($value['value'] == 'getParallelOpinionNumber') {
-                        $value['displayValue'] = ResourceListController::getParallelOpinionNumber(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getParallelOpinionsNumber') {
+                        $value['displayValue'] = ResourceListController::getParallelOpinionsNumber(['resId' => $resource['res_id']]);
                         $display[] = $value;
                     } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
                         $value['displayValue'] = ['creationDate' => $resource['creation_date'], 'processLimitDate' => $resource['process_limit_date']];
@@ -735,7 +735,7 @@ class ResourceListController
         return $recipients;
     }
 
-    private static function getParallelOpinionNumber(array $args)
+    private static function getParallelOpinionsNumber(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);

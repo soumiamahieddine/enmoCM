@@ -65,6 +65,7 @@ class ResourceListControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
     
         $this->assertGreaterThanOrEqual(1, count($responseBody->resources));
+        $this->assertNotNull($responseBody->resources[0]->alt_identifier);
         $this->assertNotNull($responseBody->resources[0]->priorityColor);
         $this->assertNotNull($responseBody->resources[0]->statusImage);
         $this->assertNotNull($responseBody->resources[0]->statusLabel);
