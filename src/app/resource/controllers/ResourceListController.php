@@ -100,16 +100,15 @@ class ResourceListController
 
             $select = [
                 'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'mlb_coll_ext.alt_identifier',
-                'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"'
+                'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"',
+                'mlb_coll_ext.closing_date'
             ];
-            $tableFunction = ['status', 'mlb_coll_ext'];
-            $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id'];
+            $tableFunction = ['status', 'mlb_coll_ext', 'priorities'];
+            $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id', 'res_letterbox.priority = priorities.id'];
             foreach ($listDisplay as $value) {
                 $value = (array)$value;
                 if ($value['value'] == 'getPriority') {
                     $select[] = 'priorities.label AS "priorities.label"';
-                    $tableFunction[] = 'priorities';
-                    $leftJoinFunction[] = 'res_letterbox.priority = priorities.id';
                 } elseif ($value['value'] == 'getCategory') {
                     $select[] = 'mlb_coll_ext.category_id';
                 } elseif ($value['value'] == 'getDoctype') {
@@ -119,6 +118,8 @@ class ResourceListController
                 } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
                     $select[] = 'res_letterbox.creation_date';
                     $select[] = 'mlb_coll_ext.process_limit_date AS "mlb_coll_ext.process_limit_date"';
+                } elseif ($value['value'] == 'getModificationDate') {
+                    $select[] = 'res_letterbox.modification_date';
                 }
             }
 
@@ -144,6 +145,8 @@ class ResourceListController
                 $formattedResources[$key]['subject'] = $resource['subject'];
                 $formattedResources[$key]['statusLabel'] = $resource['status.label_status'];
                 $formattedResources[$key]['statusImage'] = $resource['status.img_filename'];
+                $formattedResources[$key]['priorityColor'] = $resource['priorities.color'];
+                $formattedResources[$key]['closing_date'] = $resource['closing_date'];
                 $formattedResources[$key]['countAttachments'] = 0;
                 foreach ($attachments as $attachment) {
                     if ($attachment['res_id_master'] == $resource['res_id']) {
@@ -178,7 +181,10 @@ class ResourceListController
                         $display[] = $value;
                     } elseif ($value['value'] == 'getOpinionWorkflow') {
                     } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
-                        $value['displayValue'] = "{$resource['creation_date']} - {$resource['process_limit_date']}";
+                        $value['displayValue'] = ['creationDate' => $resource['creation_date'], 'processLimitDate' => $resource['process_limit_date']];
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getModificationDate') {
+                        $value['displayValue'] = $resource['modification_date'];
                         $display[] = $value;
                     }
                 }
@@ -563,17 +569,22 @@ class ResourceListController
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
+        $res = ResModel::getById(['select' => ['destination'], 'resId' => $args['resId']]);
         $listInstances = ListInstanceModel::get([
             'select'    => ['item_id'],
             'where'     => ['difflist_type = ?', 'res_id = ?', 'item_mode = ?'],
             'data'      => ['entity_id', $args['resId'], 'dest']
         ]);
 
-        if (empty($listInstances[0])) {
-            return '';
+        $assignee = '';
+        if (!empty($listInstances[0])) {
+            $assignee .= UserModel::getLabelledUserById(['login' => $listInstances[0]['item_id']]);
+        }
+        if (!empty($res['destination'])) {
+            $assignee .= (empty($assignee) ? "({$res['destination']})" : " ({$res['destination']})");
         }
 
-        return UserModel::getLabelledUserById(['login' => $listInstances[0]['item_id']]);
+        return $assignee;
     }
 
     private static function getVisaWorkflow(array $args)
@@ -589,12 +600,17 @@ class ResourceListController
         ]);
 
         $users = [];
+        $currentFound = false;
         foreach ($listInstances as $listInstance) {
             $users[] = [
-                'user'  => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
-                'mode'  => $listInstance['requested_signature'] ? 'Signataire' : 'Viseur',
-                'date'  => TextFormatModel::formatDate($listInstance['process_date']),
+                'user'      => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
+                'mode'      => $listInstance['requested_signature'] ? 'sign' : 'visa',
+                'date'      => TextFormatModel::formatDate($listInstance['process_date']),
+                'current'   => empty($listInstance['process_date']) && !$currentFound
             ];
+            if (empty($listInstance['process_date']) && !$currentFound) {
+                $currentFound = true;
+            }
         }
 
         return $users;
@@ -644,8 +660,7 @@ class ResourceListController
                         ]);
                         if (isset($contact[0])) {
                             $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
-                            $senders[] = $contact['contact']['restrictedFormat'];
-
+                            $senders[] = $contact['contact']['contact'];
                         }
                     } else {
                         $senders[] = UserModel::getLabelledUserById(['login' => $rawContact['login']]);
@@ -696,8 +711,7 @@ class ResourceListController
                         ]);
                         if (isset($contact[0])) {
                             $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
-                            $recipients[] = $contact['contact']['restrictedFormat'];
-
+                            $recipients[] = $contact['contact']['contact'];
                         }
                     } else {
                         $recipients[] = UserModel::getLabelledUserById(['login' => $rawContact['login']]);
