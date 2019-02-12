@@ -557,7 +557,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         if (this.creationMode) {
             var r = true;
 
-            //this.user.userId = this.user.userId.toLowerCase();
+            this.user.userId = this.user.userId.toLowerCase();
 
             this.http.get(this.coreUrl + "rest/users/" + this.user.userId + "/status")
                 .subscribe((data: any) => {
@@ -607,6 +607,10 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             }, (err: any) => {
                 this.notify.error(err.error.errors);
             });
+    }
+
+    setLowerUserId() {
+        this.user.userId = this.user.userId.toLowerCase();
     }
 }
 

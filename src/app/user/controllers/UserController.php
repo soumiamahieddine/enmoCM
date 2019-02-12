@@ -164,17 +164,21 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingUser = UserModel::getByLogin(['login' => $data['userId'], 'select' => ['id', 'status']]);
-        // $existingUser = UserModel::get([
-        //     'select'    => ['id', 'status'],
-        //     'where'     => ['lower(user_id) = lower(?)'],
-        //     'data'      => [$data['userId']],
-        //     'limit'     => 1
-        // ]);
+        $existingUser = UserModel::get([
+            'select'    => ['id', 'status', 'user_id'],
+            'where'     => ['lower(user_id) = lower(?)'],
+            'data'      => [$data['userId']],
+        ]);
 
-        // if(!empty($existingUser)){
-        //     $existingUser = $existingUser[0];
-        // }
+        if (sizeof($existingUser) > 1) {
+            foreach($existingUser as $eu){
+                if($eu['user_id'] == $data['userId']){
+                    $existingUser = $eu;
+                }
+            }
+        } else if(!empty($existingUser)){
+            $existingUser = $existingUser[0];
+        }
 
         if (!empty($existingUser) && $existingUser['status'] == 'DEL') {
             UserModel::updateStatus(['id' => $existingUser['id'], 'status' => 'OK']);
@@ -493,19 +497,25 @@ class UserController
         if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
-
-        $user = UserModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['status']]);
-        // $user = UserModel::get([
-        //     'select'    => ['status'],
-        //     'where'     => ['lower(user_id) = lower(?)'],
-        //     'data'      => [$aArgs['userId']],
-        //     'limit'     => 1
-        // ]);
-
-        // if(!empty($user)){
-        //     $user = $user[0];
-        // }
         
+        $user = UserModel::get([
+            'select'    => ['status', 'user_id'],
+            'where'     => ['lower(user_id) = lower(?)'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        if (sizeof($user) > 1) {
+            foreach($user as $u){
+                if($u['user_id'] == $aArgs['userId']){
+                    return $response->withJson(['status' => $u['status']]);
+                }
+            }
+        } 
+
+        if(!empty($user)){
+            $user = $user[0];
+        }
+
         return $response->withJson(['status' => $user['status']]);
     }
 
