@@ -220,6 +220,7 @@ export class BasketListComponent implements OnInit {
     processPostData(data: any) {
         this.displayedSecondaryData = [];
         data.resources.forEach((element: any) => {
+            // Process main datas
             Object.keys(element).forEach((key) => {
                  if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
@@ -227,8 +228,10 @@ export class BasketListComponent implements OnInit {
                     element[key] = this.lang.undefined;
                 }
             });
+
+            // Process secondary datas
             element.display.forEach((key: any) => {
-                if ((key.displayValue == null || key.displayValue == '') && ['getCreationAndProcessLimitDates'].indexOf(key.value) === -1) {
+                if ((key.displayValue == null || key.displayValue == '') && ['getCreationAndProcessLimitDates', 'getParallelOpinionsNumber'].indexOf(key.value) === -1) {
                     key.displayValue = this.lang.undefined;
 
                 } else if (["getSenders", "getRecipients"].indexOf(key.value) > 0) {
@@ -239,10 +242,36 @@ export class BasketListComponent implements OnInit {
                     }
                 } else if(key.value == 'getCreationAndProcessLimitDates') {
                     key.icon = '';
-                    key.displayValue = [
-                        '2019-02-10',
-                        '2019-02-13'
-                    ]
+                } else if(key.value == 'getVisaWorkflow') {
+                    let formatWorkflow: any = [];
+                    let content = '';
+                    let user = '';
+                    key.displayValue.forEach((visa: any) => {
+                        content = '';
+                        user = visa.user;
+                        if (visa.mode == 'sign') {
+                            user = '<u>'+user+'</u>';
+                        } 
+                        if (visa.date == '') {
+                            content = '<i class="fa fa-hourglass-half"></i> <span title="' + this.lang[visa.mode+'User'] + '">' + user + '</span>';
+                        } else {
+                            content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.lang[visa.mode+'User'] + '">' + user + '</span></span>';
+                        }
+
+                        if (visa.current) {
+                            content = '<b color="primary">'+content+'</b>';                            
+                        }
+                        formatWorkflow.push(content);
+                    });
+                    key.icon = '';
+                    key.displayValue = formatWorkflow.join(' <i class="fas fa-long-arrow-alt-right"></i> ');
+                } else if(key.value == 'getParallelOpinionsNumber') {
+                    if (key.displayValue > 0) {
+                        key.displayValue = '<b color="primary">' + key.displayValue + '</b> ' + this.lang.opinionsSent;
+                    } else {
+                        key.displayValue = key.displayValue + ' ' + this.lang.opinionsSent;
+                    }
+                    
                 }
                 key.label = this.lang[key.value];
             });
@@ -253,7 +282,6 @@ export class BasketListComponent implements OnInit {
                 element['checked'] = true;
             }
         });
-
         return data;
     }
 

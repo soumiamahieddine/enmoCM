@@ -12,12 +12,13 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 	transform(value:string) {
 		this.removeTimer();
 		let d = new Date(value);
-		let dayNumber = ('0' + d.getDate()).slice(-2)
-		let monthNumber = ('0' + d.getMonth()).slice(-2)
-		let hourNumber = ('0' + d.getHours()).slice(-2)
-		let minuteNumber = ('0' + d.getMinutes()).slice(-2)
+		let dayNumber = ('0' + d.getDate()).slice(-2);
+		const realMonth = d.getMonth()+1;
+		let monthNumber = ('0' + realMonth).slice(-2);
+		let hourNumber = ('0' + d.getHours()).slice(-2);
+		let minuteNumber = ('0' + d.getMinutes()).slice(-2);
 		let now = new Date();
-		let month = new Array();
+		let month = [];
 		month[0] = this.lang.januaryShort;
 		month[1] = this.lang.februaryShort;
 		month[2] = this.lang.marchShort;

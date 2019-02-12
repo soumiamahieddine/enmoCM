@@ -854,10 +854,11 @@ export const LANG_NL = {
     "getVisaWorkflow"                      : "Visa workflow", //_TO_TRANSLATE
     "getCreationAndProcessLimitDates"                      : "Creation date - Process limit date", //_TO_TRANSLATE
     "getCreationAndProcessLimitDatesSample"                      : "1st jan. - <i class=\"fa fa-stopwatch\"></i>&nbsp;<b color=\"warn\">3 day(s)</b>", //_TO_TRANSLATE
-    "nbAvisSent"                      : "Number of opinion sent", //_TO_TRANSLATE 
-    "nbAvisSentSample"                      : "<b>3</b> opinion(s) sent", //_TO_TRANSLATE 
+    "getParallelOpinionsNumber"                      : "Number of opinions sent", //_TO_TRANSLATE 
+    "getParallelOpinionsNumberSample"                      : "<b>3</b> opinion(s) sent", //_TO_TRANSLATE 
     "warnMaxDataList"                      : "Maximum of displayed datas is reached", //_TO_TRANSLATE
-    "opinionLimitDate"                      : "Opinion limit date", //_TO_TRANSLATE
-    "modificationDate"                      : "Modification date", //_TO_TRANSLATE
+    "getOpinionLimitDate"                      : "Opinion limit date", //_TO_TRANSLATE
+    "getModificationDate"                      : "Modification date", //_TO_TRANSLATE
+    "opinionsSent"                      : "opinion(s) sent", //_TO_TRANSLATE
 
 };

@@ -64,15 +64,15 @@ export class ListAdministrationComponent implements OnInit {
             'icon': 'fa-sitemap'
         },
         {
-            'value': 'getSenders',
-            'label': this.lang.getSenders,
+            'value': 'getRecipients',
+            'label': this.lang.getRecipients,
             'sample': 'Patricia PETIT',
             'cssClasses': [],
             'icon': 'fa-user'
         },
         {
-            'value': 'getRecipients',
-            'label': this.lang.getRecipients,
+            'value': 'getSenders',
+            'label': this.lang.getSenders,
             'sample': 'Alain DUBOIS (MAARCH)',
             'cssClasses': [],
             'icon': 'fa-book'
@@ -92,23 +92,23 @@ export class ListAdministrationComponent implements OnInit {
             'icon': 'fa-list-ol'
         },
         {
-            'value': 'modificationDate',
-            'label': this.lang.modificationDate,
+            'value': 'getModificationDate',
+            'label': this.lang.getModificationDate,
             'sample': '01-01-2019',
             'cssClasses': [],
             'icon': 'fa-calendar-check'
         },
         {
-            'value': 'opinionLimitDate',
-            'label': this.lang.opinionLimitDate,
+            'value': 'getOpinionLimitDate',
+            'label': this.lang.getOpinionLimitDate,
             'sample': '01-01-2019',
             'cssClasses': [],
             'icon': 'fa-stopwatch'
         },
         {
-            'value': 'nbAvisSent',
-            'label': this.lang.nbAvisSent,
-            'sample': this.lang.nbAvisSentSample,
+            'value': 'getParallelOpinionsNumber',
+            'label': this.lang.getParallelOpinionsNumber,
+            'sample': this.lang.getParallelOpinionsNumberSample,
             'cssClasses': [],
             'icon': 'fa-comment-alt'
         },
