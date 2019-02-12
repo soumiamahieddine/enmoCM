@@ -46,8 +46,10 @@ export class NotificationService {
                 }
             } else if (err.error.exception !== undefined) {
                 this.error(err.error.exception[0].message);
-            } else {
+            } else if(err.error.error !== undefined){
                 this.error(err.error.error.message);
+            } else {
+                this.error(err.status + ' : ' + err.statusText);
             }
         }
     }

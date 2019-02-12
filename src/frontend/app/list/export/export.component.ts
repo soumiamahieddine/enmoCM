@@ -19,13 +19,16 @@ export class ExportComponent implements OnInit {
     loadingExport: boolean = false;
 
     delimiters = [';', ',', 'TAB'];
-    formats = ['CSV', 'PDF'];
+    formats = ['csv', 'pdf'];
+
     exportModel: any = {
         delimiter: ';',
-        format: 'CSV',
+        format: 'csv',
         data: [],
         resources: []
     };
+
+    exportModelList: any;
 
     dataAvailable: any[] = [
         {
@@ -224,6 +227,7 @@ export class ExportComponent implements OnInit {
             isFunction: true
         }
     ];
+    dataAvailableClone: any[] = [];
 
     @ViewChild('listFilter') private listFilter: any;
 
@@ -231,20 +235,16 @@ export class ExportComponent implements OnInit {
     constructor(public http: HttpClient, private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void {
+        this.dataAvailableClone = JSON.parse(JSON.stringify(this.dataAvailable));
+        
         this.http.get('../../rest/resourcesList/exportTemplate')
             .subscribe((data: any) => {
-                if (data["delimiter"] != '') {
-                    this.exportModel.resources = this.data.selectedRes;
-                    this.exportModel.data = data["template"];
-                    this.exportModel.delimiter = data["delimiter"];
-                    this.exportModel.data.forEach((value: any) => {
-                        this.dataAvailable.forEach((availableValue: any, index: number) => {
-                            if (value.value == availableValue.value) {
-                                this.dataAvailable.splice(index, 1);
-                            }
-                        });
-                    });
-                }
+                this.exportModel.resources = this.data.selectedRes;
+
+                this.exportModelList = data.templates;
+
+                this.exportModel.data = data.templates.csv.data;
+                
                 this.loading = false;
             }, (err: any) => {
                 this.notify.handleErrors(err);
@@ -342,5 +342,10 @@ export class ExportComponent implements OnInit {
         this.exportModel.data = this.exportModel.data.concat(this.dataAvailable);
         this.dataAvailable = [];
         this.listFilter.nativeElement.value = '';
+    }
+
+    changeTemplate(event: any) {
+        this.exportModel.format = event.value;
+        this.exportModel.data = this.exportModelList[event.value].data;
     }
 }
