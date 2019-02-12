@@ -19,7 +19,7 @@ abstract class avis_controler_Abstract
         //define avis limit date
         $db = new Database();
 
-        $query = "SELECT notes.user_id,notes.note_text,recommendation_limit_date FROM notes,mlb_coll_ext WHERE identifier = ? AND note_text LIKE '[POUR AVIS]%' AND notes.identifier=mlb_coll_ext.res_id";
+        $query = "SELECT notes.user_id,notes.note_text, opinion_limit_date FROM notes,mlb_coll_ext WHERE identifier = ? AND note_text LIKE '[POUR AVIS]%' AND notes.identifier = res_letterbox.res_id";
 
         $stmt = $db->query($query, array($resId));
 
@@ -32,25 +32,25 @@ abstract class avis_controler_Abstract
     //# send avis
     //####################################
 
-    public function processAvis($resId, $recommendation_limit_date = '')
+    public function processAvis($resId, $opinionLimitDate = '')
     {
         //define avis limit date
         $db = new Database();
 
-        if ($recommendation_limit_date != '') {
-            $query = 'UPDATE mlb_coll_ext SET recommendation_limit_date = ? where res_id = ?';
-            $stmt = $db->query($query, array($recommendation_limit_date, $resId));
+        if ($opinionLimitDate != '') {
+            $query = 'UPDATE res_letterbox SET opinion_limit_date = ? where res_id = ?';
+            $db->query($query, array($opinionLimitDate, $resId));
         }
 
         $query = 'UPDATE res_letterbox SET modification_date = '.$db->current_datetime().' where res_id = ?';
-        $stmt = $db->query($query, array($resId));
+        $db->query($query, array($resId));
     }
 
     public function getList($res_id, $coll_id, $bool_modif = false, $typeList, $isAvisStep = false, $fromDetail = '')
     {
         $circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
 
-        $str .= '<div class="error" id="divErrorAvis" onclick="this.hide();"></div>';
+        $str = '<div class="error" id="divErrorAvis" onclick="this.hide();"></div>';
         $str .= '<div class="info" id="divInfoAvis" onclick="this.hide();"></div>';
 
         //AVIS USER LIST

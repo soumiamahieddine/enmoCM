@@ -754,7 +754,6 @@ export const LANG_EN = {
     "confidentiality"                                     : "Confidentiality",
     "nature"                                     : "Nature",
     "admissionDate"                                     : "Admission date",
-    "recommendationLimitDate"                                     : "Recommendation limit dateDate",
     "sveStartDate"                                     : "SVE start date",
     "caseLabel"                                     : "Case label",
     "copyUsersEntities"                                     : "Users / Entities in copy",

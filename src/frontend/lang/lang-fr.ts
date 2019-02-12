@@ -780,7 +780,6 @@ export const LANG_FR = {
     "confidentiality"                                     : "Confidentialité",
     "nature"                                     : "Nature",
     "admissionDate"                                     : "Date d'admission",
-    "recommendationLimitDate"                                     : "Date limite de demande d'avis",
     "sveStartDate"                                     : "Date de début SVE",
     "caseLabel"                                     : "Libellé de l'affaire du courrier",
     "copyUsersEntities"                                     : "Utilisateurs / Entités en copie",

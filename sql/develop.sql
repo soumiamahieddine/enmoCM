@@ -39,7 +39,7 @@ DO $$ BEGIN
         and groupbasket.group_id = usergroup_content.group_id
         and groupbasket.basket_id = user_abs.basket_id;
 
---       DROP TABLE IF EXISTS user_abs;
+      DROP TABLE IF EXISTS user_abs;
   END IF;
 END$$;
 UPDATE history SET table_name = 'redirected_baskets' WHERE table_name = 'user_abs';
@@ -118,6 +118,17 @@ ALTER TABLE groupbasket ADD UNIQUE (id);
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_display;
 ALTER TABLE groupbasket ADD COLUMN list_display json DEFAULT '[]';
 
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext') AND attname = 'recommendation_limit_date') = 1 THEN
+    ALTER TABLE res_letterbox ADD COLUMN opinion_limit_date TIMESTAMP without TIME ZONE DEFAULT NULL;
+    UPDATE res_letterbox SET opinion_limit_date =
+    (
+      SELECT recommendation_limit_date FROM mlb_coll_ext
+      WHERE res_letterbox.res_id = mlb_coll_ext.res_id
+    );
+    ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS recommendation_limit_date;
+  END IF;
+END$$;
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
@@ -159,6 +170,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.external_id,
     r.external_link,
     r.departure_date,
+    r.opinion_limit_date,
     r.department_number_id,
     r.barcode,
     r.custom_t1 AS doc_custom_t1,
@@ -254,7 +266,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.alt_identifier,
     mlb.admission_date,
     mlb.process_limit_date,
-    mlb.recommendation_limit_date,
     mlb.closing_date,
     mlb.alarm1_date,
     mlb.alarm2_date,

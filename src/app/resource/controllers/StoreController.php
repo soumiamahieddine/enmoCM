@@ -35,7 +35,7 @@ class StoreController
 
         $mlbColumns = [
             'category_id', 'exp_contact_id', 'exp_user_id', 'dest_contact_id', 'dest_user_id',
-            'nature_id', 'alt_identifier', 'admission_date', 'process_limit_date', 'recommendation_limit_date', 'closing_date', 'address_id'
+            'nature_id', 'alt_identifier', 'admission_date', 'process_limit_date', 'closing_date', 'address_id'
         ];
         try {
             foreach ($aArgs as $column => $value) {

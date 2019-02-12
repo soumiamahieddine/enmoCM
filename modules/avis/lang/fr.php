@@ -43,16 +43,12 @@ if (!defined("_RECOMMENDATION_USER")) {
     define("_RECOMMENDATION_USER", "Personne pour avis");
 }
 
-if (!defined("_RECOMMENDATION_USER")) {
-    define("_RECOMMENDATION_USER", "Utilisateurs pour avis");
-}
-
 if (!defined("_RECOMMENDATION_NOTE")) {
     define("_RECOMMENDATION_NOTE", "Motif de l'avis");
 }
 
-if (!defined("_RECOMMENDATION_LIMIT_DATE")) {
-    define("_RECOMMENDATION_LIMIT_DATE", "Date limite de l'avis");
+if (!defined("_OPINION_LIMIT_DATE")) {
+    define("_OPINION_LIMIT_DATE", "Date limite de l'avis");
 }
 
 if (!defined("_TO_AVIS")) {

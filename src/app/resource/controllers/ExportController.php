@@ -218,7 +218,7 @@ class ExportController
                         $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
                     }
                 } else {
-                    $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'recommendation_limit_date', 'closing_date', 'sve_start_date'];
+                    $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'sve_start_date'];
                     if (in_array($value['value'], $allDates)) {
                         $csvContent[] = TextFormatModel::formatDate($resource[$value['value']]);
                     } else {

@@ -783,7 +783,6 @@ export const LANG_NL = {
     "confidentiality"                                     : "_TO_TRANSLATE",
     "nature"                                     : "_TO_TRANSLATE",
     "admissionDate"                                     : "_TO_TRANSLATE",
-    "recommendationLimitDate"                                     : "_TO_TRANSLATE",
     "sveStartDate"                                     : "_TO_TRANSLATE",
     "caseLabel"                                     : "_TO_TRANSLATE",
     "copyUsersEntities"                                     : "_TO_TRANSLATE",

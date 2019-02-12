@@ -114,8 +114,8 @@ export class ExportComponent implements OnInit {
             isFunction: false
         },
         {
-            value: 'recommendation_limit_date',
-            label: this.lang.recommendationLimitDate,
+            value: 'opinion_limit_date',
+            label: this.lang.opinionLimitDate,
             isFunction: false
         },
         {

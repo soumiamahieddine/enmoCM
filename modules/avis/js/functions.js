@@ -290,30 +290,13 @@ function initDragNDropAvis() {
 
 function checkRealDateAvis() {
 
-    var docDate;
     var processLimitDate;
     var avisLimitDate;
 
-    var nowDate = new Date();
-    var date3 = new Date();
-
     var current_date = Date.now();
 
-
-
-    /* if($('doc_date')) {
-     docDate = $('doc_date').value;
-     var date2 = new Date();
-     date2.setFullYear(docDate.substr(6,4));
-     date2.setMonth(docDate.substr(3,2));
-     date2.setDate(docDate.substr(0,2));
-     date2.setHours(0);
-     date2.setMinutes(0);
-     var d2_docDate=date2.getTime();
-     } */
-
-    if ($('process_limit_date')) {
-        processLimitDate = $('process_limit_date').value;
+    if ($j('#process_limit_date')) {
+        processLimitDate = $j('#process_limit_date').val();
         var date4 = new Date();
         date4.setFullYear(processLimitDate.substr(6, 4));
         date4.setMonth(processLimitDate.substr(3, 2) - 1);
@@ -325,8 +308,8 @@ function checkRealDateAvis() {
     }
 
 
-    if ($('recommendation_limit_date')) {
-        avisLimitDate = $('recommendation_limit_date_tr').value;
+    if ($j('#opinion_limit_date')) {
+        avisLimitDate = $j('opinion_limit_date_tr').val();
         var date5 = new Date();
         date5.setFullYear(avisLimitDate.substr(6, 4));
         date5.setMonth(avisLimitDate.substr(3, 2) - 1);
@@ -340,15 +323,14 @@ function checkRealDateAvis() {
 
     if (d4_processLimitDate != "" && avisLimitDate != "" && (d5_avisLimitDate > d4_processLimitDate && d4_processLimitDate > current_date)) {
         alert("La date limite d'avis doit être antérieure à la date limite du courrier ");
-        $('recommendation_limit_date').value = "";
-        $('recommendation_limit_date_tr').value = "";
+        $j('#opinion_limit_date').val("");
+        $j('#opinion_limit_date_tr').val("");
 
     }
 
     if (current_date > d5_avisLimitDate && avisLimitDate != "") {
         alert("La date d'avis doit être supérieure à la date du jour ");
-        $('recommendation_limit_date').value = "";
-        $('recommendation_limit_date_tr').value = "";
-
+        $j('#opinion_limit_date').val("");
+        $j('#opinion_limit_date_tr').val("");
     }
 }
