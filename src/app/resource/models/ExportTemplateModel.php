@@ -32,24 +32,21 @@ class ExportTemplateModel
             'data'      => [$aArgs['userId']]
         ]);
 
-        if (empty($exportTemplates[0])) {
-            return [];
-        }
-
-        return $exportTemplates[0];
+        return $exportTemplates;
     }
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId', 'delimiter', 'data']);
-        ValidatorModel::stringType($aArgs, ['delimiter', 'data']);
+        ValidatorModel::notEmpty($aArgs, ['userId', 'type', 'data']);
+        ValidatorModel::stringType($aArgs, ['type', 'delimiter', 'data']);
         ValidatorModel::intVal($aArgs, ['userId']);
 
         DatabaseModel::insert([
             'table'         => 'exports_templates',
             'columnsValues' => [
                 'user_id'   => $aArgs['userId'],
-                'delimiter' => $aArgs['delimiter'],
+                'type'      => $aArgs['type'],
+                'delimiter' => empty($aArgs['delimiter']) ? null : $aArgs['delimiter'],
                 'data'      => $aArgs['data']
             ]
         ]);

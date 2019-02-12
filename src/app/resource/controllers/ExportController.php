@@ -38,15 +38,18 @@ class ExportController
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        $template     = ExportTemplateModel::getByUserId(['userId' => $currentUser['id']]);
-        $delimiter    = '';
-        $templateData = [];
-        if (!empty($template)) {
-            $delimiter    = $template['delimiter'];
-            $templateData = (array)json_decode($template['data']);
+        $rawTemplates      = ExportTemplateModel::getByUserId(['userId' => $currentUser['id']]);
+
+        $templates = ['pdf' => [], 'csv' => []];
+        foreach ($rawTemplates as $rawTemplate) {
+            if ($rawTemplate['type'] == 'pdf') {
+                $templates['pdf'] = ['data' => (array)json_decode($rawTemplate['data'])];
+            } elseif ($rawTemplate['type'] == 'csv') {
+                $templates['csv'] = ['delimiter' => $rawTemplate['delimiter'], 'data' => (array)json_decode($rawTemplate['data'])];
+            }
         }
 
-        return $response->withJson(['template' => $templateData, 'delimiter' => $delimiter]);
+        return $response->withJson(['templates' => $templates]);
     }
 
     public function updateExport(Request $request, Response $response, array $aArgs)
@@ -60,12 +63,14 @@ class ExportController
 
         $body = $request->getParsedBody();
 
-        if (!Validator::stringType()->notEmpty()->validate($body['delimiter']) || !in_array($body['delimiter'], [',', ';', 'TAB'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Delimiter is not set or not set well']);
+        if (!Validator::stringType()->notEmpty()->validate($body['type']) || !in_array($body['type'], ['pdf', 'csv'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data type is empty or not a string between [\'pdf\', \'csv\']']);
+        } elseif ($body['type'] == 'csv' && (!Validator::stringType()->notEmpty()->validate($body['delimiter']) || !in_array($body['delimiter'], [',', ';', 'TAB']))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Delimiter is empty or not a string between [\',\', \';\', \'TAB\']']);
         } elseif (!Validator::arrayType()->notEmpty()->validate($body['data'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data is not an array or empty']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data data is empty or not an array']);
         } elseif (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Resources is not set or empty']);
+            return $response->withStatus(403)->withJson(['errors' => 'Data resources is empty or not an array']);
         }
 
         foreach ($body['data'] as $value) {
