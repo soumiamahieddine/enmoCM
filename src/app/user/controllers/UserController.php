@@ -165,7 +165,7 @@ class UserController
         }
 
         $existingUser = UserModel::get([
-            'select'    => ['id', 'status', 'user_id'],
+            'select'    => ['id', 'status'],
             'where'     => ['lower(user_id) = lower(?)'],
             'data'      => [$data['userId']],
         ]);
@@ -493,7 +493,7 @@ class UserController
         }
         
         $user = UserModel::get([
-            'select'    => ['status', 'user_id'],
+            'select'    => ['status'],
             'where'     => ['lower(user_id) = lower(?)'],
             'data'      => [$aArgs['userId']]
         ]);
