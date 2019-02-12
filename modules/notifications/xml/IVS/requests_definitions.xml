@@ -22,11 +22,6 @@
         <parameter name="display" value="true"/>
         <parameter name="module" value="notifications"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="schedule_notifications_controler" >
-        <parameter name="page" value="schedule_notifications_controler"/>
-        <parameter name="display" value="true"/>
-        <parameter name="module" value="notifications"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="load_diffusionproperties_formcontent" >
         <parameter name="page" value="load_diffusionproperties_formcontent"/>
         <parameter name="display" value="true"/>

@@ -168,7 +168,6 @@ function display_list()
     	<table width="100%">
     	    <tr>
     	        <td align="right">
-    	            <input class="button" type="button" value="<?php echo _SCHEDULE_NOTIFICATIONS; ?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=schedule_notifications&module=notifications'; ?>'"/>      
     	        </td>
     	   </tr>
     	</table>

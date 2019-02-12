@@ -130,6 +130,9 @@ DO $$ BEGIN
   END IF;
 END$$;
 
+/* REFACTORING */
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
+
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
  SELECT r.tablename,
@@ -269,7 +272,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.closing_date,
     mlb.alarm1_date,
     mlb.alarm2_date,
-    mlb.flag_notif,
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,
