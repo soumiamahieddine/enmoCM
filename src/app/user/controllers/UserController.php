@@ -170,7 +170,7 @@ class UserController
             'data'      => [$data['userId']],
         ]);
 
-        if(!empty($existingUser)){
+        if (!empty($existingUser)) {
             $existingUser = $existingUser[0];
         }
 
@@ -383,9 +383,9 @@ class UserController
                 return $response->withStatus(400)->withJson(['errors' => 'User not found']);
             }
 
-            $check = RedirectBasketModel::get([ 'select' => [1], 
-                                                'where'  => [ 'actual_user_id = ?', 'owner_user_id = ?', 'basket_id = ?', 'group_id = ?' ], 
-                                                'data'   => [ $value['actual_user_id'], $aArgs['id'], $value['basket_id'], $value['group_id'] ] 
+            $check = RedirectBasketModel::get([ 'select' => [1],
+                                                'where'  => [ 'actual_user_id = ?', 'owner_user_id = ?', 'basket_id = ?', 'group_id = ?' ],
+                                                'data'   => [ $value['actual_user_id'], $aArgs['id'], $value['basket_id'], $value['group_id'] ]
                                             ]);
             if (!empty($check)) {
                 DatabaseModel::rollbackTransaction();
@@ -498,13 +498,12 @@ class UserController
             'data'      => [$aArgs['userId']]
         ]);
 
-        if(!empty($user)){
+        if (!empty($user)) {
             $user = $user[0];
             return $response->withJson(['status' => $user['status']]);
-        } 
+        }
 
         return $response->withJson(['status' => null]);
-
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
