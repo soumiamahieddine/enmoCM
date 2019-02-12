@@ -120,6 +120,8 @@ class ResourceListController
                     $select[] = 'mlb_coll_ext.process_limit_date AS "mlb_coll_ext.process_limit_date"';
                 } elseif ($value['value'] == 'getModificationDate') {
                     $select[] = 'res_letterbox.modification_date';
+                } elseif ($value['value'] == 'getOpinionLimitDate') {
+                    $select[] = 'res_letterbox.opinion_limit_date';
                 }
             }
 
@@ -162,7 +164,7 @@ class ResourceListController
                         $value['displayValue'] = $resource['priorities.label'];
                         $display[] = $value;
                     } elseif ($value['value'] == 'getCategory') {
-                        $value['displayValue'] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
+                        $value['displayValue'] = $resource['category_id'];
                         $display[] = $value;
                     } elseif ($value['value'] == 'getDoctype') {
                         $value['displayValue'] = $resource['doctypes.description'];
@@ -179,12 +181,17 @@ class ResourceListController
                     } elseif ($value['value'] == 'getVisaWorkflow') {
                         $value['displayValue'] = ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]);
                         $display[] = $value;
-                    } elseif ($value['value'] == 'getOpinionWorkflow') {
+                    } elseif ($value['value'] == 'getParallelOpinionNumber') {
+                        $value['displayValue'] = ResourceListController::getParallelOpinionNumber(['resId' => $resource['res_id']]);
+                        $display[] = $value;
                     } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
                         $value['displayValue'] = ['creationDate' => $resource['creation_date'], 'processLimitDate' => $resource['process_limit_date']];
                         $display[] = $value;
                     } elseif ($value['value'] == 'getModificationDate') {
                         $value['displayValue'] = $resource['modification_date'];
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getOpinionLimitDate') {
+                        $value['displayValue'] = $resource['opinion_limit_date'];
                         $display[] = $value;
                     }
                 }
@@ -726,5 +733,15 @@ class ResourceListController
         }
 
         return $recipients;
+    }
+
+    private static function getParallelOpinionNumber(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $notes = NoteModel::get(['select' => ['count(1)'], 'where' => ['identifier = ?', 'note_text like ?'], 'data' => [$args['resId'], '[avis%']]);
+
+        return $notes[0]['count'];
     }
 }
