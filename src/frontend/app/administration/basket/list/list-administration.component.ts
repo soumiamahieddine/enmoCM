@@ -221,6 +221,7 @@ export class ListAdministrationComponent implements OnInit {
         this.http.put("../../rest/baskets/" + this.basketGroup.basket_id + "/groups/" + this.basketGroup.group_id, { 'list_display': template })
             .subscribe(() => {
                 this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
+                this.basketGroup.list_display = template;
                 this.notify.success(this.lang.resultPageUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
