@@ -117,7 +117,7 @@ class ResourceListController
                     $leftJoinFunction[] = 'res_letterbox.type_id = doctypes.type_id';
                 } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
                     $select[] = 'res_letterbox.creation_date';
-                    $select[] = 'mlb_coll_ext.process_limit_date AS "mlb_coll_ext.process_limit_date"';
+                    $select[] = 'mlb_coll_ext.process_limit_date';
                 } elseif ($value['value'] == 'getModificationDate') {
                     $select[] = 'res_letterbox.modification_date';
                 } elseif ($value['value'] == 'getOpinionLimitDate') {
