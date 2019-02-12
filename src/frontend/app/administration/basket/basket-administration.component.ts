@@ -161,7 +161,7 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef = this.dialog.open(BasketAdministrationSettingsModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
-                this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + result.group.group_id + "/actions", { 'result_page': result.group.result_page, 'groupActions': result.group.groupActions })
+                this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + result.group.group_id + "/actions", { 'groupActions': result.group.groupActions })
                     .subscribe(() => {
                         this.dialogRef = null;
                         this.notify.success(this.lang.basketUpdated);
@@ -245,16 +245,6 @@ export class BasketAdministrationComponent implements OnInit {
         this.addAction(group);
     }
 
-    updateResultPage(group: any) {
-        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'result_page': group.result_page, 'groupActions': group.groupActions })
-            .subscribe(() => {
-                this.notify.success(this.lang.resultPageUpdated);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
-    }
-
-
     unlinkGroup(groupIndex: any) {
         let r = confirm(this.lang.unlinkGroup + ' ?');
 
@@ -280,6 +270,7 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef = this.dialog.open(BasketAdministrationGroupListModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
+                result.list_display = this.basketGroups[this.basketGroups.length-1].list_display;
                 this.http.post(this.coreUrl + "rest/baskets/" + this.id + "/groups", result)
                     .subscribe(() => {
                         this.basketGroups.push(result);
@@ -299,7 +290,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     addAction(group: any) {
-        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'result_page': group.result_page, 'groupActions': group.groupActions })
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'groupActions': group.groupActions })
             .subscribe(() => {
                 this.notify.success(this.lang.actionsGroupBasketUpdated);
             }, (err) => {
@@ -336,7 +327,7 @@ export class BasketAdministrationComponent implements OnInit {
 
         if (r) {
             action.checked = false;
-            this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+            this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'groupActions': group.groupActions })
                 .subscribe(() => {
                     this.notify.success(this.lang.actionsGroupBasketUpdated);
                 }, (err) => {
@@ -642,7 +633,6 @@ export class BasketAdministrationGroupListModalComponent {
 
     validateForm(group: any) {
         if (this.data.linkedGroups.length == 0) {
-            this.newBasketGroup.result_page = 'list_with_attachments';
             this.actionAll[0].used_in_action_page = true;
             this.actionAll[0].default_action_list = true;
             this.actionAll[0].used_in_basketlist = true;

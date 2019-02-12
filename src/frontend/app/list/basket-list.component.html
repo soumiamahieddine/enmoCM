@@ -31,9 +31,15 @@
                             <mat-toolbar *ngIf="row.display.length > 0">
                                 <div class="resultCol" style="flex:1;overflow: hidden;text-overflow: ellipsis;padding-right: 10px;" [class]="data.cssClasses.join(' ')" *ngFor="let data of row.display">
                                     <ng-container *ngIf="data.value == 'getCreationAndProcessLimitDates'">
-                                        <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;<span
-                                        [innerHTML]="data.displayValue.creationDate | timeAgo" title='{{data.displayValue.creationDate | date : "le dd/MM/y à HH:mm"}}'></span> - <i class="fa fa-stopwatch" title="{{lang.processLimitDate}}"></i>&nbsp;<span
-                                            [innerHTML]="data.displayValue.processLimitDate | timeLimit" title='{{data.displayValue.processLimitDate | date : "le dd/MM/y à HH:mm"}}'></span>
+                                        <ng-container *ngIf="row.closing_date != lang.undefined">
+                                            <i class="fa fa-lock" title="{{lang.closingDate}}"></i>&nbsp;<span
+                                                [innerHTML]="row.closing_date | timeAgo" title='{{row.closing_date | date : "le dd/MM/y à HH:mm"}}'></span>
+                                        </ng-container>
+                                        <ng-container *ngIf="row.closing_date == lang.undefined">
+                                                <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;<span
+                                                [innerHTML]="data.displayValue.creationDate | timeAgo" title='{{data.displayValue.creationDate | date : "le dd/MM/y à HH:mm"}}'></span> - <i class="fa fa-stopwatch" title="{{lang.processLimitDate}}"></i>&nbsp;<span
+                                                    [innerHTML]="data.displayValue.processLimitDate | timeLimit" title='{{data.displayValue.processLimitDate | date : "le dd/MM/y à HH:mm"}}'></span>
+                                        </ng-container>
                                     </ng-container>
                                     <ng-container *ngIf="data.icon != ''">
                                         <i class="fa {{data.icon}}" title="{{data.label}}"></i>
@@ -58,7 +64,7 @@
                                     <span *ngIf="data.value == 'alt_identifier'">
                                         <mat-icon [ngStyle]="{'color': row.priorityColor}" color="primary" class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x"
                                             title="{{row.statusLabel}}" style="cursor: crosshair;"
-                                            (click)="$event.stopPropagation();filterThis(row.status_label)"></mat-icon><br />
+                                            (click)="$event.stopPropagation();filterThis(row.statusLabel)"></mat-icon><br />
                                         <span *ngIf="row[data.value] == lang.undefined && row.barcode != null" style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
                                                 class="fas fa-barcode"></i> {{row.barcode}}</span>
                                         <span *ngIf="row[data.value] != lang.undefined" style="color: rgba(0,0,0,0.4);font-size: 90%;cursor: crosshair;"

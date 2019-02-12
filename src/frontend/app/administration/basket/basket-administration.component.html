@@ -116,14 +116,6 @@
                         <mat-tab-group *ngIf="selectedIndex > 0">
                             <mat-tab label="{{lang.actions}}">
                                 <div class="col-md-6">
-                                    <mat-form-field style="margin-top:5px;">
-                                        <mat-select id="actionPages" name="actionPages" placeholder="{{lang.resultPage}}"
-                                            [(ngModel)]="group.result_page" (selectionChange)="updateResultPage(group)">
-                                            <mat-option *ngFor="let page of resultPages" [value]="page.id">
-                                                {{page.label}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
                                     <h5>{{lang.actionChosen}}</h5>
                                     <mat-chip-list #chipList class="mat-chip-list-stacked">
                                         <span *ngFor="let action of group.groupActions" style="width:100%;">
