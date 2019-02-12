@@ -99,7 +99,7 @@ class BasketControllerTest extends TestCase
 
         $aArgs = [
             'group_id'      => 'AGENT',
-            'result_page'   => 'redirect_to_action',
+            'list_display'  => [],
             'groupActions'  => [
                 [
                     'id'                    => '112',
@@ -137,7 +137,6 @@ class BasketControllerTest extends TestCase
 
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('TEST-BASKET123', $responseBody->groups[0]->basket_id);
-        $this->assertSame('redirect_to_action', $responseBody->groups[0]->result_page);
         $this->assertInternalType('array', $responseBody->groups[0]->list_display);
         $this->assertEmpty($responseBody->groups[0]->list_display);
         $this->assertInternalType('array', $responseBody->groups[0]->groupActions);
@@ -188,7 +187,7 @@ class BasketControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'list_display'  => [['value' => 'subject', 'cssClasses' => ['class1', 'class2']], ['value' => 'res_id', 'cssClasses' => ['class3', 'class4']]],
+            'list_display'  => [['value' => 'getPriority', 'cssClasses' => ['class1', 'class2']], ['value' => 'getCategory', 'cssClasses' => ['class3', 'class4']]],
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -205,10 +204,10 @@ class BasketControllerTest extends TestCase
 
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('TEST-BASKET123', $responseBody->groups[0]->basket_id);
-        $this->assertSame('subject', $responseBody->groups[0]->list_display[0]->value);
+        $this->assertSame('getPriority', $responseBody->groups[0]->list_display[0]->value);
         $this->assertSame('class1', $responseBody->groups[0]->list_display[0]->cssClasses[0]);
         $this->assertSame('class2', $responseBody->groups[0]->list_display[0]->cssClasses[1]);
-        $this->assertSame('res_id', $responseBody->groups[0]->list_display[1]->value);
+        $this->assertSame('getCategory', $responseBody->groups[0]->list_display[1]->value);
         $this->assertSame('class3', $responseBody->groups[0]->list_display[1]->cssClasses[0]);
         $this->assertSame('class4', $responseBody->groups[0]->list_display[1]->cssClasses[1]);
     }

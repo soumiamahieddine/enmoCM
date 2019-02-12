@@ -311,11 +311,21 @@ class BasketController
         $data = $request->getParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['group_id']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['result_page']);
         $check = $check && Validator::arrayType()->notEmpty()->validate($data['groupActions']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+        if (!isset($data['list_display']) || !is_array($data['list_display'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data list_display is not set or not an array']);
+        }
+        foreach ($data['list_display'] as $value) {
+            if (!Validator::stringType()->notEmpty()->validate($value['value'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data list_display[\'value\'] is empty or not a string']);
+            } elseif (!isset($value['cssClasses']) || !is_array($value['cssClasses'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data list_display[\'cssClasses\'] is not set or not an array']);
+            }
+        }
+
         $data['groupActions'] = BasketController::checkGroupActions(['groupActions' => $data['groupActions'], 'userId' => $GLOBALS['userId']]);
         if (!empty($data['groupActions']['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $data['groupActions']['errors']]);
@@ -325,7 +335,8 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Group already exist for this basket']);
         }
 
-        GroupBasketModel::createGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $data['group_id'], 'resultPage' => $data['result_page']]);
+        $data['list_display'] = json_encode($data['list_display']);
+        GroupBasketModel::createGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $data['group_id'], 'listDisplay' => $data['list_display']]);
         foreach ($data['groupActions'] as $groupAction) {
             if ($groupAction['checked']) {
                 BasketModel::createGroupAction([
