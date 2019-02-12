@@ -170,13 +170,7 @@ class UserController
             'data'      => [$data['userId']],
         ]);
 
-        if (sizeof($existingUser) > 1) {
-            foreach($existingUser as $eu){
-                if($eu['user_id'] == $data['userId']){
-                    $existingUser = $eu;
-                }
-            }
-        } else if(!empty($existingUser)){
+        if(!empty($existingUser)){
             $existingUser = $existingUser[0];
         }
 
@@ -504,19 +498,12 @@ class UserController
             'data'      => [$aArgs['userId']]
         ]);
 
-        if (sizeof($user) > 1) {
-            foreach($user as $u){
-                if($u['user_id'] == $aArgs['userId']){
-                    return $response->withJson(['status' => $u['status']]);
-                }
-            }
-        } 
-
         if(!empty($user)){
             $user = $user[0];
         }
 
-        return $response->withJson(['status' => $user['status']]);
+        return $response->withJson($user);
+
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
