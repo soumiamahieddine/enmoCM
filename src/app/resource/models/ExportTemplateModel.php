@@ -19,6 +19,23 @@ use SrcCore\models\ValidatorModel;
 
 class ExportTemplateModel
 {
+    public static function get(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
+
+        $aTemplates = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['exports_templates'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
+        return $aTemplates;
+    }
+
     public static function getByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
@@ -37,15 +54,15 @@ class ExportTemplateModel
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId', 'type', 'data']);
-        ValidatorModel::stringType($aArgs, ['type', 'delimiter', 'data']);
+        ValidatorModel::notEmpty($aArgs, ['userId', 'format', 'data']);
+        ValidatorModel::stringType($aArgs, ['format', 'delimiter', 'data']);
         ValidatorModel::intVal($aArgs, ['userId']);
 
         DatabaseModel::insert([
             'table'         => 'exports_templates',
             'columnsValues' => [
                 'user_id'   => $aArgs['userId'],
-                'type'      => $aArgs['type'],
+                'format'    => $aArgs['format'],
                 'delimiter' => empty($aArgs['delimiter']) ? null : $aArgs['delimiter'],
                 'data'      => $aArgs['data']
             ]

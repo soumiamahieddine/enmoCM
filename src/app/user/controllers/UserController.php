@@ -498,12 +498,11 @@ class UserController
             'data'      => [$aArgs['userId']]
         ]);
 
-        if (!empty($user)) {
-            $user = $user[0];
-            return $response->withJson(['status' => $user['status']]);
+        if (empty($user[0])) {
+            return $response->withJson(['status' => null]);
         }
 
-        return $response->withJson(['status' => null]);
+        return $response->withJson(['status' => $user[0]['status']]);
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)

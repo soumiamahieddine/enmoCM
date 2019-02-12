@@ -101,11 +101,11 @@ CREATE TABLE exports_templates
 (
 id serial NOT NULL,
 user_id INTEGER NOT NULL,
-type character varying(3) NOT NULL,
+format character varying(3) NOT NULL,
 delimiter character varying(3),
 data json DEFAULT '[]' NOT NULL,
 CONSTRAINT exports_templates_pkey PRIMARY KEY (id),
-CONSTRAINT exports_templates_unique_key UNIQUE (user_id, type)
+CONSTRAINT exports_templates_unique_key UNIQUE (user_id, format)
 )
 WITH (OIDS=FALSE);
 
