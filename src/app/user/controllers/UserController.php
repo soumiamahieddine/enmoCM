@@ -500,9 +500,10 @@ class UserController
 
         if(!empty($user)){
             $user = $user[0];
-        }
+            return $response->withJson(['status' => $user['status']]);
+        } 
 
-        return $response->withJson($user);
+        return $response->withJson(['status' => null]);
 
     }
 
