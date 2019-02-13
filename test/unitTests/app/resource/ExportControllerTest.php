@@ -95,28 +95,6 @@ class ExportControllerTest extends TestCase
             ]
         ];
 
-        //CSV
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame(null, $responseBody);
-
-        //  GET
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-
-        $response     = $ExportController->getExportTemplates($request, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-
-        $templateData = (array)$responseBody->templates->csv->data;
-        foreach ($templateData as $key => $value) {
-            $templateData[$key] = (array)$value;
-        }
-        $this->assertSame($aArgs['data'], $templateData);
-        $this->assertSame(';', $responseBody->templates->csv->delimiter);
-
         //PDF
         $aArgs['format'] = 'pdf';
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -138,6 +116,28 @@ class ExportControllerTest extends TestCase
             $templateData[$key] = (array)$value;
         }
         $this->assertSame($aArgs['data'], $templateData);
+
+        //CSV
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(null, $responseBody);
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $ExportController->getExportTemplates($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $templateData = (array)$responseBody->templates->csv->data;
+        foreach ($templateData as $key => $value) {
+            $templateData[$key] = (array)$value;
+        }
+        $this->assertSame($aArgs['data'], $templateData);
+        $this->assertSame(';', $responseBody->templates->csv->delimiter);
 
 
         //ERRORS
