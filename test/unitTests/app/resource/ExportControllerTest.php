@@ -11,21 +11,24 @@ use PHPUnit\Framework\TestCase;
 
 class ExportControllerTest extends TestCase
 {
-//    public function testGetExportTemplate()
-//    {
-//        $exportController = new \Resource\controllers\ExportController();
-//
-//        //  GET
-//        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-//        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-//
-//        $response     = $exportController->getExportTemplate($request, new \Slim\Http\Response());
-//        $responseBody = json_decode((string)$response->getBody());
-//
-//        $this->assertInternalType('array', $responseBody->template);
-//        $this->assertInternalType('string', $responseBody->delimiter);
-//    }
-//
+    public function testGetExportTemplates()
+    {
+        $exportController = new \Resource\controllers\ExportController();
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $exportController->getExportTemplates($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->templates);
+        $this->assertInternalType('array', $responseBody->templates->pdf);
+        $this->assertInternalType('array', $responseBody->templates->pdf->data);
+        $this->assertInternalType('array', $responseBody->templates->csv);
+        $this->assertInternalType('array', $responseBody->templates->csv->data);
+    }
+
 //    public function testUpdateExport()
 //    {
 //        $GLOBALS['userId'] = 'bbain';

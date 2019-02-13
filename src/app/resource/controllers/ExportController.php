@@ -34,7 +34,7 @@ require_once 'core/class/Url.php';
 
 class ExportController
 {
-    public function getExportTemplate(Request $request, Response $response)
+    public function getExportTemplates(Request $request, Response $response)
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
@@ -190,6 +190,81 @@ class ExportController
     {
         ValidatorModel::notEmpty($aArgs, ['delimiter', 'data', 'resources']);
         ValidatorModel::stringType($aArgs, ['delimiter']);
+        ValidatorModel::arrayType($aArgs, ['data', 'resources']);
+
+        $file = fopen('php://memory', 'w');
+        $delimiter = ($aArgs['delimiter'] == 'TAB' ? "\t" : $aArgs['delimiter']);
+
+        $csvHead = [];
+        foreach ($aArgs['data'] as $value) {
+            $csvHead[] = $value['label'];
+        }
+
+        fputcsv($file, $csvHead, $delimiter);
+
+        foreach ($aArgs['resources'] as $resource) {
+            $csvContent = [];
+            foreach ($aArgs['data'] as $value) {
+                if (empty($value['value'])) {
+                    $csvContent[] = '';
+                    continue;
+                }
+                if ($value['isFunction']) {
+                    if ($value['value'] == 'getStatus') {
+                        $csvContent[] = $resource['status.label_status'];
+                    } elseif ($value['value'] == 'getPriority') {
+                        $csvContent[] = $resource['priorities.label'];
+                    } elseif ($value['value'] == 'getCopies') {
+                        $csvContent[] = ExportController::getCopies(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getDetailLink') {
+                        $csvContent[] = str_replace('rest/', "apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id={$resource['res_id']}", \Url::coreurl());
+                    } elseif ($value['value'] == 'getParentFolder') {
+                        $csvContent[] = $resource['folders.folder_name'];
+                    } elseif ($value['value'] == 'getCategory') {
+                        $csvContent[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
+                    } elseif ($value['value'] == 'getInitiatorEntity') {
+                        $csvContent[] = $resource['enone.short_label'];
+                    } elseif ($value['value'] == 'getDestinationEntity') {
+                        $csvContent[] = $resource['entwo.short_label'];
+                    } elseif ($value['value'] == 'getDestinationEntityType') {
+                        $csvContent[] = $resource['enthree.entity_type'];
+                    } elseif ($value['value'] == 'getSender') {
+                        //TODO
+                        $csvContent[] = '';
+                    } elseif ($value['value'] == 'getRecipient') {
+                        //TODO
+                        $csvContent[] = '';
+                    } elseif ($value['value'] == 'getTypist') {
+                        $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['typist']]);
+                    } elseif ($value['value'] == 'getAssignee') {
+                        $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['dest_user']]);
+                    } elseif ($value['value'] == 'getTags') {
+                        $csvContent[] = ExportController::getTags(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getSignatories') {
+                        $csvContent[] = ExportController::getSignatories(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getSignatureDates') {
+                        $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
+                    }
+                } else {
+                    $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'sve_start_date'];
+                    if (in_array($value['value'], $allDates)) {
+                        $csvContent[] = TextFormatModel::formatDate($resource[$value['value']]);
+                    } else {
+                        $csvContent[] = $resource[$value['value']];
+                    }
+                }
+            }
+            fputcsv($file, $csvContent, $delimiter);
+        }
+
+        rewind($file);
+
+        return $file;
+    }
+
+    private static function getPdf(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['data', 'resources']);
         ValidatorModel::arrayType($aArgs, ['data', 'resources']);
 
         $file = fopen('php://memory', 'w');
