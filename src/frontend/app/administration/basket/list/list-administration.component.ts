@@ -93,6 +93,13 @@ export class ListAdministrationComponent implements OnInit {
             'icon': 'fa-list-ol'
         },
         {
+            'value': 'getSignatories',
+            'label': this.lang.getSignatories,
+            'sample': 'Denis DAULL, Patricia PETIT',
+            'cssClasses': [],
+            'icon': 'fa-certificate'
+        },
+        {
             'value': 'getModificationDate',
             'label': this.lang.getModificationDate,
             'sample': '01-01-2019',

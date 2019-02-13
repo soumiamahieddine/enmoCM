@@ -857,4 +857,5 @@ export const LANG_FR = {
     "getOpinionLimitDate"                      : "Date limite d'envoi des avis",
     "getModificationDate"                      : "Date de mise à jour",
     "opinionsSent"                      : "avis donné(s)",  
+    "getSignatories"                      : "Signataires(s)",  
 };

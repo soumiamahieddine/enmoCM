@@ -860,5 +860,6 @@ export const LANG_NL = {
     "getOpinionLimitDate"                      : "Opinion limit date", //_TO_TRANSLATE
     "getModificationDate"                      : "Modification date", //_TO_TRANSLATE
     "opinionsSent"                      : "opinion(s) sent", //_TO_TRANSLATE
+    "getSignatories"                      : "Signatories", //_TO_TRANSLATE
 
 };

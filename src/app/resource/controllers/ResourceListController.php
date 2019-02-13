@@ -181,6 +181,9 @@ class ResourceListController
                     } elseif ($value['value'] == 'getVisaWorkflow') {
                         $value['displayValue'] = ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]);
                         $display[] = $value;
+                    } elseif ($value['value'] == 'getSignatories') {
+                        $value['displayValue'] = ResourceListController::getSignatories(['resId' => $resource['res_id']]);
+                        $display[] = $value;
                     } elseif ($value['value'] == 'getParallelOpinionsNumber') {
                         $value['displayValue'] = ResourceListController::getParallelOpinionsNumber(['resId' => $resource['res_id']]);
                         $display[] = $value;
@@ -619,6 +622,29 @@ class ResourceListController
             if (empty($listInstance['process_date']) && !$currentFound) {
                 $currentFound = true;
             }
+        }
+
+        return $users;
+    }
+
+    private static function getSignatories(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $listInstances = ListInstanceModel::get([
+            'select'    => ['item_id', 'process_date'],
+            'where'     => ['difflist_type = ?', 'res_id = ?' ,'requested_signature = ?'],
+            'data'      => ['VISA_CIRCUIT', $args['resId'], true],
+            'orderBy'   => ['listinstance_id']
+        ]);
+
+        $users = [];
+        foreach ($listInstances as $listInstance) {
+            $users[] = [
+                'user'      => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
+                'date'      => TextFormatModel::formatDate($listInstance['process_date']),
+            ];
         }
 
         return $users;

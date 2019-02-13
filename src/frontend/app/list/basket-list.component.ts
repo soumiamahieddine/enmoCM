@@ -278,6 +278,13 @@ export class BasketListComponent implements OnInit {
                     });
                     key.displayValue = formatWorkflow.join(' <i class="fas fa-long-arrow-alt-right"></i> ');
                     key.displayTitle = displayTitle.join(' - ');
+                } else if (key.value == 'getSignatories') {
+                    let userList: any[] = [];
+                    key.displayValue.forEach((visa: any) => {
+                        userList.push(visa.user);
+                    });
+                    key.displayValue = userList.join(', ');
+                    key.displayTitle = userList.join(', ');
                 } else if (key.value == 'getParallelOpinionsNumber') {
                     key.displayTitle = key.displayValue + ' ' + this.lang.opinionsSent;
 
