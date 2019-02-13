@@ -214,17 +214,17 @@ class SummarySheetController
                 $pdf->SetY($pdf->GetY() + 2);
 
                 $pdf->SetFont('', '', 10);
-                $pdf->MultiCell($widthNoMargins / 2, 27, _CATEGORY . " : {$category}", 1, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 27, _STATUS . " : {$status}", 1, 'L', false, 1, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 27, _PRIORITY . " : {$priority}", 1, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 27, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 30, _CATEGORY . " : {$category}", 1, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 30, _STATUS . " : {$status}", 1, 'L', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 30, _PRIORITY . " : {$priority}", 1, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 30, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, 1, '', '', true, 0, true);
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
                 $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $resource['res_id']]);
 
                 if (!empty($ext)) {
                     $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $resource['res_id']]);
                     
-                    foreach ($resourcesContacts as $key => $value) {
+                    foreach ($resourcesContacts as $contactsKey => $value) {
                         $entitiesFormat = '';
                         if ($value['type'] == 'user') {
                             $userEntity = UserModel::getPrimaryEntityById(['id' => $value['item_id']]);
@@ -232,7 +232,7 @@ class SummarySheetController
                                 $entitiesFormat = ' (' . $userEntity['entity_label'] . ')';
                             }
                         }
-                        $resourcesContacts[$key]['format'] = $value['format'] . $entitiesFormat;
+                        $resourcesContacts[$contactsKey]['format'] = $value['format'] . $entitiesFormat;
                     }
 
                     $oldContacts = [];

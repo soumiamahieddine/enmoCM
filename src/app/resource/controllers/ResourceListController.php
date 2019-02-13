@@ -137,7 +137,7 @@ class ResourceListController
                 'leftJoin'  => $leftJoinFunction,
                 'where'     => ['res_letterbox.res_id in (?)'],
                 'data'      => [$resIds],
-                'order'     => [$order]
+                'orderBy'   => [$order]
             ]);
 
             foreach ($resources as $key => $resource) {
