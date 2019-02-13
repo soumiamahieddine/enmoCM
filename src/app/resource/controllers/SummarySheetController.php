@@ -224,6 +224,18 @@ class SummarySheetController
 
                 if (!empty($ext)) {
                     $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $resource['res_id']]);
+                    
+                    foreach ($resourcesContacts as $key => $value) {
+                        $entitiesFormat = '';
+                        if ($value['type'] == 'user') {
+                            $userEntity = UserModel::getPrimaryEntityById(['id' => $value['item_id']]);
+                            if (!empty($userEntity)) {
+                                $entitiesFormat = ' (' . $userEntity['entity_label'] . ')';
+                            }
+                        }
+                        $resourcesContacts[$key]['format'] = $value['format'] . $entitiesFormat;
+                    }
+
                     $oldContacts = [];
                     $rawContacts = [];
                     if ($ext['is_multicontacts'] == 'Y') {
@@ -259,9 +271,13 @@ class SummarySheetController
                                 $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
                                 $oldContacts[] = ['format' => $contact['contact']['otherInfo']];
                             }
-
                         } else {
-                            $oldContacts[] = ['format' => UserModel::getLabelledUserById(['login' => $rawContact['login']])];
+                            $format     = UserModel::getLabelledUserById(['login' => $rawContact['login']]);
+                            $userEntity = UserModel::getPrimaryEntityByUserId(['userId' => $rawContact['login']]);
+                            if (!empty($userEntity)) {
+                                $format .= ' (' . $userEntity['entity_label'] . ')';
+                            }
+                            $oldContacts[] = ['format' => $format];
                         }
                     }
                     if ($ext['category_id'] == 'outgoing') {
@@ -281,13 +297,23 @@ class SummarySheetController
                     $pdf->SetY($pdf->GetY() + 2);
 
                     $pdf->SetFont('', '', 10);
-                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, empty($senders) ? '' : _SENDERS, empty($senders) ? 0 : 1, 0, 'C', false);
+                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, _SENDERS, 1, 0, 'C', false);
                     $pdf->Cell($widthNoMargins / 10, 15, '', 0, 0, 'C', false);
-                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, empty($recipients) ? '' : _RECIPIENTS, empty($recipients) ? 0 : 1, 1, 'C', false);
+                    $pdf->Cell($widthNoMargins / 10 * 4.5, 15, _RECIPIENTS, 1, 1, 'C', false);
                     for ($i = 0; !empty($senders[$i]) || !empty($recipients[$i]); $i++) {
-                        $pdf->MultiCell($widthNoMargins / 10 * 4.5, 40, empty($senders[$i]['format']) ? '' : $senders[$i]['format'], empty($senders[$i]['format']) ? 0 : 1, 'L', false, 0, '', '', true, 0, true);
+                        if ($i == 0 && empty($senders[$i]['format'])) {
+                            $pdf->MultiCell($widthNoMargins / 10 * 4.5, 40, _UNDEFINED, 1, 'L', false, 0, '', '', true, 0, true);
+                        } else {
+                            $pdf->MultiCell($widthNoMargins / 10 * 4.5, 40, empty($senders[$i]['format']) ? '' : $senders[$i]['format'], empty($senders[$i]['format']) ? 0 : 1, 'L', false, 0, '', '', true, 0, true);
+                        }
+
                         $pdf->MultiCell($widthNoMargins / 10, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
-                        $pdf->MultiCell($widthNoMargins / 10 * 4.5, 40, empty($recipients[$i]['format']) ? '' : $recipients[$i]['format'], empty($recipients[$i]['format']) ? 0 : 1, 'L', false, 1, '', '', true, 0, true);
+
+                        if ($i == 0 && empty($recipients[$i]['format'])) {
+                            $pdf->MultiCell($widthNoMargins / 10 * 4.5, 40, _UNDEFINED, 1, 'L', false, 1, '', '', true, 0, true);
+                        } else {
+                            $pdf->MultiCell($widthNoMargins / 10 * 4.5, 40, empty($recipients[$i]['format']) ? '' : $recipients[$i]['format'], empty($recipients[$i]['format']) ? 0 : 1, 'L', false, 1, '', '', true, 0, true);
+                        }
                     }
                 }
             } elseif ($unit['unit'] == 'diffusionList') {
@@ -295,7 +321,6 @@ class SummarySheetController
                 $copies = [];
                 $listInstances = ListInstanceModel::get(['select' => ['item_id', 'item_type', 'item_mode'], 'where' => ['difflist_type = ?', 'res_id = ?'], 'data' => ['entity_id', $resource['res_id']]]);
                 foreach ($listInstances as $listInstance) {
-
                     $item = '';
                     if ($listInstance['item_type'] == 'user_id') {
                         $item = UserModel::getLabelledUserById(['login' => $listInstance['item_id']]);

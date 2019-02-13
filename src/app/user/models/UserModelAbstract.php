@@ -362,6 +362,25 @@ abstract class UserModelAbstract
         return $aEntity[0];
     }
 
+    public static function getPrimaryEntityById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+
+        $aEntity = DatabaseModel::select([
+            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
+            'table'     => ['users, users_entities, entities'],
+            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id', 'users.id = ?', 'users_entities.primary_entity = ?'],
+            'data'      => [$aArgs['id'], 'Y']
+        ]);
+
+        if (empty($aEntity[0])) {
+            return [];
+        }
+
+        return $aEntity[0];
+    }
+
     public static function getGroupsByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);

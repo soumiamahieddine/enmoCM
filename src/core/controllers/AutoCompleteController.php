@@ -520,9 +520,7 @@ class AutoCompleteController
         if ($aArgs['contact']['is_corporate_person'] == 'Y') {
             $address.= $aArgs['contact']['firstname'];
             $address.= (empty($address) ? $aArgs['contact']['lastname'] : " {$aArgs['contact']['lastname']}");
-            if (!empty($address)) {
-                $address.= ', ';
-            }
+            $address .= ', ';
             if (!empty($aArgs['contact']['address_num'])) {
                 $address.= $aArgs['contact']['address_num'] . ' ';
             }
@@ -538,6 +536,7 @@ class AutoCompleteController
             if (!empty($aArgs['contact']['address_country'])) {
                 $address.= $aArgs['contact']['address_country'];
             }
+            $address = rtrim($address, ', ');
             $otherInfo = empty($address) ? "{$aArgs['contact']['society']}" : "{$aArgs['contact']['society']} - {$address}";
             $contact = [
                 'type'          => 'contact',

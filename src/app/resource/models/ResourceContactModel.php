@@ -58,8 +58,8 @@ class ResourceContactModel
             } elseif ($aContact['type'] == 'contact') {
                 $contact = ContactModel::getOnView([
                     'select' => [
-                        'is_corporate_person', 'lastname', 'firstname',
-                        'ca_id', 'society', 'contact_firstname', 'contact_lastname'
+                        'is_corporate_person', 'lastname', 'firstname', 'address_num', 'address_street', 'address_town', 'address_postal_code',
+                        'ca_id', 'society', 'contact_firstname', 'contact_lastname', 'address_country'
                     ],
                     'where' => ['ca_id = ?'],
                     'data' => [$aContact['item_id']]
