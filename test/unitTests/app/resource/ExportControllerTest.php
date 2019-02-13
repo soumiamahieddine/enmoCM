@@ -40,7 +40,7 @@ class ExportControllerTest extends TestCase
         $aArgs = [
             "resources" => $GLOBALS['resources'],
             "delimiter" => ';',
-            "format"    => 'csv',
+            "format"    => 'pdf',
             "data" => [
                 [
                     "value" => "subject",
@@ -96,7 +96,6 @@ class ExportControllerTest extends TestCase
         ];
 
         //PDF
-        $aArgs['format'] = 'pdf';
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
@@ -118,6 +117,7 @@ class ExportControllerTest extends TestCase
         $this->assertSame($aArgs['data'], $templateData);
 
         //CSV
+        $aArgs['format'] = 'csv';
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
