@@ -10,7 +10,7 @@
     <span class="area">
         <form>
             <mat-form-field appearance="outline" floatLabel="never">
-                <input name="availableData" type="text" matInput [formControl]="dataControl" placeholder="{{lang.availableDatas}}"
+                <input id="availableData" name="availableData" type="text" matInput [formControl]="dataControl" placeholder="{{lang.availableDatas}}"
                     [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addData($event)">
                     <mat-option *ngFor="let item of filteredDataOptions | async" [value]="item" class="dataList">

@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { startWith, map } from 'rxjs/operators';
 
+declare function $j(selector: any): any;
 @Component({
     selector: 'list-administration',
     templateUrl: "list-administration.component.html",
@@ -184,6 +185,7 @@ export class ListAdministrationComponent implements OnInit {
             let i = this.availableData.map((e: any) => { return e.value; }).indexOf(event.option.value.value);
             this.displayedSecondaryData.push(event.option.value);
             this.availableData.splice(i, 1);
+            $j('#availableData').blur();
             this.dataControl.setValue('');
         }
     }

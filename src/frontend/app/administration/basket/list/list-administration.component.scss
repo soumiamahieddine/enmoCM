@@ -40,7 +40,7 @@
   }
 
   &_chrono {
-    color: rgba(0,0,0,0.4);
+    color: rgba(0, 0, 0, 0.4);
     font-size: 90%;
   }
 }
@@ -186,7 +186,7 @@
 }
 
 .isSelectedMenu {
-  box-shadow: inset 0px 0px 5px 0px #656565;
+  background: rgba(249, 152, 48, 0.14);
 }
 
 .align_centerData {
