@@ -22,11 +22,9 @@ class ExportControllerTest extends TestCase
         $response     = $exportController->getExportTemplates($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->templates);
-        $this->assertInternalType('array', $responseBody->templates->pdf);
-        $this->assertInternalType('array', $responseBody->templates->pdf->data);
-        $this->assertInternalType('array', $responseBody->templates->csv);
-        $this->assertInternalType('array', $responseBody->templates->csv->data);
+        $this->assertNotEmpty($responseBody->templates);
+        $this->assertNotEmpty($responseBody->templates->pdf);
+        $this->assertNotEmpty($responseBody->templates->csv);
     }
 
 //    public function testUpdateExport()
