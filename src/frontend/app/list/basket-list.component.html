@@ -47,10 +47,10 @@
                                     </ng-container>
                                     <ng-container *ngIf="data.value == 'getCategory'">
                                         <span *ngIf="!lang[data.displayValue]" style="opacity: 0.5" title="id: {{data.displayValue}}">_UNDEFINED</span>
-                                        <span *ngIf="lang[data.displayValue]">{{lang[data.displayValue]}}</span>
+                                        <span *ngIf="lang[data.displayValue]" title="{{data.displayTitle}}">{{lang[data.displayValue]}}</span>
                                     </ng-container>
                                     <ng-container *ngIf="data.value != 'getCategory' && data.value != 'getCreationAndProcessLimitDates'">
-                                        <span *ngIf="!data.value.includes('Date')" title="{{data.displayValue}}"  [innerHTML]="data.displayValue"></span>
+                                        <span *ngIf="!data.value.includes('Date')" title="{{data.displayTitle}}"  [innerHTML]="data.displayValue"></span>
                                         <span *ngIf="data.value.includes('Date')" [innerHTML]="data.displayValue | timeAgo"></span>
                                     </ng-container>
                                 </div>

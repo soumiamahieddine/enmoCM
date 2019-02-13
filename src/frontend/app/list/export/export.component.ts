@@ -187,13 +187,13 @@ export class ExportComponent implements OnInit {
             isFunction: true
         },
         {
-            value: 'getSender',
-            label: this.lang.sender,
+            value: 'getSenders',
+            label: this.lang.getSenders,
             isFunction: true
         },
         {
-            value: 'getRecipient',
-            label: this.lang.recipient,
+            value: 'getRecipients',
+            label: this.lang.getRecipients,
             isFunction: true
         },
         {
