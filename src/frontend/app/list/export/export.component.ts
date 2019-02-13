@@ -118,7 +118,7 @@ export class ExportComponent implements OnInit {
         },
         {
             value: 'opinion_limit_date',
-            label: this.lang.opinionLimitDate,
+            label: this.lang.getOpinionLimitDate,
             isFunction: false
         },
         {
@@ -244,7 +244,13 @@ export class ExportComponent implements OnInit {
                 this.exportModelList = data.templates;
 
                 this.exportModel.data = data.templates.csv.data;
-                
+                this.exportModel.data.forEach((value: any) => {
+                    this.dataAvailable.forEach((availableValue: any, index: number) => {
+                        if (value.value == availableValue.value) {
+                            this.dataAvailable.splice(index, 1);
+                        }
+                    });
+                });
                 this.loading = false;
             }, (err: any) => {
                 this.notify.handleErrors(err);
@@ -345,7 +351,15 @@ export class ExportComponent implements OnInit {
     }
 
     changeTemplate(event: any) {
+        this.dataAvailable = JSON.parse(JSON.stringify(this.dataAvailableClone));
         this.exportModel.format = event.value;
         this.exportModel.data = this.exportModelList[event.value].data;
+        this.exportModel.data.forEach((value: any) => {
+            this.dataAvailable.forEach((availableValue: any, index: number) => {
+                if (value.value == availableValue.value) {
+                    this.dataAvailable.splice(index, 1);
+                }
+            });
+        });
     }
 }
