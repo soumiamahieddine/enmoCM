@@ -234,7 +234,8 @@ export class BasketListComponent implements OnInit {
                 if ((key.displayValue == null || key.displayValue == '') && ['getCreationAndProcessLimitDates', 'getParallelOpinionsNumber'].indexOf(key.value) === -1) {
                     key.displayValue = this.lang.undefined;
 
-                } else if (["getSenders", "getRecipients"].indexOf(key.value) > 0) {
+                } else if (["getSenders", "getRecipients"].indexOf(key.value) > -1) {
+                    
                     if (key.displayValue.length > 1) {
                         key.displayValue = this.lang.isMulticontact;
                     } else {
