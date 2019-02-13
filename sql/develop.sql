@@ -131,6 +131,9 @@ DO $$ BEGIN
   END IF;
 END$$;
 
+/* Replace occurence in basket_clause */
+UPDATE baskets SET basket_clause = regexp_replace(basket_clause,'recommendation_limit_date','opinion_limit_date','g');
+
 /* REFACTORING */
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
 
