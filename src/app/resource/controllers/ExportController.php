@@ -175,74 +175,18 @@ class ExportController
             'orderBy'   => [$order]
         ]);
 
-        $file = fopen('php://memory', 'w');
-        $delimiter = ($body['delimiter'] == 'TAB' ? "\t" : $body['delimiter']);
-
-        fputcsv($file, $csvHead, $delimiter);
-
-        foreach ($resources as $resource) {
-            $csvContent = [];
-            foreach ($body['data'] as $value) {
-                if (empty($value['value'])) {
-                    $csvContent[] = '';
-                    continue;
-                }
-                if ($value['isFunction']) {
-                    if ($value['value'] == 'getStatus') {
-                        $csvContent[] = $resource['status.label_status'];
-                    } elseif ($value['value'] == 'getPriority') {
-                        $csvContent[] = $resource['priorities.label'];
-                    } elseif ($value['value'] == 'getCopies') {
-                        $csvContent[] = ExportController::getCopies(['resId' => $resource['res_id']]);
-                    } elseif ($value['value'] == 'getDetailLink') {
-                        $csvContent[] = str_replace('rest/', "apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id={$resource['res_id']}", \Url::coreurl());
-                    } elseif ($value['value'] == 'getParentFolder') {
-                        $csvContent[] = $resource['folders.folder_name'];
-                    } elseif ($value['value'] == 'getCategory') {
-                        $csvContent[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
-                    } elseif ($value['value'] == 'getInitiatorEntity') {
-                        $csvContent[] = $resource['enone.short_label'];
-                    } elseif ($value['value'] == 'getDestinationEntity') {
-                        $csvContent[] = $resource['entwo.short_label'];
-                    } elseif ($value['value'] == 'getDestinationEntityType') {
-                        $csvContent[] = $resource['enthree.entity_type'];
-                    } elseif ($value['value'] == 'getSender') {
-                        //TODO
-                        $csvContent[] = '';
-                    } elseif ($value['value'] == 'getRecipient') {
-                        //TODO
-                        $csvContent[] = '';
-                    } elseif ($value['value'] == 'getTypist') {
-                        $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['typist']]);
-                    } elseif ($value['value'] == 'getAssignee') {
-                        $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['dest_user']]);
-                    } elseif ($value['value'] == 'getTags') {
-                        $csvContent[] = ExportController::getTags(['resId' => $resource['res_id']]);
-                    } elseif ($value['value'] == 'getSignatories') {
-                        $csvContent[] = ExportController::getSignatories(['resId' => $resource['res_id']]);
-                    } elseif ($value['value'] == 'getSignatureDates') {
-                        $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
-                    }
-                } else {
-                    $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'sve_start_date'];
-                    if (in_array($value['value'], $allDates)) {
-                        $csvContent[] = TextFormatModel::formatDate($resource[$value['value']]);
-                    } else {
-                        $csvContent[] = $resource[$value['value']];
-                    }
-                }
-            }
-            fputcsv($file, $csvContent, $delimiter);
+        $contentType = '';
+        if ($body['format'] == 'csv') {
+            $file = ExportController::getCsv(['delimiter' => $body['delimiter'], 'data' => $body['data'], 'resources' => $resources]);
+            $response->write(stream_get_contents($file));
+            $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=export_maarch.csv');
+            $contentType = 'application/vnd.ms-excel';
         }
 
-        rewind($file);
-        $response->write(stream_get_contents($file));
-        $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=export_maarch.csv');
-
-        return $response->withHeader('Content-Type', 'application/vnd.ms-excel');
+        return $response->withHeader('Content-Type', $contentType);
     }
 
-    public function getCsv(array $aArgs)
+    private static function getCsv(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['delimiter', 'data', 'resources']);
         ValidatorModel::stringType($aArgs, ['delimiter']);
@@ -260,7 +204,7 @@ class ExportController
 
         foreach ($aArgs['resources'] as $resource) {
             $csvContent = [];
-            foreach ($body['data'] as $value) {
+            foreach ($aArgs['data'] as $value) {
                 if (empty($value['value'])) {
                     $csvContent[] = '';
                     continue;
@@ -314,10 +258,8 @@ class ExportController
         }
 
         rewind($file);
-        $response->write(stream_get_contents($file));
-        $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=export_maarch.csv');
 
-        return $response->withHeader('Content-Type', 'application/vnd.ms-excel');
+        return $file;
     }
 
     private static function getCopies(array $args)
