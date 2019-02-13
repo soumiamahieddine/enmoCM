@@ -215,10 +215,10 @@ class SummarySheetController
                 $pdf->SetY($pdf->GetY() + 2);
 
                 $pdf->SetFont('', '', 10);
-                $pdf->MultiCell($widthNoMargins / 2, 20, _CATEGORY . " : {$category}", 1, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 20, _STATUS . " : {$status}", 1, 'L', false, 1, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 20, _PRIORITY . " : {$priority}", 1, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNoMargins / 2, 20, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 27, _CATEGORY . " : {$category}", 1, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 27, _STATUS . " : {$status}", 1, 'L', false, 1, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 27, _PRIORITY . " : {$priority}", 1, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthNoMargins / 2, 27, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, 1, '', '', true, 0, true);
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
                 $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $resource['res_id']]);
 
