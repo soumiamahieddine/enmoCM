@@ -75,35 +75,6 @@ class ListInstanceController
         return $response->withJson($listinstances);
     }
 
-    public function getListWhereUserIsDest(Request $request, Response $response, array $aArgs)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-        
-        $data = ListInstanceModel::getListWhereUserIsDest(['select' => ['li.*'], 'id' => $aArgs['itemId']]);
-
-        $listinstances = [];
-
-        if (!empty($data)) {
-            $res_id = 0;
-            $array = [];
-            foreach ($data as $value) {
-                if ($res_id == 0) {
-                    $res_id = $value['res_id'];
-                } elseif ($res_id != $value['res_id']) {
-                    $listinstances[] = ['resId' => $res_id, "listinstances" => $array];
-                    $res_id = $value['res_id'];
-                    $array = [];
-                }
-                $array[] = $value;
-            }
-            $listinstances[] = ['resId' => $res_id, "listinstances" => $array];
-        }
-            
-        return $response->withJson($listinstances);
-    }
-
     public function update(Request $request, Response $response)
     {
         $data = $request->getParams();

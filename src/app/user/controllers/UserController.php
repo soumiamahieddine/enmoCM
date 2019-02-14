@@ -28,6 +28,7 @@ use History\controllers\HistoryController;
 use History\models\HistoryModel;
 use Notification\controllers\NotificationsEventsController;
 use Parameter\models\ParameterModel;
+use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -254,6 +255,77 @@ class UserController
         ]);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public function isDeletable(Request $request, Response $response, array $aArgs)
+    {
+        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'delete' => true, 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname', 'user_id']]);
+
+        $isListInstanceDeletable = true;
+        $isListTemplateDeletable = true;
+
+        $listInstanceEntities = [];
+        $listInstanceResIds = [];
+        $listInstances = ListInstanceModel::getWhenOpenMailsByLogin(['select' => ['listinstance.res_id', 'res_letterbox.destination'], 'login' => $user['user_id'], 'itemMode' => 'dest']);
+        foreach ($listInstances as $listInstance) {
+            if (!ResController::hasRightByResId(['resId' => $listInstance['res_id'], 'userId' => $GLOBALS['userId']])) {
+                $isListInstanceDeletable = false;
+            }
+            $listInstanceResIds[] = $listInstance['res_id'];
+            $listInstanceEntities[] = $listInstance['destination'];
+        }
+
+        $listTemplateEntities = [];
+        $listTemplates = ListTemplateModel::get([
+            'select'    => ['object_id', 'title'],
+            'where'     => ['item_id = ?', 'object_type = ?', 'item_mode = ?', 'item_type = ?'],
+            'data'      => [$user['user_id'], 'entity_id', 'dest', 'user_id']
+        ]);
+        $allEntities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+        foreach ($listTemplates as $listTemplate) {
+            if (!in_array($listTemplate['object_id'], $allEntities)) {
+                $isListTemplateDeletable = false;
+            }
+            $listTemplateEntities[] = $listTemplate['object_id'];
+        }
+
+        if (!$isListInstanceDeletable || !$isListTemplateDeletable) {
+            $formattedLIEntities = [];
+            $listInstanceEntities = array_unique($listInstanceEntities);
+            foreach ($listInstanceEntities as $listInstanceEntity) {
+                $entity = Entitymodel::getByEntityId(['select' => ['short_label'], 'entityId' => $listInstanceEntity]);
+                $formattedLIEntities[] = $entity['short_label'];
+            }
+            $formattedLTEntities = [];
+            $listTemplateEntities = array_unique($listTemplateEntities);
+            foreach ($listTemplateEntities as $listTemplateEntity) {
+                $entity = Entitymodel::getByEntityId(['select' => ['short_label'], 'entityId' => $listTemplateEntity]);
+                $formattedLTEntities[] = $entity['short_label'];
+            }
+
+            return $response->withJson(['isDeletable' => false, 'listInstanceEntities' => $formattedLIEntities, 'listTemplateEntities' => $formattedLTEntities]);
+        }
+
+        $listInstances = [];
+        foreach ($listInstanceResIds as $listInstanceResId) {
+            $rawListInstances = ListInstanceModel::get([
+                'select'    => ['*'],
+                'where'     => ['res_id = ?', 'difflist_type = ?'],
+                'data'      => [$listInstanceResId, 'entity_id'],
+                'orderBy'   => ['listinstance_id']
+            ]);
+            $listInstances[] = [
+                'resId'         => $listInstanceResId,
+                'listInstances' => $rawListInstances
+            ];
+        }
+
+        return $response->withJson(['isDeletable' => true, 'listTemplates' => $listTemplates, 'listInstances' => $listInstances]);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)
