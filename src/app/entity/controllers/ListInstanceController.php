@@ -113,21 +113,26 @@ class ListInstanceController
         DatabaseModel::beginTransaction();
 
         foreach ($data['listinstances'] as $ListInstanceByRes) {
+            
+            if (empty($ListInstanceByRes['resId'])) {
+                DatabaseModel::rollbackTransaction();
+                return $response->withStatus(400)->withJson(['errors' => 'resId is empty']);
+            }
+
+            ListInstanceModel::delete([
+                'where' => ['res_id = ?', 'difflist_type = ?'],
+                'data'  => [$ListInstanceByRes['resId'], 'entity_id']
+            ]);
+
             foreach ($ListInstanceByRes['listinstances'] as $instance) {
                 if (empty($instance['res_id']) || empty($instance['item_id']) || empty($instance['item_type']) || empty($instance['item_mode']) || empty($instance['difflist_type'])) {
                     DatabaseModel::rollbackTransaction();
                     return $response->withStatus(400)->withJson(['errors' => 'Some data are empty']);
                 }
                 
-                if (isset($instance['listinstance_id']) && !empty($instance['listinstance_id'])) {
-                    $check = ListInstanceModel::getById(['select' => ['listinstance_id'], 'id' => $instance['listinstance_id']]);
-                    if (!$check) {
-                        DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'listinstance_id is not correct']);
-                    }
-    
-                    ListInstanceModel::delete(['listinstance_id' => $instance['listinstance_id']]);
-                }
+                unset($instance['listinstance_id']);
+                unset($instance['requested_signature']);
+                unset($instance['signatory']);
                 
                 if ($instance['item_type'] == 'user_id') {
                     $user = UserModel::getByLogin(['login' => $instance['item_id']]);
@@ -143,15 +148,12 @@ class ListInstanceController
                     }
                 }
 
-                unset($instance['listinstance_id']);
-                unset($instance['requested_signature']);
-                unset($instance['signatory']);
-                
                 ListInstanceModel::create($instance);
 
                 if ($instance['item_mode'] == 'dest') {
+                    $entity = UserModel::getPrimaryEntityByUserId(['userId' => $instance['item_id']]);
                     ResModel::update([
-                        'set'   => ['dest_user' => $instance['item_id']],
+                        'set'   => ['dest_user' => $instance['item_id'], 'destination' => $entity['entity_id']],
                         'where' => ['res_id = ?'],
                         'data'  => [$instance['res_id']]
                     ]);

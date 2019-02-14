@@ -208,7 +208,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                         this.listinstances = result.listinstances;
                         this.listinstances.forEach((list: any) => {
                             list.listinstances.forEach((element:any) => {
-                                if(element.item_mode == 'dest') {
+                            if(element.item_mode == 'dest' && element.item_id == user.user_id) {
                                     element.item_id = user.redirectDestResUserId;
                                 }
                             });
