@@ -62,13 +62,21 @@ class CoreConfigModel
 
     public static function getApplicationName()
     {
+        static $applicationName;
+
+        if ($applicationName !== null) {
+            return $applicationName;
+        }
+
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
 
         if ($loadedXml) {
-            return (string)$loadedXml->CONFIG->applicationname;
+            $applicationName = (string)$loadedXml->CONFIG->applicationname;
+            return $applicationName;
         }
 
-        return 'Maarch Courrier';
+        $applicationName = 'Maarch Courrier';
+        return $applicationName;
     }
 
     public static function getApplicationVersion()

@@ -13,8 +13,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'ddc0a4d7e61c0286f0f8593b1903e894' => __DIR__ . '/..' . '/clue/stream-filter/src/functions.php',
         '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'a9ed0d27b5a698798a89181429f162c5' => __DIR__ . '/..' . '/khanamiryan/qrcode-detector-decoder/lib/Common/customFunctions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -30,6 +32,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             'chillerlan\\Traits\\' => 18,
             'chillerlan\\QRCode\\' => 18,
+        ),
+        'Z' => 
+        array (
+            'Zxing\\' => 6,
         ),
         'V' => 
         array (
@@ -47,7 +53,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Symfony\\Component\\PropertyAccess\\' => 33,
             'Symfony\\Component\\OptionsResolver\\' => 34,
+            'Symfony\\Component\\Inflector\\' => 28,
             'Status\\' => 7,
             'SrcCore\\' => 8,
             'Slim\\' => 5,
@@ -72,6 +81,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             'Notification\\' => 13,
             'Note\\' => 5,
+        ),
+        'M' => 
+        array (
+            'MyCLabs\\Enum\\' => 13,
         ),
         'L' => 
         array (
@@ -110,12 +123,15 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'E' => 
         array (
             'Entity\\' => 7,
+            'Endroid\\QrCode\\' => 15,
+            'Endroid\\Installer\\' => 18,
             'Email\\' => 6,
         ),
         'D' => 
         array (
             'Doctype\\' => 8,
             'Docserver\\' => 10,
+            'DASPRiD\\Enum\\' => 13,
         ),
         'C' => 
         array (
@@ -128,6 +144,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'B' => 
         array (
             'Basket\\' => 7,
+            'BaconQrCode\\' => 12,
         ),
         'A' => 
         array (
@@ -153,6 +170,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             0 => __DIR__ . '/..' . '/chillerlan/php-qrcode/src',
         ),
+        'Zxing\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/khanamiryan/qrcode-detector-decoder/lib',
+        ),
         'VersionUpdate\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/versionUpdate',
@@ -173,9 +194,21 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Symfony\\Component\\PropertyAccess\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/property-access',
+        ),
         'Symfony\\Component\\OptionsResolver\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/options-resolver',
+        ),
+        'Symfony\\Component\\Inflector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/inflector',
         ),
         'Status\\' => 
         array (
@@ -236,6 +269,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Note\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/note',
+        ),
+        'MyCLabs\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
         ),
         'Link\\' => 
         array (
@@ -318,6 +355,14 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             0 => __DIR__ . '/../..' . '/src/app/entity',
         ),
+        'Endroid\\QrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/endroid/qr-code/src',
+        ),
+        'Endroid\\Installer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/endroid/installer/src',
+        ),
         'Email\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/email',
@@ -329,6 +374,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Docserver\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/docserver',
+        ),
+        'DASPRiD\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dasprid/enum/src',
         ),
         'Convert\\' => 
         array (
@@ -353,6 +402,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Basket\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/basket',
+        ),
+        'BaconQrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
         'Attachment\\' => 
         array (
