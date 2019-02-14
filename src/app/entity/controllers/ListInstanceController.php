@@ -101,20 +101,20 @@ class ListInstanceController
             $listinstances[] = ['resId' => $res_id, "listinstances" => $array];
         }
             
-        return $response->withJson(['listinstances' => $listinstances]);
+        return $response->withJson($listinstances);
     }
 
     public function update(Request $request, Response $response)
     {
         $data = $request->getParams();
 
-        if (empty($data['listinstances'])) {
+        if (empty($data)) {
             return $response->withStatus(400)->withJson(['errors' => 'listinstances is missing or is empty']);
         }
 
         DatabaseModel::beginTransaction();
 
-        foreach ($data['listinstances'] as $ListInstanceByRes) {
+        foreach ($data as $ListInstanceByRes) {
             if (empty($ListInstanceByRes['resId'])) {
                 DatabaseModel::rollbackTransaction();
                 return $response->withStatus(400)->withJson(['errors' => 'resId is empty']);

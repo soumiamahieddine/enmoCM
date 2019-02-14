@@ -230,7 +230,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
                                 //update listInstances
                                 this.updateListInstance = false;
-                                this.http.put(this.coreUrl + 'rest/listinstances', user)
+                                this.http.put(this.coreUrl + 'rest/listinstances', user.listinstances)
                                     .subscribe((data: any) => {
                                         if (data.errors) {
                                             this.notify.error(data.errors);
@@ -273,7 +273,6 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
                     //user inDiffListDest
                 } else if (user.inDiffListDest && !user.isResDestUser) {
-
                     //update listModels
                     this.updateListModel = false;
                     this.http.put(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
@@ -314,9 +313,8 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
                     //user isResDestUser
                 } else if (!user.inDiffListDest && user.isResDestUser) {
-
                     //update listInstances
-                    this.http.put(this.coreUrl + 'rest/listinstances', user)
+                    this.http.put(this.coreUrl + 'rest/listinstances', user.listinstances)
                         .subscribe((data: any) => {
                             if (data.errors) {
                                 this.notify.error(data.errors);
@@ -417,10 +415,11 @@ export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugi
             this.loadInstance = true;
             this.http.get(this.coreUrl + 'rest/listinstances/dest/itemId/' + this.data.userDestRedirect.user_id)
                 .subscribe((dataInstance: any) => {
-                    this.data.listinstances = dataInstance.listinstances;
+                    this.data.listinstances = dataInstance;
                     this.loadInstance = false;
                 });
         }
+
     }
 
     sendFunction() {
