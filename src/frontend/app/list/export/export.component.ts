@@ -97,11 +97,6 @@ export class ExportComponent implements OnInit {
             isFunction: false
         },
         {
-            value: 'getNature',
-            label: this.lang.nature,
-            isFunction: true
-        },
-        {
             value: 'alt_identifier',
             label: this.lang.chronoNumber,
             isFunction: false
@@ -164,6 +159,11 @@ export class ExportComponent implements OnInit {
         {
             value: 'getParentFolder',
             label: this.lang.parentFolder,
+            isFunction: true
+        },
+        {
+            value: 'getNature',
+            label: this.lang.nature,
             isFunction: true
         },
         {

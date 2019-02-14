@@ -149,6 +149,8 @@ class ExportController
                     $leftJoinFunction[] = 'res_view_letterbox.fold_parent_id = folders.folders_system_id';
                 } elseif ($value['value'] == 'getCategory') {
                     $select[] = 'res_view_letterbox.category_id';
+                } elseif ($value['value'] == 'getNature') {
+                    $select[] = 'res_view_letterbox.nature_id';
                 } elseif ($value['value'] == 'getInitiatorEntity') {
                     $select[] = 'enone.short_label AS "enone.short_label"';
                     $tableFunction[] = 'entities enone';
@@ -235,6 +237,8 @@ class ExportController
                         $csvContent[] = $resource['folders.folder_name'];
                     } elseif ($value['value'] == 'getCategory') {
                         $csvContent[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
+                    } elseif ($value['value'] == 'getNature') {
+                        $csvContent[] = ResModel::getNatureLabel(['natureId' => $resource['nature_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
                         $csvContent[] = $resource['enone.short_label'];
                     } elseif ($value['value'] == 'getDestinationEntity') {
@@ -301,8 +305,9 @@ class ExportController
 
         $pdf->SetFont('', 'B', 12);
         $labelHeight = ExportController::getMaximumHeight($pdf, ['data' => $labels, 'width' => $widthNoMargins / $columnsNumber]);
+        $pdf->SetFillColor(230, 230, 230);
         foreach ($aArgs['data'] as $value) {
-            $pdf->MultiCell($widthNoMargins / $columnsNumber, $labelHeight, $value['label'], 1, 'L', false, 0);
+            $pdf->MultiCell($widthNoMargins / $columnsNumber, $labelHeight, $value['label'], 1, 'L', true, 0);
         }
 
         $pdf->SetY($pdf->GetY() + $labelHeight);
@@ -327,6 +332,8 @@ class ExportController
                         $content[] = $resource['folders.folder_name'];
                     } elseif ($value['value'] == 'getCategory') {
                         $content[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
+                    } elseif ($value['value'] == 'getNature') {
+                        $content[] = ResModel::getNatureLabel(['natureId' => $resource['nature_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
                         $content[] = $resource['enone.short_label'];
                     } elseif ($value['value'] == 'getDestinationEntity') {
