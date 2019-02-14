@@ -143,7 +143,7 @@ abstract class ListInstanceModelAbstract
         ValidatorModel::arrayType($aArgs, ['where', 'data']);
 
         DatabaseModel::delete([
-            'table' => 'listmodels',
+            'table' => 'listinstance',
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
         ]);
