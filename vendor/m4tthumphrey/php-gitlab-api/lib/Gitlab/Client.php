@@ -135,6 +135,14 @@ class Client
     }
 
     /**
+     * @return Api\GroupsMilestones
+     */
+    public function groupsMilestones()
+    {
+        return new Api\GroupsMilestones($this);
+    }
+
+    /**
      * @return Api\Issues
      */
     public function issues()
@@ -149,6 +157,15 @@ class Client
     {
         return new Api\IssueBoards($this);
     }
+
+    /**
+     * @return Api\GroupsBoards
+     */
+    public function groupsBoards()
+    {
+        return new Api\GroupsBoards($this);
+    }
+
 
     /**
      * @return Api\IssueLinks
@@ -293,6 +310,9 @@ class Client
 
             case 'groups':
                 return $this->groups();
+                
+            case 'groupsMilestones':
+                return $this->groupsMilestones();
 
             case 'issues':
                 return $this->issues();
@@ -300,6 +320,9 @@ class Client
             case 'board':
             case 'issue_boards':
                 return $this->issueBoards();
+
+            case 'group_boards':
+                return $this->groupsBoards();
 
             case 'issue_links':
                 return $this->issueLinks();

@@ -11,4 +11,5 @@ return array(
     'Zend_Search' => array($vendorDir . '/zf1/zend-search/library'),
     'Zend_Exception' => array($vendorDir . '/zf1/zend-exception/library'),
     'Pimple' => array($vendorDir . '/pimple/pimple/src'),
+    'BaconQrCode' => array($vendorDir . '/bacon/bacon-qr-code/src'),
 );
