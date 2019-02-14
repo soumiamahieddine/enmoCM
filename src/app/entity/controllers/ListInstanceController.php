@@ -113,7 +113,6 @@ class ListInstanceController
         DatabaseModel::beginTransaction();
 
         foreach ($data['listinstances'] as $ListInstanceByRes) {
-            
             if (empty($ListInstanceByRes['resId'])) {
                 DatabaseModel::rollbackTransaction();
                 return $response->withStatus(400)->withJson(['errors' => 'resId is empty']);
@@ -141,7 +140,7 @@ class ListInstanceController
                         return $response->withStatus(400)->withJson(['errors' => 'User not found or not active']);
                     }
                 } elseif ($instance['item_type'] == 'entity_id') {
-                    $entity = EntityModel::getByEntityId( ['entityId' => $instance['item_id']] );
+                    $entity = EntityModel::getByEntityId(['entityId' => $instance['item_id']]);
                     if (empty($entity) || $entity['enabled'] != "Y") {
                         DatabaseModel::rollbackTransaction();
                         return $response->withStatus(400)->withJson(['errors' => 'Entity not found or not active']);

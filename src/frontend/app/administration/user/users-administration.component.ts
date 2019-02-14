@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
 import { NotificationService } from '../../notification.service';
-import { HeaderService }        from '../../../service/header.service';
+import { HeaderService } from '../../../service/header.service';
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
@@ -182,47 +182,47 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 
     deleteUser(user: any) {
-            
-            user.mode = 'del';
-            this.userDestRedirect = user;
 
-            this.config = { 
-                data: { 
-                    userDestRedirect: this.userDestRedirect
-                } 
-            };
+        user.mode = 'del';
+        this.userDestRedirect = user;
 
-            //open modale
-            this.dialogRef = this.dialog.open(UsersAdministrationRedirectModalComponent, this.config);
-            this.dialogRef.afterClosed().subscribe((result: any) => {
+        this.config = {
+            data: {
+                userDestRedirect: this.userDestRedirect
+            }
+        };
 
-                if(result) {
+        //open modale
+        this.dialogRef = this.dialog.open(UsersAdministrationRedirectModalComponent, this.config);
+        this.dialogRef.afterClosed().subscribe((result: any) => {
 
-                    if (result.userDestRedirectModels) {
-                        user.redirectListModels = result.userDestRedirectModels;
-                    }
+            if (result) {
 
-                    if (result.redirectDestResUserId) {
-                        user.redirectDestResUserId = result.redirectDestResUserId;
+                if (result.userDestRedirectModels) {
+                    user.redirectListModels = result.userDestRedirectModels;
+                }
 
-                        this.listinstances = result.listinstances;
-                        this.listinstances.forEach((list: any) => {
-                            list.listinstances.forEach((element:any) => {
-                            if(element.item_mode == 'dest' && element.item_id == user.user_id) {
-                                    element.item_id = user.redirectDestResUserId;
-                                }
-                            });
+                if (result.redirectDestResUserId) {
+                    user.redirectDestResUserId = result.redirectDestResUserId;
+
+                    this.listinstances = result.listinstances;
+                    this.listinstances.forEach((list: any) => {
+                        list.listinstances.forEach((element: any) => {
+                            if (element.item_mode == 'dest' && element.item_id == user.user_id) {
+                                element.item_id = user.redirectDestResUserId;
+                            }
                         });
+                    });
 
-                        user.listinstances = this.listinstances;
-                    }
+                    user.listinstances = this.listinstances;
+                }
 
-                    //if user inDiffListDest and isResDestUser
-                    if (user.inDiffListDest && user.isResDestUser) {
-                       
-                        //update listModels
-                        this.updateListModel = false;
-                        this.http.put(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
+                //if user inDiffListDest and isResDestUser
+                if (user.inDiffListDest && user.isResDestUser) {
+
+                    //update listModels
+                    this.updateListModel = false;
+                    this.http.put(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
                         .subscribe((data: any) => {
                             if (data.errors) {
                                 this.notify.error(data.errors);
@@ -231,159 +231,159 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                 //update listInstances
                                 this.updateListInstance = false;
                                 this.http.put(this.coreUrl + 'rest/listinstances', user)
-                                .subscribe((data: any) => {
-                                    if (data.errors) {
-                                        this.notify.error(data.errors);
-                                    } else {
+                                    .subscribe((data: any) => {
+                                        if (data.errors) {
+                                            this.notify.error(data.errors);
+                                        } else {
 
-                                        //delete user
-                                        this.http.delete(this.coreUrl + 'rest/users/' + user.id)
-                                        .subscribe(() => {
-                                            for (let i in this.data) {
-                                                if (this.data[i].id == user.id) {
-                                                    this.data.splice(Number(i), 1);
-                                                }
-                                            }
-                                            this.dataSource = new MatTableDataSource(this.data);
-                                            this.dataSource.paginator = this.paginator;
-                                            this.dataSource.sort = this.sort;
+                                            //delete user
+                                            this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                                                .subscribe(() => {
+                                                    for (let i in this.data) {
+                                                        if (this.data[i].id == user.id) {
+                                                            this.data.splice(Number(i), 1);
+                                                        }
+                                                    }
+                                                    this.dataSource = new MatTableDataSource(this.data);
+                                                    this.dataSource.paginator = this.paginator;
+                                                    this.dataSource.sort = this.sort;
 
-                                            if (this.quota.userQuota && user.enabled == 'Y') {
-                                                this.quota.actives--;
-                                            } else if (this.quota.userQuota && user.enabled == 'N') {
-                                                this.quota.inactives--;
-                                            }
+                                                    if (this.quota.userQuota && user.enabled == 'Y') {
+                                                        this.quota.actives--;
+                                                    } else if (this.quota.userQuota && user.enabled == 'N') {
+                                                        this.quota.inactives--;
+                                                    }
 
-                                            this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
-                                            
-                                        //end delete user
-                                        }, (err) => {
-                                            this.notify.error(err.error.errors);
-                                        });
-                                    }
-                                //end update listInstances
-                                }, (err) => {
-                                    this.notify.error(err.error.errors);
-                                });
+                                                    this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
+
+                                                    //end delete user
+                                                }, (err) => {
+                                                    this.notify.error(err.error.errors);
+                                                });
+                                        }
+                                        //end update listInstances
+                                    }, (err) => {
+                                        this.notify.error(err.error.errors);
+                                    });
                             }
-                        //end update listModels
+                            //end update listModels
                         }, (err) => {
                             this.notify.error(err.error.errors);
                         });
-                
-                //user inDiffListDest
+
+                    //user inDiffListDest
                 } else if (user.inDiffListDest && !user.isResDestUser) {
-                    
+
                     //update listModels
                     this.updateListModel = false;
                     this.http.put(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
-                    .subscribe((data: any) => {
-                        if (data.errors) {
-                            this.notify.error(data.errors);
-                        } else {
+                        .subscribe((data: any) => {
+                            if (data.errors) {
+                                this.notify.error(data.errors);
+                            } else {
 
-                            //delete user
-                            this.http.delete(this.coreUrl + 'rest/users/' + user.id)
-                            .subscribe(() => {
-                                for (let i in this.data) {
-                                    if (this.data[i].id == user.id) {
-                                        this.data.splice(Number(i), 1);
-                                    }
-                                }
-                                this.dataSource = new MatTableDataSource(this.data);
-                                this.dataSource.paginator = this.paginator;
-                                this.dataSource.sort = this.sort;
+                                //delete user
+                                this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                                    .subscribe(() => {
+                                        for (let i in this.data) {
+                                            if (this.data[i].id == user.id) {
+                                                this.data.splice(Number(i), 1);
+                                            }
+                                        }
+                                        this.dataSource = new MatTableDataSource(this.data);
+                                        this.dataSource.paginator = this.paginator;
+                                        this.dataSource.sort = this.sort;
 
-                                if (this.quota.userQuota && user.enabled == 'Y') {
-                                    this.quota.actives--;
-                                } else if (this.quota.userQuota && user.enabled == 'N') {
-                                    this.quota.inactives--;
-                                }
+                                        if (this.quota.userQuota && user.enabled == 'Y') {
+                                            this.quota.actives--;
+                                        } else if (this.quota.userQuota && user.enabled == 'N') {
+                                            this.quota.inactives--;
+                                        }
 
-                                this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
-                                
-                            //end delete user
-                            }, (err) => {
-                                this.notify.error(err.error.errors);
-                            });
-                        }
-                    //end update listModels
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
+                                        this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
 
-                //user isResDestUser
+                                        //end delete user
+                                    }, (err) => {
+                                        this.notify.error(err.error.errors);
+                                    });
+                            }
+                            //end update listModels
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+
+                    //user isResDestUser
                 } else if (!user.inDiffListDest && user.isResDestUser) {
 
                     //update listInstances
                     this.http.put(this.coreUrl + 'rest/listinstances', user)
-                    .subscribe((data: any) => {
-                        if (data.errors) {
-                            this.notify.error(data.errors);
-                        } else {
+                        .subscribe((data: any) => {
+                            if (data.errors) {
+                                this.notify.error(data.errors);
+                            } else {
 
-                            //delete user
-                            this.http.delete(this.coreUrl + 'rest/users/' + user.id)
-                            .subscribe(() => {
-                                for (let i in this.data) {
-                                    if (this.data[i].id == user.id) {
-                                        this.data.splice(Number(i), 1);
-                                    }
-                                }
-                                this.dataSource = new MatTableDataSource(this.data);
-                                this.dataSource.paginator = this.paginator;
-                                this.dataSource.sort = this.sort;
+                                //delete user
+                                this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                                    .subscribe(() => {
+                                        for (let i in this.data) {
+                                            if (this.data[i].id == user.id) {
+                                                this.data.splice(Number(i), 1);
+                                            }
+                                        }
+                                        this.dataSource = new MatTableDataSource(this.data);
+                                        this.dataSource.paginator = this.paginator;
+                                        this.dataSource.sort = this.sort;
 
-                                if (this.quota.userQuota && user.enabled == 'Y') {
-                                    this.quota.actives--;
-                                } else if (this.quota.userQuota && user.enabled == 'N') {
-                                    this.quota.inactives--;
-                                }
+                                        if (this.quota.userQuota && user.enabled == 'Y') {
+                                            this.quota.actives--;
+                                        } else if (this.quota.userQuota && user.enabled == 'N') {
+                                            this.quota.inactives--;
+                                        }
 
-                                this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
-                                
-                            //end delete user
-                            }, (err) => {
-                                this.notify.error(err.error.errors);
-                            });
-                        }
-                    //end update listInstances
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
+                                        this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
 
-                    
-                //user is not inDiffListDest and is not isResDestUser
-                } else if (!user.inDiffListDest && !user.isResDestUser) {                    
-                    
+                                        //end delete user
+                                    }, (err) => {
+                                        this.notify.error(err.error.errors);
+                                    });
+                            }
+                            //end update listInstances
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+
+
+                    //user is not inDiffListDest and is not isResDestUser
+                } else if (!user.inDiffListDest && !user.isResDestUser) {
+
                     //delete user
                     this.http.delete(this.coreUrl + 'rest/users/' + user.id)
-                    .subscribe(() => {
-                        for (let i in this.data) {
-                            if (this.data[i].id == user.id) {
-                                this.data.splice(Number(i), 1);
+                        .subscribe(() => {
+                            for (let i in this.data) {
+                                if (this.data[i].id == user.id) {
+                                    this.data.splice(Number(i), 1);
+                                }
                             }
-                        }
-                        this.dataSource = new MatTableDataSource(this.data);
-                        this.dataSource.paginator = this.paginator;
-                        this.dataSource.sort = this.sort;
+                            this.dataSource = new MatTableDataSource(this.data);
+                            this.dataSource.paginator = this.paginator;
+                            this.dataSource.sort = this.sort;
 
-                        if (this.quota.userQuota && user.enabled == 'Y') {
-                            this.quota.actives--;
-                        } else if (this.quota.userQuota && user.enabled == 'N') {
-                            this.quota.inactives--;
-                        }
+                            if (this.quota.userQuota && user.enabled == 'Y') {
+                                this.quota.actives--;
+                            } else if (this.quota.userQuota && user.enabled == 'N') {
+                                this.quota.inactives--;
+                            }
 
-                        this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
-                        
-                    //end delete user
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
+                            this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
+
+                            //end delete user
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
                 }
             }
-   
-        //close modale
+
+            //close modale
         });
     }
 }
@@ -401,32 +401,32 @@ export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugi
     }
 
     ngOnInit(): void {
-        
+
         //get listModel
-        if(this.data.userDestRedirect.inDiffListDest) {
-            this.loadModel      = true;
+        if (this.data.userDestRedirect.inDiffListDest) {
+            this.loadModel = true;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + this.data.userDestRedirect.user_id)
-            .subscribe((dataDiff: any) => {
-                this.data.userDestRedirectModels = dataDiff.listTemplates;
-                this.loadModel = false;
-            });
+                .subscribe((dataDiff: any) => {
+                    this.data.userDestRedirectModels = dataDiff.listTemplates;
+                    this.loadModel = false;
+                });
         }
 
         //get listInstances
-        if(this.data.userDestRedirect.isResDestUser) {
-            this.loadInstance   = true;
+        if (this.data.userDestRedirect.isResDestUser) {
+            this.loadInstance = true;
             this.http.get(this.coreUrl + 'rest/listinstances/dest/itemId/' + this.data.userDestRedirect.user_id)
                 .subscribe((dataInstance: any) => {
-                this.data.listinstances = dataInstance.listinstances;
-                this.loadInstance = false;
-            });
+                    this.data.listinstances = dataInstance.listinstances;
+                    this.loadInstance = false;
+                });
         }
     }
 
     sendFunction() {
         var valid = true;
 
-        if(this.data.userDestRedirect.inDiffListDest) {
+        if (this.data.userDestRedirect.inDiffListDest) {
             this.data.userDestRedirectModels.forEach((element: any) => {
                 if (!element.redirectUserId) {
                     valid = false;
@@ -434,8 +434,8 @@ export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugi
             });
         }
 
-        if(this.data.userDestRedirect.isResDestUser) {
-            if(!this.data.redirectDestResUserId) {
+        if (this.data.userDestRedirect.isResDestUser) {
+            if (!this.data.redirectDestResUserId) {
                 valid = false;
             }
         }
