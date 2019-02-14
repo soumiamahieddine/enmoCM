@@ -97,9 +97,9 @@ export class ExportComponent implements OnInit {
             isFunction: false
         },
         {
-            value: 'nature_id',
+            value: 'getNature',
             label: this.lang.nature,
-            isFunction: false
+            isFunction: true
         },
         {
             value: 'alt_identifier',
