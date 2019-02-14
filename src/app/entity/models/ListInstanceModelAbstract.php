@@ -58,6 +58,36 @@ abstract class ListInstanceModelAbstract
         return $aListinstance[0];
     }
 
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'postSet', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table'     => 'listinstance',
+            'set'       => $aArgs['set'],
+            'postSet'   => $aArgs['postSet'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'listinstance',
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function getListByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -132,36 +162,6 @@ abstract class ListInstanceModelAbstract
         DatabaseModel::insert([
             'table'         => 'listinstance',
             'columnsValues' => $aArgs
-        ]);
-
-        return true;
-    }
-
-    public static function delete(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['listinstance_id']);
-        ValidatorModel::intVal($aArgs, ['listinstance_id']);
-
-        DatabaseModel::delete([
-            'table' => 'listinstance',
-            'where'  => ['listinstance_id = ?'],
-            'data'   => [$aArgs['listinstance_id']]
-        ]);
-
-        return true;
-    }
-
-    public static function update(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['set', 'postSet', 'where', 'data']);
-
-        DatabaseModel::update([
-            'table'     => 'listinstance',
-            'set'       => $aArgs['set'],
-            'postSet'   => $aArgs['postSet'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
         ]);
 
         return true;

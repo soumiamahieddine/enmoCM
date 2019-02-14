@@ -222,7 +222,7 @@ export class BasketListComponent implements OnInit {
         data.resources.forEach((element: any) => {
             // Process main datas
             Object.keys(element).forEach((key) => {
-                 if (key == 'statusImage' && element[key] == null) {
+                if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
                 } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
@@ -231,48 +231,68 @@ export class BasketListComponent implements OnInit {
 
             // Process secondary datas
             element.display.forEach((key: any) => {
+                key.displayTitle = key.displayValue;
                 if ((key.displayValue == null || key.displayValue == '') && ['getCreationAndProcessLimitDates', 'getParallelOpinionsNumber'].indexOf(key.value) === -1) {
                     key.displayValue = this.lang.undefined;
-
+                    key.displayTitle = '';
                 } else if (["getSenders", "getRecipients"].indexOf(key.value) > -1) {
-                    
                     if (key.displayValue.length > 1) {
+                        key.displayTitle = key.displayValue.join(' - ');
                         key.displayValue = this.lang.isMulticontact;
                     } else {
                         key.displayValue = key.displayValue[0];
                     }
-                } else if(key.value == 'getCreationAndProcessLimitDates') {
+                } else if (key.value == 'getCreationAndProcessLimitDates') {
                     key.icon = '';
-                } else if(key.value == 'getVisaWorkflow') {
+                } else if (key.value == 'getVisaWorkflow') {
                     let formatWorkflow: any = [];
                     let content = '';
                     let user = '';
-                    key.displayValue.forEach((visa: any) => {
+                    let currentKey = 0;
+                    let displayTitle: string[] = [];
+                    key.displayValue.forEach((visa: any, key: number) => {
                         content = '';
                         user = visa.user;
+                        displayTitle.push(user);
+
                         if (visa.mode == 'sign') {
-                            user = '<u>'+user+'</u>';
-                        } 
+                            user = '<u>' + user + '</u>';
+                        }
                         if (visa.date == '') {
-                            content = '<i class="fa fa-hourglass-half"></i> <span title="' + this.lang[visa.mode+'User'] + '">' + user + '</span>';
+                            content = '<i class="fa fa-hourglass-half"></i> <span title="' + this.lang[visa.mode + 'User'] + '">' + user + '</span>';
                         } else {
-                            content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.lang[visa.mode+'User'] + '">' + user + '</span></span>';
+                            content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.lang[visa.mode + 'User'] + '">' + user + '</span></span>';
                         }
 
                         if (visa.current) {
-                            content = '<b color="primary">'+content+'</b>';                            
+                            currentKey = key;
+                            formatWorkflow = ['...', formatWorkflow[key - 1]];
+                            content = '<b color="primary">' + content + '</b>';
                         }
-                        formatWorkflow.push(content);
+
+                        if (key <= currentKey + 1) {
+                            formatWorkflow.push(content);
+                        } else if (key == currentKey + 2) {
+                            formatWorkflow.push('...');
+                        }
                     });
-                    key.icon = '';
                     key.displayValue = formatWorkflow.join(' <i class="fas fa-long-arrow-alt-right"></i> ');
-                } else if(key.value == 'getParallelOpinionsNumber') {
+                    key.displayTitle = displayTitle.join(' - ');
+                } else if (key.value == 'getSignatories') {
+                    let userList: any[] = [];
+                    key.displayValue.forEach((visa: any) => {
+                        userList.push(visa.user);
+                    });
+                    key.displayValue = userList.join(', ');
+                    key.displayTitle = userList.join(', ');
+                } else if (key.value == 'getParallelOpinionsNumber') {
+                    key.displayTitle = key.displayValue + ' ' + this.lang.opinionsSent;
+
                     if (key.displayValue > 0) {
                         key.displayValue = '<b color="primary">' + key.displayValue + '</b> ' + this.lang.opinionsSent;
                     } else {
                         key.displayValue = key.displayValue + ' ' + this.lang.opinionsSent;
                     }
-                    
                 }
                 key.label = this.lang[key.value];
             });

@@ -97,11 +97,6 @@ export class ExportComponent implements OnInit {
             isFunction: false
         },
         {
-            value: 'nature_id',
-            label: this.lang.nature,
-            isFunction: false
-        },
-        {
             value: 'alt_identifier',
             label: this.lang.chronoNumber,
             isFunction: false
@@ -167,6 +162,11 @@ export class ExportComponent implements OnInit {
             isFunction: true
         },
         {
+            value: 'getNature',
+            label: this.lang.nature,
+            isFunction: true
+        },
+        {
             value: 'getCategory',
             label: this.lang.category_id,
             isFunction: true
@@ -187,13 +187,13 @@ export class ExportComponent implements OnInit {
             isFunction: true
         },
         {
-            value: 'getSender',
-            label: this.lang.sender,
+            value: 'getSenders',
+            label: this.lang.getSenders,
             isFunction: true
         },
         {
-            value: 'getRecipient',
-            label: this.lang.recipient,
+            value: 'getRecipients',
+            label: this.lang.getRecipients,
             isFunction: true
         },
         {

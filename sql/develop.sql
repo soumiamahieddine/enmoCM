@@ -131,8 +131,17 @@ DO $$ BEGIN
   END IF;
 END$$;
 
+/* Replace occurence in basket_clause */
+UPDATE baskets SET basket_clause = regexp_replace(basket_clause,'recommendation_limit_date','opinion_limit_date','g');
+
 /* REFACTORING */
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
+
+
+/* PARAM LIST DISPLAY */
+UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_attachments' OR result_page = 'list_copies';
+UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]' WHERE result_page = 'list_with_avis';
+UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getVisaWorkflow","cssClasses":[],"icon":"fa-list-ol"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_signatory';
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS

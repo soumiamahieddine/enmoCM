@@ -137,7 +137,7 @@ class ResourceListController
                 'leftJoin'  => $leftJoinFunction,
                 'where'     => ['res_letterbox.res_id in (?)'],
                 'data'      => [$resIds],
-                'order'     => [$order]
+                'orderBy'   => [$order]
             ]);
 
             foreach ($resources as $key => $resource) {
@@ -180,6 +180,9 @@ class ResourceListController
                         $display[] = $value;
                     } elseif ($value['value'] == 'getVisaWorkflow') {
                         $value['displayValue'] = ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]);
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getSignatories') {
+                        $value['displayValue'] = ResourceListController::getSignatories(['resId' => $resource['res_id']]);
                         $display[] = $value;
                     } elseif ($value['value'] == 'getParallelOpinionsNumber') {
                         $value['displayValue'] = ResourceListController::getParallelOpinionsNumber(['resId' => $resource['res_id']]);
@@ -588,7 +591,8 @@ class ResourceListController
             $assignee .= UserModel::getLabelledUserById(['login' => $listInstances[0]['item_id']]);
         }
         if (!empty($res['destination'])) {
-            $assignee .= (empty($assignee) ? "({$res['destination']})" : " ({$res['destination']})");
+            $entityLabel = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $res['destination']]);
+            $assignee .= (empty($assignee) ? "({$entityLabel['entity_label']})" : " ({$entityLabel['entity_label']})");
         }
 
         return $assignee;
@@ -618,6 +622,29 @@ class ResourceListController
             if (empty($listInstance['process_date']) && !$currentFound) {
                 $currentFound = true;
             }
+        }
+
+        return $users;
+    }
+
+    private static function getSignatories(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $listInstances = ListInstanceModel::get([
+            'select'    => ['item_id', 'process_date'],
+            'where'     => ['difflist_type = ?', 'res_id = ?' ,'requested_signature = ?'],
+            'data'      => ['VISA_CIRCUIT', $args['resId'], true],
+            'orderBy'   => ['listinstance_id']
+        ]);
+
+        $users = [];
+        foreach ($listInstances as $listInstance) {
+            $users[] = [
+                'user'      => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
+                'date'      => TextFormatModel::formatDate($listInstance['process_date']),
+            ];
         }
 
         return $users;

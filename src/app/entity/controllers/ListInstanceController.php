@@ -42,7 +42,8 @@ class ListInstanceController
         $listinstances = ListInstanceModel::getListByResId(['select' => ['listinstance_id', 'sequence', 'CASE WHEN item_mode=\'cc\' THEN \'copy\' ELSE item_mode END', 'item_id', 'item_type', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment', 'signatory', 'requested_signature'], 'id' => $aArgs['resId']]);
         
         $roles = EntityModel::getRoles();
-        
+
+        $listinstancesFormat = [];
         foreach ($listinstances as $key2 => $listinstance) {
             foreach ($roles as $key => $role) {
                 if ($role['id'] == $listinstance['item_mode']) {
@@ -50,6 +51,7 @@ class ListInstanceController
                 }
             }
         }
+
         return $response->withJson($listinstancesFormat);
     }
 
@@ -94,40 +96,44 @@ class ListInstanceController
                     $res_id = $value['res_id'];
                     $array = [];
                 }
-                array_push($array, $value);
+                $array[] = $value;
             }
             $listinstances[] = ['resId' => $res_id, "listinstances" => $array];
         }
             
-        return $response->withJson(['listinstances' => $listinstances]);
+        return $response->withJson($listinstances);
     }
 
     public function update(Request $request, Response $response)
     {
         $data = $request->getParams();
 
-        if (empty($data['listinstances'])) {
+        if (empty($data)) {
             return $response->withStatus(400)->withJson(['errors' => 'listinstances is missing or is empty']);
         }
 
         DatabaseModel::beginTransaction();
 
-        foreach ($data['listinstances'] as $ListInstanceByRes) {
+        foreach ($data as $ListInstanceByRes) {
+            if (empty($ListInstanceByRes['resId'])) {
+                DatabaseModel::rollbackTransaction();
+                return $response->withStatus(400)->withJson(['errors' => 'resId is empty']);
+            }
+
+            ListInstanceModel::delete([
+                'where' => ['res_id = ?', 'difflist_type = ?'],
+                'data'  => [$ListInstanceByRes['resId'], 'entity_id']
+            ]);
+
             foreach ($ListInstanceByRes['listinstances'] as $instance) {
                 if (empty($instance['res_id']) || empty($instance['item_id']) || empty($instance['item_type']) || empty($instance['item_mode']) || empty($instance['difflist_type'])) {
                     DatabaseModel::rollbackTransaction();
                     return $response->withStatus(400)->withJson(['errors' => 'Some data are empty']);
                 }
                 
-                if (isset($instance['listinstance_id']) && !empty($instance['listinstance_id'])) {
-                    $check = ListInstanceModel::getById(['select' => ['listinstance_id'], 'id' => $instance['listinstance_id']]);
-                    if (!$check) {
-                        DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'listinstance_id is not correct']);
-                    }
-    
-                    ListInstanceModel::delete(['listinstance_id' => $instance['listinstance_id']]);
-                }
+                unset($instance['listinstance_id']);
+                unset($instance['requested_signature']);
+                unset($instance['signatory']);
                 
                 if ($instance['item_type'] == 'user_id') {
                     $user = UserModel::getByLogin(['login' => $instance['item_id']]);
@@ -136,22 +142,19 @@ class ListInstanceController
                         return $response->withStatus(400)->withJson(['errors' => 'User not found or not active']);
                     }
                 } elseif ($instance['item_type'] == 'entity_id') {
-                    $entity = EntityModel::getByEntityId( ['entityId' => $instance['item_id']] );
+                    $entity = EntityModel::getByEntityId(['entityId' => $instance['item_id']]);
                     if (empty($entity) || $entity['enabled'] != "Y") {
                         DatabaseModel::rollbackTransaction();
                         return $response->withStatus(400)->withJson(['errors' => 'Entity not found or not active']);
                     }
                 }
 
-                unset($instance['listinstance_id']);
-                unset($instance['requested_signature']);
-                unset($instance['signatory']);
-                
                 ListInstanceModel::create($instance);
 
                 if ($instance['item_mode'] == 'dest') {
+                    $entity = UserModel::getPrimaryEntityByUserId(['userId' => $instance['item_id']]);
                     ResModel::update([
-                        'set'   => ['dest_user' => $instance['item_id']],
+                        'set'   => ['dest_user' => $instance['item_id'], 'destination' => $entity['entity_id']],
                         'where' => ['res_id = ?'],
                         'data'  => [$instance['res_id']]
                     ]);

@@ -831,4 +831,5 @@ export const LANG_EN = {
     "getOpinionLimitDate"                      : "Opinion limit date",
     "getModificationDate"                      : "Modification date",
     "opinionsSent"                      : "opinion(s) sent",
+    "getSignatories"                      : "Signatories",  
 };
