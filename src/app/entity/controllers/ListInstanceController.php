@@ -42,7 +42,8 @@ class ListInstanceController
         $listinstances = ListInstanceModel::getListByResId(['select' => ['listinstance_id', 'sequence', 'CASE WHEN item_mode=\'cc\' THEN \'copy\' ELSE item_mode END', 'item_id', 'item_type', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment', 'signatory', 'requested_signature'], 'id' => $aArgs['resId']]);
         
         $roles = EntityModel::getRoles();
-        
+
+        $listinstancesFormat = [];
         foreach ($listinstances as $key2 => $listinstance) {
             foreach ($roles as $key => $role) {
                 if ($role['id'] == $listinstance['item_mode']) {
@@ -50,6 +51,7 @@ class ListInstanceController
                 }
             }
         }
+
         return $response->withJson($listinstancesFormat);
     }
 
@@ -94,7 +96,7 @@ class ListInstanceController
                     $res_id = $value['res_id'];
                     $array = [];
                 }
-                array_push($array, $value);
+                $array[] = $value;
             }
             $listinstances[] = ['resId' => $res_id, "listinstances" => $array];
         }

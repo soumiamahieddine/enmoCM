@@ -263,7 +263,38 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname', 'user_id']]);
+
+        $listInstances = ListInstanceModel::get([
+            'select'    => [1],
+            'where'     => ['item_id = ?', 'difflist_type = ?', 'item_type = ?', 'item_mode = ?'],
+            'data'      => [$user['user_id'], 'entity_id', 'user_id', 'dest']
+        ]);
+        if (!empty($listInstances)) {
+            return $response->withStatus(403)->withJson(['errors' => 'User is still present in listInstances']);
+        }
+
+        $listTemplates = ListTemplateModel::get([
+            'select'    => [1],
+            'where'     => ['item_id = ?', 'object_type = ?', 'item_type = ?', 'item_mode = ?'],
+            'data'      => [$user['user_id'], 'entity_id', 'user_id', 'dest']
+        ]);
+        if (!empty($listTemplates)) {
+            return $response->withStatus(403)->withJson(['errors' => 'User is still present in listTemplates']);
+        }
+
+        ListInstanceModel::delete([
+            'where' => ['item_id = ?', 'difflist_type = ?', 'item_type = ?'],
+            'data'  => [$user['user_id'], 'entity_id', 'user_id']
+        ]);
+        ListTemplateModel::delete([
+            'where' => ['item_id = ?', 'object_type = ?', 'item_type = ?'],
+            'data'  => [$user['user_id'], 'entity_id', 'user_id']
+        ]);
+        RedirectBasketModel::delete([
+            'where' => ['owner_user_id = ? OR actual_user_id = ?'],
+            'data'  => [$aArgs['id'], $aArgs['id']]
+        ]);
 
         UserModel::delete(['id' => $aArgs['id']]);
 
