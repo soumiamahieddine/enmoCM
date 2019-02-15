@@ -167,6 +167,8 @@ class ExportController
                     $select[] = 'res_view_letterbox.typist';
                 } elseif ($value['value'] == 'getAssignee') {
                     $select[] = 'res_view_letterbox.dest_user';
+                } elseif ($value['value'] == 'getDepartment') {
+                    $select[] = 'res_view_letterbox.department_number_id';
                 }
             } else {
                 $select[] = "res_view_letterbox.{$value['value']}";
@@ -261,6 +263,8 @@ class ExportController
                         $csvContent[] = ExportController::getSignatories(['resId' => $resource['res_id']]);
                     } elseif ($value['value'] == 'getSignatureDates') {
                         $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getDepartment') {
+                        $content[] = DepartmentController::getById(['id' => $resource['department_number_id']]);
                     }
                 } else {
                     $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'sve_start_date'];
@@ -357,6 +361,8 @@ class ExportController
                         $content[] = ExportController::getSignatories(['resId' => $resource['res_id']]);
                     } elseif ($value['value'] == 'getSignatureDates') {
                         $content[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getDepartment') {
+                        $content[] = DepartmentController::getById(['id' => $resource['department_number_id']]);
                     }
                 } else {
                     $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'sve_start_date'];

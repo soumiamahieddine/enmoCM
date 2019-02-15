@@ -72,11 +72,6 @@ export class ExportComponent implements OnInit {
             isFunction: false
         },
         {
-            value: 'department_number_id',
-            label: this.lang.department,
-            isFunction: false
-        },
-        {
             value: 'barcode',
             label: this.lang.barcode,
             isFunction: false
@@ -219,6 +214,11 @@ export class ExportComponent implements OnInit {
         {
             value: 'getSignatureDates',
             label: this.lang.signatureDate,
+            isFunction: true
+        },
+        {
+            value: 'getDepartment',
+            label: this.lang.department,
             isFunction: true
         },
         {
