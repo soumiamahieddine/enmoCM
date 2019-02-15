@@ -311,7 +311,7 @@ export class ExportComponent implements OnInit {
                 downloadLink.setAttribute('download', "export_maarch_" + today + "." + this.exportModel.format.toLowerCase());
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
-
+                this.exportModelList[this.exportModel.format.toLowerCase()].data = this.exportModel.data;
                 this.loadingExport = false;
             }, (err: any) => {
                 this.notify.handleErrors(err);
