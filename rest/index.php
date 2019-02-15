@@ -300,6 +300,7 @@ $app->get('/users', \User\controllers\UserController::class . ':get');
 $app->post('/users', \User\controllers\UserController::class . ':create');
 $app->put('/users/{id}', \User\controllers\UserController::class . ':update');
 $app->delete('/users/{id}', \User\controllers\UserController::class . ':delete');
+$app->put('/users/{id}/suspend', \User\controllers\UserController::class . ':suspend');
 $app->get('/users/{id}/isDeletable', \User\controllers\UserController::class . ':isDeletable');
 $app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}/password', \User\controllers\UserController::class . ':resetPassword');
