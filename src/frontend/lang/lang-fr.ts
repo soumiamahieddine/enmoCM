@@ -787,7 +787,7 @@ export const LANG_FR = {
     "parentFolder"                                     : "Dossier parent",
     "initiatorEntity"                                     : "Libellé de l'entité initiatrice",
     "destinationEntity"                                     : "Libellé de l'entité traitante",
-    "destinationEntityType"                                     : "Libellé de l'entité traitante",
+    "destinationEntityType"                                     : "Libellé du type de l'entité traitante",
     "sender"                                     : "Expéditeur",
     "senders"                                     : "Expéditeur(s)",
     "recipient"                                     : "Destinataire",
