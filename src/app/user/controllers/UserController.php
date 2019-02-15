@@ -589,7 +589,7 @@ class UserController
         
         $user = UserModel::getByLowerLogin(['login' => $aArgs['userId'], 'select' => ['status']]);
 
-        if (empty($user[0])) {
+        if (empty($user)) {
             return $response->withJson(['status' => null]);
         }
 
