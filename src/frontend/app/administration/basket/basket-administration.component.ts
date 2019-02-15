@@ -270,7 +270,12 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef = this.dialog.open(BasketAdministrationGroupListModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
-                result.list_display = this.basketGroups[this.basketGroups.length-1].list_display;
+                if (this.basketGroups.length > 0) {
+                    result.list_display = this.basketGroups[this.basketGroups.length-1].list_display;
+                } else {
+                    result.list_display = [];
+                }
+                
                 this.http.post(this.coreUrl + "rest/baskets/" + this.id + "/groups", result)
                     .subscribe(() => {
                         this.basketGroups.push(result);
@@ -327,7 +332,7 @@ export class BasketAdministrationComponent implements OnInit {
 
         if (r) {
             action.checked = false;
-            this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'groupActions': group.groupActions })
+            this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'groupActions': group.groupActions })
                 .subscribe(() => {
                     this.notify.success(this.lang.actionsGroupBasketUpdated);
                 }, (err) => {
