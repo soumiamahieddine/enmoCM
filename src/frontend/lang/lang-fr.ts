@@ -838,7 +838,7 @@ export const LANG_FR = {
     "alignRight"                                : "Droite",
     "fontBig"                                : "Grand",
     "chronoNumberShort"                      : "N° Chrono",
-    "objectSample"                      : "Plainte concernant des nuisances sonore nocturne (le 01/01/2019)",
+    "objectSample"                      : "Plainte concernant des nuisances sonores nocturnes (le 01/01/2019)",
     "getPriority"                      : "Priorité",    
     "getPrioritySample"                      : "Urgent",    
     "getCategory"                      : "Catégorie",
