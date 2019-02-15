@@ -834,6 +834,7 @@ export const LANG_FR = {
     "edition"                                : "Édition",
     "eraseAll"                                : "Tout effacer",
     "fontBold"                                : "Gras",
+    "alignLeft"                                : "Gauche",
     "alignCenter"                                : "Centré",
     "alignRight"                                : "Droite",
     "fontBig"                                : "Grand",

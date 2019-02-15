@@ -49,6 +49,10 @@
                         <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-bold fa-2x"></mat-icon>
                         <span>{{lang.fontBold}}</span>
                     </button>
+                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_leftData') > -1" mat-menu-item (click)="setStyle(item,'align_leftData')">
+                        <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-left fa-2x"></mat-icon>
+                        <span>{{lang.alignLeft}}</span>
+                    </button>
                     <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_centerData') > -1" mat-menu-item (click)="setStyle(item,'align_centerData')">
                         <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-center fa-2x"></mat-icon>
                         <span>{{lang.alignCenter}}</span>

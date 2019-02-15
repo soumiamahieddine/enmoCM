@@ -40,84 +40,84 @@ export class ListAdministrationComponent implements OnInit {
             'value': 'getPriority',
             'label': this.lang.getPriority,
             'sample': this.lang.getPrioritySample,
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-traffic-light'
         },
         {
             'value': 'getCategory',
             'label': this.lang.getCategory,
             'sample': this.lang.incoming,
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-exchange-alt'
         },
         {
             'value': 'getDoctype',
             'label': this.lang.getDoctype,
             'sample': this.lang.getDoctypeSample,
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-suitcase'
         },
         {
             'value': 'getAssignee',
             'label': this.lang.getAssignee,
             'sample': this.lang.getAssigneeSample,
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-sitemap'
         },
         {
             'value': 'getRecipients',
             'label': this.lang.getRecipients,
             'sample': 'Patricia PETIT',
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-user'
         },
         {
             'value': 'getSenders',
             'label': this.lang.getSenders,
             'sample': 'Alain DUBOIS (MAARCH)',
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-book'
         },
         {
             'value': 'getCreationAndProcessLimitDates',
             'label': this.lang.getCreationAndProcessLimitDates,
             'sample': this.lang.getCreationAndProcessLimitDatesSample,
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-calendar'
         },
         {
             'value': 'getVisaWorkflow',
             'label': this.lang.getVisaWorkflow,
             'sample': '<i color="accent" class="fa fa-check"></i> Barbara BAIN -> <i class="fa fa-hourglass-half"></i> <b>Bruno BOULE</b> -> <i class="fa fa-hourglass-half"></i> Patricia PETIT',
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-list-ol'
         },
         {
             'value': 'getSignatories',
             'label': this.lang.getSignatories,
             'sample': 'Denis DAULL, Patricia PETIT',
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-certificate'
         },
         {
             'value': 'getModificationDate',
             'label': this.lang.getModificationDate,
             'sample': '01-01-2019',
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-calendar-check'
         },
         {
             'value': 'getOpinionLimitDate',
             'label': this.lang.getOpinionLimitDate,
             'sample': '01-01-2019',
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-stopwatch'
         },
         {
             'value': 'getParallelOpinionsNumber',
             'label': this.lang.getParallelOpinionsNumber,
             'sample': this.lang.getParallelOpinionsNumberSample,
-            'cssClasses': [],
+            'cssClasses': ['align_leftData'],
             'icon': 'fa-comment-alt'
         },
     ];

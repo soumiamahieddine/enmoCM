@@ -23,7 +23,7 @@ mat-toolbar {
     align-items: center;
     display: flex;
     padding: 5px;
-    padding-top: 10px; 
+    padding-top: 10px;
 
     &-mobile {
         font-size: 80%;
@@ -53,6 +53,7 @@ mat-toolbar {
 .newRow {
     // font-weight: bold;
 }
+
 .endCol {
     text-align: right;
 }
@@ -64,11 +65,12 @@ mat-toolbar {
 }
 
 .noData {
-    opacity : 0.5;
+    opacity: 0.5;
 }
 
 .chrono {
     color: #666;
+
     &-mobile {
         font-size: 70%;
     }
@@ -95,38 +97,43 @@ mat-toolbar {
     justify-content: flex-end;
     overflow: inherit;
 }
+
 .mat-badge-content {
-    background: #F99830;   
+    background: #F99830;
+}
+
+.align_leftData {
+    text-align: left;
 }
 
 .align_centerData {
     text-align: center;
-  }
-  
-  .align_rightData {
-    text-align: right;
-  }
-  
-  .boldFontData {
-    font-weight: bold;
-  }
-  
-  .bigFontData {
-    font-size: 14px;
-  }
-  
-  .smallFontData {
-    font-size: 10px;
-  }
-  
-  .normalData {
-    flex: 1;
-  }
+}
 
-  .chronoData {
-      width: 150px;
-  }
-  
-  .longData {
+.align_rightData {
+    text-align: right;
+}
+
+.boldFontData {
+    font-weight: bold;
+}
+
+.bigFontData {
+    font-size: 14px;
+}
+
+.smallFontData {
+    font-size: 10px;
+}
+
+.normalData {
+    flex: 1;
+}
+
+.chronoData {
+    width: 150px;
+}
+
+.longData {
     flex: 3;
-  }
+}

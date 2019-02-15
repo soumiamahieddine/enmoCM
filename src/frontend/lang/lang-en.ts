@@ -808,6 +808,7 @@ export const LANG_EN = {
     "edtion"                                : "Edition",
     "eraseAll"                                : "Erase all",
     "fontBold"                                : "Bold",
+    "alignLeft"                                : "Left",
     "alignCenter"                                : "Centered",
     "alignRight"                                : "Right",
     "fontBig"                                : "Big",

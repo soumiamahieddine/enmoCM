@@ -837,6 +837,7 @@ export const LANG_NL = {
     "edtion"                                : "Edition", //_TO_TRANSLATE
     "eraseAll"                                : "Erase all", //_TO_TRANSLATE
     "fontBold"                                : "Bold", //_TO_TRANSLATE
+    "alignLeft"                                : "Left", //_TO_TRANSLATE
     "alignCenter"                                : "Centered", //_TO_TRANSLATE
     "alignRight"                                : "Right", //_TO_TRANSLATE
     "fontBig"                                : "Big", //_TO_TRANSLATE
