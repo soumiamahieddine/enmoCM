@@ -859,4 +859,6 @@ export const LANG_FR = {
     "getModificationDate"                      : "Date de mise à jour",
     "opinionsSent"                      : "avis donné(s)",  
     "getSignatories"                      : "Signataires(s)",  
+    "contacts"                           : "Contact(s)",
+
 };

@@ -238,7 +238,7 @@ export class BasketListComponent implements OnInit {
                 } else if (["getSenders", "getRecipients"].indexOf(key.value) > -1) {
                     if (key.displayValue.length > 1) {
                         key.displayTitle = key.displayValue.join(' - ');
-                        key.displayValue = this.lang.isMulticontact;
+                        key.displayValue = '<b>' + key.displayValue.length + '</b> ' + this.lang.contacts;
                     } else {
                         key.displayValue = key.displayValue[0];
                     }
@@ -264,7 +264,7 @@ export class BasketListComponent implements OnInit {
                             content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.lang[visa.mode + 'User'] + '">' + user + '</span></span>';
                         }
 
-                        if (visa.current) {
+                        if (visa.current && key > 0) {
                             currentKey = key;
                             formatWorkflow = ['...', formatWorkflow[key - 1]];
                             content = '<b color="primary">' + content + '</b>';

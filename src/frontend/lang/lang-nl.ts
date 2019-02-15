@@ -862,5 +862,5 @@ export const LANG_NL = {
     "getModificationDate"                      : "Modification date", //_TO_TRANSLATE
     "opinionsSent"                      : "opinion(s) sent", //_TO_TRANSLATE
     "getSignatories"                      : "Signatories", //_TO_TRANSLATE
-
+    "contacts"                           : "Contact(s)", //_TO_TRANSLATE
 };

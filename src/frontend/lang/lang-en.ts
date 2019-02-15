@@ -833,4 +833,5 @@ export const LANG_EN = {
     "getModificationDate"                      : "Modification date",
     "opinionsSent"                      : "opinion(s) sent",
     "getSignatories"                      : "Signatories",  
+    "contacts"                           : "Contact(s)",
 };
