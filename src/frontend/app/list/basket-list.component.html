@@ -65,7 +65,7 @@
                                         <mat-icon [ngStyle]="{'color': row.priorityColor}" color="primary" class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x"
                                             title="{{row.statusLabel}}" style="cursor: crosshair;"
                                             (click)="$event.stopPropagation();filterThis(row.statusLabel)"></mat-icon><br />
-                                        <span *ngIf="row[data.value] == lang.undefined && row.barcode != null" style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
+                                        <span *ngIf="row[data.value] == lang.undefined" style="color: rgba(0,0,0,0.4);font-size: 90%;"><i *ngIf="row.barcode != lang.undefined"
                                                 class="fas fa-barcode"></i> {{row.barcode}}</span>
                                         <span *ngIf="row[data.value] != lang.undefined" style="color: rgba(0,0,0,0.4);font-size: 90%;cursor: crosshair;"
                                             (click)="$event.stopPropagation();filterThis(row[data.value])">{{row[data.value]}}</span>
