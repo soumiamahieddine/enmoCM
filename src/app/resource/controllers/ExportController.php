@@ -317,6 +317,7 @@ class ExportController
             $content = [];
             foreach ($aArgs['data'] as $value) {
                 if (empty($value['value'])) {
+                    $content[] = '';
                     continue;
                 }
                 if ($value['isFunction']) {

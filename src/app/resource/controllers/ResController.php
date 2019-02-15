@@ -77,6 +77,15 @@ class ResController
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
         }
 
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $resId,
+            'eventType' => 'ADD',
+            'info'      => _DOC_ADDED,
+            'moduleId'  => 'res',
+            'eventId'   => 'resadd',
+        ]);
+
         return $response->withJson(['resId' => $resId]);
     }
 

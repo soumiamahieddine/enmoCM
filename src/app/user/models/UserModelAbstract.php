@@ -88,25 +88,14 @@ abstract class UserModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'user']);
-        ValidatorModel::notEmpty($aArgs['user'], ['firstname', 'lastname']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'enabled', 'loginmode']);
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'firstname'     => $aArgs['user']['firstname'],
-                'lastname'      => $aArgs['user']['lastname'],
-                'mail'          => $aArgs['user']['mail'],
-                'phone'         => $aArgs['user']['phone'],
-                'initials'      => $aArgs['user']['initials'],
-                'enabled'       => $aArgs['user']['enabled'],
-                'thumbprint'    => $aArgs['user']['thumbprint'],
-                'loginmode'     => empty($aArgs['user']['loginmode']) ? 'standard' : $aArgs['user']['loginmode'],
-            ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'table' => 'users',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
         ]);
 
         return true;
