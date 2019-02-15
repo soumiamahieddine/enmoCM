@@ -668,15 +668,6 @@ $export2 = array(
     'disabledRules' => count($tab).' == 0',
     );
 array_push($paramsTab['tools'], $export2);
-if ($core_tools->test_service('print_doc_details_from_list', 'apps', false)) {
-    $print = array(
-                'script' => "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
-                'icon' => 'link',
-                'tooltip' => _PRINT_DOC_FROM_LIST,
-                'disabledRules' => count($tab).' == 0',
-            );
-    array_push($paramsTab['tools'], $print);
-}
 
 //Afficher la liste
 $status = 0;

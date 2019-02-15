@@ -389,15 +389,6 @@
     </WHEREAMIUSED>
   </SERVICE>
   <SERVICE>
-    <id>print_doc_details_from_list</id>
-    <name>_PRINT_DOC_DETAILS_FROM_LIST</name>
-    <comment>_PRINT_DOC_DETAILS_FROM_LIST</comment>
-    <servicepage>print.php</servicepage>
-    <servicetype>use</servicetype>
-    <system_service>false</system_service>
-    <enabled>true</enabled>
-  </SERVICE>
-  <SERVICE>
     <id>admin_update_control</id>
     <name>_UPDATE_CONTROL</name>
     <comment>_ADMIN_UPDATE_CONTROL_DESC</comment>

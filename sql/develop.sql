@@ -137,6 +137,7 @@ UPDATE baskets SET basket_res_order = regexp_replace(basket_res_order,'recommend
 
 /* REFACTORING */
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
+DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
 
 
 /* PARAM LIST DISPLAY */
