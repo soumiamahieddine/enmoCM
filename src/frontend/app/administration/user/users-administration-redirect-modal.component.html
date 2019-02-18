@@ -64,7 +64,8 @@
             <div class="modal-body" *ngIf="!data.inDiffListDest && !data.isResDestUser">
                 <h2 mat-dialog-title>{{lang.confirmAction}}</h2>
                 <div class="alert" role="alert">
-                    <b>{{lang.delete}} {{this.data.userDestRedirect.firstname}} {{this.data.userDestRedirect.lastname}}</b>&nbsp;
+                    <b *ngIf="data.userDestRedirect.mode == 'delete'">{{lang.delete}} {{this.data.userDestRedirect.firstname}} {{this.data.userDestRedirect.lastname}}</b>&nbsp;
+                    <b *ngIf="data.userDestRedirect.mode == 'suspend'">{{lang.suspend}} {{this.data.userDestRedirect.firstname}} {{this.data.userDestRedirect.lastname}}</b>&nbsp;
                 </div>
             </div>
 
