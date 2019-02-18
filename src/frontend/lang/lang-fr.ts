@@ -132,6 +132,7 @@ export const LANG_FR = {
     "delay1"                            : "Délai relance 1 avant terme (en jours)",
     "delay2"                            : "Délai relance 2 après terme (en jours)",
     "delete"                            : "Supprimer",
+    "unableToDelete"                    : "Impossible de supprimer",
     "deleteAssignation"                 : "Supprimer l'assignation",
     "deleteAtt"                         : "Supprimer la pièce jointe",
     "deleteMsg"                         : "Voulez-vous vraiment supprimer cet élément ?",
@@ -479,6 +480,7 @@ export const LANG_FR = {
     "string"                            : "Chaine de caractère",
     "sunday"                            : "Dimanche",
     "suspend"                           : "Suspendre",
+    "unableToSuspend"                   : "Impossible de suspendre",
     "suspended"                         : "Suspendu",
     "suspendNotification"               : "Susprendre la notification",
     "system"                            : "Système",
@@ -860,5 +862,7 @@ export const LANG_FR = {
     "opinionsSent"                      : "avis donné(s)",  
     "getSignatories"                      : "Signataire(s)",  
     "contacts"                           : "Contact(s)",
-
+    "userIsNotDeletable"                 : "Vous n'avez pas la totalité des <b>droits d'accès</b> sur les listes de diffusion ou les courriers de l'utilisateur",
+    "userIsDeletableBy"                  : "Seul un utilisateur ayant la <b>totalités des droits d'accès</b> pourra supprimer ou supsprendre cet utilisateur.",
+    "mailEntitiesList"                   : "Liste des entités rattachées aux courriers"
 };

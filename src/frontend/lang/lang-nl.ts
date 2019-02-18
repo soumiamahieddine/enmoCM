@@ -108,6 +108,7 @@ export const LANG_NL = {
     "delay1" : "Termijn herinnering 1 voor einde (in dagen)",
     "delay2" : "Termijn herinnering 2 na einde (in dagen)",
     "delete" : "Verwijderen",
+    "unableToDelete" : "Niet te onderdrukken", //_TO_TRANSLATE
     "deleteAssignation" : "De toekenning verwijderen",
     "deleteMsg" : "Wilt u dit element echt verwijderen?",
     "desactivateAbsence" : "De afwezigheid uitschakelen",
@@ -397,6 +398,7 @@ export const LANG_NL = {
     "string" : "Karakterreeks",
     "sunday" : "Zondag",
     "suspend" : "Opschorten",
+    "unableToSuspend" : "Schorsing onmogelijk", //_TO_TRANSLATE
     "suspended" : "Opgeschort",
     "suspendNotification" : "De melding opschorten",
     "system" : "Systeem",
@@ -863,4 +865,7 @@ export const LANG_NL = {
     "opinionsSent"                      : "opinion(s) sent", //_TO_TRANSLATE
     "getSignatories"                      : "Signatories", //_TO_TRANSLATE
     "contacts"                           : "Contact(s)", //_TO_TRANSLATE
+    "userIsNotDeletable"                 : "You do not have <b>full access rights</b> to the user's diffusion list or mails", //_TO_TRANSLATE
+    "userIsDeletableBy"                  : "Only a user with the <b>totality of access rights</b> can delete or suspend this user.", //_TO_TRANSLATE
+    "mailEntitiesList"                   : "List of entities attached to mails" //_TO_TRANSLATE
 };

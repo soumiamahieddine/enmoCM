@@ -105,6 +105,7 @@ export const LANG_EN = {
     "default"                           : "default",
     "defaultAction"                     : "Default action",
     "delete"                            : "Delete",
+    "unableToDelete"                    : "Unable to delete",
     "deleteAtt"                         : "Delete the attachment",
     "deleteMsg"                         : "Do you really want to delete this element",
     "desactivateAbsence"                : "Deactivate absence",
@@ -384,6 +385,7 @@ export const LANG_EN = {
     "string"                            : "String",
     "sunday"                            : "Sunday",
     "suspend"                           : "Suspend",
+    "unableToSuspend"                   : "Unable to suspend",
     "suspended"                         : "Suspended",
     "suspendNotification"               : "Suspend notification",
     "system"                            : "System",
@@ -834,4 +836,7 @@ export const LANG_EN = {
     "opinionsSent"                      : "opinion(s) sent",
     "getSignatories"                      : "Signatories",  
     "contacts"                           : "Contact(s)",
+    "userIsNotDeletable"                 : "You do not have <b>full access rights</b> to the user's diffusion list or mails",
+    "userIsDeletableBy"                  : "Only a user with the <b>totality of access rights</b> can delete or suspend this user.",
+    "mailEntitiesList"                   : "List of entities attached to mails"
 };
