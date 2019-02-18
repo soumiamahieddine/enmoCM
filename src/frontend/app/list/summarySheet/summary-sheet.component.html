@@ -63,3 +63,6 @@
         <mat-icon fontSet="fas" fontIcon="fa-plus" style="height: auto;"></mat-icon>
     </button>
 </div>
+<div *ngIf="data.selectedRes.length > 10" mat-dialog-actions class="actions">
+    <span style="color: #d24747; font-style: italic">{{lang.firstSummarySheetsGenerated}}</span>
+</div>
