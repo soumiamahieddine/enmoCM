@@ -266,7 +266,11 @@ export class BasketListComponent implements OnInit {
 
                         if (visa.current && key > 0) {
                             currentKey = key;
-                            formatWorkflow = ['...', formatWorkflow[key - 1]];
+                            if (formatWorkflow[key - 2] !== undefined) {
+                                formatWorkflow = ['...', formatWorkflow[key - 1]];
+                            } else {
+                                formatWorkflow = [formatWorkflow[key - 1]];
+                            }
                             content = '<b color="primary">' + content + '</b>';
                         }
 
