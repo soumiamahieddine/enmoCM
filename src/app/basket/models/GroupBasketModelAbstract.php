@@ -39,17 +39,31 @@ abstract class GroupBasketModelAbstract
 
     public static function createGroupBasket(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['basketId', 'groupId', 'resultPage']);
-        ValidatorModel::stringType($aArgs, ['basketId', 'groupId', 'resultPage', 'list_display']);
+        ValidatorModel::notEmpty($aArgs, ['basketId', 'groupId', 'listDisplay']);
+        ValidatorModel::stringType($aArgs, ['basketId', 'groupId', 'listDisplay']);
 
         DatabaseModel::insert([
             'table'         => 'groupbasket',
             'columnsValues' => [
                 'basket_id'         => $aArgs['basketId'],
                 'group_id'          => $aArgs['groupId'],
-                'result_page'       => $aArgs['resultPage'],
-                'list_display'      => empty($aArgs['listDisplay']) ? '[]' : $aArgs['listDisplay']
+                'list_display'      => $aArgs['listDisplay']
             ]
+        ]);
+
+        return true;
+    }
+
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table' => 'groupbasket',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
         ]);
 
         return true;
@@ -59,15 +73,17 @@ abstract class GroupBasketModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['basketId', 'groupId']);
         ValidatorModel::stringType($aArgs, ['basketId', 'groupId']);
-        ValidatorModel::boolType($aArgs, ['preferences']);
+        ValidatorModel::boolType($aArgs, ['preferences', 'groupBasket']);
 
         $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $aArgs['groupId']]);
 
-        DatabaseModel::delete([
-            'table' => 'groupbasket',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['basketId'], $aArgs['groupId']]
-        ]);
+        if (!empty($aArgs['groupBasket'])) {
+            DatabaseModel::delete([
+                'table' => 'groupbasket',
+                'where' => ['basket_id = ?', 'group_id = ?'],
+                'data'  => [$aArgs['basketId'], $aArgs['groupId']]
+            ]);
+        }
         DatabaseModel::delete([
             'table' => 'actions_groupbaskets',
             'where' => ['basket_id = ?', 'group_id = ?'],

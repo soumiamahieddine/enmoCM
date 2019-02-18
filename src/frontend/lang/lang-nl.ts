@@ -108,6 +108,7 @@ export const LANG_NL = {
     "delay1" : "Termijn herinnering 1 voor einde (in dagen)",
     "delay2" : "Termijn herinnering 2 na einde (in dagen)",
     "delete" : "Verwijderen",
+    "unableToDelete" : "Niet te onderdrukken", //_TO_TRANSLATE
     "deleteAssignation" : "De toekenning verwijderen",
     "deleteMsg" : "Wilt u dit element echt verwijderen?",
     "desactivateAbsence" : "De afwezigheid uitschakelen",
@@ -397,6 +398,7 @@ export const LANG_NL = {
     "string" : "Karakterreeks",
     "sunday" : "Zondag",
     "suspend" : "Opschorten",
+    "unableToSuspend" : "Schorsing onmogelijk", //_TO_TRANSLATE
     "suspended" : "Opgeschort",
     "suspendNotification" : "De melding opschorten",
     "system" : "Systeem",
@@ -783,7 +785,6 @@ export const LANG_NL = {
     "confidentiality"                                     : "_TO_TRANSLATE",
     "nature"                                     : "_TO_TRANSLATE",
     "admissionDate"                                     : "_TO_TRANSLATE",
-    "recommendationLimitDate"                                     : "_TO_TRANSLATE",
     "sveStartDate"                                     : "_TO_TRANSLATE",
     "caseLabel"                                     : "_TO_TRANSLATE",
     "copyUsersEntities"                                     : "_TO_TRANSLATE",
@@ -831,8 +832,40 @@ export const LANG_NL = {
     "destination"                                     : "_TO_TRANSLATE",
     "selectAllResInBasket"                                     : "_TO_TRANSLATE",
     "redirectUserListInstances"                 : "_TO_TRANSLATE_Change of recipient for mail being processed",
-    "isResDest"                                 : "_TO_TRANSLATE_is the recipient of mail being processed",
-    "chooseNewDestUser"                         : "_TO_TRANSLATE_please select a replacement user", 
-    "newDest"                                   : "_TO_TRANSLATE_New recipient for",
-    "newDestRes"                                : "_TO_TRANSLATE_New recipient for mails"
+    "chooseNewDestUser"                         : "is the <b>recipient</b> of mail being processed, please select a <b>replacement user</b>", //_TO_TRANSLATE_
+    "newDest"                                   : "New recipient for", //_TO_TRANSLATE_
+    "newDestRes"                                : "New recipient for mails", //_TO_TRANSLATE
+    "preview"                                : "Preview", //_TO_TRANSLATE
+    "edtion"                                : "Edition", //_TO_TRANSLATE
+    "eraseAll"                                : "Erase all", //_TO_TRANSLATE
+    "fontBold"                                : "Bold", //_TO_TRANSLATE
+    "alignLeft"                                : "Left", //_TO_TRANSLATE
+    "alignCenter"                                : "Centered", //_TO_TRANSLATE
+    "alignRight"                                : "Right", //_TO_TRANSLATE
+    "fontBig"                                : "Big", //_TO_TRANSLATE
+    "chronoNumberShort"                      : "Chrono Num", //_TO_TRANSLATE
+    "objectSample"                      : "Subject sample", //_TO_TRANSLATE
+    "getPriority"                      : "Priority", //_TO_TRANSLATE
+    "getCategory"                      : "Category", //_TO_TRANSLATE
+    "prioritySample"                      : "Hight", //_TO_TRANSLATE
+    "getDoctype"                      : "Mail type", //_TO_TRANSLATE
+    "getDoctypeSample"                      : "Reclamation", //_TO_TRANSLATE
+    "getAssignee"                      : "User destination (entity destination)", //_TO_TRANSLATE 
+    "getAssigneeSample"                      : "Barbara BAIN (Finance division)", //_TO_TRANSLATE
+    "getSenders"                      : "Sender", //_TO_TRANSLATE
+    "getRecipients"                      : "Recipient", //_TO_TRANSLATE
+    "getVisaWorkflow"                      : "Visa workflow", //_TO_TRANSLATE
+    "getCreationAndProcessLimitDates"                      : "Creation date - Process limit date", //_TO_TRANSLATE
+    "getCreationAndProcessLimitDatesSample"                      : "1st jan. - <i class=\"fa fa-stopwatch\"></i>&nbsp;<b color=\"warn\">3 day(s)</b>", //_TO_TRANSLATE
+    "getParallelOpinionsNumber"                      : "Number of opinions sent", //_TO_TRANSLATE 
+    "getParallelOpinionsNumberSample"                      : "<b>3</b> opinion(s) sent", //_TO_TRANSLATE 
+    "warnMaxDataList"                      : "Maximum of displayed datas is reached", //_TO_TRANSLATE
+    "getOpinionLimitDate"                      : "Opinion limit date", //_TO_TRANSLATE
+    "getModificationDate"                      : "Modification date", //_TO_TRANSLATE
+    "opinionsSent"                      : "opinion(s) sent", //_TO_TRANSLATE
+    "getSignatories"                      : "Signatories", //_TO_TRANSLATE
+    "contacts"                           : "Contact(s)", //_TO_TRANSLATE
+    "userIsNotDeletable"                 : "You do not have <b>full access rights</b> to diffusion list or mails for the user ", //_TO_TRANSLATE
+    "userIsDeletableBy"                  : "Only a user with the <b>totality of access rights</b> can delete or suspend this user.", //_TO_TRANSLATE
+    "mailEntitiesList"                   : "List of entities attached to mails" //_TO_TRANSLATE
 };

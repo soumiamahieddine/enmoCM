@@ -35,16 +35,12 @@ if (!defined("_RECOMMENDATION_USER")) {
     define("_RECOMMENDATION_USER", "Person for recommendation");
 }
 
-if (!defined("_RECOMMENDATION_USER")) {
-    define("_RECOMMENDATION_USER", "Users for recommendation");
-}
-
 if (!defined("_RECOMMENDATION_NOTE")) {
     define("_RECOMMENDATION_NOTE", "Recommendation pattern");
 }
 
-if (!defined("_RECOMMENDATION_LIMIT_DATE")) {
-    define("_RECOMMENDATION_LIMIT_DATE", "Recommendation deadline");
+if (!defined("_OPINION_LIMIT_DATE")) {
+    define("_OPINION_LIMIT_DATE", "Recommendation deadline");
 }
 
 if (!defined("_TO_AVIS")) {

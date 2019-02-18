@@ -55,6 +55,21 @@ abstract class ResModelAbstract
         return $aResources;
     }
 
+    public static function getExt(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $aResources = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['mlb_coll_ext'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $aResources;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);

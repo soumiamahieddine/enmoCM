@@ -39,7 +39,7 @@ DO $$ BEGIN
         and groupbasket.group_id = usergroup_content.group_id
         and groupbasket.basket_id = user_abs.basket_id;
 
---       DROP TABLE IF EXISTS user_abs;
+      DROP TABLE IF EXISTS user_abs;
   END IF;
 END$$;
 UPDATE history SET table_name = 'redirected_baskets' WHERE table_name = 'user_abs';
@@ -101,10 +101,11 @@ CREATE TABLE exports_templates
 (
 id serial NOT NULL,
 user_id INTEGER NOT NULL,
-delimiter character varying(3) NOT NULL,
+format character varying(3) NOT NULL,
+delimiter character varying(3),
 data json DEFAULT '[]' NOT NULL,
 CONSTRAINT exports_templates_pkey PRIMARY KEY (id),
-CONSTRAINT exports_templates_unique_key UNIQUE (user_id)
+CONSTRAINT exports_templates_unique_key UNIQUE (user_id, format)
 )
 WITH (OIDS=FALSE);
 
@@ -118,6 +119,33 @@ ALTER TABLE groupbasket ADD UNIQUE (id);
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_display;
 ALTER TABLE groupbasket ADD COLUMN list_display json DEFAULT '[]';
 
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext') AND attname = 'recommendation_limit_date') = 1 THEN
+    ALTER TABLE res_letterbox ADD COLUMN opinion_limit_date TIMESTAMP without TIME ZONE DEFAULT NULL;
+    UPDATE res_letterbox SET opinion_limit_date =
+    (
+      SELECT recommendation_limit_date FROM mlb_coll_ext
+      WHERE res_letterbox.res_id = mlb_coll_ext.res_id
+    );
+    ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS recommendation_limit_date;
+  END IF;
+END$$;
+
+/* Replace occurence in basket_clause */
+UPDATE baskets SET basket_clause = regexp_replace(basket_clause,'recommendation_limit_date','opinion_limit_date','g');
+UPDATE baskets SET basket_res_order = regexp_replace(basket_res_order,'recommendation_limit_date','opinion_limit_date','g');
+
+/* REFACTORING */
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm1_date;
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm2_date;
+DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
+
+
+/* PARAM LIST DISPLAY */
+UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_attachments' OR result_page = 'list_copies';
+UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]' WHERE result_page = 'list_with_avis';
+UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getVisaWorkflow","cssClasses":[],"icon":"fa-list-ol"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_signatory';
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
@@ -159,6 +187,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.external_id,
     r.external_link,
     r.departure_date,
+    r.opinion_limit_date,
     r.department_number_id,
     r.barcode,
     r.custom_t1 AS doc_custom_t1,
@@ -254,11 +283,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.alt_identifier,
     mlb.admission_date,
     mlb.process_limit_date,
-    mlb.recommendation_limit_date,
     mlb.closing_date,
-    mlb.alarm1_date,
-    mlb.alarm2_date,
-    mlb.flag_notif,
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,

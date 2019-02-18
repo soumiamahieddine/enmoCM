@@ -67,7 +67,7 @@ abstract class UserModelAbstract
         DatabaseModel::insert([
             'table'         => 'users',
             'columnsValues' => [
-                'user_id'                       => $aArgs['user']['userId'],
+                'user_id'                       => strtolower($aArgs['user']['userId']),
                 'firstname'                     => $aArgs['user']['firstname'],
                 'lastname'                      => $aArgs['user']['lastname'],
                 'mail'                          => $aArgs['user']['mail'],
@@ -88,25 +88,14 @@ abstract class UserModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'user']);
-        ValidatorModel::notEmpty($aArgs['user'], ['firstname', 'lastname']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'enabled', 'loginmode']);
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'firstname'     => $aArgs['user']['firstname'],
-                'lastname'      => $aArgs['user']['lastname'],
-                'mail'          => $aArgs['user']['mail'],
-                'phone'         => $aArgs['user']['phone'],
-                'initials'      => $aArgs['user']['initials'],
-                'enabled'       => $aArgs['user']['enabled'],
-                'thumbprint'    => $aArgs['user']['thumbprint'],
-                'loginmode'     => empty($aArgs['user']['loginmode']) ? 'standard' : $aArgs['user']['loginmode'],
-            ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'table' => 'users',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
         ]);
 
         return true;
@@ -138,6 +127,25 @@ abstract class UserModelAbstract
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['login']]
+        ]);
+
+        if (empty($aUser)) {
+            return [];
+        }
+
+        return $aUser[0];
+    }
+    
+    public static function getByLowerLogin(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['login']);
+        ValidatorModel::stringType($aArgs, ['login']);
+
+        $aUser = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users'],
+            'where'     => ['lower(user_id) = lower(?)'],
             'data'      => [$aArgs['login']]
         ]);
 
@@ -353,6 +361,25 @@ abstract class UserModelAbstract
             'table'     => ['users_entities, entities'],
             'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?', 'users_entities.primary_entity = ?'],
             'data'      => [$aArgs['userId'], 'Y']
+        ]);
+
+        if (empty($aEntity[0])) {
+            return [];
+        }
+
+        return $aEntity[0];
+    }
+
+    public static function getPrimaryEntityById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+
+        $aEntity = DatabaseModel::select([
+            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
+            'table'     => ['users, users_entities, entities'],
+            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id', 'users.id = ?', 'users_entities.primary_entity = ?'],
+            'data'      => [$aArgs['id'], 'Y']
         ]);
 
         if (empty($aEntity[0])) {

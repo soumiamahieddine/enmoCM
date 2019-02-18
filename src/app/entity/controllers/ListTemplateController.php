@@ -218,7 +218,6 @@ class ListTemplateController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-
         $listTemplates = ListTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['object_id', 'object_type']]);
         
         if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && !strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') && !strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_')) {
@@ -258,25 +257,17 @@ class ListTemplateController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function getByUserWithEntityDest(Request $request, Response $response, array $aArgs)
-    {
-        $listTemplates = ListTemplateModel::get([
-            'select'    => ['object_id', 'title'],
-            'where'     => ['item_id = ?', 'object_type = ?', 'item_mode = ?'],
-            'data'      => [$aArgs['itemId'], 'entity_id', 'dest']
-        ]);
-
-        return $response->withJson(['listTemplates' => $listTemplates]);
-    }
-
     public function updateByUserWithEntityDest(Request $request, Response $response)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+        
         $data = $request->getParams();
 
         DatabaseModel::beginTransaction();
 
         foreach ($data['redirectListModels'] as $listModel) {
-            //check if user exist
             $user = UserModel::getByLogin(['login' => $listModel['redirectUserId']]);
             if (empty($user) || $user['status'] != "OK") {
                 DatabaseModel::rollbackTransaction();
@@ -328,7 +319,7 @@ class ListTemplateController
             $roles[$key]['usedIn'] = [];
             $listTemplates = ListTemplateModel::get(['select' => ['object_id'], 'where' => ['object_type = ?', 'item_mode = ?'], 'data' => [$aArgs['typeId'], $roles[$key]['id']]]);
             foreach ($listTemplates as $listTemplate) {
-                $entity = entitymodel::getByEntityId(['select' => ['short_label'], 'entityId' => $listTemplate['object_id']]);
+                $entity = Entitymodel::getByEntityId(['select' => ['short_label'], 'entityId' => $listTemplate['object_id']]);
                 $roles[$key]['usedIn'][] = $entity['short_label'];
             }
         }

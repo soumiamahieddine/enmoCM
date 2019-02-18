@@ -218,6 +218,84 @@ class Groups extends AbstractApi
         return $this->get('groups/'.$this->encodePath($groupId).'/subgroups', $resolver->resolve($parameters));
     }
 
+    /**
+     * @param int $group_id
+     * @param array $parameters
+     *
+     * @return mixed
+     */
+    public function variables($group_id, array $parameters = [])
+    {
+        $resolver = $this->createOptionsResolver();
+
+        return $this->get($this->getGroupPath($group_id, 'variables'), $resolver->resolve($parameters));
+    }
+
+    /**
+     * @param int $group_id
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function variable($group_id, $key)
+    {
+        return $this->get($this->getGroupPath($group_id, 'variables/'.$this->encodePath($key)));
+    }
+
+    /**
+     * @param int $group_id
+     * @param string $key
+     * @param string $value
+     * @param bool $protected
+     *
+     * @return mixed
+     */
+    public function addVariable($group_id, $key, $value, $protected = null)
+    {
+        $payload = array(
+            'key' => $key,
+            'value' => $value,
+        );
+
+        if ($protected) {
+            $payload['protected'] = $protected;
+        }
+
+        return $this->post($this->getGroupPath($group_id, 'variables'), $payload);
+    }
+
+    /**
+     * @param int $group_id
+     * @param string $key
+     * @param string $value
+     * @param bool $protected
+     *
+     * @return mixed
+     */
+    public function updateVariable($group_id, $key, $value, $protected = null)
+    {
+        $payload = array(
+            'value' => $value,
+        );
+
+        if ($protected) {
+            $payload['protected'] = $protected;
+        }
+
+        return $this->put($this->getGroupPath($group_id, 'variables/'.$this->encodePath($key)), $payload);
+    }
+
+    /**
+     * @param int $group_id
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function removeVariable($group_id, $key)
+    {
+        return $this->delete($this->getGroupPath($group_id, 'variables/'.$this->encodePath($key)));
+    }
+
     private function getGroupSearchResolver()
     {
         $resolver = $this->createOptionsResolver();

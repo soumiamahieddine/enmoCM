@@ -606,6 +606,10 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 this.notify.error(err.error.errors);
             });
     }
+
+    setLowerUserId() {
+        this.user.userId = this.user.userId.toLowerCase();
+    }
 }
 
 @Component({

@@ -346,7 +346,7 @@ CREATE TABLE baskets
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   basket_order integer,
   color character varying(16),
-  basket_res_order character varying(255) NOT NULL DEFAULT 'res_id',
+  basket_res_order character varying(255) NOT NULL DEFAULT 'res_id desc',
   flag_notif character varying(1),
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id),
   CONSTRAINT baskets_unique_key UNIQUE (id)
@@ -1366,6 +1366,7 @@ CREATE TABLE res_letterbox
   external_id character varying(255) DEFAULT NULL::character varying,
   external_link character varying(255) DEFAULT NULL::character varying,
   departure_date timestamp without time zone,
+  opinion_limit_date timestamp without time zone default NULL,
   department_number_id text,
   barcode text,
   sve_start_date TIMESTAMP without time zone,
@@ -1418,11 +1419,7 @@ CREATE TABLE mlb_coll_ext (
   alt_identifier character varying(255)  default NULL,
   admission_date timestamp without time zone,
   process_limit_date timestamp without time zone default NULL,
-  recommendation_limit_date timestamp without time zone default NULL,
   closing_date timestamp without time zone default NULL,
-  alarm1_date timestamp without time zone default NULL,
-  alarm2_date timestamp without time zone default NULL,
-  flag_notif char(1)  default 'N'::character varying ,
   flag_alarm1 char(1)  default 'N'::character varying ,
   flag_alarm2 char(1) default 'N'::character varying,
   is_multicontacts char(1),
@@ -1657,6 +1654,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.external_id,
     r.external_link,
     r.departure_date,
+    r.opinion_limit_date,
     r.department_number_id,
     r.barcode,
     r.external_signatory_book_id,
@@ -1753,11 +1751,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.alt_identifier,
     mlb.admission_date,
     mlb.process_limit_date,
-    mlb.recommendation_limit_date,
     mlb.closing_date,
-    mlb.alarm1_date,
-    mlb.alarm2_date,
-    mlb.flag_notif,
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,
@@ -2190,9 +2184,11 @@ CREATE TABLE exports_templates
 (
 id serial NOT NULL,
 user_id INTEGER NOT NULL,
-delimiter character varying(3) NOT NULL,
+delimiter character varying(3),
+format character varying(3) NOT NULL,
 data json DEFAULT '[]' NOT NULL,
 CONSTRAINT exports_templates_pkey PRIMARY KEY (id),
-CONSTRAINT exports_templates_unique_key UNIQUE (user_id)
+CONSTRAINT exports_templates_unique_key UNIQUE (user_id, format)
 )
 WITH (OIDS=FALSE);
+

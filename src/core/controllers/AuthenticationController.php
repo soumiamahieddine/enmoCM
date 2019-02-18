@@ -84,7 +84,7 @@ class AuthenticationController
         $passwordRules = PasswordModel::getEnabledRules();
 
         if (!empty($passwordRules['lockAttempts'])) {
-            $user = UserModel::getByLogin(['select' => ['failed_authentication', 'locked_until'], 'login' => $aArgs['userId']]);
+            $user = UserModel::getByLowerLogin(['select' => ['failed_authentication', 'locked_until'], 'login' => $aArgs['userId']]);
 
             if (!empty($user)) {
                 if (!empty($user['locked_until'])) {

@@ -37,14 +37,11 @@ if (!defined('_AVIS_USER_INFO')) {
 if (!defined('_RECOMMENDATION_USER')) {
     define('_RECOMMENDATION_USER', 'Persoon voor bericht');
 }
-if (!defined('_RECOMMENDATION_USER')) {
-    define('_RECOMMENDATION_USER', 'Gebruikers voor bericht');
-}
 if (!defined('_RECOMMENDATION_NOTE')) {
     define('_RECOMMENDATION_NOTE', 'Woord');
 }
-if (!defined('_RECOMMENDATION_LIMIT_DATE')) {
-    define('_RECOMMENDATION_LIMIT_DATE', 'Berichtendeadline');
+if (!defined('_OPINION_LIMIT_DATE')) {
+    define('_OPINION_LIMIT_DATE', 'Berichtendeadline');
 }
 if (!defined('_TO_AVIS')) {
     define('_TO_AVIS', 'VOOR BERICHT');

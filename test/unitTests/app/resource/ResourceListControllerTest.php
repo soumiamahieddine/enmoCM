@@ -65,16 +65,10 @@ class ResourceListControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
     
         $this->assertGreaterThanOrEqual(1, count($responseBody->resources));
-        $this->assertNotNull($responseBody->resources[0]->creation_date);
-        $this->assertSame('Demande de documents', $responseBody->resources[0]->doctype_label);
-        $this->assertSame('Pôle Jeunesse et Sport', $responseBody->resources[0]->entity_destination);
-        $this->assertNotNull($responseBody->resources[0]->priority_color);
-        $this->assertNotNull($responseBody->resources[0]->priority_label);
-        $this->assertNotNull($responseBody->resources[0]->status_icon);
-        $this->assertNotNull($responseBody->resources[0]->status_label);
+        $this->assertNotNull($responseBody->resources[0]->priorityColor);
+        $this->assertNotNull($responseBody->resources[0]->statusImage);
+        $this->assertNotNull($responseBody->resources[0]->statusLabel);
         $this->assertInternalType('int', $responseBody->resources[0]->res_id);
-        $this->assertSame('incoming', $responseBody->resources[0]->category_id);
-        $this->assertSame('COU', $responseBody->resources[0]->status_id);
         $this->assertSame('2 Breaking News : 12345 Superman is alive - PHP unit', $responseBody->resources[0]->subject);
 
         //  GET

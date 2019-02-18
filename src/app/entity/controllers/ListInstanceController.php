@@ -23,6 +23,7 @@ use Entity\models\EntityModel;
 use SrcCore\models\DatabaseModel;
 use User\models\UserModel;
 use Resource\models\ResModel;
+use Group\models\ServiceModel;
 
 class ListInstanceController
 {
@@ -41,7 +42,8 @@ class ListInstanceController
         $listinstances = ListInstanceModel::getListByResId(['select' => ['listinstance_id', 'sequence', 'CASE WHEN item_mode=\'cc\' THEN \'copy\' ELSE item_mode END', 'item_id', 'item_type', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment', 'signatory', 'requested_signature'], 'id' => $aArgs['resId']]);
         
         $roles = EntityModel::getRoles();
-        
+
+        $listinstancesFormat = [];
         foreach ($listinstances as $key2 => $listinstance) {
             foreach ($roles as $key => $role) {
                 if ($role['id'] == $listinstance['item_mode']) {
@@ -49,6 +51,7 @@ class ListInstanceController
                 }
             }
         }
+
         return $response->withJson($listinstancesFormat);
     }
 
@@ -72,77 +75,91 @@ class ListInstanceController
         return $response->withJson($listinstances);
     }
 
-    public function getListWhereUserIsDest(Request $request, Response $response, array $aArgs) {
-        
-        $data = ListInstanceModel::getListWhereUserIsDest(['select' => ['li.*'], 'id' => $aArgs['itemId']]);
-
-        if($data) {
-            $res_id = 0;
-            $array=[];
-            foreach($data as $value) {
-                if($res_id == 0) {
-                    $res_id = $value['res_id'];
-                } else if( $res_id != $value['res_id']) {
-                    $listinstances[] = ['resId' => $res_id, "listinstances" => $array];
-                    $res_id = $value['res_id'];
-                    $array = [];
-                }
-                array_push($array, $value);
-            }
-            $listinstances[] = ['resId' => $res_id, "listinstances" => $array];
-        }
-            
-        return $response->withJson(['listinstances' => $listinstances]);   
-    }
-
     public function update(Request $request, Response $response)
     {
         $data = $request->getParams();
 
-        if(empty($data['listinstances'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'listinstance is missing or is empty']);
+        if (empty($data)) {
+            return $response->withStatus(400)->withJson(['errors' => 'listInstances is missing or is empty']);
         }
 
         DatabaseModel::beginTransaction();
 
-        foreach ($data['listinstances'] as $ListInstanceByRes) {
+        foreach ($data as $ListInstanceByRes) {
+            if (empty($ListInstanceByRes['resId'])) {
+                DatabaseModel::rollbackTransaction();
+                return $response->withStatus(400)->withJson(['errors' => 'resId is empty']);
+            }
 
-            foreach($ListInstanceByRes['listinstances'] as $instance) {
+            if (!Validator::intVal()->validate($ListInstanceByRes['resId']) || !ResController::hasRightByResId(['resId' => $ListInstanceByRes['resId'], 'userId' => $GLOBALS['userId']])) {
+                DatabaseModel::rollbackTransaction();
+                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            }
 
-                if( empty($instance['res_id']) || empty($instance['item_id']) || empty($instance['item_type']) || empty($instance['item_mode']) || empty($instance['difflist_type']) ) {
-                    DatabaseModel::rollbackTransaction();
-                    return $response->withStatus(400)->withJson(['errors' => 'Some data are empty']);
-                }
-                
-                if( isset($instance['listinstance_id']) && !empty($instance['listinstance_id']) ) {
-                    $check = ListInstanceModel::getById(['select' => ['listinstance_id'], 'id' => $instance['listinstance_id']]);
-                    if( !$check) {
+            ListInstanceModel::delete([
+                'where' => ['res_id = ?', 'difflist_type = ?'],
+                'data'  => [$ListInstanceByRes['resId'], 'entity_id']
+            ]);
+
+            if (empty($ListInstanceByRes['listInstances'])) {
+                DatabaseModel::rollbackTransaction();
+                return $response->withStatus(400)->withJson(['listInstances is missing or is empty']);
+            } else {
+                foreach ($ListInstanceByRes['listInstances'] as $instance) {
+                    if (empty($instance['res_id'])) {
                         DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'listinstance_id is not correct']);
+                        return $response->withStatus(400)->withJson(['errors' => 'res_id are empty']);
                     }
-    
-                    ListInstanceModel::delete(['listinstance_id' => $instance['listinstance_id']]);
-                }
-                
-                $user = UserModel::getByLogin(['login' => $instance['item_id']]);
-                if (empty($user) || $user['status'] != "OK") {
-                    DatabaseModel::rollbackTransaction();
-                    return $response->withStatus(400)->withJson(['errors' => 'User not found or not active']);
-                }
 
-                unset($instance['listinstance_id']);
-                unset($instance['requested_signature']);
-                unset($instance['signatory']);
-                
-                ListInstanceModel::create($instance);
+                    if (empty($instance['item_id'])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'item_id are empty']);
+                    }
 
-                if($instance['item_mode'] == 'dest') {
-                    ResModel::update([
-                        'set'   => ['dest_user' => $instance['item_id']],
-                        'where' => ['res_id = ?'],
-                        'data'  => [$instance['res_id']]
-                    ]);
-                 }
+                    if (empty($instance['item_type'])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'item_type are empty']);
+                    }
+
+                    if (empty($instance['item_mode'])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'item_mode are empty']);
+                    }
+
+                    if (empty($instance['difflist_type'])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'difflist_type are empty']);
+                    }
+                    
+                    unset($instance['listinstance_id']);
+                    unset($instance['requested_signature']);
+                    unset($instance['signatory']);
+                    
+                    if ($instance['item_type'] == 'user_id') {
+                        $user = UserModel::getByLogin(['login' => $instance['item_id']]);
+                        if (empty($user) || $user['status'] != "OK") {
+                            DatabaseModel::rollbackTransaction();
+                            return $response->withStatus(400)->withJson(['errors' => 'User not found or not active']);
+                        }
+                    } elseif ($instance['item_type'] == 'entity_id') {
+                        $entity = EntityModel::getByEntityId(['entityId' => $instance['item_id']]);
+                        if (empty($entity) || $entity['enabled'] != "Y") {
+                            DatabaseModel::rollbackTransaction();
+                            return $response->withStatus(400)->withJson(['errors' => 'Entity not found or not active']);
+                        }
+                    }
+
+                    ListInstanceModel::create($instance);
+
+                    if ($instance['item_mode'] == 'dest') {
+                        $entity = UserModel::getPrimaryEntityByUserId(['userId' => $instance['item_id']]);
+                        ResModel::update([
+                            'set'   => ['dest_user' => $instance['item_id'], 'destination' => $entity['entity_id']],
+                            'where' => ['res_id = ?'],
+                            'data'  => [$instance['res_id']]
+                        ]);
+                    }
+                }
             }
         }
 

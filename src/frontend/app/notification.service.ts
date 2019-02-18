@@ -39,15 +39,21 @@ export class NotificationService {
         } else if (err.status === 0 && err.statusText === 'Unknown Error') {
             this.error(this.lang.connectionFailed);
         } else {
-            if (err.error.errors !== undefined) {
-                this.error(err.error.errors);
-                if (err.status === 403 || err.status === 404) {
-                    this.router.navigate(['/home']);
+            if (err.error !== undefined) {
+                if (err.error.errors !== undefined) {
+                    this.error(err.error.errors);
+                    if (err.status === 403 || err.status === 404) {
+                        this.router.navigate(['/home']);
+                    }
+                } else if (err.error.exception !== undefined) {
+                    this.error(err.error.exception[0].message);
+                } else if(err.error.error !== undefined){
+                    this.error(err.error.error.message);
+                } else {
+                    this.error(err.status + ' : ' + err.statusText);
                 }
-            } else if (err.error.exception !== undefined) {
-                this.error(err.error.exception[0].message);
             } else {
-                this.error(err.error.error.message);
+                this.error(err);
             }
         }
     }

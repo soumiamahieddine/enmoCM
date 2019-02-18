@@ -1411,7 +1411,6 @@ if (!defined('_ITEM_FOLDER')) { define('_ITEM_FOLDER', 'Organisch klassement');}
 if (!defined('_CHOOSE_CURRENT_STATUS')) { define('_CHOOSE_CURRENT_STATUS', 'Huidige status bewaren');}
 if (!defined('_PRINT_DETAILS_SERVICE')) { define('_PRINT_DETAILS_SERVICE', 'De verbindingsfiche vanuit de detailfiche afdrukken');}
 if (!defined('_PRINT_DETAILS')) { define('_PRINT_DETAILS', 'De verbindingsfiche afdrukken');}
-if (!defined('_PRINT_DOC_DETAILS_FROM_LIST')) { define('_PRINT_DOC_DETAILS_FROM_LIST', 'De verbindingsfiche vanuit de resultatenlijsten afdrukken');}
 if (!defined('_PRINT_DOC_FROM_LIST')) { define('_PRINT_DOC_FROM_LIST', 'De verbindingsfiches van de documenten afdrukken');}
 if (!defined('_PRINT_LIST')) { define('_PRINT_LIST', 'De lijst afdrukken');}
 if (!defined('_PRINT_CATEGORY')) { define('_PRINT_CATEGORY', 'Categorie');}

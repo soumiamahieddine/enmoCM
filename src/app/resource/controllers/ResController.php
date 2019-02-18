@@ -43,14 +43,6 @@ class ResController
 {
     //*****************************************************************************************
     //LOG ONLY LOG FOR DEBUG
-    // $file = fopen('storeResourceLogs.log', 'a');
-    // fwrite($file, '[' . date('Y-m-d H:i:s') . '] new request' . PHP_EOL);
-    // foreach ($data as $key => $value) {
-    //     if ($key <> 'encodedFile') {
-    //         fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $key . ' : ' . $value . PHP_EOL);
-    //     }
-    // }
-    // fclose($file);
     // ob_flush();
     // ob_start();
     // print_r($data);
@@ -69,21 +61,30 @@ class ResController
         if (empty($data)) {
             return $response->withStatus(400)->withJson(['errors' => 'Data is not set or empty']);
         } elseif (!Validator::notEmpty()->validate($data['encodedFile'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[encodedFile] is empty']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data encodedFile is empty']);
         } elseif (!Validator::stringType()->notEmpty()->validate($data['format'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[format] is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data format is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($data['status'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[status] is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data status is empty or not a string']);
         } elseif (!Validator::intVal()->notEmpty()->validate($data['type_id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[type_id] is empty or not an integer']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data type_id is empty or not an integer']);
         } elseif (!Validator::stringType()->notEmpty()->validate($data['category_id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data[category_id] is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data category_id is empty or not a string']);
         }
 
         $resId = StoreController::storeResource($data);
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
         }
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $resId,
+            'eventType' => 'ADD',
+            'info'      => _DOC_ADDED,
+            'moduleId'  => 'res',
+            'eventId'   => 'resadd',
+        ]);
 
         return $response->withJson(['resId' => $resId]);
     }

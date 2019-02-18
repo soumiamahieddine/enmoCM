@@ -13,7 +13,8 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 		this.removeTimer();
 		let d = new Date(value);
 		let dayNumber = ('0' + d.getDate()).slice(-2);
-		let monthNumber = ('0' + d.getMonth()).slice(-2);
+		const realMonth = d.getMonth()+1;
+		let monthNumber = ('0' + realMonth).slice(-2);
 		let hourNumber = ('0' + d.getHours()).slice(-2);
 		let minuteNumber = ('0' + d.getMinutes()).slice(-2);
 		let now = new Date();
@@ -45,7 +46,9 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 		let days = Math.round(Math.abs(hours / 24));
 		let months = Math.round(Math.abs(days/30.416));
 		let years = Math.round(Math.abs(days/365));
-		if (Number.isNaN(seconds)){
+		if(value == this.lang.undefined) {
+			return this.lang.undefined;
+		} else if (Number.isNaN(seconds)){
 			return '';
 		} else if (seconds <= 45) {
 			return this.lang.fewSeconds;

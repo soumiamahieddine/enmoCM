@@ -58,6 +58,36 @@ abstract class ListInstanceModelAbstract
         return $aListinstance[0];
     }
 
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'postSet', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table'     => 'listinstance',
+            'set'       => $aArgs['set'],
+            'postSet'   => $aArgs['postSet'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'listinstance',
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function getListByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -137,36 +167,6 @@ abstract class ListInstanceModelAbstract
         return true;
     }
 
-    public static function delete(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['listinstance_id']);
-        ValidatorModel::intVal($aArgs, ['listinstance_id']);
-
-        DatabaseModel::delete([
-            'table' => 'listinstance',
-            'where'  => ['listinstance_id = ?'],
-            'data'   => [$aArgs['listinstance_id']]
-        ]);
-
-        return true;
-    }
-
-    public static function update(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['set', 'postSet', 'where', 'data']);
-
-        DatabaseModel::update([
-            'table'     => 'listinstance',
-            'set'       => $aArgs['set'],
-            'postSet'   => $aArgs['postSet'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
-        ]);
-
-        return true;
-    }
-
     public static function getCurrentStepByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
@@ -205,22 +205,20 @@ abstract class ListInstanceModelAbstract
         return $aListInstances;
     }
 
-    public static function getListWhereUserIsDest(array $aArgs)
+    public static function getWhenOpenMailsByLogin(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['login', 'itemMode']);
+        ValidatorModel::stringType($aArgs, ['login', 'itemMode']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
-        $aListinstance = DatabaseModel::select([
+        $listInstances = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['listinstance li', 'res_letterbox res', 'mlb_coll_ext mlb'],
-            'left_join' => ['li.res_id = res.res_id', 'res.res_id = mlb.res_id'],
-            'where'     => ['res.dest_user = ?', 'li.difflist_type = ?', 'mlb.closing_date is null'],
-            'data'      => [$aArgs['id'], 'entity_id'],
-            'order_by'  => ['res_id ASC']
+            'table'     => ['listinstance', 'res_letterbox', 'mlb_coll_ext'],
+            'left_join' => ['listinstance.res_id = res_letterbox.res_id', 'res_letterbox.res_id = mlb_coll_ext.res_id'],
+            'where'     => ['listinstance.item_id = ?', 'listinstance.difflist_type = ?', 'listinstance.item_type = ?', 'listinstance.item_mode = ?', 'mlb_coll_ext.closing_date is null', 'res_letterbox.status != ?'],
+            'data'      => [$aArgs['login'], 'entity_id', 'user_id', $aArgs['itemMode'], 'DEL']
         ]);
 
-        return $aListinstance;
+        return $listInstances;
     }
-
 }

@@ -41,11 +41,6 @@
 		<parameter name="id_type" type="identifier" />
 		<parameter name="origin" type="identifier" />
 	</validationRule>
-	<validationRule name="schedule_notifications_controler" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="data" type="arrayOfStrings" />
-		<parameter name="save" type="string" />
-	</validationRule>
 	<validationRule name="load_diffusionproperties_formcontent" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="id_type" type="identifier" />

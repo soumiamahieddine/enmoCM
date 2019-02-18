@@ -49,50 +49,17 @@ export class BasketListComponent implements OnInit {
 
     displayedMainData: any = [
         {
-            'id': 'alt_identifier',
-            'class': 'softColorData centerData',
+            'value': 'alt_identifier',
+            'cssClasses': ['softColorData', 'align_centerData', 'chronoData'],
             'icon': ''
         },
         {
-            'id': 'subject',
-            'class': 'longData',
+            'value': 'subject',
+            'cssClasses': ['longData'],
             'icon': ''
         }
     ];
-
-    //displayedSecondaryData: any = [];
-    displayedSecondaryData: any = [
-        {
-            'id': 'priority_label',
-            'class': '',
-            'icon': ''
-        },
-        {
-            'id': 'category_id',
-            'class': '',
-            'icon': ''
-        },
-        {
-            'id': 'doctype_label',
-            'class': '',
-            'icon': 'fa fa-file'
-        },
-        {
-            'id': 'senders',
-            'class': '',
-            'icon': ''
-        },
-        {
-            'id': 'recipients',
-            'class': '',
-            'icon': ''
-        },
-        {
-            'id': 'date',
-            'class': 'rightData',
-            'icon': ''
-        },
-    ];
+    displayedSecondaryData: any = [];
 
     resultListDatabase: ResultListHttpDao | null;
     data: any;
@@ -148,7 +115,7 @@ export class BasketListComponent implements OnInit {
             this.filtersListService.filterMode = false;
             this.selectedRes = [];
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-            window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+            window['MainHeaderComponent'].setSnavRight(null);
 
             this.listProperties = this.filtersListService.initListsProperties(this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId);
 
@@ -251,20 +218,87 @@ export class BasketListComponent implements OnInit {
     }
 
     processPostData(data: any) {
+        this.displayedSecondaryData = [];
         data.resources.forEach((element: any) => {
+            // Process main datas
             Object.keys(element).forEach((key) => {
-                if ((element[key] == null || element[key] == '') && ['process_limit_date', 'creation_date', 'closing_date', 'countAttachments', 'countNotes'].indexOf(key) === -1) {
-                    element[key] = this.lang.undefined;
-                } else if (["senders", "recipients"].indexOf(key) > 0) {
-                    if (element[key].length > 1) {
-                        element[key] = this.lang.isMulticontact;
-                    } else {
-                        element[key] = element[key][0];
-                    }
-                } else if (key == 'status_icon' && element[key] == null) {
+                if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
+                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display'].indexOf(key) === -1) {
+                    element[key] = this.lang.undefined;
                 }
+            });
 
+            // Process secondary datas
+            element.display.forEach((key: any) => {
+                key.displayTitle = key.displayValue;
+                if ((key.displayValue == null || key.displayValue == '') && ['getCreationAndProcessLimitDates', 'getParallelOpinionsNumber'].indexOf(key.value) === -1) {
+                    key.displayValue = this.lang.undefined;
+                    key.displayTitle = '';
+                } else if (["getSenders", "getRecipients"].indexOf(key.value) > -1) {
+                    if (key.displayValue.length > 1) {
+                        key.displayTitle = key.displayValue.join(' - ');
+                        key.displayValue = '<b>' + key.displayValue.length + '</b> ' + this.lang.contacts;
+                    } else {
+                        key.displayValue = key.displayValue[0];
+                    }
+                } else if (key.value == 'getCreationAndProcessLimitDates') {
+                    key.icon = '';
+                } else if (key.value == 'getVisaWorkflow') {
+                    let formatWorkflow: any = [];
+                    let content = '';
+                    let user = '';
+                    let currentKey = 0;
+                    let displayTitle: string[] = [];
+                    key.displayValue.forEach((visa: any, key: number) => {
+                        content = '';
+                        user = visa.user;
+                        displayTitle.push(user);
+
+                        if (visa.mode == 'sign') {
+                            user = '<u>' + user + '</u>';
+                        }
+                        if (visa.date == '') {
+                            content = '<i class="fa fa-hourglass-half"></i> <span title="' + this.lang[visa.mode + 'User'] + '">' + user + '</span>';
+                        } else {
+                            content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.lang[visa.mode + 'User'] + '">' + user + '</span></span>';
+                        }
+
+                        if (visa.current && key > 0) {
+                            currentKey = key;
+                            if (formatWorkflow[key - 2] !== undefined) {
+                                formatWorkflow = ['...', formatWorkflow[key - 1]];
+                            } else {
+                                formatWorkflow = [formatWorkflow[key - 1]];
+                            }
+                            content = '<b color="primary">' + content + '</b>';
+                        }
+
+                        if (key <= currentKey + 1) {
+                            formatWorkflow.push(content);
+                        } else if (key == currentKey + 2) {
+                            formatWorkflow.push('...');
+                        }
+                    });
+                    key.displayValue = formatWorkflow.join(' <i class="fas fa-long-arrow-alt-right"></i> ');
+                    key.displayTitle = displayTitle.join(' - ');
+                } else if (key.value == 'getSignatories') {
+                    let userList: any[] = [];
+                    key.displayValue.forEach((visa: any) => {
+                        userList.push(visa.user);
+                    });
+                    key.displayValue = userList.join(', ');
+                    key.displayTitle = userList.join(', ');
+                } else if (key.value == 'getParallelOpinionsNumber') {
+                    key.displayTitle = key.displayValue + ' ' + this.lang.opinionsSent;
+
+                    if (key.displayValue > 0) {
+                        key.displayValue = '<b color="primary">' + key.displayValue + '</b> ' + this.lang.opinionsSent;
+                    } else {
+                        key.displayValue = key.displayValue + ' ' + this.lang.opinionsSent;
+                    }
+                }
+                key.label = this.lang[key.value];
             });
 
             if (this.selectedRes.indexOf(element['res_id']) === -1) {
@@ -273,7 +307,6 @@ export class BasketListComponent implements OnInit {
                 element['checked'] = true;
             }
         });
-
         return data;
     }
 

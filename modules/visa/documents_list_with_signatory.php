@@ -93,7 +93,7 @@ $select[$table] = array();
 array_push(
     $select[$table], 'res_id', 'status', 'category_id as category_img',
     'contact_firstname', 'priority', 'creation_date', 'modification_date', 'admission_date', 'subject',
-    'process_limit_date', 'recommendation_limit_date', 'entity_label', 'dest_user', 'category_id', 'type_label', 'doc_custom_n1 as count_attachment', 'alt_identifier', 'locker_user_id', 'locker_time', 'address_id', 'res_id as signatory_user', 'filename', 'res_id as real_dest'
+    'process_limit_date', 'opinion_limit_date', 'entity_label', 'dest_user', 'category_id', 'type_label', 'doc_custom_n1 as count_attachment', 'alt_identifier', 'locker_user_id', 'locker_time', 'address_id', 'res_id as signatory_user', 'filename', 'res_id as real_dest'
 );
 
 if ($core_tools->is_module_loaded('cases') == true) {
@@ -325,15 +325,15 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['show'] = true;
                 $tab[$i][$j]['order'] = 'process_limit_date';
             }
-            if ($tab[$i][$j][$value] == 'recommendation_limit_date') {
+            if ($tab[$i][$j][$value] == 'opinion_limit_date') {
                 $tab[$i][$j]['value'] = $core_tools->format_date_db($tab[$i][$j]['value'], false);
-                $tab[$i][$j]['label'] = _RECOMMENDATION_LIMIT_DATE;
+                $tab[$i][$j]['label'] = _OPINION_LIMIT_DATE;
                 $tab[$i][$j]['size'] = '10';
                 $tab[$i][$j]['label_align'] = 'left';
                 $tab[$i][$j]['align'] = 'left';
                 $tab[$i][$j]['valign'] = 'bottom';
                 $tab[$i][$j]['show'] = false;
-                $tab[$i][$j]['order'] = 'recommendation_limit_date';
+                $tab[$i][$j]['order'] = 'opinion_limit_date';
             }
             if ($tab[$i][$j][$value] == 'category_id') {
                 $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
@@ -381,7 +381,7 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['show'] = false;
                 $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
                 if (!empty($tab[$i][$j]['value'])) {
-                    $user = \User\models\UserModel::getByUserId(['userId' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
+                    $user = \User\models\UserModel::getByLogin(['login' => $tab[$i][$j]['value'], 'select' => ['firstname', 'lastname']]);
                     $dest = $tab[$i][$j]['value'];
                     $dest = $user['firstname'] . ' ' . $user['lastname'];
                 } else {
@@ -626,15 +626,6 @@ $export2 = array(
 'disabledRules' => count($tab).' == 0',
 );
 array_push($paramsTab['tools'], $export2);
-if ($core_tools->test_service('print_doc_details_from_list', 'apps', false)) {
-    $print = array(
-            'script' => "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
-            'icon' => 'link',
-            'tooltip' => _PRINT_DOC_FROM_LIST,
-            'disabledRules' => count($tab).' == 0',
-        );
-    array_push($paramsTab['tools'], $print);
-}
 
 //Afficher la liste
 $status = 0;

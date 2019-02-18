@@ -110,10 +110,10 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     } else {
         $templates = $templatesControler->getAllTemplatesForSelect();
     }
-    $frm_str .='<b>' . _RECOMMENDATION_LIMIT_DATE . ':</b><br/>';
-    $frm_str .= '<input name="recommendation_limit_date_tr" type="text" '
-            . 'id="recommendation_limit_date_tr" value="" placeholder="JJ-MM-AAAA" onfocus="checkRealDateAvis();" onChange="checkRealDateAvis();"  onclick="clear_error(\'frm_error_'
-            . $actionId . '\');showCalender(this);"  onblur="document.getElementById(\'recommendation_limit_date\').value=document.getElementById(\'recommendation_limit_date_tr\').value;"/>';
+    $frm_str .='<b>' . _OPINION_LIMIT_DATE . ':</b><br/>';
+    $frm_str .= '<input name="opinion_limit_date_tr" type="text" '
+            . 'id="opinion_limit_date_tr" value="" placeholder="JJ-MM-AAAA" onfocus="checkRealDateAvis();" onChange="checkRealDateAvis();"  onclick="clear_error(\'frm_error_'
+            . $actionId . '\');showCalender(this);"  onblur="document.getElementById(\'opinion_limit_date\').value=document.getElementById(\'opinion_limit_date_tr\').value;"/>';
     $frm_str .='<br/>';
     $frm_str .='<br/><b>' . _RECOMMENDATION_NOTE . ':</b><br/>';
     $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
@@ -144,7 +144,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<form name="frm_redirect_dep" id="frm_redirect_dep" method="post" class="forms" action="#">';
     $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
     $frm_str .= '<input type="hidden" name="note_content_to_users" id="note_content_to_users" />';
-    $frm_str .= '<input type="hidden" name="recommendation_limit_date" id="recommendation_limit_date" />';
+    $frm_str .= '<input type="hidden" name="opinion_limit_date" id="opinion_limit_date" />';
     $frm_str .= '<input type="hidden" name="doc_date" id="doc_date" value ="' . $data['doc_date'] . '"/>';
     $frm_str .= '<input type="hidden" name="process_limit_date" id="process_limit_date" value ="' . $data['process_limit_date'] . '" />';
     $frm_str .='</form>';
@@ -160,12 +160,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
 function check_form($form_id, $values)
 {
-    //var_dump($values);
-    $recommendation_limit_date = get_value_fields($values, 'recommendation_limit_date');
+    $opinionLimitDate = get_value_fields($values, 'opinion_limit_date');
     $note_content_to_users = get_value_fields($values, 'note_content_to_users');
 
-    if ($recommendation_limit_date == null || $recommendation_limit_date == '') {
-        $_SESSION['action_error'] = _RECOMMENDATION_LIMIT_DATE . " " . _MANDATORY;
+    if ($opinionLimitDate == null || $opinionLimitDate == '') {
+        $_SESSION['action_error'] = _OPINION_LIMIT_DATE . " " . _MANDATORY;
         return false;
     } else if ($note_content_to_users == null || $note_content_to_users == '') {
         $_SESSION['action_error'] = _NOTE . " " . _MANDATORY;
@@ -180,35 +179,7 @@ function check_form($form_id, $values)
         $_SESSION['action_error'] = _AVIS_WORKFLOW . " " . _MANDATORY;
         return false;
     }
-    /* if($form_id == 'frm_redirect_dep') {
-      $dep = get_value_fields($values, 'department');
-      if($dep == '') {
-      $_SESSION['action_error'] = _MUST_CHOOSE_DEP;
-      return false;
-      } else if (empty($_SESSION['redirect']['diff_list']['dest']['users'][0])
-      || ! isset($_SESSION['redirect']['diff_list']['dest']['users'][0])
-      ) {
-      $_SESSION['action_error'] = _DEST
-      . " " . _MANDATORY;
-      return false;
-      } else {
-      return true;
-      }
-      } else if($form_id == 'frm_redirect_user') {
-      $user = get_value_fields($values, 'user');
-      if($user == '')
-      {
-      $_SESSION['action_error'] = _MUST_CHOOSE_USER;
-      return false;
-      }
-      else
-      {
-      return true;
-      }
-      } else {
-      $_SESSION['action_error'] = _FORM_ERROR;
-      return false;
-      } */
+
     return true;
 }
 

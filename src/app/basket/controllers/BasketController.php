@@ -311,11 +311,21 @@ class BasketController
         $data = $request->getParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['group_id']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['result_page']);
         $check = $check && Validator::arrayType()->notEmpty()->validate($data['groupActions']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+        if (!isset($data['list_display']) || !is_array($data['list_display'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data list_display is not set or not an array']);
+        }
+        foreach ($data['list_display'] as $value) {
+            if (!Validator::stringType()->notEmpty()->validate($value['value'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data list_display[\'value\'] is empty or not a string']);
+            } elseif (!isset($value['cssClasses']) || !is_array($value['cssClasses'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data list_display[\'cssClasses\'] is not set or not an array']);
+            }
+        }
+
         $data['groupActions'] = BasketController::checkGroupActions(['groupActions' => $data['groupActions'], 'userId' => $GLOBALS['userId']]);
         if (!empty($data['groupActions']['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $data['groupActions']['errors']]);
@@ -325,7 +335,8 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Group already exist for this basket']);
         }
 
-        GroupBasketModel::createGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $data['group_id'], 'resultPage' => $data['result_page']]);
+        $data['list_display'] = json_encode($data['list_display']);
+        GroupBasketModel::createGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $data['group_id'], 'listDisplay' => $data['list_display']]);
         foreach ($data['groupActions'] as $groupAction) {
             if ($groupAction['checked']) {
                 BasketModel::createGroupAction([
@@ -387,7 +398,7 @@ class BasketController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function updateGroup(Request $request, Response $response, array $aArgs)
+    public function updateGroupActions(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -397,37 +408,22 @@ class BasketController
         if (empty($basket)) {
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
+        if (!BasketModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group does not exist for this basket']);
+        }
 
         $data = $request->getParsedBody();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['result_page']);
-        $check = $check && Validator::arrayType()->notEmpty()->validate($data['groupActions']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        if (!Validator::arrayType()->notEmpty()->validate($data['groupActions'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data groupActions is empty or not an array']);
         }
         $data['groupActions'] = BasketController::checkGroupActions(['groupActions' => $data['groupActions'], 'userId' => $GLOBALS['userId']]);
         if (!empty($data['groupActions']['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $data['groupActions']['errors']]);
         }
 
-        if (!BasketModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group does not exist for this basket']);
-        }
+        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'preferences' => false, 'groupBasket' => false]);
 
-        if (!empty($data['list_display'])) {
-            if (!Validator::arrayType()->notEmpty()->validate($data['list_display'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'List display is not an array']);
-            }
-            $data['list_display'] = json_encode($data['list_display']);
-        }
-        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'preferences' => false]);
-
-        GroupBasketModel::createGroupBasket([
-            'basketId'      => $aArgs['id'],
-            'groupId'       => $aArgs['groupId'],
-            'resultPage'    => $data['result_page'],
-            'listDisplay'   => $data['list_display']
-        ]);
         foreach ($data['groupActions'] as $groupAction) {
             if ($groupAction['checked']) {
                 BasketModel::createGroupAction([
@@ -465,6 +461,53 @@ class BasketController
                 }
             }
         }
+
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKET_GROUP_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    public function updateGroup(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $basket = BasketModel::getByBasketId(['basketId' => $aArgs['id'], 'select' => [1]]);
+        if (empty($basket)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
+        }
+        if (!BasketModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group does not exist for this basket']);
+        }
+
+        $data = $request->getParsedBody();
+
+        if (!isset($data['list_display']) || !is_array($data['list_display'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data list_display is not set or not an array']);
+        }
+        foreach ($data['list_display'] as $value) {
+            if (!Validator::stringType()->notEmpty()->validate($value['value'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data list_display[\'value\'] is empty or not a string']);
+            } elseif (!isset($value['cssClasses']) || !is_array($value['cssClasses'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data list_display[\'cssClasses\'] is not set or not an array']);
+            }
+        }
+        $data['list_display'] = json_encode($data['list_display']);
+
+        GroupBasketModel::update([
+            'set'   => ['list_display' => $data['list_display']],
+            'where' => ['group_id = ?', 'basket_id = ?'],
+            'data'  => [$aArgs['groupId'], $aArgs['id']]
+        ]);
+
         HistoryController::add([
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],
@@ -488,7 +531,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
-        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'preferences' => true]);
+        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'preferences' => true, 'groupBasket' => true]);
         HistoryController::add([
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],

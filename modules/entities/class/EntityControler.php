@@ -23,7 +23,6 @@
 *
 *
 * @file
-* @author Claire Figueras <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup core

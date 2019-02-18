@@ -696,26 +696,8 @@ if (count($_REQUEST['meta']) > 0) {
                 for ($get_i = 0; $get_i <count($_REQUEST['status_chosen']); $get_i++)
                 {
                     $json_txt .= "'".$_REQUEST['status_chosen'][$get_i]."',";
-                    if ($_REQUEST['status_chosen'][$get_i]=="REL1")
-                    {
-                        $where_request .="( ".$req->extract_date('alarm1_date')." <= CURRENT_TIMESTAMP and ".$req->extract_date('alarm2_date')." > CURRENT_TIMESTAMP and status <> 'END') or ";
-                    }
-                    else
-                    {
-                        if ($_REQUEST['status_chosen'][$get_i]=="REL2")
-                        {
-                            $where_request .="( ".$req->current_datetime()." >= ".$req->extract_date('alarm2_date')."  and status <> 'END') or ";
-                        }
-                        elseif ($_REQUEST['status_chosen'][$get_i]=="LATE")
-                        {
-                            $where_request .="( process_limit_date is not null and ".$req->current_datetime()." > ".$req->extract_date('process_limit_date')."  and status <> 'END') or ";
-                        }
-                        else
-                        {
-                            $where_request .= " ( status = :statusChosen_".$get_i.") or ";
-                            $arrayPDO = array_merge($arrayPDO, array(":statusChosen_".$get_i => $_REQUEST['status_chosen'][$get_i]));
-                        }
-                    }
+                    $where_request .= " ( status = :statusChosen_".$get_i.") or ";
+                    $arrayPDO = array_merge($arrayPDO, array(":statusChosen_".$get_i => $_REQUEST['status_chosen'][$get_i]));
                 }
                 $where_request = preg_replace("/or $/", "", $where_request);
                 $json_txt = substr($json_txt, 0, -1);

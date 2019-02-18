@@ -93,6 +93,7 @@ $app->delete('/baskets/{id}', \Basket\controllers\BasketController::class . ':de
 $app->get('/baskets/{id}/groups', \Basket\controllers\BasketController::class . ':getGroups');
 $app->post('/baskets/{id}/groups', \Basket\controllers\BasketController::class . ':createGroup');
 $app->put('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':updateGroup');
+$app->put('/baskets/{id}/groups/{groupId}/actions', \Basket\controllers\BasketController::class . ':updateGroupActions');
 $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':deleteGroup');
 $app->get('/baskets/{id}/groups/data', \Basket\controllers\BasketController::class . ':getDataForGroupById');
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
@@ -200,7 +201,6 @@ $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::clas
 $app->get('/res/{resId}/listinstance', \Entity\controllers\ListInstanceController::class . ':getListByResId');
 $app->get('/res/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/res/{resId}/avisCircuit', \Entity\controllers\ListInstanceController::class . ':getAvisCircuitByResId');
-$app->get('/listinstances/dest/itemId/{itemId}', \Entity\controllers\ListInstanceController::class . ':getListWhereUserIsDest');
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');
 
 //ListTemplates
@@ -209,7 +209,6 @@ $app->post('/listTemplates', \Entity\controllers\ListTemplateController::class .
 $app->get('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':getById');
 $app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':update');
 $app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
-$app->get('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':getByUserWithEntityDest');
 $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
@@ -265,7 +264,7 @@ $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::c
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/filters', \Resource\controllers\ResourceListController::class . ':getFilters');
-$app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplate');
+$app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/exports', \Resource\controllers\ExportController::class . ':updateExport');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/summarySheets', \Resource\controllers\SummarySheetController::class . ':createList');
 
@@ -299,13 +298,15 @@ $app->get('/administration/templates/new', \Template\controllers\TemplateControl
 //Users
 $app->get('/users', \User\controllers\UserController::class . ':get');
 $app->post('/users', \User\controllers\UserController::class . ':create');
-$app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}', \User\controllers\UserController::class . ':update');
+$app->delete('/users/{id}', \User\controllers\UserController::class . ':delete');
+$app->put('/users/{id}/suspend', \User\controllers\UserController::class . ':suspend');
+$app->get('/users/{id}/isDeletable', \User\controllers\UserController::class . ':isDeletable');
+$app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}/password', \User\controllers\UserController::class . ':resetPassword');
 $app->get('/users/{userId}/status', \User\controllers\UserController::class . ':getStatusByUserId');
 $app->put('/users/{id}/status', \User\controllers\UserController::class . ':updateStatus');
 $app->put('/users/{id}/maarchParapheur', \User\controllers\UserController::class . ':sendToMaarchParapheur');
-$app->delete('/users/{id}', \User\controllers\UserController::class . ':delete');
 $app->post('/users/{id}/groups', \User\controllers\UserController::class . ':addGroup');
 $app->put('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':updateGroup');
 $app->delete('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':deleteGroup');

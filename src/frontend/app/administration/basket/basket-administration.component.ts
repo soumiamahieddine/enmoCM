@@ -8,9 +8,6 @@ import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { FormControl } from '@angular/forms';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -47,101 +44,6 @@ export class BasketAdministrationComponent implements OnInit {
     resultPages: any[] = [];
     list_display: any[] = [];
     creationMode: boolean;
-    availableData: any = [
-        {
-            'id': 'priority_label',
-            'label': 'Priorité',
-            'sample': 'normal',
-            'class': [],
-            'icon': 'fa-traffic-light '
-        },
-        {
-            'id': 'category',
-            'label': 'Catégorie',
-            'sample': 'courrier arrivée',
-            'class': [],
-            'icon': 'fa-file'
-        },
-        {
-            'id': 'type',
-            'label': 'Type de courrier',
-            'sample': 'Réclamation',
-            'class': [],
-            'icon': 'fa-suitcase'
-        },
-        {
-            'id': 'attribution',
-            'label': 'Attributaire (entité destinatrice)',
-            'sample': 'Barbara BAIN (Pôle Jeunesse et Sport)',
-            'class': [],
-            'icon': 'fa-sitemap'
-        },
-        {
-            'id': 'senders',
-            'label': 'Destinataire',
-            'sample': 'Patricia PETIT',
-            'class': [],
-            'icon': 'fa-user'
-        },
-        {
-            'id': 'recipients',
-            'label': 'Expéditeur',
-            'sample': 'Alain DUBOIS (MAARCH)',
-            'class': [],
-            'icon': 'fa-book'
-        },
-        {
-            'id': 'creation_limit_date',
-            'label': 'Date de création - Date limite',
-            'sample': '1er mai - <i class="fa fa-stopwatch"></i>&nbsp;<b color="warn">3 jour(s)</b>',
-            'class': [],
-            'icon': 'fa-calendar'
-        },
-        {
-            'id': 'workflow_visa',
-            'label': 'Circuit de visa',
-            'sample': '<i color="accent" class="fa fa-check"></i> Barbara BAIN -> <i class="fa fa-hourglass-half"></i> <b>Bruno BOULE</b> -> <i class="fa fa-hourglass-half"></i> Patricia PETIT',
-            'class': [],
-            'icon': 'fa-list-ol'
-        },
-        {
-            'id': 'workflow_avis',
-            'label': 'Nombre d\'avis donné',
-            'sample': '<b>3</b> avis donné(s)',
-            'class': [],
-            'icon': 'fa-comment-alt'
-        },
-    ];
-    displayedMainData: any = [];
-    displayedSecondaryData: any = [{
-        'id': 'priority_label',
-            'class': [],
-        },
-        {
-            'id': 'category',
-            'class': [],
-        },
-        {
-            'id': 'type',
-            'class': [],
-        },
-        {
-            'id': 'senders',
-            'class': [],
-        },
-        {
-            'id': 'recipients',
-            'class': [],
-        },
-        {
-            'id': 'creation_limit_date',
-            'class': [],
-        }
-    ];
-    displayMode: string = 'label';
-    dataControl = new FormControl();
-    filteredDataOptions: Observable<string[]>;
-    resultListLoaded: boolean = false;
 
     displayedColumns = ['label_action', 'actions'];
     orderColumns = ['alt_identifier', 'creation_date', 'process_limit_date', 'res_id', 'priority'];
@@ -259,7 +161,7 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef = this.dialog.open(BasketAdministrationSettingsModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
-                this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + result.group.group_id, { 'result_page': result.group.result_page, 'groupActions': result.group.groupActions })
+                this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + result.group.group_id + "/actions", { 'groupActions': result.group.groupActions })
                     .subscribe(() => {
                         this.dialogRef = null;
                         this.notify.success(this.lang.basketUpdated);
@@ -343,16 +245,6 @@ export class BasketAdministrationComponent implements OnInit {
         this.addAction(group);
     }
 
-    updateResultPage(group: any) {
-        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
-            .subscribe(() => {
-                this.notify.success(this.lang.resultPageUpdated);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
-    }
-
-
     unlinkGroup(groupIndex: any) {
         let r = confirm(this.lang.unlinkGroup + ' ?');
 
@@ -378,6 +270,12 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef = this.dialog.open(BasketAdministrationGroupListModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
+                if (this.basketGroups.length > 0) {
+                    result.list_display = this.basketGroups[this.basketGroups.length-1].list_display;
+                } else {
+                    result.list_display = [];
+                }
+                
                 this.http.post(this.coreUrl + "rest/baskets/" + this.id + "/groups", result)
                     .subscribe(() => {
                         this.basketGroups.push(result);
@@ -397,7 +295,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     addAction(group: any) {
-        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'groupActions': group.groupActions })
             .subscribe(() => {
                 this.notify.success(this.lang.actionsGroupBasketUpdated);
             }, (err) => {
@@ -434,186 +332,13 @@ export class BasketAdministrationComponent implements OnInit {
 
         if (r) {
             action.checked = false;
-            this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+            this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'groupActions': group.groupActions })
                 .subscribe(() => {
                     this.notify.success(this.lang.actionsGroupBasketUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }
-    }
-
-    toggleData() {
-        if (this.displayMode == 'label') {
-            this.displayMode = 'sample';
-        } else {
-            this.displayMode = 'label';
-        }
-
-    }
-
-    initResultList(e: any, indexGroup: any) {
-        if (e.index == 1) {
-            console.log('init');
-
-            this.filteredDataOptions = this.dataControl.valueChanges
-            .pipe(
-            startWith(''),
-            map(value => this._filterData(value))
-            );
-
-            let indexData: number = 0;
-
-            this.availableData = [
-                {
-                    'id': 'priority_label',
-                    'label': 'Priorité',
-                    'sample': 'normal',
-                    'class': [],
-                    'icon': 'fa-traffic-light '
-                },
-                {
-                    'id': 'category',
-                    'label': 'Catégorie',
-                    'sample': 'courrier arrivée',
-                    'class': [],
-                    'icon': 'fa-file'
-                },
-                {
-                    'id': 'type',
-                    'label': 'Type de courrier',
-                    'sample': 'Réclamation',
-                    'class': [],
-                    'icon': 'fa-suitcase'
-                },
-                {
-                    'id': 'attribution',
-                    'label': 'Attributaire (entité destinatrice)',
-                    'sample': 'Barbara BAIN (Pôle Jeunesse et Sport)',
-                    'class': [],
-                    'icon': 'fa-sitemap'
-                },
-                {
-                    'id': 'senders',
-                    'label': 'Destinataire',
-                    'sample': 'Patricia PETIT',
-                    'class': [],
-                    'icon': 'fa-user'
-                },
-                {
-                    'id': 'recipients',
-                    'label': 'Expéditeur',
-                    'sample': 'Alain DUBOIS (MAARCH)',
-                    'class': [],
-                    'icon': 'fa-book'
-                },
-                {
-                    'id': 'creation_limit_date',
-                    'label': 'Date de création - Date limite',
-                    'sample': '1er mai - <i class="fa fa-stopwatch"></i>&nbsp;<b color="warn">3 jour(s)</b>',
-                    'class': [],
-                    'icon': 'fa-calendar'
-                },
-                {
-                    'id': 'workflow_visa',
-                    'label': 'Circuit de visa',
-                    'sample': '<i color="accent" class="fa fa-check"></i> Barbara BAIN -> <i class="fa fa-hourglass-half"></i> <b>Bruno BOULE</b> -> <i class="fa fa-hourglass-half"></i> Patricia PETIT',
-                    'class': [],
-                    'icon': 'fa-list-ol'
-                },
-                {
-                    'id': 'workflow_avis',
-                    'label': 'Nombre d\'avis donné',
-                    'sample': '<b>3</b> avis donné(s)',
-                    'class': [],
-                    'icon': 'fa-comment-alt'
-                },
-            ];
-            if (this.basketGroups[indexGroup].list_display.length > 0) {
-                this.displayedSecondaryData = [];
-                this.basketGroups[indexGroup].list_display.forEach((element: any) => {
-                    indexData = this.availableData.map((e: any) => { return e.id; }).indexOf(element.id);
-                    this.availableData[indexData].class = element.class;
-                    this.displayedSecondaryData.push(this.availableData[indexData]);
-                    this.availableData.splice(indexData, 1);
-                });
-            }
-            
-            this.displayedMainData = [
-                {
-                    'id': 'status_chrono',
-                    'label': 'N°Chrono',
-                    'sample': 'MAARCH/2018A/1',
-                    'class': ['centerData', 'normalData'],
-                    'icon': ''
-                },
-                {
-                    'id': 'subject',
-                    'label': 'Objet',
-                    'sample': 'Plainte concernant des nuisances sonore nocturne (le 20/12/2018)',
-                    'class': ['longData'],
-                    'icon': ''
-                },
-            ];
-
-            this.resultListLoaded = true;
-        }
-
-    }
-
-    setFont(item: any, value: string) {
-        const index = item.class.indexOf(value);
-
-        if (index === -1) {
-            item.class.push(value);
-        } else {
-            item.class.splice(index, 1);
-        }
-    }
-
-    addData(data: any) {
-        let i = this.availableData.map((e: any) => { return e.id; }).indexOf(data.id);
-        this.displayedSecondaryData.push(data);
-        this.availableData.splice(i, 1);
-        this.dataControl.setValue('');
-    }
-
-    removeData(data: any, i: number) {
-        this.availableData.push(data);
-        this.displayedSecondaryData.splice(i, 1);
-        this.dataControl.setValue('');
-    }
-
-    removeAllData() {
-        this.availableData = this.availableData.concat(this.displayedSecondaryData);
-        this.displayedSecondaryData = [];
-        this.dataControl.setValue('');
-    }
-
-    drop(event: CdkDragDrop<string[]>) {
-        if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        }
-    }
-
-    saveTemplate() {
-        let template: any = [];
-        this.displayedSecondaryData.forEach((element: any) => {
-            template.push(
-                {
-                    'id': element.id,
-                    'class': element.class,
-                }
-            );
-        });
-
-        console.log(template);
-    }
-
-    private _filterData(value: string): string[] {
-        const filterValue = value.toLowerCase();
-    
-        return this.availableData.filter((option:any) => option.label.toLowerCase().includes(filterValue));
     }
 }
 
@@ -913,7 +638,6 @@ export class BasketAdministrationGroupListModalComponent {
 
     validateForm(group: any) {
         if (this.data.linkedGroups.length == 0) {
-            this.newBasketGroup.result_page = 'list_with_attachments';
             this.actionAll[0].used_in_action_page = true;
             this.actionAll[0].default_action_list = true;
             this.actionAll[0].used_in_basketlist = true;

@@ -161,19 +161,6 @@
     </WHEREAMIUSED>
   </SERVICE>
   <SERVICE>
-    <id>welcome_text_load</id>
-    <name>_WELCOME_TEXT_LOAD</name>
-    <comment>_WELCOME_TEXT_LOAD</comment>
-    <servicepage>welcome_text_load.php</servicepage>
-    <servicetype>use</servicetype>
-    <system_service>true</system_service>
-    <enabled>true</enabled>
-    <WHEREAMIUSED>
-      <page>welcome.php</page>
-      <nature>include</nature>
-    </WHEREAMIUSED>
-  </SERVICE>
-  <SERVICE>
     <id>quicklaunch</id>
     <name>_QUICKLAUNCH</name>
     <comment>_QUICKLAUNCH</comment>
@@ -387,15 +374,6 @@
       <page>details.php</page>
       <nature>include</nature>
     </WHEREAMIUSED>
-  </SERVICE>
-  <SERVICE>
-    <id>print_doc_details_from_list</id>
-    <name>_PRINT_DOC_DETAILS_FROM_LIST</name>
-    <comment>_PRINT_DOC_DETAILS_FROM_LIST</comment>
-    <servicepage>print.php</servicepage>
-    <servicetype>use</servicetype>
-    <system_service>false</system_service>
-    <enabled>true</enabled>
   </SERVICE>
   <SERVICE>
     <id>admin_update_control</id>

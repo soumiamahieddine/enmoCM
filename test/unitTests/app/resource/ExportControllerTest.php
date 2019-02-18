@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class ExportControllerTest extends TestCase
 {
-    public function testGetExportTemplate()
+    public function testGetExportTemplates()
     {
         $exportController = new \Resource\controllers\ExportController();
 
@@ -19,11 +19,12 @@ class ExportControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $exportController->getExportTemplate($request, new \Slim\Http\Response());
+        $response     = $exportController->getExportTemplates($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->template);
-        $this->assertInternalType('string', $responseBody->delimiter);
+        $this->assertNotEmpty($responseBody->templates);
+        $this->assertNotEmpty($responseBody->templates->pdf);
+        $this->assertNotEmpty($responseBody->templates->csv);
     }
 
     public function testUpdateExport()
@@ -39,6 +40,7 @@ class ExportControllerTest extends TestCase
         $aArgs = [
             "resources" => $GLOBALS['resources'],
             "delimiter" => ';',
+            "format"    => 'pdf',
             "data" => [
                 [
                     "value" => "subject",
@@ -92,6 +94,8 @@ class ExportControllerTest extends TestCase
                 ],
             ]
         ];
+
+        //PDF
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
@@ -103,15 +107,37 @@ class ExportControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $ExportController->getExportTemplate($request, new \Slim\Http\Response());
+        $response     = $ExportController->getExportTemplates($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $template = (array)$responseBody->template;
-        foreach ($template as $key => $value) {
-            $template[$key] = (array)$value;
+        $templateData = (array)$responseBody->templates->pdf->data;
+        foreach ($templateData as $key => $value) {
+            $templateData[$key] = (array)$value;
         }
-        $this->assertSame($aArgs['data'], $template);
-        $this->assertSame(';', $responseBody->delimiter);
+        $this->assertSame($aArgs['data'], $templateData);
+
+        //CSV
+        $aArgs['format'] = 'csv';
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(null, $responseBody);
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $ExportController->getExportTemplates($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $templateData = (array)$responseBody->templates->csv->data;
+        foreach ($templateData as $key => $value) {
+            $templateData[$key] = (array)$value;
+        }
+        $this->assertSame($aArgs['data'], $templateData);
+        $this->assertSame(';', $responseBody->templates->csv->delimiter);
 
 
         //ERRORS
@@ -128,13 +154,19 @@ class ExportControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertSame('Data is not an array or empty', $responseBody->errors);
+        $this->assertSame('Data data is empty or not an array', $responseBody->errors);
 
         $aArgs['delimiter'] = 't';
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertSame('Delimiter is not set or not set well', $responseBody->errors);
+        $this->assertSame('Delimiter is empty or not a string between [\',\', \';\', \'TAB\']', $responseBody->errors);
+
+        $aArgs['format'] = 'pd';
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame('Data format is empty or not a string between [\'pdf\', \'csv\']', $responseBody->errors);
 
         $GLOBALS['userId'] = 'superadmin';
     }

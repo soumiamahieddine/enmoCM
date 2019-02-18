@@ -105,10 +105,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $_SESSION['redirect']['diff_list']['avis_info'] = $_SESSION['process']['diff_list']['avis_info'];
     }  
          
-    $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.':</b><br/>';
-    $frm_str .= '<input name="recommendation_limit_date_tr" type="text" '
-        . 'id="recommendation_limit_date_tr" value="'.functions::format_date_db($avisContent->recommendation_limit_date).'" placeholder="JJ-MM-AAAA" onfocus="checkRealDateAvis();" onChange="checkRealDateAvis();"  onclick="clear_error(\'frm_error_'
-        . $actionId . '\');showCalender(this);"  onblur="document.getElementById(\'recommendation_limit_date\').value=document.getElementById(\'recommendation_limit_date_tr\').value;"/>';
+    $frm_str .='<b>'._OPINION_LIMIT_DATE.':</b><br/>';
+    $frm_str .= '<input name="opinion_limit_date_tr" type="text" '
+        . 'id="opinion_limit_date_tr" value="'.functions::format_date_db($avisContent->opinion_limit_date).'" placeholder="JJ-MM-AAAA" onfocus="checkRealDateAvis();" onChange="checkRealDateAvis();"  onclick="clear_error(\'frm_error_'
+        . $actionId . '\');showCalender(this);"  onblur="document.getElementById(\'opinion_limit_date\').value=document.getElementById(\'opinion_limit_date_tr\').value;"/>';
     $frm_str .='<br/>';
     /*$frm_str .='<br/><b>'._RECOMMENDATION_NOTE.':</b><br/>';
     $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
@@ -138,7 +138,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
         $frm_str .= '<input type="hidden" name="note_content_to_users" id="note_content_to_users" value="'.$avisContent->note_text.'" />';
         $frm_str .= '<input type="hidden" name="note_content_to_users_origin" id="note_content_to_users_origin" value="'.$avisContent->note_text.'" />';
-        $frm_str .= '<input type="hidden" name="recommendation_limit_date" id="recommendation_limit_date" value="'.$avisContent->recommendation_limit_date.'" />';
+        $frm_str .= '<input type="hidden" name="opinion_limit_date" id="opinion_limit_date" value="'.$avisContent->opinion_limit_date.'" />';
                 $frm_str .='<p>';
                     $frm_str .='<div style="clear:both;"></div>';
                 $frm_str .= '<div id="diff_list_div_redirect" class="scroll_div" style="height:auto;"></div>';
@@ -163,40 +163,12 @@ function check_form($form_id,$values)
             return false;
         }
     }
-    $recommendation_limit_date = get_value_fields($values, 'recommendation_limit_date');
-    if ($recommendation_limit_date == null || $recommendation_limit_date == '') {
-        $_SESSION['action_error'] = _RECOMMENDATION_LIMIT_DATE. " " . _MANDATORY;
+    $opinionLimitDate = get_value_fields($values, 'opinion_limit_date');
+    if ($opinionLimitDate == null || $opinionLimitDate == '') {
+        $_SESSION['action_error'] = _OPINION_LIMIT_DATE. " " . _MANDATORY;
         return false;
     }
-    /*if($form_id == 'frm_redirect_dep') {
-        $dep = get_value_fields($values, 'department');
-        if($dep == '') {
-            $_SESSION['action_error'] = _MUST_CHOOSE_DEP;
-            return false;
-        } else if (empty($_SESSION['redirect']['diff_list']['dest']['users'][0])
-                || ! isset($_SESSION['redirect']['diff_list']['dest']['users'][0])
-            ) {
-                $_SESSION['action_error'] = _DEST
-                    . " " . _MANDATORY;
-                return false;
-        } else {
-            return true;
-        }
-    } else if($form_id == 'frm_redirect_user') {
-        $user = get_value_fields($values, 'user');
-        if($user == '')
-        {
-            $_SESSION['action_error'] = _MUST_CHOOSE_USER;
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    } else {
-        $_SESSION['action_error'] = _FORM_ERROR;
-        return false;
-    }*/
+
     return true;
 }
 
@@ -329,7 +301,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $avis->UpdateNoteAvis($res_id, $coll_id, $content_note);
         
     //}
-    $avis->processAvis($res_id, $formValues['recommendation_limit_date']);
+    $avis->processAvis($res_id, $formValues['opinion_limit_date']);
     //Save listinstance
     $diffList->save_listinstance(
         $new_difflist, 

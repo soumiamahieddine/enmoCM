@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
-import { ListAdministrationComponent } from '../../administration/list/list-administration.component';
+import { ExportComponent } from '../export/export.component';
 import { SummarySheetComponent } from '../summarySheet/summary-sheet.component';
 
 
@@ -275,7 +275,7 @@ export class FiltersToolComponent implements OnInit {
     }
 
     openListAdmin(): void {
-        this.dialog.open(ListAdministrationComponent, {
+        this.dialog.open(ExportComponent, {
             width: '800px',
             data: {
                 ownerId: this.currentBasketInfo.ownerId,

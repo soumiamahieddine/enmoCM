@@ -202,4 +202,19 @@ class DatabasePDO
     {
         return self::$type;
     }
+
+    public function beginTransaction()
+    {
+        return self::$pdo->beginTransaction();
+    }
+
+    public function commitTransaction()
+    {
+        return self::$pdo->commit();
+    }
+
+    public function rollbackTransaction()
+    {
+        return self::$pdo->rollBack();
+    }
 }
