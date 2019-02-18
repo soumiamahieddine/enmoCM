@@ -248,8 +248,8 @@ export class BasketListComponent implements OnInit {
                     let formatWorkflow: any = [];
                     let content = '';
                     let user = '';
-                    let currentKey = 0;
                     let displayTitle: string[] = [];
+
                     key.displayValue.forEach((visa: any, key: number) => {
                         content = '';
                         user = visa.user;
@@ -265,21 +265,30 @@ export class BasketListComponent implements OnInit {
                         }
 
                         if (visa.current && key > 0) {
-                            currentKey = key;
-                            if (formatWorkflow[key - 2] !== undefined) {
-                                formatWorkflow = ['...', formatWorkflow[key - 1]];
-                            } else {
-                                formatWorkflow = [formatWorkflow[key - 1]];
-                            }
                             content = '<b color="primary">' + content + '</b>';
                         }
 
-                        if (key <= currentKey + 1) {
-                            formatWorkflow.push(content);
-                        } else if (key == currentKey + 2) {
-                            formatWorkflow.push('...');
-                        }
+                        formatWorkflow.push(content);
+        
                     });
+
+                    //TRUNCATE DISPLAY LIST
+                    const index = key.displayValue.map((e: any) => { return e.current; }).indexOf(true);
+                    if (index > 0) {
+                        formatWorkflow = formatWorkflow.slice(index-1);
+                        formatWorkflow = formatWorkflow.reverse();
+                        formatWorkflow = formatWorkflow.slice((formatWorkflow.length-index)-1);
+                        formatWorkflow = formatWorkflow.reverse();
+                    } else if (index === -1) {
+                        formatWorkflow = formatWorkflow.slice(formatWorkflow.length-2);
+                    }
+                    if (index >= 2 || (index == -1 && key.displayValue.length >= 3)) {
+                        formatWorkflow.unshift('...');
+                    }
+                    if (index != -1 && index-2 <= key.displayValue.length && key.displayValue.length >= 3) {
+                        formatWorkflow.push('...');
+                    }
+
                     key.displayValue = formatWorkflow.join(' <i class="fas fa-long-arrow-alt-right"></i> ');
                     key.displayTitle = displayTitle.join(' - ');
                 } else if (key.value == 'getSignatories') {
