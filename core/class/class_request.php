@@ -127,14 +127,12 @@ class request extends dbquery
             }
         }
         //Time to create the SQL Query
-        $query = "";
         $dist = '';
         if ($distinct_argument == true) {
             $dist = " distinct ";
         }
         //LIMIT 100
-        $fakeLimit = ($limit > 100) ? $limit : 100;
-        $query = $db->limit_select($start, $fakeLimit, $field_string, $table_string." ".$join, $where_string, $other, $dist);
+        $query = $db->limit_select($start, 500, $field_string, $table_string." ".$join, $where_string, $other, $dist);
 
         if (preg_match('/_view/i', $query)) {
             $_SESSION['last_select_query'] = $query;
