@@ -182,7 +182,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                         } else {
 
                                             //update listInstances
-                                            this.http.put(this.coreUrl + 'rest/listinstances', user)
+                                            this.http.put(this.coreUrl + 'rest/listinstances', user.redirectListInstances)
                                                 .subscribe((data: any) => {
                                                     if (data.errors) {
                                                         this.notify.error(data.errors);
@@ -297,7 +297,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
                             } else if (!user.inDiffListDest && user.isResDestUser) { //user isResDestUser
                                 //update listInstances
-                                this.http.put(this.coreUrl + 'rest/listinstances', user)
+                                this.http.put(this.coreUrl + 'rest/listinstances', user.redirectListInstances)
                                     .subscribe((data: any) => {
                                         if (data.errors) {
                                             this.notify.error(data.errors);

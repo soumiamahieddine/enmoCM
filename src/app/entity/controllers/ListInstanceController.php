@@ -85,10 +85,15 @@ class ListInstanceController
 
         DatabaseModel::beginTransaction();
 
-        foreach ($data['redirectListInstances'] as $ListInstanceByRes) {
+        foreach ($data as $ListInstanceByRes) {
             if (empty($ListInstanceByRes['resId'])) {
                 DatabaseModel::rollbackTransaction();
                 return $response->withStatus(400)->withJson(['errors' => 'resId is empty']);
+            }
+
+            if (!Validator::intVal()->validate($ListInstanceByRes['resId']) || !ResController::hasRightByResId(['resId' => $ListInstanceByRes['resId'], 'userId' => $GLOBALS['userId']])) {
+                DatabaseModel::rollbackTransaction();
+                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
 
             ListInstanceModel::delete([
@@ -101,9 +106,29 @@ class ListInstanceController
                 return $response->withStatus(400)->withJson(['listInstances is missing or is empty']);
             } else {
                 foreach ($ListInstanceByRes['listInstances'] as $instance) {
-                    if (empty($instance['res_id']) || empty($instance['item_id']) || empty($instance['item_type']) || empty($instance['item_mode']) || empty($instance['difflist_type'])) {
+                    if (empty($instance['res_id'])) {
                         DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'Some data are empty']);
+                        return $response->withStatus(400)->withJson(['errors' => 'res_id are empty']);
+                    }
+
+                    if (empty($instance['item_id'])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'item_id are empty']);
+                    }
+
+                    if (empty($instance['item_type'])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'item_type are empty']);
+                    }
+
+                    if (empty($instance['item_mode'])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'item_mode are empty']);
+                    }
+
+                    if (empty($instance['difflist_type'])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => 'difflist_type are empty']);
                     }
                     
                     unset($instance['listinstance_id']);
