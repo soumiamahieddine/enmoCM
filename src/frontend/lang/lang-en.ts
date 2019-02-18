@@ -836,7 +836,7 @@ export const LANG_EN = {
     "opinionsSent"                      : "opinion(s) sent",
     "getSignatories"                      : "Signatories",  
     "contacts"                           : "Contact(s)",
-    "userIsNotDeletable"                 : "You do not have <b>full access rights</b> to the user's diffusion list or mails",
+    "userIsNotDeletable"                 : "You do not have <b>full access rights</b> to diffusion list or mails for the user ",
     "userIsDeletableBy"                  : "Only a user with the <b>totality of access rights</b> can delete or suspend this user.",
     "mailEntitiesList"                   : "List of entities attached to mails"
 };

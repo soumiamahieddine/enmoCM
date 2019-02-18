@@ -862,7 +862,7 @@ export const LANG_FR = {
     "opinionsSent"                      : "avis donné(s)",  
     "getSignatories"                      : "Signataire(s)",  
     "contacts"                           : "Contact(s)",
-    "userIsNotDeletable"                 : "Vous n'avez pas la totalité des <b>droits d'accès</b> sur les listes de diffusion ou les courriers de l'utilisateur",
-    "userIsDeletableBy"                  : "Seul un utilisateur ayant la <b>totalités des droits d'accès</b> pourra supprimer ou supsprendre cet utilisateur.",
+    "userIsNotDeletable"                 : "Vous n'avez pas la totalité des <b>droits d'accès</b> sur les listes de diffusion ou les courriers de l'utilisateur ",
+    "userIsDeletableBy"                  : "Seul un utilisateur ayant la <b>totalité des droits d'accès</b> pourra supprimer ou suspendre cet utilisateur.",
     "mailEntitiesList"                   : "Liste des entités rattachées aux courriers"
 };
