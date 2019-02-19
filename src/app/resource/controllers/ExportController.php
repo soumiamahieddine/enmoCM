@@ -85,7 +85,7 @@ class ExportController
         }
 
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
-        $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+        $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
         $rawResourcesInBasket = ResModel::getOnView([
@@ -110,7 +110,7 @@ class ExportController
         if (empty($template)) {
             ExportTemplateModel::create([
                 'userId'    => $currentUser['id'],
-                'format'      => $body['format'],
+                'format'    => $body['format'],
                 'delimiter' => empty($body['delimiter']) ? null : $body['delimiter'],
                 'data'      => json_encode($body['data'])
             ]);
@@ -125,10 +125,10 @@ class ExportController
             ]);
         }
 
-        $select = ['res_id'];
-        $tableFunction = [];
+        $select           = ['res_id'];
+        $tableFunction    = [];
         $leftJoinFunction = [];
-        $csvHead = [];
+        $csvHead          = [];
         foreach ($body['data'] as $value) {
             $csvHead[] = $value['label'];
             if (empty($value['value'])) {
@@ -175,22 +175,28 @@ class ExportController
             }
         }
 
-        $resources = ResourceListModel::getOnView([
-            'select'    => $select,
-            'table'     => $tableFunction,
-            'leftJoin'  => $leftJoinFunction,
-            'where'     => ['res_view_letterbox.res_id in (?)'],
-            'data'      => [$body['resources']],
-            'orderBy'   => [$order]
-        ]);
+        $aChunkedResources = array_chunk($body['resources'], 10000);
+        $resources = [];
+        foreach ($aChunkedResources as $chunkedResource) {
+            $resourcesTmp = ResourceListModel::getOnView([
+                'select'    => $select,
+                'table'     => $tableFunction,
+                'leftJoin'  => $leftJoinFunction,
+                'where'     => ['res_view_letterbox.res_id in (?)'],
+                'data'      => [$chunkedResource],
+                'orderBy'   => [$order]
+            ]);
+            $resources = array_merge($resources, $resourcesTmp);
+        }
 
         if ($body['format'] == 'csv') {
-            $file = ExportController::getCsv(['delimiter' => $body['delimiter'], 'data' => $body['data'], 'resources' => $resources]);
+            $file = ExportController::getCsv(['delimiter' => $body['delimiter'], 'data' => $body['data'], 'resources' => $resources, 'chunkedResIds' => $aChunkedResources]);
             $response->write(stream_get_contents($file));
             $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename=export_maarch.csv');
             $contentType = 'application/vnd.ms-excel';
+            fclose($file);
         } else {
-            $pdf = ExportController::getPdf(['data' => $body['data'], 'resources' => $resources]);
+            $pdf = ExportController::getPdf(['data' => $body['data'], 'resources' => $resources, 'chunkedResIds' => $aChunkedResources]);
 
             $fileContent    = $pdf->Output('', 'S');
             $finfo          = new \finfo(FILEINFO_MIME_TYPE);
@@ -205,11 +211,11 @@ class ExportController
 
     private static function getCsv(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['delimiter', 'data', 'resources']);
+        ValidatorModel::notEmpty($aArgs, ['delimiter', 'data', 'resources', 'chunkedResIds']);
         ValidatorModel::stringType($aArgs, ['delimiter']);
-        ValidatorModel::arrayType($aArgs, ['data', 'resources']);
+        ValidatorModel::arrayType($aArgs, ['data', 'resources', 'chunkedResIds']);
 
-        $file = fopen('php://memory', 'w');
+        $file = fopen('php://temp', 'w');
         $delimiter = ($aArgs['delimiter'] == 'TAB' ? "\t" : $aArgs['delimiter']);
 
         $csvHead = [];
@@ -232,7 +238,8 @@ class ExportController
                     } elseif ($value['value'] == 'getPriority') {
                         $csvContent[] = $resource['priorities.label'];
                     } elseif ($value['value'] == 'getCopies') {
-                        $csvContent[] = ExportController::getCopies(['resId' => $resource['res_id']]);
+                        $copies       = ExportController::getCopies(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $csvContent[] = empty($copies[$resource['res_id']]) ? '' : $copies[$resource['res_id']];
                     } elseif ($value['value'] == 'getDetailLink') {
                         $csvContent[] = str_replace('rest/', "apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id={$resource['res_id']}", \Url::coreurl());
                     } elseif ($value['value'] == 'getParentFolder') {
@@ -248,23 +255,32 @@ class ExportController
                     } elseif ($value['value'] == 'getDestinationEntityType') {
                         $csvContent[] = $resource['enthree.entity_type'];
                     } elseif ($value['value'] == 'getSenders') {
-                        $senders = ExportController::getSenders(['resId' => $resource['res_id']]);
-                        $content[] = implode("\n\n", $senders);
-                    } elseif ($value['value'] == 'getRecipient') {
-                        $recipients = ExportController::getRecipients(['resId' => $resource['res_id']]);
-                        $content[] = implode("\n\n", $recipients);
+                        $senders = ExportController::getSenders(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $aSenders = empty($senders[$resource['res_id']]) ? [] : $senders[$resource['res_id']];
+                        $csvContent[] = implode("\n\n", $aSenders);
+                    } elseif ($value['value'] == 'getRecipients') {
+                        $recipients = ExportController::getRecipients(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $aRecipients = empty($recipients[$resource['res_id']]) ? [] : $recipients[$resource['res_id']];
+                        $csvContent[] = implode("\n\n", $aRecipients);
                     } elseif ($value['value'] == 'getTypist') {
                         $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['typist']]);
                     } elseif ($value['value'] == 'getAssignee') {
                         $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['dest_user']]);
                     } elseif ($value['value'] == 'getTags') {
-                        $csvContent[] = ExportController::getTags(['resId' => $resource['res_id']]);
+                        $tags = ExportController::getTags(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $csvContent[] = empty($tags[$resource['res_id']]) ? '' : $tags[$resource['res_id']];
                     } elseif ($value['value'] == 'getSignatories') {
-                        $csvContent[] = ExportController::getSignatories(['resId' => $resource['res_id']]);
+                        $signatories[] = ExportController::getSignatories(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $csvContent[] = empty($signatories[$resource['res_id']]) ? '' : $signatories[$resource['res_id']];
                     } elseif ($value['value'] == 'getSignatureDates') {
-                        $csvContent[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
+                        $signatureDates[] = ExportController::getSignatureDates(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $csvContent[] = empty($signatureDates[$resource['res_id']]) ? '' : $signatureDates[$resource['res_id']];
                     } elseif ($value['value'] == 'getDepartment') {
-                        $content[] = DepartmentController::getById(['id' => $resource['department_number_id']]);
+                        if (!empty($resource['department_number_id'])) {
+                            $csvContent[] = $resource['department_number_id'] . ' - ' . DepartmentController::getById(['id' => $resource['department_number_id']]);
+                        } else {
+                            $csvContent[] = '';
+                        }
                     }
                 } else {
                     $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'sve_start_date'];
@@ -285,8 +301,8 @@ class ExportController
 
     private static function getPdf(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['data', 'resources']);
-        ValidatorModel::arrayType($aArgs, ['data', 'resources']);
+        ValidatorModel::notEmpty($aArgs, ['data', 'resources', 'chunkedResIds']);
+        ValidatorModel::arrayType($aArgs, ['data', 'resources', 'chunkedResIds']);
 
         $columnsNumber = count($aArgs['data']);
         $orientation = 'P';
@@ -298,9 +314,9 @@ class ExportController
         $pdf->setPrintHeader(false);
 
         $pdf->AddPage();
-        $dimensions = $pdf->getPageDimensions();
+        $dimensions     = $pdf->getPageDimensions();
         $widthNoMargins = $dimensions['w'] - $dimensions['rm'] - $dimensions['lm'];
-        $bottomHeight = $dimensions['h'] - $dimensions['bm'];
+        $bottomHeight   = $dimensions['h'] - $dimensions['bm'];
 
         $labels = [];
         foreach ($aArgs['data'] as $value) {
@@ -330,7 +346,8 @@ class ExportController
                     } elseif ($value['value'] == 'getPriority') {
                         $content[] = $resource['priorities.label'];
                     } elseif ($value['value'] == 'getCopies') {
-                        $content[] = ExportController::getCopies(['resId' => $resource['res_id']]);
+                        $copies    = ExportController::getCopies(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $content[] = empty($copies[$resource['res_id']]) ? '' : $copies[$resource['res_id']];
                     } elseif ($value['value'] == 'getDetailLink') {
                         $content[] = str_replace('rest/', "apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id={$resource['res_id']}", \Url::coreurl());
                     } elseif ($value['value'] == 'getParentFolder') {
@@ -346,23 +363,32 @@ class ExportController
                     } elseif ($value['value'] == 'getDestinationEntityType') {
                         $content[] = $resource['enthree.entity_type'];
                     } elseif ($value['value'] == 'getSenders') {
-                        $senders = ExportController::getSenders(['resId' => $resource['res_id']]);
-                        $content[] = implode("\n\n", $senders);
+                        $senders = ExportController::getSenders(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $aSenders = empty($senders[$resource['res_id']]) ? [] : $senders[$resource['res_id']];
+                        $content[] = implode("\n\n", $aSenders);
                     } elseif ($value['value'] == 'getRecipients') {
-                        $recipients = ExportController::getRecipients(['resId' => $resource['res_id']]);
-                        $content[] = implode("\n\n", $recipients);
+                        $recipients = ExportController::getRecipients(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $aRecipients = empty($recipients[$resource['res_id']]) ? [] : $recipients[$resource['res_id']];
+                        $content[] = implode("\n\n", $aRecipients);
                     } elseif ($value['value'] == 'getTypist') {
                         $content[] = UserModel::getLabelledUserById(['login' => $resource['typist']]);
                     } elseif ($value['value'] == 'getAssignee') {
                         $content[] = UserModel::getLabelledUserById(['login' => $resource['dest_user']]);
                     } elseif ($value['value'] == 'getTags') {
-                        $content[] = ExportController::getTags(['resId' => $resource['res_id']]);
+                        $tags = ExportController::getTags(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $content[] = empty($tags[$resource['res_id']]) ? '' : $tags[$resource['res_id']];
                     } elseif ($value['value'] == 'getSignatories') {
-                        $content[] = ExportController::getSignatories(['resId' => $resource['res_id']]);
+                        $signatories[] = ExportController::getSignatories(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $content[] = empty($signatories[$resource['res_id']]) ? '' : $signatories[$resource['res_id']];
                     } elseif ($value['value'] == 'getSignatureDates') {
-                        $content[] = ExportController::getSignatureDates(['resId' => $resource['res_id']]);
+                        $signatureDates[] = ExportController::getSignatureDates(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $content[]        = empty($signatureDates[$resource['res_id']]) ? '' : $signatureDates[$resource['res_id']];
                     } elseif ($value['value'] == 'getDepartment') {
-                        $content[] = DepartmentController::getById(['id' => $resource['department_number_id']]);
+                        if (!empty($resource['department_number_id'])) {
+                            $content[] = $resource['department_number_id'] . ' - ' . DepartmentController::getById(['id' => $resource['department_number_id']]);
+                        } else {
+                            $content[] = '';
+                        }
                     }
                 } else {
                     $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'sve_start_date'];
@@ -390,218 +416,348 @@ class ExportController
 
     private static function getCopies(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::notEmpty($args, ['chunkedResIds']);
+        ValidatorModel::arrayType($args, ['chunkedResIds']);
 
-        $listInstances = ListInstanceModel::get([
-            'select'    => ['item_id', 'item_type'],
-            'where'     => ['res_id = ?', 'difflist_type = ?', 'item_mode = ?'],
-            'data'      => [$args['resId'], 'entity_id', 'cc']
-        ]);
+        static $aCopies = [];
+        if (!empty($aCopies)) {
+            return $aCopies;
+        }
 
-        $copies = '';
-        foreach ($listInstances as $listInstance) {
-            if (!empty($copies)) {
-                $copies .= "\n";
-            }
-            if ($listInstance['item_type'] == 'user_id') {
-                $copies .= UserModel::getLabelledUserById(['login' => $listInstance['item_id']]);
-            } elseif ($listInstance['item_type'] == 'entity_id') {
-                $entity = EntityModel::getByEntityId(['entityId' => $listInstance['item_id'], 'select' => ['short_label']]);
-                $copies .= $entity['short_label'];
+        foreach ($args['chunkedResIds'] as $resIds) {
+            $listInstances = ListInstanceModel::get([
+                'select'    => ['item_id', 'item_type', 'res_id'],
+                'where'     => ['res_id in (?)', 'difflist_type = ?', 'item_mode = ?'],
+                'data'      => [$resIds, 'entity_id', 'cc'],
+                'order_by'  => ['res_id']
+            ]);
+
+            $resId = '';
+            if (!empty($listInstances)) {
+                foreach ($listInstances as $key => $listInstance) {
+                    if ($key != 0 && $resId == $listInstance['res_id']) {
+                        $copies .= "\n";
+                    } elseif ($key != 0 && $resId != $listInstance['res_id']) {
+                        $aCopies[$resId] = $copies;
+                        $copies = '';
+                    } else {
+                        $copies = '';
+                    }
+                    if ($listInstance['item_type'] == 'user_id') {
+                        $copies .= UserModel::getLabelledUserById(['login' => $listInstance['item_id']]);
+                    } elseif ($listInstance['item_type'] == 'entity_id') {
+                        $entity = EntityModel::getByEntityId(['entityId' => $listInstance['item_id'], 'select' => ['short_label']]);
+                        $copies .= $entity['short_label'];
+                    }
+                    $resId = $listInstance['res_id'];
+                }
+                $aCopies[$listInstance['res_id']] = $copies;
             }
         }
 
-        return $copies;
+        if (empty($aCopies)) {
+            $aCopies = ['empty'];
+        }
+        return $aCopies;
     }
 
     private static function getTags(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::notEmpty($args, ['chunkedResIds']);
+        ValidatorModel::arrayType($args, ['chunkedResIds']);
 
-        $tagsRes = TagModel::getTagRes([
-            'select'    => ['tag_id'],
-            'where'     => ['res_id = ?'],
-            'data'      => [$args['resId']],
-        ]);
-
-        $tags = '';
-        foreach ($tagsRes as $value) {
-            $tag = TagModel::getById(['id' => $value['tag_id'], 'select' => ['tag_label']]);
-            if (!empty($tags)) {
-                $tags .= "\n";
-            }
-            $tags .= $tag['tag_label'];
+        static $aTags = [];
+        if (!empty($aTags)) {
+            return $aTags;
         }
 
-        return $tags;
+        foreach ($args['chunkedResIds'] as $resIds) {
+            $tagsRes = TagModel::getTagRes([
+                'select'    => ['tag_id', 'res_id'],
+                'where'     => ['res_id in (?)'],
+                'data'      => [$resIds],
+                'order_by'  => ['res_id']
+            ]);
+
+            if (!empty($tagsRes)) {
+                $resId = '';
+                foreach ($tagsRes as $key => $value) {
+                    if ($key != 0 && $resId == $value['res_id']) {
+                        $tags .= "\n";
+                    } elseif ($key != 0 && $resId != $value['res_id']) {
+                        $aTags[$resId] = $tags;
+                        $tags = '';
+                    } else {
+                        $tags = '';
+                    }
+                    $tag = TagModel::getById(['id' => $value['tag_id'], 'select' => ['tag_label']]);
+                    $tags .= $tag['tag_label'];
+                    $resId = $value['res_id'];
+                }
+                $aTags[$value['res_id']] = $tags;
+            }
+        }
+
+        if (empty($aTags)) {
+            $aTags = ['empty'];
+        }
+        return $aTags;
     }
 
     private static function getSignatories(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::notEmpty($args, ['chunkedResIds']);
+        ValidatorModel::arrayType($args, ['chunkedResIds']);
 
-        $listInstances = ListInstanceModel::get([
-            'select'    => ['item_id'],
-            'where'     => ['res_id = ?', 'item_type = ?', 'signatory = ?'],
-            'data'      => [$args['resId'], 'user_id', true]
-        ]);
-
-        $signatories = '';
-        foreach ($listInstances as $listInstance) {
-            $user = UserModel::getByLogin(['login' => $listInstance['item_id'], 'select' => ['firstname', 'lastname']]);
-            if (!empty($signatories)) {
-                $signatories .= "\n";
-            }
-            $signatories .= "{$user['firstname']} {$user['lastname']}";
+        static $aSignatories = [];
+        if (!empty($aSignatories)) {
+            return $aSignatories;
         }
 
-        return $signatories;
+        foreach ($args['chunkedResIds'] as $resIds) {
+            $listInstances = ListInstanceModel::get([
+                'select'    => ['item_id', 'res_id'],
+                'where'     => ['res_id in (?)', 'item_type = ?', 'signatory = ?'],
+                'data'      => [$resIds, 'user_id', true],
+                'order_by'   => ['res_id']
+            ]);
+
+            if (!empty($listInstances)) {
+                $resId = '';
+                foreach ($listInstances as $key => $listInstance) {
+                    if ($key != 0 && $resId == $listInstance['res_id']) {
+                        $signatories .= "\n";
+                    } elseif ($key != 0 && $resId != $listInstance['res_id']) {
+                        $aSignatories[$resId] = $signatories;
+                        $signatories = '';
+                    } else {
+                        $signatories = '';
+                    }
+                    $user = UserModel::getByLogin(['login' => $listInstance['item_id'], 'select' => ['firstname', 'lastname']]);
+                    $signatories .= "{$user['firstname']} {$user['lastname']}";
+                    $resId = $listInstance['res_id'];
+                }
+                $aSignatories[$listInstance['res_id']] = $signatories;
+            }
+        }
+
+        if (empty($aSignatories)) {
+            $aSignatories = ['empty'];
+        }
+        return $aSignatories;
     }
 
     private static function getSignatureDates(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::notEmpty($args, ['chunkedResIds']);
+        ValidatorModel::arrayType($args, ['chunkedResIds']);
 
-        $attachments = AttachmentModel::getOnView([
-            'select'    => ['creation_date'],
-            'where'     => ['res_id = ?', 'attachment_type = ?', 'status = ?'],
-            'data'      => [$args['resId'], 'signed_response', 'TRA']
-        ]);
-
-        $dates = '';
-        foreach ($attachments as $attachment) {
-            $date = new \DateTime($attachment['creation_date']);
-            $date = $date->format('d-m-Y H:i');
-
-            if (!empty($dates)) {
-                $dates .= "\n";
-            }
-            $dates .= $date;
+        static $aSignatureDates = [];
+        if (!empty($aSignatureDates)) {
+            return $aSignatureDates;
         }
 
-        return $dates;
+        foreach ($args['chunkedResIds'] as $resIds) {
+            $attachments = AttachmentModel::getOnView([
+                'select'    => ['creation_date', 'res_id'],
+                'where'     => ['res_id in (?)', 'attachment_type = ?', 'status = ?'],
+                'data'      => [$resIds, 'signed_response', 'TRA'],
+                'order_by'  => ['res_id']
+            ]);
+
+            if (!empty($attachments)) {
+                $resId = '';
+                foreach ($attachments as $key => $attachment) {
+                    if ($key != 0 && $resId == $attachment['res_id']) {
+                        $dates .= "\n";
+                    } elseif ($key != 0 && $resId != $attachment['res_id']) {
+                        $aSignatureDates[$resId] = $dates;
+                        $dates = '';
+                    } else {
+                        $dates = '';
+                    }
+                    $date  = new \DateTime($attachment['creation_date']);
+                    $dates .= $date->format('d-m-Y H:i');
+                    $resId = $attachment['res_id'];
+                }
+                $aSignatureDates[$attachment['res_id']] = $dates;
+            }
+        }
+
+        if (empty($aSignatureDates)) {
+            $aSignatureDates = ['empty'];
+        }
+        return $aSignatureDates;
     }
 
     private static function getSenders(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::notEmpty($args, ['chunkedResIds']);
+        ValidatorModel::arrayType($args, ['chunkedResIds']);
 
-        $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
+        static $aSenders = [];
+        if (!empty($aSenders)) {
+            return $aSenders;
+        }
 
-        $senders = [];
-        if (!empty($ext)) {
-            if ($ext['category_id'] == 'outgoing') {
-                $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $args['resId']]);
-                foreach ($resourcesContacts as $resourcesContact) {
-                    $senders[] = $resourcesContact['format'];
-                }
-            } else {
-                $rawContacts = [];
-                if ($ext['is_multicontacts'] == 'Y') {
-                    $multiContacts = DatabaseModel::select([
-                        'select'    => ['contact_id', 'address_id'],
-                        'table'     => ['contacts_res'],
-                        'where'     => ['res_id = ?', 'mode = ?'],
-                        'data'      => [$args['resId'], 'multi']
-                    ]);
-                    foreach ($multiContacts as $multiContact) {
-                        $rawContacts[] = [
-                            'login'         => $multiContact['contact_id'],
-                            'address_id'    => $multiContact['address_id'],
-                        ];
+        foreach ($args['chunkedResIds'] as $resIds) {
+            $exts = ResModel::getExt([
+                'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
+                'where' => ['res_id in (?)'],
+                'data' => [$resIds]
+            ]);
+
+            if (!empty($exts)) {
+                $resId   = '';
+                $senders = [];
+                foreach ($exts as $key => $ext) {
+                    if ($key != 0 && $resId != $ext['res_id']) {
+                        $aSenders[$resId] = $senders;
+                        $senders = [];
                     }
-                } else {
-                    $rawContacts[] = [
-                        'login'         => $ext['dest_user_id'],
-                        'address_id'    => $ext['address_id'],
-                    ];
-                }
-                foreach ($rawContacts as $rawContact) {
-                    if (!empty($rawContact['address_id'])) {
-                        $contact = ContactModel::getOnView([
-                            'select' => [
-                                'is_corporate_person', 'lastname', 'firstname', 'address_num', 'address_street', 'address_town', 'address_postal_code',
-                                'ca_id', 'society', 'contact_firstname', 'contact_lastname', 'address_country'
-                            ],
-                            'where'     => ['ca_id = ?'],
-                            'data'      => [$rawContact['address_id']]
-                        ]);
-                        if (isset($contact[0])) {
-                            $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
-                            $senders[] = $contact['contact']['otherInfo'];
+                    if (!empty($ext)) {
+                        if ($ext['category_id'] == 'outgoing') {
+                            $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $ext['res_id']]);
+                            foreach ($resourcesContacts as $resourcesContact) {
+                                $senders[] = $resourcesContact['format'];
+                            }
+                        } else {
+                            $rawContacts = [];
+                            if ($ext['is_multicontacts'] == 'Y') {
+                                $multiContacts = DatabaseModel::select([
+                                    'select'    => ['contact_id', 'address_id'],
+                                    'table'     => ['contacts_res'],
+                                    'where'     => ['res_id = ?', 'mode = ?'],
+                                    'data'      => [$ext['res_id'], 'multi']
+                                ]);
+                                foreach ($multiContacts as $multiContact) {
+                                    $rawContacts[] = [
+                                        'login'         => $multiContact['contact_id'],
+                                        'address_id'    => $multiContact['address_id'],
+                                    ];
+                                }
+                            } else {
+                                $rawContacts[] = [
+                                    'login'         => $ext['dest_user_id'],
+                                    'address_id'    => $ext['address_id'],
+                                ];
+                            }
+                            foreach ($rawContacts as $rawContact) {
+                                if (!empty($rawContact['address_id'])) {
+                                    $contact = ContactModel::getOnView([
+                                        'select' => [
+                                            'is_corporate_person', 'lastname', 'firstname', 'address_num', 'address_street', 'address_town', 'address_postal_code',
+                                            'ca_id', 'society', 'contact_firstname', 'contact_lastname', 'address_country'
+                                        ],
+                                        'where'     => ['ca_id = ?'],
+                                        'data'      => [$rawContact['address_id']]
+                                    ]);
+                                    if (isset($contact[0])) {
+                                        $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
+                                        $senders[] = $contact['contact']['otherInfo'];
+                                    }
+                                } else {
+                                    $senders[] = UserModel::getLabelledUserById(['login' => $rawContact['login']]);
+                                }
+                            }
                         }
-                    } else {
-                        $senders[] = UserModel::getLabelledUserById(['login' => $rawContact['login']]);
+                        $resId = $ext['res_id'];
                     }
                 }
+                $aSenders[$resId] = $senders;
             }
         }
 
-        return $senders;
+        if (empty($aSenders)) {
+            $aSenders = ['empty'];
+        }
+
+        return $aSenders;
     }
 
     private static function getRecipients(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::notEmpty($args, ['chunkedResIds']);
+        ValidatorModel::arrayType($args, ['chunkedResIds']);
 
-        $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
+        static $aRecipients = [];
+        if (!empty($aRecipients)) {
+            return $aRecipients;
+        }
 
-        $recipients = [];
-        if (!empty($ext)) {
-            if ($ext['category_id'] == 'outgoing') {
-                $rawContacts = [];
-                if ($ext['is_multicontacts'] == 'Y') {
-                    $multiContacts = DatabaseModel::select([
-                        'select'    => ['contact_id', 'address_id'],
-                        'table'     => ['contacts_res'],
-                        'where'     => ['res_id = ?', 'mode = ?'],
-                        'data'      => [$args['resId'], 'multi']
-                    ]);
-                    foreach ($multiContacts as $multiContact) {
-                        $rawContacts[] = [
-                            'login'         => $multiContact['contact_id'],
-                            'address_id'    => $multiContact['address_id'],
-                        ];
+        foreach ($args['chunkedResIds'] as $resIds) {
+            $exts = ResModel::getExt([
+                'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
+                'where' => ['res_id in (?)'],
+                'data' => [$resIds]
+            ]);
+
+            if (!empty($exts)) {
+                $resId      = '';
+                $recipients = [];
+                foreach ($exts as $key => $ext) {
+                    if ($key != 0 && $resId != $ext['res_id']) {
+                        $aRecipients[$resId] = $recipients;
+                        $recipients = [];
                     }
-                } else {
-                    $rawContacts[] = [
-                        'login'         => $ext['dest_user_id'],
-                        'address_id'    => $ext['address_id'],
-                    ];
-                }
-                foreach ($rawContacts as $rawContact) {
-                    if (!empty($rawContact['address_id'])) {
-                        $contact = ContactModel::getOnView([
-                            'select' => [
-                                'is_corporate_person', 'lastname', 'firstname', 'address_num', 'address_street', 'address_town', 'address_postal_code',
-                                'ca_id', 'society', 'contact_firstname', 'contact_lastname', 'address_country'
-                            ],
-                            'where'     => ['ca_id = ?'],
-                            'data'      => [$rawContact['address_id']]
-                        ]);
-                        if (isset($contact[0])) {
-                            $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
-                            $recipients[] = $contact['contact']['otherInfo'];
+                    if (!empty($ext)) {
+                        if ($ext['category_id'] == 'outgoing') {
+                            $rawContacts = [];
+                            if ($ext['is_multicontacts'] == 'Y') {
+                                $multiContacts = DatabaseModel::select([
+                                    'select'    => ['contact_id', 'address_id'],
+                                    'table'     => ['contacts_res'],
+                                    'where'     => ['res_id = ?', 'mode = ?'],
+                                    'data'      => [$ext['res_id'], 'multi']
+                                ]);
+                                foreach ($multiContacts as $multiContact) {
+                                    $rawContacts[] = [
+                                        'login'         => $multiContact['contact_id'],
+                                        'address_id'    => $multiContact['address_id'],
+                                    ];
+                                }
+                            } else {
+                                $rawContacts[] = [
+                                    'login'         => $ext['dest_user_id'],
+                                    'address_id'    => $ext['address_id'],
+                                ];
+                            }
+                            foreach ($rawContacts as $rawContact) {
+                                if (!empty($rawContact['address_id'])) {
+                                    $contact = ContactModel::getOnView([
+                                        'select' => [
+                                            'is_corporate_person', 'lastname', 'firstname', 'address_num', 'address_street', 'address_town', 'address_postal_code',
+                                            'ca_id', 'society', 'contact_firstname', 'contact_lastname', 'address_country'
+                                        ],
+                                        'where'     => ['ca_id = ?'],
+                                        'data'      => [$rawContact['address_id']]
+                                    ]);
+                                    if (isset($contact[0])) {
+                                        $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
+                                        $recipients[] = $contact['contact']['otherInfo'];
+                                    }
+                                } else {
+                                    $recipients[] = UserModel::getLabelledUserById(['login' => $rawContact['login']]);
+                                }
+                            }
+                        } else {
+                            $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $ext['res_id']]);
+                            foreach ($resourcesContacts as $resourcesContact) {
+                                $recipients[] = $resourcesContact['format'];
+                            }
                         }
-                    } else {
-                        $recipients[] = UserModel::getLabelledUserById(['login' => $rawContact['login']]);
+                        $resId = $ext['res_id'];
                     }
                 }
-            } else {
-                $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $args['resId']]);
-                foreach ($resourcesContacts as $resourcesContact) {
-                    $recipients[] = $resourcesContact['format'];
-                }
+                $aRecipients[$resId] = $recipients;
             }
         }
 
-        return $recipients;
+        if (empty($aRecipients)) {
+            $aRecipients = ['empty'];
+        }
+
+        return $aRecipients;
     }
 
     private static function getMaximumHeight(Fpdi $pdf, array $args)
