@@ -137,8 +137,6 @@ UPDATE baskets SET basket_res_order = regexp_replace(basket_res_order,'recommend
 
 /* REFACTORING */
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm1_date;
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm2_date;
 DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
 
 
@@ -284,6 +282,8 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.admission_date,
     mlb.process_limit_date,
     mlb.closing_date,
+    mlb.alarm1_date,
+    mlb.alarm2_date,
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,
