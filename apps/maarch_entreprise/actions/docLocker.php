@@ -58,22 +58,36 @@ class docLocker
 
     public function isLock()
     {
-        return \Resource\models\ResModel::isLock(['resId' => $this->res_id, 'userId' => $_SESSION['user']['UserId']]);
+        $currentUser = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+        $resource = \Resource\models\ResModel::getById(['resId' => $this->res_id, 'select' => ['locker_user_id', 'locker_time']]);
+
+        $lock = true;
+        if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+            $lock = false;
+        } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+            $lock = false;
+        } elseif (strtotime($resource['locker_time']) < time()) {
+            $lock = false;
+        }
+
+        $lockBy = '';
+        if ($lock) {
+            $lockBy = \User\models\UserModel::getLabelledUserById(['id' => $resource['locker_user_id']]);
+        }
+
+        return ['lock' => $lock, 'lockBy' => $lockBy];
     }
 
     public function lock()
     {
-        if (!$this->checkProperties()) return false;
+        if (!$this->checkProperties())
+            return false;
 
-        $query = "UPDATE ";
-            $query .= $this->table . " ";
-        $query .= "SET ";
-            $query .= "locker_user_id = ?, ";
-            $query .= "locker_time = current_timestamp + interval '1' MINUTE ";
-        $query .= "WHERE ";
-            $query .= "res_id = ?";
+        $query = "UPDATE res_letterbox SET locker_user_id = ?, locker_time = current_timestamp + interval '1' MINUTE WHERE res_id = ?";
 
-        $arrayPDO = array($this->user_id, $this->res_id);
+        $user = \User\models\UserModel::getByLogin(['login' => $this->user_id, 'select' => ['id']]);
+
+        $arrayPDO = array($user['id'], $this->res_id);
 
         $db = new Database();
         $db->query($query, $arrayPDO);
@@ -83,20 +97,14 @@ class docLocker
 
     public function unlock()
     {
-        if (!$this->checkProperties()) return false;
+        if (!$this->checkProperties())
+            return false;
 
-        $query .= "UPDATE ";
-            $query .= $this->table . " ";
-        $query .= "SET ";
-            $query .= "locker_user_id = NULL, ";
-            $query .= "locker_time = NULL ";
-        $query .= "WHERE ";
-            $query .= "res_id = ?";
-
-        $arrayPDO = array($this->res_id);
-
-        $db = new Database();
-        $db->query($query, $arrayPDO);
+        \Resource\models\ResModel::update([
+            'set'   => ['locker_user_id' => null, 'locker_time' => null],
+            'where' => ['res_id = ?'],
+            'data'  => [$this->res_id]
+        ]);
 
         return true;
     }
@@ -135,21 +143,14 @@ class docLocker
 
     private function userLock()
     {
-        $query = "SELECT ";
-            $query .= "locker_user_id as user_lock ";
-        $query .= "FROM ";
-            $query .= $this->table . " ";
-        $query .= "WHERE ";
-            $query .= "res_id = ? ";
+        $resource = \Resource\models\ResModel::getById(['resId' => $this->res_id, 'select' => ['locker_user_id']]);
 
-        $arrayPDO = array($this->res_id);
-        
-        $db = new Database();
-        $stmt = $db->query($query, $arrayPDO);
+        if (empty($resource['locker_user_id'])) {
+            return '';
+        }
 
-        while ($result = $stmt->fetchObject())
-            return $result->user_lock;
+        $user = \User\models\UserModel::getById(['id' => $resource['locker_user_id'], 'select' => ['user_id']]);
 
-        return '';
+        return $user['user_id'];
     }
 }

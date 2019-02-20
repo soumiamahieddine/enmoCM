@@ -1354,7 +1354,7 @@ CREATE TABLE res_letterbox
   tablename character varying(32) DEFAULT 'res_letterbox'::character varying,
   initiator character varying(50) DEFAULT NULL::character varying,
   dest_user character varying(128) DEFAULT NULL::character varying,
-  locker_user_id character varying(255) DEFAULT NULL::character varying,
+  locker_user_id INTEGER DEFAULT NULL::character varying,
   locker_time timestamp without time zone,
   confidentiality character(1),
   convert_result character varying(10) DEFAULT NULL::character varying,

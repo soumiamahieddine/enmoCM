@@ -216,33 +216,6 @@ abstract class ResModelAbstract
         return $resources;
     }
 
-    public static function isLock(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => ['locker_user_id', 'locker_time'],
-            'table'     => ['res_letterbox'],
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
-        ]);
-
-        $lock = true;
-        $lockBy = empty($aReturn[0]['locker_user_id']) ? '' : $aReturn[0]['locker_user_id'];
-
-        if (empty($aReturn[0]['locker_user_id'] || empty($aReturn[0]['locker_time']))) {
-            $lock = false;
-        } elseif ($aReturn[0]['locker_user_id'] == $aArgs['userId']) {
-            $lock = false;
-        } elseif (strtotime($aReturn[0]['locker_time']) < time()) {
-            $lock = false;
-        }
-
-        return ['lock' => $lock, 'lockBy' => $lockBy];
-    }
-
     public static function getDocsByClause(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['clause']);
