@@ -20,6 +20,8 @@ import { PasswordModificationComponent, InfoChangePasswordModalComponent, }     
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
 import { ActivateUserComponent }                from './activate-user.component';
+import { ConfirmActionComponent }               from './actions/confirm-action/confirm-actions.component';
+import { ActionsListComponent }                 from './actions/actions-list.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -58,7 +60,9 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         FiltersListComponent,
         FiltersToolComponent,
         SummarySheetComponent,
-        ExportComponent
+        ExportComponent,
+        ConfirmActionComponent,
+        ActionsListComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
@@ -68,7 +72,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         AttachmentsListComponent,
         DiffusionsListComponent,
         SummarySheetComponent,
-        ExportComponent
+        ExportComponent,
+        ConfirmActionComponent
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]

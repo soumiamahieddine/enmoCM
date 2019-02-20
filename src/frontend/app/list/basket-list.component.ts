@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter, ComponentFactoryResolver } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
@@ -15,6 +15,8 @@ import { NotesListComponent } from '../notes/notes.component';
 import { AttachmentsListComponent } from '../attachments/attachments-list.component';
 import { DiffusionsListComponent } from '../diffusions/diffusions-list.component';
 import { FiltersToolComponent } from './filters/filters-tool.component';
+
+import { ActionsListComponent } from '../actions/actions-list.component';
 
 
 declare function $j(selector: any): any;
@@ -74,10 +76,12 @@ export class BasketListComponent implements OnInit {
     allResInBasket: number[] = [];
 
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
+    @ViewChild('actionsList') actionsList: ActionsListComponent;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
-    constructor(changeDetectorRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService, private notify: NotificationService) {
+
+    constructor(changeDetectorRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService, private notify: NotificationService, private componentFactoryResolver: ComponentFactoryResolver) {
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -343,6 +347,12 @@ export class BasketListComponent implements OnInit {
             });
         }
     }
+
+    launchEvent() {
+        /* FOR TEST */
+        let action = 'confirmAction';
+        this.actionsList[action]();
+    }
 }
 export interface BasketList {
     resources: any[];
@@ -350,7 +360,6 @@ export interface BasketList {
     basketLabel: string,
     allResources: number[]
 }
-
 
 export class ResultListHttpDao {
 
