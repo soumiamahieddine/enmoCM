@@ -43,16 +43,26 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     idCircuitVisa                   : number;
     config                          : any       = {};
 
-    dataSource          = new MatTableDataSource(this.currentEntity.users);
-    displayedColumns    = ['firstname', 'lastname'];
+    dataSourceUsers             = new MatTableDataSource(this.currentEntity.users);
+    dataSourceTemplates         = new MatTableDataSource(this.currentEntity.templates);
+    displayedColumnsUsers       = ['firstname', 'lastname'];
+    displayedColumnsTemplates   = ['template_label', 'template_comment', 'template_target', 'template_attachment_type'];
 
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    applyFilter(filterValue: string) {
+    @ViewChild('paginatorUsers') paginatorUsers: MatPaginator;
+    @ViewChild('paginatorTemplates') paginatorTemplates: MatPaginator;
+    @ViewChild('tableUsers') sortUsers: MatSort;
+    @ViewChild('tableTemplates') sortTemplates: MatSort;
+    applyFilterUsers(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
-        this.dataSource.filter = filterValue;
+        this.dataSourceUsers.filter = filterValue;
+    }
+
+    applyFilterTemplates(filterValue: string) {
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
+        this.dataSourceTemplates.filter = filterValue;
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
@@ -193,9 +203,14 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 } else {
                     this.idCircuitVisa = null;
                 }
-                this.dataSource = new MatTableDataSource(this.currentEntity.users);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
+                this.dataSourceUsers = new MatTableDataSource(this.currentEntity.users);
+                this.dataSourceUsers.paginator = this.paginatorUsers;
+                this.dataSourceUsers.sort = this.sortUsers;
+
+                this.dataSourceTemplates = new MatTableDataSource(this.currentEntity.templates);
+                this.dataSourceTemplates.paginator = this.paginatorTemplates;
+                this.dataSourceTemplates.sort = this.sortTemplates;
+
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -705,9 +720,9 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     lastname : displayName[1]
                 }
                 this.currentEntity.users.push(user);
-                this.dataSource = new MatTableDataSource(this.currentEntity.users);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
+                this.dataSourceUsers = new MatTableDataSource(this.currentEntity.users);
+                this.dataSourceUsers.paginator = this.paginatorUsers;
+                this.dataSourceUsers.sort = this.sortUsers;
                 this.notify.success(this.lang.userAdded);
             }, (err) => {
                 this.notify.error(err.error.errors);
