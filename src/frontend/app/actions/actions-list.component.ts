@@ -58,7 +58,7 @@ export class ActionsListComponent implements OnInit {
     launchEvent(action: string) {
         let arrRes: any[] = [];
 
-        if (this.contextMode) {
+        if (this.contextMode && this.selectedRes.length == 0) {
             arrRes = [this.contextResId];
         } else {
             arrRes = this.selectedRes;  
@@ -85,7 +85,11 @@ export class ActionsListComponent implements OnInit {
     confirmAction() {
         this.dialog.open(ConfirmActionComponent, {
             width: 'auto',
-            data: { }
+            data: { 
+                contextMode : this.contextMode,
+                contextChrono : this.contextMenuTitle,
+                selectedRes : this.selectedRes
+            }
         });
     }
 }

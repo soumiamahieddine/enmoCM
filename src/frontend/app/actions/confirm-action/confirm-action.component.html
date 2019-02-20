@@ -5,6 +5,9 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            Voulez-vous faire cette action sur 
+            <b *ngIf="data.contextMode && data.selectedRes.length == 0" color="primary" class="highlight">{{data.contextChrono}}</b>
+            <b  *ngIf="!data.contextMode || (data.contextMode && data.selectedRes.length > 0)" color="primary" class="highlight">{{data.selectedRes.length}} élement(s)</b> ?
         </div>
     </div>
 </div>

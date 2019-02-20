@@ -15,10 +15,22 @@
                 <div class="example-loading-shade" *ngIf="isLoadingResults">
                     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
                 </div>
-                <div class="row" style="margin:0px;">
+                <div *ngIf="resultsLength == 0 && !isLoadingResults" class="emptyBasket">
+                    <div class="emptyBasket_content">
+                        <div class="emptyBasket_icon">
+                            <i class="fa fa-inbox"></i>
+                        </div>
+                        <div class="emptyBasket_label">
+                            {{lang.emptyBasket}}
+                        </div>
+                    </div>
+
+                </div>
+                <div [style.display]="resultsLength > 0 ? 'block' : 'none'" class="row" style="margin:0px;">
                     <div class="col-md-12" style="display:flex;">
                         <app-filters-tool style="flex:1;" #filtersTool [currentBasketInfo]="currentBasketInfo"
-                            [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)" (refreshEvent)="refreshDao()"></app-filters-tool>
+                            [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
+                            [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)" (refreshEvent)="refreshDao()"></app-filters-tool>
                         <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="10" class="paginatorResultList"></mat-paginator>
                     </div>
                 </div>
@@ -29,16 +41,18 @@
                         <td mat-cell *matCellDef="let row" class="resultContainer" [class.resultContainer-mobile]="mobileMode">
                             <!-- Secondary Info Line -->
                             <mat-toolbar *ngIf="row.display.length > 0">
-                                <div class="resultCol" style="flex:1;overflow: hidden;text-overflow: ellipsis;padding-right: 10px;" [class]="data.cssClasses.join(' ')" *ngFor="let data of row.display">
+                                <div class="resultCol" style="flex:1;overflow: hidden;text-overflow: ellipsis;padding-right: 10px;"
+                                    [class]="data.cssClasses.join(' ')" *ngFor="let data of row.display">
                                     <ng-container *ngIf="data.value == 'getCreationAndProcessLimitDates'">
                                         <ng-container *ngIf="row.closing_date != lang.undefined">
                                             <i class="fa fa-lock" title="{{lang.closingDate}}"></i>&nbsp;<span
                                                 [innerHTML]="row.closing_date | timeAgo" title='{{row.closing_date | date : "le dd/MM/y à HH:mm"}}'></span>
                                         </ng-container>
                                         <ng-container *ngIf="row.closing_date == lang.undefined">
-                                                <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;<span
-                                                [innerHTML]="data.displayValue.creationDate | timeAgo" title='{{data.displayValue.creationDate | date : "le dd/MM/y à HH:mm"}}'></span> - <i class="fa fa-stopwatch" title="{{lang.processLimitDate}}"></i>&nbsp;<span
-                                                    [innerHTML]="data.displayValue.processLimitDate | timeLimit" title='{{data.displayValue.processLimitDate | date : "le dd/MM/y à HH:mm"}}'></span>
+                                            <i class="fa fa-calendar" title="{{lang.creationDate}}"></i>&nbsp;<span
+                                                [innerHTML]="data.displayValue.creationDate | timeAgo" title='{{data.displayValue.creationDate | date : "le dd/MM/y à HH:mm"}}'></span>
+                                            - <i class="fa fa-stopwatch" title="{{lang.processLimitDate}}"></i>&nbsp;<span
+                                                [innerHTML]="data.displayValue.processLimitDate | timeLimit" title='{{data.displayValue.processLimitDate | date : "le dd/MM/y à HH:mm"}}'></span>
                                         </ng-container>
                                     </ng-container>
                                     <ng-container *ngIf="data.icon != ''">
@@ -50,7 +64,8 @@
                                         <span *ngIf="lang[data.displayValue]" title="{{data.displayTitle}}">{{lang[data.displayValue]}}</span>
                                     </ng-container>
                                     <ng-container *ngIf="data.value != 'getCategory' && data.value != 'getCreationAndProcessLimitDates'">
-                                        <span *ngIf="!data.value.includes('Date')" title="{{data.displayTitle}}"  [innerHTML]="data.displayValue"></span>
+                                        <span *ngIf="!data.value.includes('Date')" title="{{data.displayTitle}}"
+                                            [innerHTML]="data.displayValue"></span>
                                         <span *ngIf="data.value.includes('Date')" [innerHTML]="data.displayValue | timeAgo"></span>
                                     </ng-container>
                                 </div>
@@ -58,28 +73,33 @@
                             <!-- Primary Info Line -->
                             <div class="resultRow newRow" [class.resultRow-mobile]="mobileMode">
                                 <div *ngIf="!mobileMode" class="checkThis">
-                                    <mat-checkbox color="primary" [checked]="row.checked" (change)="toggleRes($event,row.res_id)" (click)="$event.stopPropagation();"></mat-checkbox>
+                                    <mat-checkbox color="primary" [checked]="row.checked" (change)="toggleRes($event,row.res_id)"
+                                        (click)="$event.stopPropagation();"></mat-checkbox>
                                 </div>
-                                <div class="resultCol" [class]="data.cssClasses.join(' ')" *ngFor="let data of displayedMainData" (click)="launchEvent();" style="cursor: pointer;">
+                                <div class="resultCol" [class]="data.cssClasses.join(' ')" *ngFor="let data of displayedMainData"
+                                    (click)="launchEvent();" style="cursor: pointer;">
                                     <span *ngIf="data.value == 'alt_identifier'">
                                         <mat-icon [ngStyle]="{'color': row.priorityColor}" color="primary" class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x"
-                                            title="{{row.statusLabel}}" style="cursor: crosshair;"
-                                            (click)="$event.stopPropagation();filterThis(row.statusLabel)"></mat-icon><br />
-                                        <span *ngIf="row[data.value] == lang.undefined" style="color: rgba(0,0,0,0.4);font-size: 90%;"><i title="{{lang.barcode}}" *ngIf="row.barcode != lang.undefined"
-                                                class="fas fa-barcode"></i> {{row.barcode}}</span>
+                                            title="{{row.statusLabel}}" style="cursor: crosshair;" (click)="$event.stopPropagation();filterThis(row.statusLabel)"></mat-icon><br />
+                                        <span *ngIf="row[data.value] == lang.undefined" style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
+                                                title="{{lang.barcode}}" *ngIf="row.barcode != lang.undefined" class="fas fa-barcode"></i>
+                                            {{row.barcode}}</span>
                                         <span *ngIf="row[data.value] != lang.undefined" style="color: rgba(0,0,0,0.4);font-size: 90%;cursor: crosshair;"
                                             (click)="$event.stopPropagation();filterThis(row[data.value])">{{row[data.value]}}</span>
                                     </span>
                                     <ng-container *ngIf="data.value != 'alt_identifier'">
-                                        <span [class.undefined]="row[data.value] == lang.undefined" title="{{row[data.value]}}" >{{row[data.value] | shorten: 150: '...'}}</span>
+                                        <span [class.undefined]="row[data.value] == lang.undefined" title="{{row[data.value]}}">{{row[data.value]
+                                            | shorten: 150: '...'}}</span>
                                     </ng-container>
                                 </div>
                                 <mat-button-toggle-group #group="matButtonToggleGroup" class="actions" multiple>
-                                    <button color="primary" mat-icon-button title="{{lang.notes}}" (click)="$event.stopPropagation();openBottomSheet(row)" [class.noData]="row.countNotes == 0">
+                                    <button color="primary" mat-icon-button title="{{lang.notes}}" (click)="$event.stopPropagation();openBottomSheet(row)"
+                                        [class.noData]="row.countNotes == 0">
                                         <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas" matBadge="{{row.countNotes}}"
                                             fontIcon="fa-comments fa-2x"></mat-icon>
                                     </button>
-                                    <button color="primary" mat-icon-button title="{{lang.attachments}}" (click)="$event.stopPropagation();openAttachSheet(row)" [class.noData]="row.countAttachments == 0">
+                                    <button color="primary" mat-icon-button title="{{lang.attachments}}" (click)="$event.stopPropagation();openAttachSheet(row)"
+                                        [class.noData]="row.countAttachments == 0">
                                         <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas" matBadge="{{row.countAttachments}}"
                                             fontIcon="fa-paperclip fa-2x"></mat-icon>
                                     </button>

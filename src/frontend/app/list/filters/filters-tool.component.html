@@ -1,5 +1,5 @@
 <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" multiple>
-    <mat-checkbox color="primary" [checked]="selectedRes.length == totalRes" [indeterminate]="selectedRes.length > 0 && selectedRes.length < totalRes" style="margin: 10px;padding-right: 10px;"
+    <mat-checkbox color="primary" [checked]="selectedRes.length == totalRes && selectedRes.length > 0" [indeterminate]="selectedRes.length > 0 && selectedRes.length < totalRes" style="margin: 10px;padding-right: 10px;"
         title="{{lang.selectAllResInBasket}}" (change)="toggleAll($event)"></mat-checkbox>
     <app-actions-list #actionsList [contextMode]="false" [totalRes]="totalRes" [selectedRes]="selectedRes"></app-actions-list>
     <form [formGroup]="stateForm" [style.flex]="1">

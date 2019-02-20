@@ -841,4 +841,5 @@ export const LANG_EN = {
     "mailEntitiesList"                   : "List of entities attached to mails",
     "firstSummarySheetsGenerated"        : "Only first 500 summary sheets will be generated.",
     "selectAction"                      : "Select an action",
+    "emptyBasket"                      : "Empty basket",
 };

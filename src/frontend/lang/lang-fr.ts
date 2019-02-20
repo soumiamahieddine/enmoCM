@@ -867,4 +867,5 @@ export const LANG_FR = {
     "mailEntitiesList"                   : "Liste des entités rattachées aux courriers",
     "firstSummarySheetsGenerated"        : "Seules les 500 premières fiches de liaison seront générés.",
     "selectAction"                      : "Effectuer une action",
+    "emptyBasket"                      : "Bannette vide",
 };
