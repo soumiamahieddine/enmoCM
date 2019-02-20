@@ -20,7 +20,7 @@ import { PasswordModificationComponent, InfoChangePasswordModalComponent, }     
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
 import { ActivateUserComponent }                from './activate-user.component';
-import { ConfirmActionComponent }               from './actions/confirm-action/confirm-actions.component';
+import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
 import { ActionsListComponent }                 from './actions/actions-list.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
