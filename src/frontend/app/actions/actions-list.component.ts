@@ -4,7 +4,7 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { MatDialog } from '@angular/material';
 
-import { ConfirmActionComponent } from '../actions/confirm-action/confirm-actions.component';
+import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
 
 @Component({
     selector: 'app-actions-list',

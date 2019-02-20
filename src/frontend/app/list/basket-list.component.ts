@@ -273,23 +273,23 @@ export class BasketListComponent implements OnInit {
                         }
 
                         formatWorkflow.push(content);
-        
+
                     });
 
                     //TRUNCATE DISPLAY LIST
                     const index = key.displayValue.map((e: any) => { return e.current; }).indexOf(true);
                     if (index > 0) {
-                        formatWorkflow = formatWorkflow.slice(index-1);
+                        formatWorkflow = formatWorkflow.slice(index - 1);
                         formatWorkflow = formatWorkflow.reverse();
-                        formatWorkflow = formatWorkflow.slice((formatWorkflow.length-index)-1);
+                        formatWorkflow = formatWorkflow.slice((formatWorkflow.length - index) - 1);
                         formatWorkflow = formatWorkflow.reverse();
                     } else if (index === -1) {
-                        formatWorkflow = formatWorkflow.slice(formatWorkflow.length-2);
+                        formatWorkflow = formatWorkflow.slice(formatWorkflow.length - 2);
                     }
                     if (index >= 2 || (index == -1 && key.displayValue.length >= 3)) {
                         formatWorkflow.unshift('...');
                     }
-                    if (index != -1 && index-2 <= key.displayValue.length && key.displayValue.length >= 3) {
+                    if (index != -1 && index - 2 <= key.displayValue.length && key.displayValue.length >= 3) {
                         formatWorkflow.push('...');
                     }
 
@@ -351,7 +351,12 @@ export class BasketListComponent implements OnInit {
     launchEvent() {
         /* FOR TEST */
         let action = 'confirmAction';
-        this.actionsList[action]();
+        try {
+            this.actionsList[action]();
+        }
+        catch (error) {
+            alert("L'action n'existe pas!");
+        }
     }
 }
 export interface BasketList {
