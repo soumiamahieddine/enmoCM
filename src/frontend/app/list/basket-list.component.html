@@ -18,7 +18,7 @@
                 <div class="row" style="margin:0px;">
                     <div class="col-md-12" style="display:flex;">
                         <app-filters-tool style="flex:1;" #filtersTool [currentBasketInfo]="currentBasketInfo"
-                            [listProperties]="this.listProperties" [snavR]="snav2" [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)" (refreshEvent)="refreshDao()"></app-filters-tool>
+                            [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)" (refreshEvent)="refreshDao()"></app-filters-tool>
                         <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="10" class="paginatorResultList"></mat-paginator>
                     </div>
                 </div>
@@ -95,9 +95,8 @@
                         </td>
                     </ng-container>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;" (swipeleft)="paginatorResultList.nextPage()"
-                        (swiperight)="paginatorResultList.previousPage()"></tr>
+                        (swiperight)="paginatorResultList.previousPage()" (contextmenu)="open($event,row);$event.preventDefault();"></tr>
                 </table>
-                <app-actions-list #actionsList></app-actions-list>
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 mode="over" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'
@@ -113,3 +112,4 @@
         </mat-sidenav>
     </mat-sidenav-container>
 </div>
+<app-actions-list #actionsListContext [contextMode]="true" [totalRes]="totalRes" [selectedRes]="selectedRes"></app-actions-list>

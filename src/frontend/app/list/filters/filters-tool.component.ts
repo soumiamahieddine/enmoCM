@@ -9,6 +9,7 @@ import { startWith, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { ExportComponent } from '../export/export.component';
 import { SummarySheetComponent } from '../summarySheet/summary-sheet.component';
+import { ActionsListComponent } from '../../actions/actions-list.component';
 
 
 declare function $j(selector: any): any;
@@ -59,11 +60,14 @@ export class FiltersToolComponent implements OnInit {
 
     isLoading: boolean = false;
 
+    @ViewChild('actionsList') actionsList: ActionsListComponent;
+    
     @Input('listProperties') listProperties: any;
     @Input('currentBasketInfo') currentBasketInfo: any;
 
     @Input('snavR') sidenavRight: MatSidenav;
     @Input('selectedRes') selectedRes: any;
+    @Input('totalRes') totalRes: number;
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     @Output('toggleAllRes') toggleAllRes = new EventEmitter<string>();

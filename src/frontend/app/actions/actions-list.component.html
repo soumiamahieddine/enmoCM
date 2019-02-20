@@ -1,0 +1,24 @@
+<button *ngIf="!contextMode" mat-icon-button [matMenuTriggerFor]="menu" title="{{lang.selectAction}}" [disabled]="selectedRes.length==0"
+    style="height: 20px;width: 20px;position: absolute;left: 25px;top: 7px;">
+    <mat-icon fontSet="fas" fontIcon="fa-sort-down fa-2x" style="height: 20px;width: 20px;margin-top: -30px;"></mat-icon>
+</button>
+<span *ngIf="contextMode" [matMenuTriggerFor]="menu" #menu2 style="position: absolute;" [style.left]="contextMenuPosition.x"
+    [style.top]="contextMenuPosition.y"></span>
+
+<mat-menu #menu="matMenu">
+    <div style="text-align: center;font-size: 10px;opacity: 0.5;margin-top:-10px;">
+        {{menuTitle}}
+        <ng-container *ngIf="!contextMode">
+            {{selectedRes.length}} {{lang.selectedElements}} 
+        </ng-container>
+        <ng-container *ngIf="contextMode">
+            {{this.contextMenuTitle}}
+        </ng-container>
+    </div>
+    <button mat-menu-item (click)="launchEvent('confirmAction');">
+        <span>Valider le document</span>
+    </button>
+    <button mat-menu-item (click)="launchEvent('err');">
+        <span>Action erronée</span>
+    </button>
+</mat-menu>

@@ -865,5 +865,6 @@ export const LANG_FR = {
     "userIsNotDeletable"                 : "Vous n'avez pas la totalité des <b>droits d'accès</b> sur les listes de diffusion ou les courriers de l'utilisateur ",
     "userIsDeletableBy"                  : "Seul un utilisateur ayant la <b>totalité des droits d'accès</b> pourra supprimer ou suspendre cet utilisateur.",
     "mailEntitiesList"                   : "Liste des entités rattachées aux courriers",
-    "firstSummarySheetsGenerated"        : "Seules les 500 premières fiches de liaison seront générés."
+    "firstSummarySheetsGenerated"        : "Seules les 500 premières fiches de liaison seront générés.",
+    "selectAction"                      : "Effectuer une action",
 };

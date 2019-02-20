@@ -839,5 +839,6 @@ export const LANG_EN = {
     "userIsNotDeletable"                 : "You do not have <b>full access rights</b> to diffusion list or mails for the user ",
     "userIsDeletableBy"                  : "Only a user with the <b>totality of access rights</b> can delete or suspend this user.",
     "mailEntitiesList"                   : "List of entities attached to mails",
-    "firstSummarySheetsGenerated"        : "Only first 500 summary sheets will be generated."
+    "firstSummarySheetsGenerated"        : "Only first 500 summary sheets will be generated.",
+    "selectAction"                      : "Select an action",
 };

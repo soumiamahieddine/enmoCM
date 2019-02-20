@@ -1,14 +1,14 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter, ComponentFactoryResolver } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter, ComponentFactoryResolver, ViewContainerRef, TemplateRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { merge, Observable, of as observableOf } from 'rxjs';
+import { merge, Observable, of as observableOf, fromEvent, Subscription } from 'rxjs';
 import { NotificationService } from '../notification.service';
-import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet } from '@angular/material';
+import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet, MatMenu, MatMenuTrigger } from '@angular/material';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 import { NotesListComponent } from '../notes/notes.component';
@@ -17,6 +17,7 @@ import { DiffusionsListComponent } from '../diffusions/diffusions-list.component
 import { FiltersToolComponent } from './filters/filters-tool.component';
 
 import { ActionsListComponent } from '../actions/actions-list.component';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 
 
 declare function $j(selector: any): any;
@@ -75,13 +76,15 @@ export class BasketListComponent implements OnInit {
     selectedRes: number[] = [];
     allResInBasket: number[] = [];
 
+    @ViewChild('actionsListContext') actionsList: ActionsListComponent;
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
-    @ViewChild('actionsList') actionsList: ActionsListComponent;
+
+    currentSelectedChrono: string = '';
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService, private notify: NotificationService, private componentFactoryResolver: ComponentFactoryResolver) {
+    constructor(changeDetectorRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService, private notify: NotificationService, public overlay: Overlay, public viewContainerRef: ViewContainerRef) {
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -348,15 +351,12 @@ export class BasketListComponent implements OnInit {
         }
     }
 
-    launchEvent() {
-        /* FOR TEST */
-        let action = 'confirmAction';
-        try {
-            this.actionsList[action]();
-        }
-        catch (error) {
-            alert("L'action n'existe pas!");
-        }
+    open({ x, y }: MouseEvent, row: any) {
+    
+        this.actionsList.open(x, y, row)
+
+        // prevents default
+        return false;
     }
 }
 export interface BasketList {
