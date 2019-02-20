@@ -487,16 +487,16 @@ export class SignatureBookComponent implements OnInit {
     }
 
     changeLocation(resId: number, origin: string) {
-        this.http.put(this.coreUrl + 'rest/resources/' + resId + '/lock', {})
+        this.http.put(this.coreUrl + 'rest/resources/lock', {resources : [resId]})
             .subscribe(() => {
                 let path = "/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + resId;
                 this.router.navigate([path]);
             }, (err) => {
                 if (err.error.lockBy) {
                     if (origin == "view") {
-                        alert("Courrier verrouillé par " + err.error.lockBy);
+                        alert("Courrier verrouillé par " + err.error.lockBy[0]);
                     } else if (origin == "action") {
-                        alert("Courrier suivant verrouillé par " + err.error.lockBy);
+                        alert("Courrier suivant verrouillé par " + err.error.lockBy[0]);
                         this.backToBasket();
                     }
                 } else {

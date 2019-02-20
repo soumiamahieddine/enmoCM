@@ -248,13 +248,13 @@ $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 
 //Resources
 $app->post('/resources', \Resource\controllers\ResController::class . ':create');
+$app->put('/resources/lock', \Resource\controllers\ResController::class . ':lock');
 $app->post('/res', \Resource\controllers\ResController::class . ':createRes');
 $app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
 $app->get('/res/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
 $app->get('/res/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
-$app->put('/resources/{resId}/lock', \Resource\controllers\ResController::class . ':lock');
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');

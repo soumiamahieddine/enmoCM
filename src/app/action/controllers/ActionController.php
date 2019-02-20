@@ -16,7 +16,6 @@ use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
-use SrcCore\models\CoreConfigModel;
 use Status\models\StatusModel;
 use Group\models\ServiceModel;
 use Slim\Http\Request;
