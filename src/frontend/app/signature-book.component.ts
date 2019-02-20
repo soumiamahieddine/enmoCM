@@ -487,18 +487,20 @@ export class SignatureBookComponent implements OnInit {
     }
 
     changeLocation(resId: number, origin: string) {
-        this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
-            .subscribe((data : any) => {
-                if (!data.lock) {
-                    let path = "/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + resId;
-                    this.router.navigate([path]);
-                } else {
+        this.http.put(this.coreUrl + 'rest/resources/' + resId + '/lock', {})
+            .subscribe(() => {
+                let path = "/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + resId;
+                this.router.navigate([path]);
+            }, (err) => {
+                if (err.error.lockBy) {
                     if (origin == "view") {
-                        alert("Courrier verrouillé par " + data.lockBy);
+                        alert("Courrier verrouillé par " + err.error.lockBy);
                     } else if (origin == "action") {
-                        alert("Courrier suivant verrouillé par " + data.lockBy);
+                        alert("Courrier suivant verrouillé par " + err.error.lockBy);
                         this.backToBasket();
                     }
+                } else {
+                    this.notify.error(err.error.errors);
                 }
             });
     }
