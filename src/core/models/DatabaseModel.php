@@ -248,7 +248,7 @@ class DatabaseModel
         $dataSet = [];
         if (!empty($args['set'])) {
             foreach ($args['set'] as $key => $value) {
-                if ($value == 'SYSDATE' || $value == 'CURRENT_TIMESTAMP') {
+                if ($value == 'SYSDATE' || strpos($value, 'CURRENT_TIMESTAMP') !== false) {
                     $querySet[] = "{$key} = {$value}";
                 } else {
                     $querySet[] = "{$key} = ?";

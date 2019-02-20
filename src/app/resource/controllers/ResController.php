@@ -493,32 +493,6 @@ class ResController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function isLock(Request $request, Response $response, array $aArgs)
-    {
-        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['locker_user_id', 'locker_time']]);
-
-        $lock = true;
-        if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
-            $lock = false;
-        } elseif ($resource['locker_user_id'] == $currentUser['id']) {
-            $lock = false;
-        } elseif (strtotime($resource['locker_time']) < time()) {
-            $lock = false;
-        }
-
-        $lockBy = '';
-        if ($lock) {
-            $lockBy = UserModel::getLabelledUserById(['id' => $resource['locker_user_id']]);
-        }
-
-        return $response->withJson(['lock' => $lock, 'lockBy' => $lockBy]);
-    }
-
     public function lock(Request $request, Response $response, array $aArgs)
     {
         if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
@@ -541,6 +515,12 @@ class ResController
             $user = UserModel::getLabelledUserById(['id' => $resource['locker_user_id']]);
             return $response->withStatus(403)->withJson(['lockBy' => $user]);
         }
+
+        ResModel::update([
+            'set'   => ['locker_user_id' => $currentUser['id'], 'locker_time' => 'CURRENT_TIMESTAMP + interval \'1\' MINUTE'],
+            'where' => ['res_id = ?'],
+            'data'  => [$aArgs['resId']]
+        ]);
 
         return $response->withStatus(204);
     }
