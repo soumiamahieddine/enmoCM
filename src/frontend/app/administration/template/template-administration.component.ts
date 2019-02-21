@@ -32,7 +32,6 @@ export class TemplateAdministrationComponent implements OnInit {
     creationMode            : boolean;
     template                : any       = {};
     statuses                : any[]     = [];
-    actionPagesList         : any[]     = [];
     categoriesList          : any[]     = [];
     keywordsList            : any[]     = [];
     defaultTemplatesList    : any;

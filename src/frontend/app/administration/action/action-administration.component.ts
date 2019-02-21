@@ -16,6 +16,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class ActionAdministrationComponent implements OnInit {
+
     /*HEADER*/
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
@@ -27,7 +28,7 @@ export class ActionAdministrationComponent implements OnInit {
     creationMode: boolean;
     action: any = {};
     statuses: any[] = [];
-    actionPagesList: any[] = [];
+    actionPages: any[] = [];
     categoriesList: any[] = [];
     keywordsList: any[] = [];
 
@@ -61,7 +62,7 @@ export class ActionAdministrationComponent implements OnInit {
                         this.categoriesList = data.categoriesList;
                         this.statuses = data.statuses;
 
-                        this.actionPagesList = data.action_pagesList;
+                        this.actionPages = data['actionPages'];
                         this.keywordsList = data.keywordsList;
                         this.headerService.setHeader(this.lang.actionCreation);
                         this.loading = false;
@@ -78,7 +79,7 @@ export class ActionAdministrationComponent implements OnInit {
                         this.action = data.action;
                         this.categoriesList = data.categoriesList;
                         this.statuses = data.statuses;
-                        this.actionPagesList = data.action_pagesList;
+                        this.actionPages = data['actionPages'];
                         this.keywordsList = data.keywordsList;
                         this.headerService.setHeader(this.lang.actionCreation, data.action.label_action);
                         this.loading = false;

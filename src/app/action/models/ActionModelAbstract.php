@@ -54,26 +54,14 @@ abstract class ActionModelAbstract
 
     public static function create(array $aArgs)
     {
-        $actionCategories = empty($aArgs['actionCategories']) ? [] : $aArgs['actionCategories'];
-        unset($aArgs['actionCategories']);
-
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'actions_id_seq']);
-        $aArgs['id'] = $nextSequenceId;
 
+        unset($aArgs['actionCategories']);
+        $aArgs['id'] = $nextSequenceId;
         DatabaseModel::insert([
             'table'         => 'actions',
             'columnsValues' => $aArgs
         ]);
-
-        $data = [];
-        $data['action_id'] = $nextSequenceId;
-        foreach ($actionCategories as $actionCategory) {
-            $data['category_id'] = $actionCategory;
-            DatabaseModel::insert([
-                'table'         => 'actions_categories',
-                'columnsValues' => $data
-            ]);
-        }
 
         return $nextSequenceId;
     }
@@ -90,29 +78,12 @@ abstract class ActionModelAbstract
                 'label_action'      => $aArgs['label_action'],
                 'id_status'         => $aArgs['id_status'],
                 'action_page'       => $aArgs['action_page'],
+                'component'         => $aArgs['component'],
                 'history'           => $aArgs['history'],
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
         ]);
-
-        DatabaseModel::delete([
-            'table' => 'actions_categories',
-            'where'  => ['action_id = ?'],
-            'data'   => [$aArgs['id']]
-        ]);
-
-        $tab['action_id'] = $aArgs['id'];
-
-        if (!empty($aArgs['actionCategories'])) {
-            foreach ($aArgs['actionCategories'] as $actionCategory) {
-                $tab['category_id'] = $actionCategory;
-                DatabaseModel::insert([
-                    'table'         => 'actions_categories',
-                    'columnsValues' => $tab
-                ]);
-            }
-        }
 
         return true;
     }
@@ -125,11 +96,6 @@ abstract class ActionModelAbstract
         DatabaseModel::delete([
             'table' => 'actions',
             'where' => ['id = ?'],
-            'data'  => [$aArgs['id']]
-        ]);
-        DatabaseModel::delete([
-            'table' => 'actions_categories',
-            'where' => ['action_id = ?'],
             'data'  => [$aArgs['id']]
         ]);
         DatabaseModel::delete([
@@ -156,43 +122,71 @@ abstract class ActionModelAbstract
         return $categories;
     }
 
+    public static function createCategories(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'categories']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['categories']);
+
+        foreach ($aArgs['categories'] as $category) {
+            DatabaseModel::insert([
+                'table'         => 'actions_categories',
+                'columnsValues' => [
+                    'action_id' => $aArgs['id'],
+                    'category_id' => $category,
+                ]
+            ]);
+        }
+
+        return true;
+    }
+
+    public static function deleteCategories(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+
+        DatabaseModel::delete([
+            'table' => 'actions_categories',
+            'where' => ['action_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
+
+        return true;
+    }
+
     public static function getActionPages()
     {
-        $actionsPages              = [];
-        $actionsPages['modules'][] = 'Apps';
+        $actionsPages = [];
 
-        $paths = ['core/xml/actions_pages.xml', 'modules/avis/xml/actions_pages.xml', 'modules/export_seda/xml/actions_pages.xml'];
-
-        foreach ($paths as $path) {
-            $loadedXml = CoreConfigModel::getXmlLoaded(['path' => $path]);
-            if ($loadedXml) {
-                foreach ($loadedXml->ACTIONPAGE as $actionPage) {
-                    if (!defined((string) $actionPage->LABEL)) {
-                        $label = $actionPage->LABEL;
-                    } else {
-                        $label = constant((string) $actionPage->LABEL);
-                    }
-                    if (!empty((string) $actionPage->MODULE)) {
-                        $origin = (string) $actionPage->MODULE;
-                    } else {
-                        $origin = 'apps';
-                    }
-                    if (!empty((string) $actionPage->DESC)) {
-                        $desc = constant((string) $actionPage->DESC);
-                    } else {
-                        $desc = 'No description';
-                    }
-                    $component = empty((string)$actionPage->component) ? null : (string)$actionPage->component;
-
-                    $actionsPages['actionsPageList'][] = [
-                        'id'        => (string)$actionPage->ID,
-                        'label'     => $label,
-                        'name'      => (string)$actionPage->NAME,
-                        'component' => $component,
-                        'desc'      => $desc,
-                        'origin'    => ucfirst($origin)
-                    ];
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'core/xml/actions_pages.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->ACTIONPAGE as $actionPage) {
+                if (!defined((string) $actionPage->LABEL)) {
+                    $label = $actionPage->LABEL;
+                } else {
+                    $label = constant((string) $actionPage->LABEL);
                 }
+                if (!empty((string) $actionPage->MODULE)) {
+                    $origin = (string) $actionPage->MODULE;
+                } else {
+                    $origin = 'apps';
+                }
+                if (!empty((string) $actionPage->DESC)) {
+                    $desc = constant((string) $actionPage->DESC);
+                } else {
+                    $desc = 'No description';
+                }
+                $component = empty((string)$actionPage->component) ? null : (string)$actionPage->component;
+
+                $actionsPages[] = [
+                    'id'        => (string)$actionPage->ID,
+                    'label'     => $label,
+                    'name'      => (string)$actionPage->NAME,
+                    'component' => $component,
+                    'desc'      => $desc,
+                    'origin'    => ucfirst($origin)
+                ];
             }
         }
 
@@ -200,13 +194,10 @@ abstract class ActionModelAbstract
             array_map(
                 function ($element) {
                     return $element['label'];
-                }, $actionsPages['actionsPageList']
+                }, $actionsPages
             ),
-            SORT_ASC, $actionsPages['actionsPageList']
+            SORT_ASC, $actionsPages
         );
-
-        $actionsPages['modules'] = array_unique($actionsPages['modules']);
-        sort($actionsPages['modules']);
 
         return $actionsPages;
     }
