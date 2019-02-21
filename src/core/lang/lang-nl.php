@@ -293,7 +293,6 @@ define('_USE_DATE_IN_SIGNBLOCK_DESC', 'De datum van ondertekening zal bovenaan d
 // ACTIONS
 define('_REDIRECTION', 'Doorsturen');
 define('_REDIRECTION_DESC', 'Opent een modaliteit waarmee een nieuwe verwerkende gebruiker gekozen kan worden OF die de verwerkende dienst met een nieuwe distributielijst opnieuw kan instellen.');
-define('_REDIRECTION_VISA_SIGN', 'Doorsturen voor ondertekening');
 define('_PUT_IN_COPY', 'In kopie toevoegen');
 define('_PUT_IN_COPY_DESC', 'Opent een modaliteit die ENKEL toelaat personen in KOPIE aan de verdelingslijst toe te voegen of ervan te verwijderen.');
 define('_SIMPLE_CONFIRM', 'Eenvoudige bevestiging');
@@ -317,8 +316,6 @@ define('_MARK_AS_READ_DESC', 'Markeert het document als \gelezen\ in het bakje. 
 define('_SEND_FILE_WS', 'Het document via Web Service verzenden');
 define('_SEND_DATA_WS', 'Gegevens via Web Service verzenden');
 define('_SEND_TO_EXTERNAL_SB', 'Gegevens naar een extern vloeiboek verzenden');
-define('_CONFIRM_FOLDER_STATUS', '[map] De mapstatus bevestigen');
-define('_REDIRECT_FOLDER', '[map] De map doorsturen');
 define('_CLOSE_MAIL_AND_INDEX', 'Een brief afsluiten en de indexering starten');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Om de afsluitingsdatum van een document bij te werken (\ closing_date van tabel mlb_coll_ext) EN de indexeringspagina te openen om een nieuw document te bewaren.');
 define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Een brief met een bijlage afsluiten');

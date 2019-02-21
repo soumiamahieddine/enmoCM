@@ -359,11 +359,6 @@ abstract class business_app_tools_Abstract extends Database
                 ) {
                     $createFlag = 'Y';
                 }
-                $collections = array();
-                $collectionsTag = $actionPage->COLLECTIONS;
-                foreach ($collectionsTag->COLL_ID as $collection) {
-                    array_push($collections, (string) $collection);
-                }
                 $_SESSION['actions_pages'][$i] = array(
                     'ID'          => (string) $actionPage->ID,
                     'LABEL'       => $label,
@@ -372,7 +367,6 @@ abstract class business_app_tools_Abstract extends Database
                     'MODULE'      => (string) $actionPage->MODULE,
                     'KEYWORD'     => $keyword,
                     'FLAG_CREATE' => $createFlag,
-                    'COLLECTIONS' => $collections,
                 );
                 $i++;
             }
@@ -435,11 +429,6 @@ abstract class business_app_tools_Abstract extends Database
                 ) {
                     $createFlag = 'Y';
                 }
-                $collections = array();
-                $collectionsTag = $actionPage->COLLECTIONS;
-                foreach ($collectionsTag->COLL_ID as $collection) {
-                    array_push($collections, (string) $collection);
-                }
                 $_SESSION['actions_pages'][$i] = array(
                     'ID'          => (string) $actionPage->ID,
                     'LABEL'       => $label,
@@ -447,11 +436,9 @@ abstract class business_app_tools_Abstract extends Database
                     'ORIGIN'      => (string) $actionPage->ORIGIN,
                     'MODULE'      => (string) $actionPage->MODULE,
                     'KEYWORD'     => $keyword,
-                    'FLAG_CREATE' => $createFlag,
-                    'COLLECTIONS' => $collections,
+                    'FLAG_CREATE' => $createFlag
                 );
                 $i++;
-
             }
         }
 

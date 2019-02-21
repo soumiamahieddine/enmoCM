@@ -21,22 +21,7 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>entities</MODULE>
         <KEYWORD>redirect</KEYWORD>
         <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
     </ACTIONPAGE>
-    <!-- <ACTIONPAGE>
-        <ID>redirect_visa_sign</ID>
-        <LABEL>_REDIRECTION_VISA_SIGN</LABEL>
-        <NAME>redirect_visa_sign</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>visa</MODULE>
-        <KEYWORD>redirect</KEYWORD>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE> -->
     <ACTIONPAGE>
         <ID>put_in_copy</ID>
         <LABEL>_PUT_IN_COPY</LABEL>
@@ -54,12 +39,10 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SIMPLE_CONFIRM</LABEL>
         <NAME>confirm_status</NAME>
         <DESC>_SIMPLE_CONFIRM_DESC</DESC>
+        <component>TODO</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
         <ID>confirm_status_with_update_date</ID>
@@ -203,28 +186,6 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
-    <!-- <ACTIONPAGE>
-        <ID>confirm_folder_status</ID>
-        <LABEL>_CONFIRM_FOLDER_STATUS</LABEL>
-        <NAME>confirm_folder_status</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>folder</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>redirect_folder</ID>
-        <LABEL>_REDIRECT_FOLDER</LABEL>
-        <NAME>redirect_folder</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>folder</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE> -->
     <ACTIONPAGE>
         <ID>close_mail_and_index</ID>
         <LABEL>_CLOSE_MAIL_AND_INDEX</LABEL>

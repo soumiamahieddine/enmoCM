@@ -293,7 +293,6 @@ define('_USE_DATE_IN_SIGNBLOCK_DESC', 'The current date is added in top of sign 
 // ACTIONS
 define('_REDIRECTION', 'Redirection');
 define('_REDIRECTION_DESC', 'Opens a modal to choose a new user processing OR to redefine the processing service with a new mailing list.');
-define('_REDIRECTION_VISA_SIGN', 'Redirection for signature');
 define('_PUT_IN_COPY', 'Add on copy');
 define('_PUT_IN_COPY_DESC', 'Opens a modal ONLY to add or delete COPY people from the mailing list.');
 define('_SIMPLE_CONFIRM', 'Simple confirmation');
@@ -317,8 +316,6 @@ define('_MARK_AS_READ_DESC', 'Mark the document as \'read\' in the basket. Inser
 define('_SEND_FILE_WS', 'Send file via Web Service');
 define('_SEND_DATA_WS', 'Send data via Web Service');
 define('_SEND_TO_EXTERNAL_SB', 'Send data to external signature book');
-define('_CONFIRM_FOLDER_STATUS', '[folder] Confirm the folder status');
-define('_REDIRECT_FOLDER', '[folder] Redirect the folder');
 define('_CLOSE_MAIL_AND_INDEX', 'Close a mail and launch the indexation');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Allows you to update the closing date of a document (\'closing_date\' of the mlb_coll_ext table) AND opens the indexing page to save a new document.');
 define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Closing with attachment');

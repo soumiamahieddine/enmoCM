@@ -141,12 +141,10 @@ class EntityController
             }
         }
 
-        //List of documents model
-        $templates = TemplateModel::getByEntity([
-            'select' => ['t.template_id, t.template_label, template_comment, t.template_target, t.template_attachment_type '],
-            'entities' => [$aArgs['id']]
+        $entity['templates'] = TemplateModel::getByEntity([
+            'select'    => ['t.template_id', 't.template_label', 'template_comment', 't.template_target', 't.template_attachment_type'],
+            'entities'  => [$aArgs['id']]
         ]);
-        $entity['templates'] = $templates;
 
         $entity['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.id','users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
         $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);

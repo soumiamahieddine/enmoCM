@@ -36,27 +36,20 @@ abstract class ActionModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
-        $aReturn = DatabaseModel::select([
+        $action = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'  => ['actions'],
             'where'  => ['id = ?'],
             'data'   => [$aArgs['id']]
         ]);
 
-        if (empty($aReturn[0])) {
+        if (empty($action[0])) {
             return [];
         }
 
-        $aReturn = $aReturn[0];
-        $aReturn['actionCategories'] = DatabaseModel::select([
-            'select' => ['category_id'],
-            'table'  => ['actions_categories'],
-            'where'  => ['action_id = ?'],
-            'data'   => [$aArgs['id']]
-        ]);
-       
-        return $aReturn;
+        return $action[0];
     }
 
     public static function create(array $aArgs)
@@ -148,6 +141,21 @@ abstract class ActionModelAbstract
         return true;
     }
 
+    public static function getCategoriesById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+
+        $categories = DatabaseModel::select([
+            'select' => ['category_id'],
+            'table'  => ['actions_categories'],
+            'where'  => ['action_id = ?'],
+            'data'   => [$aArgs['id']]
+        ]);
+
+        return $categories;
+    }
+
     public static function getActionPages()
     {
         $actionsPages              = [];
@@ -174,12 +182,15 @@ abstract class ActionModelAbstract
                     } else {
                         $desc = 'No description';
                     }
+                    $component = empty((string)$actionPage->component) ? null : (string)$actionPage->component;
+
                     $actionsPages['actionsPageList'][] = [
-                        'id'     => (string) $actionPage->ID,
-                        'label'  => $label,
-                        'name'   => (string) $actionPage->NAME,
-                        'desc'   => $desc,
-                        'origin' => ucfirst($origin)
+                        'id'        => (string)$actionPage->ID,
+                        'label'     => $label,
+                        'name'      => (string)$actionPage->NAME,
+                        'component' => $component,
+                        'desc'      => $desc,
+                        'origin'    => ucfirst($origin)
                     ];
                 }
             }

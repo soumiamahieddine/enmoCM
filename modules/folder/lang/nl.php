@@ -441,12 +441,6 @@ if (!defined('_IS_FOLDER_ACTION')) {
 if (!defined('_IS_FOLDER_ACTION_DESC')) {
     define('_IS_FOLDER_ACTION_DESC', 'Om deze actie in een mapbakje te gebruiken');
 }
-if (!defined('_CONFIRM_FOLDER_STATUS')) {
-    define('_CONFIRM_FOLDER_STATUS', 'Eenvoudige bevestiging (mappen)');
-}
-if (!defined('_REDIRECT_FOLDER')) {
-    define('_REDIRECT_FOLDER', 'Omleiding van de map');
-}
 if (!defined('_REDIRECT_ALL_DOCUMENTS_IN_FOLDER')) {
     define('_REDIRECT_ALL_DOCUMENTS_IN_FOLDER', 'Alle documenten van de map omleiden');
 }

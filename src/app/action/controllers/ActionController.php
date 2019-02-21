@@ -16,6 +16,7 @@ use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
+use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use Group\models\ServiceModel;
 use Slim\Http\Request;
@@ -32,13 +33,14 @@ class ActionController
         return $response->withJson(['actions' => ActionModel::get()]);
     }
 
-    public function getById(Request $request, Response $response, $aArgs)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
         $obj['action'] = ActionModel::getById(['id' => $aArgs['id']]);
+        $obj['action']['actionCategories'] = ActionModel::getCategoriesById(['id' => $aArgs['id']]);
 
         if (!empty($obj['action'])) {
             $obj['action']['history'] = ($obj['action']['history'] == 'Y');
@@ -46,7 +48,7 @@ class ActionController
             $obj['action']['create_id'] = ($obj['action']['create_id'] == 'Y');
 
             $actionCategories = [];
-            foreach ($obj['action']['actionCategories'] as $key => $category) {
+            foreach ($obj['action']['actionCategories'] as $category) {
                 $actionCategories[] = $category['category_id'];
             }
             $obj['action']['actionCategories'] = $actionCategories;
@@ -54,7 +56,7 @@ class ActionController
             $obj['categoriesList'] = ResModel::getCategories();
             if (empty($obj['action']['actionCategories'])) {
                 $categoriesList = [];
-                foreach ($obj['categoriesList'] as $key => $category) {
+                foreach ($obj['categoriesList'] as $category) {
                     $categoriesList[] = $category['id'];
                 }
                 $obj['action']['actionCategories'] = $categoriesList;
@@ -137,7 +139,7 @@ class ActionController
             return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
         }
 
-        $action = ActionModel::getById(['id' => $aArgs['id']]);
+        $action = ActionModel::getById(['id' => $aArgs['id'], 'select' => ['label_action']]);
         ActionModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([
@@ -149,6 +151,39 @@ class ActionController
         ]);
 
         return $response->withJson(['actions' => ActionModel::get()]);
+    }
+
+    public static function terminateAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'resId']);
+        ValidatorModel::intVal($aArgs, ['id', 'resId']);
+
+        $set = ['locker_user_id' => null, 'locker_time' => null];
+
+        $action = ActionModel::getById(['id' => $aArgs['id'], 'select' => ['label_action', 'id_status', 'history']]);
+        if (!empty($action['id_status']) && $action['id_status'] != '_NOSTATUS_') {
+            $set['status'] = $action['id_status'];
+        }
+
+        ResModel::update([
+            'set'   => $set,
+            'where' => ['res_id = ?'],
+            'data'  => [$aArgs['resId']]
+        ]);
+
+        if ($action['history'] == 'Y') {
+            HistoryController::add([
+                'tableName' => 'actions',
+                'recordId'  => $aArgs['resId'],
+                'eventType' => 'ACTION#' . $aArgs['id'],
+                'eventId'   => $aArgs['id'],
+                'info'      => $action['label_action']
+            ]);
+
+            //TODO M2M
+        }
+
+        return true;
     }
 
     protected function control($aArgs, $mode)
@@ -170,7 +205,7 @@ class ActionController
             if (!Validator::intVal()->validate($aArgs['id'])) {
                 $errors[] = 'Id is not a numeric';
             } else {
-                $obj = ActionModel::getById(['id' => $aArgs['id']]);
+                $obj = ActionModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
             }
            
             if (empty($obj)) {
