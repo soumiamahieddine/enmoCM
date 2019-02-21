@@ -78,7 +78,6 @@ export class ActionAdministrationComponent implements OnInit {
                         this.action = data.action;
                         this.categoriesList = data.categoriesList;
                         this.statuses = data.statuses;
-
                         this.actionPagesList = data.action_pagesList;
                         this.keywordsList = data.keywordsList;
                         this.headerService.setHeader(this.lang.actionCreation, data.action.label_action);
