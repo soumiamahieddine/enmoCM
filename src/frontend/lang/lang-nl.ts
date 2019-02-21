@@ -108,7 +108,6 @@ export const LANG_NL = {
     "delay1" : "Termijn herinnering 1 voor einde (in dagen)",
     "delay2" : "Termijn herinnering 2 na einde (in dagen)",
     "delete" : "Verwijderen",
-    "unableToDelete" : "Niet te onderdrukken", //_TO_TRANSLATE
     "deleteAssignation" : "De toekenning verwijderen",
     "deleteMsg" : "Wilt u dit element echt verwijderen?",
     "desactivateAbsence" : "De afwezigheid uitschakelen",
@@ -398,7 +397,6 @@ export const LANG_NL = {
     "string" : "Karakterreeks",
     "sunday" : "Zondag",
     "suspend" : "Opschorten",
-    "unableToSuspend" : "Schorsing onmogelijk", //_TO_TRANSLATE
     "suspended" : "Opgeschort",
     "suspendNotification" : "De melding opschorten",
     "system" : "Systeem",
@@ -831,7 +829,7 @@ export const LANG_NL = {
     "selectedElements"                                     : "_TO_TRANSLATE",
     "destination"                                     : "_TO_TRANSLATE",
     "selectAllResInBasket"                                     : "_TO_TRANSLATE",
-    "redirectUserListInstances"                 : "_TO_TRANSLATE_Change of recipient for mail being processed",
+    "redirectUserListInstances"                 : "Change of recipient for mail being processed", //_TO_TRANSLATE_
     "chooseNewDestUser"                         : "is the <b>recipient</b> of mail being processed, please select a <b>replacement user</b>", //_TO_TRANSLATE_
     "newDest"                                   : "New recipient for", //_TO_TRANSLATE_
     "newDestRes"                                : "New recipient for mails", //_TO_TRANSLATE
@@ -871,4 +869,7 @@ export const LANG_NL = {
     "firstSummarySheetsGenerated"        : "Only first 500 summary sheets will be generated.", //_TO_TRANSLATE
     "selectAction"                      : "Select an action", //_TO_TRANSLATE
     "emptyBasket"                      : "Empty basket", //_TO_TRANSLATE
+    "unableToSuspend"                  : "Schorsing onmogelijk", //_TO_TRANSLATE
+    "unableToDelete"                   : "Niet te onderdrukken", //_TO_TRANSLATE
+    "associatedTemplates"              : "Associated templates", //_TO_TRANSLATE
 };

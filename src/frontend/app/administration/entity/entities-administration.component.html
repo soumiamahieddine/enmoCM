@@ -336,7 +336,7 @@
                                 style="cursor:pointer;"></mat-row>
                         </mat-table>
                     </mat-tab>
-                    <mat-tab label="Modèles de documents associés" *ngIf="!creationMode">
+                    <mat-tab label="{{lang.associatedTemplates}}" *ngIf="!creationMode">
                             <div class="row" style="margin:0px;">
                                 <div class="col-md-6 col-xs-6">
                                     <mat-form-field>
@@ -348,26 +348,32 @@
                                     </mat-paginator>
                                 </div>
                             </div>
-                            <mat-table #tableTemplates="matSort" [dataSource]="dataSourceTemplates" matSort matSortActive="template_label" matSortDirection="asc">
-                                    <ng-container matColumnDef="template_label">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.templateName}}</mat-header-cell>
-                                        <mat-cell *matCellDef="let element" style="flex:2;"> {{element.template_label}} </mat-cell>
-                                    </ng-container>
-                                    <ng-container matColumnDef="template_comment">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">{{lang.description}}</mat-header-cell>
-                                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;"> {{element.template_comment}} </mat-cell>
-                                    </ng-container>
-                                    <ng-container matColumnDef="template_target">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
-                                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
-                                    </ng-container>
-                                    <ng-container matColumnDef="template_attachment_type">
-                                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.attachmentType}}</mat-header-cell>
-                                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;"> {{element.template_attachment_type}} </mat-cell>
-                                    </ng-container>
-                                    <mat-header-row *matHeaderRowDef="displayedColumnsTemplates"></mat-header-row>
-                                    <mat-row *matRowDef="let row; columns: displayedColumnsTemplates;" routerLink="/administration/templates/{{row.template_id}}" style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
-                                </mat-table>
+                            <mat-table #tableTemplates="matSort" [dataSource]="dataSourceTemplates" matSort matSortActive="template_label" matSortDirection="asc" *ngIf="currentEntity.canAdminTemplates">
+                                <ng-container matColumnDef="template_label">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.templateName}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" style="flex:2;" matTooltip="{{element.template_comment}}" > {{element.template_label}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="template_target">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
+                                </ng-container>
+                                <mat-header-row *matHeaderRowDef="displayedColumnsTemplates"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsTemplates;" routerLink="/administration/templates/{{row.template_id}}" style="cursor:pointer;"></mat-row>
+                            </mat-table>
+
+                            <mat-table #tableTemplates="matSort" [dataSource]="dataSourceTemplates" matSort matSortActive="template_label" matSortDirection="asc" *ngIf="!currentEntity.canAdminTemplates">
+                                <ng-container matColumnDef="template_label">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.templateName}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" style="flex:2;" matTooltip="{{element.template_comment}}" > {{element.template_label}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="template_target">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
+                                </ng-container>
+                                <mat-header-row *matHeaderRowDef="displayedColumnsTemplates"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsTemplates;"></mat-row>
+                            </mat-table>
+
                         </mat-tab>
                 </mat-tab-group>
             </mat-nav-list>

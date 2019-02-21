@@ -119,7 +119,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 this.serialId = params['id'];
                 this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/details")
                     .subscribe((data: any) => {
-                        console.log(data);
                         this.user = data;
                         this.data = data.history;
                         this.userId = data.user_id;

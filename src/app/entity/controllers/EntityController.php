@@ -158,6 +158,7 @@ class EntityController
         $redirects = BasketModel::getGroupActionRedirect(['select' => [1], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
         $entity['redirects'] = count($redirects);
         $entity['canAdminUsers'] = ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
+        $entity['canAdminTemplates'] = ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin']);
 
         return $response->withJson(['entity' => $entity]);
     }

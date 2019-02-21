@@ -46,7 +46,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     dataSourceUsers             = new MatTableDataSource(this.currentEntity.users);
     dataSourceTemplates         = new MatTableDataSource(this.currentEntity.templates);
     displayedColumnsUsers       = ['firstname', 'lastname'];
-    displayedColumnsTemplates   = ['template_label', 'template_comment', 'template_target', 'template_attachment_type'];
+    displayedColumnsTemplates   = ['template_label', 'template_target'];
 
 
     @ViewChild('paginatorUsers') paginatorUsers: MatPaginator;
