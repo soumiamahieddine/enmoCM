@@ -846,4 +846,6 @@ export const LANG_EN = {
     "actionNotExist"                      : "This action does not exist",
     "thisRes"                      : "Following mail(s)",
     "lockedBy"                      : "locked by",
+    "addNote"                      : "Add note",
+    "makeActionOn"                      : "Do you want to do this action on",
 };

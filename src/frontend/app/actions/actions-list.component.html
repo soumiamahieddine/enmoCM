@@ -7,18 +7,20 @@
 
 <mat-menu #menu="matMenu">
     <div style="text-align: center;font-size: 10px;opacity: 0.5;margin-top:-15px;">
-        {{menuTitle}}
         <ng-container *ngIf="!contextMode || (contextMode && this.selectedRes.length > 0)">
-            {{selectedRes.length}} {{lang.selectedElements}} 
+            {{selectedRes.length}} {{lang.selectedElements}}
         </ng-container>
         <ng-container *ngIf="contextMode && this.selectedRes.length == 0">
             {{this.contextMenuTitle}}
         </ng-container>
     </div>
-    <button mat-menu-item (click)="launchEvent('confirmAction');">
+    <button mat-menu-item (click)="launchEvent('confirmAction', 'Valider le document');">
         <span>Valider le document</span>
     </button>
-    <button mat-menu-item (click)="launchEvent('err');">
+    <button mat-menu-item (click)="launchEvent('closingAction', 'Clôturer le document');">
+        <span>Clôturer le document</span>
+    </button>
+    <button mat-menu-item (click)="launchEvent('err', 'Action erronée');">
         <span>Action erronée</span>
     </button>
 </mat-menu>

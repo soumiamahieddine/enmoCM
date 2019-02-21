@@ -20,14 +20,18 @@ import { PasswordModificationComponent, InfoChangePasswordModalComponent, }     
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
 import { ActivateUserComponent }                from './activate-user.component';
-import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
+
 import { ActionsListComponent }                 from './actions/actions-list.component';
+/*ACTIONS PAGES */
+import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
+import { ClosingActionComponent }               from './actions/closing-action/closing-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
 import { SummarySheetComponent }                from './list/summarySheet/summary-sheet.component';
 import { ExportComponent }                      from './list/export/export.component';
 
+import { NoteEditorComponent }                  from './notes/note-editor.component';
 import { NotesListComponent }                   from './notes/notes.component';
 import { AttachmentsListComponent }             from './attachments/attachments-list.component';
 import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
@@ -55,6 +59,7 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         InfoChangePasswordModalComponent,
         ActivateUserComponent,
         NotesListComponent,
+        NoteEditorComponent,
         AttachmentsListComponent,
         DiffusionsListComponent,
         FiltersListComponent,
@@ -62,7 +67,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,
-        ActionsListComponent
+        ClosingActionComponent,
+        ActionsListComponent,
     ],
     entryComponents: [
         CustomSnackbarComponent,
@@ -73,7 +79,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         DiffusionsListComponent,
         SummarySheetComponent,
         ExportComponent,
-        ConfirmActionComponent
+        ConfirmActionComponent,
+        ClosingActionComponent,
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]

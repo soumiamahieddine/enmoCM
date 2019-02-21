@@ -5,6 +5,7 @@ import { NotificationService } from '../notification.service';
 import { MatDialog, MatMenuTrigger } from '@angular/material';
 
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
+import { ClosingActionComponent } from './closing-action/closing-action.component';
 
 @Component({
     selector: 'app-actions-list',
@@ -21,6 +22,7 @@ export class ActionsListComponent implements OnInit {
     
     contextMenuPosition = { x: '0px', y: '0px' };
     contextMenuTitle = '';
+    currentActionName = '';
     contextResId = 0;
 
     @Input('selectedRes') selectedRes: any;
@@ -55,8 +57,9 @@ export class ActionsListComponent implements OnInit {
         return false;
     }
 
-    launchEvent(action: string) {
+    launchEvent(action: string, actionName: string) {
         let arrRes: any[] = [];
+        this.currentActionName = actionName;
 
         if (this.contextMode && this.selectedRes.length == 0) {
             arrRes = [this.contextResId];
@@ -88,7 +91,20 @@ export class ActionsListComponent implements OnInit {
             data: { 
                 contextMode : this.contextMode,
                 contextChrono : this.contextMenuTitle,
-                selectedRes : this.selectedRes
+                selectedRes : this.selectedRes,
+                actionName : this.currentActionName
+            }
+        });
+    }
+
+    closingAction() {
+        this.dialog.open(ClosingActionComponent, {
+            width: 'auto',
+            data: { 
+                contextMode : this.contextMode,
+                contextChrono : this.contextMenuTitle,
+                selectedRes : this.selectedRes,
+                actionName : this.currentActionName
             }
         });
     }

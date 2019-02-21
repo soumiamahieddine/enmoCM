@@ -872,4 +872,6 @@ export const LANG_FR = {
     "actionNotExist"                      : "L'action n'existe pas",
     "thisRes"                      : "Courrier(s) suivant(s)",
     "lockedBy"                      : "verrouillé par",
+    "addNote"                      : "Ajouter une annotation",
+    "makeActionOn"                      : "Voulez-vous effectuer cette action sur",
 };

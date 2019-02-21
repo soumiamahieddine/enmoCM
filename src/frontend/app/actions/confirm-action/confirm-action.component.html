@@ -1,13 +1,13 @@
-<h1 mat-dialog-title>Confirmer "Valider le document"</h1>
+<h1 mat-dialog-title>Confirmer "{{data.actionName}}"</h1>
 <div mat-dialog-content>
-    <div *ngIf="loadingExport" class="loader">
-        <mat-spinner></mat-spinner>
-    </div>
     <div class="row">
         <div class="col-md-12">
-            Voulez-vous faire cette action sur 
+            {{lang.makeActionOn}} 
             <b *ngIf="data.contextMode && data.selectedRes.length == 0" color="primary" class="highlight">{{data.contextChrono}}</b>
-            <b  *ngIf="!data.contextMode || (data.contextMode && data.selectedRes.length > 0)" color="primary" class="highlight">{{data.selectedRes.length}} élement(s)</b> ?
+            <b *ngIf="!data.contextMode || (data.contextMode && data.selectedRes.length > 0)" color="primary" class="highlight">{{data.selectedRes.length}} élement(s)</b> ?
+        </div>
+        <div class="col-md-12">
+            <app-note-editor></app-note-editor>
         </div>
     </div>
 </div>

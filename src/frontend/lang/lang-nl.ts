@@ -875,4 +875,6 @@ export const LANG_NL = {
     "actionNotExist"                      : "This action does not exist", //_TO_TRANSLATE
     "thisRes"                      : "Following mail(s)", //_TO_TRANSLATE
     "lockedBy"                      : "locked by", //_TO_TRANSLATE
+    "addNote"                      : "Add note", //_TO_TRANSLATE
+    "makeActionOn"                      : "Do you want to do this action on", //_TO_TRANSLATE
 };

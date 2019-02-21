@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>"{{data.actionName}}"</h1>
+<div mat-dialog-content>
+    <div class="row">
+        <div class="col-md-12">
+            Voulez-vous faire cette action sur 
+            <b *ngIf="data.contextMode && data.selectedRes.length == 0" color="primary" class="highlight">{{data.contextChrono}}</b>
+            <b  *ngIf="!data.contextMode || (data.contextMode && data.selectedRes.length > 0)" color="primary" class="highlight">{{data.selectedRes.length}} élement(s)</b> ?
+            <div class="alert alert-danger" role="alert" style="margin-top: 30px;">
+                Cela actualisera la <b class="highlight">date de clôture</b> des courriers.
+            </div>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button mat-button color="primary">{{lang.validate}}</button>
+    <button mat-raised-button mat-button [mat-dialog-close]="">{{lang.cancel}}</button>
+</div>
