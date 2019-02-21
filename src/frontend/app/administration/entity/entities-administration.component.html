@@ -348,7 +348,7 @@
                                     </mat-paginator>
                                 </div>
                             </div>
-                            <mat-table #tableTemplates="matSort" [dataSource]="dataSourceTemplates" matSort matSortActive="template_label" matSortDirection="asc" *ngIf="currentEntity.canAdminTemplates">
+                            <mat-table #tableTemplates="matSort" [dataSource]="dataSourceTemplates" matSort matSortActive="template_label" matSortDirection="asc">
                                 <ng-container matColumnDef="template_label">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.templateName}}</mat-header-cell>
                                     <mat-cell *matCellDef="let element" style="flex:2;" matTooltip="{{element.template_comment}}" > {{element.template_label}} </mat-cell>
@@ -358,22 +358,8 @@
                                     <mat-cell *matCellDef="let element" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="displayedColumnsTemplates"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumnsTemplates;" routerLink="/administration/templates/{{row.template_id}}" style="cursor:pointer;"></mat-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsTemplates;" (click)="showTemplate(row.template_id);" [ngStyle]="{'cursor': !currentEntity.canAdminTemplates ? 'position' : 'pointer'}"></mat-row>
                             </mat-table>
-
-                            <mat-table #tableTemplates="matSort" [dataSource]="dataSourceTemplates" matSort matSortActive="template_label" matSortDirection="asc" *ngIf="!currentEntity.canAdminTemplates">
-                                <ng-container matColumnDef="template_label">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.templateName}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element" style="flex:2;" matTooltip="{{element.template_comment}}" > {{element.template_label}} </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="template_target">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
-                                </ng-container>
-                                <mat-header-row *matHeaderRowDef="displayedColumnsTemplates"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumnsTemplates;"></mat-row>
-                            </mat-table>
-
                         </mat-tab>
                 </mat-tab-group>
             </mat-nav-list>

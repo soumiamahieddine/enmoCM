@@ -6,6 +6,7 @@ import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDi
 import { ConfirmModalComponent } from '../../confirmModal.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
+import { Router } from '@angular/router';
 
 import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 
@@ -65,7 +66,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.dataSourceTemplates.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService, private router: Router) {
         super(http, ['adminUsers', 'usersAndEntities', 'visaUsers']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -727,6 +728,12 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
+    }
+
+    showTemplate(templateId:any) {
+        if(this.currentEntity.canAdminTemplates) {
+            this.router.navigate(['/administration/templates/' + templateId]);
+        }
     }
 }
 @Component({
