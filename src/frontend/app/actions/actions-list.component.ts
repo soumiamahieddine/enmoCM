@@ -69,12 +69,12 @@ export class ActionsListComponent implements OnInit {
                     this[action]();
                 }
                 catch (error) {
-                    alert("L'action n'existe pas!");
+                    alert(this.lang.actionNotExist);
                 }
                 this.loading = false;
             }, (err: any) => {
                 if (err.error.lockBy) {
-                    alert("Courrier suivant : " + arrRes.join(', ') + " verrouillé par " + err.error.lockBy.join(', '));
+                    alert(this.lang.thisRes + " : " + arrRes.join(', ') + " " + this.lang.lockedBy + " " + err.error.lockBy.join(', '));
                 } else {
                     this.notify.handleErrors(err);
                 } 

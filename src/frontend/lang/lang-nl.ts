@@ -872,4 +872,7 @@ export const LANG_NL = {
     "unableToSuspend"                  : "Schorsing onmogelijk", //_TO_TRANSLATE
     "unableToDelete"                   : "Niet te onderdrukken", //_TO_TRANSLATE
     "associatedTemplates"              : "Associated templates", //_TO_TRANSLATE
+    "actionNotExist"                      : "This action does not exist", //_TO_TRANSLATE
+    "thisRes"                      : "Following mail(s)", //_TO_TRANSLATE
+    "lockedBy"                      : "locked by", //_TO_TRANSLATE
 };

@@ -843,4 +843,7 @@ export const LANG_EN = {
     "firstSummarySheetsGenerated"        : "Only first 500 summary sheets will be generated.",
     "selectAction"                      : "Select an action",
     "emptyBasket"                      : "Empty basket",
+    "actionNotExist"                      : "This action does not exist",
+    "thisRes"                      : "Following mail(s)",
+    "lockedBy"                      : "locked by",
 };

@@ -515,7 +515,7 @@ export const LANG_FR = {
     "unlinkAction"                      : "Dissocier l'action",
     "unlinkGroup"                       : "Dissocier le groupe",
     "unselectAll"                       : "Tout désélectionner",
-    "unlockDocserver"                   : "Déverouiller la zone de stockage (lecture et écriture)",    
+    "unlockDocserver"                   : "Déverrouiller la zone de stockage (lecture et écriture)",    
     "until"                             : "Jusqu'à",    
     "update"                            : "Modifier",
     "updateAtt"                         : "Modifier la pièce jointe",
@@ -869,4 +869,7 @@ export const LANG_FR = {
     "firstSummarySheetsGenerated"        : "Seules les 500 premières fiches de liaison seront générés.",
     "selectAction"                      : "Effectuer une action",
     "emptyBasket"                      : "Bannette vide",
+    "actionNotExist"                      : "L'action n'existe pas",
+    "thisRes"                      : "Courrier(s) suivant(s)",
+    "lockedBy"                      : "verrouillé par",
 };
