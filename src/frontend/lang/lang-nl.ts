@@ -872,8 +872,12 @@ export const LANG_NL = {
     "unableToSuspend"                  : "Schorsing onmogelijk", //_TO_TRANSLATE
     "unableToDelete"                   : "Niet te onderdrukken", //_TO_TRANSLATE
     "actionNotExist"                      : "This action does not exist", //_TO_TRANSLATE
-    "thisRes"                      : "Following mail(s)", //_TO_TRANSLATE
+    "thisRes"                       : "Following mail(s)", //_TO_TRANSLATE
     "lockedBy"                      : "locked by", //_TO_TRANSLATE
     "addNote"                      : "Add note", //_TO_TRANSLATE
     "makeActionOn"                      : "Do you want to do this action on", //_TO_TRANSLATE
+    "AR"                                : "Acknowledgement of receipt", //_TO_TRANSLATE
+    'AR_simple'                         : 'AR simple', //_TO_TRANSLATE
+    'AR_SVA'                            : 'AR SVA', //_TO_TRANSLATE
+    'AR_SVR'                            : 'AR SVR', //_TO_TRANSLATE
 };
