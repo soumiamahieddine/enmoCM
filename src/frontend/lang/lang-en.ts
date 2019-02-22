@@ -40,7 +40,6 @@ export const LANG_EN = {
     "arrivalDate"                       : "Arrival date",
     "assignBy"                          : "Assign by",
     "associatedStatus"                  : "Associated status",
-    "associatedTemplates"               : "Associated templates",
     "attachment"                        : "Attachment",
     "attachments"                       : "Attachments",
     "august"                            : "August",

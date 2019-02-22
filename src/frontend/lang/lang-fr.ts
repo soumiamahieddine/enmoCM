@@ -48,7 +48,6 @@ export const LANG_FR = {
     "arrivalDate"                       : "Date d'arrivée",
     "assignBy"                          : "Assignée par",
     "associatedStatus"                  : "Statut associé",
-    "associatedTemplates"               : "Modèles de documents associés",
     "attachment"                        : "Pièce jointe",
     "attachments"                       : "Pièces jointes",
     "august"                            : "Août",
