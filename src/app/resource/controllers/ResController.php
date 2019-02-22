@@ -507,20 +507,21 @@ class ResController
             if (!Validator::intVal()->notEmpty()->validate($resource) || !ResController::hasRightByResId(['resId' => $resource, 'userId' => $GLOBALS['userId']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
+        }
 
-            $res = ResModel::getById(['resId' => $resource, 'select' => ['locker_user_id', 'locker_time']]);
-
+        $resources = ResModel::get(['select' => ['locker_user_id', 'locker_time'], 'where' => ['res_id in (?)'], 'data' => $body['resources']]);
+        foreach ($resources as $resource) {
             $lock = true;
-            if (empty($res['locker_user_id'] || empty($res['locker_time']))) {
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
                 $lock = false;
-            } elseif ($res['locker_user_id'] == $currentUser['id']) {
+            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
                 $lock = false;
-            } elseif (strtotime($res['locker_time']) < time()) {
+            } elseif (strtotime($resource['locker_time']) < time()) {
                 $lock = false;
             }
 
             if ($lock) {
-                $lockers[] = UserModel::getLabelledUserById(['id' => $res['locker_user_id']]);
+                $lockers[] = UserModel::getLabelledUserById(['id' => $resource['locker_user_id']]);
             }
         }
 

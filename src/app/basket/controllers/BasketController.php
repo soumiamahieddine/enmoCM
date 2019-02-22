@@ -14,6 +14,7 @@
 
 namespace Basket\controllers;
 
+use Basket\models\ActionGroupBasketModel;
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
 use Basket\models\GroupBasketModel;
@@ -228,10 +229,10 @@ class BasketController
             }
             $groups[$key]['list_display'] = json_decode($group['list_display']);
             $actionsForGroup = $allActions;
-            $actions = BasketModel::getActionsForGroupById([
-                'id'        => $aArgs['id'],
-                'groupId'   => $group['group_id'],
-                'select'    => ['id_action', 'where_clause', 'used_in_basketlist', 'used_in_action_page', 'default_action_list']
+            $actions = ActionGroupBasketModel::get([
+                'select'    => ['id_action', 'where_clause', 'used_in_basketlist', 'used_in_action_page', 'default_action_list'],
+                'where'     => ['basket_id = ?', 'group_id = ?'],
+                'data'      => [$aArgs['id'], $group['group_id']]
             ]);
             $actionIds = [];
             foreach ($actions as $action) {
@@ -339,7 +340,7 @@ class BasketController
         GroupBasketModel::createGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $data['group_id'], 'listDisplay' => $data['list_display']]);
         foreach ($data['groupActions'] as $groupAction) {
             if ($groupAction['checked']) {
-                BasketModel::createGroupAction([
+                ActionGroupBasketModel::create([
                     'id'                => $aArgs['id'],
                     'groupId'           => $data['group_id'],
                     'actionId'          => $groupAction['id'],
@@ -426,7 +427,7 @@ class BasketController
 
         foreach ($data['groupActions'] as $groupAction) {
             if ($groupAction['checked']) {
-                BasketModel::createGroupAction([
+                ActionGroupBasketModel::create([
                     'id'                => $aArgs['id'],
                     'groupId'           => $aArgs['groupId'],
                     'actionId'          => $groupAction['id'],

@@ -182,28 +182,6 @@ abstract class BasketModelAbstract
         return true;
     }
 
-    public static function createGroupAction(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'usedInBasketlist', 'usedInActionPage', 'defaultActionList']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'whereClause', 'usedInBasketlist', 'usedInActionPage', 'defaultActionList']);
-        ValidatorModel::intVal($aArgs, ['actionId']);
-
-        DatabaseModel::insert([
-            'table'         => 'actions_groupbaskets',
-            'columnsValues' => [
-                'id_action'             => $aArgs['actionId'],
-                'where_clause'          => $aArgs['whereClause'],
-                'group_id'              => $aArgs['groupId'],
-                'basket_id'             => $aArgs['id'],
-                'used_in_basketlist'    => $aArgs['usedInBasketlist'],
-                'used_in_action_page'   => $aArgs['usedInActionPage'],
-                'default_action_list'   => $aArgs['defaultActionList'],
-            ]
-        ]);
-
-        return true;
-    }
-
     public static function getGroupActionRedirect(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
@@ -290,22 +268,6 @@ abstract class BasketModelAbstract
         ]);
 
         return true;
-    }
-
-    public static function getActionsForGroupById(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId']);
-        ValidatorModel::arrayType($aArgs, ['select']);
-
-        $aGroups = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['actions_groupbaskets'],
-            'where'     => ['basket_id = ?', 'group_id = ?'],
-            'data'      => [$aArgs['id'], $aArgs['groupId']]
-        ]);
-
-        return $aGroups;
     }
 
     public static function hasGroup(array $aArgs)

@@ -14,7 +14,9 @@
 
 namespace Resource\controllers;
 
+use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
+use Basket\models\ActionGroupBasketModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
@@ -521,6 +523,32 @@ class ResourceListController
         }
 
         return ['table' => $table, 'leftJoin' => $leftJoin, 'where' => $where, 'queryData' => $queryData, 'order' => $order];
+    }
+
+    public function getActions(Request $request, Response $response, array $aArgs)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name', 'basket_id']]);
+        $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
+
+        $rawActions = ActionGroupBasketModel::get([
+            'select'    => ['id_action'],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'used_in_basketlist = ?', 'default_action_list = ?'],
+            'data'      => [$basket['basket_id'], $group['group_id'], 'Y', 'N']
+        ]);
+
+        $actions = [];
+        foreach ($rawActions as $rawAction) {
+            $actions[] = ActionModel::getById(['id' => $rawAction['id_action'], 'select' => ['label_action', 'component']]);
+        }
+
+        return $response->withJson(['actions' => $actions]);
     }
 
     public static function listControl(array $aArgs)

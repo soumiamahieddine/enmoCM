@@ -39,7 +39,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SIMPLE_CONFIRM</LABEL>
         <NAME>confirm_status</NAME>
         <DESC>_SIMPLE_CONFIRM_DESC</DESC>
-        <component>TODO</component>
+        <component>confirmAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
