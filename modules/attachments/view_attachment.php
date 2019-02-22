@@ -52,7 +52,6 @@ if (! empty($_SESSION['error'])) {
     header("location: " . $_SESSION['config']['businessappurl'] . "index.php");
     exit();
 } else {
-
     if (!empty($_REQUEST['isVersion'])) {
         if ($_REQUEST['isVersion'] == 'false') {
             $stmt = $db->query("SELECT coll_id, res_id_master FROM res_attachments WHERE res_id = ? AND res_id_master = ?", [$sId, $_REQUEST['res_id_master']]);
@@ -63,7 +62,9 @@ if (! empty($_SESSION['error'])) {
         $stmt = $db->query(
             "SELECT coll_id, res_id_master
                 FROM res_view_attachments
-                WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", [$sId,$sId,$_REQUEST['res_id_master']]);
+                WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc",
+            [$sId,$sId,$_REQUEST['res_id_master']]
+        );
     }
     $res = $stmt->fetchObject();
     $collId = $res->coll_id;
@@ -88,12 +89,14 @@ if (! empty($_SESSION['error'])) {
     //fonction qui va permettre de récupérer les infos auxquels l'utilisateur à la possibilité de voir
     $security = new security();
     $right = $security->test_right_doc(
-        $_SESSION['collection_id_choice'], 
+        $_SESSION['collection_id_choice'],
         $resIdMaster
     );
     $table = $sec->retrieve_view_from_coll_id($collId);
     $stmt = $db->query(
-        "SELECT res_id FROM " . $table . " WHERE res_id = ? ".$where2,array($resIdMaster));
+        "SELECT res_id FROM " . $table . " WHERE res_id = ? ".$where2,
+        array($resIdMaster)
+    );
 
     if ($stmt->rowCount() == 0 and !$right) {
         $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS;
@@ -112,7 +115,8 @@ if (! empty($_SESSION['error'])) {
             $stmt = $db->query(
                 "SELECT docserver_id, path, filename, format, title
                     FROM res_view_attachments
-                    WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", array($sId,$sId,$_REQUEST['res_id_master'])
+                    WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc",
+                array($sId,$sId,$_REQUEST['res_id_master'])
             );
         }
         if ($stmt->rowCount() == 0) {
@@ -125,17 +129,18 @@ if (! empty($_SESSION['error'])) {
         } else {
             $line = $stmt->fetchObject();
 
-            if((!empty($_GET['editingMode']) || !empty($_GET['viewpdf'])) && strpos($line->format, 'xl') === false && strpos($line->format, 'ppt') === false){  
+            if ((!empty($_GET['editingMode']) || !empty($_GET['viewpdf'])) && strpos($line->format, 'xl') === false && strpos($line->format, 'ppt') === false) {
                 header(
                     "location: ../../rest/res/".$_REQUEST['res_id_master']."/attachments/".$_GET['id']."/content"
                 );
                 $stmtPdf = $db->query(
                     "SELECT docserver_id, path, filename, format, title
                      FROM res_view_attachments
-                     WHERE filename=? AND (status = 'TRA' or status = 'A_TRA')", array(substr($line->filename, 0, strrpos($line->filename, ".")).'.pdf')
+                     WHERE filename=? AND (status = 'TRA' or status = 'A_TRA')",
+                    array(substr($line->filename, 0, strrpos($line->filename, ".")).'.pdf')
                 );
                 $linePdf = $stmtPdf->fetchObject();
-                if(!empty($linePdf)){
+                if (!empty($linePdf)) {
                     $line = $linePdf;
                 }
             }
@@ -149,15 +154,17 @@ if (! empty($_SESSION['error'])) {
             $format    = $line->format;
             $stmt = $db->query(
                 "select path_template from " . _DOCSERVERS_TABLE_NAME
-                . " where docserver_id = ?",array($docserver)
+                . " where docserver_id = ?",
+                array($docserver)
             );
             //$db->show();
             $lineDoc   = $stmt->fetchObject();
             $docserver = $lineDoc->path_template;
             $file      = $docserver . $path . $filename;
             $file      = str_replace("#", DIRECTORY_SEPARATOR, $file);
-            if(!file_exists($file)){
-                echo _FILE_NOT_EXISTS_ON_THE_SERVER; exit;
+            if (!file_exists($file)) {
+                echo _FILE_NOT_EXISTS_ON_THE_SERVER;
+                exit;
             }
 
             if (!copy($file, $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR  . $filename)) {
@@ -189,7 +196,7 @@ if (! empty($_SESSION['error'])) {
                     $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS . "...";
                     ?><script type="text/javascript">window.opener.top.location.href='index.php';self.close();</script><?php
                 }
-            } else if(!empty($_GET['editingMode']) && !in_array($format, ['pdf', 'jpg', 'jpeg', 'png'])){
+            } elseif (!empty($_GET['editingMode']) && !in_array($format, ['pdf', 'jpg', 'jpeg', 'png'])) {
                 ?>
                 <div style="border: dashed;font-weight: bold;opacity: 0.5;font-size: 30px;height: 96%;text-align: center">
                     <div style="padding-top: 25%;"><?php echo _NO_PREVIEW_AVAILABLE;?><br><sub><?php echo _FILE_HAS_NO_PDF;?></sub></div>
@@ -203,22 +210,27 @@ if (! empty($_SESSION['error'])) {
                     if ($_SESSION['history']['attachview'] == "true") {
                         $hist = new history();
                         $hist->add(
-                            $table, $sId, "VIEW", 'attachview', _VIEW_DOC_NUM . "" . $sId,
-                            $_SESSION['config']['databasetype'], 'apps'
+                            'res_attachments',
+                            $sId,
+                            "VIEW",
+                            'attachview',
+                            _VIEW_DOC_NUM . "" . $sId,
+                            $_SESSION['config']['databasetype'],
+                            'apps'
                         );
                     }
                     //WATERMARK
                     if (strtoupper($format) == 'PDF') {
-                        if($_REQUEST['watermark_outgoing'] == 'true'){
+                        if ($_REQUEST['watermark_outgoing'] == 'true') {
                             $_SESSION['modules_loaded']['attachments']['watermark']['enabled'] = 'true';
                         }
                         
                         if ($_SESSION['modules_loaded']['attachments']['watermark']['enabled'] == 'true') {
                             $table = 'res_attachments';
                             $watermarkForAttachments = true;
-                            try{
+                            try {
                                 include 'apps/maarch_entreprise/indexing_searching/watermark.php';
-                            } catch(Exception $e) {
+                            } catch (Exception $e) {
                                 $logger = Logger::getLogger('loggerTechnique');
                                 $logger->warn(
                                 "[{$_SESSION['user']['UserId']}][View_attachment] Watermark has failed"
