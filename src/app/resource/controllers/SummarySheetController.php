@@ -16,6 +16,7 @@ namespace Resource\controllers;
 
 use Basket\models\BasketModel;
 use Contact\models\ContactModel;
+use Endroid\QrCode\QrCode;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Note\models\NoteEntityModel;
@@ -36,11 +37,6 @@ use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use User\models\UserModel;
 
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\LabelAlignment;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Response\QrCodeResponse;
-
 class SummarySheetController
 {
     public function createList(Request $request, Response $response, array $aArgs)
@@ -60,6 +56,7 @@ class SummarySheetController
             return $response->withStatus(403)->withJson(['errors' => 'Resources is not set or empty']);
         }
 
+        $bodyData['resources'] = array_slice($bodyData['resources'], 0, 500);
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
@@ -157,8 +154,6 @@ class SummarySheetController
             }
         }
 
-        // End of data
-
         foreach ($resources as $resource) {
             SummarySheetController::createSummarySheet($pdf, ['resource' => $resource, 'units' => $units, 'login' => $GLOBALS['userId'], 'data' => $data]);
         }
@@ -175,8 +170,8 @@ class SummarySheetController
 
     private static function createSummarySheet(Fpdi $pdf, array $args)
     {
-        ValidatorModel::notEmpty($args, ['resource', 'login', 'data']);
-        ValidatorModel::arrayType($args, ['resource', 'units']);
+        ValidatorModel::notEmpty($args, ['resource', 'login']);
+        ValidatorModel::arrayType($args, ['resource', 'units', 'data']);
         ValidatorModel::stringType($args, ['login']);
 
         $resource = $args['resource'];
@@ -386,7 +381,7 @@ class SummarySheetController
                 $copies      = [];
                 $destination = '';
                 $found       = false;
-                foreach ($args['data']['listInstances'] as $key => $listInstance) {
+                foreach ($args['data']['listInstances'] as $listKey => $listInstance) {
                     if ($found && $listInstance['res_id'] != $resource['res_id']) {
                         break;
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
@@ -405,7 +400,7 @@ class SummarySheetController
                         } else {
                             $copies[] = $item;
                         }
-                        unset($args['data']['listInstances'][$key]);
+                        unset($args['data']['listInstances'][$listKey]);
                         $found = true;
                     }
                 }
@@ -439,7 +434,7 @@ class SummarySheetController
             } elseif ($unit['unit'] == 'visaWorkflow') {
                 $users = [];
                 $found = false;
-                foreach ($args['data']['listInstancesVisa'] as $key => $listInstance) {
+                foreach ($args['data']['listInstancesVisa'] as $listKey => $listInstance) {
                     if ($found && $listInstance['res_id'] != $resource['res_id']) {
                         break;
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
@@ -448,7 +443,7 @@ class SummarySheetController
                             'mode'  => $listInstance['requested_signature'] ? 'Signataire' : 'Viseur',
                             'date'  => TextFormatModel::formatDate($listInstance['process_date']),
                         ];
-                        unset($args['data']['listInstancesVisa'][$key]);
+                        unset($args['data']['listInstancesVisa'][$listKey]);
                         $found = true;
                     }
                 }
@@ -473,7 +468,7 @@ class SummarySheetController
             } elseif ($unit['unit'] == 'opinionWorkflow') {
                 $users = [];
                 $found = false;
-                foreach ($args['data']['listInstancesOpinion'] as $key => $listInstance) {
+                foreach ($args['data']['listInstancesOpinion'] as $listKey => $listInstance) {
                     if ($found && $listInstance['res_id'] != $resource['res_id']) {
                         break;
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
@@ -481,7 +476,7 @@ class SummarySheetController
                             'user'  => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
                             'date'  => TextFormatModel::formatDate($listInstance['process_date']),
                         ];
-                        unset($args['data']['listInstancesOpinion'][$key]);
+                        unset($args['data']['listInstancesOpinion'][$listKey]);
                         $found = true;
                     }
                 }
@@ -506,7 +501,7 @@ class SummarySheetController
             } elseif ($unit['unit'] == 'notes') {
                 $notes = [];
                 $found = false;
-                foreach ($args['data']['notes'] as $key => $rawNote) {
+                foreach ($args['data']['notes'] as $noteKey => $rawNote) {
                     if ($found && $rawNote['identifier'] != $resource['res_id']) {
                         break;
                     } elseif ($rawNote['identifier'] == $resource['res_id']) {
@@ -533,7 +528,7 @@ class SummarySheetController
                                 'note'  => $rawNote['note_text']
                             ];
                         }
-                        unset($args['data']['notes'][$key]);
+                        unset($args['data']['notes'][$noteKey]);
                         $found = true;
                     }
                 }

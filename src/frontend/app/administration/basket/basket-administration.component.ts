@@ -275,7 +275,6 @@ export class BasketAdministrationComponent implements OnInit {
                 } else {
                     result.list_display = [];
                 }
-                
                 this.http.post(this.coreUrl + "rest/baskets/" + this.id + "/groups", result)
                     .subscribe(() => {
                         this.basketGroups.push(result);
@@ -646,6 +645,7 @@ export class BasketAdministrationGroupListModalComponent {
         } else {
             this.newBasketGroup = JSON.parse(JSON.stringify(this.data.linkedGroups[this.data.linkedGroups.length - 1]));
         }
+        this.newBasketGroup.basket_id = this.data.basketId;
         this.newBasketGroup.group_id = group.group_id;
         this.newBasketGroup.group_desc = group.group_desc;
         this.dialogRef.close(this.newBasketGroup);

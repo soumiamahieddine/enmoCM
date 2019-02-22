@@ -98,6 +98,37 @@ mat-toolbar {
     overflow: inherit;
 }
 
+.emptyBasket {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    position: absolute;
+    margin: -16px;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+
+    &_content {
+        width: 400px;
+    }
+
+    &_icon {
+        font-size: 500px;
+        opacity: 0.1;
+        position: absolute;
+        top: 0px;
+        left: 0;
+        width: 100%;
+    }
+
+    &_label {
+        font-size: 40px;
+        font-weight: bold;
+        opacity: 0.2;
+    }
+}
+
 .mat-badge-content {
     background: #F99830;
 }

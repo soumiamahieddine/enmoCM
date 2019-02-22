@@ -1,20 +1,23 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter, ComponentFactoryResolver, ViewContainerRef, TemplateRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { merge, Observable, of as observableOf } from 'rxjs';
+import { merge, Observable, of as observableOf, fromEvent, Subscription } from 'rxjs';
 import { NotificationService } from '../notification.service';
-import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet } from '@angular/material';
+import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet, MatMenu, MatMenuTrigger } from '@angular/material';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 import { NotesListComponent } from '../notes/notes.component';
 import { AttachmentsListComponent } from '../attachments/attachments-list.component';
 import { DiffusionsListComponent } from '../diffusions/diffusions-list.component';
 import { FiltersToolComponent } from './filters/filters-tool.component';
+
+import { ActionsListComponent } from '../actions/actions-list.component';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 
 
 declare function $j(selector: any): any;
@@ -73,11 +76,15 @@ export class BasketListComponent implements OnInit {
     selectedRes: number[] = [];
     allResInBasket: number[] = [];
 
+    @ViewChild('actionsListContext') actionsList: ActionsListComponent;
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
+
+    currentSelectedChrono: string = '';
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
-    constructor(changeDetectorRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService, private notify: NotificationService) {
+
+    constructor(changeDetectorRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService, private notify: NotificationService, public overlay: Overlay, public viewContainerRef: ViewContainerRef) {
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -248,8 +255,8 @@ export class BasketListComponent implements OnInit {
                     let formatWorkflow: any = [];
                     let content = '';
                     let user = '';
-                    let currentKey = 0;
                     let displayTitle: string[] = [];
+
                     key.displayValue.forEach((visa: any, key: number) => {
                         content = '';
                         user = visa.user;
@@ -265,21 +272,30 @@ export class BasketListComponent implements OnInit {
                         }
 
                         if (visa.current && key > 0) {
-                            currentKey = key;
-                            if (formatWorkflow[key - 2] !== undefined) {
-                                formatWorkflow = ['...', formatWorkflow[key - 1]];
-                            } else {
-                                formatWorkflow = [formatWorkflow[key - 1]];
-                            }
                             content = '<b color="primary">' + content + '</b>';
                         }
 
-                        if (key <= currentKey + 1) {
-                            formatWorkflow.push(content);
-                        } else if (key == currentKey + 2) {
-                            formatWorkflow.push('...');
-                        }
+                        formatWorkflow.push(content);
+
                     });
+
+                    //TRUNCATE DISPLAY LIST
+                    const index = key.displayValue.map((e: any) => { return e.current; }).indexOf(true);
+                    if (index > 0) {
+                        formatWorkflow = formatWorkflow.slice(index - 1);
+                        formatWorkflow = formatWorkflow.reverse();
+                        formatWorkflow = formatWorkflow.slice((formatWorkflow.length - index) - 1);
+                        formatWorkflow = formatWorkflow.reverse();
+                    } else if (index === -1) {
+                        formatWorkflow = formatWorkflow.slice(formatWorkflow.length - 2);
+                    }
+                    if (index >= 2 || (index == -1 && key.displayValue.length >= 3)) {
+                        formatWorkflow.unshift('...');
+                    }
+                    if (index != -1 && index - 2 <= key.displayValue.length && key.displayValue.length >= 3) {
+                        formatWorkflow.push('...');
+                    }
+
                     key.displayValue = formatWorkflow.join(' <i class="fas fa-long-arrow-alt-right"></i> ');
                     key.displayTitle = displayTitle.join(' - ');
                 } else if (key.value == 'getSignatories') {
@@ -334,6 +350,14 @@ export class BasketListComponent implements OnInit {
             });
         }
     }
+
+    open({ x, y }: MouseEvent, row: any) {
+    
+        this.actionsList.open(x, y, row)
+
+        // prevents default
+        return false;
+    }
 }
 export interface BasketList {
     resources: any[];
@@ -341,7 +365,6 @@ export interface BasketList {
     basketLabel: string,
     allResources: number[]
 }
-
 
 export class ResultListHttpDao {
 

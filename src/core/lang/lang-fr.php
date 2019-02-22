@@ -293,7 +293,6 @@ define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut d
 // ACTIONS
 define('_REDIRECTION', 'Rediriger');
 define('_REDIRECTION_DESC', 'Ouvre une modal permettant de choisir un nouvel utilisateur traitant OU de redéfinir le service traitant avec une nouvelle liste de diffusion.');
-define('_REDIRECTION_VISA_SIGN', 'Rediriger pour signature');
 define('_PUT_IN_COPY', 'Ajouter en copie');
 define('_PUT_IN_COPY_DESC', "Ouvre une modal permettant UNIQUEMENT d'ajouter ou de supprimer des personne en COPIE de la liste de diffusion.");
 define('_SIMPLE_CONFIRM', 'Confirmation simple');
@@ -317,8 +316,6 @@ define('_MARK_AS_READ_DESC', 'Marque le document comme \'lu\' dans la bannette. 
 define('_SEND_FILE_WS', 'Envoyer le document via Web Service');
 define('_SEND_DATA_WS', 'Envoyer des données via Web Service');
 define('_SEND_TO_EXTERNAL_SB', 'Envoyer des données vers un parapheur externe');
-define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirmer le statut du dossier');
-define('_REDIRECT_FOLDER', '[dossier] Rediriger le dossier');
 define('_CLOSE_MAIL_AND_INDEX', 'Clôturer un courrier et lancer l\'indexation');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Permet de mettre à jour la date de clôture d\'un document (\'closing_date\' de la table mlb_coll_ext) ET ouvre la page d\'indexation afin d\'enregistrer un nouveau document.');
 define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');

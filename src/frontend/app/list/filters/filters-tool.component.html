@@ -1,5 +1,7 @@
 <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" multiple>
-    <mat-checkbox color="primary" style="margin: 10px;" title="{{lang.selectAllResInBasket}}" (change)="toggleAll($event)"></mat-checkbox>
+    <mat-checkbox color="primary" [checked]="selectedRes.length == totalRes && selectedRes.length > 0" [indeterminate]="selectedRes.length > 0 && selectedRes.length < totalRes" style="margin: 10px;padding-right: 10px;"
+        title="{{lang.selectAllResInBasket}}" (change)="toggleAll($event)"></mat-checkbox>
+    <app-actions-list #actionsList [contextMode]="false" [totalRes]="totalRes" [selectedRes]="selectedRes"></app-actions-list>
     <form [formGroup]="stateForm" [style.flex]="1">
         <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10" style="top: -2px;">
             <input class="metaSearch" type="text" matInput placeholder="{{lang.searchMailInBasket}}" formControlName="stateGroup"
@@ -36,12 +38,13 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <button [disabled]="this.listProperties.order == ''" [style.opacity]="this.listProperties.order == '' ? '0.2' : '1'" mat-icon-button [title]="this.listProperties.orderDir == 'DESC' ? lang.descOrder : lang.ascOrder"
-        style="color: rgba(0,0,0,0.38);" (click)="changeOrderDir();">
+    <button [disabled]="this.listProperties.order == ''" [style.opacity]="this.listProperties.order == '' ? '0.2' : '1'"
+        mat-icon-button [title]="this.listProperties.orderDir == 'DESC' ? lang.descOrder : lang.ascOrder" style="color: rgba(0,0,0,0.38);"
+        (click)="changeOrderDir();">
         <mat-icon *ngIf="this.listProperties.orderDir == 'DESC'" fontSet="fas" fontIcon="fa-sort-amount-down fa-2x"></mat-icon>
         <mat-icon *ngIf="this.listProperties.orderDir == 'ASC'" fontSet="fas" fontIcon="fa-sort-amount-up fa-2x"></mat-icon>
     </button>
-    <button mat-icon-button [matMenuTriggerFor]="menuParamList">
+    <button mat-icon-button [matMenuTriggerFor]="menuParamList" title="{{lang.tools}}">
         <mat-icon color="primary" fontSet="fas" fontIcon="fa-cog fa-2x"></mat-icon>
     </button>
     <mat-menu class="actionsTool" #menuParamList="matMenu">
@@ -59,18 +62,25 @@
     </mat-menu>
 </mat-button-toggle-group>
 <div class="filterBadges">
-    <span *ngIf="haveFilters()" class="label badge-eraser" title="{{lang.eraseAllFilters}}" (click)="this.listProperties.search='';removeFilters();"><i class="fas fa-eraser"></i></span>
-    
-    <span class="label badge-search" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}" (click)="this.listProperties.search='';updateFilters();">{{this.listProperties.search}}
+    <span *ngIf="haveFilters()" class="label badge-eraser" title="{{lang.eraseAllFilters}}" (click)="this.listProperties.search='';removeFilters();"><i
+            class="fas fa-eraser"></i></span>
+
+    <span class="label badge-search" *ngIf="this.listProperties.search !== ''" title="{{lang.subject}} / {{lang.chronoNumber}}"
+        (click)="this.listProperties.search='';updateFilters();">{{this.listProperties.search}}
         <i class="fa fa-times-circle"></i></span>
-    <span class="label badge-categories" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index" (click)="removeFilter('categories', i)">{{category.label}}
+    <span class="label badge-categories" title="{{lang.categories}}" *ngFor="let category of this.listProperties.categories; let i=index"
+        (click)="removeFilter('categories', i)">{{category.label}}
         <i class="fa fa-times-circle"></i></span>
-    <span class="label badge-priorities" title="{{lang.priorities}}" *ngFor="let priority of this.listProperties.priorities; let i=index" (click)="removeFilter('priorities', i)">{{priority.label}}
+    <span class="label badge-priorities" title="{{lang.priorities}}" *ngFor="let priority of this.listProperties.priorities; let i=index"
+        (click)="removeFilter('priorities', i)">{{priority.label}}
         <i class="fa fa-times-circle"></i></span>
-    <span class="label badge-statuses" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index" (click)="removeFilter('statuses', i)">{{status.label}}
+    <span class="label badge-statuses" title="{{lang.statuses}}" *ngFor="let status of this.listProperties.statuses; let i=index"
+        (click)="removeFilter('statuses', i)">{{status.label}}
         <i class="fa fa-times-circle"></i></span>
-    <span class="label badge-entities" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index" (click)="removeFilter('entities', i)">{{entity.label}}
+    <span class="label badge-entities" title="{{lang.entities}}" *ngFor="let entity of this.listProperties.entities; let i=index"
+        (click)="removeFilter('entities', i)">{{entity.label}}
         <i class="fa fa-times-circle"></i></span>
-    <span class="label badge-subEntities" title="{{lang.subEntities}}" *ngFor="let subEntity of this.listProperties.subEntities; let i=index" (click)="removeFilter('subEntities', i)">{{subEntity.label}}
+    <span class="label badge-subEntities" title="{{lang.subEntities}}" *ngFor="let subEntity of this.listProperties.subEntities; let i=index"
+        (click)="removeFilter('subEntities', i)">{{subEntity.label}}
         <i class="fa fa-times-circle"></i></span>
 </div>

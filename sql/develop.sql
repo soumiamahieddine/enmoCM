@@ -137,15 +137,22 @@ UPDATE baskets SET basket_res_order = regexp_replace(basket_res_order,'recommend
 
 /* REFACTORING */
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm1_date;
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm2_date;
 DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
+UPDATE res_letterbox SET locker_user_id = NULL;
+ALTER TABLE res_letterbox ALTER COLUMN locker_user_id DROP DEFAULT;
+ALTER TABLE res_letterbox ALTER COLUMN locker_user_id TYPE INTEGER USING locker_user_id::integer;
+ALTER TABLE res_letterbox ALTER COLUMN locker_user_id SET DEFAULT NULL;
 
 
 /* PARAM LIST DISPLAY */
 UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_attachments' OR result_page = 'list_copies';
 UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]' WHERE result_page = 'list_with_avis';
 UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getVisaWorkflow","cssClasses":[],"icon":"fa-list-ol"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_signatory';
+
+/* ACTIONS */
+ALTER TABLE actions DROP COLUMN IF EXISTS component;
+ALTER TABLE actions ADD COLUMN component CHARACTER VARYING (128);
+
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
@@ -284,6 +291,8 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.admission_date,
     mlb.process_limit_date,
     mlb.closing_date,
+    mlb.alarm1_date,
+    mlb.alarm2_date,
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,

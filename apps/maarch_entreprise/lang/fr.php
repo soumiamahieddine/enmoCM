@@ -4338,12 +4338,6 @@ if (!defined('_NOT_EXISTS')) {
 }
 
 /*************** FOLDER **************/
-if (!defined('_CONFIRM_FOLDER_STATUS')) {
-    define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirmer le statut du dossier');
-}
-if (!defined('_REDIRECT_FOLDER')) {
-    define('_REDIRECT_FOLDER', '[dossier] Rediriger le dossier');
-}
 
 //***Business Collection***/
 
@@ -4663,9 +4657,6 @@ if (!defined('_SEND_SIGNED_DOCS_DESC')) {
 }
 if (!defined('_PREPARE_VISA')) {
     define('_PREPARE_VISA', 'Préparer le circuit de visa');
-}
-if (!defined('_REDIRECTION_VISA_SIGN')) {
-    define('_REDIRECTION_VISA_SIGN', 'Rediriger pour signature');
 }
 if (!defined('_SEND_TO_VISA')) {
     define('_SEND_TO_VISA', 'Envoyer pour visa');

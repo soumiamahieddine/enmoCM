@@ -464,12 +464,6 @@ if (!defined("_SEARCH_FOLDER_TREE")) {
 if (!defined("_NB_DOCS_IN_FOLDER")) {
     define("_NB_DOCS_IN_FOLDER", "Files number");
 }
-if (!defined("_CONFIRM_FOLDER_STATUS")) {
-    define("_CONFIRM_FOLDER_STATUS", "Simple confirmation (folders)");
-}
-if (!defined("_REDIRECT_FOLDER")) {
-    define("_REDIRECT_FOLDER", "Folder redirection");
-}
 if (!defined("_REDIRECT_ALL_DOCUMENTS_IN_FOLDER")) {
     define("_REDIRECT_ALL_DOCUMENTS_IN_FOLDER", "Redirect all folder's documents");
 }

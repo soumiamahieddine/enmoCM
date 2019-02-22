@@ -27,6 +27,7 @@ use Slim\Http\Response;
 use Template\models\TemplateAssociationModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
+use \Template\models\TemplateModel;
 
 class EntityController
 {
@@ -85,7 +86,7 @@ class EntityController
                 $entity['roles'][$key]['id'] = 'cc';
             }
         }
-
+        //Diffusion list
         $listTemplates = ListTemplateModel::get([
             'select'    => ['id', 'object_type', 'item_id', 'item_type', 'item_mode', 'title', 'description', 'sequence'],
             'where'     => ['object_id = ?'],
@@ -140,18 +141,22 @@ class EntityController
             }
         }
 
+        $entity['templates'] = TemplateModel::getByEntity([
+            'select'    => ['t.template_id', 't.template_label', 'template_comment', 't.template_target', 't.template_attachment_type'],
+            'entities'  => [$aArgs['id']]
+        ]);
+
         $entity['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.id','users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
         $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
         $entity['hasChildren'] = count($children) > 0;
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $entity['documents'] = count($documents);
-        $templates = TemplateAssociationModel::get(['select' => [1], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
-        $entity['templates'] = count($templates);
         $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
         $entity['instances'] = count($instances);
         $redirects = BasketModel::getGroupActionRedirect(['select' => [1], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
         $entity['redirects'] = count($redirects);
         $entity['canAdminUsers'] = ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
+        $entity['canAdminTemplates'] = ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin']);
 
         return $response->withJson(['entity' => $entity]);
     }

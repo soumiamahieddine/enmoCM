@@ -1400,8 +1400,6 @@ if (!defined('_CATEGORY_HELP')) { define('_CATEGORY_HELP', 'De categorie wijzige
 if (!defined('_CONTACT_HELP')) { define('_CONTACT_HELP', 'Veld met autoaanvullen het contacttype hangt af van de gekozen categorie');}
 if (!defined('_SUBJECT_HELP')) { define('_SUBJECT_HELP', 'Onderwerp van het document');}
 if (!defined('_NOT_EXISTS')) { define('_NOT_EXISTS', 'bestaat niet');}
-if (!defined('_CONFIRM_FOLDER_STATUS')) { define('_CONFIRM_FOLDER_STATUS', '[map] De mapstatus bevestigen');}
-if (!defined('_REDIRECT_FOLDER')) { define('_REDIRECT_FOLDER', '[map] De map doorsturen');}
 if (!defined('_CHOOSE_TYPE')) { define('_CHOOSE_TYPE', 'Kies een typologie');}
 if (!defined('_DEPARTMENT_OWNER')) { define('_DEPARTMENT_OWNER', 'Eenheid waartoe het behoort');}
 if (!defined('_FOLDER')) { define('_FOLDER', 'Seriële map');}
@@ -1492,7 +1490,6 @@ if (!defined('_VISA_MAIL_DESC')) { define('_VISA_MAIL_DESC', 'Opent de pagina va
 if (!defined('_SEND_SIGNED_DOCS')) { define('_SEND_SIGNED_DOCS', 'Ondertekende antwoorden doorsturen');}
 if (!defined('_SEND_SIGNED_DOCS_DESC')) { define('_SEND_SIGNED_DOCS_DESC', 'Controleert of de antwoordprojecten ondertekend werden.');}
 if (!defined('_PREPARE_VISA')) { define('_PREPARE_VISA', 'Het goedkeuringscircuit voorbereiden');}
-if (!defined('_REDIRECTION_VISA_SIGN')) { define('_REDIRECTION_VISA_SIGN', 'Doorsturen voor ondertekening');}
 if (!defined('_SEND_TO_VISA')) { define('_SEND_TO_VISA', 'Versturen voor goedkeuring');}
 if (!defined('_SEND_TO_VISA_DESC')) { define('_SEND_TO_VISA_DESC', 'Controleert of er een goedkeuringscircuit is geconfigureerd EN of er één of meerdere antwoordprojecten aan het document gekoppeld zijn.');}
 if (!defined('_MAIL_WILL_DISAPPEAR')) { define('_MAIL_WILL_DISAPPEAR', 'Deze brief gaat uw perimeter te buiten. U zal er daarna geen toegang meer tot kunnen hebben.');}

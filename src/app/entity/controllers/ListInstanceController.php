@@ -106,29 +106,12 @@ class ListInstanceController
                 return $response->withStatus(400)->withJson(['listInstances is missing or is empty']);
             } else {
                 foreach ($ListInstanceByRes['listInstances'] as $instance) {
-                    if (empty($instance['res_id'])) {
-                        DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'res_id are empty']);
-                    }
-
-                    if (empty($instance['item_id'])) {
-                        DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'item_id are empty']);
-                    }
-
-                    if (empty($instance['item_type'])) {
-                        DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'item_type are empty']);
-                    }
-
-                    if (empty($instance['item_mode'])) {
-                        DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'item_mode are empty']);
-                    }
-
-                    if (empty($instance['difflist_type'])) {
-                        DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'difflist_type are empty']);
+                    
+                    $listControl = ['res_id', 'item_id', 'item_type', 'item_mode', 'difflist_type'];
+                    foreach($listControl as $itemControl){
+                        if (empty($instance[$itemControl])) {
+                            return $response->withStatus(400)->withJson(['errors' => $itemControl . ' are empty']);
+                        }
                     }
                     
                     unset($instance['listinstance_id']);

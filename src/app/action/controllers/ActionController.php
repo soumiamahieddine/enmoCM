@@ -16,7 +16,7 @@ use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
-use SrcCore\models\CoreConfigModel;
+use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use Group\models\ServiceModel;
 use Slim\Http\Request;
@@ -33,43 +33,46 @@ class ActionController
         return $response->withJson(['actions' => ActionModel::get()]);
     }
 
-    public function getById(Request $request, Response $response, $aArgs)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        $obj['action'] = ActionModel::getById(['id' => $aArgs['id']]);
-
-        if (!empty($obj['action'])) {
-            $obj['action']['history'] = ($obj['action']['history'] == 'Y');
-            $obj['action']['is_system'] = ($obj['action']['is_system'] == 'Y');
-            $obj['action']['create_id'] = ($obj['action']['create_id'] == 'Y');
-
-            $actionCategories = [];
-            foreach ($obj['action']['actionCategories'] as $key => $category) {
-                $actionCategories[] = $category['category_id'];
-            }
-            $obj['action']['actionCategories'] = $actionCategories;
-
-            $obj['categoriesList'] = ResModel::getCategories();
-            if (empty($obj['action']['actionCategories'])) {
-                $categoriesList = [];
-                foreach ($obj['categoriesList'] as $key => $category) {
-                    $categoriesList[] = $category['id'];
-                }
-                $obj['action']['actionCategories'] = $categoriesList;
-            }
-
-
-            $obj['statuses'] = StatusModel::get();
-            array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_', 'label_status'=> _UNCHANGED]);
-            $obj['action_pagesList'] = ActionModel::getActionPages();
-            array_unshift($obj['action_pagesList']['actionsPageList'], ['id' => '', 'label' => _NO_PAGE, 'name' => '', 'origin' => '']);
-            $obj['keywordsList'] = ActionModel::getKeywords();
+        $action['action'] = ActionModel::getById(['id' => $aArgs['id']]);
+        if (empty($action['action'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action does not exist']);
         }
-  
-        return $response->withJson($obj);
+
+        $categories = ActionModel::getCategoriesById(['id' => $aArgs['id']]);
+
+        $action['action']['history'] = ($action['action']['history'] == 'Y');
+        $action['action']['is_system'] = ($action['action']['is_system'] == 'Y');
+
+        $action['action']['actionCategories'] = [];
+        foreach ($categories as $category) {
+            $action['action']['actionCategories'][] = $category['category_id'];
+        }
+
+        $action['categoriesList'] = ResModel::getCategories();
+        if (empty($action['action']['actionCategories'])) {
+            foreach ($action['categoriesList'] as $category) {
+                $action['action']['actionCategories'][] = $category['id'];
+            }
+        }
+
+        $action['statuses'] = StatusModel::get();
+        array_unshift($action['statuses'], ['id' => '_NOSTATUS_', 'label_status' => _UNCHANGED]);
+        $action['actionPages'] = ActionModel::getActionPages();
+        $action['keywordsList'] = ActionModel::getKeywords();
+
+        foreach ($action['actionPages'] as $actionPage) {
+            if ($actionPage['name'] == $action['action']['action_page']) {
+                $action['action']['actionPageId'] = $actionPage['id'];
+            }
+        }
+
+        return $response->withJson($action);
     }
 
     public function create(Request $request, Response $response)
@@ -78,22 +81,37 @@ class ActionController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data = $request->getParams();
-        $data = $this->manageValue($data);
+        $body = $request->getParsedBody();
+        $body = $this->manageValue($body);
         
-        $errors = $this->control($data, 'create');
+        $errors = $this->control($body, 'create');
         if (!empty($errors)) {
-            return $response->withStatus(500)->withJson(['errors' => $errors]);
+            return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
-    
-        $id = ActionModel::create($data);
+
+        unset($body['action_page']);
+        $actionPages = ActionModel::getActionPages();
+        foreach ($actionPages as $actionPage) {
+            if ($actionPage['id'] == $body['actionPageId']) {
+                $body['action_page'] = $actionPage['name'];
+                $body['component'] = $actionPage['component'];
+            }
+        }
+        if (empty($body['action_page'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data actionPageId does not exist']);
+        }
+
+        $id = ActionModel::create($body);
+        if (!empty($body['actionCategories'])) {
+            ActionModel::createCategories(['id' => $id, 'categories' => $body['actionCategories']]);
+        }
 
         HistoryController::add([
             'tableName' => 'actions',
             'recordId'  => $id,
             'eventType' => 'ADD',
             'eventId'   => 'actionadd',
-            'info'      => _ACTION_ADDED . ' : ' . $data['label_action']
+            'info'      => _ACTION_ADDED . ' : ' . $body['label_action']
         ]);
 
         return $response->withJson(['actionId' => $id]);
@@ -105,24 +123,39 @@ class ActionController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data = $request->getParams();
-        $data['id'] = $aArgs['id'];
+        $body = $request->getParsedBody();
+        $body['id'] = $aArgs['id'];
 
-        $data    = $this->manageValue($data);
-        $errors = $this->control($data, 'update');
-      
+        $body    = $this->manageValue($body);
+        $errors = $this->control($body, 'update');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        ActionModel::update($data);
+        unset($body['action_page']);
+        $actionPages = ActionModel::getActionPages();
+        foreach ($actionPages as $actionPage) {
+            if ($actionPage['id'] == $body['actionPageId']) {
+                $body['action_page'] = $actionPage['name'];
+                $body['component'] = $actionPage['component'];
+            }
+        }
+        if (empty($body['action_page'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data actionPageId does not exist']);
+        }
+
+        ActionModel::update($body);
+        ActionModel::deleteCategories(['id' => $aArgs['id']]);
+        if (!empty($body['actionCategories'])) {
+            ActionModel::createCategories(['id' => $aArgs['id'], 'categories' => $body['actionCategories']]);
+        }
 
         HistoryController::add([
             'tableName' => 'actions',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
             'eventId'   => 'actionup',
-            'info'      => _ACTION_UPDATED. ' : ' . $data['label_action']
+            'info'      => _ACTION_UPDATED. ' : ' . $body['label_action']
         ]);
 
         return $response->withJson(['success' => 'success']);
@@ -135,12 +168,13 @@ class ActionController
         }
 
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        $action = ActionModel::getById(['id' => $aArgs['id']]);
         ActionModel::delete(['id' => $aArgs['id']]);
+        ActionModel::deleteCategories(['id' => $aArgs['id']]);
 
+        $action = ActionModel::getById(['id' => $aArgs['id'], 'select' => ['label_action']]);
         HistoryController::add([
             'tableName' => 'actions',
             'recordId'  => $aArgs['id'],
@@ -150,6 +184,39 @@ class ActionController
         ]);
 
         return $response->withJson(['actions' => ActionModel::get()]);
+    }
+
+    public static function terminateAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'resId']);
+        ValidatorModel::intVal($aArgs, ['id', 'resId']);
+
+        $set = ['locker_user_id' => null, 'locker_time' => null];
+
+        $action = ActionModel::getById(['id' => $aArgs['id'], 'select' => ['label_action', 'id_status', 'history']]);
+        if (!empty($action['id_status']) && $action['id_status'] != '_NOSTATUS_') {
+            $set['status'] = $action['id_status'];
+        }
+
+        ResModel::update([
+            'set'   => $set,
+            'where' => ['res_id = ?'],
+            'data'  => [$aArgs['resId']]
+        ]);
+
+        if ($action['history'] == 'Y') {
+            HistoryController::add([
+                'tableName' => 'actions',
+                'recordId'  => $aArgs['resId'],
+                'eventType' => 'ACTION#' . $aArgs['id'],
+                'eventId'   => $aArgs['id'],
+                'info'      => $action['label_action']
+            ]);
+
+            //TODO M2M
+        }
+
+        return true;
     }
 
     protected function control($aArgs, $mode)
@@ -171,17 +238,20 @@ class ActionController
             if (!Validator::intVal()->validate($aArgs['id'])) {
                 $errors[] = 'Id is not a numeric';
             } else {
-                $obj = ActionModel::getById(['id' => $aArgs['id']]);
+                $obj = ActionModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
             }
            
             if (empty($obj)) {
-                $errors[] = 'Id ' .$aArgs['id']. ' does not exists';
+                $errors[] = 'Id ' .$aArgs['id']. ' does not exist';
             }
         }
            
         if (!Validator::notEmpty()->validate($aArgs['label_action']) ||
             !Validator::length(1, 255)->validate($aArgs['label_action'])) {
             $errors[] = 'Invalid label action';
+        }
+        if (!Validator::stringType()->notEmpty()->validate($aArgs['actionPageId'])) {
+            $errors[] = 'Invalid page action';
         }
 
         if (!Validator::notEmpty()->validate($aArgs['id_status'])) {
@@ -197,10 +267,9 @@ class ActionController
 
     public function initAction(Request $request, Response $response)
     {
-        //default data
         $obj['action']['history']          = true;
         $obj['action']['keyword']          = '';
-        $obj['action']['action_page']      = '';
+        $obj['action']['actionPageId']     = 'confirm_status';
         $obj['action']['id_status']        = '_NOSTATUS_';
         $obj['categoriesList']             = ResModel::getCategories();
 
@@ -210,8 +279,7 @@ class ActionController
 
         $obj['statuses'] = StatusModel::get();
         array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
-        $obj['action_pagesList'] = ActionModel::getActionPages();
-        array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
+        $obj['actionPages'] = ActionModel::getActionPages();
         $obj['keywordsList'] = ActionModel::getKeywords();
         
         return $response->withJson($obj);

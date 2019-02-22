@@ -55,7 +55,9 @@
         </div>
     </div>
 </div>
-
+<div *ngIf="data.selectedRes.length > 500" mat-dialog-actions class="actions">
+    <span style="color: #d24747; font-style: italic">{{lang.firstSummarySheetsGenerated}}</span>
+</div>
 <div mat-dialog-actions class="actions">
     <button mat-raised-button mat-button color="primary" (click)="genSummarySheets();">{{lang.genSummarySheets}}</button>
     <button mat-raised-button mat-button [mat-dialog-close]="">{{lang.cancel}}</button>

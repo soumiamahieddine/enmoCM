@@ -108,7 +108,6 @@ export const LANG_NL = {
     "delay1" : "Termijn herinnering 1 voor einde (in dagen)",
     "delay2" : "Termijn herinnering 2 na einde (in dagen)",
     "delete" : "Verwijderen",
-    "unableToDelete" : "Niet te onderdrukken", //_TO_TRANSLATE
     "deleteAssignation" : "De toekenning verwijderen",
     "deleteMsg" : "Wilt u dit element echt verwijderen?",
     "desactivateAbsence" : "De afwezigheid uitschakelen",
@@ -398,7 +397,6 @@ export const LANG_NL = {
     "string" : "Karakterreeks",
     "sunday" : "Zondag",
     "suspend" : "Opschorten",
-    "unableToSuspend" : "Schorsing onmogelijk", //_TO_TRANSLATE
     "suspended" : "Opgeschort",
     "suspendNotification" : "De melding opschorten",
     "system" : "Systeem",
@@ -831,7 +829,7 @@ export const LANG_NL = {
     "selectedElements"                                     : "_TO_TRANSLATE",
     "destination"                                     : "_TO_TRANSLATE",
     "selectAllResInBasket"                                     : "_TO_TRANSLATE",
-    "redirectUserListInstances"                 : "_TO_TRANSLATE_Change of recipient for mail being processed",
+    "redirectUserListInstances"                 : "Change of recipient for mail being processed", //_TO_TRANSLATE_
     "chooseNewDestUser"                         : "is the <b>recipient</b> of mail being processed, please select a <b>replacement user</b>", //_TO_TRANSLATE_
     "newDest"                                   : "New recipient for", //_TO_TRANSLATE_
     "newDestRes"                                : "New recipient for mails", //_TO_TRANSLATE
@@ -867,5 +865,19 @@ export const LANG_NL = {
     "contacts"                           : "Contact(s)", //_TO_TRANSLATE
     "userIsNotDeletable"                 : "You do not have <b>full access rights</b> to diffusion list or mails for the user ", //_TO_TRANSLATE
     "userIsDeletableBy"                  : "Only a user with the <b>totality of access rights</b> can delete or suspend this user.", //_TO_TRANSLATE
-    "mailEntitiesList"                   : "List of entities attached to mails" //_TO_TRANSLATE
+    "mailEntitiesList"                   : "List of entities attached to mails", //_TO_TRANSLATE
+    "firstSummarySheetsGenerated"        : "Only first 500 summary sheets will be generated.", //_TO_TRANSLATE
+    "selectAction"                      : "Select an action", //_TO_TRANSLATE
+    "emptyBasket"                      : "Empty basket", //_TO_TRANSLATE
+    "unableToSuspend"                  : "Schorsing onmogelijk", //_TO_TRANSLATE
+    "unableToDelete"                   : "Niet te onderdrukken", //_TO_TRANSLATE
+    "actionNotExist"                      : "This action does not exist", //_TO_TRANSLATE
+    "thisRes"                       : "Following mail(s)", //_TO_TRANSLATE
+    "lockedBy"                      : "locked by", //_TO_TRANSLATE
+    "addNote"                      : "Add note", //_TO_TRANSLATE
+    "makeActionOn"                      : "Do you want to do this action on", //_TO_TRANSLATE
+    "AR"                                : "Acknowledgement of receipt", //_TO_TRANSLATE
+    'AR_simple'                         : 'AR simple', //_TO_TRANSLATE
+    'AR_SVA'                            : 'AR SVA', //_TO_TRANSLATE
+    'AR_SVR'                            : 'AR SVR', //_TO_TRANSLATE
 };

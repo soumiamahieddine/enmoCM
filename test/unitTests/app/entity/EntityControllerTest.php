@@ -189,7 +189,7 @@ class EntityControllerTest extends TestCase
         $this->assertSame(false, $responseBody->entity->hasChildren);
         $this->assertSame(0, $responseBody->entity->documents);
         $this->assertInternalType('array', $responseBody->entity->users);
-        $this->assertSame(0, $responseBody->entity->templates);
+        $this->assertInternalType('array', $responseBody->entity->templates);
         $this->assertSame(0, $responseBody->entity->instances);
         $this->assertSame(0, $responseBody->entity->redirects);
     }

@@ -32,7 +32,6 @@ export class TemplateAdministrationComponent implements OnInit {
     creationMode            : boolean;
     template                : any       = {};
     statuses                : any[]     = [];
-    actionPagesList         : any[]     = [];
     categoriesList          : any[]     = [];
     keywordsList            : any[]     = [];
     defaultTemplatesList    : any;
@@ -124,7 +123,8 @@ export class TemplateAdministrationComponent implements OnInit {
                 height: "200",
                 plugins: [
                     "textcolor",
-                    "autoresize"
+                    "autoresize",
+                    "code"
                 ],
                 external_plugins: {
                     'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
@@ -275,11 +275,11 @@ export class TemplateAdministrationComponent implements OnInit {
         if (this.template.template_target != 'notifications') {
             this.template.template_datasource = 'letterbox_attachment';
         }
-        if (this.creationMode && this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && this.template.template_type == 'OFFICE') {
+        if (this.creationMode && this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && (this.template.template_type == 'OFFICE' || this.template.template_type == 'OFFICE_HTML' )) {
             alert(this.lang.editModelFirst);
             return;
         }
-        if (this.template.template_type=='HTML') {
+        if (this.template.template_type=='HTML' || this.template.template_type=='OFFICE_HTML') {
             this.template.template_content = tinymce.get('templateHtml').getContent();
         }
         if (this.creationMode) {
@@ -324,6 +324,9 @@ export class TemplateAdministrationComponent implements OnInit {
             this.initMce();
         } else if (this.template.template_target == 'notes') {
             this.template.template_type = 'TXT';
+        } else if(this.template.template_target == 'AR'){
+            this.template.template_type = 'OFFICE_HTML';
+            this.initMce();
         }
     }
 

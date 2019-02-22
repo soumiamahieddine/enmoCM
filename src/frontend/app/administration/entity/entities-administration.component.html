@@ -45,8 +45,7 @@
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="false" class="col-md-4 col-xs-11">
-
+            position='end' [opened]="false" class="col-md-5 col-xs-11">
             <mat-nav-list>
                 <mat-tab-group>
                     <mat-tab [label]="creationMode ? lang.createNewEntity : lang.informations">
@@ -315,15 +314,15 @@
                             </div>
                             <div class="col-md-6 col-xs-6">
                                 <mat-form-field>
-                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                    <input matInput (keyup)="applyFilterUsers($event.target.value)" placeholder="{{lang.filterBy}}">
                                 </mat-form-field>
                             </div>
                             <div class="col-md-6 col-xs-6">
-                                <mat-paginator #paginator [length]="100" [pageSize]="10">
+                                <mat-paginator #paginatorUsers [length]="100" [pageSize]="10">
                                 </mat-paginator>
                             </div>
                         </div>
-                        <mat-table #table [dataSource]="dataSource" matSort matSortActive="lastname" matSortDirection="asc">
+                        <mat-table #tableUsers="matSort" [dataSource]="dataSourceUsers" matSort matSortActive="lastname" matSortDirection="asc">
                             <ng-container matColumnDef="firstname">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
@@ -332,11 +331,36 @@
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.lastname}}</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
                             </ng-container>
-                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
+                            <mat-header-row *matHeaderRowDef="displayedColumnsUsers"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumnsUsers;" routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
                                 style="cursor:pointer;"></mat-row>
                         </mat-table>
                     </mat-tab>
+                    <mat-tab label="{{lang.templates}}" *ngIf="!creationMode">
+                            <div class="row" style="margin:0px;">
+                                <div class="col-md-6 col-xs-6">
+                                    <mat-form-field>
+                                        <input matInput (keyup)="applyFilterTemplates($event.target.value)" placeholder="{{lang.filterBy}}">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6 col-xs-6">
+                                    <mat-paginator #paginatorTemplates [length]="100" [pageSize]="10">
+                                    </mat-paginator>
+                                </div>
+                            </div>
+                            <mat-table #tableTemplates="matSort" [dataSource]="dataSourceTemplates" matSort matSortActive="template_label" matSortDirection="asc">
+                                <ng-container matColumnDef="template_label">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.templateName}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" style="flex:2;" matTooltip="{{element.template_comment}}" > {{element.template_label}} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="template_target">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
+                                </ng-container>
+                                <mat-header-row *matHeaderRowDef="displayedColumnsTemplates"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumnsTemplates;" (click)="showTemplate(row.template_id);" [ngStyle]="{'cursor': !currentEntity.canAdminTemplates ? 'position' : 'pointer'}"></mat-row>
+                            </mat-table>
+                        </mat-tab>
                 </mat-tab-group>
             </mat-nav-list>
         </mat-sidenav>

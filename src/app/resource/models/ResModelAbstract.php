@@ -43,13 +43,16 @@ abstract class ResModelAbstract
     public static function get(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
         $aResources = DatabaseModel::select([
             'select'    => $aArgs['select'],
             'table'     => ['res_letterbox'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
         return $aResources;
@@ -214,33 +217,6 @@ abstract class ResModelAbstract
         ]);
 
         return $resources;
-    }
-
-    public static function isLock(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => ['locker_user_id', 'locker_time'],
-            'table'     => ['res_letterbox'],
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
-        ]);
-
-        $lock = true;
-        $lockBy = empty($aReturn[0]['locker_user_id']) ? '' : $aReturn[0]['locker_user_id'];
-
-        if (empty($aReturn[0]['locker_user_id'] || empty($aReturn[0]['locker_time']))) {
-            $lock = false;
-        } elseif ($aReturn[0]['locker_user_id'] == $aArgs['userId']) {
-            $lock = false;
-        } elseif (strtotime($aReturn[0]['locker_time']) < time()) {
-            $lock = false;
-        }
-
-        return ['lock' => $lock, 'lockBy' => $lockBy];
     }
 
     public static function getDocsByClause(array $aArgs = [])

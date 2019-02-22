@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Confirmer "{{data.actionName}}"</h1>
+<div mat-dialog-content>
+    <div class="row">
+        <div class="col-md-12">
+            {{lang.makeActionOn}} 
+            <b *ngIf="data.contextMode && data.selectedRes.length == 0" color="primary" class="highlight">{{data.contextChrono}}</b>
+            <b *ngIf="!data.contextMode || (data.contextMode && data.selectedRes.length > 0)" color="primary" class="highlight">{{data.selectedRes.length}} élement(s)</b> ?
+        </div>
+        <div class="col-md-12">
+            <app-note-editor></app-note-editor>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button mat-button color="primary">{{lang.validate}}</button>
+    <button mat-raised-button mat-button [mat-dialog-close]="">{{lang.cancel}}</button>
+</div>
