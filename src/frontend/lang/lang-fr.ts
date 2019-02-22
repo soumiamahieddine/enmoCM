@@ -877,4 +877,5 @@ export const LANG_FR = {
     "lockedBy"                      : "verrouillé par",
     "addNote"                      : "Ajouter une annotation",
     "makeActionOn"                      : "Voulez-vous effectuer cette action sur",
+    "tooMuchDatas"                      : "Trop de données à exporter",
 };

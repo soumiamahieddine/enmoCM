@@ -292,6 +292,7 @@ export class BasketListComponent implements OnInit {
                     if (index >= 2 || (index == -1 && key.displayValue.length >= 3)) {
                         formatWorkflow.unshift('...');
                     }
+                    //console.log();
                     if (index != -1 && index - 2 <= key.displayValue.length && key.displayValue.length >= 3) {
                         formatWorkflow.push('...');
                     }

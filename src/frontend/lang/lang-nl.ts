@@ -880,4 +880,5 @@ export const LANG_NL = {
     'AR_simple'                         : 'AR simple', //_TO_TRANSLATE
     'AR_SVA'                            : 'AR SVA', //_TO_TRANSLATE
     'AR_SVR'                            : 'AR SVR', //_TO_TRANSLATE
+    "tooMuchDatas"                      : "Too much datas to export", //_TO_TRANSLATE
 };

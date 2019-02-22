@@ -851,4 +851,6 @@ export const LANG_EN = {
     "lockedBy"                      : "locked by",
     "addNote"                      : "Add note",
     "makeActionOn"                      : "Do you want to do this action on",
+    "tooMuchDatas"                      : "Too much datas to export",
+
 };

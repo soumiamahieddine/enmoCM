@@ -1,4 +1,4 @@
-<button *ngIf="!contextMode" mat-icon-button [matMenuTriggerFor]="menu" title="{{lang.selectAction}}" [disabled]="selectedRes.length==0"
+<button *ngIf="!contextMode" (click)="loadActionList();" mat-icon-button [matMenuTriggerFor]="menu" title="{{lang.selectAction}}" [disabled]="selectedRes.length==0"
     class="buttonArrowCheckboxTool">
     <mat-icon fontSet="fas" fontIcon="fa-sort-down fa-2x"></mat-icon>
 </button>
@@ -14,13 +14,7 @@
             {{this.contextMenuTitle}}
         </ng-container>
     </div>
-    <button mat-menu-item (click)="launchEvent('confirmAction', 'Valider le document');">
-        <span>Valider le document</span>
-    </button>
-    <button mat-menu-item (click)="launchEvent('closingAction', 'Clôturer le document');">
-        <span>Clôturer le document</span>
-    </button>
-    <button mat-menu-item (click)="launchEvent('err', 'Action erronée');">
-        <span>Action erronée</span>
+    <button *ngFor="let action of actionsList" [disabled]="action.component == ''" mat-menu-item (click)="launchEvent(action.component, action.label_action);">
+        <span>{{action.label_action}}</span>
     </button>
 </mat-menu>

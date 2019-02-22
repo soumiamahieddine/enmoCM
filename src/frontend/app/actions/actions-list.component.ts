@@ -23,26 +23,22 @@ export class ActionsListComponent implements OnInit {
     contextMenuPosition = { x: '0px', y: '0px' };
     contextMenuTitle = '';
     currentActionName = '';
+    basketInfo: any = {};
     contextResId = 0;
+
+    actionsList: any[] = [];
 
     @Input('selectedRes') selectedRes: any;
     @Input('totalRes') totalRes: number;
     @Input('contextMode') contextMode: boolean;
+    @Input('currentBasketInfo') currentBasketInfo: any;
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) { }
 
-    ngOnInit(): void {
-        /*this.http.get('../../rest/resourcesList/exportTemplate')
-            .subscribe((data: any) => {
-                this.loading = false;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });*/
-        this.loading = false;
-    }
+    ngOnInit(): void { }
 
     open(x: number, y: number, row: any) {
-    
+        this.loadActionList();
         // Adjust the menu anchor position
         this.contextMenuPosition.x = x + 'px';
         this.contextMenuPosition.y = y + 'px';
@@ -107,5 +103,29 @@ export class ActionsListComponent implements OnInit {
                 actionName : this.currentActionName
             }
         });
+    }
+
+    loadActionList() {
+        
+        if (JSON.stringify(this.basketInfo) != JSON.stringify(this.currentBasketInfo)) {
+
+            this.basketInfo = JSON.parse(JSON.stringify(this.currentBasketInfo));
+
+            this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/actions')
+            .subscribe((data: any) => {
+                if (data.actions.length > 0) {
+                    this.actionsList = data.actions;
+                } else {
+                    this.actionsList = [{
+                        label_action : 'Aucune action',
+                        component : ''
+                    }];
+                }
+                this.loading = false;
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
+        }
+        
     }
 }

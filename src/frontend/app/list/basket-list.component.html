@@ -15,7 +15,7 @@
                 <div class="example-loading-shade" *ngIf="isLoadingResults">
                     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
                 </div>
-                <div *ngIf="resultsLength == 0 && !isLoadingResults" class="emptyBasket">
+                <div *ngIf="(resultsLength == 0 && this.filtersListService.getUrlFilters() == '') && !isLoadingResults" class="emptyBasket">
                     <div class="emptyBasket_content">
                         <div class="emptyBasket_icon">
                             <i class="fa fa-inbox"></i>
@@ -24,9 +24,8 @@
                             {{lang.emptyBasket}}
                         </div>
                     </div>
-
                 </div>
-                <div [style.display]="resultsLength > 0 ? 'block' : 'none'" class="row" style="margin:0px;">
+                <div [style.display]="(resultsLength > 0 || this.filtersListService.getUrlFilters() != '') ? 'block' : 'none'" class="row" style="margin:0px;">
                     <div class="col-md-12" style="display:flex;">
                         <app-filters-tool style="flex:1;" #filtersTool [currentBasketInfo]="currentBasketInfo"
                             [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
@@ -132,4 +131,4 @@
         </mat-sidenav>
     </mat-sidenav-container>
 </div>
-<app-actions-list #actionsListContext [contextMode]="true" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"></app-actions-list>
+<app-actions-list #actionsListContext [contextMode]="true" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo"></app-actions-list>
