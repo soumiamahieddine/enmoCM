@@ -545,7 +545,11 @@ class ResourceListController
 
         $actions = [];
         foreach ($rawActions as $rawAction) {
-            $actions[] = ActionModel::getById(['id' => $rawAction['id_action'], 'select' => ['label_action', 'component']]);
+            $actions[] = $rawAction['id_action'];
+        }
+
+        if (!empty($actions)) {
+            $actions = ActionModel::get(['select' => ['label_action', 'component'], 'where' => ['id in (?)'], 'data' => [$actions], 'orderBy' => ['label_action']]);
         }
 
         return $response->withJson(['actions' => $actions]);
