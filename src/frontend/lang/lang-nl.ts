@@ -876,7 +876,7 @@ export const LANG_NL = {
     "lockedBy"                      : "locked by", //_TO_TRANSLATE
     "addNote"                      : "Add note", //_TO_TRANSLATE
     "makeActionOn"                      : "Do you want to do this action on", //_TO_TRANSLATE
-    "AR"                                : "Acknowledgement of receipt", //_TO_TRANSLATE
+    "acknowledgementReceipt"            : "Acknowledgement of receipt", //_TO_TRANSLATE
     'AR_simple'                         : 'AR simple', //_TO_TRANSLATE
     'AR_SVA'                            : 'AR SVA', //_TO_TRANSLATE
     'AR_SVR'                            : 'AR SVR', //_TO_TRANSLATE

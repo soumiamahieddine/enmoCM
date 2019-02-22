@@ -324,7 +324,7 @@ export class TemplateAdministrationComponent implements OnInit {
             this.initMce();
         } else if (this.template.template_target == 'notes') {
             this.template.template_type = 'TXT';
-        } else if(this.template.template_target == 'AR'){
+        } else if(this.template.template_target == 'acknowledgementReceipt'){
             this.template.template_type = 'OFFICE_HTML';
             this.initMce();
         }

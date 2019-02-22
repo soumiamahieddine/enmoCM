@@ -42,7 +42,7 @@ export const LANG_FR = {
     "appUpToDate"                       : "Votre application est à jour",
     "april"                             : "Avril",
     "aprilShort"                        : "Avr.",
-    "AR"                                : "Accusé de réception",
+    "acknowledgementReceipt"            : "Accusé de réception",
     'AR_simple'                         : 'AR simple',
     'AR_SVA'                            : 'AR SVA',
     'AR_SVR'                            : 'AR SVR',
