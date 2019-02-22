@@ -141,29 +141,33 @@ export class SummarySheetComponent implements OnInit {
 
         this.http.post('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets', { units: currElemData, resources: this.data.selectedRes }, { responseType: "blob" })
             .subscribe((data) => {
-                let downloadLink = document.createElement('a');
-                downloadLink.href = window.URL.createObjectURL(data);
+                if (data.type !== 'text/html') {
+                    let downloadLink = document.createElement('a');
+                    downloadLink.href = window.URL.createObjectURL(data);
 
-                let today: any;
-                let dd: any;
-                let mm: any;
-                let yyyy: any;
+                    let today: any;
+                    let dd: any;
+                    let mm: any;
+                    let yyyy: any;
 
-                today = new Date();
-                dd = today.getDate();
-                mm = today.getMonth() + 1;
-                yyyy = today.getFullYear();
+                    today = new Date();
+                    dd = today.getDate();
+                    mm = today.getMonth() + 1;
+                    yyyy = today.getFullYear();
 
-                if (dd < 10) {
-                    dd = '0' + dd;
+                    if (dd < 10) {
+                        dd = '0' + dd;
+                    }
+                    if (mm < 10) {
+                        mm = '0' + mm;
+                    }
+                    today = dd + '-' + mm + '-' + yyyy;
+                    downloadLink.setAttribute('download', this.lang.summarySheetsAlt + "_" + today + ".pdf");
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                } else {
+                    alert(this.lang.tooMuchDatas);
                 }
-                if (mm < 10) {
-                    mm = '0' + mm;
-                }
-                today = dd + '-' + mm + '-' + yyyy;
-                downloadLink.setAttribute('download', this.lang.summarySheetsAlt + "_" + today + ".pdf");
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
 
                 this.loading = false;
             }, (err: any) => {
