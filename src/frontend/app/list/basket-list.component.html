@@ -72,11 +72,11 @@
                             <!-- Primary Info Line -->
                             <div class="resultRow newRow" [class.resultRow-mobile]="mobileMode">
                                 <div *ngIf="!mobileMode" class="checkThis">
-                                    <mat-checkbox color="primary" [checked]="row.checked" (change)="toggleRes($event,row.res_id)"
+                                    <mat-checkbox color="primary" [checked]="row.checked" (change)="toggleRes($event,row)"
                                         (click)="$event.stopPropagation();"></mat-checkbox>
                                 </div>
                                 <div class="resultCol" [class]="data.cssClasses.join(' ')" *ngFor="let data of displayedMainData"
-                                    (click)="launchEvent();" style="cursor: pointer;">
+                                     style="cursor: pointer;">
                                     <span *ngIf="data.value == 'alt_identifier'">
                                         <mat-icon [ngStyle]="{'color': row.priorityColor}" color="primary" class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x"
                                             title="{{row.statusLabel}}" style="cursor: crosshair;" (click)="$event.stopPropagation();filterThis(row.statusLabel)"></mat-icon><br />

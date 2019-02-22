@@ -327,14 +327,16 @@ export class BasketListComponent implements OnInit {
         return data;
     }
 
-    toggleRes(e: any, resId: any) {
+    toggleRes(e: any, row: any) {
         if (e.checked) {
-            if (this.selectedRes.indexOf(resId) === -1) {
-                this.selectedRes.push(resId);
+            if (this.selectedRes.indexOf(row.res_id) === -1) {
+                this.selectedRes.push(row.res_id);
+                row.checked = true;
             }
         } else {
-            let index = this.selectedRes.indexOf(resId);
+            let index = this.selectedRes.indexOf(row.res_id);
             this.selectedRes.splice(index, 1);
+            row.checked = false;
         }
     }
 
@@ -353,7 +355,11 @@ export class BasketListComponent implements OnInit {
     }
 
     open({ x, y }: MouseEvent, row: any) {
-    
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        row.checked = true;
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
         this.actionsList.open(x, y, row)
 
         // prevents default

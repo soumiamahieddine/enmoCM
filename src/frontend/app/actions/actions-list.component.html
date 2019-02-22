@@ -6,11 +6,11 @@
     [style.top]="contextMenuPosition.y"></span>
 
 <mat-menu #menu="matMenu">
-    <div style="text-align: center;font-size: 10px;opacity: 0.5;margin-top:-15px;">
-        <ng-container *ngIf="!contextMode || (contextMode && this.selectedRes.length > 0)">
+    <div style="text-align: center;font-size: 10px;opacity: 0.5;margin-top:-15px;padding:5px;">
+        <ng-container *ngIf="!contextMode || (contextMode && this.selectedRes.length > 1)">
             {{selectedRes.length}} {{lang.selectedElements}}
         </ng-container>
-        <ng-container *ngIf="contextMode && this.selectedRes.length == 0">
+        <ng-container *ngIf="contextMode && this.selectedRes.length == 1">
             {{this.contextMenuTitle}}
         </ng-container>
     </div>
