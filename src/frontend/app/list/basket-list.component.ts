@@ -355,6 +355,7 @@ export class BasketListComponent implements OnInit {
     }
 
     open({ x, y }: MouseEvent, row: any) {
+        
         let thisSelect = { checked : true };
         let thisDeselect = { checked : false };
         row.checked = true;

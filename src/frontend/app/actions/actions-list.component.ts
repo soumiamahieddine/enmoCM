@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -36,8 +36,9 @@ export class ActionsListComponent implements OnInit {
     constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) { }
 
     ngOnInit(): void { }
-
+      
     open(x: number, y: number, row: any) {
+
         this.loadActionList();
         // Adjust the menu anchor position
         this.contextMenuPosition.x = x + 'px';
@@ -83,7 +84,7 @@ export class ActionsListComponent implements OnInit {
     /* OPEN SPECIFIC ACTION */
     confirmAction() {
         this.dialog.open(ConfirmActionComponent, {
-            width: 'auto',
+            width: '500px',
             data: { 
                 contextMode : this.contextMode,
                 contextChrono : this.contextMenuTitle,
@@ -95,7 +96,7 @@ export class ActionsListComponent implements OnInit {
 
     closingAction() {
         this.dialog.open(ClosingActionComponent, {
-            width: 'auto',
+            width: '500px',
             data: { 
                 contextMode : this.contextMode,
                 contextChrono : this.contextMenuTitle,

@@ -114,7 +114,7 @@
                         </td>
                     </ng-container>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;" (swipeleft)="paginatorResultList.nextPage()"
-                        (swiperight)="paginatorResultList.previousPage()" (contextmenu)="open($event,row);$event.preventDefault();"></tr>
+                        (swiperight)="paginatorResultList.previousPage()" (contextmenu)="open($event,row);"></tr>
                 </table>
             </mat-card>
         </mat-sidenav-content>
