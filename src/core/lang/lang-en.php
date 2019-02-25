@@ -419,6 +419,7 @@ define('_SVA', 'SVA');
 define('_SVR', 'SVR');
 define('_REDACTOR', 'Redactor');
 define('_ASSIGNEE', 'Assignee');
+define('_DOCUMENT_WITH_NOTES', 'Document with notes');
 
 define('_SUMMARY_SHEET', 'Summary sheet');
 define('_UNDEFINED', 'Undefined');

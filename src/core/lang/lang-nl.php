@@ -419,6 +419,7 @@ define('_SVA', 'Stilzwijgende aanvaarding');
 define('_SVR', 'Stilzwijgende weigering');
 define('_REDACTOR', 'Opsteller');
 define('_ASSIGNEE', 'Toegekende persoon');
+define('_DOCUMENT_WITH_NOTES', 'Document met opmerkingen');
 
 define('_SUMMARY_SHEET', 'Summary sheet_TO_TRANSLATE');
 define('_UNDEFINED', 'Undefined_TO_TRANSLATE');
