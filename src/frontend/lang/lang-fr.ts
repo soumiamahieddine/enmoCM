@@ -879,4 +879,8 @@ export const LANG_FR = {
     "makeActionOn"                      : "Voulez-vous effectuer cette action sur",
     "tooMuchDatas"                      : "Trop de données à exporter",
     "warnTooMuchSelect"                      : "seul les 500 premiers éléments seront pris en compte si une action est lancé",
+    "elements"                      : "élément(s)",
+    "done"                      : "effectuée",
+    "noAction"                      : "Aucune action",
+    "warnLockRes"                      : "courrier(s) verrouillé(s) par un autre utilisateur.\n\nL\'action prendra en compte UNIQUEMENT les courriers NON verouillés",
 };

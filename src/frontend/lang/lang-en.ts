@@ -853,4 +853,8 @@ export const LANG_EN = {
     "makeActionOn"                      : "Do you want to do this action on",
     "tooMuchDatas"                      : "Too much datas to export",
     "warnTooMuchSelect"                      : "only 500 elements can be processed with an action",
+    "elements"                      : "element(s)",
+    "done"                      : "done",
+    "noAction"                      : "No action",
+    "warnLockRes"                      : "mail(s) are locked by an other user.\n\nThis action will process ONLY mails which are NOT locked",
 };

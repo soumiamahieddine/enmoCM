@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -19,12 +19,14 @@ export class ActionsListComponent implements OnInit {
     loading: boolean = false;
 
     @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
-    
+    @Output() triggerEvent = new EventEmitter<string>();
+
     contextMenuPosition = { x: '0px', y: '0px' };
     contextMenuTitle = '';
-    currentActionName = '';
+    currentAction: any = {};
     basketInfo: any = {};
     contextResId = 0;
+    currentLock: any = null;
 
     actionsList: any[] = [];
 
@@ -36,7 +38,7 @@ export class ActionsListComponent implements OnInit {
     constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) { }
 
     ngOnInit(): void { }
-      
+
     open(x: number, y: number, row: any) {
 
         this.loadActionList();
@@ -49,27 +51,28 @@ export class ActionsListComponent implements OnInit {
 
         // Opens the menu
         this.contextMenu.openMenu();
-        
+
         // prevents default
         return false;
     }
 
-    launchEvent(action: string, actionName: string) {
+    launchEvent(action: any) {
         let arrRes: any[] = [];
-        this.currentActionName = actionName;
+        this.currentAction = action;
 
         if (this.contextMode && this.selectedRes.length == 0) {
             arrRes = [this.contextResId];
         } else {
-            arrRes = this.selectedRes;  
+            arrRes = this.selectedRes;
         }
-        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', {resources : arrRes})
+        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: arrRes })
             .subscribe((data: any) => {
                 try {
                     if (data.lockedResources > 0) {
-                        alert(data.lockedResources + ' courrier(s) verrouillé(s) par un autre utilisateur.\n\nL\'action prendra en compte UNIQUEMENT les courriers NON verouillés.');
+                        alert(data.lockedResources + ' ' + this.lang.warnLockRes + '.');
                     }
-                    this[action]();
+                    this.lock(arrRes);
+                    this[action.component]();
                 }
                 catch (error) {
                     alert(this.lang.actionNotExist);
@@ -82,13 +85,21 @@ export class ActionsListComponent implements OnInit {
 
     /* OPEN SPECIFIC ACTION */
     confirmAction() {
-        this.dialog.open(ConfirmActionComponent, {
+        const dialogRef = this.dialog.open(ConfirmActionComponent, {
             width: '500px',
-            data: { 
-                contextMode : this.contextMode,
-                contextChrono : this.contextMenuTitle,
-                selectedRes : this.selectedRes,
-                actionName : this.currentActionName
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
             }
         });
     }
@@ -96,36 +107,54 @@ export class ActionsListComponent implements OnInit {
     closingAction() {
         this.dialog.open(ClosingActionComponent, {
             width: '500px',
-            data: { 
-                contextMode : this.contextMode,
-                contextChrono : this.contextMenuTitle,
-                selectedRes : this.selectedRes,
-                actionName : this.currentActionName
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction
             }
         });
     }
+    ////
+
+    endAction() {
+        this.triggerEvent.emit();
+        this.notify.success(this.lang.action + ' : "' + this.currentAction.label_action + '" ' + this.lang.done);
+    }
 
     loadActionList() {
-        
+
         if (JSON.stringify(this.basketInfo) != JSON.stringify(this.currentBasketInfo)) {
 
             this.basketInfo = JSON.parse(JSON.stringify(this.currentBasketInfo));
 
             this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/actions')
-            .subscribe((data: any) => {
-                if (data.actions.length > 0) {
-                    this.actionsList = data.actions;
-                } else {
-                    this.actionsList = [{
-                        label_action : 'Aucune action',
-                        component : ''
-                    }];
-                }
-                this.loading = false;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
+                .subscribe((data: any) => {
+                    if (data.actions.length > 0) {
+                        this.actionsList = data.actions;
+                    } else {
+                        this.actionsList = [{
+                            id: 0,
+                            label_action: this.lang.noAction,
+                            component: ''
+                        }];
+                    }
+                    this.loading = false;
+                }, (err: any) => {
+                    this.notify.handleErrors(err);
+                });
         }
-        
+    }
+
+    lock(arrRes: any) {
+        this.currentLock = setInterval(() => {
+            this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: arrRes })
+                .subscribe((data: any) => { }, (err: any) => { });
+        }, 50000);
+    }
+
+    unlock() {
+        console.log('unlock documents');
+        clearInterval(this.currentLock);
     }
 }

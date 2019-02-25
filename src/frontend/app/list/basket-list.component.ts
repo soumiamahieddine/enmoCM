@@ -209,6 +209,12 @@ export class BasketListComponent implements OnInit {
         this.filtersChange.emit();
     }
 
+    refreshDaoAfterAction() {
+        this.refreshDao();
+        const e:any = {checkd : false};
+        this.toggleAllRes(e); 
+    }
+
     filterThis(value: string) {
         this.filtersTool.setInputSearch(value);
     }

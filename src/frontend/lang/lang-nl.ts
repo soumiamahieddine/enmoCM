@@ -882,4 +882,8 @@ export const LANG_NL = {
     'AR_SVR'                            : 'AR SVR', //_TO_TRANSLATE
     "tooMuchDatas"                      : "Too much datas to export", //_TO_TRANSLATE
     "warnTooMuchSelect"                      : "only 500 elements can be processed with an action", //_TO_TRANSLATE
+    "elements"                      : "element(s)", //_TO_TRANSLATE
+    "done"                      : "done", //_TO_TRANSLATE
+    "noAction"                      : "No action", //_TO_TRANSLATE
+    "warnLockRes"                      : "mail(s) are locked by an other user.\n\nThis action will process ONLY mails which are NOT locked", //_TO_TRANSLATE 
 };

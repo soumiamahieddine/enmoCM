@@ -70,6 +70,7 @@ export class FiltersToolComponent implements OnInit {
     @Input('totalRes') totalRes: number;
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
+    @Output('refreshEventAfterAction') refreshEventAfterAction = new EventEmitter<string>();
     @Output('toggleAllRes') toggleAllRes = new EventEmitter<string>();
 
     constructor(public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder, private latinisePipe: LatinisePipe, public dialog: MatDialog) { }
@@ -112,6 +113,10 @@ export class FiltersToolComponent implements OnInit {
         this.filtersListService.updateListsProperties(this.listProperties);
 
         this.refreshEvent.emit();
+    }
+
+    refreshAfterAction() {
+        this.refreshEventAfterAction.emit();
     }
 
     setFilters(e: any, id: string) {

@@ -14,7 +14,7 @@
             {{this.contextMenuTitle}}
         </ng-container>
     </div>
-    <button *ngFor="let action of actionsList" [disabled]="action.component == ''" mat-menu-item (click)="launchEvent(action.component, action.label_action);">
+    <button *ngFor="let action of actionsList" [disabled]="action.component == ''" mat-menu-item (click)="launchEvent(action);">
         <span>{{action.label_action}}</span>
     </button>
 </mat-menu>
