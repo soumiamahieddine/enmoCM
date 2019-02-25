@@ -608,11 +608,13 @@ class ResourceListController
             }
         }
 
-        ResModel::update([
-            'set'   => ['locker_user_id' => $currentUser['id'], 'locker_time' => 'CURRENT_TIMESTAMP + interval \'1\' MINUTE'],
-            'where' => ['res_id in (?)'],
-            'data'  => [$resourcesToLock]
-        ]);
+        if (!empty($resourcesToLock)) {
+            ResModel::update([
+                'set'   => ['locker_user_id' => $currentUser['id'], 'locker_time' => 'CURRENT_TIMESTAMP + interval \'1\' MINUTE'],
+                'where' => ['res_id in (?)'],
+                'data'  => [$resourcesToLock]
+            ]);
+        }
 
         return $response->withJson(['lockedResources' => $locked]);
     }
