@@ -25,9 +25,10 @@ class ActionMethodController
 
     public static function terminateAction(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'resources']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'resources', 'basketName']);
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::arrayType($aArgs, ['resources']);
+        ValidatorModel::stringType($aArgs, ['basketName']);
 
         $set = ['locker_user_id' => null, 'locker_time' => null, 'modification_date' => 'CURRENT_TIMESTAMP'];
 
@@ -49,7 +50,7 @@ class ActionMethodController
                     'recordId'  => $resource,
                     'eventType' => 'ACTION#' . $resource,
                     'eventId'   => $aArgs['id'],
-                    'info'      => $action['label_action']
+                    'info'      => "{$aArgs['basketName']} : {$action['label_action']}"
                 ]);
 
                 //TODO M2M

@@ -571,7 +571,7 @@ class ResourceListController
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_id']]);
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_id', 'basket_name']]);
         $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
         $actionGroupBasket = ActionGroupBasketModel::get([
             'select'    => [1],
@@ -630,7 +630,7 @@ class ResourceListController
                 ActionMethodController::$method(['id' => $aArgs['actionId'], 'resId' => $resId]);
             }
         }
-        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $body['resources']]);
+        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $body['resources'], 'basketName' => $basket['basket_name']]);
 
         return $response->withStatus(204);
     }

@@ -80,7 +80,6 @@ class ActionsControllerTest extends TestCase
         $this->assertSame('index_mlb', $responseBody->action->action_page);
         $this->assertSame(true, $responseBody->action->history);
         $this->assertSame('apps', $responseBody->action->origin);
-        $this->assertSame(false, $responseBody->action->create_id);
 
         // FAIL READ
         $actionController = new \Action\controllers\ActionController();
