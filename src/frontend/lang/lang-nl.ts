@@ -881,4 +881,5 @@ export const LANG_NL = {
     'AR_SVA'                            : 'AR SVA', //_TO_TRANSLATE
     'AR_SVR'                            : 'AR SVR', //_TO_TRANSLATE
     "tooMuchDatas"                      : "Too much datas to export", //_TO_TRANSLATE
+    "warnTooMuchSelect"                      : "only 500 elements can be processed with an action", //_TO_TRANSLATE
 };

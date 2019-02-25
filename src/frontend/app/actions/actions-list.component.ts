@@ -63,9 +63,12 @@ export class ActionsListComponent implements OnInit {
         } else {
             arrRes = this.selectedRes;  
         }
-        this.http.put('../../rest/resources/lock', {resources : arrRes})
+        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', {resources : arrRes})
             .subscribe((data: any) => {
                 try {
+                    if (data.lockedResources > 0) {
+                        alert(data.lockedResources + ' courrier(s) verrouillé(s) par un autre utilisateur.\n\nL\'action prendra en compte UNIQUEMENT les courriers NON verouillés.');
+                    }
                     this[action]();
                 }
                 catch (error) {
@@ -73,11 +76,7 @@ export class ActionsListComponent implements OnInit {
                 }
                 this.loading = false;
             }, (err: any) => {
-                if (err.error.lockBy) {
-                    alert(this.lang.thisRes + " : " + arrRes.join(', ') + " " + this.lang.lockedBy + " " + err.error.lockBy.join(', '));
-                } else {
-                    this.notify.handleErrors(err);
-                } 
+                this.notify.handleErrors(err);
             });
     }
 

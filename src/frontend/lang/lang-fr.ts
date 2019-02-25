@@ -878,4 +878,5 @@ export const LANG_FR = {
     "addNote"                      : "Ajouter une annotation",
     "makeActionOn"                      : "Voulez-vous effectuer cette action sur",
     "tooMuchDatas"                      : "Trop de données à exporter",
+    "warnTooMuchSelect"                      : "seul les 500 premiers éléments seront pris en compte si une action est lancé",
 };

@@ -852,5 +852,5 @@ export const LANG_EN = {
     "addNote"                      : "Add note",
     "makeActionOn"                      : "Do you want to do this action on",
     "tooMuchDatas"                      : "Too much datas to export",
-
+    "warnTooMuchSelect"                      : "only 500 elements can be processed with an action",
 };

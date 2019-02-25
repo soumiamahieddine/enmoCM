@@ -84,3 +84,6 @@
         (click)="removeFilter('subEntities', i)">{{subEntity.label}}
         <i class="fa fa-times-circle"></i></span>
 </div>
+<div *ngIf="selectedRes.length > 1" style="text-align: center;font-size: 10px;opacity: 0.5;padding-top:10px;">
+    <b>{{selectedRes.length}}</b> {{lang.selectedElements}}&nbsp;&nbsp;<span *ngIf="selectedRes.length >= 500" color="warn" style="font-weight: bold;">({{lang.warnTooMuchSelect}})</span>
+</div>
