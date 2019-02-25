@@ -91,7 +91,8 @@ class ExportController
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
         $rawResourcesInBasket = ResModel::getOnView([
             'select'    => ['res_id'],
-            'where'     => [$whereClause]
+            'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
+            'data'      => [$body['resources']]
         ]);
         $allResourcesInBasket = [];
         foreach ($rawResourcesInBasket as $resource) {

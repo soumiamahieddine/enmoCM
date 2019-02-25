@@ -487,6 +487,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     changeLocation(resId: number, origin: string) {
+        //TODO Refonte route isLock
         this.http.put(this.coreUrl + 'rest/resources/lock', {resources : [resId]})
             .subscribe(() => {
                 let path = "/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + resId;

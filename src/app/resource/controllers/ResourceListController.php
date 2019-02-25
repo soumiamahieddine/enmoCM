@@ -29,6 +29,7 @@ use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use Resource\models\ResourceListModel;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\AutoCompleteController;
@@ -553,6 +554,67 @@ class ResourceListController
         }
 
         return $response->withJson(['actions' => $actions]);
+    }
+
+    public function lock(Request $request, Response $response, array $aArgs)
+    {
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause']]);
+        $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $resources = ResModel::getOnView([
+            'select'    => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
+            'data'      => [$body['resources']]
+        ]);
+        $resourcesInBasket = [];
+        foreach ($resources as $resource) {
+            $resourcesInBasket[] = $resource['res_id'];
+        }
+
+        foreach ($body['resources'] as $resId) {
+            if (!in_array($resId, $resourcesInBasket)) {
+                return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+            }
+        }
+
+        $locked = 0;
+        $resourcesToLock = [];
+        foreach ($resources as $key => $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+
+            if (!$lock) {
+                $resourcesToLock[] = $resource['res_id'];
+            } else {
+                ++$locked;
+            }
+        }
+
+        ResModel::update([
+            'set'   => ['locker_user_id' => $currentUser['id'], 'locker_time' => 'CURRENT_TIMESTAMP + interval \'1\' MINUTE'],
+            'where' => ['res_id in (?)'],
+            'data'  => [$resourcesToLock]
+        ]);
+
+        return $response->withJson(['lockedResources' => $locked]);
     }
 
     public static function listControl(array $aArgs)
