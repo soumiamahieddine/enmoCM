@@ -89,7 +89,7 @@ export class TemplateAdministrationComponent implements OnInit {
                         this.template = data.template;
                         this.headerService.setHeader(this.lang.templateModification, this.template.template_label);
                         this.loading  = false;
-                        if(this.template.template_type=='HTML'){
+                        if(this.template.template_type=='HTML' || this.template.template_type=='OFFICE_HTML'){
                             this.initMce();
                         }
                         if (this.template.template_style == '') {

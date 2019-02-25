@@ -106,7 +106,7 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if ($data['template_type'] == 'OFFICE') {
+        if ($data['template_type'] == 'OFFICE' || $data['template_type'] == 'OFFICE_HTML') {
             if (empty($data['jnlpUniqueId']) && empty($data['uploadedFile'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Template file is missing']);
             }
@@ -186,7 +186,7 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if ($data['template_type'] == 'OFFICE' && (!empty($data['jnlpUniqueId']) || !empty($data['uploadedFile']))) {
+        if (($data['template_type'] == 'OFFICE' || $data['template_type'] == 'OFFICE_HTML') && (!empty($data['jnlpUniqueId']) || !empty($data['uploadedFile']))) {
             if (!empty($data['jnlpUniqueId'])) {
                 if (!empty($template['template_style']) && !Validator::stringType()->notEmpty()->validate($data['template_style'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
@@ -347,7 +347,7 @@ class TemplateController
         ValidatorModel::notEmpty($aArgs, ['data']);
         ValidatorModel::arrayType($aArgs, ['data']);
 
-        $availableTypes = ['HTML', 'TXT', 'OFFICE'];
+        $availableTypes = ['HTML', 'TXT', 'OFFICE', 'OFFICE_HTML'];
         $data = $aArgs['data'];
 
         $check = Validator::stringType()->notEmpty()->validate($data['template_label']);
@@ -356,6 +356,10 @@ class TemplateController
 
         if ($data['template_type'] == 'HTML' || $data['template_type'] == 'TXT') {
             $check = $check && Validator::stringType()->notEmpty()->validate($data['template_content']);
+        }
+
+        if ($data['template_type'] == 'OFFICE_HTML') {
+            $check = $check && Validator::stringType()->validate($data['template_content']);
         }
 
         return $check;
