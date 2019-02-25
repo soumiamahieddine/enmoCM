@@ -493,51 +493,6 @@ class ResController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function lock(Request $request, Response $response, array $aArgs)
-    {
-        $body = $request->getParsedBody();
-        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
-        }
-
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        $lockers = [];
-
-        foreach ($body['resources'] as $resource) {
-            if (!Validator::intVal()->notEmpty()->validate($resource) || !ResController::hasRightByResId(['resId' => $resource, 'userId' => $GLOBALS['userId']])) {
-                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-            }
-        }
-
-        $resources = ResModel::get(['select' => ['locker_user_id', 'locker_time'], 'where' => ['res_id in (?)'], 'data' => $body['resources']]);
-        foreach ($resources as $resource) {
-            $lock = true;
-            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
-                $lock = false;
-            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
-                $lock = false;
-            } elseif (strtotime($resource['locker_time']) < time()) {
-                $lock = false;
-            }
-
-            if ($lock) {
-                $lockers[] = UserModel::getLabelledUserById(['id' => $resource['locker_user_id']]);
-            }
-        }
-
-        if (!empty($lockers)) {
-            return $response->withStatus(403)->withJson(['lockBy' => $lockers]);
-        }
-
-        ResModel::update([
-            'set'   => ['locker_user_id' => $currentUser['id'], 'locker_time' => 'CURRENT_TIMESTAMP + interval \'1\' MINUTE'],
-            'where' => ['res_id in (?)'],
-            'data'  => [$body['resources']]
-        ]);
-
-        return $response->withStatus(204);
-    }
-
     public function getNotesCountForCurrentUserById(Request $request, Response $response, array $aArgs)
     {
         return $response->withJson(NoteModel::countByResId(['resId' => $aArgs['resId'], 'login' => $GLOBALS['userId']]));

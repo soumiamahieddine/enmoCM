@@ -14,6 +14,7 @@
 
 namespace Resource\controllers;
 
+use Action\controllers\ActionMethodController;
 use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\ActionGroupBasketModel;
@@ -550,10 +551,75 @@ class ResourceListController
         }
 
         if (!empty($actions)) {
-            $actions = ActionModel::get(['select' => ['label_action', 'component'], 'where' => ['id in (?)'], 'data' => [$actions], 'orderBy' => ['label_action']]);
+            $actions = ActionModel::get(['select' => ['id', 'label_action', 'component'], 'where' => ['id in (?)'], 'data' => [$actions], 'orderBy' => ['label_action']]);
         }
 
         return $response->withJson(['actions' => $actions]);
+    }
+
+    public function setAction(Request $request, Response $response, array $aArgs)
+    {
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_id']]);
+        $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
+        $actionGroupBasket = ActionGroupBasketModel::get([
+            'select'    => [1],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'id_action = ?'],
+            'data'      => [$basket['basket_id'], $group['group_id'], $aArgs['actionId']]
+        ]);
+        if (empty($actionGroupBasket)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group basket']);
+        }
+
+        //TODO Check locked ???
+        $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $resources = ResModel::getOnView([
+            'select'    => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
+            'data'      => [$body['resources']]
+        ]);
+        $resourcesInBasket = [];
+        foreach ($resources as $resource) {
+            $resourcesInBasket[] = $resource['res_id'];
+        }
+
+        foreach ($body['resources'] as $resId) {
+            if (!in_array($resId, $resourcesInBasket)) {
+                return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+            }
+        }
+
+        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component']]);
+        if (empty($action['component'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
+        }
+
+        if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
+        }
+
+        foreach ($body['resources'] as $resId) {
+            $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
+
+            if (!empty($method)) {
+                ActionMethodController::$method(['id' => $aArgs['actionId'], 'resId' => $resId]);
+            }
+            ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resId' => $resId]);
+        }
+
+        return $response->withStatus(204);
     }
 
     public function lock(Request $request, Response $response, array $aArgs)
@@ -562,6 +628,7 @@ class ResourceListController
         if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
         }
+        $body['resources'] = array_slice($body['resources'], 0, 500);
 
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
