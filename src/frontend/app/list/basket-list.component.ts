@@ -271,7 +271,7 @@ export class BasketListComponent implements OnInit {
                             content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.lang[visa.mode + 'User'] + '">' + user + '</span></span>';
                         }
 
-                        if (visa.current && key > 0) {
+                        if (visa.current && key >= 0) {
                             content = '<b color="primary">' + content + '</b>';
                         }
 
@@ -284,7 +284,14 @@ export class BasketListComponent implements OnInit {
                     if (index > 0) {
                         formatWorkflow = formatWorkflow.slice(index - 1);
                         formatWorkflow = formatWorkflow.reverse();
-                        formatWorkflow = formatWorkflow.slice((formatWorkflow.length - index) - 1);
+                        const indexReverse = key.displayValue.map((e: any) => { return e.current; }).reverse().indexOf(true);
+                        if (indexReverse > 1) {
+                            formatWorkflow = formatWorkflow.slice(indexReverse - 1);
+                        }
+                        formatWorkflow = formatWorkflow.reverse();
+                    } else if (index === 0) {
+                        formatWorkflow = formatWorkflow.reverse();
+                        formatWorkflow = formatWorkflow.slice(index - 2);
                         formatWorkflow = formatWorkflow.reverse();
                     } else if (index === -1) {
                         formatWorkflow = formatWorkflow.slice(formatWorkflow.length - 2);
@@ -292,8 +299,7 @@ export class BasketListComponent implements OnInit {
                     if (index >= 2 || (index == -1 && key.displayValue.length >= 3)) {
                         formatWorkflow.unshift('...');
                     }
-                    //console.log();
-                    if (index != -1 && index - 2 <= key.displayValue.length && key.displayValue.length >= 3) {
+                    if (index != -1 && index - 2 <= key.displayValue.length && index + 2 < key.displayValue.length && key.displayValue.length >= 3) {
                         formatWorkflow.push('...');
                     }
 
