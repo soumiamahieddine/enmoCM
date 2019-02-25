@@ -629,8 +629,8 @@ class ResourceListController
             if (!empty($method)) {
                 ActionMethodController::$method(['id' => $aArgs['actionId'], 'resId' => $resId]);
             }
-            ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resId' => $resId]);
         }
+        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $body['resources']]);
 
         return $response->withStatus(204);
     }
