@@ -12,6 +12,12 @@ DROP VIEW IF EXISTS res_view_letterbox;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
 ALTER TABLE res_letterbox ADD COLUMN external_signatory_book_id integer;
 
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS acknowledgment_creation_date;
+ALTER TABLE res_letterbox ADD COLUMN acknowledgment_creation_date timestamp without time zone;
+
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS acknowledgment_send_date;
+ALTER TABLE res_letterbox ADD COLUMN acknowledgment_send_date timestamp without time zone;
+
 ALTER TABLE users DROP COLUMN IF EXISTS external_id;
 ALTER TABLE users ADD COLUMN external_id json DEFAULT '{}';
 
@@ -197,6 +203,9 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.opinion_limit_date,
     r.department_number_id,
     r.barcode,
+    r.external_signatory_book_id,
+    r.acknowledgment_creation_date,
+    r.acknowledgment_send_date,
     r.custom_t1 AS doc_custom_t1,
     r.custom_t2 AS doc_custom_t2,
     r.custom_t3 AS doc_custom_t3,
