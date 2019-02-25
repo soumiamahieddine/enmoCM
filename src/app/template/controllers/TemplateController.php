@@ -106,7 +106,11 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if ($data['template_type'] == 'OFFICE' || $data['template_type'] == 'OFFICE_HTML') {
+        if($data['template_type'] == 'OFFICE_HTML' && !$data['jnlpUniqueId'] && !$data['uploadedFile'] && !$data['template_content']){
+            return $response->withStatus(400)->withJson(['errors' => 'You must complete at least one of the two templates']);
+        }
+
+        if ($data['template_type'] == 'OFFICE' || ($data['template_type'] == 'OFFICE_HTML' && $data['jnlpUniqueId'] && $data['uploadedFile'])) {
             if (empty($data['jnlpUniqueId']) && empty($data['uploadedFile'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Template file is missing']);
             }
