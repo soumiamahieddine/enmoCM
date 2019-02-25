@@ -25,8 +25,9 @@ class ActionMethodController
 
     public static function terminateAction(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'resId']);
-        ValidatorModel::intVal($aArgs, ['id', 'resId']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'resources']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['resources']);
 
         $set = ['locker_user_id' => null, 'locker_time' => null, 'modification_date' => 'CURRENT_TIMESTAMP'];
 
@@ -37,20 +38,22 @@ class ActionMethodController
 
         ResModel::update([
             'set'   => $set,
-            'where' => ['res_id = ?'],
-            'data'  => [$aArgs['resId']]
+            'where' => ['res_id in (?)'],
+            'data'  => [$aArgs['resources']]
         ]);
 
         if ($action['history'] == 'Y') {
-            HistoryController::add([
-                'tableName' => 'actions',
-                'recordId'  => $aArgs['resId'],
-                'eventType' => 'ACTION#' . $aArgs['id'],
-                'eventId'   => $aArgs['id'],
-                'info'      => $action['label_action']
-            ]);
+            foreach ($aArgs['resources'] as $resource) {
+                HistoryController::add([
+                    'tableName' => 'actions',
+                    'recordId'  => $resource,
+                    'eventType' => 'ACTION#' . $resource,
+                    'eventId'   => $aArgs['id'],
+                    'info'      => $action['label_action']
+                ]);
 
-            //TODO M2M
+                //TODO M2M
+            }
         }
 
         return true;

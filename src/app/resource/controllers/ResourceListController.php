@@ -582,7 +582,6 @@ class ResourceListController
             return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group basket']);
         }
 
-        //TODO Check locked ???
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
         $resources = ResModel::getOnView([
@@ -598,6 +597,20 @@ class ResourceListController
         foreach ($body['resources'] as $resId) {
             if (!in_array($resId, $resourcesInBasket)) {
                 return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+            }
+        }
+
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+            if ($lock) {
+                return $response->withStatus(403)->withJson(['errors' => 'One of resources is lock']);
             }
         }
 
@@ -658,7 +671,7 @@ class ResourceListController
 
         $locked = 0;
         $resourcesToLock = [];
-        foreach ($resources as $key => $resource) {
+        foreach ($resources as $resource) {
             $lock = true;
             if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
                 $lock = false;

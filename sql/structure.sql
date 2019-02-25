@@ -13,22 +13,16 @@ SET search_path = public, pg_catalog;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
-CREATE SEQUENCE actions_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 500
-  CACHE 1;
-
 CREATE TABLE actions
 (
-  id integer NOT NULL DEFAULT nextval('actions_id_seq'::regclass),
+  id serial NOT NULL,
   keyword character varying(32) NOT NULL DEFAULT ''::bpchar,
   label_action character varying(255),
   id_status character varying(10),
   is_system character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   action_page character varying(255),
+  component CHARACTER VARYING (128),
   history character(1) NOT NULL DEFAULT 'N'::bpchar,
   origin character varying(255) NOT NULL DEFAULT 'apps'::bpchar,
   create_id  character(1) NOT NULL DEFAULT 'N'::bpchar,
