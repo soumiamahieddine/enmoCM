@@ -366,12 +366,20 @@ class ExportController
                         $content[] = $resource['enthree.entity_type'];
                     } elseif ($value['value'] == 'getSenders') {
                         $senders = ExportController::getSenders(['chunkedResIds' => $aArgs['chunkedResIds']]);
-                        $aSenders = empty($senders[$resource['res_id']]) ? [] : $senders[$resource['res_id']];
-                        $content[] = implode("\n\n", $aSenders);
+                        if (!empty($senders[$resource['res_id']]) && count($senders[$resource['res_id']]) > 2) {
+                            $content[] = count($senders[$resource['res_id']]) . ' ' . _CONTACTS;
+                        } else {
+                            $aSenders = empty($senders[$resource['res_id']]) ? [] : $senders[$resource['res_id']];
+                            $content[] = implode("\n\n", $aSenders);
+                        }
                     } elseif ($value['value'] == 'getRecipients') {
                         $recipients = ExportController::getRecipients(['chunkedResIds' => $aArgs['chunkedResIds']]);
-                        $aRecipients = empty($recipients[$resource['res_id']]) ? [] : $recipients[$resource['res_id']];
-                        $content[] = implode("\n\n", $aRecipients);
+                        if (!empty($recipients[$resource['res_id']]) && count($recipients[$resource['res_id']]) > 2) {
+                            $content[] = count($recipients[$resource['res_id']]) . ' ' . _CONTACTS;
+                        } else {
+                            $aRecipients = empty($recipients[$resource['res_id']]) ? [] : $recipients[$resource['res_id']];
+                            $content[] = implode("\n\n", $aRecipients);
+                        }
                     } elseif ($value['value'] == 'getTypist') {
                         $content[] = UserModel::getLabelledUserById(['login' => $resource['typist']]);
                     } elseif ($value['value'] == 'getAssignee') {

@@ -338,6 +338,16 @@ class SummarySheetController
                                 $oldContacts[] = ['format' => $format];
                             }
                         }
+                        if (!empty($oldContacts) && count($oldContacts) > 2) {
+                            $nbOldContacts = count($oldContacts);
+                            $oldContacts = [];
+                            $oldContacts[0]['format'] = $nbOldContacts . ' ' . _CONTACTS;
+                        }
+                        if (!empty($resourcesContacts) && count($resourcesContacts) > 2) {
+                            $nbResourcesContacts = count($resourcesContacts);
+                            $resourcesContacts = [];
+                            $resourcesContacts[0]['format'] = $nbResourcesContacts . ' ' . _CONTACTS;
+                        }
                         if ($mlbValue['category_id'] == 'outgoing') {
                             $senders    = $resourcesContacts;
                             $recipients = $oldContacts;
