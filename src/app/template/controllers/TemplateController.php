@@ -360,6 +360,7 @@ class TemplateController
 
         if ($data['template_type'] == 'OFFICE_HTML') {
             $check = $check && Validator::stringType()->validate($data['template_content']);
+            $check = $check && Validator::stringType()->notEmpty()->validate($data['template_attachment_type']);
         }
 
         return $check;
