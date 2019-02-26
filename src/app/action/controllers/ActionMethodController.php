@@ -24,6 +24,7 @@ class ActionMethodController
     const COMPONENTS_ACTIONS = [
         'confirmAction' => null,
         'closeMailAction' => 'closeMailAction',
+        'updateDepartureDateAction' => 'updateDepartureDateAction',
     ];
 
     public static function terminateAction(array $aArgs)
@@ -75,8 +76,8 @@ class ActionMethodController
 
     public static function closeMailAction(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'resId']);
-        ValidatorModel::intVal($aArgs, ['id', 'resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
 
         ResModel::updateExt(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
 
@@ -150,6 +151,16 @@ class ActionMethodController
                 CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
             }
         }
+
+        return true;
+    }
+
+    public static function updateDepartureDateAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        ResModel::update(['set' => ['departure_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?',  'departure_date is null'], 'data' => [$aArgs['resId']]]);
 
         return true;
     }

@@ -49,6 +49,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SIMPLE_CONFIRM_WITH_UPDATE_DATE</LABEL>
         <NAME>confirm_status_with_update_date</NAME>
         <DESC>_SIMPLE_CONFIRM_DESC</DESC>
+        <component>updateDepartureDateAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

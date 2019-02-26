@@ -6,6 +6,7 @@ import { MatDialog, MatMenuTrigger } from '@angular/material';
 
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
 import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
+import { UpdateDepartureDateActionComponent } from './update-departure-date-action/update-departure-date-action.component';
 
 @Component({
     selector: 'app-actions-list',
@@ -107,6 +108,26 @@ export class ActionsListComponent implements OnInit {
 
     closeMailAction() {
         const dialogRef = this.dialog.open(CloseMailActionComponent, {
+            width: '500px',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
+            }
+        });
+    }
+
+    updateDepartureDateAction() {
+        const dialogRef = this.dialog.open(UpdateDepartureDateActionComponent, {
             width: '500px',
             data: {
                 contextMode: this.contextMode,
