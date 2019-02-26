@@ -36,7 +36,7 @@ class NoteController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $aNotes = NoteModel::getByResId(['select' => ['notes.id', 'firstname', 'lastname', 'entity_label', 'note_text', 'date_note'], 'resId' => $aArgs['resId'], 'orderBy' => ['date_note DESC']]);
+        $aNotes = NoteModel::getByResId(['select' => ['notes.id', 'firstname', 'lastname', 'entity_label', 'note_text', 'creation_date'], 'resId' => $aArgs['resId'], 'orderBy' => ['creation_date DESC']]);
 
         return $response->withJson($aNotes);
     }
@@ -105,10 +105,10 @@ class NoteController
         $pdf->AddPage();
 
         foreach ($aArgs['ids'] as $noteId) {
-            $note = NoteModel::getById(['id' => $noteId, 'select' => ['note_text', 'date_note', 'user_id']]);
+            $note = NoteModel::getById(['id' => $noteId, 'select' => ['note_text', 'creation_date', 'user_id']]);
 
             $user = UserModel::getByLogin(['login' => $note['user_id'], 'select' => ['firstname', 'lastname']]);
-            $date = new \DateTime($note['date_note']);
+            $date = new \DateTime($note['creation_date']);
             $date = $date->format('d-m-Y H:i');
 
             $pdf->Cell(0, 20, "{$user['firstname']} {$user['lastname']} : {$date}", 1, 2, 'C', false);

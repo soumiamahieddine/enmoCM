@@ -34,7 +34,7 @@ if (isset($_REQUEST['identifier'])) {
     $query = "SELECT ";
     $query .= "DISTINCT(notes.id), ";
     $query .= "user_id, ";
-    $query .= "date_note, ";
+    $query .= "creation_date, ";
     $query .= "note_text ";
     $query .= "FROM ";
     $query .= "notes ";
@@ -43,11 +43,8 @@ if (isset($_REQUEST['identifier'])) {
     $query .= "on ";
     $query .= "notes.id = note_entities.note_id ";
     $query .= "WHERE ";
-    $query .= "coll_id = ? ";
-    $arrayPDO = array($_SESSION['collection_id_choice']);
-    $query .= "AND ";
     $query .= "identifier = ? ";
-    $arrayPDO = array_merge($arrayPDO, array($_REQUEST['identifier']));
+    $arrayPDO = [$_REQUEST['identifier']];
     $query .= "AND ";
     $query .= "( ";
     $query .= "( ";
@@ -70,7 +67,7 @@ if (isset($_REQUEST['identifier'])) {
     $query .= "OR ";
     $query .= "user_id = '" . $_SESSION['user']['UserId'] . "' ";
     $query .= ") ";
-    $query .= " order by date_note desc";
+    $query .= " order by creation_date desc";
 
     $stmt = $db->query($query, $arrayPDO);
 
@@ -118,7 +115,7 @@ if (isset($_REQUEST['identifier'])) {
 
         $return .= functions::xssafe($firstname) . ' ' . functions::xssafe($lastname);
         $return .= ', ';
-        $return .= functions::xssafe($Core_Tools->format_date_db($return_db->date_note));
+        $return .= functions::xssafe($Core_Tools->format_date_db($return_db->creation_date));
                                     
         $return .= '</div>';
 

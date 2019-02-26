@@ -1,12 +1,11 @@
 <?php
 $targetTab = $_REQUEST['targetTab'];
 $res_id = $_REQUEST['resId'];
-$coll_id = $_REQUEST['collId'];
 
 require_once 'modules/notes/class/class_modules_tools.php';
 $notes_tools    = new notes();
 //Count notes
-$nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
+$nbr_notes = $notes_tools->countUserNotes($res_id);
 if ($nbr_notes == 0){
     $class = 'nbResZero';
     $style2 = 'display:none;';

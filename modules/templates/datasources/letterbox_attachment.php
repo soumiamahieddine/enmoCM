@@ -134,12 +134,12 @@ if (!empty($res_id)) {
 
     // Notes
     $datasources['notes'] = array();
-    $stmt = $dbDatasource->query('SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE coll_id = ? AND identifier = ?', array($coll_id, $res_id));
+    $stmt = $dbDatasource->query('SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE identifier = ?', array($res_id));
 
     $countNote = 1;
     while ($notes = $stmt->fetchObject()) {
         $datasources['notes'][0]['note_text'.$countNote] = $notes->note_text;
-        $datasources['notes'][0]['date_note'.$countNote] = $notes->date_note;
+        $datasources['notes'][0]['date_note'.$countNote] = $notes->creation_date;
         ++$countNote;
     }
 
@@ -210,7 +210,7 @@ if (!empty($res_id)) {
         $stmt2 = $dbDatasource->query('SELECT u.*, ue.user_role as role FROM users u, users_entities ue WHERE u.user_id = ? AND ue.user_id = u.user_id AND ue.primary_entity = ?', [$avis->item_id, 'Y']);
         $avisContact = $stmt2->fetchObject();
         $stmt3 = $dbDatasource->query('SELECT en.entity_id, en.entity_label FROM entities en, users_entities ue WHERE ue.user_id = ? AND primary_entity = ? AND ue.entity_id = en.entity_id', [$avis->item_id, 'Y']);
-        $stmt4 = $dbDatasource->query('SELECT note_text, date_note FROM notes WHERE user_id = ? AND identifier = ? AND note_text LIKE ? ORDER BY date_note ASC', [$avis->item_id, $doc['res_id'], '[Avis n°%']);
+        $stmt4 = $dbDatasource->query('SELECT note_text, creation_date FROM notes WHERE user_id = ? AND identifier = ? AND note_text LIKE ? ORDER BY creation_date ASC', [$avis->item_id, $doc['res_id'], '[Avis n°%']);
 
         $avisEntity = $stmt3->fetchObject();
         $avisContent = $stmt4->fetchObject();
@@ -222,7 +222,7 @@ if (!empty($res_id)) {
                 $datasources['avis'][0]['entity'.$i] = str_replace($avisEntity->entity_id.': ', '', $avisEntity->entity_label);
                 if ($avisContent) {
                     $datasources['avis'][0]['note'.$i] = $avisContent->note_text;
-                    $datasources['avis'][0]['date_note'.$i] = $avisContent->note_text;
+                    $datasources['avis'][0]['date_note'.$i] = $avisContent->creation_date;
                 }
             }
         }

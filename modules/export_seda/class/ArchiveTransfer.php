@@ -575,7 +575,7 @@ class ArchiveTransfer
                     $content->CreatedDate = $date->format('Y-m-d');
                 } elseif ($type == "Note") {
                     $content->DocumentType = "Note";
-                    $date = new DateTime($object->date_note);
+                    $date = new DateTime($object->creation_date);
                     $content->CreatedDate = $date->format('Y-m-d');
                 } elseif ($type == "Email") {
                     $content->DocumentType = "Courriel";

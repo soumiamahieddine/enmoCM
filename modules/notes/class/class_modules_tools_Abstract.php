@@ -170,13 +170,13 @@ abstract class notes_Abstract
          }
     }
     
-    public function countUserNotes($id, $coll_id) {
+    public function countUserNotes($id) {
         $not_nbr = 0;
         $db = new Database();
 
-        $stmt = $db->query("SELECT id, identifier, user_id, date_note, note_text FROM "
+        $stmt = $db->query("SELECT id, identifier, user_id, creation_date, note_text FROM "
                             . NOTES_TABLE 
-                            . " WHERE identifier = ? and coll_id = ? order by date_note desc", array($id, $coll_id));
+                            . " WHERE identifier = ? order by creation_date desc", array($id));
 
        while ($res = $stmt->fetchObject())
        {
@@ -206,10 +206,10 @@ abstract class notes_Abstract
         $userNotes = array();
         $db = new Database();
 
-        $stmt = $db->query("SELECT id, identifier, user_id, date_note, note_text FROM "
+        $stmt = $db->query("SELECT id, identifier, user_id, creation_date, note_text FROM "
                             . NOTES_TABLE 
-                            . " WHERE identifier = ? and coll_id = ? order by date_note desc",
-                            array($id, $coll_id));
+                            . " WHERE identifier = ? order by creation_date desc",
+                            array($id));
 
        while ($res = $stmt->fetchObject())
        {
@@ -222,7 +222,7 @@ abstract class notes_Abstract
                     array('id' => $res->id, //ID
                           'label' => functions::show_string($res->note_text), //Label
                           'author' => $res->user_id, //Author 
-                          'date' => $res->date_note //Date
+                          'date' => $res->creation_date //Date
                         )
                 );
            } else {
@@ -237,7 +237,7 @@ abstract class notes_Abstract
                         array('id' => $res->id, //ID
                               'label' => functions::show_string($res->note_text), //Label
                               'author' => $res->user_id, //Author 
-                              'date' => $res->date_note //Date
+                              'date' => $res->creation_date //Date
                             )
                     );
                 }

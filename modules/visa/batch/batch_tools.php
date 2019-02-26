@@ -158,7 +158,7 @@ function Bt_createAttachment($aArgs = [])
 {
     if (!empty($aArgs['noteContent'])) {
         $GLOBALS['db']->query(
-            "INSERT INTO notes (identifier, tablename, user_id, date_note, note_text, coll_id) VALUES (?, 'res_letterbox', 'superadmin', CURRENT_TIMESTAMP, ?, 'letterbox_coll')",
+            "INSERT INTO notes (identifier, user_id, creation_date, note_text) VALUES (?, 'superadmin', CURRENT_TIMESTAMP, ?)",
             [$aArgs['res_id_master'], $aArgs['noteContent']]
         );
     }
@@ -226,7 +226,7 @@ function Bt_refusedSignedMail($aArgs = [])
 {
     if (!empty($aArgs['noteContent'])) {
         $GLOBALS['db']->query(
-            "INSERT INTO notes (identifier, tablename, user_id, date_note, note_text, coll_id) VALUES (?, 'res_letterbox', 'superadmin', CURRENT_TIMESTAMP, ?, 'letterbox_coll')",
+            "INSERT INTO notes (identifier, user_id, creation_date, note_text) VALUES (?, 'superadmin', CURRENT_TIMESTAMP, ?)",
             [$aArgs['resIdMaster'], $aArgs['noteContent']]
         );
     }

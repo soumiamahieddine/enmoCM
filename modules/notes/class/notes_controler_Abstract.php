@@ -75,16 +75,16 @@ abstract class notes_controler_Abstract
             } else {
                 $query =
                     "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, "
-                    . "date_note, user_id, coll_id, tablename) values"
-                    . " (?, ?, CURRENT_TIMESTAMP, ?, ?, ?)";
+                    . "creation_date, user_id) values"
+                    . " (?, ?, CURRENT_TIMESTAMP, ?)";
                     
-                    $stmt = $db->query($query, array($resId, $noteContent, $typist, $collId, $table));
+                    $stmt = $db->query($query, array($resId, $noteContent, $typist));
 
                     $hist = new history();
                     $stmt = $db->query(
                         "SELECT id FROM " . NOTES_TABLE . " WHERE "
-                        . "identifier = ? and user_id = ? and coll_id = ? order by id desc",
-                        array($resId, $typist, $collId)
+                        . "identifier = ? and user_id = ? order by id desc",
+                        array($resId, $typist)
                     );
                     $res = $stmt->fetchObject();
                     $id = $res->id;

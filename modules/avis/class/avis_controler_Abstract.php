@@ -402,12 +402,11 @@ abstract class avis_controler_Abstract
             } else {
                 $query = 'UPDATE '.NOTES_TABLE
                         .' SET note_text = ?'
-                        .', date_note = CURRENT_TIMESTAMP'
+                        .', creation_date = CURRENT_TIMESTAMP'
                         .' WHERE identifier = ?'
-                        ." AND note_text LIKE '[POUR AVIS]%'"
-                        .' AND coll_id = ?';
+                        ." AND note_text LIKE '[POUR AVIS]%'";
 
-                $stmt = $db->query($query, array($noteContent, $resId, $collId));
+                $stmt = $db->query($query, array($noteContent, $resId));
 
                 $hist = new history();
                 $hist->add(

@@ -115,7 +115,7 @@ class SummarySheetController
         foreach ($units as $unit) {
             if ($unit['unit'] == 'notes') {
                 $data['notes'] = NoteModel::get([
-                    'select'   => ['id', 'note_text', 'user_id', 'date_note', 'identifier'],
+                    'select'   => ['id', 'note_text', 'user_id', 'creation_date', 'identifier'],
                     'where'    => ['identifier in (?)'],
                     'data'     => [$tmpIds],
                     'order_by' => ['identifier']]);
@@ -535,7 +535,7 @@ class SummarySheetController
                         if ($allowed) {
                             $notes[] = [
                                 'user'  => UserModel::getLabelledUserById(['login' => $rawNote['user_id']]),
-                                'date'  => TextFormatModel::formatDate($rawNote['date_note']),
+                                'date'  => TextFormatModel::formatDate($rawNote['creation_date']),
                                 'note'  => $rawNote['note_text']
                             ];
                         }

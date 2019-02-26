@@ -21,7 +21,7 @@ $db = new Database();
 $sec = new security();
 $table = $sec->retrieve_table_from_coll($_REQUEST['coll_id']);
 $date = $db->current_datetime();
-$query = "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, date_note, user_id, coll_id, tablename) 
+$query = "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, creation_date, user_id, coll_id, tablename) 
           VALUES(".$_REQUEST['id'] . ", '" . $_REQUEST['fieldNotes']. "', " . $date . ", '"
 	. functions::xssafe($_SESSION['user']['UserId']) . "', '"
 	. functions::xssafe($_REQUEST['coll_id']) . "', '"

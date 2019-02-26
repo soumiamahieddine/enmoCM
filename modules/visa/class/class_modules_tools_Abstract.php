@@ -1352,27 +1352,19 @@ abstract class PdfNotes_Abstract extends FPDI
         $db2 = new Database();
         foreach ($tab as $id) {
             //Check if ID exists
-            $arrayPDO = array();
-            if (!empty($collId)) {
-                $where = ' and coll_id = :collId';
-                $arrayPDO = array_merge($arrayPDO, array(':collId' => $collId));
-            }
-            $arrayPDO = array_merge($arrayPDO, array(':Id' => $id));
             $stmt2 = $db2->query(
-                'SELECT n.identifier, n.date_note, n.user_id, n.note_text, u.lastname, '
+                'SELECT n.identifier, n.creation_date, n.user_id, n.note_text, u.lastname, '
                 .'u.firstname FROM '.NOTES_TABLE.' n inner join '.USERS_TABLE
-                .' u on n.user_id  = u.user_id WHERE n.id = :Id '.$where,
-                $arrayPDO
+                .' u on n.user_id  = u.user_id WHERE n.id = :Id ',
+                [':Id' => $id]
             );
 
             if ($stmt2->rowCount() > 0) {
                 $line = $stmt2->fetchObject();
                 $user = $request->show_string($line->lastname.' '.$line->firstname);
                 $notes = str_replace('←', '<=', $line->note_text);
-                $userId = $line->user_id;
-                $date = explode('-', date('d-m-Y', strtotime($line->date_note)));
-                $date = $date[0].'/'.$date[1].'/'.$date[2].' '.date('H:i', strtotime($line->date_note));
-                $identifier = $line->identifier;
+                $date = explode('-', date('d-m-Y', strtotime($line->creation_date)));
+                $date = $date[0].'/'.$date[1].'/'.$date[2].' '.date('H:i', strtotime($line->creation_date));
             }
             $data[] = array(utf8_decode($user), $date, utf8_decode($notes));
         }

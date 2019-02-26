@@ -148,6 +148,9 @@ UPDATE res_letterbox SET locker_user_id = NULL;
 ALTER TABLE res_letterbox ALTER COLUMN locker_user_id DROP DEFAULT;
 ALTER TABLE res_letterbox ALTER COLUMN locker_user_id TYPE INTEGER USING locker_user_id::integer;
 ALTER TABLE res_letterbox ALTER COLUMN locker_user_id SET DEFAULT NULL;
+ALTER TABLE notes DROP COLUMN IF EXISTS tablename;
+ALTER TABLE notes DROP COLUMN IF EXISTS coll_id;
+ALTER TABLE notes RENAME COLUMN date_note TO creation_date;
 
 
 /* PARAM LIST DISPLAY */
