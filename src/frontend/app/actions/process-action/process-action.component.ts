@@ -16,7 +16,17 @@ export class ProcessActionComponent implements OnInit {
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<ProcessActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-    ngOnInit(): void {
-        window.location.href = 'index.php?page=view_baskets&module=basket&baskets=MyBasket&resId=105&defaultAction=19';
+    ngOnInit(): void { }
+
+    onSubmit(): void {
+        this.loading = true;
+        /*this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : this.data.selectedRes})
+            .subscribe((data: any) => {
+                this.loading = false;
+                this.dialogRef.close('success');
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+                this.loading = false;
+            });*/
     }
 }

@@ -63,7 +63,6 @@ export class ActionsListComponent implements OnInit {
         this.arrRes = [];
         this.currentAction = action;
 
-        console.log(action);
         if (this.contextMode && this.selectedRes.length == 0) {
             this.arrRes = [this.contextResId];
         } else {
@@ -150,12 +149,8 @@ export class ActionsListComponent implements OnInit {
     }
 
     processAction() {
-        console.log(this.currentBasketInfo);
-        console.log(this.currentAction);
-        console.log(this.arrRes);
 
-        this.currentBasketInfo.basket_id = 'MyBasket';
-        window.location.href = 'index.php?page=view_baskets&module=basket&baskets='+this.currentBasketInfo.basket_id+'&resId='+this.arrRes[0]+'&defaultAction='+this.currentAction.id;
+        window.location.href = 'index.php?page=view_baskets&module=basket&baskets='+this.currentBasketInfo.basket_id+'&basketId='+this.currentBasketInfo.basketId+'&resId='+this.arrRes[0]+'&userId='+this.currentBasketInfo.ownerId+'&groupIdSer='+this.currentBasketInfo.groupId+'&defaultAction='+this.currentAction.id;
         // WHEN V2
         /*this.dialog.open(ProcessActionComponent, {
             width: '500px',
