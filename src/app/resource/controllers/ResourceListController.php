@@ -213,7 +213,7 @@ class ResourceListController
         ]);
         $defaultAction = ActionModel::getById(['select' => ['id', 'label_action', 'component'], 'id' => $defaultAction[0]['id_action']]);
 
-        return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'allResources' => $allResources, 'defaultAction' => $defaultAction]);
+        return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'basket_id' => $basket['basket_id'], 'allResources' => $allResources, 'defaultAction' => $defaultAction]);
     }
 
     public function getFilters(Request $request, Response $response, array $aArgs)
