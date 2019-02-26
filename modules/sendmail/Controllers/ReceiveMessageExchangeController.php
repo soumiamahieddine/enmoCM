@@ -344,15 +344,11 @@ class ReceiveMessageExchangeController
     {
         $countNote = 0;
         foreach ($aArgs['dataObject']->Comment as $value) {
-            $aDataNote = [
-                "identifier" => $aArgs['resId'],
-                "tablename"  => "res_letterbox",
-                "user_id"    => "superadmin",
-                "note_text"  => $value->value,
-                "coll_id"    => "letterbox_coll",
-            ];
-
-            NoteModel::create($aDataNote);
+            NoteModel::create([
+                "resId" => $aArgs['resId'],
+                "login"    => "superadmin",
+                "note_text"  => $value->value
+            ]);
 
             HistoryController::add([
                 'tableName' => 'notes',

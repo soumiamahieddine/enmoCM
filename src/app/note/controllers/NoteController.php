@@ -69,28 +69,28 @@ class NoteController
         if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
-        
-        $data['identifier'] = $aArgs['resId'];
-        
-        $noteId = NoteModel::create($data);
+
+        $noteId = NoteModel::create([
+            'resId'     => $aArgs['resId'],
+            'login'     => $GLOBALS['userId'],
+            'note_text' => $data['note_text']
+        ]);
     
-        //Insert relation note with entities in note_entities_table
         if (!empty($noteId) && !empty($data['entities_chosen'])) {
             foreach ($data['entities_chosen'] as $entity) {
-                NoteEntityModel::create(['item_id' => $entity, 'note_id' => $noteId ]);
+                NoteEntityModel::create(['item_id' => $entity, 'note_id' => $noteId]);
             }
         }
 
-        HistoryController::add(
-            [
+        HistoryController::add([
             'tableName' => "notes",
             'recordId'  => $noteId,
             'eventType' => "ADD",
             'userId'    => $GLOBALS['userId'],
             'info'      => _NOTE_ADDED . " (" . $noteId . ")",
             'moduleId'  => 'notes',
-            'eventId'   => 'noteadd']
-        );
+            'eventId'   => 'noteadd'
+        ]);
 
         return $response->withJson(['noteId' => $noteId]);
     }

@@ -105,17 +105,18 @@ class NoteModel
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['identifier', 'note_text']);
-        ValidatorModel::intVal($aArgs, ['identifier']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'note_text', 'login']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['login', 'note_text']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'notes_id_seq']);
 
         DatabaseModel::insert([
-            'table' => 'notes',
+            'table'         => 'notes',
             'columnsValues' => [
                 'id'            => $nextSequenceId,
-                'identifier'    => $aArgs['identifier'],
-                'user_id'       => $GLOBALS['userId'],
+                'identifier'    => $aArgs['resId'],
+                'user_id'       => $aArgs['login'],
                 'creation_date' => 'CURRENT_TIMESTAMP',
                 'note_text'     => $aArgs['note_text']
             ]

@@ -13,6 +13,7 @@
 namespace Action\controllers;
 
 use History\controllers\HistoryController;
+use Note\models\NoteModel;
 use Resource\models\ResModel;
 use Action\models\ActionModel;
 use SrcCore\models\ValidatorModel;
@@ -28,7 +29,7 @@ class ActionMethodController
         ValidatorModel::notEmpty($aArgs, ['id', 'resources', 'basketName']);
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::arrayType($aArgs, ['resources']);
-        ValidatorModel::stringType($aArgs, ['basketName']);
+        ValidatorModel::stringType($aArgs, ['basketName', 'note']);
 
         $set = ['locker_user_id' => null, 'locker_time' => null, 'modification_date' => 'CURRENT_TIMESTAMP'];
 
@@ -42,6 +43,16 @@ class ActionMethodController
             'where' => ['res_id in (?)'],
             'data'  => [$aArgs['resources']]
         ]);
+
+        if (!empty($aArgs['note'])) {
+            foreach ($aArgs['resources'] as $resource) {
+                NoteModel::create([
+                    'resId'     => $resource,
+                    'login'     => $GLOBALS['userId'],
+                    'note_text' => $aArgs['note']
+                ]);
+            }
+        }
 
         if ($action['history'] == 'Y') {
             foreach ($aArgs['resources'] as $resource) {
