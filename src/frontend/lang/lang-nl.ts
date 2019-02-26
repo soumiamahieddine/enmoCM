@@ -886,4 +886,5 @@ export const LANG_NL = {
     "done"                      : "done", //_TO_TRANSLATE
     "noAction"                      : "No action", //_TO_TRANSLATE
     "warnLockRes"                      : "mail(s) are locked by an other user.\n\nThis action will process ONLY mails which are NOT locked", //_TO_TRANSLATE 
+    "acknowledgementReceiptType"        : "Type of acknowledgement of receipt", //_TO_TRANSLATE
 };
