@@ -108,7 +108,7 @@ class NoteModel
         ValidatorModel::notEmpty($aArgs, ['identifier', 'note_text']);
         ValidatorModel::intVal($aArgs, ['identifier']);
 
-        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'notes_seq']);
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'notes_id_seq']);
 
         DatabaseModel::insert([
             'table' => 'notes',

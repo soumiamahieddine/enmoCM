@@ -251,7 +251,7 @@ switch ($mode) {
                 );
                 
                 //Last insert ID from sequence
-                $id = $db->lastInsertId('notes_seq');
+                $id = $db->lastInsertId('notes_id_seq');
                 
                 //Entities selected
                 if (!empty($id) && isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen']))

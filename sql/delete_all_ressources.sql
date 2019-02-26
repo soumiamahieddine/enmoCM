@@ -34,7 +34,7 @@ TRUNCATE TABLE history_batch;
 ALTER SEQUENCE history_batch_id_seq restart WITH 1;
 
 TRUNCATE TABLE notes;
-ALTER SEQUENCE notes_seq restart WITH 1;
+ALTER SEQUENCE notes_id_seq restart WITH 1;
 
 TRUNCATE TABLE note_entities;
 
