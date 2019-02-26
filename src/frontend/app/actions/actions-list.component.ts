@@ -27,6 +27,7 @@ export class ActionsListComponent implements OnInit {
     basketInfo: any = {};
     contextResId = 0;
     currentLock: any = null;
+    arrRes: any[] = [];
 
     actionsList: any[] = [];
 
@@ -57,21 +58,21 @@ export class ActionsListComponent implements OnInit {
     }
 
     launchEvent(action: any) {
-        let arrRes: any[] = [];
+        this.arrRes = [];
         this.currentAction = action;
 
         if (this.contextMode && this.selectedRes.length == 0) {
-            arrRes = [this.contextResId];
+            this.arrRes = [this.contextResId];
         } else {
-            arrRes = this.selectedRes;
+            this.arrRes = this.selectedRes;
         }
-        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: arrRes })
+        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
             .subscribe((data: any) => {
                 try {
                     if (data.lockedResources > 0) {
                         alert(data.lockedResources + ' ' + this.lang.warnLockRes + '.');
                     }
-                    this.lock(arrRes);
+                    this.lock();
                     this[action.component]();
                 }
                 catch (error) {
@@ -111,7 +112,8 @@ export class ActionsListComponent implements OnInit {
                 contextMode: this.contextMode,
                 contextChrono: this.contextMenuTitle,
                 selectedRes: this.selectedRes,
-                action: this.currentAction
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
             }
         });
     }
@@ -146,9 +148,9 @@ export class ActionsListComponent implements OnInit {
         }
     }
 
-    lock(arrRes: any) {
+    lock() {
         this.currentLock = setInterval(() => {
-            this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: arrRes })
+            this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
                 .subscribe((data: any) => { }, (err: any) => { });
         }, 50000);
     }
@@ -156,5 +158,7 @@ export class ActionsListComponent implements OnInit {
     unlock() {
         console.log('unlock documents');
         clearInterval(this.currentLock);
+        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/unlock', { resources: this.arrRes })
+            .subscribe((data: any) => { }, (err: any) => { });
     }
 }
