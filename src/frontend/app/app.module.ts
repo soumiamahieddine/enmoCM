@@ -26,6 +26,7 @@ import { ActionsListComponent }                 from './actions/actions-list.com
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
 import { CloseMailActionComponent }             from './actions/close-mail-action/close-mail-action.component';
 import { UpdateDepartureDateActionComponent }   from './actions/update-departure-date-action/update-departure-date-action.component';
+import { ProcessActionComponent }               from './actions/process-action/process-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -70,6 +71,7 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         ConfirmActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
+        ProcessActionComponent,
         ActionsListComponent,
     ],
     entryComponents: [
@@ -84,6 +86,7 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         ConfirmActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
+        ProcessActionComponent,
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]

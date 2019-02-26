@@ -71,6 +71,10 @@ export class BasketListComponent implements OnInit {
     listProperties: any = {};
     currentBasketInfo: any = {};
     currentChrono: string = '';
+    defaultAction = {
+        id: 19,
+        component : 'processAction'
+    };
     thumbnailUrl: string = '';
 
     selectedRes: number[] = [];
@@ -112,6 +116,7 @@ export class BasketListComponent implements OnInit {
         this.initResultList();
 
         this.route.params.subscribe(params => {
+            console.log(params);
             this.basketUrl = '../../rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
 
             this.currentBasketInfo = {
@@ -155,6 +160,8 @@ export class BasketListComponent implements OnInit {
                     data = this.processPostData(data);
                     this.resultsLength = data.count;
                     this.allResInBasket = data.allResources;
+                    this.currentBasketInfo.basket_id = data.basket_id;
+                    this.defaultAction = data.defaultAction;
                     this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;
                 }),
@@ -378,11 +385,26 @@ export class BasketListComponent implements OnInit {
         // prevents default
         return false;
     }
+
+    launch(action: any, row: any) {
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        row.checked = true;
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
+        
+        setTimeout(() => {
+            this.actionsList.launchEvent(action);
+        }, 200);
+        
+    }
 }
 export interface BasketList {
     resources: any[];
     count: number;
     basketLabel: string,
+    basket_id: string,
+    defaultAction: any;
     allResources: number[]
 }
 

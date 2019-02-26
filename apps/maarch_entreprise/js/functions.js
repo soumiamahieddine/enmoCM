@@ -1096,20 +1096,24 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
     if (pile_actions.values.length == 0) {
         if (actions_status.values.length > 0) {
             var status = actions_status.values[actions_status.values.length - 1];
+            console.log('toto');
             action_done = action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status, page);
         } else {
             if (page != '' && page != NaN && page && page != null) {
                 if (typeof window['angularSignatureBookComponent'] != "undefined") {
                     window.angularSignatureBookComponent.componentAfterAction();
                 } else {
+                    console.log('tutu');
                     do_nothing = false;
-                    window.top.location.href = page;
+                    triggerAngular('#/basketList/users/21/groups/2/baskets/9');
+                    //window.top.location.href = page;
                 }
 
             } else if (do_nothing == false) {
                 if (typeof window['angularSignatureBookComponent'] != "undefined") {
                     window.angularSignatureBookComponent.componentAfterAction();
                 } else {
+                    console.log('tata');
                     window.top.location.hash = "";
                     window.top.location.reload();
                 }
@@ -1542,8 +1546,12 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                         if (typeof window['angularSignatureBookComponent'] != "undefined") {
                             window.angularSignatureBookComponent.componentAfterAction();
                         } else {
-                            window.top.location.hash = "";
-                            window.top.location.reload();
+                            //window.top.location.hash = "";
+                            //window.top.location.reload();
+                            var arr = window.top.location.href.split('&');
+                            arr = arr.unshift();
+                            console.log(arr);
+                            triggerAngular('#/basketList/users/21/groups/2/baskets/9');
                         }
                     }
                 }

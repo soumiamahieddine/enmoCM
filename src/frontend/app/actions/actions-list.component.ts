@@ -7,6 +7,7 @@ import { MatDialog, MatMenuTrigger } from '@angular/material';
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
 import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
 import { UpdateDepartureDateActionComponent } from './update-departure-date-action/update-departure-date-action.component';
+import { ProcessActionComponent } from './process-action/process-action.component';
 
 @Component({
     selector: 'app-actions-list',
@@ -62,6 +63,7 @@ export class ActionsListComponent implements OnInit {
         this.arrRes = [];
         this.currentAction = action;
 
+        console.log(action);
         if (this.contextMode && this.selectedRes.length == 0) {
             this.arrRes = [this.contextResId];
         } else {
@@ -77,7 +79,8 @@ export class ActionsListComponent implements OnInit {
                     this[action.component]();
                 }
                 catch (error) {
-                    alert(this.lang.actionNotExist);
+                    console.log(error);
+                    alert(this.lang.actionNotExist);  
                 }
                 this.loading = false;
             }, (err: any) => {
@@ -144,6 +147,26 @@ export class ActionsListComponent implements OnInit {
                 this.endAction();
             }
         });
+    }
+
+    processAction() {
+        console.log(this.currentBasketInfo);
+        console.log(this.currentAction);
+        console.log(this.arrRes);
+
+        this.currentBasketInfo.basket_id = 'MyBasket';
+        window.location.href = 'index.php?page=view_baskets&module=basket&baskets='+this.currentBasketInfo.basket_id+'&resId='+this.arrRes[0]+'&defaultAction='+this.currentAction.id;
+        // WHEN V2
+        /*this.dialog.open(ProcessActionComponent, {
+            width: '500px',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });*/
     }
     ////
 
