@@ -211,7 +211,7 @@ class ResourceListController
             'where'     => ['basket_id = ?', 'group_id = ?', 'default_action_list = ?'],
             'data'      => [$basket['basket_id'], $group['group_id'], 'Y']
         ]);
-        $defaultAction = ActionModel::getById(['select' => ['id', 'label_action', 'component'], 'id' => [$defaultAction[0]['id_action']]]);
+        $defaultAction = ActionModel::getById(['select' => ['id', 'label_action', 'component'], 'id' => $defaultAction[0]['id_action']]);
 
         return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'allResources' => $allResources, 'defaultAction' => $defaultAction]);
     }
