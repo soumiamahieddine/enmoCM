@@ -145,14 +145,14 @@ class ResourceListController
             ]);
 
             foreach ($resources as $key => $resource) {
-                $formattedResources[$key]['res_id'] = $resource['res_id'];
-                $formattedResources[$key]['alt_identifier'] = $resource['alt_identifier'];
-                $formattedResources[$key]['barcode'] = $resource['barcode'];
-                $formattedResources[$key]['subject'] = $resource['subject'];
-                $formattedResources[$key]['statusLabel'] = $resource['status.label_status'];
-                $formattedResources[$key]['statusImage'] = $resource['status.img_filename'];
-                $formattedResources[$key]['priorityColor'] = $resource['priorities.color'];
-                $formattedResources[$key]['closing_date'] = $resource['closing_date'];
+                $formattedResources[$key]['res_id']           = $resource['res_id'];
+                $formattedResources[$key]['alt_identifier']   = $resource['alt_identifier'];
+                $formattedResources[$key]['barcode']          = $resource['barcode'];
+                $formattedResources[$key]['subject']          = $resource['subject'];
+                $formattedResources[$key]['statusLabel']      = $resource['status.label_status'];
+                $formattedResources[$key]['statusImage']      = $resource['status.img_filename'];
+                $formattedResources[$key]['priorityColor']    = $resource['priorities.color'];
+                $formattedResources[$key]['closing_date']     = $resource['closing_date'];
                 $formattedResources[$key]['countAttachments'] = 0;
                 foreach ($attachments as $attachment) {
                     if ($attachment['res_id_master'] == $resource['res_id']) {
@@ -243,12 +243,12 @@ class ResourceListController
 
         $wherePriorities = $where;
         $whereCategories = $where;
-        $whereStatuses = $where;
-        $whereEntities = $where;
-        $dataPriorities = $queryData;
-        $dataCategories = $queryData;
-        $dataStatuses = $queryData;
-        $dataEntities = $queryData;
+        $whereStatuses   = $where;
+        $whereEntities   = $where;
+        $dataPriorities  = $queryData;
+        $dataCategories  = $queryData;
+        $dataStatuses    = $queryData;
+        $dataEntities    = $queryData;
 
         if (isset($data['priorities'])) {
             if (empty($data['priorities'])) {
@@ -262,13 +262,13 @@ class ResourceListController
                     $tmpWhere = 'priority in (?)';
                 }
                 $dataCategories[] = explode(',', $replace);
-                $dataStatuses[] = explode(',', $replace);
-                $dataEntities[] = explode(',', $replace);
+                $dataStatuses[]   = explode(',', $replace);
+                $dataEntities[]   = explode(',', $replace);
             }
 
             $whereCategories[] = $tmpWhere;
-            $whereStatuses[] = $tmpWhere;
-            $whereEntities[] = $tmpWhere;
+            $whereStatuses[]   = $tmpWhere;
+            $whereEntities[]   = $tmpWhere;
         }
         if (isset($data['categories'])) {
             if (empty($data['categories'])) {
@@ -282,21 +282,21 @@ class ResourceListController
                     $tmpWhere = 'category_id in (?)';
                 }
                 $dataPriorities[] = explode(',', $replace);
-                $dataStatuses[] = explode(',', $replace);
-                $dataEntities[] = explode(',', $replace);
+                $dataStatuses[]   = explode(',', $replace);
+                $dataEntities[]   = explode(',', $replace);
             }
 
             $wherePriorities[] = $tmpWhere;
-            $whereStatuses[] = $tmpWhere;
-            $whereEntities[] = $tmpWhere;
+            $whereStatuses[]   = $tmpWhere;
+            $whereEntities[]   = $tmpWhere;
         }
         if (!empty($data['statuses'])) {
             $wherePriorities[] = 'status in (?)';
-            $dataPriorities[] = explode(',', $data['statuses']);
+            $dataPriorities[]  = explode(',', $data['statuses']);
             $whereCategories[] = 'status in (?)';
-            $dataCategories[] = explode(',', $data['statuses']);
-            $whereEntities[] = 'status in (?)';
-            $dataEntities[] = explode(',', $data['statuses']);
+            $dataCategories[]  = explode(',', $data['statuses']);
+            $whereEntities[]   = 'status in (?)';
+            $dataEntities[]    = explode(',', $data['statuses']);
         }
         if (isset($data['entities'])) {
             if (empty($data['entities'])) {
@@ -316,7 +316,7 @@ class ResourceListController
 
             $wherePriorities[] = $tmpWhere;
             $whereCategories[] = $tmpWhere;
-            $whereStatuses[] = $tmpWhere;
+            $whereStatuses[]   = $tmpWhere;
         }
         if (!empty($data['entitiesChildren'])) {
             $entities = explode(',', $data['entitiesChildren']);
@@ -327,11 +327,11 @@ class ResourceListController
             }
             if (!empty($entitiesChildren)) {
                 $wherePriorities[] = 'destination in (?)';
-                $dataPriorities[] = $entitiesChildren;
+                $dataPriorities[]  = $entitiesChildren;
                 $whereCategories[] = 'destination in (?)';
-                $dataCategories[] = $entitiesChildren;
-                $whereStatuses[] = 'destination in (?)';
-                $dataStatuses[] = $entitiesChildren;
+                $dataCategories[]  = $entitiesChildren;
+                $whereStatuses[]   = 'destination in (?)';
+                $dataStatuses[]    = $entitiesChildren;
             }
         }
 
@@ -416,8 +416,8 @@ class ResourceListController
 
         $priorities = (count($priorities) >= 2) ? $priorities : [];
         $categories = (count($categories) >= 2) ? $categories : [];
-        $statuses = (count($statuses) >= 2) ? $statuses : [];
-        $entities = (count($entities) >= 2) ? $entities : [];
+        $statuses   = (count($statuses) >= 2) ? $statuses : [];
+        $entities   = (count($entities) >= 2) ? $entities : [];
 
         $entitiesChildren = [];
         foreach ($entities as $entity) {

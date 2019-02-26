@@ -110,6 +110,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_CLOSE_MAIL</LABEL>
         <NAME>close_mail</NAME>
         <DESC>_CLOSE_MAIL_DESC</DESC>
+        <component>closeMailAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

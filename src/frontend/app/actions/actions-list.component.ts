@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { MatDialog, MatMenuTrigger } from '@angular/material';
 
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
-import { ClosingActionComponent } from './closing-action/closing-action.component';
+import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
 
 @Component({
     selector: 'app-actions-list',
@@ -105,8 +105,8 @@ export class ActionsListComponent implements OnInit {
         });
     }
 
-    closingAction() {
-        this.dialog.open(ClosingActionComponent, {
+    closeMailAction() {
+        const dialogRef = this.dialog.open(CloseMailActionComponent, {
             width: '500px',
             data: {
                 contextMode: this.contextMode,
@@ -114,6 +114,13 @@ export class ActionsListComponent implements OnInit {
                 selectedRes: this.selectedRes,
                 action: this.currentAction,
                 currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
             }
         });
     }

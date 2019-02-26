@@ -17,11 +17,13 @@ use Note\models\NoteModel;
 use Resource\models\ResModel;
 use Action\models\ActionModel;
 use SrcCore\models\ValidatorModel;
+use SrcCore\models\CurlModel;
 
 class ActionMethodController
 {
     const COMPONENTS_ACTIONS = [
-        'confirmAction' => null
+        'confirmAction' => null,
+        'closeMailAction' => 'closeMailAction',
     ];
 
     public static function terminateAction(array $aArgs)
@@ -57,7 +59,7 @@ class ActionMethodController
         if ($action['history'] == 'Y') {
             foreach ($aArgs['resources'] as $resource) {
                 HistoryController::add([
-                    'tableName' => 'actions',
+                    'tableName' => 'res_view_letterbox',
                     'recordId'  => $resource,
                     'eventType' => 'ACTION#' . $resource,
                     'eventId'   => $aArgs['id'],
@@ -65,6 +67,87 @@ class ActionMethodController
                 ]);
 
                 //TODO M2M
+            }
+        }
+
+        return true;
+    }
+
+    public static function closeMailAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'resId']);
+        ValidatorModel::intVal($aArgs, ['id', 'resId']);
+
+        ResModel::updateExt(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+
+        if (CurlModel::isEnabled(['curlCallId' => 'closeResource'])) {
+            $bodyData = [];
+            $config = CurlModel::getConfigByCallId(['curlCallId' => 'closeResource']);
+            $configResource = CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
+
+            $resource = ResModel::getOnView(['select' => ['doc_' . $configResource['return']['value']], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+
+            if (!empty($resource[0]['doc_' . $configResource['return']['value']])) {
+                if (!empty($config['inObject'])) {
+                    $multipleObject = true;
+
+                    foreach ($config['objects'] as $object) {
+                        $select = [];
+                        $tmpBodyData = [];
+                        foreach ($object['rawData'] as $value) {
+                            if ($value == $configResource['return']['value']) {
+                                $select[] = 'doc_' . $configResource['return']['value'];
+                            } elseif ($value != 'note') {
+                                $select[] = $value;
+                            }
+                        }
+
+                        $document = ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+                        if (!empty($document[0])) {
+                            foreach ($object['rawData'] as $key => $value) {
+                                if ($value == 'note') {
+                                    $tmpBodyData[$key] = $formValues['note_content_to_users'];
+                                } elseif ($value == $configResource['return']['value']) {
+                                    $tmpBodyData[$key] = $document[0]['doc_' . $value];
+                                } else {
+                                    $tmpBodyData[$key] = $document[0][$value];
+                                }
+                            }
+                        }
+
+                        if (!empty($object['data'])) {
+                            $tmpBodyData = array_merge($tmpBodyData, $object['data']);
+                        }
+
+                        $bodyData[$object['name']] = $tmpBodyData;
+                    }
+                } else {
+                    $multipleObject = false;
+
+                    $select = [];
+                    foreach ($config['rawData'] as $value) {
+                        if ($value != 'note') {
+                            $select[] = $value;
+                        }
+                    }
+
+                    $document = ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+                    if (!empty($document[0])) {
+                        foreach ($config['rawData'] as $key => $value) {
+                            if ($value == 'note') {
+                                $bodyData[$key] = $formValues['note_content_to_users'];
+                            } else {
+                                $bodyData[$key] = $document[0][$value];
+                            }
+                        }
+                    }
+
+                    if (!empty($config['data'])) {
+                        $bodyData = array_merge($bodyData, $config['data']);
+                    }
+                }
+
+                CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
             }
         }
 

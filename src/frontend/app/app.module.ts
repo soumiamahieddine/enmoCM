@@ -24,7 +24,7 @@ import { ActivateUserComponent }                from './activate-user.component'
 import { ActionsListComponent }                 from './actions/actions-list.component';
 /*ACTIONS PAGES */
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
-import { ClosingActionComponent }               from './actions/closing-action/closing-action.component';
+import { CloseMailActionComponent }               from './actions/close-mail-action/close-mail-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -67,7 +67,7 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,
-        ClosingActionComponent,
+        CloseMailActionComponent,
         ActionsListComponent,
     ],
     entryComponents: [
@@ -80,7 +80,7 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,
-        ClosingActionComponent,
+        CloseMailActionComponent,
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]
