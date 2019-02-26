@@ -886,4 +886,6 @@ export const LANG_FR = {
     "warnLockRes"                      : "courrier(s) verrouillé(s) par un autre utilisateur.\n\nL\'action prendra en compte UNIQUEMENT les courriers NON verouillés",
     "paperTemplate"                        : "Modèle papier",
     "electronicTemplate"                   : "Modèle électronique",
+    "updateClosingDate"                   : "Cela actualisera la <b class=\"highlight\">date de clôture</b> des courriers.",
+    "updateDepartureDate"                   : "Cela actualisera la <b class=\"highlight\">date de départ</b> des courriers.",
 };

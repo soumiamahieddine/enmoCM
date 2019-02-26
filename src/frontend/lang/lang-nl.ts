@@ -889,4 +889,6 @@ export const LANG_NL = {
     "acknowledgementReceiptType"        : "Type of acknowledgement of receipt", //_TO_TRANSLATE
     "paperTemplate"                        : "Paper template", //_TO_TRANSLATE
     "electronicTemplate"                   : "Electronic template", //_TO_TRANSLATE
+    "updateClosingDate"                   : "This will update mail <b class=\"highlight\">closing date</b>.", //_TO_TRANSLATE
+    "updateDepartureDate"                   : "This will update mail <b class=\"highlight\">departure date</b>.", //_TO_TRANSLATE
 };
