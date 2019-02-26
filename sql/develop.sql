@@ -12,9 +12,9 @@ DROP VIEW IF EXISTS res_view_letterbox;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
 ALTER TABLE res_letterbox ADD COLUMN external_signatory_book_id integer;
 
+/* Acknowledgment receipt */
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS acknowledgment_creation_date;
 ALTER TABLE res_letterbox ADD COLUMN acknowledgment_creation_date timestamp without time zone;
-
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS acknowledgment_send_date;
 ALTER TABLE res_letterbox ADD COLUMN acknowledgment_send_date timestamp without time zone;
 

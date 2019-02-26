@@ -582,6 +582,14 @@ class ResourceListController
             return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group basket']);
         }
 
+        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component']]);
+        if (empty($action['component'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
+        }
+        if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
+        }
+
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
         $resources = ResModel::getOnView([
@@ -600,6 +608,7 @@ class ResourceListController
             }
         }
 
+        $resourcesForAction = [];
         foreach ($resources as $resource) {
             $lock = true;
             if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
@@ -609,28 +618,23 @@ class ResourceListController
             } elseif (strtotime($resource['locker_time']) < time()) {
                 $lock = false;
             }
-            if ($lock) {
-                return $response->withStatus(403)->withJson(['errors' => 'One of resources is lock']);
+            if (!$lock) {
+                $resourcesForAction[] = $resource['res_id'];
             }
         }
 
-        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component']]);
-        if (empty($action['component'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
+        if (empty($resourcesForAction)) {
+            return $response->withJson(['success' => 'No resource to process']);
         }
 
-        if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
-        }
-
-        foreach ($body['resources'] as $resId) {
+        foreach ($resourcesForAction as $resId) {
             $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
 
             if (!empty($method)) {
                 ActionMethodController::$method(['id' => $aArgs['actionId'], 'resId' => $resId]);
             }
         }
-        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $body['resources'], 'basketName' => $basket['basket_name']]);
+        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name']]);
 
         return $response->withStatus(204);
     }
@@ -697,6 +701,58 @@ class ResourceListController
         }
 
         return $response->withJson(['lockedResources' => $locked]);
+    }
+
+    public function unlock(Request $request, Response $response, array $aArgs)
+    {
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause']]);
+        $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $resources = ResModel::getOnView([
+            'select'    => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
+            'data'      => [$body['resources']]
+        ]);
+        $resourcesInBasket = [];
+        foreach ($resources as $resource) {
+            $resourcesInBasket[] = $resource['res_id'];
+        }
+
+        foreach ($body['resources'] as $resId) {
+            if (!in_array($resId, $resourcesInBasket)) {
+                return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+            }
+        }
+
+        $resourcesToUnlock = [];
+        foreach ($resources as $resource) {
+            if (!(!empty($resource['locker_user_id']) && $resource['locker_user_id'] != $currentUser['id'] && strtotime($resource['locker_time']) > time())) {
+                $resourcesToUnlock[] = $resource['res_id'];
+            }
+        }
+
+        if (!empty($resourcesToUnlock)) {
+            ResModel::update([
+                'set'   => ['locker_user_id' => null, 'locker_time' => null],
+                'where' => ['res_id in (?)'],
+                'data'  => [$resourcesToUnlock]
+            ]);
+        }
+
+        return $response->withStatus(204);
     }
 
     public static function listControl(array $aArgs)
