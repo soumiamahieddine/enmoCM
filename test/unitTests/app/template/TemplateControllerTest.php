@@ -13,12 +13,14 @@ class TemplateControllerTest extends TestCase
 {
     private static $id = null;
     private static $idDuplicated = null;
+    private static $idAcknowledgementReceipt = null;
+
 
     public function testCreate()
     {
         $templates   = new \Template\controllers\TemplateController();
 
-        //  CREATE
+        ########## CREATE ##########
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -40,7 +42,7 @@ class TemplateControllerTest extends TestCase
         self::$id = $responseBody->template;
         $this->assertInternalType("int", self::$id);
 
-        // CREATE FAIL
+        ########## CREATE FAIL ##########
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -58,6 +60,69 @@ class TemplateControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Bad Request', $responseBody->errors);
+
+        ########## CREATE ACKNOLEDGEMENT RECEIPT ##########
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'template_label'            => 'TEST TEMPLATE AR',
+            'template_comment'          => 'DESCRIPTION OF THIS TEMPLATE',
+            'template_target'           => 'acknowledgementReceipt',
+            'template_attachment_type'  => 'ar_simple',
+            'template_type'             => 'OFFICE_HTML',
+            'template_content'          => 'Content of this template',
+            'template_datasource'       => 'letterbox_attachment',
+            'entities'                  => ['TST']
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $templates->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        self::$idAcknowledgementReceipt = $responseBody->template;
+        $this->assertInternalType("int", self::$idAcknowledgementReceipt);
+
+        ########## CREATE FAIL ACKNOLEDGEMENT RECEIPT - entity already associated ##########
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'template_label'            => 'TEST TEMPLATE AR FAIL',
+            'template_comment'          => 'DESCRIPTION OF THIS TEMPLATE',
+            'template_target'           => 'acknowledgementReceipt',
+            'template_attachment_type'  => 'ar_simple',
+            'template_type'             => 'OFFICE_HTML',
+            'template_content'          => 'Content of this template',
+            'template_datasource'       => 'letterbox_attachment',
+            'entities'                  => ['TST', 'BAD']
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $templates->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame("Les entités suivantes ont déjà un modèle d'ar_simple : TST", $responseBody->errors);
+
+        ########## CREATE FAIL ACKNOLEDGEMENT RECEIPT - no html and no office ##########
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'template_label'            => 'TEST TEMPLATE AR FAIL',
+            'template_comment'          => 'DESCRIPTION OF THIS TEMPLATE',
+            'template_target'           => 'acknowledgementReceipt',
+            'template_attachment_type'  => 'ar_simple',
+            'template_type'             => 'OFFICE_HTML',
+            'template_content'          => '',
+            'template_datasource'       => 'letterbox_attachment',
+            'entities'                  => ['TST', 'BAD']
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $templates->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame("You must complete at least one of the two templates", $responseBody->errors);
     }
 
     public function testRead()
@@ -272,6 +337,15 @@ class TemplateControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $response     = $templates->delete($request, new \Slim\Http\Response(), ['id' => self::$idDuplicated]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame("success", $responseBody->success);
+
+        ########## DELETE ACKNOLEDGEMENT RECEIPT ##########
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $templates->delete($request, new \Slim\Http\Response(), ['id' => self::$idAcknowledgementReceipt]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame("success", $responseBody->success);
