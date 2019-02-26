@@ -212,4 +212,23 @@ abstract class TemplateModelAbstract
 
         return $models;
     }
+
+    public static function checkEntities(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['data']);
+        ValidatorModel::arrayType($aArgs, ['data']);
+
+        $data = $aArgs['data'];
+        
+        $listEntities = DatabaseModel::select([
+        'select'    => ['ta.value_field'],
+        'table'     => ['templates t','templates_association ta'],
+        'left_join' => ['ta.template_id = t.template_id'],
+        'where'     => ['t.template_attachment_type = ?', 'value_field in (?)'],
+        'data'      => [$data['template_attachment_type'], $data['entities']],
+        'groupBy'   => ['ta.value_field']
+        ]);
+
+        return $listEntities;
+    }
 }

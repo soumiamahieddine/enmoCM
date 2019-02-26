@@ -27,7 +27,6 @@ use Template\models\TemplateAssociationModel;
 use Template\models\TemplateModel;
 use Attachment\models\AttachmentModel;
 use Entity\models\EntityModel;
-use SrcCore\models\DatabaseModel;
 
 class TemplateController
 {
@@ -112,7 +111,7 @@ class TemplateController
         }
 
         if ($data['template_target'] == 'acknowledgementReceipt' && !empty($data['entities'])) {
-            $checkEntities = TemplateController::checkEntities(['data' => $data]);
+            $checkEntities = TemplateModel::checkEntities(['data' => $data]);
             
             if(!empty($checkEntities)){
                 $listMessage = '';
@@ -475,24 +474,5 @@ class TemplateController
         include $datasourceScript['script'];
 
         return $datasources;
-    }
-
-    private static function checkEntities(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['data']);
-        ValidatorModel::arrayType($aArgs, ['data']);
-
-        $data = $aArgs['data'];
-        
-        $listEntities = DatabaseModel::select([
-        'select'    => ['ta.value_field'],
-        'table'     => ['templates t','templates_association ta'],
-        'left_join' => ['ta.template_id = t.template_id'],
-        'where'     => ['t.template_attachment_type = ?', 'value_field in (?)'],
-        'data'      => [$data['template_attachment_type'], $data['entities']],
-        'groupBy'   => ['ta.value_field']
-        ]);
-
-        return $listEntities;
     }
 }
