@@ -85,6 +85,7 @@ define('_STATUS_NOT_FOUND', 'Statut introuvable');
 define('_TEMPLATE_ADDED', 'Modèle de document ajouté');
 define('_TEMPLATE_UPDATED', 'Modèle de document modifié');
 define('_TEMPLATE_DELETED', 'Modèle de document supprimé');
+define( '_TEMPLATE_ERROR_CHECK_ENTITIES',"Les entités suivantes ont déjà un modèle d'");
 define('_TO_CC', 'En copie');
 define('_TO_SIGN', 'Pour signature');
 define('_UPDATE_STATUS', 'Modification du statut');

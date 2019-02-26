@@ -102,6 +102,7 @@ define('_PASSWORD_RULES_UPDATED', 'Wachtwoordregels gewijzigd');
 define('_TEMPLATE_ADDED', 'Documentmodel toegevoegd');
 define('_TEMPLATE_UPDATED', 'Documentmodel gewijzigd');
 define('_TEMPLATE_DELETED', 'Documentmodel verwijderd');
+define('_TEMPLATE_ERROR_CHECK_ENTITIES',"The following entities already have a model of"); //_TO_TRANSLATE
 define('_USER_ALREADY_LINK_GROUP', 'De gebruiker is reeds aan deze groep gekoppeld');
 define('_USER_ALREADY_LINK_ENTITY', 'De gebruiker is reeds aan deze eenheid gekoppeld');
 define('_UNREACHABLE_DOCSERVER', 'Pad docserver onbereikbaar');

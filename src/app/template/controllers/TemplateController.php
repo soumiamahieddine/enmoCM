@@ -27,6 +27,7 @@ use Template\models\TemplateAssociationModel;
 use Template\models\TemplateModel;
 use Attachment\models\AttachmentModel;
 use Entity\models\EntityModel;
+use SrcCore\models\DatabaseModel;
 
 class TemplateController
 {
@@ -106,8 +107,24 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if($data['template_type'] == 'OFFICE_HTML' && !$data['jnlpUniqueId'] && !$data['uploadedFile'] && !$data['template_content']){
+        if ($data['template_type'] == 'OFFICE_HTML' && !$data['jnlpUniqueId'] && !$data['uploadedFile'] && !$data['template_content']) {
             return $response->withStatus(400)->withJson(['errors' => 'You must complete at least one of the two templates']);
+        }
+
+        if ($data['template_target'] == 'acknowledgementReceipt' && !empty($data['entities'])) {
+            $checkEntities = TemplateController::checkEntities(['data' => $data]);
+            
+            if(!empty($checkEntities)){
+                $listMessage = '';
+                foreach($checkEntities as $entities){
+                    if($listMessage!='') {
+                        $listMessage .= ", ";
+                    }
+                    $listMessage = $listMessage . $entities['value_field'];
+                }
+                $message = _TEMPLATE_ERROR_CHECK_ENTITIES . $data['template_attachment_type'] . ' : ' . $listMessage;
+                return $response->withStatus(400)->withJson(['errors' => $message]);
+            }
         }
 
         if ($data['template_type'] == 'OFFICE' || ($data['template_type'] == 'OFFICE_HTML' && $data['jnlpUniqueId'] && $data['uploadedFile'])) {
@@ -186,8 +203,13 @@ class TemplateController
         $data = $request->getParams();
         $data['template_type'] = $template['template_type'];
         $data['template_target'] = $template['template_target'];
+
         if (!TemplateController::checkData(['data' => $data])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if ($data['template_type'] == 'OFFICE_HTML' && !$data['jnlpUniqueId'] && !$data['uploadedFile'] && !$data['template_content']) {
+            return $response->withStatus(400)->withJson(['errors' => 'You must complete at least one of the two templates']);
         }
 
         if (($data['template_type'] == 'OFFICE' || $data['template_type'] == 'OFFICE_HTML') && (!empty($data['jnlpUniqueId']) || !empty($data['uploadedFile']))) {
@@ -367,6 +389,10 @@ class TemplateController
             $check = $check && Validator::stringType()->notEmpty()->validate($data['template_attachment_type']);
         }
 
+        if (!empty($data['entities'])) {
+            $check = $check && Validator::arrayType()->validate($data['entities']);
+        }
+
         return $check;
     }
     public static function mergeDatasource(array $aArgs)
@@ -449,5 +475,24 @@ class TemplateController
         include $datasourceScript['script'];
 
         return $datasources;
+    }
+
+    private static function checkEntities(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['data']);
+        ValidatorModel::arrayType($aArgs, ['data']);
+
+        $data = $aArgs['data'];
+        
+        $listEntities = DatabaseModel::select([
+        'select'    => ['ta.value_field'],
+        'table'     => ['templates t','templates_association ta'],
+        'left_join' => ['ta.template_id = t.template_id'],
+        'where'     => ['t.template_attachment_type = ?', 'value_field in (?)'],
+        'data'      => [$data['template_attachment_type'], $data['entities']],
+        'groupBy'   => ['ta.value_field']
+        ]);
+
+        return $listEntities;
     }
 }
