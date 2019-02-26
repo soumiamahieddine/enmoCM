@@ -246,10 +246,6 @@ if (!empty($tab)) {
                     $query .= 'on ';
                     $query .= 'notes.id = note_entities.note_id ';
                     $query .= 'WHERE ';
-                    $query .= "tablename = 'res_letterbox' ";
-                    $query .= 'AND ';
-                    $query .= "coll_id = 'letterbox_coll' ";
-                    $query .= 'AND ';
                     $query .= 'identifier = ? ';
                     $arrayPDOnotes = array($tab[$i][$j]['value']);
                     $query .= 'AND ';
