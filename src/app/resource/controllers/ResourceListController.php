@@ -206,7 +206,14 @@ class ResourceListController
             }
         }
 
-        return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'allResources' => $allResources]);
+        $defaultAction = ActionGroupBasketModel::get([
+            'select'    => ['id_action'],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'default_action_list = ?'],
+            'data'      => [$basket['basket_id'], $group['group_id'], 'Y']
+        ]);
+        $defaultAction = ActionModel::getById(['select' => ['id', 'label_action', 'component'], 'id' => [$defaultAction[0]['id_action']]]);
+
+        return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'allResources' => $allResources, 'defaultAction' => $defaultAction]);
     }
 
     public function getFilters(Request $request, Response $response, array $aArgs)
@@ -602,10 +609,8 @@ class ResourceListController
             $resourcesInBasket[] = $resource['res_id'];
         }
 
-        foreach ($body['resources'] as $resId) {
-            if (!in_array($resId, $resourcesInBasket)) {
-                return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
-            }
+        if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
         }
 
         $resourcesForAction = [];
@@ -667,10 +672,8 @@ class ResourceListController
             $resourcesInBasket[] = $resource['res_id'];
         }
 
-        foreach ($body['resources'] as $resId) {
-            if (!in_array($resId, $resourcesInBasket)) {
-                return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
-            }
+        if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
         }
 
         $locked = 0;
@@ -731,10 +734,8 @@ class ResourceListController
             $resourcesInBasket[] = $resource['res_id'];
         }
 
-        foreach ($body['resources'] as $resId) {
-            if (!in_array($resId, $resourcesInBasket)) {
-                return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
-            }
+        if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
         }
 
         $resourcesToUnlock = [];

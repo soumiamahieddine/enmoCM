@@ -16,6 +16,7 @@ namespace SignatureBook\controllers;
 
 use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
+use Basket\models\ActionGroupBasketModel;
 use Basket\models\BasketModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
@@ -67,11 +68,17 @@ class SignatureBookController
             }
         }
 
+        $defaultAction = ActionGroupBasketModel::get([
+            'select'    => ['id_action'],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'default_action_list = ?'],
+            'data'      => [$aArgs['basketId'], $aArgs['groupId'], 'Y']
+        ]);
+
         $actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $documents[0]['res_id'] : $documents[0]['alt_id']);
         $actionLabel .= " : {$documents[0]['title']}";
         $currentAction = [
-            'id' => ActionModel::getDefaultActionByGroupBasketId(['groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]),
-            'actionLabel' => $actionLabel
+            'id'            => $defaultAction[0]['id_action'],
+            'actionLabel'   => $actionLabel
         ];
         $listInstances = ListInstanceModel::get([
             'select'    => ['COUNT(*)'],
