@@ -859,4 +859,6 @@ export const LANG_EN = {
     "done"                      : "done",
     "noAction"                      : "No action",
     "warnLockRes"                      : "mail(s) are locked by an other user.\n\nThis action will process ONLY mails which are NOT locked",
+    "paperTemplate"                        : "Paper template",
+    "electronicTemplate"                   : "Electronic template",
 };

@@ -884,4 +884,6 @@ export const LANG_FR = {
     "done"                      : "effectuée",
     "noAction"                      : "Aucune action",
     "warnLockRes"                      : "courrier(s) verrouillé(s) par un autre utilisateur.\n\nL\'action prendra en compte UNIQUEMENT les courriers NON verouillés",
+    "paperTemplate"                        : "Modèle papier",
+    "electronicTemplate"                   : "Modèle électronique",
 };

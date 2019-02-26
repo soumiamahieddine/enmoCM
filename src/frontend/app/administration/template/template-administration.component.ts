@@ -89,8 +89,11 @@ export class TemplateAdministrationComponent implements OnInit {
                         this.template = data.template;
                         this.headerService.setHeader(this.lang.templateModification, this.template.template_label);
                         this.loading  = false;
-                        if(this.template.template_type=='HTML' || this.template.template_type=='OFFICE_HTML'){
+                        if(this.template.template_type=='HTML'){
                             this.initMce();
+                        }
+                        if(this.template.template_type=='OFFICE_HTML'){
+                            this.initMatTabMce();
                         }
                         if (this.template.template_style == '') {
                             this.buttonFileName = this.template.template_file_name;
@@ -117,6 +120,40 @@ export class TemplateAdministrationComponent implements OnInit {
             tinymce.suffix = '.min';
             tinymce.init({
                 selector: "textarea#templateHtml",
+                statusbar: false,
+                language: "fr_FR",
+                language_url: "tools/tinymce/langs/fr_FR.js",
+                height: "200",
+                plugins: [
+                    "textcolor",
+                    "autoresize",
+                    "code"
+                ],
+                external_plugins: {
+                    'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
+                },
+                menubar: false,
+                toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor | code",
+                theme_buttons1_add: "fontselect,fontsizeselect",
+                theme_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
+                theme_buttons2_add: "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
+                theme_buttons3_add_before: "tablecontrols,separator",
+                theme_buttons3_add: "separator,print,separator,ltr,rtl,separator,fullscreen,separator,insertlayer,moveforward,movebackward,absolut",
+                theme_toolbar_align: "left",
+                theme_advanced_toolbar_location: "top",
+                theme_styles: "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
+            });
+        }, 20);
+    }
+
+    initMatTabMce() {
+        setTimeout(() => {
+            tinymce.remove('textarea');
+            //LOAD EDITOR TINYMCE
+            tinymce.baseURL = "../../node_modules/tinymce";
+            tinymce.suffix = '.min';
+            tinymce.init({
+                selector: "textarea#templateOfficeHtml",
                 statusbar: false,
                 language: "fr_FR",
                 language_url: "tools/tinymce/langs/fr_FR.js",
@@ -331,7 +368,7 @@ export class TemplateAdministrationComponent implements OnInit {
         } else if(this.template.template_target == 'acknowledgementReceipt'){
             this.template.template_type = 'OFFICE_HTML';
             this.template.template_attachment_type = '';
-            this.initMce();
+            this.initMatTabMce();
         }
     }
 
