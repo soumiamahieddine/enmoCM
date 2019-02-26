@@ -632,11 +632,13 @@ class ResourceListController
             return $response->withJson(['success' => 'No resource to process']);
         }
 
+        if (empty($body['data'])) {
+            $body['data'] = [];
+        }
+        $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
         foreach ($resourcesForAction as $resId) {
-            $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
-
             if (!empty($method)) {
-                ActionMethodController::$method(['id' => $aArgs['actionId'], 'resId' => $resId]);
+                ActionMethodController::$method(['id' => $aArgs['actionId'], 'resId' => $resId, 'data' => $body['data']]);
             }
         }
         ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name']]);
