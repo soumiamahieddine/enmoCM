@@ -5,9 +5,13 @@ import { NotificationService } from '../notification.service';
 import { MatDialog, MatMenuTrigger } from '@angular/material';
 
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
+import { EnabledBasketPersistenceActionComponent } from './enabled-basket-persistence/enabled-basket-persistence-action.component';
+import { DisabledBasketPersistenceActionComponent } from './disabled-basket-persistence/disabled-basket-persistence-action.component';
+import { ResMarkAsReadActionComponent } from './res-mark-as-read/res-mark-as-read-action.component';
 import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
 import { UpdateDepartureDateActionComponent } from './update-departure-date-action/update-departure-date-action.component';
 import { ProcessActionComponent } from './process-action/process-action.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-actions-list',
@@ -38,7 +42,7 @@ export class ActionsListComponent implements OnInit {
     @Input('contextMode') contextMode: boolean;
     @Input('currentBasketInfo') currentBasketInfo: any;
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) { }
+    constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private router: Router) { }
 
     ngOnInit(): void { }
 
@@ -79,6 +83,7 @@ export class ActionsListComponent implements OnInit {
                 }
                 catch (error) {
                     console.log(error);
+                    console.log(action);
                     alert(this.lang.actionNotExist);  
                 }
                 this.loading = false;
@@ -148,8 +153,71 @@ export class ActionsListComponent implements OnInit {
         });
     }
 
+    disabledBasketPersistenceAction() {
+        const dialogRef = this.dialog.open(DisabledBasketPersistenceActionComponent, {
+            width: '500px',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
+            }
+        });
+    }
+
+    enabledBasketPersistenceAction() {
+        const dialogRef = this.dialog.open(EnabledBasketPersistenceActionComponent, {
+            width: '500px',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
+            }
+        });
+    }
+
+    resMarkAsReadAction() {
+        const dialogRef = this.dialog.open(ResMarkAsReadActionComponent, {
+            width: '500px',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
+            }
+        });
+    }
+
     processAction() {
 
+    // CALL GENERIC ACTION V1
+    v1Action() {
+        location.hash = "";
         window.location.href = 'index.php?page=view_baskets&module=basket&baskets='+this.currentBasketInfo.basket_id+'&basketId='+this.currentBasketInfo.basketId+'&resId='+this.arrRes[0]+'&userId='+this.currentBasketInfo.ownerId+'&groupIdSer='+this.currentBasketInfo.groupId+'&defaultAction='+this.currentAction.id;
         // WHEN V2
         /*this.dialog.open(ProcessActionComponent, {
@@ -162,6 +230,13 @@ export class ActionsListComponent implements OnInit {
                 currentBasketInfo: this.currentBasketInfo
             }
         });*/
+    }
+
+    // CALL SIGNATUREBOOK WITH V1 METHOD
+    signatureBookAction() {
+        location.hash = "";
+        window.location.href = 'index.php?page=view_baskets&module=basket&baskets='+this.currentBasketInfo.basket_id+'&basketId='+this.currentBasketInfo.basketId+'&resId='+this.arrRes[0]+'&userId='+this.currentBasketInfo.ownerId+'&groupIdSer='+this.currentBasketInfo.groupId+'&defaultAction='+this.currentAction.id+'&signatureBookMode=true';
+
     }
     ////
 
@@ -202,9 +277,6 @@ export class ActionsListComponent implements OnInit {
     }
 
     unlock() {
-        console.log('unlock documents');
         clearInterval(this.currentLock);
-        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/unlock', { resources: this.arrRes })
-            .subscribe((data: any) => { }, (err: any) => { });
     }
 }

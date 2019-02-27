@@ -15,6 +15,8 @@ namespace Action\controllers;
 use History\controllers\HistoryController;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
+use Action\models\ResMarkAsReadModel;
+use Action\models\BasketPersistenceModel;
 use Action\models\ActionModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\CurlModel;
@@ -22,9 +24,12 @@ use SrcCore\models\CurlModel;
 class ActionMethodController
 {
     const COMPONENTS_ACTIONS = [
-        'confirmAction' => null,
-        'closeMailAction' => 'closeMailAction',
-        'updateDepartureDateAction' => 'updateDepartureDateAction',
+        'confirmAction'                  => null,
+        'closeMailAction'                => 'closeMailAction',
+        'updateDepartureDateAction'      => 'updateDepartureDateAction',
+        'disabledBasketPersistenceAction' => 'disabledBasketPersistenceAction',
+        'enabledBasketPersistenceAction' => 'enabledBasketPersistenceAction',
+        'resMarkAsReadAction'            => 'resMarkAsReadAction',
     ];
 
     public static function terminateAction(array $aArgs)
@@ -161,6 +166,63 @@ class ActionMethodController
         ValidatorModel::intVal($aArgs, ['resId']);
 
         ResModel::update(['set' => ['departure_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?',  'departure_date is null'], 'data' => [$aArgs['resId']]]);
+
+        return true;
+    }
+
+    public static function disabledBasketPersistenceAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        BasketPersistenceModel::delete([
+            'where' => ['res_id = ?',  'user_id = ?'],
+            'data'  => [$aArgs['resId'], $GLOBALS['userId']]
+        ]);
+
+        BasketPersistenceModel::create([
+            'res_id'        => $aArgs['resId'],
+            'user_id'       => $GLOBALS['userId'],
+            'is_persistent' => 'N'
+        ]);
+
+        return true;
+    }
+
+    public static function enabledBasketPersistenceAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        BasketPersistenceModel::delete([
+            'where' => ['res_id = ?', 'user_id = ?'],
+            'data'  => [$aArgs['resId'], $GLOBALS['userId']]
+        ]);
+
+        BasketPersistenceModel::create([
+            'res_id'        => $aArgs['resId'],
+            'user_id'       => $GLOBALS['userId'],
+            'is_persistent' => 'Y'
+        ]);
+
+        return true;
+    }
+
+    public static function resMarkAsReadAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'data']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        ResMarkAsReadModel::delete([
+            'where' => ['res_id = ?', 'user_id = ?', 'basket_id = ?'],
+            'data'  => [$aArgs['resId'], $GLOBALS['userId'], $aArgs['data']['basketId']]
+        ]);
+
+        ResMarkAsReadModel::create([
+            'res_id'    => $aArgs['resId'],
+            'user_id'   => $GLOBALS['userId'],
+            'basket_id' => $aArgs['data']['basketId']
+        ]);
 
         return true;
     }

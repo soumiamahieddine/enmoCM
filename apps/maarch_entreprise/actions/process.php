@@ -246,11 +246,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     $frm_str .= '<i onmouseover="this.style.cursor=\'pointer\';" ';
     $frm_str .= 'onclick="$j.ajax({url :\'index.php?display=true&dir=actions&page=docLocker\', type : \'POST\',data : {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': '.$res_id.'}, success: function (answer) { ';
-    $frm_str .= 'destroyModal(\'modal_'.$id_action.'\');triggerAngular(\'#/basketList/users/21/groups/2/baskets/9\');';
-    //$frm_str .= 'window.location.href=window.location.href.replace(\'&directLinkToAction\', \'\');} });var tmp_bask=$(\'baskets\');';
-    //$frm_str .= 'if (tmp_bask){tmp_bask.style.visibility=\'visible\';}var tmp_ent =$(\'entity\');';
-    //$frm_str .= 'if (tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\');';
-    //$frm_str .= 'if (tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'.$id_action.'\');reinit();"';
+    $frm_str .= 'destroyModal(\'modal_'.$id_action.'\');triggerAngular(\'#/basketList/users/'.$_SESSION['urlV2Basket']['userId'].'/groups/'.$_SESSION['urlV2Basket']['groupIdSer'].'/baskets/'.$_SESSION['urlV2Basket']['basketId'].'\');';
     $frm_str .= ' }});"';
 
     $frm_str .= ' class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';

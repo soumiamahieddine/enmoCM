@@ -146,6 +146,7 @@ ALTER TABLE notes DROP COLUMN IF EXISTS tablename;
 ALTER TABLE notes DROP COLUMN IF EXISTS coll_id;
 ALTER TABLE notes RENAME COLUMN date_note TO creation_date;
 ALTER sequence notes_seq RENAME TO notes_id_seq;
+ALTER TABLE res_mark_as_read DROP COLUMN IF EXISTS coll_id;
 
 
 /* PARAM LIST DISPLAY */

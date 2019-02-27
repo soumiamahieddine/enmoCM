@@ -365,9 +365,15 @@ if ($_SESSION['cpt_info_basket'] > 0) {
 }
 
 if (!empty($_GET['resId']) && !empty($_GET['defaultAction']) && ($_SESSION['alreadyDefaultAction'] == false || !empty($_GET['groupIdSer']))) {
-    $_SESSION['alreadyDefaultAction'] = true;
+
+    $_SESSION['urlV2Basket'] = $_GET;
     echo '<script language="javascript">';
-    echo 'setTimeout(function(){validForm(\'page\', \''.$_GET['resId'].'\', \''.$_GET['defaultAction'].'\');}, 800);';
+    
+    if (!empty($_GET['signatureBookMode'])) {
+        echo 'setTimeout(function(){islockForSignatureBook(\''.$_GET['resId'].'\', \''.$_GET['baskets'].'\', \'RESPONSABLE\');}, 400);';
+    } else {
+        echo 'setTimeout(function(){validForm(\'page\', \''.$_GET['resId'].'\', \''.$_GET['defaultAction'].'\');}, 400);';
+    }
     echo '</script>';
 } else {
     $_SESSION['alreadyDefaultAction'] = false;
