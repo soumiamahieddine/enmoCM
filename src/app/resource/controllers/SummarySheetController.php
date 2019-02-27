@@ -146,7 +146,7 @@ class SummarySheetController
                     'data'   => ['entity_id', $tmpIds],
                     'orderBy' => ['listinstance_id']
                 ]);
-            } elseif ($unit['unit'] == 'secondaryInformations') {
+            } elseif ($unit['unit'] == 'senderRecipientInformations') {
                 $data['mlbCollExt'] = ResModel::getExt([
                     'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
                     'where' => ['res_id in (?)'],
