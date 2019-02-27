@@ -517,40 +517,19 @@ export class SignatureBookComponent implements OnInit {
     sendActionForm() {
         unlockDocument(this.resId);
 
-        if (this.signatureBook.resList.length == 0) {
-            this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
-                .subscribe((data: any) => {
-                    this.signatureBook.resList = data.resList;
-
-                    setSessionForSignatureBook(this.resId);
-                    valid_action_form(
-                        'empty',
-                        'index.php?display=true&page=manage_action&module=core',
-                        this.signatureBook.currentAction.id,
-                        this.resId,
-                        'res_letterbox',
-                        'null',
-                        'letterbox_coll',
-                        'page',
-                        false,
-                        [$j("#signatureBookActions option:selected")[0].value]
-                    );
-                });
-        } else {
-            setSessionForSignatureBook(this.resId);
-            valid_action_form(
-                'empty',
-                'index.php?display=true&page=manage_action&module=core',
-                this.signatureBook.currentAction.id,
-                this.resId,
-                'res_letterbox',
-                'null',
-                'letterbox_coll',
-                'page',
-                false,
-                [$j("#signatureBookActions option:selected")[0].value]
-            );
-        }
+        setSessionForSignatureBook(this.resId);
+        valid_action_form(
+            'empty',
+            'index.php?display=true&page=manage_action&module=core',
+            this.signatureBook.currentAction.id,
+            this.resId,
+            'res_letterbox',
+            'null',
+            'letterbox_coll',
+            'page',
+            false,
+            [$j("#signatureBookActions option:selected")[0].value]
+        );
     }
 
 }
