@@ -135,7 +135,7 @@ class NoteModel
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['notes', 'users', 'users_entities', 'entities'],
             'left_join' => ['notes.user_id = users.user_id', 'users.user_id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id'],
-            'where'     => ['notes.identifier = ?', 'users_entities.primary_entity=\'Y\''],
+            'where'     => ['notes.identifier = ?', '(users_entities.primary_entity=\'Y\' or notes.user_id = \'superadmin\')'],
             'data'      => [$aArgs['resId']],
             'order_by'  => empty($aArgs['orderBy']) ? ['creation_date'] : $aArgs['orderBy']
         ]);
@@ -169,5 +169,4 @@ class NoteModel
 
         return $aReturn;
     }
-
 }

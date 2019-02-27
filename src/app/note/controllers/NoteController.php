@@ -31,9 +31,13 @@ class NoteController
 {
     public function getByResId(Request $request, Response $response, array $aArgs)
     {
-        $check = Validator::intVal()->validate($aArgs['resId']);
+        $check = Validator::intVal()->notEmpty()->validate($aArgs['resId']);
         if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withStatus(400)->withJson(['errors' => 'resId is empty or not an integer']);
+        }
+
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $aNotes = NoteModel::getByResId(['select' => ['notes.id', 'firstname', 'lastname', 'entity_label', 'note_text', 'creation_date'], 'resId' => $aArgs['resId'], 'orderBy' => ['creation_date DESC']]);
@@ -47,12 +51,16 @@ class NoteController
 
         $check = Validator::stringType()->notEmpty()->validate($data['note_text']);
         if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request note text']);
+            return $response->withStatus(400)->withJson(['errors' => 'note_text is empty or not a string']);
+        }
+
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         
         if (isset($data['entities_chosen'])) {
             if (!Validator::arrayType()->validate($data['entities_chosen'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
+                return $response->withStatus(400)->withJson(['errors' => 'entities_chosen is not an array']);
             }
             foreach ($data['entities_chosen'] as $entityId) {
                 if ($entityId == null) {
@@ -64,10 +72,6 @@ class NoteController
                     return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
                 }
             }
-        }
-
-        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $noteId = NoteModel::create([
