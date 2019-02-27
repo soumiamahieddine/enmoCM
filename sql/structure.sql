@@ -1350,8 +1350,6 @@ CREATE TABLE res_letterbox
   barcode text,
   sve_start_date TIMESTAMP without time zone,
   external_signatory_book_id integer,
-  acknowledgment_creation_date timestamp without time zone,
-  acknowledgment_send_date timestamp without time zone,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1641,8 +1639,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.department_number_id,
     r.barcode,
     r.external_signatory_book_id,
-    r.acknowledgment_creation_date,
-    r.acknowledgment_send_date,
     r.custom_t1 AS doc_custom_t1,
     r.custom_t2 AS doc_custom_t2,
     r.custom_t3 AS doc_custom_t3,
@@ -2179,3 +2175,19 @@ CONSTRAINT exports_templates_unique_key UNIQUE (user_id, format)
 )
 WITH (OIDS=FALSE);
 
+CREATE TABLE acknowledgment_receipts
+(
+id serial NOT NULL,
+res_id INTEGER NOT NULL,
+type CHARACTER VARYING(4) NOT NULL,
+format CHARACTER VARYING(8) NOT NULL,
+user_id INTEGER NOT NULL,
+contact_address_id character varying(8) NOT NULL,
+creation_date timestamp without time zone NOT NULL,
+send_date timestamp without time zone NOT NULL,
+docserver_id CHARACTER VARYING(128) NOT NULL,
+path CHARACTER VARYING(256) NOT NULL,
+filename CHARACTER VARYING(256) NOT NULL,
+CONSTRAINT acknowledgment_receipts_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);

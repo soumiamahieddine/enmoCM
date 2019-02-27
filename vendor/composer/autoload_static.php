@@ -142,6 +142,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             'Attachment\\' => 11,
             'Action\\' => 7,
+            'AcknowledgementReceipt\\' => 23,
         ),
     );
 
@@ -386,6 +387,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Action\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/action',
+        ),
+        'AcknowledgementReceipt\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/acknowledgementReceipt',
         ),
     );
 

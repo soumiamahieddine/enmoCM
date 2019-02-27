@@ -281,13 +281,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '</div>';
     $frm_str .= '</div>';
 
-    $frm_str .= '<i onmouseover="this.style.cursor=\'pointer\';" '
-        .'onclick="new Ajax.Request(\''.$_SESSION['config']['businessappurl']
-        .'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': '
-        .functions::xssafe($res_id).'}, onSuccess: function(answer){window.location.href=\''
-        .$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket&baskets='
-        .$_SESSION['current_basket']['id'].'\';} });$j(\'#baskets\').css(\'visibility\',\'visible\');destroyModal(\'modal_'.$id_action.'\');reinit();"'
-        .' class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
+    $frm_str .= '<i onmouseover="this.style.cursor=\'pointer\';" ';
+    $frm_str .= 'onclick="$j.ajax({url :\'index.php?display=true&dir=actions&page=docLocker\', type : \'POST\',data : {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': '.$res_id.'}, success: function (answer) { ';
+    $frm_str .= 'destroyModal(\'modal_'.$id_action.'\');triggerAngular(\'#/basketList/users/'.$_SESSION['urlV2Basket']['userId'].'/groups/'.$_SESSION['urlV2Basket']['groupIdSer'].'/baskets/'.$_SESSION['urlV2Basket']['basketId'].'\');';
+    $frm_str .= ' }});"';
+    $frm_str .=' class="fa fa-times-circle fa-2x closeModale" title="'._CLOSE.'"/>';
     $frm_str .= '</i>';
 
     //PART LEFT

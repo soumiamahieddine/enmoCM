@@ -636,12 +636,23 @@ class ResourceListController
         $body['note'] = empty($body['note']) ? null : $body['note'];
 
         $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
+        $methodResponses = [];
         foreach ($resourcesForAction as $resId) {
             if (!empty($method)) {
-                ActionMethodController::$method(['id' => $aArgs['actionId'], 'resId' => $resId, 'data' => $body['data']]);
+                $methodResponse = ActionMethodController::$method(['id' => $aArgs['actionId'], 'resId' => $resId, 'data' => $body['data']]);
+                if (!empty($methodResponse['errors'])) {
+                    return $response->withStatus(500)->withJson(['errors' => $methodResponse['errors']]);
+                }
+                if ($methodResponse !== true) {
+                    $methodResponses = array_merge($methodResponses, $methodResponse);
+                }
             }
         }
         ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note']]);
+
+        if (!empty($methodResponses)) {
+            return $response->withJson($methodResponses);
+        }
 
         return $response->withStatus(204);
     }

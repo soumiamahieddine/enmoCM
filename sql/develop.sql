@@ -12,12 +12,6 @@ DROP VIEW IF EXISTS res_view_letterbox;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
 ALTER TABLE res_letterbox ADD COLUMN external_signatory_book_id integer;
 
-/* Acknowledgment receipt */
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS acknowledgment_creation_date;
-ALTER TABLE res_letterbox ADD COLUMN acknowledgment_creation_date timestamp without time zone;
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS acknowledgment_send_date;
-ALTER TABLE res_letterbox ADD COLUMN acknowledgment_send_date timestamp without time zone;
-
 ALTER TABLE users DROP COLUMN IF EXISTS external_id;
 ALTER TABLE users ADD COLUMN external_id json DEFAULT '{}';
 
@@ -164,6 +158,28 @@ UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"
 ALTER TABLE actions DROP COLUMN IF EXISTS component;
 ALTER TABLE actions ADD COLUMN component CHARACTER VARYING (128);
 
+/* Acknowledgment receipts */
+DROP TABLE IF EXISTS acknowledgment_receipts;
+CREATE TABLE acknowledgment_receipts
+(
+id serial NOT NULL,
+res_id INTEGER NOT NULL,
+type CHARACTER VARYING(4) NOT NULL,
+format CHARACTER VARYING(8) NOT NULL,
+user_id INTEGER NOT NULL,
+contact_address_id character varying(8) NOT NULL,
+creation_date timestamp without time zone NOT NULL,
+send_date timestamp without time zone NOT NULL,
+docserver_id CHARACTER VARYING(128) NOT NULL,
+path CHARACTER VARYING(256) NOT NULL,
+filename CHARACTER VARYING(256) NOT NULL,
+CONSTRAINT acknowledgment_receipts_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled)
+VALUES ('ACKNOWLEDGMENT_RECEIPTS', 'Accusés de réception', 'Y');
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
+VALUES ('ACKNOWLEDGMENT_RECEIPTS', 'ACKNOWLEDGMENT_RECEIPTS', 'Dépôt des AR', 'N', 50000000000, 0, '/opt/maarch/docservers/acknowledgment_receipts/', '2019-04-19 22:22:22.201904', 'letterbox_coll');
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
@@ -209,8 +225,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.department_number_id,
     r.barcode,
     r.external_signatory_book_id,
-    r.acknowledgment_creation_date,
-    r.acknowledgment_send_date,
     r.custom_t1 AS doc_custom_t1,
     r.custom_t2 AS doc_custom_t2,
     r.custom_t3 AS doc_custom_t3,
