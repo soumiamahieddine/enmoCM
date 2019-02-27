@@ -1,22 +1,11 @@
 <?php
-/*
-*    Copyright 2008,2015 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
+
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
 
 /**
 * @brief   Action : mark as read
@@ -51,22 +40,19 @@ function manage_markAsRead($arr_id, $history, $id_action, $label_action, $status
     $ind_coll = $sec->get_ind_collection($_POST['coll_id']);
     $ext_table = $_SESSION['collections'][$ind_coll]['extensions'][0];
 
-    for($i=0; $i<count($arr_id );$i++)
-    {
+    for ($i=0; $i<count($arr_id);$i++) {
         $result .= $arr_id[$i].'#';
 
-        $stmt = $db->query("SELECT * FROM res_mark_as_read WHERE res_id = ? AND user_id = ? AND basket_id = ? AND coll_id = ?"
-                            , array($arr_id[$i], $_SESSION['user']['UserId'], $_SESSION['current_basket']['id'], $_POST['coll_id']));
+        $stmt = $db->query("SELECT * FROM res_mark_as_read WHERE res_id = ? AND user_id = ? AND basket_id = ?", array($arr_id[$i], $_SESSION['user']['UserId'], $_SESSION['current_basket']['id']));
 
         $lineExist = false;
         while ($result1 = $stmt->fetchObject()) {
             $lineExist = true;
         }
         if (!$lineExist) {
-            $query = "INSERT INTO res_mark_as_read VALUES(?, ?, ?, ?)";
-            $db->query($query, array($_POST['coll_id'], $arr_id[$i], $_SESSION['user']['UserId'], $_SESSION['current_basket']['id']));
+            $query = "INSERT INTO res_mark_as_read VALUES(?, ?, ?)";
+            $db->query($query, array($arr_id[$i], $_SESSION['user']['UserId'], $_SESSION['current_basket']['id']));
         }
-
     }
     return array('result' => $result, 'history_msg' => '');
- }
+}

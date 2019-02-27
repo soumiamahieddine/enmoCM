@@ -124,6 +124,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SET_PERSISTENT_MODE_ON</LABEL>
         <NAME>set_persistent_mode_on</NAME>
         <DESC>_SET_PERSISTENT_MODE_ON_DESC</DESC>
+        <component>enabledBasketPersistenceAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -136,6 +137,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SET_PERSISTENT_MODE_OFF</LABEL>
         <NAME>set_persistent_mode_off</NAME>
         <DESC>_SET_PERSISTENT_MODE_OFF_DESC</DESC>
+        <component>disabledBasketPersistenceAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -148,6 +150,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_MARK_AS_READ</LABEL>
         <NAME>mark_as_read</NAME>
         <DESC>_MARK_AS_READ_DESC</DESC>
+        <component>resMarkAsReadAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
