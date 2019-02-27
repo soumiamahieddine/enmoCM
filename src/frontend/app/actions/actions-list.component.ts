@@ -213,8 +213,6 @@ export class ActionsListComponent implements OnInit {
         });
     }
 
-    processAction() {
-
     // CALL GENERIC ACTION V1
     v1Action() {
         location.hash = "";
