@@ -320,8 +320,11 @@ export class TemplateAdministrationComponent implements OnInit {
             alert(this.lang.editModelFirst);
             return;
         }
-        if (this.template.template_type=='HTML' || this.template.template_type=='OFFICE_HTML') {
+        if (this.template.template_type=='HTML') {
             this.template.template_content = tinymce.get('templateHtml').getContent();
+        }
+        if (this.template.template_type=='OFFICE_HTML') {
+            this.template.template_content = tinymce.get('templateOfficeHtml').getContent();
         }
         if (this.creationMode) {
             if (this.template.template_style == 'uploadFile') {
