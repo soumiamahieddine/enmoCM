@@ -15,7 +15,6 @@
 namespace Action\models;
 
 use SrcCore\models\ValidatorModel;
-use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
 abstract class ResMarkAsReadModelAbstract
@@ -27,7 +26,7 @@ abstract class ResMarkAsReadModelAbstract
             'columnsValues' => $aArgs
         ]);
 
-        return $nextSequenceId;
+        return true;
     }
 
     public static function delete(array $aArgs)
