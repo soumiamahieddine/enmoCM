@@ -66,4 +66,5 @@ return array(
     'Basket\\' => array($baseDir . '/src/app/basket'),
     'Attachment\\' => array($baseDir . '/src/app/attachment'),
     'Action\\' => array($baseDir . '/src/app/action'),
+    'AcknowledgementReceipt\\' => array($baseDir . '/src/app/acknowledgementReceipt'),
 );

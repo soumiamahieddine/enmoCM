@@ -2,6 +2,7 @@
     "autoload": {
     	"psr-4": {
             "SrcCore\\"                 : "src/core/",
+            "AcknowledgementReceipt\\"  : "src/app/acknowledgementReceipt/",
             "Action\\"                  : "src/app/action/",
             "Attachment\\"              : "src/app/attachment/",
             "Basket\\"                  : "src/app/basket/",
@@ -30,7 +31,6 @@
             "Template\\"                : "src/app/template/",
             "User\\"                    : "src/app/user/",
             "VersionUpdate\\"           : "src/app/versionUpdate/",
-            "AcknowledgementReceipt\\"  : "src/app/acknowledgementReceipt/",
             "Sendmail\\"                : "modules/sendmail/"
     	}
     },
