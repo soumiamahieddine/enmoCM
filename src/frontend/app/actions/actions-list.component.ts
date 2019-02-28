@@ -75,15 +75,23 @@ export class ActionsListComponent implements OnInit {
         this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
             .subscribe((data: any) => {
                 try {
-                    if (data.lockedResources > 0) {
-                        alert(data.lockedResources + ' ' + this.lang.warnLockRes + '.');
+                    let msgWarn  = this.lang.warnLockRes;
+
+                    if (data.lockedResources != this.arrRes.length) {
+                        msgWarn += this.lang.warnLockRes2 + '.';
                     }
-                    this.lock();
-                    this[action.component]();
+
+                    if (data.lockedResources > 0) {
+                        alert(data.lockedResources + ' ' + msgWarn);
+                    }
+
+                    if (data.lockedResources != this.arrRes.length) {
+                        this.lock();
+                        this[action.component]();
+                    }
                 }
                 catch (error) {
                     console.log(error);
-                    console.log(action);
                     alert(this.lang.actionNotExist);  
                 }
                 this.loading = false;
