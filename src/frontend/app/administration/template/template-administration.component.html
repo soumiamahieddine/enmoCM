@@ -45,12 +45,12 @@
                                     <mat-select [disabled]="!creationMode" id="template_target" name="template_target" title="{{lang.templateTarget}}" placeholder="{{lang.templateTarget}}"
                                         [(ngModel)]="template.template_target" (ngModelChange)="updateTemplateType()">
                                         <mat-option value="">{{lang.noTarget}}</mat-option>
-                                        <mat-option value="attachments">{{lang.attachments}}</mat-option>
-                                        <mat-option value="notifications">{{lang.notifications}}</mat-option>
-                                        <mat-option value="doctypes">{{lang.doctypes}}</mat-option>
+                                        <mat-option value="acknowledgementReceipt">{{lang.acknowledgementReceipt}}</mat-option>
                                         <mat-option value="notes">{{lang.notes}}</mat-option>
                                         <mat-option value="sendmail">{{lang.sendmail}}</mat-option>
-                                        <mat-option value="acknowledgementReceipt">{{lang.acknowledgementReceipt}}</mat-option>
+                                        <mat-option value="notifications">{{lang.notifications}}</mat-option>
+                                        <mat-option value="attachments">{{lang.attachments}}</mat-option>
+                                        <mat-option value="doctypes">{{lang.doctypes}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
