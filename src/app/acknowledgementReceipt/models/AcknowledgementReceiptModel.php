@@ -52,6 +52,34 @@ class AcknowledgementReceiptModel
         return $aTemplates;
     }
 
+    public static function create(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'type', 'format', 'userId', 'contactAddressId', 'docserverId', 'path', 'filename', 'fingerprint']);
+        ValidatorModel::intVal($aArgs, ['resId', 'userId']);
+        ValidatorModel::stringType($aArgs, ['type', 'format', 'docserverId', 'path', 'filename', 'fingerprint']);
+
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'acknowledgement_receipts_id_seq']);
+
+        DatabaseModel::insert([
+            'table'         => 'acknowledgement_receipts',
+            'columnsValues' => [
+                'id'                    => $nextSequenceId,
+                'res_id'                => $aArgs['resId'],
+                'type'                  => $aArgs['type'],
+                'format'                => $aArgs['format'],
+                'user_id'               => $aArgs['userId'],
+                'contact_address_id'    => $aArgs['contactAddressId'],
+                'creation_date'         => 'CURRENT_TIMESTAMP',
+                'docserver_id'          => $aArgs['docserverId'],
+                'path'                  => $aArgs['path'],
+                'filename'              => $aArgs['filename'],
+                'fingerprint'           => $aArgs['fingerprint']
+            ]
+        ]);
+
+        return $nextSequenceId;
+    }
+
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);

@@ -20,7 +20,7 @@ import { SaveNumericPackageComponent }      from './save-numeric-package.compone
             { path: 'home', component: HomeComponent },
             { path: 'basketList/users/:userSerialId/groups/:groupSerialId/baskets/:basketId', component: BasketListComponent },
             { path: 'saveNumericPackage', component: SaveNumericPackageComponent },
-            { path: 'groups/:groupId/baskets/:basketId/signatureBook/:resId', component: SignatureBookComponent },
+            { path: 'signatureBook/users/:userId/groups/:groupId/baskets/:basketId/resources/:resId', component: SignatureBookComponent },
             { path: '**',   redirectTo: 'home', pathMatch: 'full' },
         ], { useHash: true }),
     ],

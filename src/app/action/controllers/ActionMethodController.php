@@ -23,6 +23,8 @@ use SrcCore\models\CurlModel;
 
 class ActionMethodController
 {
+    use ActionMethodTraitAcknowledgementReceipt;
+
     const COMPONENTS_ACTIONS = [
         'confirmAction'                  => null,
         'closeMailAction'                => 'closeMailAction',

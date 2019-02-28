@@ -162,9 +162,9 @@ UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"
 ALTER TABLE actions DROP COLUMN IF EXISTS component;
 ALTER TABLE actions ADD COLUMN component CHARACTER VARYING (128);
 
-/* Acknowledgment Receipts */
-DROP TABLE IF EXISTS acknowledgment_receipts;
-CREATE TABLE acknowledgment_receipts
+/* Acknowledgement Receipts */
+DROP TABLE IF EXISTS acknowledgement_receipts;
+CREATE TABLE acknowledgement_receipts
 (
 id serial NOT NULL,
 res_id INTEGER NOT NULL,
@@ -178,14 +178,14 @@ docserver_id CHARACTER VARYING(128) NOT NULL,
 path CHARACTER VARYING(256) NOT NULL,
 filename CHARACTER VARYING(256) NOT NULL,
 fingerprint CHARACTER VARYING(256) NOT NULL,
-CONSTRAINT acknowledgment_receipts_pkey PRIMARY KEY (id)
+CONSTRAINT acknowledgement_receipts_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-DELETE FROM docserver_types WHERE docserver_type_id = 'ACKNOWLEDGMENT_RECEIPTS';
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled) VALUES ('ACKNOWLEDGMENT_RECEIPTS', 'Accusés de réception', 'Y');
-DELETE FROM docservers WHERE docserver_id = 'ACKNOWLEDGMENT_RECEIPTS';
+DELETE FROM docserver_types WHERE docserver_type_id = 'ACKNOWLEDGEMENT_RECEIPTS';
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled) VALUES ('ACKNOWLEDGEMENT_RECEIPTS', 'Accusés de réception', 'Y');
+DELETE FROM docservers WHERE docserver_id = 'ACKNOWLEDGEMENT_RECEIPTS';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
-VALUES ('ACKNOWLEDGMENT_RECEIPTS', 'ACKNOWLEDGMENT_RECEIPTS', 'Dépôt des AR', 'N', 50000000000, 0, '/opt/maarch/docservers/acknowledgment_receipts/', '2019-04-19 22:22:22.201904', 'letterbox_coll');
+VALUES ('ACKNOWLEDGEMENT_RECEIPTS', 'ACKNOWLEDGEMENT_RECEIPTS', 'Dépôt des AR', 'N', 50000000000, 0, '/opt/maarch/docservers/acknowledgment_receipts/', '2019-04-19 22:22:22.201904', 'letterbox_coll');
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS

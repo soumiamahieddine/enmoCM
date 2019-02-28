@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -15,6 +15,10 @@ export class NoteEditorComponent implements AfterViewInit {
     notes: any;
     loading: boolean = true;
 
+    content: string = '';
+
+    @Input('mode') mode: any;
+
     constructor(public http: HttpClient) { }
 
     ngAfterViewInit() { }
@@ -25,5 +29,10 @@ export class NoteEditorComponent implements AfterViewInit {
             this.notes = data;
             this.loading = false;
         });*/
+    }
+
+
+    getNoteContent() {
+        return this.content;
     }
 }

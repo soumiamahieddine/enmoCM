@@ -60,24 +60,25 @@ if (empty($_GET['resId'])) {
     $_GET['resId'] = "'none'";
 }
 
-if(empty($_GET['defaultAction'])) {
+if (empty($_GET['defaultAction'])) {
     $_GET['defaultAction'] = $_SESSION['current_basket']['default_action'];
 }
 
 $_SESSION['urlV2Basket'] = $_GET;
 echo '<script language="javascript">';
-
-if (!empty($_GET['signatureBookMode'])) {
-    echo 'islockForSignatureBook(\''.$_GET['resId'].'\', \''.$_GET['baskets'].'\', \'RESPONSABLE\');';
+if (!empty($_GET['backToBasket'])) {
+    echo 'triggerAngular(\'#/basketList/users/'.$_GET['userId'].'/groups/'.$_GET['groupIdSer'].'/baskets/'.$_GET['basketId'].'\');';
+} else if (!empty($_GET['signatureBookMode'])) {
+    echo 'triggerAngular(\'#/signatureBook/users/'.$_GET['userId'].'/groups/'.$_GET['groupIdSer'].'/baskets/'.$_GET['basketId'].'/resources/'.$_GET['resId'].'\');';
 } else {
-    echo 'action_send_first_request(\'' 
-        . $_SESSION['config']['businessappurl'] 
+    echo 'action_send_first_request(\''
+        . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&page=manage_action&module=core\''
         . ', \'page\''
-        . ',' . $_GET['defaultAction'] 
-        . ',' . $_GET['resId'] 
+        . ',' . $_GET['defaultAction']
+        . ',' . $_GET['resId']
         . ',\'' . $_SESSION['current_basket']['table'] . '\''
-        . ',\'basket\'' 
+        . ',\'basket\''
         . ',\'' . $_SESSION['current_basket']['coll_id'] . '\');';
 }
 echo '</script>';

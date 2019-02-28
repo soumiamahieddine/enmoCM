@@ -2175,7 +2175,7 @@ CONSTRAINT exports_templates_unique_key UNIQUE (user_id, format)
 )
 WITH (OIDS=FALSE);
 
-CREATE TABLE acknowledgment_receipts
+CREATE TABLE acknowledgement_receipts
 (
 id serial NOT NULL,
 res_id INTEGER NOT NULL,

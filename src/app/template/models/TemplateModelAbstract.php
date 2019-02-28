@@ -166,7 +166,7 @@ abstract class TemplateModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
 
-        $datasources = [];
+        $datasource = [];
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/templates/xml/datasources.xml']);
         if ($loadedXml) {
@@ -221,14 +221,14 @@ abstract class TemplateModelAbstract
         $data = $aArgs['data'];
         
         $listEntities = DatabaseModel::select([
-        'select'    => ['ta.value_field'],
-        'table'     => ['templates t','templates_association ta'],
-        'left_join' => ['ta.template_id = t.template_id'],
-        'where'     => ['t.template_attachment_type = ?', 'value_field in (?)'],
-        'data'      => [$data['template_attachment_type'], $data['entities']],
-        'groupBy'   => ['ta.value_field']
-        ]);
-
+        'select'    => ['ta.value_field', 'e.entity_label'],
+        'table'     => ['templates t','templates_association ta', 'entities e'],
+        'left_join' => ['ta.template_id = t.template_id', 'e.entity_id = ta.value_field'],
+        'where'     => empty($data['template_id']) ? ['t.template_attachment_type = ?', 'value_field in (?)'] : ['t.template_attachment_type = ?', 'value_field in (?)', 't.template_id != (?)' ],
+        'data'      => empty($data['template_id']) ? [$data['template_attachment_type'], $data['entities']]   : [$data['template_attachment_type'], $data['entities'], $data['template_id']],
+        'groupBy'   => ['ta.value_field', 'e.entity_label']
+        ]);       
+        
         return $listEntities;
     }
 }

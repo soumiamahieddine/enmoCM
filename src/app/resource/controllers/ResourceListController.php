@@ -641,7 +641,7 @@ class ResourceListController
         $methodResponses = [];
         foreach ($resourcesForAction as $resId) {
             if (!empty($method)) {
-                $methodResponse = ActionMethodController::$method(['id' => $aArgs['actionId'], 'resId' => $resId, 'data' => $body['data']]);
+                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data']]);
                 if (!empty($methodResponse['errors'])) {
                     return $response->withStatus(500)->withJson(['errors' => $methodResponse['errors']]);
                 }

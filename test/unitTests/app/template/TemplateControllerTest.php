@@ -62,6 +62,27 @@ class TemplateControllerTest extends TestCase
         $this->assertSame('Bad Request', $responseBody->errors);
 
         ########## CREATE ACKNOLEDGEMENT RECEIPT ##########
+
+        //Create entity
+        $entityController = new \Entity\controllers\EntityController();
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'entity_id'         => 'TST_AR',
+            'entity_label'      => 'TEST-ENTITY_AR',
+            'short_label'       => 'TEST-ENTITY_AR',
+            'entity_type'       => 'Service',
+            'email'             => 'test@test.fr',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $entityController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->entities);
+
+        //Create template
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -102,7 +123,7 @@ class TemplateControllerTest extends TestCase
         $response     = $templates->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame("Les entités suivantes ont déjà un modèle d'ar_simple : TST", $responseBody->errors);
+        $this->assertInternalType('array', $responseBody->checkEntities);
 
         ########## CREATE FAIL ACKNOLEDGEMENT RECEIPT - no html and no office ##########
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
@@ -349,6 +370,16 @@ class TemplateControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame("success", $responseBody->success);
+
+        //Delete entity
+        $entityController = new \Entity\controllers\EntityController();
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $entityController->delete($request, new \Slim\Http\Response(), ['id' => 'TST_AR']);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->entities);
+
 
         ########## DELETE FAIL ##########
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
