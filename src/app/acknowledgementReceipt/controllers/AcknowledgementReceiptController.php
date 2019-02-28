@@ -56,12 +56,17 @@ class AcknowledgementReceiptController
             'data'      => [$bodyData['resources']]
         ]);
 
+        $allResourcesInBasket = [];
+        foreach ($rawResourcesInBasket as $resource) {
+            $allResourcesInBasket[] = $resource['res_id'];
+        }
+
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
         $acknowledgement = AcknowledgementReceiptModel::getByResIds([
             'select'  => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'send_date'],
-            'resIds'  => $rawResourcesInBasket,
+            'resIds'  => $allResourcesInBasket,
             'orderBy' => ['res_id']
         ]);
 
@@ -76,8 +81,7 @@ class AcknowledgementReceiptController
                     return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
                 }
 
-                $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
-                $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+                $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => 'SHA256']);
                 if (!empty($value['fingerprint']) && $value['fingerprint'] != $fingerprint) {
                     return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
                 }
