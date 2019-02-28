@@ -116,7 +116,6 @@ export class BasketListComponent implements OnInit {
         this.initResultList();
 
         this.route.params.subscribe(params => {
-            console.log(params);
             this.basketUrl = '../../rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
 
             this.currentBasketInfo = {
