@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { HeaderService } from '../../../service/header.service';
 
 declare function $j(selector: any): any;
@@ -43,8 +43,12 @@ export class TemplateAdministrationComponent implements OnInit {
     lockFound               : boolean   = false;
     intervalLockFile        : any;
 
+    dialogRef               : MatDialogRef<any>;
+    data                    : any[]      = [];
+    config                  : any        = {};
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService, public dialog: MatDialog) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -293,9 +297,19 @@ export class TemplateAdministrationComponent implements OnInit {
                 this.template.template_style = '';
             }
             this.http.post(this.coreUrl + 'rest/templates', this.template)
-                .subscribe(() => {
-                    this.router.navigate(['/administration/templates']);
-                    this.notify.success(this.lang.templateAdded);
+                .subscribe((data:any) => {
+                    if(data.checkEntities) {
+                        this.config = {
+                            data: {
+                                entitiesList: data.checkEntities,
+                                template_attachment_type: this.template.template_attachment_type
+                            }
+                        };
+                        this.dialogRef = this.dialog.open(TemplateAdministrationCheckEntitiesModalComponent, this.config);
+                    } else {
+                        this.router.navigate(['/administration/templates']);
+                        this.notify.success(this.lang.templateAdded);
+                    }
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -304,9 +318,19 @@ export class TemplateAdministrationComponent implements OnInit {
                 this.template.template_style = '';
             }
             this.http.put(this.coreUrl + 'rest/templates/' + this.template.template_id, this.template)
-                .subscribe(() => {
-                    this.router.navigate(['/administration/templates']);
-                    this.notify.success(this.lang.templateUpdated);
+                .subscribe((data:any) => {
+                    if(data.checkEntities) {
+                        this.config = {
+                            data: {
+                                entitiesList: data.checkEntities,
+                                template_attachment_type: this.template.template_attachment_type
+                            }
+                        };
+                        this.dialogRef = this.dialog.open(TemplateAdministrationCheckEntitiesModalComponent, this.config);
+                    } else {
+                        this.router.navigate(['/administration/templates']);
+                        this.notify.success(this.lang.templateUpdated);
+                    }
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -349,4 +373,16 @@ export class TemplateAdministrationComponent implements OnInit {
         this.fileToImport();
         this.template.uploadedFile = null;
     }
+@Component({
+    templateUrl: "template-administration-checkEntities-modal.component.html",
+    styleUrls: ['template-administration-checkEntities-modal.scss']
+})
+export class TemplateAdministrationCheckEntitiesModalComponent {
+    lang: any  = LANG;
+    
+    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<TemplateAdministrationCheckEntitiesModalComponent>) {
+    }
+
+    ngOnInit(): void {}
+    
 }

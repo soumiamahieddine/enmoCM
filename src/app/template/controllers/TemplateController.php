@@ -114,15 +114,7 @@ class TemplateController
             $checkEntities = TemplateModel::checkEntities(['data' => $data]);
             
             if(!empty($checkEntities)){
-                $listMessage = '';
-                foreach($checkEntities as $entities){
-                    if($listMessage!='') {
-                        $listMessage .= ", ";
-                    }
-                    $listMessage = $listMessage . $entities['value_field'];
-                }
-                $message = _TEMPLATE_ERROR_CHECK_ENTITIES . $data['template_attachment_type'] . ' : ' . $listMessage;
-                return $response->withStatus(400)->withJson(['errors' => $message]);
+                return $response->withJson(['checkEntities' => $checkEntities]);
             }
         }
 
@@ -202,6 +194,7 @@ class TemplateController
         $data = $request->getParams();
         $data['template_type'] = $template['template_type'];
         $data['template_target'] = $template['template_target'];
+        $data['template_id'] = $aArgs['id'];
 
         if (!TemplateController::checkData(['data' => $data])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
@@ -209,6 +202,14 @@ class TemplateController
 
         if ($data['template_type'] == 'OFFICE_HTML' && !$data['jnlpUniqueId'] && !$data['uploadedFile'] && !$data['template_content']) {
             return $response->withStatus(400)->withJson(['errors' => 'You must complete at least one of the two templates']);
+        }
+
+        if ($data['template_target'] == 'acknowledgementReceipt' && !empty($data['entities'])) {
+            $checkEntities = TemplateModel::checkEntities(['data' => $data]);
+            
+            if(!empty($checkEntities)){
+                return $response->withJson(['checkEntities' => $checkEntities]);
+            }
         }
 
         if (($data['template_type'] == 'OFFICE' || $data['template_type'] == 'OFFICE_HTML') && (!empty($data['jnlpUniqueId']) || !empty($data['uploadedFile']))) {

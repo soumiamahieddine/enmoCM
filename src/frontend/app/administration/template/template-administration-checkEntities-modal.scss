@@ -1,0 +1,13 @@
+.mat-dialog-content{
+    height: auto !important;
+    min-width: 30vw;
+    max-height: 65vh;
+}
+
+.modal-body{
+    min-height: auto;
+}
+
+mat-dialog-actions{
+    justify-content: center;
+}

@@ -877,9 +877,9 @@ export const LANG_NL = {
     "addNote"                      : "Add note", //_TO_TRANSLATE
     "makeActionOn"                      : "Do you want to do this action on", //_TO_TRANSLATE
     "acknowledgementReceipt"            : "Acknowledgement of receipt", //_TO_TRANSLATE
-    'AR_simple'                         : 'AR simple', //_TO_TRANSLATE
-    'AR_SVA'                            : 'AR SVA', //_TO_TRANSLATE
-    'AR_SVR'                            : 'AR SVR', //_TO_TRANSLATE
+    'ar_simple'                         : 'AR simple', //_TO_TRANSLATE
+    'ar_sva'                            : 'AR SVA', //_TO_TRANSLATE
+    'ar_svr'                            : 'AR SVR', //_TO_TRANSLATE
     "tooMuchDatas"                      : "Too much datas to export", //_TO_TRANSLATE
     "warnTooMuchSelect"                      : "only 500 elements can be processed with an action", //_TO_TRANSLATE
     "elements"                      : "element(s)", //_TO_TRANSLATE
@@ -891,4 +891,6 @@ export const LANG_NL = {
     "electronicTemplate"                   : "Electronic template", //_TO_TRANSLATE
     "updateClosingDate"                   : "This will update mail <b class=\"highlight\">closing date</b>.", //_TO_TRANSLATE
     "updateDepartureDate"                   : "This will update mail <b class=\"highlight\">departure date</b>.", //_TO_TRANSLATE
+    "templateCheckEntities"                 : "The following entities already have a registered template for the type : ", //_TO_TRANSLATE
+    "templateAssociateEntities"             : "List of entities already associated with a template", //_TO_TRANSLATE
 };

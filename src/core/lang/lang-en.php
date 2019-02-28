@@ -85,7 +85,6 @@ define('_STATUS_NOT_FOUND', 'Status not found');
 define('_TEMPLATE_ADDED', 'Template added');
 define('_TEMPLATE_UPDATED', 'Template updated');
 define('_TEMPLATE_DELETED', 'Template deleted');
-define( '_TEMPLATE_ERROR_CHECK_ENTITIES',"The following entities already have a model of");
 define('_TO_CC', 'On copy');
 define('_TO_SIGN', 'For signature');
 define('_UPDATE_STATUS', 'Status update');
