@@ -12,6 +12,7 @@ declare function $j(selector: string) : any;
 declare function showAttachmentsForm(path: string) : void;
 declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
 declare function setSessionForSignatureBook(resId: any) : void;
+declare function triggerAngular(route: string) : void;
 
 declare var angularGlobals : any;
 
@@ -32,8 +33,9 @@ export class SignatureBookComponent implements OnInit {
 
     coreUrl                     : string;
     resId                       : number;
-    basketId                    : string;
-    groupId                     : string;
+    basketId                    : number;
+    groupId                     : number;
+    userId                     : number;
     lang                        : any       = LANG;
 
     signatureBook: any = {
@@ -106,11 +108,13 @@ export class SignatureBookComponent implements OnInit {
             this.resId      = +params['resId'];
             this.basketId   = params['basketId'];
             this.groupId    = params['groupId'];
+            this.userId    = params['userId'];
 
             this.signatureBook.resList = []; // This line is added because of manage action behaviour (processAfterAction is called twice)
             lockDocument(this.resId);
             setInterval(() => {lockDocument(this.resId)}, 50000);
-            this.http.get(this.coreUrl + "rest/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + this.resId)
+            //this.http.get(this.coreUrl + "rest/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + this.resId)
+            this.http.get("../../rest/signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources/" + this.resId)
                 .subscribe((data : any) => {
                     if (data.error) {
                         location.hash = "";
@@ -256,8 +260,7 @@ export class SignatureBookComponent implements OnInit {
                 this.rightContentWidth = "44%";
                 this.leftContentWidth = "44%";
                 if (this.signatureBook.resList.length == 0 || typeof this.signatureBook.resList[0].creation_date === 'undefined') {
-                    //TODO change route /signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources
-                    this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
+                    this.http.get("../../rest/signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources")
                         .subscribe((data : any) => {
                             this.signatureBook.resList = data.resources;
                             this.signatureBook.resList.forEach((value: any, index: number) => {
@@ -477,8 +480,10 @@ export class SignatureBookComponent implements OnInit {
 
     backToBasket() {
         unlockDocument(this.resId);
-        location.hash = "";
-        location.reload();
+        //location.hash = "";
+        //location.reload();
+        //this.router.navigate(['basketList/users/'+ this.userId+'/groups/'+ this.groupId+'/baskets/'+ this.basketId]);
+        window.location.href = 'index.php?page=view_baskets&module=basket&basketId='+this.basketId+'&userId='+this.userId+'&groupIdSer='+this.groupId+'&backToBasket=true';
     }
 
     backToDetails() {
@@ -488,22 +493,16 @@ export class SignatureBookComponent implements OnInit {
     }
 
     changeLocation(resId: number, origin: string) {
-        //TODO Refonte route isLock
-        this.http.put(this.coreUrl + 'rest/resources/lock', {resources : [resId]})
-            .subscribe(() => {
-                let path = "/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + resId;
-                this.router.navigate([path]);
-            }, (err) => {
-                if (err.error.lockBy) {
-                    if (origin == "view") {
-                        alert("Courrier verrouillé par " + err.error.lockBy[0]);
-                    } else if (origin == "action") {
-                        alert("Courrier suivant verrouillé par " + err.error.lockBy[0]);
-                        this.backToBasket();
-                    }
+        this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/lock', { resources: [resId] })
+            .subscribe((data: any) => {
+                if (data.lockedResources > 0) {
+                    alert(data.lockedResources + ' ' + this.lang.warnLockRes + '.');
                 } else {
-                    this.notify.error(err.error.errors);
+                    let path = "signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources/" + resId;
+                    this.router.navigate([path]); 
                 }
+            }, (err: any) => {
+                this.notify.handleErrors(err);
             });
     }
 
