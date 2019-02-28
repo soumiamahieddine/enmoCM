@@ -45,6 +45,7 @@
         "php-http/guzzle6-adapter": "^1.1",
         "phpmailer/phpmailer": "^6.0",
         "chillerlan/php-qrcode": "2.0.6",
-        "endroid/qr-code": "^2.5"
+        "endroid/qr-code": "^2.5",
+        "tinybutstrong/tinybutstrong": "^3.10"
     }
 }

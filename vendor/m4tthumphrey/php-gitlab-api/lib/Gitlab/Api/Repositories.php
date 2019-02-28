@@ -5,9 +5,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Repositories extends AbstractApi
 {
-    const TYPE_BRANCH = 'branch';
-    const TYPE_TAG = 'tag';
-
     /**
      * @param int $project_id
      * @param array $parameters
@@ -156,7 +153,6 @@ class Repositories extends AbstractApi
             return $value->format('c');
         };
 
-        $resolver->setDefined('path');
         $resolver->setDefined('ref_name');
         $resolver->setDefined('since')
             ->setAllowedTypes('since', \DateTimeInterface::class)
@@ -185,16 +181,11 @@ class Repositories extends AbstractApi
     /**
      * @param int $project_id
      * @param $sha
-     * @param array $parameters
-     *
      * @return mixed
      */
-    public function commitRefs($project_id, $sha, array $parameters = [])
+    public function commitRefs($project_id, $sha)
     {
-        $resolver = $this->createOptionsResolver();
-
-        return $this->get($this->getProjectPath($project_id, 'repository/commits/' . $this->encodePath($sha) . '/refs'),
-            $resolver->resolve($parameters));
+        return $this->get($this->getProjectPath($project_id, 'repository/commits/'.$this->encodePath($sha).'/refs'));
     }
 
     /**
@@ -478,20 +469,5 @@ class Repositories extends AbstractApi
     public function mergeBase($project_id, $refs)
     {
         return $this->get($this->getProjectPath($project_id, 'repository/merge_base'), array('refs' => $refs));
-    }
-
-    protected function createOptionsResolver()
-    {
-        $allowedTypeValues = [
-            self::TYPE_BRANCH,
-            self::TYPE_TAG
-        ];
-
-        $resolver = parent::createOptionsResolver();
-        $resolver->setDefined('type')
-            ->setAllowedTypes('type', 'string')
-            ->setAllowedValues('type', $allowedTypeValues);
-
-        return $resolver;
     }
 }
