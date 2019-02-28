@@ -255,10 +255,11 @@ export class SignatureBookComponent implements OnInit {
             } else {
                 this.rightContentWidth = "44%";
                 this.leftContentWidth = "44%";
-                if (this.signatureBook.resList.length == 0 || this.signatureBook.resList[0].allSigned == null) {
+                if (this.signatureBook.resList.length == 0 || typeof this.signatureBook.resList[0].creation_date === 'undefined') {
+                    //TODO change route /signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
                         .subscribe((data : any) => {
-                            this.signatureBook.resList = data.resList;
+                            this.signatureBook.resList = data.resources;
                             this.signatureBook.resList.forEach((value: any, index: number) => {
                                 if (value.res_id == this.resId) {
                                     this.signatureBook.resListIndex = index;
