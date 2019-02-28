@@ -26,11 +26,27 @@ class AcknowledgementReceiptModel
 
         $aTemplates = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['acknowledgment_receipts'],
+            'table'     => ['acknowledgement_receipts'],
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
             'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
+        return $aTemplates;
+    }
+
+    public static function getByResIds(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['resIds']);
+        ValidatorModel::arrayType($aArgs, ['select', 'orderBy', 'resIds']);
+
+        $aTemplates = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['acknowledgement_receipts'],
+            'where'     => ['res_id in (?)'],
+            'data'      => $aArgs['resIds'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
         ]);
 
         return $aTemplates;
@@ -42,7 +58,7 @@ class AcknowledgementReceiptModel
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'acknowledgment_receipts',
+            'table' => 'acknowledgement_receipts',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
@@ -57,7 +73,7 @@ class AcknowledgementReceiptModel
         ValidatorModel::arrayType($aArgs, ['where', 'data']);
 
         DatabaseModel::delete([
-            'table' => 'acknowledgment_receipts',
+            'table' => 'acknowledgement_receipts',
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
         ]);
