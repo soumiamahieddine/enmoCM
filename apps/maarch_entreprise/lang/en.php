@@ -5070,3 +5070,9 @@ if (!defined('_ACCESS_SMARTPHONE')) {
 if (!defined('_MAILING_CONFIRMATION')) {
     define('_MAILING_CONFIRMATION', 'Do you want to generate all attachments ?');
 }
+if (!defined('_ELECTRONIC')) {
+    define('_ELECTRONIC', 'Electronic');
+}
+if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
+    define('_ACKNOWLEDGEMENT_RECEIPTS', 'Acknowledgement of receipts');
+}

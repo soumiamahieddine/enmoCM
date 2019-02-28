@@ -5232,3 +5232,9 @@ if (!defined('_ACCESS_SMARTPHONE')) {
 if (!defined('_MAILING_CONFIRMATION')) {
     define('_MAILING_CONFIRMATION', 'Voulez-vous générer toutes les pièces jointes ?');
 }
+if (!defined('_ELECTRONIC')) {
+    define('_ELECTRONIC', 'Électronique');
+}
+if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
+    define('_ACKNOWLEDGEMENT_RECEIPTS', 'Accusés de réception');
+}
