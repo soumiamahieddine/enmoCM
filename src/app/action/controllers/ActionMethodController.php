@@ -83,6 +83,7 @@ class ActionMethodController
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['note']);
 
         ResModel::updateExt(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?', 'closing_date is null'], 'data' => [$aArgs['resId']]]);
 
@@ -95,8 +96,6 @@ class ActionMethodController
 
             if (!empty($resource[0]['doc_' . $configResource['return']['value']])) {
                 if (!empty($config['inObject'])) {
-                    $multipleObject = true;
-
                     foreach ($config['objects'] as $object) {
                         $select = [];
                         $tmpBodyData = [];
@@ -112,7 +111,7 @@ class ActionMethodController
                         if (!empty($document[0])) {
                             foreach ($object['rawData'] as $key => $value) {
                                 if ($value == 'note') {
-                                    $tmpBodyData[$key] = $formValues['note_content_to_users'];
+                                    $tmpBodyData[$key] = empty($aArgs['note']) ? '' : $aArgs['note'];
                                 } elseif ($value == $configResource['return']['value']) {
                                     $tmpBodyData[$key] = $document[0]['doc_' . $value];
                                 } else {
@@ -127,33 +126,9 @@ class ActionMethodController
 
                         $bodyData[$object['name']] = $tmpBodyData;
                     }
-                } else {
-                    $multipleObject = false;
-
-                    $select = [];
-                    foreach ($config['rawData'] as $value) {
-                        if ($value != 'note') {
-                            $select[] = $value;
-                        }
-                    }
-
-                    $document = ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
-                    if (!empty($document[0])) {
-                        foreach ($config['rawData'] as $key => $value) {
-                            if ($value == 'note') {
-                                $bodyData[$key] = $formValues['note_content_to_users'];
-                            } else {
-                                $bodyData[$key] = $document[0][$value];
-                            }
-                        }
-                    }
-
-                    if (!empty($config['data'])) {
-                        $bodyData = array_merge($bodyData, $config['data']);
-                    }
                 }
 
-                CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
+                CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData, 'multipleObject' => true, 'noAuth' => true]);
             }
         }
 
