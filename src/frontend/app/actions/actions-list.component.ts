@@ -12,6 +12,7 @@ import { CloseMailActionComponent } from './close-mail-action/close-mail-action.
 import { UpdateDepartureDateActionComponent } from './update-departure-date-action/update-departure-date-action.component';
 import { ProcessActionComponent } from './process-action/process-action.component';
 import { Router } from '@angular/router';
+import { ViewDocActionComponent } from './view-doc-action/view-doc-action.component';
 
 @Component({
     selector: 'app-actions-list',
@@ -217,6 +218,19 @@ export class ActionsListComponent implements OnInit {
 
             if (result == 'success') {
                 this.endAction();
+            }
+        });
+    }
+
+    viewDoc() {
+        this.dialog.open(ViewDocActionComponent, {
+            panelClass: 'no-padding-full-dialog',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
             }
         });
     }

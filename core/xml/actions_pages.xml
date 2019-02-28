@@ -104,7 +104,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_VIEW_DOC</LABEL>
         <NAME>view</NAME>
         <DESC>_VIEW_DOC_DESC</DESC>
-        <component>v1Action</component>
+        <component>viewDoc</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

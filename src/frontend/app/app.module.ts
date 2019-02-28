@@ -30,6 +30,7 @@ import { ResMarkAsReadActionComponent } from './actions/res-mark-as-read/res-mar
 import { CloseMailActionComponent }             from './actions/close-mail-action/close-mail-action.component';
 import { UpdateDepartureDateActionComponent }   from './actions/update-departure-date-action/update-departure-date-action.component';
 import { ProcessActionComponent }               from './actions/process-action/process-action.component';
+import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -78,6 +79,7 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
         ProcessActionComponent,
+        ViewDocActionComponent,
         ActionsListComponent,
     ],
     entryComponents: [
@@ -96,6 +98,7 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
         ProcessActionComponent,
+        ViewDocActionComponent
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]
