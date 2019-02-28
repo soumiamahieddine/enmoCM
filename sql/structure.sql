@@ -2182,12 +2182,13 @@ res_id INTEGER NOT NULL,
 type CHARACTER VARYING(4) NOT NULL,
 format CHARACTER VARYING(8) NOT NULL,
 user_id INTEGER NOT NULL,
-contact_address_id character varying(8) NOT NULL,
+contact_address_id INTEGER NOT NULL,
 creation_date timestamp without time zone NOT NULL,
-send_date timestamp without time zone NOT NULL,
+send_date timestamp without time zone,
 docserver_id CHARACTER VARYING(128) NOT NULL,
 path CHARACTER VARYING(256) NOT NULL,
 filename CHARACTER VARYING(256) NOT NULL,
+fingerprint CHARACTER VARYING(256) NOT NULL,
 CONSTRAINT acknowledgment_receipts_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

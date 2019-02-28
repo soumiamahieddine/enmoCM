@@ -144,8 +144,12 @@ ALTER TABLE res_letterbox ALTER COLUMN locker_user_id TYPE INTEGER USING locker_
 ALTER TABLE res_letterbox ALTER COLUMN locker_user_id SET DEFAULT NULL;
 ALTER TABLE notes DROP COLUMN IF EXISTS tablename;
 ALTER TABLE notes DROP COLUMN IF EXISTS coll_id;
-ALTER TABLE notes RENAME COLUMN date_note TO creation_date;
-ALTER sequence notes_seq RENAME TO notes_id_seq;
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'notes') AND attname = 'date_note') = 1 THEN
+	  ALTER TABLE notes RENAME COLUMN date_note TO creation_date;
+	  ALTER sequence notes_seq RENAME TO notes_id_seq;
+  END IF;
+END$$;
 ALTER TABLE res_mark_as_read DROP COLUMN IF EXISTS coll_id;
 
 
@@ -158,7 +162,7 @@ UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"
 ALTER TABLE actions DROP COLUMN IF EXISTS component;
 ALTER TABLE actions ADD COLUMN component CHARACTER VARYING (128);
 
-/* Acknowledgment receipts */
+/* Acknowledgment Receipts */
 DROP TABLE IF EXISTS acknowledgment_receipts;
 CREATE TABLE acknowledgment_receipts
 (
@@ -167,17 +171,19 @@ res_id INTEGER NOT NULL,
 type CHARACTER VARYING(4) NOT NULL,
 format CHARACTER VARYING(8) NOT NULL,
 user_id INTEGER NOT NULL,
-contact_address_id character varying(8) NOT NULL,
+contact_address_id INTEGER NOT NULL,
 creation_date timestamp without time zone NOT NULL,
-send_date timestamp without time zone NOT NULL,
+send_date timestamp without time zone,
 docserver_id CHARACTER VARYING(128) NOT NULL,
 path CHARACTER VARYING(256) NOT NULL,
 filename CHARACTER VARYING(256) NOT NULL,
+fingerprint CHARACTER VARYING(256) NOT NULL,
 CONSTRAINT acknowledgment_receipts_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled)
-VALUES ('ACKNOWLEDGMENT_RECEIPTS', 'Accusés de réception', 'Y');
+DELETE FROM docserver_types WHERE docserver_type_id = 'ACKNOWLEDGMENT_RECEIPTS';
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled) VALUES ('ACKNOWLEDGMENT_RECEIPTS', 'Accusés de réception', 'Y');
+DELETE FROM docservers WHERE docserver_id = 'ACKNOWLEDGMENT_RECEIPTS';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
 VALUES ('ACKNOWLEDGMENT_RECEIPTS', 'ACKNOWLEDGMENT_RECEIPTS', 'Dépôt des AR', 'N', 50000000000, 0, '/opt/maarch/docservers/acknowledgment_receipts/', '2019-04-19 22:22:22.201904', 'letterbox_coll');
 
