@@ -373,6 +373,7 @@ export class TemplateAdministrationComponent implements OnInit {
         this.fileToImport();
         this.template.uploadedFile = null;
     }
+}
 @Component({
     templateUrl: "template-administration-checkEntities-modal.component.html",
     styleUrls: ['template-administration-checkEntities-modal.scss']
