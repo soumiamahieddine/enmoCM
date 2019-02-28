@@ -166,7 +166,7 @@ abstract class TemplateModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
 
-        $datasources = [];
+        $datasource = [];
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/templates/xml/datasources.xml']);
         if ($loadedXml) {
