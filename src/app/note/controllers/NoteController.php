@@ -51,7 +51,7 @@ class NoteController
 
         $check = Validator::stringType()->notEmpty()->validate($data['note_text']);
         if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'note_text is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data note_text is empty or not a string']);
         }
 
         if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
