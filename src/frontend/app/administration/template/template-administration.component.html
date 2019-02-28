@@ -89,7 +89,7 @@
                                         *ngIf="template.template_target=='attachments' || template.template_target==''">{{lang.office}}</mat-radio-button>
                                     <mat-radio-button style="margin-left:10px" color="primary" name="template_type" value="HTML" [checked]="template.template_type=='HTML'"
                                         *ngIf="template.template_target=='sendmail' || template.template_target=='doctypes' || template.template_target == 'notifications' || template.template_target == ''"
-                                        (click)="initMce()">{{lang.html}}</mat-radio-button>
+                                        (click)="initMce('textarea#templateHtml')">{{lang.html}}</mat-radio-button>
                                     <mat-radio-button style="margin-left:10px" color="primary" name="template_type" value="TXT" [checked]="template.template_type=='TXT'"
                                         *ngIf="template.template_target=='sendmail' || template.template_target=='notes' || template.template_target == ''">{{lang.txt}}</mat-radio-button>
                                 </mat-radio-group>
@@ -158,7 +158,7 @@
                         </div>
 
                         <div class="form-group" *ngIf="template.template_type=='OFFICE_HTML'">
-                            <mat-tab-group (selectedTabChange)="initMatTabMce()">
+                            <mat-tab-group (selectedTabChange)="initMce('textarea#templateOfficeHtml')">
                                 <mat-tab label="{{lang.electronicTemplate}}">
                                     <div class="form-group" *ngIf="template.template_type=='OFFICE_HTML'">
                                         <div class="col-sm-12">
