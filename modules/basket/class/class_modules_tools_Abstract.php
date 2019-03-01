@@ -260,32 +260,6 @@ abstract class basket_Abstract extends Database
         }
     }
 
-    /**
-     * Loads the baskets datas into session variables
-     *
-     */
-    public function load_basket($primaryGroup, $userId)
-    {
-        $arr = array();
-        $db = new Database();
-        $stmt = $db->query(
-            "SELECT gb.basket_id FROM " . GROUPBASKET_TABLE . " gb, "
-            . BASKET_TABLE . " b WHERE gb.group_id = ? and gb.basket_id = b.basket_id order by b.basket_order, b.basket_name ",
-            array($primaryGroup)
-        );
-        // $db->show();
-        while ($res = $stmt->fetchObject()) {
-            $tmp = $this->get_baskets_data(
-                $res->basket_id,
-                $userId,
-                $primaryGroup
-            );
-            //$this->show_array($tmp);
-            array_push($arr, $tmp);
-        }
-        return $arr;
-    }
-
     public function load_basket_abs($userId)
     {
         $user = \User\models\UserModel::getByLogin(['login' => $userId, 'select' => ['id']]);
@@ -859,23 +833,5 @@ abstract class basket_Abstract extends Database
         $tab['lock_sublist'] = '';
         
         return $tab;
-    }
-
-    public function is_redirect_to_action_basket($basketId, $groupId)
-    {
-        $db = new Database();
-        $stmt = $db->query(
-                "select result_page from " . GROUPBASKET_TABLE
-                . " where group_id = ? and basket_id = ?",
-            array($groupId,$basketId)
-        );
-        $res = $stmt->fetchObject();
-
-        $basketIdPage = $res->result_page;
-        if ($basketIdPage == 'redirect_to_action') {
-            return true;
-        } else {
-            return false;
-        }
     }
 }
