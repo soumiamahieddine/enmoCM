@@ -38,6 +38,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use User\models\UserModel;
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 
 class ResController
 {
@@ -232,7 +233,7 @@ class ResController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
+        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'fingerprint'], 'resId' => $aArgs['resId']]);
         $extDocument = ResModel::getExtById(['select' => ['category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
         if (empty($document) || empty($extDocument)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
@@ -296,7 +297,6 @@ class ResController
         if ($loadedXml) {
             $watermark = (array)$loadedXml->FEATURES->watermark;
             if ($watermark['enabled'] == 'true') {
-
                 $text = "watermark by {$GLOBALS['userId']}";
                 if (!empty($watermark['text'])) {
                     $text = $watermark['text'];
@@ -308,7 +308,7 @@ class ResController
                             $tmp = date('d-m-Y');
                         } elseif ($value == 'hour_now') {
                             $tmp = date('H:i');
-                        } elseif($value == 'alt_identifier'){
+                        } elseif ($value == 'alt_identifier') {
                             $tmp = $extDocument['alt_identifier'];
                         } else {
                             $backFromView = ResModel::getOnView(['select' => $value, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
@@ -379,6 +379,64 @@ class ResController
             'where'     => ['item_id = ?', 'item_mode = ?', 'res_id = ?'],
             'data'      => [$GLOBALS['userId'], 'cc', $aArgs['resId']]
         ]);
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $aArgs['resId'],
+            'eventType' => 'VIEW',
+            'info'      => _DOC_DISPLAYING . " : {$aArgs['resId']}",
+            'moduleId'  => 'res',
+            'eventId'   => 'resview',
+        ]);
+
+        return $response->withHeader('Content-Type', $mimeType);
+    }
+
+    public function getAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $mainDocument = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'fingerprint'], 'resId' => $aArgs['resId']]);
+        $extDocument = ResModel::getExtById(['select' => ['category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
+        if (empty($mainDocument) || empty($extDocument)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $document = AcknowledgementReceiptModel::getById([
+            'select'  => ['docserver_id', 'path', 'filename', 'fingerprint'],
+            'id'      => $aArgs['id']
+        ]);
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => 'SHA256']);
+        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+            return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
+        }
+
+        $fileContent = file_get_contents($pathToDocument);
+
+        if ($fileContent === false) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+        $pathInfo = pathinfo($pathToDocument);
+
+        $response->write($fileContent);
+        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
+
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $aArgs['resId'],
@@ -468,15 +526,15 @@ class ResController
         }
 
         foreach ($data['externalInfos'] as $mail) {
-            if(!Validator::intType()->validate($mail['res_id'])){
+            if (!Validator::intType()->validate($mail['res_id'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request: invalid res_id']);
             }
-            if(!Validator::StringType()->notEmpty()->validate($mail['external_id'])){
+            if (!Validator::StringType()->notEmpty()->validate($mail['external_id'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request: invalid external_id for element : '.$mail['res_id']]);
             }
-            if(!Validator::StringType()->notEmpty()->validate($mail['external_link'])){
+            if (!Validator::StringType()->notEmpty()->validate($mail['external_link'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request:  invalid external_link for element'.$mail['res_id']]);
-            }          
+            }
         }
 
         foreach ($data['externalInfos'] as $mail) {
@@ -488,7 +546,7 @@ class ResController
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
             ResModel::update(['set' => ['external_id' => $mail['external_id'] , 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
-        }        
+        }
 
         return $response->withJson(['success' => 'success']);
     }
@@ -655,15 +713,15 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request: clause is not valid']);
         }
         if (!empty($data['withFile'])) {
-            if(!Validator::boolType()->validate($data['withFile'])){
+            if (!Validator::boolType()->validate($data['withFile'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request: withFile parameter is not a boolean']);
-            }            
+            }
         }
 
         if (!empty($data['orderBy'])) {
             if (!Validator::arrayType()->notEmpty()->validate($data['orderBy'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request: orderBy parameter not valid']);
-            }            
+            }
         }
 
         if (!empty($data['limit'])) {
@@ -687,7 +745,7 @@ class ResController
         }
 
         if ($data['withFile'] === true) {
-            $select[] = 'res_id';            
+            $select[] = 'res_id';
         }
 
         $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $data['orderBy'], 'limit' => $data['limit']]);

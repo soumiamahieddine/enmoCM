@@ -129,7 +129,7 @@ if (!empty($tab)) {
 
     // TO DO : LINK ROUTE
     $download = array(
-        "script"    => "window.open('../../rest/res/".$identifier."/content','_blank');",
+        "script"    => "window.open('../../rest/res/".$identifier."/acknowledgementReceipt/@@id@@','acknowledgementReceipt');",
         "icon"      =>  'eye',
         "tooltip"   =>  _VIEW_DOC,
         "disabledRules" => "empty(@@id@@)"

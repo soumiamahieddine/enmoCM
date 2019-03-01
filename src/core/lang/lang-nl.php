@@ -444,3 +444,5 @@ define('_ACTION_DATE', 'Action date_TO_TRANSLATE');
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'User created in Maarch Parapheur_TO_TRANSLATE');
 
 define('_SEND_ACKNOWLEDGEMENT_RECEIPT', 'Send acknowledgement receipt_TO_TRANSLATE');
+
+define('_AR_DISPLAYING', 'Displaying acknowledgement receipt_TO_TRANSLATE');

@@ -906,7 +906,7 @@ if ($mode == 'add') {
 
                     $content .= '</table>';
                     //Filename
-                    $filename = 'notes_'.$identifier.'_'.date(dmY).'.html';
+                    $filename = 'notes_'.$identifier.'_'.date('dmY').'.html';
                     $all_joined_files .= _NOTES.': '.$filename.PHP_EOL;
                 }
             }
@@ -1303,7 +1303,7 @@ if ($mode == 'add') {
 
                     $content .= '</table>';
                     //Filename
-                    $filename = 'notes_'.$identifier.'_'.date(dmY).'.html';
+                    $filename = 'notes_'.$identifier.'_'.date('dmY').'.html';
                     $all_joined_files .= _NOTES.': '.$filename.PHP_EOL;
                 }
             }
