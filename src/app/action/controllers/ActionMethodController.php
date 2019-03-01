@@ -57,18 +57,16 @@ class ActionMethodController
             'data'  => [$aArgs['resources']]
         ]);
 
-        if (!empty($aArgs['note'])) {
-            foreach ($aArgs['resources'] as $resource) {
+        foreach ($aArgs['resources'] as $resource) {
+            if (!empty(trim($aArgs['note']))) {
                 NoteModel::create([
                     'resId'     => $resource,
                     'login'     => $GLOBALS['userId'],
                     'note_text' => $aArgs['note']
                 ]);
             }
-        }
 
-        if ($action['history'] == 'Y') {
-            foreach ($aArgs['resources'] as $resource) {
+            if ($action['history'] == 'Y') {
                 HistoryController::add([
                     'tableName' => 'res_view_letterbox',
                     'recordId'  => $resource,
