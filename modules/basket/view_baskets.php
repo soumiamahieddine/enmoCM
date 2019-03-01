@@ -64,6 +64,17 @@ if (empty($_GET['defaultAction'])) {
     $_GET['defaultAction'] = $_SESSION['current_basket']['default_action'];
 }
 
+if (!empty($_GET['resId'])) {
+    require_once('core/class/class_security.php');
+    $security = new security();
+    $aResId = explode(',', $_GET['resId']);
+    foreach ($aResId as $value) {
+        if (!$security->test_right_doc('letterbox_coll', $value)) {
+            exit(_NO_RIGHT_TXT);
+        };
+    }
+}
+
 $_SESSION['urlV2Basket'] = $_GET;
 echo '<script language="javascript">';
 if (!empty($_GET['backToBasket'])) {
