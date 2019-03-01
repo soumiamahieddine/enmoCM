@@ -460,8 +460,11 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'TCPDF_IMPORT' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_import.php',
         'TCPDF_PARSER' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_parser.php',
         'TCPDF_STATIC' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_static.php',
+        'clsOpenTBS' => __DIR__ . '/..' . '/tinybutstrong/opentbs/tbs_plugin_opentbs.php',
         'clsTbsDataSource' => __DIR__ . '/..' . '/tinybutstrong/tinybutstrong/tbs_class.php',
         'clsTbsLocator' => __DIR__ . '/..' . '/tinybutstrong/tinybutstrong/tbs_class.php',
+        'clsTbsXmlLoc' => __DIR__ . '/..' . '/tinybutstrong/opentbs/tbs_plugin_opentbs.php',
+        'clsTbsZip' => __DIR__ . '/..' . '/tinybutstrong/opentbs/tbs_plugin_opentbs.php',
         'clsTinyButStrong' => __DIR__ . '/..' . '/tinybutstrong/tinybutstrong/tbs_class.php',
     );
 

@@ -145,13 +145,13 @@ class TemplateController
                 fclose($file);
             }
 
+            $resource = file_get_contents(CoreConfigModel::getTmpPath() . $fileOnTmp);
+            $pathInfo = pathinfo(CoreConfigModel::getTmpPath() . $fileOnTmp);
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'templates',
                 'docserverTypeId'   => 'TEMPLATES',
-                'fileInfos'         => [
-                    'tmpDir'            => CoreConfigModel::getTmpPath(),
-                    'tmpFileName'       => $fileOnTmp,
-                ]
+                'encodedResource'   => base64_encode($resource),
+                'format'            => $pathInfo['extension']
             ]);
             if (!empty($storeResult['errors'])) {
                 return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
@@ -236,13 +236,13 @@ class TemplateController
                 fclose($file);
             }
 
+            $resource = file_get_contents(CoreConfigModel::getTmpPath() . $fileOnTmp);
+            $pathInfo = pathinfo(CoreConfigModel::getTmpPath() . $fileOnTmp);
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'templates',
                 'docserverTypeId'   => 'TEMPLATES',
-                'fileInfos'         => [
-                    'tmpDir'            => CoreConfigModel::getTmpPath(),
-                    'tmpFileName'       => $fileOnTmp,
-                ]
+                'encodedResource'   => base64_encode($resource),
+                'format'            => $pathInfo['extension']
             ]);
             if (!empty($storeResult['errors'])) {
                 return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
@@ -321,16 +321,18 @@ class TemplateController
             $docinfo['fileDestinationName'] .=  '.' . explode('.', $template['template_file_name'])[1];
 
             $pathToDocumentToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+            $resource = file_get_contents($pathToDocumentToCopy);
+
             $copyResult = DocserverController::copyOnDocServer([
-                'sourceFilePath'             => $pathToDocumentToCopy,
-                'destinationDir'             => $docinfo['destinationDir'],
-                'fileDestinationName'        => $docinfo['fileDestinationName']
+                'encodedResource'       => base64_encode($resource),
+                'destinationDir'        => $docinfo['destinationDir'],
+                'fileDestinationName'   => $docinfo['fileDestinationName']
             ]);
             if (!empty($copyResult['errors'])) {
                 return $response->withStatus(500)->withJson(['errors' => 'Template duplication failed : ' . $copyResult['errors']]);
             }
-            $template['template_path'] = str_replace(str_replace(DIRECTORY_SEPARATOR, '#', $docserver['path_template']), '', $copyResult['copyOnDocserver']['destinationDir']);
-            $template['template_file_name'] = $copyResult['copyOnDocserver']['fileDestinationName'];
+            $template['template_path'] = str_replace(str_replace(DIRECTORY_SEPARATOR, '#', $docserver['path_template']), '', $docinfo['destinationDir']);
+            $template['template_file_name'] = $docinfo['fileDestinationName'];
         }
 
         $template['template_label'] = 'Copie de ' . $template['template_label'];

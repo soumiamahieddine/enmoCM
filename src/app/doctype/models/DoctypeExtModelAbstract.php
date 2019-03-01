@@ -17,27 +17,23 @@ use SrcCore\models\DatabaseModel;
 
 class DoctypeExtModelAbstract
 {
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $doctype = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'  => ['mlb_doctype_ext'],
             'where'  => ['type_id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
 
-        if (empty($aReturn[0])) {
+        if (empty($doctype[0])) {
             return [];
         }
 
-        $aReturn = $aReturn[0];
-       
-        return $aReturn;
+        return $doctype[0];
     }
 
     public static function create(array $aArgs)

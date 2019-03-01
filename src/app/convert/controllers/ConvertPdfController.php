@@ -96,14 +96,13 @@ class ConvertPdfController
                 return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
             }
         }
-        
+
+        $resource = file_get_contents("{$tmpPath}{$fileNameOnTmp}.pdf");
         $storeResult = DocserverController::storeResourceOnDocServer([
-            'collId'    => $aArgs['collId'],
-            'fileInfos' => [
-                'tmpDir'        => $tmpPath,
-                'tmpFileName'   => $fileNameOnTmp . '.pdf',
-            ],
-            'docserverTypeId'   => 'CONVERT'
+            'collId'            => $aArgs['collId'],
+            'docserverTypeId'   => 'CONVERT',
+            'encodedResource'   => base64_encode($resource),
+            'format'            => 'pdf'
         ]);
 
         if (!empty($storeResult['errors'])) {

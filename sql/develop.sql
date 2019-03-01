@@ -168,7 +168,7 @@ CREATE TABLE acknowledgement_receipts
 (
 id serial NOT NULL,
 res_id INTEGER NOT NULL,
-type CHARACTER VARYING(4) NOT NULL,
+type CHARACTER VARYING(16) NOT NULL,
 format CHARACTER VARYING(8) NOT NULL,
 user_id INTEGER NOT NULL,
 contact_address_id INTEGER NOT NULL,

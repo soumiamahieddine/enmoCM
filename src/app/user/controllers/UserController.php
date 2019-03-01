@@ -771,10 +771,8 @@ class UserController
         $storeInfos = DocserverController::storeResourceOnDocServer([
             'collId'            => 'templates',
             'docserverTypeId'   => 'TEMPLATES',
-            'fileInfos'         => [
-                'tmpDir'        => CoreConfigModel::getTmpPath(),
-                'tmpFileName'   => $tmpName,
-            ]
+            'encodedResource'   => base64_encode($file),
+            'format'            => $ext
         ]);
 
         if (!file_exists($storeInfos['path_template']. str_replace('#', '/', $storeInfos['destination_dir']) .$storeInfos['file_destination_name'])) {

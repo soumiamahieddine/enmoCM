@@ -12,10 +12,18 @@
 
 namespace Action\controllers;
 
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Contact\models\ContactModel;
+use ContentManagement\controllers\MergeController;
+use Docserver\controllers\DocserverController;
+use Docserver\models\DocserverModel;
+use Doctype\models\DoctypeExtModel;
 use Resource\models\ResModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use Template\models\TemplateModel;
+use User\models\UserModel;
+
 
 trait ActionMethodTraitAcknowledgementReceipt
 {
@@ -50,14 +58,75 @@ trait ActionMethodTraitAcknowledgementReceipt
             return [];
         }
 
+        $resource = ResModel::getById(['select' => ['type_id', 'destination'], 'resId' => $aArgs['resId']]);
+        $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
+
+        if ($doctype['type_id'] == 'SVA') {
+            $templateAttachmentType = 'sva';
+        } elseif ($doctype['type_id'] == 'SVR') {
+            $templateAttachmentType = 'svr';
+        } else {
+            $templateAttachmentType = 'simple';
+        }
+        $template = TemplateModel::getWithAssociation([
+            'select'    => ['template_content', 'template_path', 'template_file_name'],
+            'where'     => ['templates.template_id = templates_association.template_id', 'template_target = ?', 'template_attachment_type = ?', 'value_field = ?'],
+            'data'      => ['acknowledgementReceipt', $templateAttachmentType, $resource['destination']]
+        ]);
+        if (empty($template[0])) {
+            return [];
+        }
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => 'TEMPLATES', 'select' => ['path_template']]);
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template[0]['template_path']) . $template[0]['template_file_name'];
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         foreach ($contactsToProcess as $contactToProcess) {
             $contact = ContactModel::getByAddressId(['addressId' => $contactToProcess, 'select' => ['email', 'address_street', 'address_town', 'address_postal_code']]);
 
-            //TODO check si pas adresse
+            if (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code'])) {
+                //TODO rollback
+                return [];
+            }
 
             if (!empty($contact['email'])) {
-
+                if (empty($template[0]['template_content'])) {
+                    //TODO rollback
+                    return [];
+                }
+                $mergedDocument = MergeController::mergeDocument(['content' => $template[0]['template_content']]);
+                $format = 'html';
+            } else {
+                if (!file_exists($pathToDocument)) {
+                    //TODO rollback
+                    return [];
+                }
+                $mergedDocument = MergeController::mergeDocument(['path' => $pathToDocument]);
+                $format = 'pdf';
             }
+
+            $storeResult = DocserverController::storeResourceOnDocServer([
+                'collId'            => 'letterbox_coll',
+                'docserverTypeId'   => 'ACKNOWLEDGEMENT_RECEIPTS',
+                'encodedResource'   => $mergedDocument['encodedDocument'],
+                'format'            => $format
+            ]);
+            if (!empty($storeResult['errors'])) {
+                //TODO rollback
+                return ['errors' => '[storeResource] ' . $storeResult['errors']];
+            }
+
+            $id = AcknowledgementReceiptModel::create([
+                'resId'             => $aArgs['resId'],
+                'type'              => $templateAttachmentType,
+                'format'            => $format,
+                'userId'            => $currentUser['id'],
+                'contactAddressId'  => $contactToProcess,
+                'docserverId'       => 'ACKNOWLEDGEMENT_RECEIPTS',
+                'path'              => $storeResult['directory'],
+                'filename'          => $storeResult['file_destination_name'],
+                'fingerprint'       => $storeResult['fingerPrint']
+            ]);
         }
 
 

@@ -507,26 +507,17 @@ class RequestSeda
             $filePath = null;
         } else {
             $filePath = $aArgs['filePath'];
-            $pathInfo = pathinfo($filePath);
             $filesize = filesize($filePath);
 
             //Store resource on docserver
-            $aFileInfo = [
-                'collId' => 'archive_transfer_coll',
-                'fileInfos' =>
-                    [
-                        'tmpDir'        => $_SESSION['config']['tmppath'],
-                        'size'          => $filesize,
-                        'format'        => $pathInfo['extension'],
-                        'tmpFileName'   => $pathInfo['basename'],
-                    ]
-            ];
 
-            
+            $resource = file_get_contents($filePath);
+            $pathInfo = pathinfo($filePath);
             $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
                 'collId'            => 'archive_transfer_coll',
                 'docserverTypeId'   => 'ARCHIVETRANSFER',
-                'fileInfos'         => $aFileInfo['fileInfos']
+                'encodedResource'   => base64_encode($resource),
+                'format'            => $pathInfo['extension']
             ]);
 
             if (!empty($storeResult['errors'])) {

@@ -198,19 +198,8 @@ class DocserverController
 
     public static function storeResourceOnDocServer(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['collId', 'docserverTypeId', 'fileInfos']);
-        ValidatorModel::stringType($aArgs, ['collId', 'docserverTypeId']);
-        ValidatorModel::arrayType($aArgs, ['fileInfos']);
-        ValidatorModel::notEmpty($aArgs['fileInfos'], ['tmpDir', 'tmpFileName']);
-        ValidatorModel::stringType($aArgs['fileInfos'], ['tmpDir', 'tmpFileName']);
-
-        if (!is_dir($aArgs['fileInfos']['tmpDir'])) {
-            return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpDir does not exist'];
-        }
-        if (!file_exists($aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName'])) {
-            return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpFileName does not exist '
-                . $aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName']];
-        }
+        ValidatorModel::notEmpty($aArgs, ['collId', 'docserverTypeId', 'encodedResource', 'format']);
+        ValidatorModel::stringType($aArgs, ['collId', 'docserverTypeId', 'encodedResource', 'format']);
 
         $docserver = DocserverModel::getCurrentDocserver(['collId' => $aArgs['collId'], 'typeId' => $aArgs['docserverTypeId']]);
         if (empty($docserver)) {
@@ -226,22 +215,20 @@ class DocserverController
         if (!empty($docinfo['errors'])) {
             return ['errors' => '[storeRessourceOnDocserver] ' . $docinfo['errors']];
         }
-        $pathInfoOnTmp = pathinfo($aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName']);
-        $docinfo['fileDestinationName'] .= '.' . strtolower($pathInfoOnTmp['extension']);
+        $docinfo['fileDestinationName'] .= '.' . strtolower($aArgs['format']);
 
         $docserverTypeObject = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id']]);
         $copyResult = DocserverController::copyOnDocServer([
-            'sourceFilePath'             => $aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName'],
-            'destinationDir'             => $docinfo['destinationDir'],
-            'fileDestinationName'        => $docinfo['fileDestinationName'],
-            'docserverSourceFingerprint' => $docserverTypeObject['fingerprint_mode'],
+            'encodedResource'       => $aArgs['encodedResource'],
+            'destinationDir'        => $docinfo['destinationDir'],
+            'fileDestinationName'   => $docinfo['fileDestinationName'],
         ]);
         if (!empty($copyResult['errors'])) {
             return ['errors' => '[storeRessourceOnDocserver] ' . $copyResult['errors']];
         }
 
-        $destinationDir = substr($copyResult['copyOnDocserver']['destinationDir'], strlen($docserver['path_template'])) . '/';
-        $destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $destinationDir);
+        $directory = substr($docinfo['destinationDir'], strlen($docserver['path_template']));
+        $destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $directory);
 
         DocserverModel::update([
             'id'                    => $docserver['id'],
@@ -251,9 +238,10 @@ class DocserverController
         return [
             'path_template'         => $docserver['path_template'],
             'destination_dir'       => $destinationDir,
+            'directory'             => $directory,
             'docserver_id'          => $docserver['docserver_id'],
-            'file_destination_name' => $copyResult['copyOnDocserver']['fileDestinationName'],
-            'fileSize'              => $copyResult['copyOnDocserver']['fileSize'],
+            'file_destination_name' => $docinfo['fileDestinationName'],
+            'fileSize'              => $copyResult['fileSize'],
             'fingerPrint'           => StoreController::getFingerPrint([
                 'filePath'  => $docinfo['destinationDir'] . $docinfo['fileDestinationName'],
                 'mode'      => $docserverTypeObject['fingerprint_mode']
@@ -392,19 +380,14 @@ class DocserverController
 
     public static function copyOnDocServer(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['destinationDir', 'fileDestinationName', 'sourceFilePath']);
-        ValidatorModel::stringType($aArgs, ['destinationDir', 'fileDestinationName', 'sourceFilePath']);
+        ValidatorModel::notEmpty($aArgs, ['destinationDir', 'fileDestinationName', 'encodedResource']);
+        ValidatorModel::stringType($aArgs, ['destinationDir', 'fileDestinationName', 'encodedResource']);
 
         if (file_exists($aArgs['destinationDir'] . $aArgs['fileDestinationName'])) {
             return ['errors' => '[copyOnDocserver] File already exists: ' . $aArgs['destinationDir'] . $aArgs['fileDestinationName']];
         }
 
-        if (!file_exists($aArgs['sourceFilePath'])) {
-            return ['errors' => '[copyOnDocserver] File does not exist'];
-        }
-
         error_reporting(0);
-        $aArgs['sourceFilePath'] = str_replace('\\\\', '\\', $aArgs['sourceFilePath']);
 
         if (!is_dir($aArgs['destinationDir'])) {
             mkdir($aArgs['destinationDir'], 0770, true);
@@ -415,7 +398,7 @@ class DocserverController
             chmod($aArgs['destinationDir'], 0770);
         }
 
-        if (!copy($aArgs['sourceFilePath'], $aArgs['destinationDir'] . $aArgs['fileDestinationName'])) {
+        if (file_put_contents($aArgs['destinationDir'] . $aArgs['fileDestinationName'], base64_decode($aArgs['encodedResource'])) === false) {
             return ['errors' => '[copyOnDocserver] Copy on the docserver failed'];
         }
         if (DIRECTORY_SEPARATOR == '/' && !empty($GLOBALS['apacheUserAndGroup'])) {
@@ -424,34 +407,9 @@ class DocserverController
         umask(0022);
         chmod($aArgs['destinationDir'] . $aArgs['fileDestinationName'], 0770);
 
-        $fingerprintControl = StoreController::controlFingerPrint([
-            'pathInit'          => $aArgs['sourceFilePath'],
-            'pathTarget'        => $aArgs['destinationDir'] . $aArgs['fileDestinationName'],
-            'fingerprintMode'   => $aArgs['docserverSourceFingerprint'],
-        ]);
-        if (!empty($fingerprintControl['errors'])) {
-            return ['errors' => '[copyOnDocserver] ' . $fingerprintControl['errors']];
-        }
-
-        if (!empty($GLOBALS['currentStep'])) { // For batch like life cycle
-            $aArgs['destinationDir'] = str_replace($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'], '', $aArgs['destinationDir']);
-        }
         $aArgs['destinationDir'] = str_replace(DIRECTORY_SEPARATOR, '#', $aArgs['destinationDir']);
 
-        $dataToReturn = [
-            'copyOnDocserver' =>
-                [
-                    'destinationDir'        => $aArgs['destinationDir'],
-                    'fileDestinationName'   => $aArgs['fileDestinationName'],
-                    'fileSize'              => filesize(str_replace('#', '/', $aArgs['destinationDir']) . $aArgs['fileDestinationName']),
-                ]
-        ];
-
-        if (!empty($GLOBALS['TmpDirectory'])) {
-            DocserverController::directoryWasher(['path' => $GLOBALS['TmpDirectory']]);
-        }
-
-        return $dataToReturn;
+        return ['fileSize' => filesize(str_replace('#', '/', $aArgs['destinationDir']) . $aArgs['fileDestinationName'])];
     }
 
     private static function getFormattedDocserver(array $aArgs)

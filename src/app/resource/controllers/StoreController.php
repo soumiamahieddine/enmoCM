@@ -44,25 +44,16 @@ class StoreController
                 }
             }
             $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
-            $fileName       = 'tmp_file_' . rand() . '.' . $aArgs['format'];
-            $tmpFilepath    = CoreConfigModel::getTmpPath() . $fileName;
-
-            $file = fopen($tmpFilepath, 'w');
-            fwrite($file, $fileContent);
-            fclose($file);
 
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'letterbox_coll',
                 'docserverTypeId'   => 'DOC',
-                'fileInfos'         => [
-                    'tmpDir'            => CoreConfigModel::getTmpPath(),
-                    'tmpFileName'       => $fileName
-                ]
+                'encodedResource'   => base64_encode($fileContent),
+                'format'            => $aArgs['format']
             ]);
             if (!empty($storeResult['errors'])) {
                 return ['errors' => '[storeResource] ' . $storeResult['errors']];
             }
-            unlink($tmpFilepath);
             unset($aArgs['encodedFile']);
 
             $resId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);
@@ -108,25 +99,16 @@ class StoreController
 
         try {
             $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
-            $fileName       = 'tmp_file_' . rand() . '.' . $aArgs['fileFormat'];
-            $tmpFilepath    = CoreConfigModel::getTmpPath() . $fileName;
-
-            $file = fopen($tmpFilepath, 'w');
-            fwrite($file, $fileContent);
-            fclose($file);
 
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => $aArgs['collId'],
                 'docserverTypeId'   => 'DOC',
-                'fileInfos'         => [
-                    'tmpDir'            => CoreConfigModel::getTmpPath(),
-                    'tmpFileName'       => $fileName
-                ]
+                'encodedResource'   => base64_encode($fileContent),
+                'format'            => $aArgs['fileFormat']
             ]);
             if (!empty($storeResult['errors'])) {
                 return ['errors' => '[storeResource] ' . $storeResult['errors']];
             }
-            unlink($tmpFilepath);
 
             $data = StoreController::prepareStorageRes([
                 'data'          => $aArgs['data'],
@@ -180,7 +162,7 @@ class StoreController
         ValidatorModel::stringType($aArgs, ['filePath', 'mode']);
 
         if (empty($aArgs['mode']) || $aArgs['mode'] == 'NONE') {
-            return '0';
+            $aArgs['mode'] = 'sha512';
         }
 
         return hash_file(strtolower($aArgs['mode']), $aArgs['filePath']);

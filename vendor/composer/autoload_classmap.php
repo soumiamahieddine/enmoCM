@@ -22,7 +22,10 @@ return array(
     'TCPDF_IMPORT' => $vendorDir . '/tecnickcom/tcpdf/tcpdf_import.php',
     'TCPDF_PARSER' => $vendorDir . '/tecnickcom/tcpdf/tcpdf_parser.php',
     'TCPDF_STATIC' => $vendorDir . '/tecnickcom/tcpdf/include/tcpdf_static.php',
+    'clsOpenTBS' => $vendorDir . '/tinybutstrong/opentbs/tbs_plugin_opentbs.php',
     'clsTbsDataSource' => $vendorDir . '/tinybutstrong/tinybutstrong/tbs_class.php',
     'clsTbsLocator' => $vendorDir . '/tinybutstrong/tinybutstrong/tbs_class.php',
+    'clsTbsXmlLoc' => $vendorDir . '/tinybutstrong/opentbs/tbs_plugin_opentbs.php',
+    'clsTbsZip' => $vendorDir . '/tinybutstrong/opentbs/tbs_plugin_opentbs.php',
     'clsTinyButStrong' => $vendorDir . '/tinybutstrong/tinybutstrong/tbs_class.php',
 );

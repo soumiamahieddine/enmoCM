@@ -22,12 +22,13 @@ use SrcCore\models\ValidatorModel;
 use SrcCore\models\CurlModel;
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 
+
 class ActionMethodController
 {
     use ActionMethodTraitAcknowledgementReceipt;
 
     const COMPONENTS_ACTIONS = [
-        'confirmAction'                   => null,
+        'confirmAction'                   => 'createAcknowledgementReceipts',
         'closeMailAction'                 => 'closeMailAction',
         'closeAndIndexAction'             => 'closeAndIndexAction',
         'updateDepartureDateAction'       => 'updateDepartureDateAction',

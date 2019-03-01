@@ -46,6 +46,7 @@
         "phpmailer/phpmailer": "^6.0",
         "chillerlan/php-qrcode": "2.0.6",
         "endroid/qr-code": "^2.5",
-        "tinybutstrong/tinybutstrong": "^3.10"
+        "tinybutstrong/tinybutstrong": "^3.10",
+        "tinybutstrong/opentbs": "^1.9"
     }
 }
