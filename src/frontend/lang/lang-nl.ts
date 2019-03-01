@@ -897,4 +897,5 @@ export const LANG_NL = {
     "openIndexation"             : "Indexing page will be open so that you can create a new mail", //_TO_TRANSLATE
     "acknowledgementSendDate"             : "Acknowledgement send date", //_TO_TRANSLATE
     "updateAcknowledgementSendDate"             : "This will update send date for paper acknowledgement receipt", //_TO_TRANSLATE
+    "mustCompleteAR"                        : "You must complete one of two acknowledgement of receipts", //_TO_TRANSLATE
 };

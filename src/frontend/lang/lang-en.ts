@@ -869,4 +869,5 @@ export const LANG_EN = {
     "openIndexation"             : "Indexing page will be open so that you can create a new mail",
     "acknowledgementSendDate"             : "Acknowledgement send date",
     "updateAcknowledgementSendDate"             : "This will update send date for paper acknowledgement receipt",
+    "mustCompleteAR"                        : "You must complete one of two acknowledgement of receipts",
 };

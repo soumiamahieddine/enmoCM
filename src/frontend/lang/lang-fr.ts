@@ -894,4 +894,5 @@ export const LANG_FR = {
     "openIndexation"             : "La page d'indexation s'ouvrira ensuite pour pouvoir créer un courrier",
     "acknowledgementSendDate"             : "Date d'envoi de l'accusé de reception",
     "updateAcknowledgementSendDate"             : "Cela mettra à jour la date d'envoi pour les accusés de réception papier",
+    "mustCompleteAR"                        : "Veuillez compléter un des deux modèles d'AR",
 };
