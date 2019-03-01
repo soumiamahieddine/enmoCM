@@ -361,3 +361,82 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
      LEFT JOIN contacts_v2 cont ON mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id
      LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
   WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
+
+/* Actions pages component*/
+UPDATE actions 
+SET component = CASE action_page 
+  WHEN 'redirect'                                   THEN 'v1Action'
+  WHEN 'put_in_copy'                                THEN 'v1Action'
+  WHEN 'confirm_status'                             THEN 'confirmAction'
+  WHEN 'confirm_status_with_update_date'            THEN 'updateDepartureDateAction'
+  WHEN 'process'                                    THEN 'v1Action'
+  WHEN 'index_mlb'                                  THEN 'v1Action'
+  WHEN 'validate_mail'                              THEN 'v1Action'
+  WHEN 'view'                                       THEN 'viewDoc'
+  WHEN 'close_mail'                                 THEN 'closeMailAction'
+  WHEN 'set_persistent_mode_on'                     THEN 'enabledBasketPersistenceAction'
+  WHEN 'set_persistent_mode_off'                    THEN 'disabledBasketPersistenceAction'
+  WHEN 'mark_as_read'                               THEN 'resMarkAsReadAction'
+  WHEN 'sendFileWS'                                 THEN 'v1Action'
+  WHEN 'sendDataWS'                                 THEN 'v1Action'
+  WHEN 'sendToExternalSignatureBook'                THEN 'v1Action'
+  WHEN 'close_mail_and_index'                       THEN 'v1Action'
+  WHEN 'close_mail_with_attachment'                 THEN 'v1Action'
+  WHEN 'send_attachments_to_contact'                THEN 'v1Action'
+  WHEN 'send_to_contact_with_mandatory_attachment'  THEN 'v1Action'
+  WHEN 'visa_mail'                                  THEN 'signatureBookAction'
+  WHEN 'visa_workflow'                              THEN 'v1Action'
+  WHEN 'interrupt_visa'                             THEN 'v1Action'
+  WHEN 'rejection_visa_redactor'                    THEN 'v1Action'
+  WHEN 'rejection_visa_previous'                    THEN 'v1Action'
+  WHEN 'redirect_visa_entity'                       THEN 'v1Action'
+  WHEN 'send_to_visa'                               THEN 'v1Action'
+  WHEN 'send_signed_docs'                           THEN 'v1Action'
+  WHEN 'send_docs_to_recommendation'                THEN 'v1Action'
+  WHEN 'validate_recommendation'                    THEN 'v1Action'
+  WHEN 'send_to_avis'                               THEN 'v1Action'
+  WHEN 'avis_workflow'                              THEN 'v1Action'
+  WHEN 'avis_workflow_simple'                       THEN 'v1Action'
+  WHEN 'export_seda'                                THEN 'v1Action'
+  WHEN 'check_acknowledgement'                      THEN 'v1Action'
+  WHEN 'check_reply'                                THEN 'v1Action'
+  WHEN 'purge_letter'                               THEN 'v1Action'
+  WHEN 'reset_letter'                               THEN 'v1Action'
+  END 
+WHERE action_page IN( 'redirect',
+                      'put_in_copy',
+                      'confirm_status',
+                      'confirm_status_with_update_date',
+                      'process',
+                      'index_mlb',
+                      'validate_mail',
+                      'view',
+                      'close_mail',
+                      'set_persistent_mode_on',
+                      'set_persistent_mode_off',
+                      'mark_as_read',
+                      'sendFileWS',
+                      'sendDataWS',
+                      'sendToExternalSignatureBook',
+                      'close_mail_and_index',
+                      'close_mail_with_attachment',
+                      'send_attachments_to_contact',
+                      'send_to_contact_with_mandatory_attachment',
+                      'visa_mail',
+                      'visa_workflow',
+                      'interrupt_visa',
+                      'rejection_visa_redactor',
+                      'rejection_visa_previous',
+                      'redirect_visa_entity',
+                      'send_to_visa',
+                      'send_signed_docs',
+                      'send_docs_to_recommendation',
+                      'validate_recommendation',
+                      'send_to_avis',
+                      'avis_workflow',
+                      'avis_workflow_simple',
+                      'export_seda',
+                      'check_acknowledgement',
+                      'check_reply',
+                      'purge_letter',
+                      'reset_letter')
