@@ -14,6 +14,7 @@ export class NoteEditorComponent implements AfterViewInit {
     lang: any = LANG;
     notes: any;
     loading: boolean = true;
+    templatesNote: any = [];
 
     content: string = '';
 
@@ -21,7 +22,9 @@ export class NoteEditorComponent implements AfterViewInit {
 
     constructor(public http: HttpClient) { }
 
-    ngAfterViewInit() { }
+    ngAfterViewInit() {
+        
+    }
 
     addNote() {
         /*this.http.get("../../rest/res/" + this.data.resId + "/notes")
@@ -31,8 +34,25 @@ export class NoteEditorComponent implements AfterViewInit {
         });*/
     }
 
-
     getNoteContent() {
         return this.content;
+    }
+
+    selectTemplate(template: any) {
+        if (this.content.length > 0) {
+            this.content = this.content + ' ' + template.template_content;
+        } else {
+            this.content = template.template_content;
+        }
+        
+    }
+
+    getTemplatesNote() {
+        if (this.templatesNote.length == 0) {
+            this.http.get("../../rest/notes/templates")
+            .subscribe((data: any) => {
+                this.templatesNote = data;
+            });
+        }
     }
 }

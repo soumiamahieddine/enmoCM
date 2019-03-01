@@ -169,4 +169,21 @@ class NoteModel
 
         return $aReturn;
     }
+
+    public static function getTemplateList(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['entityIds']);
+
+        //get notes
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['templates','templates_association'],
+            'left_join' => ['templates.template_id = templates_association.template_id'],
+            'where'     => ['templates.template_target = ?','templates_association.value_field IN (?)'],
+            'data'      => ['notes', $aArgs['entityIds']],
+            'order_by'  => empty($aArgs['orderBy']) ? ['template_label'] : $aArgs['orderBy']
+        ]);
+
+        return $aReturn;
+    }
 }

@@ -123,4 +123,17 @@ class NoteController
 
         return ['encodedDocument' => base64_encode($fileContent)];
     }
+
+    public static function getTemplateList(Request $request, Response $response, array $aArgs)
+    {
+        //get user entities
+        $userEntities = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+
+        $userEntities = array_column($userEntities, 'entity_id');
+
+        //get templates note
+        $aReturn = NoteModel::getTemplateList(['entityIds' => $userEntities, 'select' => ['template_label', 'template_content']]);
+
+        return $response->withJson($aReturn);
+    }
 }
