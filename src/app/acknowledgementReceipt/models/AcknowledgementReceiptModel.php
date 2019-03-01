@@ -95,6 +95,20 @@ class AcknowledgementReceiptModel
         return true;
     }
 
+    public static function updateSendDate(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['send_date', 'res_id']);
+
+        DatabaseModel::update([
+            'table' => 'acknowledgement_receipts',
+            'set'   => ['send_date' => $aArgs['send_date']],
+            'where' => ['res_id = ?', 'send_date is null', 'format = \'pdf\''],
+            'data'  => [$aArgs['res_id']]
+        ]);
+
+        return true;
+    }
+
     public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['where', 'data']);

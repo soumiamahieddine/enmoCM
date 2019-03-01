@@ -22,12 +22,15 @@ import { SaveNumericPackageComponent }          from './save-numeric-package.com
 import { ActivateUserComponent }                from './activate-user.component';
 
 import { ActionsListComponent }                 from './actions/actions-list.component';
+
 /*ACTIONS PAGES */
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
 import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence/disabled-basket-persistence-action.component';
 import { EnabledBasketPersistenceActionComponent } from './actions/enabled-basket-persistence/enabled-basket-persistence-action.component';
 import { ResMarkAsReadActionComponent } from './actions/res-mark-as-read/res-mark-as-read-action.component';
 import { CloseMailActionComponent }             from './actions/close-mail-action/close-mail-action.component';
+import { SendAcknowledgementReceiptActionComponent }             from './actions/send-acknowledgement-receipt-action/send-acknowledgement-receipt-action.component';
+import { CloseAndIndexActionComponent }             from './actions/close-and-index-action/close-and-index-action.component';
 import { UpdateDepartureDateActionComponent }   from './actions/update-departure-date-action/update-departure-date-action.component';
 import { ProcessActionComponent }               from './actions/process-action/process-action.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
@@ -76,6 +79,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         ResMarkAsReadActionComponent,
         EnabledBasketPersistenceActionComponent,
         DisabledBasketPersistenceActionComponent,
+        CloseAndIndexActionComponent,
+        SendAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
         ProcessActionComponent,
@@ -95,6 +100,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         ResMarkAsReadActionComponent,
         EnabledBasketPersistenceActionComponent,
         DisabledBasketPersistenceActionComponent,
+        CloseAndIndexActionComponent,
+        SendAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
         ProcessActionComponent,

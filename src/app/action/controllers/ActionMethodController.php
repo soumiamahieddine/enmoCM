@@ -20,18 +20,21 @@ use Action\models\BasketPersistenceModel;
 use Action\models\ActionModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\CurlModel;
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 
 class ActionMethodController
 {
     use ActionMethodTraitAcknowledgementReceipt;
 
     const COMPONENTS_ACTIONS = [
-        'confirmAction'                  => null,
-        'closeMailAction'                => 'closeMailAction',
-        'updateDepartureDateAction'      => 'updateDepartureDateAction',
+        'confirmAction'                   => null,
+        'closeMailAction'                 => 'closeMailAction',
+        'closeAndIndexAction'             => 'closeAndIndexAction',
+        'updateDepartureDateAction'       => 'updateDepartureDateAction',
         'disabledBasketPersistenceAction' => 'disabledBasketPersistenceAction',
-        'enabledBasketPersistenceAction' => 'enabledBasketPersistenceAction',
-        'resMarkAsReadAction'            => 'resMarkAsReadAction',
+        'enabledBasketPersistenceAction'  => 'enabledBasketPersistenceAction',
+        'sendAcknowledgementReceiptAction'  => 'sendAcknowledgementReceiptAction',
+        'resMarkAsReadAction'             => 'resMarkAsReadAction',
     ];
 
     public static function terminateAction(array $aArgs)
@@ -133,6 +136,26 @@ class ActionMethodController
                 CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData, 'multipleObject' => true, 'noAuth' => true]);
             }
         }
+
+        return true;
+    }
+
+    public static function closeAndIndexAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        ResModel::updateExt(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?', 'closing_date is null'], 'data' => [$aArgs['resId']]]);
+
+        return true;
+    }
+
+    public static function sendAcknowledgementReceiptAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'data']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        AcknowledgementReceiptModel::updateSendDate(['send_date' => date('Y-m-d H:i:s', $aArgs['data']['send_date']), 'res_id' => $aArgs['resId']]);
 
         return true;
     }

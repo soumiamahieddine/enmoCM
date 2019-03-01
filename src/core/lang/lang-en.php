@@ -442,3 +442,5 @@ define('_CLOSING_DATE', 'Closing date');
 define('_ACTION_DATE', 'Action date');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'User created in Maarch Parapheur');
+
+define('_SEND_ACKNOWLEDGEMENT_RECEIPT', 'Send acknowledgement receipt');

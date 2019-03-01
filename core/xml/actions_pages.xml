@@ -165,6 +165,19 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
+        <ID>send_acknowledgement_receipt</ID>
+        <LABEL>_SEND_ACKNOWLEDGEMENT_RECEIPT</LABEL>
+        <NAME>send_acknowledgement_receipt</NAME>
+        <DESC>_SEND_ACKNOWLEDGEMENT_RECEIPT</DESC>
+        <component>sendAcknowledgementReceiptAction</component>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
         <ID>sendFileWS</ID>
         <LABEL>_SEND_FILE_WS</LABEL>
         <NAME>sendFileWS</NAME>
@@ -205,7 +218,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_CLOSE_MAIL_AND_INDEX</LABEL>
         <NAME>close_mail_and_index</NAME>
         <DESC>_CLOSE_MAIL_AND_INDEX_DESC</DESC>
-        <component>v1Action</component>
+        <component>closeAndIndexAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

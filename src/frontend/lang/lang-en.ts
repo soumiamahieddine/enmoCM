@@ -866,4 +866,7 @@ export const LANG_EN = {
     "updateDepartureDate"                   : "This will update mail <b class=\"highlight\">departure date</b>.",
     "templateCheckEntities"                 : "The following entities already have a registered template for the type : ",
     "templateAssociateEntities"             : "List of entities already associated with a template",
+    "openIndexation"             : "Indexing page will be open so that you can create a new mail",
+    "acknowledgementSendDate"             : "Acknowledgement send date",
+    "updateAcknowledgementSendDate"             : "This will update send date for paper acknowledgement receipt",
 };

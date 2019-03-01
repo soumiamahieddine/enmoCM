@@ -9,8 +9,10 @@ import { EnabledBasketPersistenceActionComponent } from './enabled-basket-persis
 import { DisabledBasketPersistenceActionComponent } from './disabled-basket-persistence/disabled-basket-persistence-action.component';
 import { ResMarkAsReadActionComponent } from './res-mark-as-read/res-mark-as-read-action.component';
 import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
+import { SendAcknowledgementReceiptActionComponent } from './send-acknowledgement-receipt-action/send-acknowledgement-receipt-action.component';
+import { CloseAndIndexActionComponent } from './close-and-index-action/close-and-index-action.component';
 import { UpdateDepartureDateActionComponent } from './update-departure-date-action/update-departure-date-action.component';
-import { ProcessActionComponent } from './process-action/process-action.component';
+// import { ProcessActionComponent } from './process-action/process-action.component';
 import { Router } from '@angular/router';
 import { ViewDocActionComponent } from './view-doc-action/view-doc-action.component';
 
@@ -93,6 +95,7 @@ export class ActionsListComponent implements OnInit {
                 }
                 catch (error) {
                     console.log(error);
+                    console.log(action.component);
                     alert(this.lang.actionNotExist);  
                 }
                 this.loading = false;
@@ -124,6 +127,46 @@ export class ActionsListComponent implements OnInit {
 
     closeMailAction() {
         const dialogRef = this.dialog.open(CloseMailActionComponent, {
+            width: '500px',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
+            }
+        });
+    }
+
+    closeAndIndexAction() {
+        const dialogRef = this.dialog.open(CloseAndIndexActionComponent, {
+            width: '500px',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
+            }
+        });
+    }
+
+    sendAcknowledgementReceiptAction() {
+        const dialogRef = this.dialog.open(SendAcknowledgementReceiptActionComponent, {
             width: '500px',
             data: {
                 contextMode: this.contextMode,
