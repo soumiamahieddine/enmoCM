@@ -8,7 +8,15 @@
             {{lang.makeActionOn}} 
             <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
             <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b> ?
-            <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;" [innerHTML]="lang.updateClosingDate"></div>
+            <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;" [innerHTML]="lang.updateAcknowledgementSendDate"></div>
+            <div class="col-sm-6" style="padding-top:10px;">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="acknowledgementSendDate" [max]="acknowledgementSendDateEnd" [matDatepicker]="pickerStart" placeholder="{{lang.acknowledgementSendDate}}"
+                    (focus)="pickerStart.open()">
+                    <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerStart [startAt]="acknowledgementSendDate"></mat-datepicker>
+                </mat-form-field>
+            </div>
         </div>
         <div class="col-md-12">
             <app-note-editor #noteEditor></app-note-editor>

@@ -17,13 +17,16 @@ export class SendAcknowledgementReceiptActionComponent implements OnInit {
 
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
 
+    acknowledgementSendDate    : Date      = new Date();
+    acknowledgementSendDateEnd : Date      = new Date();
+
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendAcknowledgementReceiptActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void { }
 
     onSubmit(): void {
         this.loading = true;
-        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : this.data.selectedRes, note : this.noteEditor.getNoteContent(), data : {send_date : ''}})
+        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : this.data.selectedRes, note : this.noteEditor.getNoteContent(), data : {send_date : (this.acknowledgementSendDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
                 this.loading = false;
                 this.dialogRef.close('success');
