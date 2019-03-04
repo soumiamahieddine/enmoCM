@@ -54,7 +54,7 @@ $bask = new basket();
 
 if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
     $_SESSION['tmpbasket']['status'] = "all";
-    $bask->load_current_basket(trim($_REQUEST['baskets']), trim($_REQUEST['groupId']));
+    $bask->load_current_basket(trim($_REQUEST['baskets']), trim($_GET['groupIdSer']));
 }
 
 if (empty($_GET['defaultAction'])) {

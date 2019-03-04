@@ -366,6 +366,13 @@ abstract class basket_Abstract extends Database
         $_SESSION['current_basket'] = [];
         $_SESSION['current_basket']['id'] = trim($basketId);
         $ind = -1;
+
+        // replace serial id by group_id (V2 call)
+        if (is_numeric($groupId)) {
+            $groupIdNotSer = \Group\models\GroupModel::getById(['id' => $groupId, 'select' => ['group_id']]);
+            $groupId = $groupIdNotSer['group_id'];
+        }
+
         for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {
             if ($_SESSION['user']['baskets'][$i]['id'] == trim($basketId)
                 && (empty($groupId) || $_SESSION['user']['baskets'][$i]['group_id'] == trim($groupId))) {
