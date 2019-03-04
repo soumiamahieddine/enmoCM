@@ -419,7 +419,7 @@ class ResController
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
 
-        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => 'SHA256']);
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument]);
         if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
             return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
         }

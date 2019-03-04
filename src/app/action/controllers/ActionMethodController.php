@@ -22,7 +22,6 @@ use SrcCore\models\ValidatorModel;
 use SrcCore\models\CurlModel;
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 
-
 class ActionMethodController
 {
     use ActionMethodTraitAcknowledgementReceipt;
