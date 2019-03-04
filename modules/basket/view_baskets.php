@@ -49,12 +49,21 @@ if (! isset($_REQUEST['noinit'])) {
 }
 require_once "modules/basket/class/class_modules_tools.php";
 
+if (!empty($_GET['userId']) && is_numeric($_GET['userId']) && !empty($_REQUEST['baskets'])) {
+    $user = \User\models\UserModel::getById(['id' => $_GET['userId']]);
+    if ($user['user_id'] != $_SESSION['user']['UserId']) {
+        $basketId = trim($_REQUEST['baskets']) . '_' . $user['user_id'];
+    } else {
+        $basketId = trim($_REQUEST['baskets']);
+    }
+} else {
+    $basketId = trim($_REQUEST['baskets']);
+}
 
 $bask = new basket();
-
-if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
+if (!empty($basketId)) {
     $_SESSION['tmpbasket']['status'] = "all";
-    $bask->load_current_basket(trim($_REQUEST['baskets']), trim($_GET['groupIdSer']));
+    $bask->load_current_basket(trim($basketId), trim($_GET['groupIdSer']));
 }
 
 if (empty($_GET['defaultAction'])) {
@@ -80,7 +89,7 @@ $_SESSION['urlV2Basket'] = $_GET;
 echo '<script language="javascript">';
 if (!empty($_GET['backToBasket'])) {
     echo 'triggerAngular(\'#/basketList/users/'.$_GET['userId'].'/groups/'.$_GET['groupIdSer'].'/baskets/'.$_GET['basketId'].'\');';
-} else if (!empty($_GET['signatureBookMode'])) {
+} elseif (!empty($_GET['signatureBookMode'])) {
     echo 'triggerAngular(\'#/signatureBook/users/'.$_GET['userId'].'/groups/'.$_GET['groupIdSer'].'/baskets/'.$_GET['basketId'].'/resources/'.$_GET['resId'].'\');';
 } else {
     echo 'action_send_first_request(\''
