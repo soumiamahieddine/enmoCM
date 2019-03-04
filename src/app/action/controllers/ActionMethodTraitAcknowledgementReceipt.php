@@ -15,6 +15,7 @@ namespace Action\controllers;
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Contact\models\ContactModel;
 use ContentManagement\controllers\MergeController;
+use Convert\controllers\ConvertPdfController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
@@ -32,9 +33,7 @@ trait ActionMethodTraitAcknowledgementReceipt
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
 
-
         $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'is_multicontacts'], 'resId' => $aArgs['resId']]);
-
         if (empty($ext) || $ext['category_id'] != 'incoming') {
             return [];
         }
@@ -81,6 +80,7 @@ trait ActionMethodTraitAcknowledgementReceipt
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template[0]['template_path']) . $template[0]['template_file_name'];
 
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $ids = [];
         foreach ($contactsToProcess as $contactToProcess) {
             $contact = ContactModel::getByAddressId(['addressId' => $contactToProcess, 'select' => ['email', 'address_street', 'address_town', 'address_postal_code']]);
 
@@ -102,7 +102,13 @@ trait ActionMethodTraitAcknowledgementReceipt
                     return [];
                 }
                 $mergedDocument = MergeController::mergeDocument(['path' => $pathToDocument]);
+                $mergedDocument['encodedDocument'] = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $mergedDocument['encodedDocument']]);
                 $format = 'pdf';
+
+                if (!empty($mergedDocument['encodedDocument']['errors'])) {
+                    //TODO rollback ??
+                    return [];
+                }
             }
 
             $storeResult = DocserverController::storeResourceOnDocServer([
@@ -116,7 +122,7 @@ trait ActionMethodTraitAcknowledgementReceipt
                 return ['errors' => '[storeResource] ' . $storeResult['errors']];
             }
 
-            $id = AcknowledgementReceiptModel::create([
+            $ids[] = AcknowledgementReceiptModel::create([
                 'resId'             => $aArgs['resId'],
                 'type'              => $templateAttachmentType,
                 'format'            => $format,
@@ -129,7 +135,6 @@ trait ActionMethodTraitAcknowledgementReceipt
             ]);
         }
 
-
-        return true;
+        return $ids;
     }
 }

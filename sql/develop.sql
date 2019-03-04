@@ -161,6 +161,15 @@ UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"
 /* ACTIONS */
 ALTER TABLE actions DROP COLUMN IF EXISTS component;
 ALTER TABLE actions ADD COLUMN component CHARACTER VARYING (128);
+UPDATE actions SET component = 'v1Action' WHERE action_page IN ('redirect', 'put_in_copy', 'process', 'index_mlb', 'validate_mail', 'sendFileWS', 'sendDataWS', 'sendToExternalSignatureBook', 'close_mail_and_index', 'close_mail_with_attachment', 'send_attachments_to_contact', 'send_to_contact_with_mandatory_attachment', 'visa_workflow', 'interrupt_visa', 'rejection_visa_redactor', 'rejection_visa_previous', 'redirect_visa_entity', 'send_to_visa', 'send_signed_docs', 'send_docs_to_recommendation', 'validate_recommendation', 'send_to_avis', 'avis_workflow', 'avis_workflow_simple', 'export_seda', 'check_acknowledgement', 'check_reply', 'purge_letter', 'reset_letter');
+UPDATE actions SET component = 'confirmAction' WHERE action_page = 'confirm_status' OR action_page is null OR action_page = '';
+UPDATE actions SET component = 'updateDepartureDateAction' WHERE action_page = 'confirm_status_with_update_date';
+UPDATE actions SET component = 'viewDoc' WHERE action_page = 'view';
+UPDATE actions SET component = 'closeMailAction' WHERE action_page = 'close_mail';
+UPDATE actions SET component = 'enabledBasketPersistenceAction' WHERE action_page = 'set_persistent_mode_on';
+UPDATE actions SET component = 'disabledBasketPersistenceAction' WHERE action_page = 'set_persistent_mode_off';
+UPDATE actions SET component = 'resMarkAsReadAction' WHERE action_page = 'mark_as_read';
+UPDATE actions SET component = 'signatureBookAction' WHERE action_page = 'visa_mail';
 
 /* Acknowledgement Receipts */
 DROP TABLE IF EXISTS acknowledgement_receipts;
@@ -361,14 +370,3 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
      LEFT JOIN contacts_v2 cont ON mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id
      LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
   WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
-
-/* Actions pages component*/
-UPDATE actions SET component = 'v1Action' WHERE action_page IN ('redirect', 'put_in_copy', 'process', 'index_mlb', 'validate_mail', 'sendFileWS', 'sendDataWS', 'sendToExternalSignatureBook', 'close_mail_and_index', 'close_mail_with_attachment', 'send_attachments_to_contact', 'send_to_contact_with_mandatory_attachment', 'visa_workflow', 'interrupt_visa', 'rejection_visa_redactor', 'rejection_visa_previous', 'redirect_visa_entity', 'send_to_visa', 'send_signed_docs', 'send_docs_to_recommendation', 'validate_recommendation', 'send_to_avis', 'avis_workflow', 'avis_workflow_simple', 'export_seda', 'check_acknowledgement', 'check_reply', 'purge_letter', 'reset_letter');
-UPDATE actions SET component = 'confirmAction' WHERE action_page = 'confirm_status' OR action_page is null OR action_page = '';
-UPDATE actions SET component = 'updateDepartureDateAction' WHERE action_page = 'confirm_status_with_update_date';
-UPDATE actions SET component = 'viewDoc' WHERE action_page = 'view';
-UPDATE actions SET component = 'closeMailAction' WHERE action_page = 'close_mail';
-UPDATE actions SET component = 'enabledBasketPersistenceAction' WHERE action_page = 'set_persistent_mode_on';
-UPDATE actions SET component = 'disabledBasketPersistenceAction' WHERE action_page = 'set_persistent_mode_off';
-UPDATE actions SET component = 'resMarkAsReadAction' WHERE action_page = 'mark_as_read';
-UPDATE actions SET component = 'signatureBookAction' WHERE action_page = 'visa_mail';

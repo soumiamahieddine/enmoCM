@@ -39,16 +39,20 @@ class MergeController
         }
 
         if ($extension == 'odt') {
-            $tbs->LoadTemplate("{$args['path']}#styles.xml", OPENTBS_ALREADY_UTF8);
+            $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
+//            $tbs->LoadTemplate("{$args['path']}#content.xml;styles.xml", OPENTBS_ALREADY_UTF8);
         } elseif ($extension == 'docx') {
-            $tbs->LoadTemplate("{$args['path']}#word/header1.xml;word/footer1.xml", OPENTBS_ALREADY_UTF8);
+            $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
+//            $tbs->LoadTemplate("{$args['path']}#word/header1.xml;word/footer1.xml", OPENTBS_ALREADY_UTF8);
         } else {
             $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
         }
 
         //TODO
         $dataToBeMerge['contact']['contact_title'] = 'Mister';
+        $dataToBeMerge['contact']['title'] = 'Miss';
         $dataToBeMerge['contact']['contact_firstname'] = 'Banane';
+        $dataToBeMerge['contact']['lastname'] = 'Smith';
 
         foreach ($dataToBeMerge as $key => $value) {
             $tbs->MergeField($key, $value);
