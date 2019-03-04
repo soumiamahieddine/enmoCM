@@ -6,7 +6,7 @@
             <menu-nav></menu-nav>
             <mat-nav-list *ngIf="!creationMode">
                 <h3 mat-subheader>{{lang.actions}}</h3>
-                <a mat-list-item *ngIf="!lockFound" (click)="duplicateTemplate()">
+                <a mat-list-item *ngIf="!lockFound && template.template_target != 'acknowledgementReceipt'" (click)="duplicateTemplate()">
                     <mat-icon color="primary" mat-list-icon class="fa fa-copy"></mat-icon>
                     <p mat-line>
                         {{lang.duplicate}}
