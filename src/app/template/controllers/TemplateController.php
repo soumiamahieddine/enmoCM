@@ -200,7 +200,7 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if ($data['template_type'] == 'OFFICE_HTML' && !$data['jnlpUniqueId'] && !$data['uploadedFile'] && !$data['template_content']) {
+        if ($data['template_type'] == 'OFFICE_HTML' && empty($data['jnlpUniqueId']) && empty($data['uploadedFile']) && empty($data['template_content']) && empty($template['template_file_name'])) {
             return $response->withStatus(400)->withJson(['errors' => 'You must complete at least one of the two templates']);
         }
 
