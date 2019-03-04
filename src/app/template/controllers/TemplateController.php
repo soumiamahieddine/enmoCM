@@ -118,7 +118,7 @@ class TemplateController
             }
         }
 
-        if ($data['template_type'] == 'OFFICE' || ($data['template_type'] == 'OFFICE_HTML' && $data['jnlpUniqueId'] && $data['uploadedFile'])) {
+        if ($data['template_type'] == 'OFFICE' || ($data['template_type'] == 'OFFICE_HTML' && ($data['jnlpUniqueId'] || $data['uploadedFile']))) {
             if (empty($data['jnlpUniqueId']) && empty($data['uploadedFile'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Template file is missing']);
             }
