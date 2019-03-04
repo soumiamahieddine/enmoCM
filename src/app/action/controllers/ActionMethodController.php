@@ -28,14 +28,15 @@ class ActionMethodController
     use ActionMethodTraitAcknowledgementReceipt;
 
     const COMPONENTS_ACTIONS = [
-        'confirmAction'                   => 'createAcknowledgementReceipts',
-        'closeMailAction'                 => 'closeMailAction',
-        'closeAndIndexAction'             => 'closeAndIndexAction',
-        'updateDepartureDateAction'       => 'updateDepartureDateAction',
-        'disabledBasketPersistenceAction' => 'disabledBasketPersistenceAction',
-        'enabledBasketPersistenceAction'  => 'enabledBasketPersistenceAction',
-        'sendAcknowledgementReceiptAction'  => 'sendAcknowledgementReceiptAction',
-        'resMarkAsReadAction'             => 'resMarkAsReadAction',
+        'confirmAction'                         => null,
+        'closeMailAction'                       => 'closeMailAction',
+        'closeAndIndexAction'                   => 'closeAndIndexAction',
+        'updateDepartureDateAction'             => 'updateDepartureDateAction',
+        'enabledBasketPersistenceAction'        => 'enabledBasketPersistenceAction',
+        'disabledBasketPersistenceAction'       => 'disabledBasketPersistenceAction',
+        'resMarkAsReadAction'                   => 'resMarkAsReadAction',
+        'createAcknowledgementReceiptsAction'   => 'createAcknowledgementReceipts',
+        'sendAcknowledgementReceiptAction'      => 'sendAcknowledgementReceiptAction'
     ];
 
     public static function terminateAction(array $aArgs)
