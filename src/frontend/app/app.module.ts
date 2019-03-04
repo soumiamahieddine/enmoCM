@@ -25,9 +25,9 @@ import { ActionsListComponent }                 from './actions/actions-list.com
 
 /*ACTIONS PAGES */
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
-import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence/disabled-basket-persistence-action.component';
-import { EnabledBasketPersistenceActionComponent } from './actions/enabled-basket-persistence/enabled-basket-persistence-action.component';
-import { ResMarkAsReadActionComponent } from './actions/res-mark-as-read/res-mark-as-read-action.component';
+import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence-action/disabled-basket-persistence-action.component';
+import { EnabledBasketPersistenceActionComponent } from './actions/enabled-basket-persistence-action/enabled-basket-persistence-action.component';
+import { ResMarkAsReadActionComponent } from './actions/res-mark-as-read-action/res-mark-as-read-action.component';
 import { CloseMailActionComponent }             from './actions/close-mail-action/close-mail-action.component';
 import { SendAcknowledgementReceiptActionComponent }             from './actions/send-acknowledgement-receipt-action/send-acknowledgement-receipt-action.component';
 import { CloseAndIndexActionComponent }             from './actions/close-and-index-action/close-and-index-action.component';
