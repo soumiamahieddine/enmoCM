@@ -42,6 +42,7 @@ if (isset($_REQUEST['md5'])) {
 if (isset($_REQUEST['tmp_file'])) {
     $_SESSION['FILE']['tmp_file'] = $_REQUEST['tmp_file'];
 }
+$_SESSION['category_id'] = '';
 
 if (! isset($_REQUEST['noinit'])) {
     $_SESSION['current_basket'] = array();
