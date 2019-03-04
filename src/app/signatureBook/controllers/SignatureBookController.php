@@ -424,10 +424,12 @@ class SignatureBookController
                 $resources[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
             }
 
-            $priority = PriorityModel::getById(['id' => $value['priority'], 'select' => ['color', 'label']]);
             $resources[$key]['creation_date'] = date(DATE_ATOM, strtotime($resources[$key]['creation_date']));
             $resources[$key]['process_limit_date'] = (empty($resources[$key]['process_limit_date']) ? null : date(DATE_ATOM, strtotime($resources[$key]['process_limit_date'])));
             $resources[$key]['allSigned'] = ($resListForAttachments[$value['res_id']] === null ? false : $resListForAttachments[$value['res_id']]);
+            if (!empty($value['priority'])) {
+                $priority = PriorityModel::getById(['id' => $value['priority'], 'select' => ['color', 'label']]);
+            }
             if (!empty($priority)) {
                 $resources[$key]['priorityColor'] = $priority['color'];
                 $resources[$key]['priorityLabel'] = $priority['label'];
