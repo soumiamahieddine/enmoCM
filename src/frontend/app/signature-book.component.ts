@@ -113,7 +113,6 @@ export class SignatureBookComponent implements OnInit {
             this.signatureBook.resList = []; // This line is added because of manage action behaviour (processAfterAction is called twice)
             lockDocument(this.resId);
             setInterval(() => {lockDocument(this.resId)}, 50000);
-            //this.http.get(this.coreUrl + "rest/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + this.resId)
             this.http.get("../../rest/signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources/" + this.resId)
                 .subscribe((data : any) => {
                     if (data.error) {
@@ -480,9 +479,6 @@ export class SignatureBookComponent implements OnInit {
 
     backToBasket() {
         unlockDocument(this.resId);
-        //location.hash = "";
-        //location.reload();
-        //this.router.navigate(['basketList/users/'+ this.userId+'/groups/'+ this.groupId+'/baskets/'+ this.basketId]);
         window.location.href = 'index.php?page=view_baskets&module=basket&basketId='+this.basketId+'&userId='+this.userId+'&groupIdSer='+this.groupId+'&backToBasket=true';
     }
 
