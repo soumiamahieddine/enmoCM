@@ -131,35 +131,7 @@ class AcknowledgementReceiptController
             //Verify resource category
             if (empty($ext) || $ext['category_id'] != 'incoming') {
                 $noSendAR['number'] += 1;
-                array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'Not incoming category' ]);
-                continue;
-            }
-
-            //Verify associated contact
-            if ($ext['address_id'] == '' && $ext['is_multicontacts'] == '') {
-                $noSendAR['number'] += 1;
-                array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No contact' ]);
-                continue;
-            }
-            
-            $contactsToProcess = [];
-            if ($ext['is_multicontacts'] == 'Y') {
-                $multiContacts = DatabaseModel::select([
-                    'select'    => ['address_id'],
-                    'table'     => ['contacts_res'],
-                    'where'     => ['res_id = ?', 'mode = ?', 'address_id != ?'],
-                    'data'      => [$resId, 'multi', 0]
-                ]);
-                foreach ($multiContacts as $multiContact) {
-                    $contactsToProcess[] = $multiContact['address_id'];
-                }
-            } else {
-                $contactsToProcess[] = $ext['address_id'];
-            }
-
-            if (empty($contactsToProcess)) {
-                $noSendAR['number'] += 1;
-                array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No contact' ]);
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'Not incoming category' ];
                 continue;
             }
 
@@ -183,7 +155,7 @@ class AcknowledgementReceiptController
 
             if (empty($template[0])) {
                 $noSendAR['number'] += 1;
-                array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No template']);
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No template'];
                 continue;
             }
 
@@ -199,28 +171,49 @@ class AcknowledgementReceiptController
 
             if (!empty($acknowledgement)) {
                 $alreadySend['number'] += 1;
-                array_push($alreadySend['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'AR already send' ]);
+                $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'AR already send' ];
                 continue;
             }
 
-            //Verify user informations
-            $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+            // //Verify associated contact            
+            $contactsToProcess = [];
+            if ($ext['is_multicontacts'] == 'Y') {
+                $multiContacts = DatabaseModel::select([
+                    'select'    => ['address_id'],
+                    'table'     => ['contacts_res'],
+                    'where'     => ['res_id = ?', 'mode = ?', 'address_id != ?'],
+                    'data'      => [$resId, 'multi', 0]
+                ]);
+                foreach ($multiContacts as $multiContact) {
+                    $contactsToProcess[] = $multiContact['address_id'];
+                }
+            } else {
+                $contactsToProcess[] = $ext['address_id'];
+            }
 
+            //Verify user informations
             foreach ($contactsToProcess as $contactToProcess) {
                 $email = 0;
                 $paper = 0;
+
+                if (empty($contactToProcess)) {
+                    $noSendAR['number'] += 1;
+                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No contact' ];
+                    continue;
+                }
+
                 $contact = ContactModel::getByAddressId(['addressId' => $contactToProcess, 'select' => ['email', 'address_street', 'address_town', 'address_postal_code']]);
     
-                if (empty($contact['address_street']) && empty($contact['address_town']) && empty($contact['address_postal_code'] && empty($contact['email']))) {
+                if (empty($contact['email']) || empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code'])) {
                     $noSendAR['number'] += 1;
-                    array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No user informations' ]);
+                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No user informations' ];
                     continue;
                 }  
                 
                 if (!empty($contact['email'])) {
                     if (empty($template[0]['template_content'])) {
                         $noSendAR['number'] += 1;
-                        array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No email template' ]);
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No email template' ];
                         continue;
                     } else {
                         $email += 1;
@@ -229,7 +222,7 @@ class AcknowledgementReceiptController
                 } else if (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'] )) {
                     if (!file_exists($pathToDocument)) {
                         $noSendAR['number'] += 1;
-                        array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No paper template' ]);
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No paper template' ];
                         continue;
                     } else {
                         $paper += 1;
