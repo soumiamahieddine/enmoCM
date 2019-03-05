@@ -355,4 +355,7 @@ $app->post('/saveNumericPackage', \Sendmail\Controllers\ReceiveMessageExchangeCo
 $app->post('/saveMessageExchangeReturn', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');
 $app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
 
+//Acknowledgement Receipt
+$app->post('/AcknowledgementReceipt/users/{userId}/groups/{groupId}/baskets/{basketId}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceiptsNumberToSend');
+
 $app->run();

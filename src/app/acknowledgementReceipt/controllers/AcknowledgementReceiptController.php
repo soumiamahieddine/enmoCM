@@ -27,6 +27,10 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Respect\Validation\Validator;
 use Resource\controllers\ResourceListController;
+use Contact\models\ContactModel;
+use SrcCore\models\DatabaseModel;
+use Doctype\models\DoctypeExtModel;
+use Template\models\TemplateModel;
 
 class AcknowledgementReceiptController
 {
@@ -98,5 +102,145 @@ class AcknowledgementReceiptController
         $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.pdf");
 
         return $response->withHeader('Content-Type', $mimeType);
+    }
+    
+    public function getAcknowledgementReceiptsNumberToSend(Request $request, Response $response, array $aArgs)
+    {
+        $data = $request->getParsedBody();
+        //$data = $request->getParams();
+        $sendEmail = 0;
+        $sendPaper = 0;
+        $noSendAR = [
+            'number'    => 0,
+            'list'      => [],
+        ];
+        $alreadySend = [
+            'number'    => 0,
+            'list'      => [],
+        ];
+
+        if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+        $data['resources'] = array_slice($data['resources'], 0, 500);
+
+        
+        foreach($data['resources'] as $resId) {
+            $ext = ResModel::getExtById(['select' => ['res_id', 'category_id', 'address_id', 'is_multicontacts', 'alt_identifier'], 'resId' => $resId]);
+                        
+            //Verify resource category
+            if (empty($ext) || $ext['category_id'] != 'incoming') {
+                $noSendAR['number'] += 1;
+                array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'Not incoming category' ]);
+                continue;
+            }
+
+            //Verify associated contact
+            if ($ext['address_id'] == '' && $ext['is_multicontacts'] == '') {
+                $noSendAR['number'] += 1;
+                array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No contact' ]);
+                continue;
+            }
+            
+            $contactsToProcess = [];
+            if ($ext['is_multicontacts'] == 'Y') {
+                $multiContacts = DatabaseModel::select([
+                    'select'    => ['address_id'],
+                    'table'     => ['contacts_res'],
+                    'where'     => ['res_id = ?', 'mode = ?', 'address_id != ?'],
+                    'data'      => [$resId, 'multi', 0]
+                ]);
+                foreach ($multiContacts as $multiContact) {
+                    $contactsToProcess[] = $multiContact['address_id'];
+                }
+            } else {
+                $contactsToProcess[] = $ext['address_id'];
+            }
+
+            if (empty($contactsToProcess)) {
+                $noSendAR['number'] += 1;
+                array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No contact' ]);
+                continue;
+            }
+
+            //Verify template
+            $resource = ResModel::getById(['select' => ['type_id', 'destination'], 'resId' => $resId]);
+            $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
+
+            if ($doctype['process_mode'] == 'SVA') {
+                $templateAttachmentType = 'sva';
+            } elseif ($doctype['process_mode'] == 'SVR') {
+                $templateAttachmentType = 'svr';
+            } else {
+                $templateAttachmentType = 'simple';
+            }
+
+            $template = TemplateModel::getWithAssociation([
+                'select'    => ['template_content', 'template_path', 'template_file_name'],
+                'where'     => ['templates.template_id = templates_association.template_id', 'template_target = ?', 'template_attachment_type = ?', 'value_field = ?'],
+                'data'      => ['acknowledgementReceipt', $templateAttachmentType, $resource['destination']]
+            ]);
+
+            if (empty($template[0])) {
+                $noSendAR['number'] += 1;
+                array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No template']);
+                continue;
+            }
+
+            $docserver = DocserverModel::getByDocserverId(['docserverId' => 'TEMPLATES', 'select' => ['path_template']]);
+            $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template[0]['template_path']) . $template[0]['template_file_name'];
+
+            //Verify sending
+            $acknowledgement = AcknowledgementReceiptModel::get([
+                'select'    => ['res_id', 'type', 'format', 'send_date'],
+                'where'     => ['res_id = (?)', 'type = (?)'],
+                'data'      => [$resId, $templateAttachmentType],
+            ]);
+
+            if (!empty($acknowledgement)) {
+                $alreadySend['number'] += 1;
+                array_push($alreadySend['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'AR already send' ]);
+                continue;
+            }
+
+            //Verify user informations
+            $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+            foreach ($contactsToProcess as $contactToProcess) {
+                $email = 0;
+                $paper = 0;
+                $contact = ContactModel::getByAddressId(['addressId' => $contactToProcess, 'select' => ['email', 'address_street', 'address_town', 'address_postal_code']]);
+    
+                if (empty($contact['address_street']) && empty($contact['address_town']) && empty($contact['address_postal_code'] && empty($contact['email']))) {
+                    $noSendAR['number'] += 1;
+                    array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No user informations' ]);
+                    continue;
+                }  
+                
+                if (!empty($contact['email'])) {
+                    if (empty($template[0]['template_content'])) {
+                        $noSendAR['number'] += 1;
+                        array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No email template' ]);
+                        continue;
+                    } else {
+                        $email += 1;
+                    }
+                    
+                } else if (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'] )) {
+                    if (!file_exists($pathToDocument)) {
+                        $noSendAR['number'] += 1;
+                        array_push($noSendAR['list'], ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No paper template' ]);
+                        continue;
+                    } else {
+                        $paper += 1;
+                    }
+                }
+            }
+            
+            $sendEmail += $email;
+            $sendPaper += $paper;            
+        }
+
+        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend]);
     }
 }
