@@ -165,11 +165,24 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>send_acknowledgement_receipt</ID>
-        <LABEL>_SEND_ACKNOWLEDGEMENT_RECEIPT</LABEL>
-        <NAME>send_acknowledgement_receipt</NAME>
-        <DESC>_SEND_ACKNOWLEDGEMENT_RECEIPT</DESC>
-        <component>sendAcknowledgementReceiptAction</component>
+        <ID>create_acknowledgement_receipt</ID>
+        <LABEL>_CREATE_ACKNOWLEDGEMENT_RECEIPT</LABEL>
+        <NAME>create_acknowledgement_receipt</NAME>
+        <DESC>_CREATE_ACKNOWLEDGEMENT_RECEIPT</DESC>
+        <component>createAcknowledgementReceiptsAction</component>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>update_acknowledgement_send_date</ID>
+        <LABEL>_UPDATE_ACKNOWLEDGEMENT_SEND_DATE</LABEL>
+        <NAME>update_acknowledgement_send_date</NAME>
+        <DESC>_UPDATE_ACKNOWLEDGEMENT_SEND_DATE</DESC>
+        <component>updateAcknowledgementSendDateAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

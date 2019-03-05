@@ -29,7 +29,8 @@ import { DisabledBasketPersistenceActionComponent } from './actions/disabled-bas
 import { EnabledBasketPersistenceActionComponent } from './actions/enabled-basket-persistence-action/enabled-basket-persistence-action.component';
 import { ResMarkAsReadActionComponent } from './actions/res-mark-as-read-action/res-mark-as-read-action.component';
 import { CloseMailActionComponent }             from './actions/close-mail-action/close-mail-action.component';
-import { SendAcknowledgementReceiptActionComponent }             from './actions/send-acknowledgement-receipt-action/send-acknowledgement-receipt-action.component';
+import { UpdateAcknowledgementSendDateActionComponent }             from './actions/update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
+import { CreateAcknowledgementReceiptActionComponent }             from './actions/create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
 import { CloseAndIndexActionComponent }             from './actions/close-and-index-action/close-and-index-action.component';
 import { UpdateDepartureDateActionComponent }   from './actions/update-departure-date-action/update-departure-date-action.component';
 import { ProcessActionComponent }               from './actions/process-action/process-action.component';
@@ -80,7 +81,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         EnabledBasketPersistenceActionComponent,
         DisabledBasketPersistenceActionComponent,
         CloseAndIndexActionComponent,
-        SendAcknowledgementReceiptActionComponent,
+        UpdateAcknowledgementSendDateActionComponent,
+        CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
         ProcessActionComponent,
@@ -101,7 +103,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         EnabledBasketPersistenceActionComponent,
         DisabledBasketPersistenceActionComponent,
         CloseAndIndexActionComponent,
-        SendAcknowledgementReceiptActionComponent,
+        UpdateAcknowledgementSendDateActionComponent,
+        CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
         ProcessActionComponent,

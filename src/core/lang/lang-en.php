@@ -444,4 +444,5 @@ define('_ACTION_DATE', 'Action date');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'User created in Maarch Parapheur');
 
-define('_SEND_ACKNOWLEDGEMENT_RECEIPT', 'Send acknowledgement receipt');
+define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Create acknowledgement receipt');
+define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'update acknowledgement send date');

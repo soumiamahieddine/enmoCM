@@ -6,11 +6,11 @@ import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 
 @Component({
-    templateUrl: "send-acknowledgement-receipt-action.component.html",
+    templateUrl: "update-acknowledgement-send-date-action.component.html",
     styleUrls: ['../close-mail-action/close-mail-action.component.scss'],
     providers: [NotificationService],
 })
-export class SendAcknowledgementReceiptActionComponent implements OnInit {
+export class UpdateAcknowledgementSendDateActionComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
@@ -20,7 +20,7 @@ export class SendAcknowledgementReceiptActionComponent implements OnInit {
     acknowledgementSendDate    : Date      = new Date();
     acknowledgementSendDateEnd : Date      = new Date();
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendAcknowledgementReceiptActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<UpdateAcknowledgementSendDateActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void { }
 

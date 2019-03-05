@@ -35,7 +35,7 @@ class ActionMethodController
         'disabledBasketPersistenceAction'       => 'disabledBasketPersistenceAction',
         'resMarkAsReadAction'                   => 'resMarkAsReadAction',
         'createAcknowledgementReceiptsAction'   => 'createAcknowledgementReceipts',
-        'sendAcknowledgementReceiptAction'      => 'sendAcknowledgementReceiptAction'
+        'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction'
     ];
 
     public static function terminateAction(array $aArgs)
@@ -149,7 +149,7 @@ class ActionMethodController
         return true;
     }
 
-    public static function sendAcknowledgementReceiptAction(array $aArgs)
+    public static function updateAcknowledgementSendDateAction(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'data']);
         ValidatorModel::intVal($aArgs, ['resId']);

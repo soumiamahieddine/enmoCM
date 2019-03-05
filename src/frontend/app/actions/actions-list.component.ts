@@ -9,7 +9,8 @@ import { EnabledBasketPersistenceActionComponent } from './enabled-basket-persis
 import { DisabledBasketPersistenceActionComponent } from './disabled-basket-persistence-action/disabled-basket-persistence-action.component';
 import { ResMarkAsReadActionComponent } from './res-mark-as-read-action/res-mark-as-read-action.component';
 import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
-import { SendAcknowledgementReceiptActionComponent } from './send-acknowledgement-receipt-action/send-acknowledgement-receipt-action.component';
+import { UpdateAcknowledgementSendDateActionComponent } from './update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
+import { CreateAcknowledgementReceiptActionComponent } from './create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
 import { CloseAndIndexActionComponent } from './close-and-index-action/close-and-index-action.component';
 import { UpdateDepartureDateActionComponent } from './update-departure-date-action/update-departure-date-action.component';
 // import { ProcessActionComponent } from './process-action/process-action.component';
@@ -165,8 +166,28 @@ export class ActionsListComponent implements OnInit {
         });
     }
 
-    sendAcknowledgementReceiptAction() {
-        const dialogRef = this.dialog.open(SendAcknowledgementReceiptActionComponent, {
+    updateAcknowledgementSendDateAction() {
+        const dialogRef = this.dialog.open(UpdateAcknowledgementSendDateActionComponent, {
+            width: '500px',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
+            }
+        });
+    }
+
+    createAcknowledgementReceiptAction() {
+        const dialogRef = this.dialog.open(CreateAcknowledgementReceiptActionComponent, {
             width: '500px',
             data: {
                 contextMode: this.contextMode,
