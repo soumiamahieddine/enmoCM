@@ -104,7 +104,7 @@ class AcknowledgementReceiptController
         return $response->withHeader('Content-Type', $mimeType);
     }
     
-    public function getAcknowledgementReceiptsNumberToSend(Request $request, Response $response, array $aArgs)
+    public function checkAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
     {
         $data = $request->getParsedBody();
         //$data = $request->getParams();

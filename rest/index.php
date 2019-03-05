@@ -273,6 +273,7 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/su
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':checkAcknowledgementReceipt');
 
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');
@@ -354,8 +355,5 @@ $app->post('/scriptNotification', \Notification\controllers\NotificationSchedule
 $app->post('/saveNumericPackage', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchange');
 $app->post('/saveMessageExchangeReturn', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');
 $app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
-
-//Acknowledgement Receipt
-$app->post('/AcknowledgementReceipt/users/{userId}/groups/{groupId}/baskets/{basketId}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceiptsNumberToSend');
 
 $app->run();
