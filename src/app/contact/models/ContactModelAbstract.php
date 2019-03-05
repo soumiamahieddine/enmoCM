@@ -15,6 +15,7 @@
 namespace Contact\models;
 
 use Resource\models\ResModel;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
@@ -379,6 +380,44 @@ abstract class ContactModelAbstract
         ]);
 
         return $aReturn[0];
+    }
+
+    public static function getCivilities()
+    {
+        static $civilities;
+
+        if (!empty($civilities)) {
+            return $civilities;
+        }
+
+        $civilities = [];
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
+        if ($loadedXml != false) {
+            $result = $loadedXml->xpath('/ROOT/titles');
+            foreach ($result as $title) {
+                foreach ($title as $value) {
+                    $civilities[(string) $value->id] = [
+                        'label'         => (string)$value->label,
+                        'abbreviation'  => (string)$value->abbreviation,
+                    ];
+                }
+            }
+        }
+
+        return $civilities;
+    }
+
+    public static function getCivilityLabel(array $args)
+    {
+        ValidatorModel::stringType($args, ['civilityId']);
+
+        $civilities = ContactModel::getCivilities();
+        if (!empty($civilities[$args['civilityId']])) {
+            return $civilities[$args['civilityId']]['label'];
+        }
+
+        return '';
     }
 
     public static function CreateContactM2M(array $aArgs)

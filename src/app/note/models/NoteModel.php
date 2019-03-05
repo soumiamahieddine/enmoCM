@@ -14,8 +14,10 @@
 
 namespace Note\models;
 
+use Entity\models\EntityModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 class NoteModel
 {
@@ -168,6 +170,53 @@ class NoteModel
         }
 
         return $aReturn;
+    }
+
+    public static function getByUserIdForResource(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['userId', 'resId', 'select']);
+        ValidatorModel::intVal($aArgs, ['userId', 'resId']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $user = UserModel::getById(['select' => ['user_id'], 'id' => $aArgs['userId']]);
+        $rawUserEntities = EntityModel::getByLogin(['login' => $user['user_id'], 'select' => ['entity_id']]);
+
+        $userEntities = [];
+        foreach ($rawUserEntities as $rawUserEntity) {
+            $userEntities[] = $rawUserEntity['entity_id'];
+        }
+
+        $allNotes = NoteModel::get([
+            'select'   => $aArgs['select'],
+            'where'    => ['identifier = ?'],
+            'data'     => [$aArgs['resId']],
+            'order_by' => ['identifier']
+        ]);
+
+        $notes = [];
+        foreach ($allNotes as $note) {
+            $allowed = false;
+            if ($note['user_id'] == $user['user_id']) {
+                $allowed = true;
+            } else {
+                $noteEntities = NoteEntityModel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$note['id']]]);
+                if (!empty($noteEntities)) {
+                    foreach ($noteEntities as $noteEntity) {
+                        if (in_array($noteEntity['item_id'], $userEntities)) {
+                            $allowed = true;
+                            break;
+                        }
+                    }
+                } else {
+                    $allowed = true;
+                }
+            }
+            if ($allowed) {
+                $notes[] = $note;
+            }
+        }
+
+        return $notes;
     }
 
     public static function getTemplateList(array $aArgs = [])

@@ -24,7 +24,7 @@ use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 
 class ActionMethodController
 {
-    use ActionMethodTraitAcknowledgementReceipt;
+    use AcknowledgementReceiptTrait;
 
     const COMPONENTS_ACTIONS = [
         'confirmAction'                         => null,

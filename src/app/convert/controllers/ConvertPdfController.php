@@ -151,6 +151,8 @@ class ConvertPdfController
         }
 
         $resource = file_get_contents("{$tmpPath}{$tmpFilename}.pdf");
+        unlink("{$tmpPath}{$tmpFilename}");
+        unlink("{$tmpPath}{$tmpFilename}.pdf");
 
         return base64_encode($resource);
     }

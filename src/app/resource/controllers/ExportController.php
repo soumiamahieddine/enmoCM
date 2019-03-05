@@ -443,6 +443,7 @@ class ExportController
             ]);
 
             $resId = '';
+            $copies = '';
             if (!empty($listInstances)) {
                 foreach ($listInstances as $key => $listInstance) {
                     if ($key != 0 && $resId == $listInstance['res_id']) {
@@ -461,7 +462,7 @@ class ExportController
                     }
                     $resId = $listInstance['res_id'];
                 }
-                $aCopies[$listInstance['res_id']] = $copies;
+                $aCopies[$resId] = $copies;
             }
         }
 

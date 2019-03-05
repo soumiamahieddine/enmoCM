@@ -14,7 +14,14 @@
 
 namespace ContentManagement\controllers;
 
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
+use Entity\models\EntityModel;
+use Note\models\NoteModel;
+use Resource\models\ResModel;
+use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 include_once('vendor/tinybutstrong/opentbs/tbs_plugin_opentbs.php');
 
@@ -23,7 +30,11 @@ class MergeController
 {
     public static function mergeDocument(array $args)
     {
+        ValidatorModel::notEmpty($args, ['data']);
+        ValidatorModel::arrayType($args, ['data']);
         ValidatorModel::stringType($args, ['path', 'content']);
+        ValidatorModel::notEmpty($args['data'], ['resId', 'contactAddressId', 'userId']);
+        ValidatorModel::intVal($args['data'], ['resId', 'contactAddressId', 'userId']);
 
         $tbs = new \clsTinyButStrong();
         $tbs->NoErr = true;
@@ -48,11 +59,7 @@ class MergeController
             $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
         }
 
-        //TODO
-        $dataToBeMerge['contact']['contact_title'] = 'Mister';
-        $dataToBeMerge['contact']['title'] = 'Miss';
-        $dataToBeMerge['contact']['contact_firstname'] = 'Banane';
-        $dataToBeMerge['contact']['lastname'] = 'Smith';
+        $dataToBeMerge = MergeController::getDataForMerge($args['data']);
 
         foreach ($dataToBeMerge as $key => $value) {
             $tbs->MergeField($key, $value);
@@ -65,5 +72,71 @@ class MergeController
         }
 
         return ['encodedDocument' => base64_encode($tbs->Source)];
+    }
+
+    private static function getDataForMerge(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId', 'contactAddressId', 'userId']);
+        ValidatorModel::intVal($args, ['resId', 'contactAddressId', 'userId']);
+
+        //Resource
+        $resource = ResModel::getOnView(['select' => ['*'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]])[0];
+        $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'creation_date'];
+        foreach ($allDates as $date) {
+            $resource[$date] = TextFormatModel::formatDate($resource[$date], 'd/m/Y');
+        }
+        if (!empty($resource['category_id'])) {
+            $resource['category_id'] = ResModel::getCategoryLabel(['category_id' => $resource['category_id']]);
+        }
+        if (!empty($resource['nature_id'])) {
+            $resource['nature_id'] = ResModel::getNatureLabel(['nature_id' => $resource['nature_id']]);
+        }
+        if (!empty($resource['initiator'])) {
+            $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['*']]);
+            if (!empty($initiator)) {
+                foreach ($initiator as $key => $value) {
+                    $resource['initiator_' . $key] = $value;
+                }
+            }
+        }
+
+        //User
+        $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname']]);
+
+        //Contact
+        $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$args['contactAddressId']]])[0];
+        $contact['postal_address'] = ContactController::formatContactAddressAfnor($contact);
+        $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['title']]);
+        if (empty($contact['title'])) {
+            $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['contact_title']]);
+        }
+        if (empty($contact['firstname'])) {
+            $contact['firstname'] = $contact['contact_firstname'];
+        }
+        if (empty($contact['lastname'])) {
+            $contact['lastname'] = $contact['contact_lastname'];
+        }
+        if (empty($contact['function'])) {
+            $contact['function'] = $contact['contact_function'];
+        }
+        if (empty($contact['other_data'])) {
+            $contact['other_data'] = $contact['contact_other_data'];
+        }
+
+        //Notes
+        $mergedNote = '';
+        $notes = NoteModel::getByUserIdForResource(['select' => ['note_text', 'creation_date', 'user_id'], 'resId' => $args['resId'], 'userId' => $args['userId']]);
+        foreach ($notes as $note) {
+            $labelledUser = UserModel::getLabelledUserById(['login' => $note['user_id']]);
+            $creationDate = TextFormatModel::formatDate($note['creation_date'], 'd/m/Y');
+            $mergedNote .= "{$labelledUser} : {$creationDate} : {$note['note_text']}\n";
+        }
+
+        $dataToBeMerge['res_letterbox'] = $resource;
+        $dataToBeMerge['user'] = $currentUser;
+        $dataToBeMerge['contact'] = $contact;
+        $dataToBeMerge['notes'] = $mergedNote;
+
+        return $dataToBeMerge;
     }
 }

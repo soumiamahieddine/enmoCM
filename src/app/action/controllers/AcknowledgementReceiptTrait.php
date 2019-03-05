@@ -5,7 +5,7 @@
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
 
-* @brief   ActionController
+* @brief   AcknowledgementReceiptTrait
 * @author  dev <dev@maarch.org>
 * @ingroup core
 */
@@ -26,7 +26,7 @@ use Template\models\TemplateModel;
 use User\models\UserModel;
 
 
-trait ActionMethodTraitAcknowledgementReceipt
+trait AcknowledgementReceiptTrait
 {
     public static function createAcknowledgementReceipts(array $aArgs)
     {
@@ -53,16 +53,18 @@ trait ActionMethodTraitAcknowledgementReceipt
             $contactsToProcess[] = $ext['address_id'];
         }
 
-        if (empty($contactsToProcess)) {
-            return [];
+        foreach ($contactsToProcess as $contactToProcess) {
+            if (empty($contactToProcess)) {
+                return [];
+            }
         }
 
         $resource = ResModel::getById(['select' => ['type_id', 'destination'], 'resId' => $aArgs['resId']]);
         $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
 
-        if ($doctype['type_id'] == 'SVA') {
+        if ($doctype['process_mode'] == 'SVA') {
             $templateAttachmentType = 'sva';
-        } elseif ($doctype['type_id'] == 'SVR') {
+        } elseif ($doctype['process_mode'] == 'SVR') {
             $templateAttachmentType = 'svr';
         } else {
             $templateAttachmentType = 'simple';
@@ -81,32 +83,39 @@ trait ActionMethodTraitAcknowledgementReceipt
 
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $ids = [];
+        DatabaseModel::beginTransaction();
         foreach ($contactsToProcess as $contactToProcess) {
             $contact = ContactModel::getByAddressId(['addressId' => $contactToProcess, 'select' => ['email', 'address_street', 'address_town', 'address_postal_code']]);
 
-            if (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code'])) {
-                //TODO rollback
+            if (empty($contact['email']) && (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code']))) {
+                DatabaseModel::rollbackTransaction();
                 return [];
             }
 
             if (!empty($contact['email'])) {
                 if (empty($template[0]['template_content'])) {
-                    //TODO rollback
+                    DatabaseModel::rollbackTransaction();
                     return [];
                 }
-                $mergedDocument = MergeController::mergeDocument(['content' => $template[0]['template_content']]);
+                $mergedDocument = MergeController::mergeDocument([
+                    'content'   => $template[0]['template_content'],
+                    'data'      => ['resId' => $aArgs['resId'], 'contactAddressId' => $contactToProcess, 'userId' => $currentUser['id']]
+                ]);
                 $format = 'html';
             } else {
                 if (!file_exists($pathToDocument)) {
-                    //TODO rollback
+                    DatabaseModel::rollbackTransaction();
                     return [];
                 }
-                $mergedDocument = MergeController::mergeDocument(['path' => $pathToDocument]);
+                $mergedDocument = MergeController::mergeDocument([
+                    'path'  => $pathToDocument,
+                    'data'  => ['resId' => $aArgs['resId'], 'contactAddressId' => $contactToProcess, 'userId' => $currentUser['id']]
+                ]);
                 $mergedDocument['encodedDocument'] = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $mergedDocument['encodedDocument']]);
                 $format = 'pdf';
 
                 if (!empty($mergedDocument['encodedDocument']['errors'])) {
-                    //TODO rollback ??
+                    DatabaseModel::rollbackTransaction();
                     return [];
                 }
             }
@@ -118,7 +127,7 @@ trait ActionMethodTraitAcknowledgementReceipt
                 'format'            => $format
             ]);
             if (!empty($storeResult['errors'])) {
-                //TODO rollback
+                DatabaseModel::rollbackTransaction();
                 return ['errors' => '[storeResource] ' . $storeResult['errors']];
             }
 
@@ -134,6 +143,7 @@ trait ActionMethodTraitAcknowledgementReceipt
                 'fingerprint'       => $storeResult['fingerPrint']
             ]);
         }
+        DatabaseModel::commitTransaction();
 
         return $ids;
     }
