@@ -42,6 +42,7 @@ define('_DOCTYPE_SECONDLEVEL_ADDED', 'Submap toegevoegd');
 define('_DOCTYPE_SECONDLEVEL_DELETED', 'Submap verwijderd');
 define('_DOCTYPE_SECONDLEVEL_UPDATED', 'Submap gewijzigd');
 define('_DOCUMENT_NOT_FOUND', 'Document onvindbaar');
+define('_DOCUMENT_OUT_PERIMETER', 'Document buiten de omtrek'); //_TO_TRANSLATE
 define('_EMAIL_ADDED', 'TO_TRANSLATE : Email added');
 define('_ENTITY_CREATION', 'Aanmaak eenheid');
 define('_ENTITY_MODIFICATION', 'Wijziging eenheid');
@@ -387,11 +388,13 @@ define('_RESET_LETTER', 'Reset van het verwerkingscircuit');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Bevestiging en bijwerking van de vertrekdatum');
 define('_NOT_INCOMING_CATEGORY', 'Categorie verschillend van \'Inkomende post\'' ); //_TO_TRANSLATE
 define('_AR_ALREADY_SEND', 'Ontvangstbevestiging reeds verzonden'); //_TO_TRANSLATE
+define('_AR_ALREADY_GENERATED', 'Ontvangstbevestiging gegenereerd maar niet verzonden'); //_TO_TRANSLATE
 define('_NO_CONTACT', 'Geen bijbehorend contact'); //_TO_TRANSLATE
 define('_USER_MISSING_INFORMATIONS', 'Ontbrekende informatie op de contactkaart'); //_TO_TRANSLATE
 define('_NO_TEMPLATE', 'Geen sjabloon'); //_TO_TRANSLATE
 define('_NO_EMAIL_TEMPLATE', 'Geen elektronisch sjabloon'); //_TO_TRANSLATE
 define('_NO_PAPER_TEMPLATE', 'Geen papieren sjabloon'); //_TO_TRANSLATE
+define('_AR_SEND_ERROR', 'Fout in reeds verzonden ontvangstbevestigingen'); //_TO_TRANSLATE
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Aantal geraadpleegde mappen');

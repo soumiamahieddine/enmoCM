@@ -20,6 +20,7 @@ use SrcCore\controllers\PreparedClauseController;
 use User\models\UserModel;
 use Basket\models\BasketModel;
 use Resource\models\ResModel;
+use Resource\controllers\ResController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Resource\controllers\StoreController;
@@ -122,11 +123,28 @@ class AcknowledgementReceiptController
     
     public function checkAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
     {
+        //check service
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
         $data = $request->getParsedBody();
         //$data = $request->getParams();
+
+        if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+        
         $sendEmail = 0;
         $sendPaper = 0;
         $noSendAR = [
+            'number'    => 0,
+            'list'      => [],
+        ];
+        $alreadyGenerated = [
             'number'    => 0,
             'list'      => [],
         ];
@@ -135,17 +153,27 @@ class AcknowledgementReceiptController
             'list'      => [],
         ];
 
-        if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
-        }
         $data['resources'] = array_slice($data['resources'], 0, 500);
-
-        
         foreach ($data['resources'] as $resId) {
+            $canSendEmail = true;
+            $canSendPaper = true;
             $ext = ResModel::getExtById(['select' => ['res_id', 'category_id', 'address_id', 'is_multicontacts', 'alt_identifier'], 'resId' => $resId]);
-                        
+
+            //Check
+            if (empty($ext)) {
+                $noSendAR['number'] += 1;
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _DOCUMENT_NOT_FOUND ];
+                continue;
+            }
+        
+            if (!ResController::hasRightByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']])) {
+                $noSendAR['number'] += 1;
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _DOCUMENT_OUT_PERIMETER ];
+                continue;
+            }
+
             //Verify resource category
-            if (empty($ext) || $ext['category_id'] != 'incoming') {
+            if ($ext['category_id'] != 'incoming') {
                 $noSendAR['number'] += 1;
                 $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NOT_INCOMING_CATEGORY ];
                 continue;
@@ -179,19 +207,68 @@ class AcknowledgementReceiptController
             $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template[0]['template_path']) . $template[0]['template_file_name'];
 
             //Verify sending
-            $acknowledgement = AcknowledgementReceiptModel::get([
-                'select'    => ['res_id', 'type', 'format', 'send_date'],
+            $acknowledgements = AcknowledgementReceiptModel::get([
+                'select'    => ['res_id', 'type', 'format', 'creation_date', 'send_date'],
                 'where'     => ['res_id = (?)', 'type = (?)'],
                 'data'      => [$resId, $templateAttachmentType],
             ]);
 
-            if (!empty($acknowledgement)) {
-                $alreadySend['number'] += 1;
-                $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_SEND ];
-                continue;
+            if(!empty($acknowledgements)){
+                $sendedEmail = 0;
+                $sendedPaper = 0;
+                $generatedPaper = 0;
+                $generatedEmail = 0;
+                $sendError = 0;
+                $canSendEmail = false;
+                $canSendPaper = false;
+
+                foreach ($acknowledgements as $acknowledgement) {
+
+                    if ($acknowledgement['format'] == 'html') {
+                        if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
+                            $sendedEmail += 1;
+                        } else if (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
+                            $generatedEmail += 1;
+                        } else {
+                            $sendedError +=1;
+                        }
+                    } else if($acknowledgement['format'] == 'pdf') {
+                        if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
+                            $sendedPaper += 1;
+                        } else if (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
+                            $generatedPaper += 1;
+                        } else {
+                            $sendedError +=1;
+                        }
+                    }
+                }
+                
+                if($sendedError > 0) {
+                    $noSendAR['number'] += 1;
+                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_SEND_ERROR ];
+                    continue;
+                }
+
+                if($sendedEmail + $sendedPaper == sizeof($acknowledgements)){
+                    $alreadySend['number'] += 1;
+                    $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_SEND ];
+                    continue;
+                }
+
+                if($generatedEmail + $generatedPaper > 0 ){
+                    $alreadyGenerated['number'] += 1;
+                    $alreadyGenerated['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_GENERATED ];
+
+                    if ($generatedEmail > 0) {
+                        $canSendEmail = true;
+                    }
+                    if($generatedPaper > 0) {
+                        $canSendPaper = true;
+                    }
+                }
             }
 
-            // //Verify associated contact            
+            //Verify associated contact            
             $contactsToProcess = [];
             if ($ext['is_multicontacts'] == 'Y') {
                 $multiContacts = DatabaseModel::select([
@@ -207,30 +284,32 @@ class AcknowledgementReceiptController
                 $contactsToProcess[] = $ext['address_id'];
             }
 
-            //Verify user informations
+            //Verify contact informations
+            $email = 0;
+            $paper = 0;
             foreach ($contactsToProcess as $contactToProcess) {
-                $email = 0;
-                $paper = 0;
 
                 if (empty($contactToProcess)) {
+                    $email = 0;
+                    $paper = 0;
                     $noSendAR['number'] += 1;
                     $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_CONTACT ];
-                    continue;
+                    continue 2;
                 }
 
                 $contact = ContactModel::getByAddressId(['addressId' => $contactToProcess, 'select' => ['email', 'address_street', 'address_town', 'address_postal_code']]);
     
-                if (empty($contact['email']) || empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code'])) {
+                if (empty($contact['email']) && (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code']))) {
                     $noSendAR['number'] += 1;
                     $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _USER_MISSING_INFORMATIONS ];
-                    continue;
+                    continue 2;
                 }
                 
                 if (!empty($contact['email'])) {
                     if (empty($template[0]['template_content'])) {
                         $noSendAR['number'] += 1;
                         $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE ];
-                        continue;
+                        continue 2;
                     } else {
                         $email += 1;
                     }
@@ -238,17 +317,22 @@ class AcknowledgementReceiptController
                     if (!file_exists($pathToDocument)) {
                         $noSendAR['number'] += 1;
                         $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE ];
-                        continue;
+                        continue 2;
                     } else {
                         $paper += 1;
                     }
                 }
             }
             
-            $sendEmail += $email;
-            $sendPaper += $paper;
+            if($email > 0 && $canSendEmail){
+                $sendEmail += $email;
+            }
+
+            if($paper > 0 && $canSendPaper){
+                $sendPaper += $paper;
+            }
         }
 
-        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend]);
+        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
     }
 }
