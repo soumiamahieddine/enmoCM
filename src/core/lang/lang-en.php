@@ -386,6 +386,13 @@ define('_CHECK_REPLY', 'Check reply');
 define('_PURGE_LETTER', 'Purge the mail after archiving');
 define('_RESET_LETTER', 'Reset workflow');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Confirm and update departure date');
+define('_NOT_INCOMING_CATEGORY', 'Not incomping category' );
+define('_AR_ALREADY_SEND', 'Acknowledgement receipt already send');
+define('_NO_CONTACT', 'No associated contact');
+define('_USER_MISSING_INFORMATIONS', 'Missing informations in contact card');
+define('_NO_TEMPLATE', 'No template');
+define('_NO_EMAIL_TEMPLATE', 'No electronic template');
+define('_NO_PAPER_TEMPLATE', 'No paper template');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Number of read folders');

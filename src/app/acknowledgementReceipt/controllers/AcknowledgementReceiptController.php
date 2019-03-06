@@ -147,7 +147,7 @@ class AcknowledgementReceiptController
             //Verify resource category
             if (empty($ext) || $ext['category_id'] != 'incoming') {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'Not incoming category' ];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NOT_INCOMING_CATEGORY ];
                 continue;
             }
 
@@ -171,7 +171,7 @@ class AcknowledgementReceiptController
 
             if (empty($template[0])) {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No template'];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_TEMPLATE];
                 continue;
             }
 
@@ -187,7 +187,7 @@ class AcknowledgementReceiptController
 
             if (!empty($acknowledgement)) {
                 $alreadySend['number'] += 1;
-                $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'AR already send' ];
+                $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_SEND ];
                 continue;
             }
 
@@ -214,7 +214,7 @@ class AcknowledgementReceiptController
 
                 if (empty($contactToProcess)) {
                     $noSendAR['number'] += 1;
-                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No contact' ];
+                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_CONTACT ];
                     continue;
                 }
 
@@ -222,14 +222,14 @@ class AcknowledgementReceiptController
     
                 if (empty($contact['email']) || empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code'])) {
                     $noSendAR['number'] += 1;
-                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No user informations' ];
+                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _USER_MISSING_INFORMATIONS ];
                     continue;
                 }
                 
                 if (!empty($contact['email'])) {
                     if (empty($template[0]['template_content'])) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No email template' ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE ];
                         continue;
                     } else {
                         $email += 1;
@@ -237,7 +237,7 @@ class AcknowledgementReceiptController
                 } elseif (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'])) {
                     if (!file_exists($pathToDocument)) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No paper template' ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE ];
                         continue;
                     } else {
                         $paper += 1;
