@@ -19,6 +19,8 @@ use Convert\controllers\ConvertPdfController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
+use Email\controllers\EmailController;
+use Entity\models\EntityModel;
 use Resource\models\ResModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
@@ -59,7 +61,7 @@ trait AcknowledgementReceiptTrait
             }
         }
 
-        $resource = ResModel::getById(['select' => ['type_id', 'destination'], 'resId' => $aArgs['resId']]);
+        $resource = ResModel::getById(['select' => ['type_id', 'destination', 'subject'], 'resId' => $aArgs['resId']]);
         $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
 
         if ($doctype['process_mode'] == 'SVA') {
@@ -81,8 +83,10 @@ trait AcknowledgementReceiptTrait
         $docserver = DocserverModel::getByDocserverId(['docserverId' => 'TEMPLATES', 'select' => ['path_template']]);
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template[0]['template_path']) . $template[0]['template_file_name'];
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'mail']]);
         $ids = [];
+        $errors = [];
+        $emailsToSend = [];
         DatabaseModel::beginTransaction();
         foreach ($contactsToProcess as $contactToProcess) {
             $contact = ContactModel::getByAddressId(['addressId' => $contactToProcess, 'select' => ['email', 'address_street', 'address_town', 'address_postal_code']]);
@@ -103,7 +107,7 @@ trait AcknowledgementReceiptTrait
                 ]);
                 $format = 'html';
             } else {
-                if (!file_exists($pathToDocument)) {
+                if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
                     DatabaseModel::rollbackTransaction();
                     return [];
                 }
@@ -131,7 +135,7 @@ trait AcknowledgementReceiptTrait
                 return ['errors' => '[storeResource] ' . $storeResult['errors']];
             }
 
-            $ids[] = AcknowledgementReceiptModel::create([
+            $id = AcknowledgementReceiptModel::create([
                 'resId'             => $aArgs['resId'],
                 'type'              => $templateAttachmentType,
                 'format'            => $format,
@@ -142,9 +146,38 @@ trait AcknowledgementReceiptTrait
                 'filename'          => $storeResult['file_destination_name'],
                 'fingerprint'       => $storeResult['fingerPrint']
             ]);
+
+            if (!empty($contact['email'])) {
+                $emailsToSend[] = ['id' => $id, 'email' => $contact['email'], 'encodedHtml' => $mergedDocument['encodedDocument']];
+            }
+            $ids[] = $id;
         }
         DatabaseModel::commitTransaction();
 
-        return $ids;
+        if (!empty($emailsToSend)) {
+            $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['email', 'id']]);
+        }
+        foreach ($emailsToSend as $email) {
+            $isSent = EmailController::createEmail([
+                'userId' => $currentUser['id'],
+                'data' => [
+                    'sender'        => empty($entity['email']) ? ['email' => $currentUser['mail']] : ['email' => $entity['email'], 'entityId' => $entity['id']],
+                    'recipients'    => [$email['email']],
+                    'object'        => '[AR] ' . (empty($resource['subject']) ? '' : substr($resource['subject'], 0, 100)),
+                    'body'          => base64_decode($email['encodedHtml']),
+                    'document'      => ['id' => $aArgs['resId'], 'isLinked' => false, 'original' => true],
+                    'isHtml'        => true,
+                    'status'        => 'TO_SEND'
+                ]
+            ]);
+
+            if (!empty($isSent['errors'])) {
+                $errors[] = "Send Email error AR {$email['id']}: {$isSent['errors']}";
+            } else {
+                AcknowledgementReceiptModel::update(['set' => ['send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$email['id']]]);
+            }
+        }
+
+        return ['ids' => $ids, 'errors' => $errors];
     }
 }

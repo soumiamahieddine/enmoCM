@@ -36,33 +36,49 @@ use User\models\UserModel;
 
 class EmailController
 {
-    public function create(Request $request, Response $response)
+    public function send(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'sendmail', 'userId' => $GLOBALS['userId'], 'location' => 'sendmail', 'type' => 'use'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data = $request->getParams();
-
-        $check = EmailController::controlCreateEmail(['login' => $GLOBALS['userId'], 'data' => $data]);
-        if (!empty($check['errors'])) {
-            return $response->withStatus($check['code'])->withJson(['errors' => $check['errors']]);
-        }
+        $body = $request->getParsedBody();
 
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $isSent = EmailController::createEmail(['userId' => $user['id'], 'data' => $body]);
+
+        if (!empty($isSent['errors'])) {
+            return $response->withStatus($isSent['code'])->withJson(['errors' => $isSent['errors']]);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public static function createEmail(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['userId', 'data']);
+        ValidatorModel::intVal($args, ['userId']);
+        ValidatorModel::arrayType($args, ['data']);
+
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+
+        $check = EmailController::controlCreateEmail(['login' => $user['user_id'], 'data' => $args['data']]);
+        if (!empty($check['errors'])) {
+            return ['errors' => $check['errors'], 'code' => $check['code']];
+        }
 
         $id = EmailModel::create([
-            'userId'                => $user['id'],
-            'sender'                => json_encode($data['sender']),
-            'recipients'            => json_encode($data['recipients']),
-            'cc'                    => empty($data['cc']) ? '[]' : json_encode($data['cc']),
-            'cci'                   => empty($data['cci']) ? '[]' : json_encode($data['cci']),
-            'object'                => $data['object'],
-            'body'                  => $data['body'],
-            'document'              => empty($data['document']) ? null : json_encode($data['document']),
-            'isHtml'                => $data['isHtml'] ? 'true' : 'false',
-            'status'                => $data['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING',
-            'messageExchangeId'     => $data['messageExchangeId']
+            'userId'                => $args['userId'],
+            'sender'                => json_encode($args['data']['sender']),
+            'recipients'            => json_encode($args['data']['recipients']),
+            'cc'                    => empty($args['data']['cc']) ? '[]' : json_encode($args['data']['cc']),
+            'cci'                   => empty($args['data']['cci']) ? '[]' : json_encode($args['data']['cci']),
+            'object'                => empty($args['data']['object']) ? null : $args['data']['object'],
+            'body'                  => empty($args['data']['body']) ? null : $args['data']['body'],
+            'document'              => empty($args['data']['document']) ? null : json_encode($args['data']['document']),
+            'isHtml'                => $args['data']['isHtml'] ? 'true' : 'false',
+            'status'                => $args['data']['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING',
+            'messageExchangeId'     => empty($args['data']['messageExchangeId']) ? null : $args['data']['messageExchangeId']
         ]);
 
         HistoryController::add([
@@ -73,18 +89,18 @@ class EmailController
             'info'         => _EMAIL_ADDED
         ]);
 
-        if ($data['status'] != 'DRAFT') {
-            $isSent = EmailController::sendEmail(['emailId' => $id, 'userId' => $user['id']]);
+        if ($args['data']['status'] != 'DRAFT') {
+            $isSent = EmailController::sendEmail(['emailId' => $id, 'userId' => $args['userId']]);
 
             if (!empty($isSent['success'])) {
                 EmailModel::update(['set' => ['status' => 'SENT', 'send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$id]]);
             } else {
                 EmailModel::update(['set' => ['status' => 'ERROR'], 'where' => ['id = ?'], 'data' => [$id]]);
-                return $response->withStatus(502)->withJson(['errors' => $isSent['errors']]);
+                return ['errors' => $isSent['errors'], 'code' => 502];
             }
         }
 
-        return $response->withStatus(204);
+        return true;
     }
 
     public static function sendEmail(array $args)
@@ -167,6 +183,9 @@ class EmailController
 
         $phpmailer->Subject = $email['object'];
         $phpmailer->Body = $email['body'];
+        if (empty($email['body'])) {
+            $phpmailer->AllowEmpty = true;
+        }
 
         //TODO M2M
 

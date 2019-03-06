@@ -646,6 +646,7 @@ class ResourceListController
                     return $response->withStatus(500)->withJson(['errors' => $methodResponse['errors']]);
                 }
                 if ($methodResponse !== true) {
+                    //TODO array_merge keys avec errors
                     $methodResponses = array_merge($methodResponses, $methodResponse);
                 }
             }

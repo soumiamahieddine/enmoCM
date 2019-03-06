@@ -49,14 +49,16 @@ class MergeController
             $args['path'] = null;
         }
 
-        if ($extension == 'odt') {
-            $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
-//            $tbs->LoadTemplate("{$args['path']}#content.xml;styles.xml", OPENTBS_ALREADY_UTF8);
-        } elseif ($extension == 'docx') {
-            $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
-//            $tbs->LoadTemplate("{$args['path']}#word/header1.xml;word/footer1.xml", OPENTBS_ALREADY_UTF8);
-        } else {
-            $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
+        if (!empty($args['path'])) {
+            if ($extension == 'odt') {
+                $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
+    //            $tbs->LoadTemplate("{$args['path']}#content.xml;styles.xml", OPENTBS_ALREADY_UTF8);
+            } elseif ($extension == 'docx') {
+                $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
+    //            $tbs->LoadTemplate("{$args['path']}#word/header1.xml;word/footer1.xml", OPENTBS_ALREADY_UTF8);
+            } else {
+                $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
+            }
         }
 
         $dataToBeMerge = MergeController::getDataForMerge($args['data']);

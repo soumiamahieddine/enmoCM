@@ -153,7 +153,7 @@ $app->put('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeControlle
 $app->get('/administration/doctypes/new', \Doctype\controllers\FirstLevelController::class . ':initDoctypes');
 
 //Emails
-$app->post('/emails', \Email\controllers\EmailController::class . ':create');
+$app->post('/emails', \Email\controllers\EmailController::class . ':send');
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
