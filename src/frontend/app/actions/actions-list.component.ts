@@ -186,7 +186,7 @@ export class ActionsListComponent implements OnInit {
         });
     }
 
-    createAcknowledgementReceiptAction() {
+    createAcknowledgementReceiptsAction() {
         const dialogRef = this.dialog.open(CreateAcknowledgementReceiptActionComponent, {
             width: '500px',
             data: {

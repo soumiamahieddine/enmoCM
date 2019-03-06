@@ -36,23 +36,19 @@ class AcknowledgementReceiptModel
         return $aTemplates;
     }
 
-    public static function getById(array $aArgs)
+    public static function getByIds(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['ids']);
+        ValidatorModel::arrayType($aArgs, ['ids']);
 
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['acknowledgement_receipts'],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'where'     => ['id in (?)'],
+            'data'      => [$aArgs['ids']]
         ]);
 
-        if (empty($aReturn[0])) {
-            return [];
-        }
-
-        return $aReturn[0];
+        return $aReturn;
     }
 
     public static function getByResIds(array $aArgs = [])

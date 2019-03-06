@@ -53,28 +53,38 @@ class AcknowledgementReceiptController
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
+        $acknowledgements = AcknowledgementReceiptModel::getByIds([
+            'select'  => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'send_date'],
+            'ids'     => $bodyData['resources'],
+            'orderBy' => ['res_id']
+        ]);
+
+        $resourcesInBasket = [];
+        foreach ($acknowledgements as $acknowledgement) {
+            $resourcesInBasket[$acknowledgement['res_id']] = $acknowledgement['res_id'];
+        }
+
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
         $rawResourcesInBasket = ResModel::getOnView([
             'select'    => ['res_id'],
             'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
-            'data'      => [$bodyData['resources']]
+            'data'      => [$resourcesInBasket]
         ]);
 
         $allResourcesInBasket = [];
-        foreach ($rawResourcesInBasket as $resource) {
-            $allResourcesInBasket[] = $resource['res_id'];
+        foreach ($rawResourcesInBasket as $rawResourceInBasket) {
+            $allResourcesInBasket[$rawResourceInBasket['res_id']] = $rawResourceInBasket['res_id'];
+        }
+
+        $aDiff = array_diff($resourcesInBasket, $allResourcesInBasket);
+        if (!empty($aDiff)) {
+            return $response->withStatus(403)->withJson(['errors' => 'Documents out of perimeter']);
         }
 
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
-        $acknowledgement = AcknowledgementReceiptModel::getByResIds([
-            'select'  => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'send_date'],
-            'resIds'  => $allResourcesInBasket,
-            'orderBy' => ['res_id']
-        ]);
-
-        foreach ($acknowledgement as $value) {
+        foreach ($acknowledgements as $value) {
             if (empty($value['send_date'])) {
                 $docserver = DocserverModel::getByDocserverId(['docserverId' => $value['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
                 if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
@@ -90,7 +100,13 @@ class AcknowledgementReceiptController
                     return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
                 }
 
-                $pdf->setSourceFile($pathToDocument);
+                $nbPages = $pdf->setSourceFile($pathToDocument);
+                for ($i = 1; $i <= $nbPages; $i++) {
+                    $page = $pdf->importPage($i);
+                    $size = $pdf->getTemplateSize($page);
+                    $pdf->AddPage($size['orientation'], $size);
+                    $pdf->useImportedPage($page);
+                }
             }
         }
 
@@ -125,7 +141,7 @@ class AcknowledgementReceiptController
         $data['resources'] = array_slice($data['resources'], 0, 500);
 
         
-        foreach($data['resources'] as $resId) {
+        foreach ($data['resources'] as $resId) {
             $ext = ResModel::getExtById(['select' => ['res_id', 'category_id', 'address_id', 'is_multicontacts', 'alt_identifier'], 'resId' => $resId]);
                         
             //Verify resource category
@@ -208,7 +224,7 @@ class AcknowledgementReceiptController
                     $noSendAR['number'] += 1;
                     $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No user informations' ];
                     continue;
-                }  
+                }
                 
                 if (!empty($contact['email'])) {
                     if (empty($template[0]['template_content'])) {
@@ -218,8 +234,7 @@ class AcknowledgementReceiptController
                     } else {
                         $email += 1;
                     }
-                    
-                } else if (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'] )) {
+                } elseif (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'])) {
                     if (!file_exists($pathToDocument)) {
                         $noSendAR['number'] += 1;
                         $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => 'No paper template' ];
@@ -231,7 +246,7 @@ class AcknowledgementReceiptController
             }
             
             $sendEmail += $email;
-            $sendPaper += $paper;            
+            $sendPaper += $paper;
         }
 
         return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend]);

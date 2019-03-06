@@ -403,24 +403,24 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
-        $document = AcknowledgementReceiptModel::getById([
+        $document = AcknowledgementReceiptModel::getByIds([
             'select'  => ['docserver_id', 'path', 'filename', 'fingerprint'],
-            'id'      => $aArgs['id']
+            'ids'      => [$aArgs['id']]
         ]);
 
-        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document[0]['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
 
-        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document[0]['path']) . $document[0]['filename'];
 
         if (!file_exists($pathToDocument)) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
 
         $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument]);
-        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+        if (!empty($document[0]['fingerprint']) && $document[0]['fingerprint'] != $fingerprint) {
             return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
         }
 

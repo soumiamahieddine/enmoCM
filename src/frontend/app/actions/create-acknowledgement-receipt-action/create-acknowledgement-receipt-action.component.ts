@@ -14,6 +14,8 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
+    loadingInit: boolean = false;
+    acknowledgement: any;
 
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
     loadingExport: boolean;
@@ -21,11 +23,14 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<CreateAcknowledgementReceiptActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void { 
-        this.http.post("../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/checkAcknowledgement", {resources : this.data.selectedRes})
-        .subscribe(() => {
-
+        this.loadingInit = true;
+        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkAcknowledgementReceipt', {resources : this.data.selectedRes})
+        .subscribe((data : any) => {
+            this.acknowledgement = data;
+            this.loadingInit = false;
         }, (err) => {
             this.notify.error(err.error.errors);
+            this.loadingInit = false;
         });
     }
 
@@ -46,7 +51,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
 
     downloadAcknowledgementReceipt(data : any) {
         this.loadingExport = true;
-        this.http.put('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/acknowledgementReceipt', { 'resources' : data })
+        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/acknowledgementReceipt', { 'resources' : data }, { responseType: "blob" })
             .subscribe((data) => {
                 let downloadLink = document.createElement('a');
                 downloadLink.href = window.URL.createObjectURL(data);

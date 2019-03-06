@@ -1,20 +1,38 @@
 <h1 mat-dialog-title>Confirmer "{{data.action.label_action}}"</h1>
-<div mat-dialog-content>
+<div mat-dialog-content *ngIf="!loadingInit">
     <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
     <div class="row">
         <div class="col-md-12">
-            {{lang.makeActionOn}} 
+            <div *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">{{lang.makeActionOn}} 
             <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
-            <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b> ?
+            <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}<br></b> ?<br><br></div>
+            <div *ngIf="acknowledgement.alreadySend.number">
+                <div class="alert-message alert-message-info" role="alert" style="margin-top: 30px;">{{acknowledgement.alreadySend.number}} accusé(s) de réception déjà envoyé(s) :</div>
+                <mat-list>
+                    <mat-list-item *ngFor="let info of acknowledgement.alreadySend.list">
+                        <span mat-line>{{info.alt_identifier}}</span>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+            <div *ngIf="acknowledgement.noSendAR.number">
+                <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">{{acknowledgement.noSendAR.number}} accusé(s) de réception impossible à envoyer :</div>
+                <mat-list>
+                    <mat-list-item *ngFor="let info of acknowledgement.noSendAR.list">
+                        <span mat-line>{{info.alt_identifier}} : {{info.info}} </span>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+            <b *ngIf="acknowledgement.sendEmail" color="primary" class="highlight">{{acknowledgement.sendEmail}} accusé(s) de réception électronique à envoyer<br></b><br>
+            <b *ngIf="acknowledgement.sendPaper" color="primary" class="highlight">{{acknowledgement.sendPaper}} accusé(s) de réception papier à générer<br></b><br>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">
             <app-note-editor #noteEditor></app-note-editor>
         </div>
     </div>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button mat-button color="primary" [disabled]="loading" (click)="onSubmit()">{{lang.validate}}</button>
+    <button mat-raised-button mat-button color="primary" [disabled]="loading || (!acknowledgement.sendEmail && !acknowledgement.sendPaper)" (click)="onSubmit()" >{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>
