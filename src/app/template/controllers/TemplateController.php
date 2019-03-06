@@ -313,6 +313,10 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Template not found']);
         }
 
+        if($template['template_target'] == 'acknowledgementReceipt') {
+            return $response->withStatus(400)->withJson(['errors' => 'Forbidden duplication']);
+        }
+
         if ($template['template_type'] == 'OFFICE') {
             $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
 
