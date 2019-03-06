@@ -392,10 +392,11 @@ define('_AR_ALREADY_SEND', 'Accusé de réception déjà envoyé');
 define('_AR_ALREADY_GENERATED', 'Accusé de réception généré mais non envoyé');
 define('_NO_CONTACT', 'Pas de contact associé');
 define('_USER_MISSING_INFORMATIONS', 'Informations incomplètes sur la fiche du contact');
-define('_NO_TEMPLATE', 'Pas de modèle');
-define('_NO_EMAIL_TEMPLATE', 'Pas de modèle électronique');
-define('_NO_PAPER_TEMPLATE', 'Pas de modèle papier');
+define('_NO_TEMPLATE', 'Pas de modèle ');
+define('_NO_EMAIL_TEMPLATE', 'Pas de modèle électronique ');
+define('_NO_PAPER_TEMPLATE', 'Pas de modèle papier ');
 define('_AR_SEND_ERROR', 'Erreur dans les accusés de réception déjà envoyés');
+define( '_FOR_ENTITY', 'pour l\'entité : ');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');

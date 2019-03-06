@@ -391,10 +391,11 @@ define('_AR_ALREADY_SEND', 'Ontvangstbevestiging reeds verzonden'); //_TO_TRANSL
 define('_AR_ALREADY_GENERATED', 'Ontvangstbevestiging gegenereerd maar niet verzonden'); //_TO_TRANSLATE
 define('_NO_CONTACT', 'Geen bijbehorend contact'); //_TO_TRANSLATE
 define('_USER_MISSING_INFORMATIONS', 'Ontbrekende informatie op de contactkaart'); //_TO_TRANSLATE
-define('_NO_TEMPLATE', 'Geen sjabloon'); //_TO_TRANSLATE
-define('_NO_EMAIL_TEMPLATE', 'Geen elektronisch sjabloon'); //_TO_TRANSLATE
-define('_NO_PAPER_TEMPLATE', 'Geen papieren sjabloon'); //_TO_TRANSLATE
+define('_NO_TEMPLATE', 'Geen sjabloon '); //_TO_TRANSLATE
+define('_NO_EMAIL_TEMPLATE', 'Geen elektronisch sjabloon '); //_TO_TRANSLATE
+define('_NO_PAPER_TEMPLATE', 'Geen papieren sjabloon '); //_TO_TRANSLATE
 define('_AR_SEND_ERROR', 'Fout in reeds verzonden ontvangstbevestigingen'); //_TO_TRANSLATE
+define( '_FOR_ENTITY', 'voor deze entiteit : ');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Aantal geraadpleegde mappen');

@@ -32,6 +32,7 @@ use Contact\models\ContactModel;
 use SrcCore\models\DatabaseModel;
 use Doctype\models\DoctypeExtModel;
 use Template\models\TemplateModel;
+use Entity\models\EntityModel;
 
 class AcknowledgementReceiptController
 {
@@ -182,6 +183,7 @@ class AcknowledgementReceiptController
             //Verify template
             $resource = ResModel::getById(['select' => ['type_id', 'destination'], 'resId' => $resId]);
             $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
+            $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $resource['destination']]);
 
             if ($doctype['process_mode'] == 'SVA') {
                 $templateAttachmentType = 'sva';
@@ -199,7 +201,7 @@ class AcknowledgementReceiptController
 
             if (empty($template[0])) {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_TEMPLATE];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_TEMPLATE . '\'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . $entity['entity_label'] ];
                 continue;
             }
 
@@ -308,15 +310,15 @@ class AcknowledgementReceiptController
                 if (!empty($contact['email'])) {
                     if (empty($template[0]['template_content'])) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE . '\'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . $entity['entity_label'] ];
                         continue 2;
                     } else {
                         $email += 1;
                     }
                 } elseif (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'])) {
-                    if (!file_exists($pathToDocument)) {
+                    if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE . '\'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . $entity['entity_label'] ];
                         continue 2;
                     } else {
                         $paper += 1;
