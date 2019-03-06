@@ -1,33 +1,51 @@
 <div *ngIf="loading" style="display:flex;height:100%;">
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
-<div style="text-align:center;font-weight:bold;opacity:0.3;">{{data.chrono}} - {{lang.diffusionList}}</div>
-<mat-list *ngIf="!loading">
-    <mat-tab-group>
-        <mat-tab label="{{lang.diffusionList}}">
-            <div *ngIf="listinstance.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
-                AUCUNE LISTE DE DIFFUSION
-            </div>
-            <ng-container *ngFor="let role of roles">
-                <h3 mat-subheader>{{role}}</h3>
-                <mat-list-item *ngFor="let diffusion of listinstance[role]">
 
+<!--<div style="text-align:center;font-weight:bold;opacity:0.3;">{{data.chrono}} - {{lang.diffusionList}}</div>-->
+<mat-list *ngIf="!loading">
+    <div *ngIf="diffList.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
+        AUCUNE LISTE DE DIFFUSION
+    </div>
+    <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
+        <input class="metaSearch" type="text" matInput placeholder="Ajouter une personne / une entité">
+    </mat-form-field>
+    <div cdkDropListGroup>
+        <ng-container *ngFor="let role of availableRoles">
+            <h3 mat-subheader>{{role.label}}</h3>
+            <mat-divider></mat-divider>
+            <div cdkDropList [id]="role.id" #dataAvailableList="cdkDropList" [cdkDropListData]="diffList[role.id].items"
+                class="cdk-list" (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="role.id == 'dest'">
+                <div *ngIf="diffList[role.id].items.length === 0" style="opacity: 0.5;text-align: center;font-size: 10px;padding: 10px;">
+                    Acune personne
+                </div>
+                <mat-list-item *ngFor="let diffusion of diffList[role.id].items;let i=index" cdkDrag class="columns"
+                    [cdkDragDisabled]="diffusion.item_type == 'entity_id'" [class.notDraggable]="diffusion.item_type == 'entity_id' || role.id == 'dest'">
                     <mat-icon *ngIf="diffusion.item_type == 'user_id'" mat-list-icon class="fa fa-2x" [ngClass]="[diffusion.item_mode == 'copy' ? 'fa-users' : 'fa-user']"
                         color="primary"></mat-icon>
                     <h4 mat-line *ngIf="diffusion.item_type == 'user_id'">{{diffusion.item_firstname}}
                         {{diffusion.item_lastname}}</h4>
                     <p mat-line *ngIf="diffusion.item_type == 'user_id'" style="opacity:0.5;">
                         {{diffusion.item_entity}} </p>
-
+                    <button mat-icon-button *ngIf="role.id != 'dest'" (click)="deleteItem(role.id,i)">
+                        <mat-icon class="fa fa-times" color="warn"></mat-icon>
+                    </button>
                     <mat-icon *ngIf="diffusion.item_type == 'entity_id'" mat-list-icon class="fa fa-sitemap fa-2x"
                         color="primary"></mat-icon>
                     <h4 *ngIf="diffusion.item_type == 'entity_id'" mat-line>{{diffusion.item_entity}}</h4>
                     <p *ngIf="diffusion.item_type == 'entity_id'" mat-line style="opacity:0.5;"> &nbsp; </p>
                 </mat-list-item>
-                <mat-divider></mat-divider>
-            </ng-container>
+            </div>
+        </ng-container>
+    </div>
+
+
+
+    <!--<mat-tab-group>
+        <mat-tab label="{{lang.diffusionList}}" *ngIf="injectDatas.modes.indexOf('diffList') > -1">
+            
         </mat-tab>
-        <mat-tab label="Circuit de visa" [disabled]='!tabVisaCircuit'>
+        <mat-tab label="Circuit de visa" *ngIf="injectDatas.modes.indexOf('visa') > -1"  [disabled]='!tabVisaCircuit'>
             <div *ngIf="visaCircuit.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
                 AUCUN CIRCUIT DE VISA
             </div>
@@ -51,7 +69,7 @@
                 </mat-list-item>
             </ng-container>
         </mat-tab>
-        <mat-tab label="Circuit d'avis" [disabled]='!tabAvisCircuit'>
+        <mat-tab label="Circuit d'avis" *ngIf="injectDatas.modes.indexOf('avis') > -1" [disabled]='!tabAvisCircuit'>
             <div *ngIf="avisCircuit.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
                 AUCUN CIRCUIT D'AVIS
             </div>
@@ -73,7 +91,7 @@
                 </mat-list-item>
             </ng-container>
         </mat-tab>
-    </mat-tab-group>
+    </mat-tab-group>-->
 
 
 </mat-list>

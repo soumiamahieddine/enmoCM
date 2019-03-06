@@ -16,6 +16,7 @@ import { UpdateDepartureDateActionComponent } from './update-departure-date-acti
 // import { ProcessActionComponent } from './process-action/process-action.component';
 import { Router } from '@angular/router';
 import { ViewDocActionComponent } from './view-doc-action/view-doc-action.component';
+import { RedirectActionComponent } from './redirect-action/redirect-action.component';
 
 @Component({
     selector: 'app-actions-list',
@@ -289,6 +290,18 @@ export class ActionsListComponent implements OnInit {
     viewDoc() {
         this.dialog.open(ViewDocActionComponent, {
             panelClass: 'no-padding-full-dialog',
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+    }
+
+    redirectAction() {
+        this.dialog.open(RedirectActionComponent, {
             data: {
                 contextMode: this.contextMode,
                 contextChrono: this.contextMenuTitle,

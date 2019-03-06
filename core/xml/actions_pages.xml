@@ -17,7 +17,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_REDIRECTION</LABEL>
         <NAME>redirect</NAME>
         <DESC>_REDIRECTION_DESC</DESC>
-        <component>v1Action</component>
+        <component>redirectAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>entities</MODULE>
         <KEYWORD>redirect</KEYWORD>
