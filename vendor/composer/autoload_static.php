@@ -85,6 +85,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'M' => 
         array (
             'MyCLabs\\Enum\\' => 13,
+            'MessageExchange\\' => 16,
         ),
         'L' => 
         array (
@@ -122,6 +123,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         ),
         'E' => 
         array (
+            'ExportSeda\\' => 11,
             'Entity\\' => 7,
             'Endroid\\QrCode\\' => 15,
             'Email\\' => 6,
@@ -272,6 +274,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
         ),
+        'MessageExchange\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/external/messageExchange',
+        ),
         'Link\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/link',
@@ -348,6 +354,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'ExportSeda\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/external/exportSeda',
         ),
         'Entity\\' => 
         array (

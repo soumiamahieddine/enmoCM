@@ -215,7 +215,7 @@ class AcknowledgementReceiptController
                 'data'      => [$resId, $templateAttachmentType],
             ]);
 
-            if(!empty($acknowledgements)){
+            if (!empty($acknowledgements)) {
                 $sendedEmail = 0;
                 $sendedPaper = 0;
                 $generatedPaper = 0;
@@ -225,19 +225,18 @@ class AcknowledgementReceiptController
                 $canSendPaper = false;
 
                 foreach ($acknowledgements as $acknowledgement) {
-
                     if ($acknowledgement['format'] == 'html') {
                         if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
                             $sendedEmail += 1;
-                        } else if (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
+                        } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
                             $generatedEmail += 1;
                         } else {
                             $sendedError +=1;
                         }
-                    } else if($acknowledgement['format'] == 'pdf') {
+                    } elseif ($acknowledgement['format'] == 'pdf') {
                         if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
                             $sendedPaper += 1;
-                        } else if (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
+                        } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
                             $generatedPaper += 1;
                         } else {
                             $sendedError +=1;
@@ -245,32 +244,32 @@ class AcknowledgementReceiptController
                     }
                 }
                 
-                if($sendedError > 0) {
+                if ($sendedError > 0) {
                     $noSendAR['number'] += 1;
                     $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_SEND_ERROR ];
                     continue;
                 }
 
-                if($sendedEmail + $sendedPaper == sizeof($acknowledgements)){
+                if ($sendedEmail + $sendedPaper == sizeof($acknowledgements)) {
                     $alreadySend['number'] += 1;
                     $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_SEND ];
                     continue;
                 }
 
-                if($generatedEmail + $generatedPaper > 0 ){
+                if ($generatedEmail + $generatedPaper > 0) {
                     $alreadyGenerated['number'] += 1;
                     $alreadyGenerated['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_GENERATED ];
 
                     if ($generatedEmail > 0) {
                         $canSendEmail = true;
                     }
-                    if($generatedPaper > 0) {
+                    if ($generatedPaper > 0) {
                         $canSendPaper = true;
                     }
                 }
             }
 
-            //Verify associated contact            
+            //Verify associated contact
             $contactsToProcess = [];
             if ($ext['is_multicontacts'] == 'Y') {
                 $multiContacts = DatabaseModel::select([
@@ -290,7 +289,6 @@ class AcknowledgementReceiptController
             $email = 0;
             $paper = 0;
             foreach ($contactsToProcess as $contactToProcess) {
-
                 if (empty($contactToProcess)) {
                     $email = 0;
                     $paper = 0;
@@ -326,11 +324,11 @@ class AcknowledgementReceiptController
                 }
             }
             
-            if($email > 0 && $canSendEmail){
+            if ($email > 0 && $canSendEmail) {
                 $sendEmail += $email;
             }
 
-            if($paper > 0 && $canSendPaper){
+            if ($paper > 0 && $canSendPaper) {
                 $sendPaper += $paper;
             }
         }

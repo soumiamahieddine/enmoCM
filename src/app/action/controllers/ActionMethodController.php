@@ -21,6 +21,7 @@ use Action\models\ActionModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\CurlModel;
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+//use MessageExchange\controllers\MessageExchangeReviewController;
 
 class ActionMethodController
 {
@@ -76,7 +77,7 @@ class ActionMethodController
                     'info'      => "{$aArgs['basketName']} : {$action['label_action']}"
                 ]);
 
-                //TODO M2M
+                //MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $aArgs['id']]);
             }
         }
 

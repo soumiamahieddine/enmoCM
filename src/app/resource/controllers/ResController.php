@@ -446,6 +446,10 @@ class ResController
             'eventId'   => 'resview',
         ]);
 
+        if ($mimeType == 'text/plain') {
+            $mimeType = 'text/html';
+        }
+
         return $response->withHeader('Content-Type', $mimeType);
     }
 
