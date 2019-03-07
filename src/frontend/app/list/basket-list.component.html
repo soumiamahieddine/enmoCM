@@ -15,7 +15,7 @@
                 <div class="example-loading-shade" *ngIf="isLoadingResults">
                     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
                 </div>
-                <div *ngIf="resultsLength == 0 && !isLoadingResults" class="emptyBasket">
+                <div *ngIf="(resultsLength == 0 && this.filtersListService.getUrlFilters() == '') && !isLoadingResults" class="emptyBasket">
                     <div class="emptyBasket_content">
                         <div class="emptyBasket_icon">
                             <i class="fa fa-inbox"></i>
@@ -24,13 +24,12 @@
                             {{lang.emptyBasket}}
                         </div>
                     </div>
-
                 </div>
-                <div [style.display]="resultsLength > 0 ? 'block' : 'none'" class="row" style="margin:0px;">
+                <div [style.display]="(resultsLength > 0 || this.filtersListService.getUrlFilters() != '') ? 'block' : 'none'" class="row" style="margin:0px;">
                     <div class="col-md-12" style="display:flex;">
                         <app-filters-tool style="flex:1;" #filtersTool [currentBasketInfo]="currentBasketInfo"
                             [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
-                            [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)" (refreshEvent)="refreshDao()"></app-filters-tool>
+                            [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)" (refreshEventAfterAction)="refreshDaoAfterAction()" (refreshEvent)="refreshDao()"></app-filters-tool>
                         <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="10" class="paginatorResultList"></mat-paginator>
                     </div>
                 </div>
@@ -61,7 +60,7 @@
                                     </ng-container>
                                     <ng-container *ngIf="data.value == 'getCategory'">
                                         <span *ngIf="!lang[data.displayValue]" style="opacity: 0.5" title="id: {{data.displayValue}}">_UNDEFINED</span>
-                                        <span *ngIf="lang[data.displayValue]" title="{{data.displayTitle}}">{{lang[data.displayValue]}}</span>
+                                        <span *ngIf="lang[data.displayValue]" title="{{lang[data.displayValue]}}">{{lang[data.displayValue]}}</span>
                                     </ng-container>
                                     <ng-container *ngIf="data.value != 'getCategory' && data.value != 'getCreationAndProcessLimitDates'">
                                         <span *ngIf="!data.value.includes('Date')" title="{{data.displayTitle}}"
@@ -73,11 +72,11 @@
                             <!-- Primary Info Line -->
                             <div class="resultRow newRow" [class.resultRow-mobile]="mobileMode">
                                 <div *ngIf="!mobileMode" class="checkThis">
-                                    <mat-checkbox color="primary" [checked]="row.checked" (change)="toggleRes($event,row.res_id)"
+                                    <mat-checkbox color="primary" [checked]="row.checked" (change)="toggleRes($event,row)"
                                         (click)="$event.stopPropagation();"></mat-checkbox>
                                 </div>
                                 <div class="resultCol" [class]="data.cssClasses.join(' ')" *ngFor="let data of displayedMainData"
-                                    (click)="launchEvent();" style="cursor: pointer;">
+                                     style="cursor: pointer;" title="{{defaultAction.label_action}}" (click)="$event.stopPropagation();launch(defaultAction,row)">
                                     <span *ngIf="data.value == 'alt_identifier'">
                                         <mat-icon [ngStyle]="{'color': row.priorityColor}" color="primary" class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x"
                                             title="{{row.statusLabel}}" style="cursor: crosshair;" (click)="$event.stopPropagation();filterThis(row.statusLabel)"></mat-icon><br />
@@ -115,21 +114,33 @@
                         </td>
                     </ng-container>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;" (swipeleft)="paginatorResultList.nextPage()"
-                        (swiperight)="paginatorResultList.previousPage()" (contextmenu)="open($event,row);$event.preventDefault();"></tr>
+                        (swiperight)="paginatorResultList.previousPage()" (contextmenu)="open($event,row);"></tr>
                 </table>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 mode="over" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'
+        <mat-sidenav #snav2 mode="side" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'
             [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode"
-            [ngStyle]="{'width': mobileMode ? '80%' : '40%'}" autoFocus="false">
+            [ngStyle]="{'width': mobileMode ? '80%' : '30%'}" autoFocus="false">
             <div *ngIf="innerHtml && !filtersListService.filterMode" [matTooltip]="currentChrono" [innerHTML]="innerHtml"
                 style="height: 100%;overflow: hidden;"></div>
 
             <app-filters-list *ngIf="filtersListService.filterMode" [listProperties]="this.listProperties"
                 (refreshEvent)="refreshDao()"></app-filters-list>
-
+                <div style="display:flex;">
+                    <button mat-icon-button (click)="snav2.close()" style="font-size: 25px;">
+                        <mat-icon class="fa fa-arrow-right"></mat-icon>
+                    </button>
+                </div>
+            <div style="display:flex;justify-content: center;padding: 30px;">
+                {{this.currentResource.alt_identifier}}
+            </div>
+            <mat-tab-group>
+                <mat-tab label="{{lang.diffusionList}}">
+                    <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
+                </mat-tab>
+                </mat-tab-group>
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>
 </div>
-<app-actions-list #actionsListContext [contextMode]="true" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"></app-actions-list>
+<app-actions-list (triggerEvent)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo"></app-actions-list>

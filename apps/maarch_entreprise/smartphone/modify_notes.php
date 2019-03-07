@@ -47,7 +47,7 @@ if (isset($_REQUEST['newtext']) && isset($_REQUEST['notes_id'])) {
 	$date = $db->current_datetime();
 	$query = " UPDATE " . NOTES_TABLE . " SET 
 	note_text='" .$_REQUEST['newtext']. "'
-	 , date_note=" .$date. "
+	 , creation_date=" .$date. "
 	  WHERE note_text= ? AND id= ? ";
 	if($db->query($query,array($_REQUEST['oldnote'],$_REQUEST['notes_id']))){
 		//echo 'query ' . $query;

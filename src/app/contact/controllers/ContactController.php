@@ -322,7 +322,7 @@ class ContactController
 
     public static function controlLengthNameAfnor(array $aArgs)
     {
-        $aCivility = ContactController::getContactCivility();
+        $aCivility = ContactModel::getCivilities();
         if (strlen($aArgs['title'].' '.$aArgs['fullName']) > $aArgs['strMaxLength']) {
             $aArgs['title'] = $aCivility[$aArgs['title']]['abbreviation'];
         } else {
@@ -330,26 +330,6 @@ class ContactController
         }
 
         return substr($aArgs['title'].' '.$aArgs['fullName'], 0, $aArgs['strMaxLength']);
-    }
-
-    public static function getContactCivility()
-    {
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
-
-        $aCivility = [];
-        if ($loadedXml != false) {
-            $result = $loadedXml->xpath('/ROOT/titles');
-            foreach ($result as $title) {
-                foreach ($title as $value) {
-                    $aCivility[(string) $value->id] = [
-                        'label'         => (string) $value->label,
-                        'abbreviation'  => (string) $value->abbreviation,
-                    ];
-                }
-            }
-        }
-
-        return $aCivility;
     }
 
     public function availableReferential()

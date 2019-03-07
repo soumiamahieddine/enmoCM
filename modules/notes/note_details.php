@@ -55,7 +55,7 @@ if (isset($_REQUEST['modify'])) {
     } else if (empty($error)) {
         $text = $_REQUEST['notes'];
         $db->query(
-            "UPDATE ".NOTES_TABLE." SET note_text = ?, date_note = CURRENT_TIMESTAMP WHERE id = ?",
+            "UPDATE ".NOTES_TABLE." SET note_text = ?, creation_date = CURRENT_TIMESTAMP WHERE id = ?",
             array($text, $id)
         );
 
@@ -188,26 +188,17 @@ if (empty($table) && empty($collId)) {
     $error = _PB_TABLE_COLL;
 } else {
 
-    $arrayPDO = array();
-    if (! empty($collId)) {
-        $where = " and coll_id = :collId";
-        $arrayPDO = array_merge($arrayPDO, array(":collId" => $collId));
-    } else {
-        $where = " and tablename = :table";
-        $arrayPDO = array_merge($arrayPDO, array(":table" => $table));
-    }
-    $arrayPDO = array_merge($arrayPDO, array(":sId" => $sId));
     $stmt = $db->query(
-        "SELECT n.identifier, n.date_note, n.user_id, n.note_text, u.lastname, "
+        "SELECT n.identifier, n.creation_date, n.user_id, n.note_text, u.lastname, "
         . "u.firstname FROM " . NOTES_TABLE . " n inner join ". USERS_TABLE
-        . " u on n.user_id  = u.user_id WHERE n.id = :sId " . $where, $arrayPDO
+        . " u on n.user_id  = u.user_id WHERE n.id = :sId ", [":sId" => $sId]
     );
 
     $line = $stmt->fetchObject();
     $user = $func->show_string($line->lastname . " " . $line->firstname);
     $text = $func->show_string($line->note_text);
     $userId = $line->user_id;
-    $date = $line->date_note;
+    $date = $line->creation_date;
     $identifier = $line->identifier;
 }
 

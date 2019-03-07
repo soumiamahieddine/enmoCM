@@ -236,7 +236,7 @@ class SendMessageExchangeController
 
         if (!empty($aArgs['notes'])) {
             $notes     = \Note\models\NoteModel::getByResId([
-                'select' => ['notes.id', 'notes.user_id', 'notes.date_note', 'notes.note_text', 'users.firstname', 'users.lastname', 'users_entities.entity_id'],
+                'select' => ['notes.id', 'notes.user_id', 'notes.creation_date', 'notes.note_text', 'users.firstname', 'users.lastname', 'users_entities.entity_id'],
                 'resId' => $aArgs['resId']
             ]);
 
@@ -247,7 +247,7 @@ class SendMessageExchangeController
                     }
 
                     $oComment        = new stdClass();
-                    $date            = new DateTime($value['date_note']);
+                    $date            = new DateTime($value['creation_date']);
                     $entityRoot      = \Entity\models\EntityModel::getEntityRootById(['entityId' => $value['entity_id']]);
                     $userEntity      = \Entity\models\entitymodel::getByEntityId(['entityId' => $value['entity_id']]);
                     $oComment->value = $value['firstname'].' '.$value['lastname'].' - '.$date->format('d-m-Y H:i:s').' ('.$entityRoot['entity_label'].' - '.$userEntity['entity_label'].') : '.$value['note_text'];

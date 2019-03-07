@@ -112,13 +112,12 @@ class ConvertThumbnailController
             return ['errors' => "[ConvertThumbnail] ".implode(" ", $output)];
         }
 
+        $resource = file_get_contents("{$tmpPath}{$fileNameOnTmp}.png");
         $storeResult = DocserverController::storeResourceOnDocServer([
-            'collId'    => $aArgs['collId'],
-            'fileInfos' => [
-                'tmpDir'        => $tmpPath,
-                'tmpFileName'   => $fileNameOnTmp . '.png',
-            ],
-            'docserverTypeId'   => 'TNL'
+            'collId'            => $aArgs['collId'],
+            'docserverTypeId'   => 'TNL',
+            'encodedResource'   => base64_encode($resource),
+            'format'            => 'png'
         ]);
 
         if (!empty($storeResult['errors'])) {

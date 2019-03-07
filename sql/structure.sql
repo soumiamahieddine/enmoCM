@@ -13,22 +13,16 @@ SET search_path = public, pg_catalog;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
-CREATE SEQUENCE actions_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 500
-  CACHE 1;
-
 CREATE TABLE actions
 (
-  id integer NOT NULL DEFAULT nextval('actions_id_seq'::regclass),
+  id serial NOT NULL,
   keyword character varying(32) NOT NULL DEFAULT ''::bpchar,
   label_action character varying(255),
   id_status character varying(10),
   is_system character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   action_page character varying(255),
+  component CHARACTER VARYING (128),
   history character(1) NOT NULL DEFAULT 'N'::bpchar,
   origin character varying(255) NOT NULL DEFAULT 'apps'::bpchar,
   create_id  character(1) NOT NULL DEFAULT 'N'::bpchar,
@@ -365,7 +359,6 @@ WITH (
 
 CREATE TABLE res_mark_as_read
 (
-  coll_id character varying(32),
   res_id bigint,
   user_id character varying(128),
   basket_id character varying(32)
@@ -784,27 +777,13 @@ CREATE TABLE lc_stack
 )
 WITH (OIDS = FALSE);
 
-
-
--- modules/notes/sql/structure/notes.postgresql.sql
-
-CREATE SEQUENCE notes_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 20
-  CACHE 1;
-
-
 CREATE TABLE notes
 (
-  id bigint NOT NULL DEFAULT nextval('notes_seq'::regclass),
+  id serial,
   identifier bigint NOT NULL,
-  tablename character varying(50),
   user_id character varying(128) NOT NULL,
-  date_note timestamp without time zone NOT NULL,
+  creation_date timestamp without time zone NOT NULL,
   note_text text NOT NULL,
-  coll_id character varying(50),
   CONSTRAINT notes_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -2196,3 +2175,20 @@ CONSTRAINT exports_templates_unique_key UNIQUE (user_id, format)
 )
 WITH (OIDS=FALSE);
 
+CREATE TABLE acknowledgement_receipts
+(
+id serial NOT NULL,
+res_id INTEGER NOT NULL,
+type CHARACTER VARYING(16) NOT NULL,
+format CHARACTER VARYING(8) NOT NULL,
+user_id INTEGER NOT NULL,
+contact_address_id INTEGER NOT NULL,
+creation_date timestamp without time zone NOT NULL,
+send_date timestamp without time zone,
+docserver_id CHARACTER VARYING(128) NOT NULL,
+path CHARACTER VARYING(256) NOT NULL,
+filename CHARACTER VARYING(256) NOT NULL,
+fingerprint CHARACTER VARYING(256) NOT NULL,
+CONSTRAINT acknowledgment_receipts_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);

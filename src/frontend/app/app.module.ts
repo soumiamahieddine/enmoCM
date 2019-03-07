@@ -22,9 +22,20 @@ import { SaveNumericPackageComponent }          from './save-numeric-package.com
 import { ActivateUserComponent }                from './activate-user.component';
 
 import { ActionsListComponent }                 from './actions/actions-list.component';
+
 /*ACTIONS PAGES */
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
-import { ClosingActionComponent }               from './actions/closing-action/closing-action.component';
+import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence-action/disabled-basket-persistence-action.component';
+import { EnabledBasketPersistenceActionComponent } from './actions/enabled-basket-persistence-action/enabled-basket-persistence-action.component';
+import { ResMarkAsReadActionComponent } from './actions/res-mark-as-read-action/res-mark-as-read-action.component';
+import { CloseMailActionComponent }             from './actions/close-mail-action/close-mail-action.component';
+import { UpdateAcknowledgementSendDateActionComponent }             from './actions/update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
+import { CreateAcknowledgementReceiptActionComponent }             from './actions/create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
+import { CloseAndIndexActionComponent }             from './actions/close-and-index-action/close-and-index-action.component';
+import { UpdateDepartureDateActionComponent }   from './actions/update-departure-date-action/update-departure-date-action.component';
+import { ProcessActionComponent }               from './actions/process-action/process-action.component';
+import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
+import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -67,7 +78,17 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,
-        ClosingActionComponent,
+        ResMarkAsReadActionComponent,
+        EnabledBasketPersistenceActionComponent,
+        DisabledBasketPersistenceActionComponent,
+        CloseAndIndexActionComponent,
+        UpdateAcknowledgementSendDateActionComponent,
+        CreateAcknowledgementReceiptActionComponent,
+        CloseMailActionComponent,
+        UpdateDepartureDateActionComponent,
+        ProcessActionComponent,
+        ViewDocActionComponent,
+        RedirectActionComponent,
         ActionsListComponent,
     ],
     entryComponents: [
@@ -80,7 +101,17 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,
-        ClosingActionComponent,
+        ResMarkAsReadActionComponent,
+        EnabledBasketPersistenceActionComponent,
+        DisabledBasketPersistenceActionComponent,
+        CloseAndIndexActionComponent,
+        UpdateAcknowledgementSendDateActionComponent,
+        CreateAcknowledgementReceiptActionComponent,
+        CloseMailActionComponent,
+        UpdateDepartureDateActionComponent,
+        ProcessActionComponent,
+        RedirectActionComponent,
+        ViewDocActionComponent
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]

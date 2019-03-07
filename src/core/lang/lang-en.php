@@ -52,6 +52,7 @@ define('_DOCTYPE_SECONDLEVEL_ADDED', 'Doctype second level added');
 define('_DOCTYPE_SECONDLEVEL_DELETED', 'Doctype second level deleted');
 define('_DOCTYPE_SECONDLEVEL_UPDATED', 'Doctype second level edited');
 define('_DOCUMENT_NOT_FOUND', 'Document not found');
+define('_DOCUMENT_OUT_PERIMETER', 'Document out of perimeter');
 define('_EMAIL_ADDED', 'Email added');
 define('_ENTITY_CREATION', 'Entity creation');
 define('_ENTITY_MODIFICATION', 'Entity modification');
@@ -135,6 +136,7 @@ define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Inaccessible Docserver path');
 define('_BACK_FROM_VACATION', 'back from vacation');
 define('_DOC_DISPLAYING', 'Displaying document');
+define('_AR_DISPLAYING', 'Displaying acknowledgement receipt');
 define('_DOC_ADDED', 'Document added');
 define('_ATTACH_DISPLAYING', 'Displaying attachment');
 define('_NOTE_ADDED', 'Note added');
@@ -385,6 +387,16 @@ define('_CHECK_REPLY', 'Check reply');
 define('_PURGE_LETTER', 'Purge the mail after archiving');
 define('_RESET_LETTER', 'Reset workflow');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Confirm and update departure date');
+define('_NOT_INCOMING_CATEGORY', 'Not incomping category');
+define('_AR_ALREADY_SEND', 'Acknowledgement receipt already send');
+define('_AR_ALREADY_GENERATED', 'Acknowledgement receipt generated but not sent');
+define('_NO_CONTACT', 'No associated contact');
+define('_USER_MISSING_INFORMATIONS', 'Missing informations in contact card');
+define('_NO_TEMPLATE', 'No template ');
+define('_NO_EMAIL_TEMPLATE', 'No electronic template ');
+define('_NO_PAPER_TEMPLATE', 'No paper template ');
+define('_AR_SEND_ERROR', 'Error in acknowledgements receipt already sent');
+define('_FOR_ENTITY', 'for this entity: ');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Number of read folders');
@@ -419,6 +431,7 @@ define('_SVA', 'SVA');
 define('_SVR', 'SVR');
 define('_REDACTOR', 'Redactor');
 define('_ASSIGNEE', 'Assignee');
+define('_DOCUMENT_WITH_NOTES', 'Document with notes');
 
 define('_SUMMARY_SHEET', 'Summary sheet');
 define('_UNDEFINED', 'Undefined');
@@ -441,3 +454,9 @@ define('_CLOSING_DATE', 'Closing date');
 define('_ACTION_DATE', 'Action date');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'User created in Maarch Parapheur');
+
+define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Create acknowledgement receipt');
+define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'update acknowledgement send date');
+
+define("_M2M_ACTION_DONE", "done by");
+define("_M2M_ENTITY_DESTINATION", "Mail is in the department");

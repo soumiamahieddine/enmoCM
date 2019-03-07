@@ -52,6 +52,7 @@ define('_DOCTYPE_SECONDLEVEL_ADDED', 'Sous-chemise ajoutée');
 define('_DOCTYPE_SECONDLEVEL_DELETED', 'Sous-chemise supprimée');
 define('_DOCTYPE_SECONDLEVEL_UPDATED', 'Sous-chemise modifiée');
 define('_DOCUMENT_NOT_FOUND', 'Document introuvable');
+define('_DOCUMENT_OUT_PERIMETER', 'Document en dehors du périmètre');
 define('_EMAIL_ADDED', 'Courriel ajouté');
 define('_ENTITY_CREATION', 'Création entité');
 define('_ENTITY_MODIFICATION', 'Modification entité');
@@ -135,6 +136,7 @@ define('_MAX_SIZE_UPLOAD_REACHED', 'Taille maximum de fichier dépassée');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin de la zone de stockage inaccessible');
 define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
+define('_AR_DISPLAYING', 'Visualisation de l\'accusé de réception');
 define('_DOC_ADDED', 'Document ajouté');
 define('_ATTACH_DISPLAYING', 'Visualisation de la pièce jointe');
 define('_NOTE_ADDED', 'Annotation ajoutée');
@@ -385,6 +387,16 @@ define('_CHECK_REPLY', 'Vérification de la réponse au transfert');
 define('_PURGE_LETTER', 'Purger le courrier apres l\'archivage');
 define('_RESET_LETTER', 'Remise à zéro du circuit de traitement');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Confirmation et mise à jour de la date de départ');
+define('_NOT_INCOMING_CATEGORY', 'Catégorie différente de \'Courrier arrivée\'');
+define('_AR_ALREADY_SEND', 'Accusé de réception déjà envoyé');
+define('_AR_ALREADY_GENERATED', 'Accusé de réception généré mais non envoyé');
+define('_NO_CONTACT', 'Pas de contact associé');
+define('_USER_MISSING_INFORMATIONS', 'Informations incomplètes sur la fiche du contact');
+define('_NO_TEMPLATE', 'Pas de modèle ');
+define('_NO_EMAIL_TEMPLATE', 'Pas de modèle électronique ');
+define('_NO_PAPER_TEMPLATE', 'Pas de modèle papier ');
+define('_AR_SEND_ERROR', 'Erreur dans les accusés de réception déjà envoyés');
+define('_FOR_ENTITY', 'pour l\'entité : ');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');
@@ -419,6 +431,7 @@ define('_SVA', 'SVA');
 define('_SVR', 'SVR');
 define('_REDACTOR', 'Rédacteur');
 define('_ASSIGNEE', 'Attributaire');
+define('_DOCUMENT_WITH_NOTES', 'Document annoté');
 
 define('_SUMMARY_SHEET', 'Fiche de liaison');
 define('_UNDEFINED', 'Non définie');
@@ -441,3 +454,9 @@ define('_CLOSING_DATE', 'Date de clôture');
 define('_ACTION_DATE', 'Date d\'action');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'Utilisateur créé dans Maarch Parapheur');
+
+define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Créer les accusés de réception');
+define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Mettre à jour la date d\'envoi des accusés de réception');
+
+define("_M2M_ACTION_DONE", "actionné par");
+define("_M2M_ENTITY_DESTINATION", "Le courrier est dans l'entité");

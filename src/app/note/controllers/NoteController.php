@@ -31,12 +31,16 @@ class NoteController
 {
     public function getByResId(Request $request, Response $response, array $aArgs)
     {
-        $check = Validator::intVal()->validate($aArgs['resId']);
+        $check = Validator::intVal()->notEmpty()->validate($aArgs['resId']);
         if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withStatus(400)->withJson(['errors' => 'resId is empty or not an integer']);
         }
 
-        $aNotes = NoteModel::getByResId(['select' => ['notes.id', 'firstname', 'lastname', 'entity_label', 'note_text', 'date_note'], 'resId' => $aArgs['resId'], 'orderBy' => ['date_note DESC']]);
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $aNotes = NoteModel::getByResId(['select' => ['notes.id', 'firstname', 'lastname', 'entity_label', 'note_text', 'creation_date'], 'resId' => $aArgs['resId'], 'orderBy' => ['creation_date DESC']]);
 
         return $response->withJson($aNotes);
     }
@@ -47,12 +51,16 @@ class NoteController
 
         $check = Validator::stringType()->notEmpty()->validate($data['note_text']);
         if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request note text']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data note_text is empty or not a string']);
+        }
+
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         
         if (isset($data['entities_chosen'])) {
             if (!Validator::arrayType()->validate($data['entities_chosen'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
+                return $response->withStatus(400)->withJson(['errors' => 'entities_chosen is not an array']);
             }
             foreach ($data['entities_chosen'] as $entityId) {
                 if ($entityId == null) {
@@ -66,31 +74,27 @@ class NoteController
             }
         }
 
-        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-        
-        $data['identifier'] = $aArgs['resId'];
-        
-        $noteId = NoteModel::create($data);
+        $noteId = NoteModel::create([
+            'resId'     => $aArgs['resId'],
+            'login'     => $GLOBALS['userId'],
+            'note_text' => $data['note_text']
+        ]);
     
-        //Insert relation note with entities in note_entities_table
         if (!empty($noteId) && !empty($data['entities_chosen'])) {
             foreach ($data['entities_chosen'] as $entity) {
-                NoteEntityModel::create(['item_id' => $entity, 'note_id' => $noteId ]);
+                NoteEntityModel::create(['item_id' => $entity, 'note_id' => $noteId]);
             }
         }
 
-        HistoryController::add(
-            [
+        HistoryController::add([
             'tableName' => "notes",
             'recordId'  => $noteId,
             'eventType' => "ADD",
             'userId'    => $GLOBALS['userId'],
             'info'      => _NOTE_ADDED . " (" . $noteId . ")",
             'moduleId'  => 'notes',
-            'eventId'   => 'noteadd']
-        );
+            'eventId'   => 'noteadd'
+        ]);
 
         return $response->withJson(['noteId' => $noteId]);
     }
@@ -105,10 +109,10 @@ class NoteController
         $pdf->AddPage();
 
         foreach ($aArgs['ids'] as $noteId) {
-            $note = NoteModel::getById(['id' => $noteId, 'select' => ['note_text', 'date_note', 'user_id']]);
+            $note = NoteModel::getById(['id' => $noteId, 'select' => ['note_text', 'creation_date', 'user_id']]);
 
             $user = UserModel::getByLogin(['login' => $note['user_id'], 'select' => ['firstname', 'lastname']]);
-            $date = new \DateTime($note['date_note']);
+            $date = new \DateTime($note['creation_date']);
             $date = $date->format('d-m-Y H:i');
 
             $pdf->Cell(0, 20, "{$user['firstname']} {$user['lastname']} : {$date}", 1, 2, 'C', false);
@@ -118,5 +122,18 @@ class NoteController
         $fileContent = $pdf->Output('', 'S');
 
         return ['encodedDocument' => base64_encode($fileContent)];
+    }
+
+    public static function getTemplateList(Request $request, Response $response, array $aArgs)
+    {
+        //get user entities
+        $userEntities = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+
+        $userEntities = array_column($userEntities, 'entity_id');
+
+        //get templates note
+        $aReturn = NoteModel::getTemplateList(['entityIds' => $userEntities, 'select' => ['template_label', 'template_content']]);
+
+        return $response->withJson($aReturn);
     }
 }

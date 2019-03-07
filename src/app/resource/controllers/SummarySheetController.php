@@ -63,7 +63,8 @@ class SummarySheetController
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
         $rawResourcesInBasket = ResModel::getOnView([
             'select'    => ['res_id'],
-            'where'     => [$whereClause]
+            'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
+            'data'      => [$bodyData['resources']]
         ]);
         $allResourcesInBasket = [];
         foreach ($rawResourcesInBasket as $resource) {
@@ -114,7 +115,7 @@ class SummarySheetController
         foreach ($units as $unit) {
             if ($unit['unit'] == 'notes') {
                 $data['notes'] = NoteModel::get([
-                    'select'   => ['id', 'note_text', 'user_id', 'date_note', 'identifier'],
+                    'select'   => ['id', 'note_text', 'user_id', 'creation_date', 'identifier'],
                     'where'    => ['identifier in (?)'],
                     'data'     => [$tmpIds],
                     'order_by' => ['identifier']]);
@@ -145,7 +146,7 @@ class SummarySheetController
                     'data'   => ['entity_id', $tmpIds],
                     'orderBy' => ['listinstance_id']
                 ]);
-            } elseif ($unit['unit'] == 'secondaryInformations') {
+            } elseif ($unit['unit'] == 'senderRecipientInformations') {
                 $data['mlbCollExt'] = ResModel::getExt([
                     'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
                     'where' => ['res_id in (?)'],
@@ -337,6 +338,16 @@ class SummarySheetController
                                 $oldContacts[] = ['format' => $format];
                             }
                         }
+                        if (!empty($oldContacts) && count($oldContacts) > 2) {
+                            $nbOldContacts = count($oldContacts);
+                            $oldContacts = [];
+                            $oldContacts[0]['format'] = $nbOldContacts . ' ' . _CONTACTS;
+                        }
+                        if (!empty($resourcesContacts) && count($resourcesContacts) > 2) {
+                            $nbResourcesContacts = count($resourcesContacts);
+                            $resourcesContacts = [];
+                            $resourcesContacts[0]['format'] = $nbResourcesContacts . ' ' . _CONTACTS;
+                        }
                         if ($mlbValue['category_id'] == 'outgoing') {
                             $senders    = $resourcesContacts;
                             $recipients = $oldContacts;
@@ -524,7 +535,7 @@ class SummarySheetController
                         if ($allowed) {
                             $notes[] = [
                                 'user'  => UserModel::getLabelledUserById(['login' => $rawNote['user_id']]),
-                                'date'  => TextFormatModel::formatDate($rawNote['date_note']),
+                                'date'  => TextFormatModel::formatDate($rawNote['creation_date']),
                                 'note'  => $rawNote['note_text']
                             ];
                         }

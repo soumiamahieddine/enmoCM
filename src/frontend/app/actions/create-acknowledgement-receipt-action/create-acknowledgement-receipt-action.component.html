@@ -1,0 +1,55 @@
+<h1 mat-dialog-title>Confirmer "{{data.action.label_action}}"</h1>
+<div mat-dialog-content *ngIf="!loadingInit">
+    <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
+        <mat-spinner style="margin:auto;"></mat-spinner>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">{{lang.makeActionOn}}
+                <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
+                <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}}
+                    {{lang.elements}}</b>&nbsp;?</p>
+            <div *ngIf="acknowledgement.alreadySend.number">
+                <div class="alert-message alert-message-info acknowledgementList" role="alert">
+                    <p>
+                        <b>{{acknowledgement.alreadySend.number}}</b> accusé(s) de réception déjà envoyé(s) :
+                    </p>
+                    <ul>
+                        <li *ngFor="let info of acknowledgement.alreadySend.list">
+                            {{info.alt_identifier}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div *ngIf="acknowledgement.noSendAR.number">
+                <div class="alert-message alert-message-danger acknowledgementList" role="alert">
+                    <p><b>{{acknowledgement.noSendAR.number}}</b> accusé(s) de réception impossible à envoyer :</p>
+                    <ul>
+                        <li *ngFor="let info of acknowledgement.noSendAR.list">
+                            <b >{{info.alt_identifier != null ? info.alt_identifier : lang.undefined}}</b> : {{info.info}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper" class="alert-message alert-message-success acknowledgementList" role="alert" style="padding: 10px;">
+               <div *ngIf="acknowledgement.sendEmail">
+                    <b>{{acknowledgement.sendEmail}}</b>
+                    accusé(s) de réception électronique prêt à être envoyé(s)
+               </div>
+               <div *ngIf="acknowledgement.sendPaper">
+                    <b>{{acknowledgement.sendPaper}}</b>
+                    accusé(s) de réception papier prêt à être généré(s)
+               </div>
+            </div>
+        </div>
+        <div class="col-md-12" *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">
+            <app-note-editor #noteEditor></app-note-editor>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button mat-button color="primary" [disabled]="loading || (!acknowledgement.sendEmail && !acknowledgement.sendPaper)"
+        (click)="onSubmit()">{{lang.validate}}</button>
+    <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
+</div>

@@ -56,12 +56,12 @@ class EmailModel
                 'recipients'                => $aArgs['recipients'],
                 'cc'                        => $aArgs['cc'],
                 'cci'                       => $aArgs['cci'],
-                'object'                    => empty($aArgs['object']) ? null : $aArgs['object'],
-                'body'                      => empty($aArgs['body']) ? null : $aArgs['body'],
+                'object'                    => $aArgs['object'],
+                'body'                      => $aArgs['body'],
                 'document'                  => $aArgs['document'],
                 'is_html'                   => $aArgs['isHtml'],
                 'status'                    => $aArgs['status'],
-                'message_exchange_id'       => empty($aArgs['messageExchangeId']) ? null : $aArgs['messageExchangeId'],
+                'message_exchange_id'       => $aArgs['messageExchangeId'],
                 'creation_date'             => 'CURRENT_TIMESTAMP'
             ]
         ]);

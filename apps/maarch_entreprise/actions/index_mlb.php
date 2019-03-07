@@ -1206,13 +1206,13 @@ function check_docserver($collId)
         $newFileName = $_SESSION['upfile']['name'];
     }
 
+    $resource = file_get_contents($_SESSION['config']['tmppath'] . $newFileName);
+    $pathInfo = pathinfo($_SESSION['config']['tmppath'] . $newFileName);
     $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
         'collId'            => $collId,
         'docserverTypeId'   => 'DOC',
-        'fileInfos'         => [
-            'tmpDir'            => $_SESSION['config']['tmppath'],
-            'tmpFileName'       => $newFileName
-        ]
+        'encodedResource'   => base64_encode($resource),
+        'format'            => $pathInfo['extension']
     ]);
 
     if (isset($storeResult['errors']) && $storeResult['errors'] != '') {
@@ -1830,13 +1830,14 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     }
     //CONVERTED DOC
     if (!empty($_SESSION['upfile']['fileNamePdfOnTmp'])) {
+
+        $resource = file_get_contents($_SESSION['config']['tmppath'] . $_SESSION['upfile']['fileNamePdfOnTmp']);
+        $pathInfo = pathinfo($_SESSION['config']['tmppath'] . $_SESSION['upfile']['fileNamePdfOnTmp']);
         $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
             'collId'            => 'letterbox_coll',
             'docserverTypeId'   => 'CONVERT',
-            'fileInfos'         => [
-                'tmpDir'            => $_SESSION['config']['tmppath'],
-                'tmpFileName'       => $_SESSION['upfile']['fileNamePdfOnTmp']
-            ]
+            'encodedResource'   => base64_encode($resource),
+            'format'            => $pathInfo['extension']
         ]);
         \Convert\models\AdrModel::createDocumentAdr([
             'resId'         => $resId,

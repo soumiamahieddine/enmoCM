@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { HeaderService } from '../../../service/header.service';
 
 declare function $j(selector: any): any;
@@ -43,8 +43,12 @@ export class TemplateAdministrationComponent implements OnInit {
     lockFound               : boolean   = false;
     intervalLockFile        : any;
 
+    dialogRef               : MatDialogRef<any>;
+    data                    : any[]      = [];
+    config                  : any        = {};
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService, public dialog: MatDialog) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -74,8 +78,8 @@ export class TemplateAdministrationComponent implements OnInit {
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template.template_target = '';
-                        this.template.template_type   = 'OFFICE';
-                        this.loading                  = false;
+                        this.template.template_type = 'OFFICE';
+                        this.loading = false;
 
                     });
             } else {
@@ -88,13 +92,16 @@ export class TemplateAdministrationComponent implements OnInit {
                         this.setInitialValue(data);
                         this.template = data.template;
                         this.headerService.setHeader(this.lang.templateModification, this.template.template_label);
-                        this.loading  = false;
-                        if(this.template.template_type=='HTML'){
-                            this.initMce();
+                        this.loading = false;
+                        if (this.template.template_type == 'HTML') {
+                            this.initMce('textarea#templateHtml');
                         }
-                        if (this.template.template_style == '') {
+                        if (this.template.template_type == 'OFFICE_HTML') {
+                            this.initMce('textarea#templateOfficeHtml');
+                        }
+                        if (this.template.template_style == '' && this.template.template_file_name != null) {
                             this.buttonFileName = this.template.template_file_name;
-                        } else {
+                        } else if (this.template.template_style != '') {
                             this.buttonFileName = this.template.template_style;
                         }
 
@@ -103,20 +110,20 @@ export class TemplateAdministrationComponent implements OnInit {
                         }
                     });
             }
-            if(!this.template.template_attachment_type){
+            if (!this.template.template_attachment_type) {
                 this.template.template_attachment_type = 'all';
             }
         });
     }
 
-    initMce() {
+    initMce(selectorId: string) {
         setTimeout(() => {
             tinymce.remove('textarea');
             //LOAD EDITOR TINYMCE for MAIL SIGN
             tinymce.baseURL = "../../node_modules/tinymce";
             tinymce.suffix = '.min';
             tinymce.init({
-                selector: "textarea#templateHtml",
+                selector: selectorId,
                 statusbar: false,
                 language: "fr_FR",
                 language_url: "tools/tinymce/langs/fr_FR.js",
@@ -143,17 +150,17 @@ export class TemplateAdministrationComponent implements OnInit {
         }, 20);
     }
 
-    setInitialValue(data:any) {
+    setInitialValue(data: any) {
         this.extensionModels = [];
         data.templatesModels.forEach((model: any) => {
             if (this.extensionModels.indexOf(model.fileExt) == -1) {
                 this.extensionModels.push(model.fileExt);
-            } 
+            }
         });
         this.defaultTemplatesList = data.templatesModels;
 
-        this.attachmentTypesList  = data.attachmentTypes;
-        this.datasourcesList      = data.datasources;
+        this.attachmentTypesList = data.attachmentTypes;
+        this.datasourcesList = data.datasources;
         setTimeout(() => {
             $j('#jstree')
                 .on('select_node.jstree', function (e: any, data: any) {
@@ -197,10 +204,10 @@ export class TemplateAdministrationComponent implements OnInit {
             if (this.template.uploadedFile.label == "") {
                 this.template.uploadedFile.label = this.template.uploadedFile.name;
             }
-            
+
             var reader = new FileReader();
             reader.readAsDataURL(fileInput.target.files[0]);
-            
+
             reader.onload = function (value: any) {
                 window['angularTemplateComponent'].componentAfterUpload(value.target.result);
             };
@@ -220,16 +227,16 @@ export class TemplateAdministrationComponent implements OnInit {
     startJnlp() {
         if (this.creationMode) {
             this.jnlpValue.objectType = 'templateCreation';
-            for(let element of this.defaultTemplatesList){
-                if(this.template.template_style == element.fileExt + ': ' + element.fileName){
+            for (let element of this.defaultTemplatesList) {
+                if (this.template.template_style == element.fileExt + ': ' + element.fileName) {
                     this.jnlpValue.objectId = element.filePath;
                 }
             }
         } else {
             this.jnlpValue.objectType = 'templateModification';
-            this.jnlpValue.objectId   = this.template.template_id;
+            this.jnlpValue.objectId = this.template.template_id;
         }
-        this.jnlpValue.table    = 'templates';
+        this.jnlpValue.table = 'templates';
         this.jnlpValue.uniqueId = 0;
         this.jnlpValue.cookies = document.cookie;
 
@@ -247,12 +254,12 @@ export class TemplateAdministrationComponent implements OnInit {
     checkLockFile() {
         this.intervalLockFile = setInterval(() => {
             this.http.get(this.coreUrl + 'rest/jnlp/lock/' + this.template.jnlpUniqueId)
-            .subscribe((data: any) => {
-                this.lockFound = data.lockFileFound;
-                if(!this.lockFound){
-                    clearInterval(this.intervalLockFile);
-                }
-            });
+                .subscribe((data: any) => {
+                    this.lockFound = data.lockFileFound;
+                    if (!this.lockFound) {
+                        clearInterval(this.intervalLockFile);
+                    }
+                });
         }, 1000)
     }
 
@@ -260,13 +267,13 @@ export class TemplateAdministrationComponent implements OnInit {
         let r = confirm(this.lang.confirmDuplicate);
 
         if (r) {
-            this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', {'id': this.template.template_id})
-            .subscribe((data:any) => {
-                this.notify.success(this.lang.templateDuplicated);
-                this.router.navigate(['/administration/templates/' + data.id]);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
+            this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', { 'id': this.template.template_id })
+                .subscribe((data: any) => {
+                    this.notify.success(this.lang.templateDuplicated);
+                    this.router.navigate(['/administration/templates/' + data.id]);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
         }
     }
 
@@ -275,21 +282,40 @@ export class TemplateAdministrationComponent implements OnInit {
         if (this.template.template_target != 'notifications') {
             this.template.template_datasource = 'letterbox_attachment';
         }
-        if (this.creationMode && this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && (this.template.template_type == 'OFFICE' || this.template.template_type == 'OFFICE_HTML' )) {
+        if (this.creationMode && this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && (this.template.template_type == 'OFFICE' || (this.template.template_type == 'OFFICE_HTML' && this.template.template_style))) {
             alert(this.lang.editModelFirst);
             return;
         }
-        if (this.template.template_type=='HTML' || this.template.template_type=='OFFICE_HTML') {
+
+        if (this.template.template_type == 'HTML') {
             this.template.template_content = tinymce.get('templateHtml').getContent();
+        }
+        if (this.template.template_type == 'OFFICE_HTML') {
+            this.template.template_content = tinymce.get('templateOfficeHtml').getContent();
+
+            if (this.template.template_content == '' && !this.template.template_style) {
+                alert(this.lang.mustCompleteAR);
+                return;
+            }
         }
         if (this.creationMode) {
             if (this.template.template_style == 'uploadFile') {
                 this.template.template_style = '';
             }
             this.http.post(this.coreUrl + 'rest/templates', this.template)
-                .subscribe(() => {
-                    this.router.navigate(['/administration/templates']);
-                    this.notify.success(this.lang.templateAdded);
+                .subscribe((data: any) => {
+                    if (data.checkEntities) {
+                        this.config = {
+                            data: {
+                                entitiesList: data.checkEntities,
+                                template_attachment_type: this.template.template_attachment_type
+                            }
+                        };
+                        this.dialogRef = this.dialog.open(TemplateAdministrationCheckEntitiesModalComponent, this.config);
+                    } else {
+                        this.router.navigate(['/administration/templates']);
+                        this.notify.success(this.lang.templateAdded);
+                    }
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -298,19 +324,29 @@ export class TemplateAdministrationComponent implements OnInit {
                 this.template.template_style = '';
             }
             this.http.put(this.coreUrl + 'rest/templates/' + this.template.template_id, this.template)
-                .subscribe(() => {
-                    this.router.navigate(['/administration/templates']);
-                    this.notify.success(this.lang.templateUpdated);
+                .subscribe((data: any) => {
+                    if (data.checkEntities) {
+                        this.config = {
+                            data: {
+                                entitiesList: data.checkEntities,
+                                template_attachment_type: this.template.template_attachment_type
+                            }
+                        };
+                        this.dialogRef = this.dialog.open(TemplateAdministrationCheckEntitiesModalComponent, this.config);
+                    } else {
+                        this.router.navigate(['/administration/templates']);
+                        this.notify.success(this.lang.templateUpdated);
+                    }
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }
     }
 
-    displayDatasources(datasource:any) {
-        if (datasource.target=='notification' && this.template.template_target == 'notifications') {
+    displayDatasources(datasource: any) {
+        if (datasource.target == 'notification' && this.template.template_target == 'notifications') {
             return true;
-        } else if (datasource.target=='document' && this.template.template_target != 'notifications') {
+        } else if (datasource.target == 'document' && this.template.template_target != 'notifications') {
             return true;
         }
         return false;
@@ -321,19 +357,20 @@ export class TemplateAdministrationComponent implements OnInit {
             this.template.template_type = 'OFFICE';
         } else if (this.template.template_target == 'notifications' || this.template.template_target == 'doctypes' || this.template.template_target == 'sendmail') {
             this.template.template_type = 'HTML';
-            this.initMce();
+            this.initMce('textarea#templateHtml');
         } else if (this.template.template_target == 'notes') {
             this.template.template_type = 'TXT';
-        } else if(this.template.template_target == 'AR'){
+        } else if (this.template.template_target == 'acknowledgementReceipt') {
             this.template.template_type = 'OFFICE_HTML';
-            this.initMce();
+            this.template.template_attachment_type = '';
+            this.initMce('textarea#templateOfficeHtml');
         }
     }
 
     fileImported() {
         this.buttonFileName = this.template.uploadedFile.name;
     }
-    
+
     fileToImport() {
         this.buttonFileName = this.lang.importFile;
     }
@@ -342,4 +379,17 @@ export class TemplateAdministrationComponent implements OnInit {
         this.fileToImport();
         this.template.uploadedFile = null;
     }
+}
+@Component({
+    templateUrl: "template-administration-checkEntities-modal.component.html",
+    styleUrls: ['template-administration-checkEntities-modal.scss']
+})
+export class TemplateAdministrationCheckEntitiesModalComponent {
+    lang: any = LANG;
+
+    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<TemplateAdministrationCheckEntitiesModalComponent>) {
+    }
+
+    ngOnInit(): void { }
+
 }

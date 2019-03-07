@@ -132,7 +132,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         
         # save note
         if ($formValues['note_content_to_users'] != '') {
-            \Note\models\NoteModel::create(['identifier' => $res_id, 'tablename' => 'res_letterbox', 'user_id' => $_SESSION['user']['UserId'], 'coll_id' => 'letterbox_coll', 'note_text' => $formValues['note_content_to_users']]);
+            \Note\models\NoteModel::create(['resId' => $res_id, 'login' => $_SESSION['user']['UserId'], 'note_text' => $formValues['note_content_to_users']]);
         }
 
         if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'closeResource'])) {

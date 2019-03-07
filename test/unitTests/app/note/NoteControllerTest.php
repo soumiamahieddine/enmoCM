@@ -145,6 +145,6 @@ class NoteControllerTest extends TestCase
         $response     = $noteController->create($fullRequest, new \Slim\Http\Response(), $resID);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('Bad Request note text', $responseBody->errors);
+        $this->assertSame('Data note_text is empty or not a string', $responseBody->errors);
     }
 }

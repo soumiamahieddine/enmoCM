@@ -96,14 +96,13 @@ class ConvertPdfController
                 return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
             }
         }
-        
+
+        $resource = file_get_contents("{$tmpPath}{$fileNameOnTmp}.pdf");
         $storeResult = DocserverController::storeResourceOnDocServer([
-            'collId'    => $aArgs['collId'],
-            'fileInfos' => [
-                'tmpDir'        => $tmpPath,
-                'tmpFileName'   => $fileNameOnTmp . '.pdf',
-            ],
-            'docserverTypeId'   => 'CONVERT'
+            'collId'            => $aArgs['collId'],
+            'docserverTypeId'   => 'CONVERT',
+            'encodedResource'   => base64_encode($resource),
+            'format'            => 'pdf'
         ]);
 
         if (!empty($storeResult['errors'])) {
@@ -132,6 +131,30 @@ class ConvertPdfController
         }
 
         return ['docserver_id' => $storeResult['docserver_id'], 'path' => $storeResult['destination_dir'], 'filename' => $storeResult['file_destination_name']];
+    }
+
+    public static function convertFromEncodedResource(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['encodedResource']);
+        ValidatorModel::stringType($aArgs, ['encodedResource']);
+
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $tmpFilename = 'converting' . rand();
+
+        file_put_contents($tmpPath . $tmpFilename, base64_decode($aArgs['encodedResource']));
+
+        $command = "unoconv -f pdf {$tmpPath}{$tmpFilename}";
+        exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
+
+        if (!file_exists($tmpPath.$tmpFilename.'.pdf')) {
+            return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
+        }
+
+        $resource = file_get_contents("{$tmpPath}{$tmpFilename}.pdf");
+        unlink("{$tmpPath}{$tmpFilename}");
+        unlink("{$tmpPath}{$tmpFilename}.pdf");
+
+        return base64_encode($resource);
     }
 
     public static function getConvertedPdfById(array $aArgs)

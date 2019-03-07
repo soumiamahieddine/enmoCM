@@ -370,7 +370,6 @@ elseif (empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
                     $what .= $res_action['history_msg'][$i];
                 }
                 $_SESSION['info'] = $what . ' ';
-                $_SESSION['cpt_info_basket'] = 0;
                 if ($_POST['module'] == 'null') {
                     $_POST['module'] = '';
                 }

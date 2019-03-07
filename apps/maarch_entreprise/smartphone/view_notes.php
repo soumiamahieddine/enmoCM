@@ -19,13 +19,12 @@ $stmt = $db->query(
     "SELECT u.lastname as lastname, 
             u.firstname as firstname, 
             notes.note_text, 
-            notes.date_note as date_note, 
+            notes.creation_date as creation_date, 
             notes.id as notes_id 
       FROM " . NOTES_TABLE . " notes, " . $_SESSION['tablename']['users'] ." u 
       WHERE notes.user_id = u.user_id 
       AND notes.identifier = ? 
-      AND notes.coll_id = ? 
-      ORDER BY notes.date_note DESC",array($_REQUEST['id'],$_REQUEST['collId']));
+      ORDER BY notes.creation_date DESC",array($_REQUEST['id']));
 //$db->show();
 $notesList = '<div id="newNote" class="row" style="display: none;"></div>';
 if ($stmt->rowCount()< 1) {
@@ -35,7 +34,7 @@ if ($stmt->rowCount()< 1) {
 		$line->note_text = str_replace("\n", "<br>", $line->note_text);
         $notesList .= '<div class="row" id="'.functions::xssafe($line->notes_id).'">
         <div>' . functions::xssafe($line->firstname) . ' '
-        . functions::xssafe($line->lastname) . ' le ' . functions::xssafe($line->date_note) . '</div>
+        . functions::xssafe($line->lastname) . ' le ' . functions::xssafe($line->creation_date) . '</div>
 		<table>
 			<tr>
 				<td>

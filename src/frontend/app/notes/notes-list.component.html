@@ -18,7 +18,7 @@
                     style="color: white;flex: 1;font-size: 25px;margin: auto;"></i></div>
             <mat-card-title>{{note.firstname}} {{note.lastname}}</mat-card-title>
             <mat-card-subtitle>{{note.entity_label}}</mat-card-subtitle>
-            <mat-card-subtitle title='{{note.date_note | date : "le dd/MM/y à HH:mm"}}' style="position: absolute;right: 10px;top: 20px;font-size: 10px;">{{note.date_note
+            <mat-card-subtitle title='{{note.creation_date | date : "le dd/MM/y à HH:mm"}}' style="position: absolute;right: 10px;top: 20px;font-size: 10px;">{{note.creation_date
                 | timeAgo}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>

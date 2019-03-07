@@ -174,4 +174,23 @@ class ResourceListControllerTest extends TestCase
 
         $GLOBALS['userId'] = 'superadmin';
     }
+
+    public function testGetActions()
+    {
+        $GLOBALS['userId'] = 'bbain';
+
+        $resListController = new \Resource\controllers\ResourceListController();
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $resListController->getActions($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->actions);
+        $this->assertNotNull($responseBody->actions);
+
+        $GLOBALS['userId'] = 'superadmin';
+    }
 }

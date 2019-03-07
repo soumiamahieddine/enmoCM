@@ -245,13 +245,13 @@ switch ($mode) {
                 $userId = $_SESSION['user']['UserId'];
 
                 $db->query(
-                    "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, date_note, "
-                    . "user_id, coll_id, tablename) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, ?)",
-                    array($identifier, $notes, $userId, $collId, $table)
+                    "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, creation_date, "
+                    . "user_id) VALUES (?, ?, CURRENT_TIMESTAMP, ?)",
+                    array($identifier, $notes, $userId)
                 );
                 
                 //Last insert ID from sequence
-                $id = $db->lastInsertId('notes_seq');
+                $id = $db->lastInsertId('notes_id_seq');
                 
                 //Entities selected
                 if (!empty($id) && isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen']))
@@ -331,19 +331,10 @@ switch ($mode) {
             
             $id = $_REQUEST['id'];
             //Check if ID exists
-            $arrayPDO = array();
-            if (! empty($collId)) {
-                $where = " and coll_id = :collId";
-                $arrayPDO = array_merge($arrayPDO, array(":collId" => $collId));
-            } else {
-                $where = " and tablename = :table";
-                $arrayPDO = array_merge($arrayPDO, array(":table" => $table));
-            }
-            $arrayPDO = array_merge($arrayPDO, array(":Id" => $id));
             $stmt = $db->query(
-                "SELECT n.identifier, n.date_note, n.user_id, n.note_text, u.lastname, "
+                "SELECT n.identifier, n.creation_date, n.user_id, n.note_text, u.lastname, "
                 . "u.firstname FROM " . NOTES_TABLE . " n inner join ". USERS_TABLE
-                . " u on n.user_id  = u.user_id WHERE n.id = :Id " . $where, $arrayPDO
+                . " u on n.user_id  = u.user_id WHERE n.id = :Id ", [":Id" => $id]
             );
             
             if($stmt->rowCount() > 0) {
@@ -353,7 +344,7 @@ switch ($mode) {
                 $user = $request->show_string($line->lastname . " " . $line->firstname);
                 $notes = $line->note_text;
                 $userId = $line->user_id;
-                $date = $line->date_note;
+                $date = $line->creation_date;
                 $identifier = $line->identifier;
     
                 $notesEntities = array();
@@ -458,7 +449,7 @@ switch ($mode) {
                     $notes = $_REQUEST['notes'];
 
                     $db->query(
-                        "UPDATE ".NOTES_TABLE." SET note_text = ?, date_note = CURRENT_TIMESTAMP WHERE id = ?",
+                        "UPDATE ".NOTES_TABLE." SET note_text = ?, creation_date = CURRENT_TIMESTAMP WHERE id = ?",
                         array($notes, $id)
                     );
                     
@@ -548,7 +539,7 @@ switch ($mode) {
             $msgResult = _NOTES_DELETED;
 
             //Count notes
-            $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&origin=parent&resId='.$identifier.'&collId='.$collId;
+            $toolbarBagde_script = $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=notes&page=load_toolbar_notes&origin=parent&resId='.$identifier;
             $js .='loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');';
         }
     break;

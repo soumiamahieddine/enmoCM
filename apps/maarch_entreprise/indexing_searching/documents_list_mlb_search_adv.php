@@ -404,10 +404,6 @@ if ($mode == 'normal') {
                     $query .= 'on ';
                     $query .= 'notes.id = note_entities.note_id ';
                     $query .= 'WHERE ';
-                    $query .= "tablename = 'res_letterbox' ";
-                    $query .= 'AND ';
-                    $query .= "coll_id = 'letterbox_coll' ";
-                    $query .= 'AND ';
                     $query .= 'identifier = ? ';
                     $arrayPDO = array($tab[$i][$j]['value']);
 

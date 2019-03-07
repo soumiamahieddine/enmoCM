@@ -1,7 +1,7 @@
 <mat-button-toggle-group #group="matButtonToggleGroup" class="envFilter" multiple>
     <mat-checkbox color="primary" [checked]="selectedRes.length == totalRes && selectedRes.length > 0" [indeterminate]="selectedRes.length > 0 && selectedRes.length < totalRes" style="margin: 10px;padding-right: 10px;"
         title="{{lang.selectAllResInBasket}}" (change)="toggleAll($event)"></mat-checkbox>
-    <app-actions-list #actionsList [contextMode]="false" [totalRes]="totalRes" [selectedRes]="selectedRes"></app-actions-list>
+    <app-actions-list #actionsList (triggerEvent)="refreshAfterAction()" [contextMode]="false" [totalRes]="totalRes" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo"></app-actions-list>
     <form [formGroup]="stateForm" [style.flex]="1">
         <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10" style="top: -2px;">
             <input class="metaSearch" type="text" matInput placeholder="{{lang.searchMailInBasket}}" formControlName="stateGroup"
@@ -83,4 +83,7 @@
     <span class="label badge-subEntities" title="{{lang.subEntities}}" *ngFor="let subEntity of this.listProperties.subEntities; let i=index"
         (click)="removeFilter('subEntities', i)">{{subEntity.label}}
         <i class="fa fa-times-circle"></i></span>
+</div>
+<div *ngIf="selectedRes.length > 1" style="text-align: center;font-size: 10px;opacity: 0.5;padding-top:10px;">
+    <b>{{selectedRes.length}}</b> {{lang.selectedElements}}&nbsp;&nbsp;<span *ngIf="selectedRes.length >= 500" color="warn" style="font-weight: bold;">({{lang.warnTooMuchSelect}})</span>
 </div>

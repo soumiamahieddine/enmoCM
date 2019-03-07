@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -14,10 +14,17 @@ export class NoteEditorComponent implements AfterViewInit {
     lang: any = LANG;
     notes: any;
     loading: boolean = true;
+    templatesNote: any = [];
+
+    content: string = '';
+
+    @Input('mode') mode: any;
 
     constructor(public http: HttpClient) { }
 
-    ngAfterViewInit() { }
+    ngAfterViewInit() {
+        
+    }
 
     addNote() {
         /*this.http.get("../../rest/res/" + this.data.resId + "/notes")
@@ -25,5 +32,27 @@ export class NoteEditorComponent implements AfterViewInit {
             this.notes = data;
             this.loading = false;
         });*/
+    }
+
+    getNoteContent() {
+        return this.content;
+    }
+
+    selectTemplate(template: any) {
+        if (this.content.length > 0) {
+            this.content = this.content + ' ' + template.template_content;
+        } else {
+            this.content = template.template_content;
+        }
+        
+    }
+
+    getTemplatesNote() {
+        if (this.templatesNote.length == 0) {
+            this.http.get("../../rest/notes/templates")
+            .subscribe((data: any) => {
+                this.templatesNote = data;
+            });
+        }
     }
 }

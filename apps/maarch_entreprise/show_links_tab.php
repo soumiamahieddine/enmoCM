@@ -8,7 +8,7 @@ if (!empty($_REQUEST['id'])) {
     $_SESSION['doc_id'] = $_REQUEST['id'];
 }
 $security = new security();
-$right = $security->test_right_doc($_SESSION['collection_id_choice'], $_SESSION['doc_id']);
+$right = $security->test_right_doc('letterbox_coll', $_SESSION['doc_id']);
 
 if (!$right) {
     exit(_NO_RIGHT_TXT);
@@ -24,26 +24,36 @@ $Class_LinkController = new LinkController();
 
 $frm_str .= '<div id="loadLinks">';
 $nbLinkDesc = $Class_LinkController->nbDirectLink(
-        $_SESSION['doc_id'], $_SESSION['collection_id_choice'], 'desc'
+        $_SESSION['doc_id'],
+    'letterbox_coll',
+    'desc'
 );
 if ($nbLinkDesc > 0) {
     $frm_str .= '<i class="fa fa-long-arrow-alt-right fa-2x"></i>';
     $frm_str .= $Class_LinkController->formatMap(
             $Class_LinkController->getMap(
-                    $_SESSION['doc_id'], $_SESSION['collection_id_choice'], 'desc'
-            ), 'desc'
+                    $_SESSION['doc_id'],
+                'letterbox_coll',
+                'desc'
+            ),
+        'desc'
     );
     $frm_str .= '<br />';
 }
 $nbLinkAsc = $Class_LinkController->nbDirectLink(
-        $_SESSION['doc_id'], $_SESSION['collection_id_choice'], 'asc'
+        $_SESSION['doc_id'],
+    'letterbox_coll',
+    'asc'
 );
 if ($nbLinkAsc > 0) {
     $frm_str .= '<i class="fa fa-long-arrow-alt-left fa-2x"></i>';
     $frm_str .= $Class_LinkController->formatMap(
             $Class_LinkController->getMap(
-                    $_SESSION['doc_id'], $_SESSION['collection_id_choice'], 'asc'
-            ), 'asc'
+                    $_SESSION['doc_id'],
+                'letterbox_coll',
+                'asc'
+            ),
+        'asc'
     );
     $frm_str .= '<br />';
 }

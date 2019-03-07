@@ -1,10 +1,8 @@
-import { Component, AfterViewInit, Inject } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MAT_BOTTOM_SHEET_DATA } from '@angular/material';
-
-declare function $j(selector: any): any;
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-diffusions-list',
@@ -12,43 +10,148 @@ declare function $j(selector: any): any;
     styleUrls: ['diffusions-list.component.scss'],
     providers: [NotificationService]
 })
-export class DiffusionsListComponent implements AfterViewInit {
+export class DiffusionsListComponent implements OnInit {
 
     lang: any = LANG;
     listinstance: any = [];
-    visaCircuit: any;
-    avisCircuit: any;
+    visaCircuit: any = [];
+    avisCircuit: any = [];
     roles: any = [];
     loading: boolean = true;
     tabVisaCircuit: boolean = false;
     tabAvisCircuit: boolean = false;
+    data: any;
+    availableRoles: any[] = [];
 
-    constructor(public http: HttpClient, @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) { }
+    diffList: any = {};
 
-    ngAfterViewInit() {
-        this.http.get("../../rest/res/" + this.data.resId + "/listinstance")
+    @Input('injectDatas') injectDatas: any;
+
+    constructor(public http: HttpClient, private notify: NotificationService) { }
+
+    ngOnInit(): void {
+        this.http.get("../../rest/listTemplates/types/entity_id/roles")
             .subscribe((data: any) => {
-                if (data != null) {
-                    this.roles = Object.keys(data);
-                    this.listinstance = data;
+                data['roles'].forEach((element: any) => {
+                    if (element.id == 'cc') {
+                        element.id = 'copy';
+                    }
+                    if (element.available) {
+                        this.availableRoles.push(element);
+                        this.diffList[element.id] = {
+                            'label': element.label,
+                            'items': []
+                        };
+                    }
+                });
+                if (this.injectDatas.resId > 0) {
+                    this.loadListinstance(this.injectDatas.resId);
+                } else {
+                    this.loadListModel('COU');
+                    
                 }
-
-                this.http.get("../../rest/res/" + this.data.resId + "/visaCircuit")
-                    .subscribe((data: any) => {
-                        this.visaCircuit = data;
-                        if (this.visaCircuit.length > 0) {
-                            this.tabVisaCircuit = true;
-                        }
-
-                        this.http.get("../../rest/res/" + this.data.resId + "/avisCircuit")
-                            .subscribe((data: any) => {
-                                this.avisCircuit = data;
-                                if (this.avisCircuit.length > 0) {
-                                    this.tabAvisCircuit = true;
-                                }
-                            });
-                    });
-                    this.loading = false;
+            }, (err: any) => {
+                this.notify.error(err.error.errors);
             });
+    }
+
+    drop(event: CdkDragDrop<string[]>) {
+        if (event.previousContainer === event.container) {
+            //moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        } else if (event.container.id != 'dest') {
+            console.log(event);
+            transferArrayItem(event.previousContainer.data,
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex);
+        }
+    }
+
+    loadListModel(entityId: string) {
+        this.loading = true;
+
+        this.availableRoles.forEach(element => {
+            this.diffList[element.id].items = [];
+        });
+
+        // TO DO : ADD ROUTE
+        /*this.http.get("../../rest/???")
+            .subscribe((data: any) => {
+                this.loading = false;
+            });*/
+
+        this.diffList['dest'].items.push(
+            {
+                "listinstance_id": 20,
+                "sequence": 0,
+                "item_mode": "dest",
+                "item_id": "bbain",
+                "item_type": "user_id",
+                "item_firstname": "Barbara",
+                "item_lastname": "BAIN",
+                "item_entity": "P\u00f4le Jeunesse et Sport",
+                "viewed": 0,
+                "process_date": null,
+                "process_comment": "",
+                "signatory": false,
+                "requested_signature": false
+            });
+        this.diffList['copy'].items.push(
+            {
+                "listinstance_id": 21,
+                "sequence": 0,
+                "item_mode": "copy",
+                "item_id": "DSG",
+                "item_type": "entity_id",
+                "item_entity": "Secr\u00e9tariat G\u00e9n\u00e9ral",
+                "viewed": 0,
+                "process_date": null,
+                "process_comment": null,
+                "signatory": false,
+                "requested_signature": false
+            }
+        );
+        this.diffList['copy'].items.push(
+            {
+                "listinstance_id": 20,
+                "sequence": 0,
+                "item_mode": "copy",
+                "item_id": "bboule",
+                "item_type": "user_id",
+                "item_firstname": "Bruno",
+                "item_lastname": "Boule",
+                "item_entity": "Archives",
+                "viewed": 0,
+                "process_date": null,
+                "process_comment": "",
+                "signatory": false,
+                "requested_signature": false
+            });
+        this.loading = false;
+        //this.roles = Object.keys(this.data);
+        //this.listinstance = this.data;
+        //this.loading = false;
+    }
+
+    loadListinstance(resId: number) {
+        this.loading = true;
+        this.http.get("../../rest/res/" + resId + "/listinstance").subscribe((data: any) => {
+            this.availableRoles.forEach(element => {
+                this.diffList[element.id].items = [];
+            });
+            Object.keys(data).forEach(diffusionRole => {
+                console.log(data[diffusionRole]);
+                data[diffusionRole].forEach((line:any) => {
+                    this.diffList[line.item_mode].items.push(line);
+                });
+            });
+            this.loading = false;
+        }, (err: any) => {
+            this.notify.handleErrors(err);
+        });
+    }
+
+    deleteItem(roleId:string, index: number) {
+        this.diffList[roleId].items.splice(index, 1);
     }
 }

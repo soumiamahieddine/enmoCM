@@ -1,17 +1,14 @@
 <mat-form-field appearance="outline">
-    <textarea matInput placeholder="{{lang.addNote}}"></textarea>
-    <button matSuffix color="primary" mat-icon-button [matMenuTriggerFor]="menu">
+    <textarea matInput placeholder="{{lang.addNote}}" [(ngModel)]="content"></textarea>
+    <button matSuffix color="primary" mat-icon-button [matMenuTriggerFor]="menu" (click)="getTemplatesNote()">
         <mat-icon fontSet="fas" fontIcon="fa-file-alt fa-2x"></mat-icon>
     </button>
     <mat-menu #menu="matMenu">
         <div style="text-align: center;font-size: 10px;opacity: 0.5;margin-top:-15px;">
             Modèles d'annotations
         </div>
-        <button mat-menu-item>
-            <span>Clôture pour REJET</span>
-        </button>
-        <button mat-menu-item>
-            <span>Clôture pour ABANDON</span>
+        <button mat-menu-item *ngFor="let template of templatesNote" (click)="selectTemplate(template)">
+            <span>{{template.template_label}}</span>
         </button>
     </mat-menu>
 </mat-form-field>

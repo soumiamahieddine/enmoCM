@@ -42,6 +42,12 @@ export class BasketListComponent implements OnInit {
     public innerHtml: SafeHtml;
     basketUrl: string;
     homeData: any;
+    
+    injectDatasParam = {
+        resId: 0,
+        editable: false
+    };
+    currentResource: any = {};
 
     filtersChange = new EventEmitter();
 
@@ -71,6 +77,10 @@ export class BasketListComponent implements OnInit {
     listProperties: any = {};
     currentBasketInfo: any = {};
     currentChrono: string = '';
+    defaultAction = {
+        id: 19,
+        component : 'processAction'
+    };
     thumbnailUrl: string = '';
 
     selectedRes: number[] = [];
@@ -78,6 +88,7 @@ export class BasketListComponent implements OnInit {
 
     @ViewChild('actionsListContext') actionsList: ActionsListComponent;
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
+    @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
 
     currentSelectedChrono: string = '';
 
@@ -155,6 +166,8 @@ export class BasketListComponent implements OnInit {
                     data = this.processPostData(data);
                     this.resultsLength = data.count;
                     this.allResInBasket = data.allResources;
+                    this.currentBasketInfo.basket_id = data.basket_id;
+                    this.defaultAction = data.defaultAction;
                     this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
                     return data.resources;
                 }),
@@ -199,14 +212,29 @@ export class BasketListComponent implements OnInit {
     }
 
     openDiffusionSheet(row: any): void {
-        this.bottomSheet.open(DiffusionsListComponent, {
+        if(this.injectDatasParam.resId == row.res_id && this.sidenavRight.opened) {
+            this.sidenavRight.close();
+        } else {
+            this.currentResource = row;
+            this.injectDatasParam.resId = row.res_id;
+            this.appDiffusionsList.loadListinstance(row.res_id);
+            this.sidenavRight.open();
+        }
+
+        /*this.bottomSheet.open(DiffusionsListComponent, {
             data: { resId: row.res_id, chrono: row.alt_identifier },
-        });
+        });*/
     }
 
     refreshDao() {
         this.paginator.pageIndex = this.listProperties.page;
         this.filtersChange.emit();
+    }
+
+    refreshDaoAfterAction() {
+        this.refreshDao();
+        const e:any = {checkd : false};
+        this.toggleAllRes(e); 
     }
 
     filterThis(value: string) {
@@ -271,7 +299,7 @@ export class BasketListComponent implements OnInit {
                             content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.lang[visa.mode + 'User'] + '">' + user + '</span></span>';
                         }
 
-                        if (visa.current && key > 0) {
+                        if (visa.current && key >= 0) {
                             content = '<b color="primary">' + content + '</b>';
                         }
 
@@ -284,7 +312,14 @@ export class BasketListComponent implements OnInit {
                     if (index > 0) {
                         formatWorkflow = formatWorkflow.slice(index - 1);
                         formatWorkflow = formatWorkflow.reverse();
-                        formatWorkflow = formatWorkflow.slice((formatWorkflow.length - index) - 1);
+                        const indexReverse = key.displayValue.map((e: any) => { return e.current; }).reverse().indexOf(true);
+                        if (indexReverse > 1) {
+                            formatWorkflow = formatWorkflow.slice(indexReverse - 1);
+                        }
+                        formatWorkflow = formatWorkflow.reverse();
+                    } else if (index === 0) {
+                        formatWorkflow = formatWorkflow.reverse();
+                        formatWorkflow = formatWorkflow.slice(index - 2);
                         formatWorkflow = formatWorkflow.reverse();
                     } else if (index === -1) {
                         formatWorkflow = formatWorkflow.slice(formatWorkflow.length - 2);
@@ -292,7 +327,7 @@ export class BasketListComponent implements OnInit {
                     if (index >= 2 || (index == -1 && key.displayValue.length >= 3)) {
                         formatWorkflow.unshift('...');
                     }
-                    if (index != -1 && index - 2 <= key.displayValue.length && key.displayValue.length >= 3) {
+                    if (index != -1 && index - 2 <= key.displayValue.length && index + 2 < key.displayValue.length && key.displayValue.length >= 3) {
                         formatWorkflow.push('...');
                     }
 
@@ -326,14 +361,16 @@ export class BasketListComponent implements OnInit {
         return data;
     }
 
-    toggleRes(e: any, resId: any) {
+    toggleRes(e: any, row: any) {
         if (e.checked) {
-            if (this.selectedRes.indexOf(resId) === -1) {
-                this.selectedRes.push(resId);
+            if (this.selectedRes.indexOf(row.res_id) === -1) {
+                this.selectedRes.push(row.res_id);
+                row.checked = true;
             }
         } else {
-            let index = this.selectedRes.indexOf(resId);
+            let index = this.selectedRes.indexOf(row.res_id);
             this.selectedRes.splice(index, 1);
+            row.checked = false;
         }
     }
 
@@ -352,17 +389,37 @@ export class BasketListComponent implements OnInit {
     }
 
     open({ x, y }: MouseEvent, row: any) {
-    
+        
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        row.checked = true;
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
         this.actionsList.open(x, y, row)
 
         // prevents default
         return false;
+    }
+
+    launch(action: any, row: any) {
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        row.checked = true;
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
+        
+        setTimeout(() => {
+            this.actionsList.launchEvent(action);
+        }, 200);
+        
     }
 }
 export interface BasketList {
     resources: any[];
     count: number;
     basketLabel: string,
+    basket_id: string,
+    defaultAction: any;
     allResources: number[]
 }
 

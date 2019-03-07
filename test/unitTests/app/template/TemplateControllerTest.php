@@ -13,12 +13,14 @@ class TemplateControllerTest extends TestCase
 {
     private static $id = null;
     private static $idDuplicated = null;
+    private static $idAcknowledgementReceipt = null;
+
 
     public function testCreate()
     {
         $templates   = new \Template\controllers\TemplateController();
 
-        //  CREATE
+        ########## CREATE ##########
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -40,7 +42,7 @@ class TemplateControllerTest extends TestCase
         self::$id = $responseBody->template;
         $this->assertInternalType("int", self::$id);
 
-        // CREATE FAIL
+        ########## CREATE FAIL ##########
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -58,6 +60,90 @@ class TemplateControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Bad Request', $responseBody->errors);
+
+        ########## CREATE ACKNOLEDGEMENT RECEIPT ##########
+
+        //Create entity
+        $entityController = new \Entity\controllers\EntityController();
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'entity_id'         => 'TST_AR',
+            'entity_label'      => 'TEST-ENTITY_AR',
+            'short_label'       => 'TEST-ENTITY_AR',
+            'entity_type'       => 'Service',
+            'email'             => 'test@test.fr',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $entityController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->entities);
+
+        //Create template
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'template_label'            => 'TEST TEMPLATE AR',
+            'template_comment'          => 'DESCRIPTION OF THIS TEMPLATE',
+            'template_target'           => 'acknowledgementReceipt',
+            'template_attachment_type'  => 'ARsimple',
+            'template_type'             => 'OFFICE_HTML',
+            'template_content'          => 'Content of this template',
+            'template_datasource'       => 'letterbox_attachment',
+            'entities'                  => ['TST']
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $templates->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        self::$idAcknowledgementReceipt = $responseBody->template;
+        $this->assertInternalType("int", self::$idAcknowledgementReceipt);
+
+        ########## CREATE FAIL ACKNOLEDGEMENT RECEIPT - entity already associated ##########
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'template_label'            => 'TEST TEMPLATE AR FAIL',
+            'template_comment'          => 'DESCRIPTION OF THIS TEMPLATE',
+            'template_target'           => 'acknowledgementReceipt',
+            'template_attachment_type'  => 'ARsimple',
+            'template_type'             => 'OFFICE_HTML',
+            'template_content'          => 'Content of this template',
+            'template_datasource'       => 'letterbox_attachment',
+            'entities'                  => ['TST', 'BAD']
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $templates->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->checkEntities);
+
+        ########## CREATE FAIL ACKNOLEDGEMENT RECEIPT - no html and no office ##########
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'template_label'            => 'TEST TEMPLATE AR FAIL',
+            'template_comment'          => 'DESCRIPTION OF THIS TEMPLATE',
+            'template_target'           => 'acknowledgementReceipt',
+            'template_attachment_type'  => 'ARsimple',
+            'template_type'             => 'OFFICE_HTML',
+            'template_content'          => '',
+            'template_datasource'       => 'letterbox_attachment',
+            'entities'                  => ['TST', 'BAD']
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $templates->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame("You must complete at least one of the two templates", $responseBody->errors);
     }
 
     public function testRead()
@@ -275,6 +361,25 @@ class TemplateControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame("success", $responseBody->success);
+
+        ########## DELETE ACKNOLEDGEMENT RECEIPT ##########
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $templates->delete($request, new \Slim\Http\Response(), ['id' => self::$idAcknowledgementReceipt]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame("success", $responseBody->success);
+
+        //Delete entity
+        $entityController = new \Entity\controllers\EntityController();
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $entityController->delete($request, new \Slim\Http\Response(), ['id' => 'TST_AR']);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->entities);
+
 
         ########## DELETE FAIL ##########
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);

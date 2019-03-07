@@ -153,7 +153,7 @@ $app->put('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeControlle
 $app->get('/administration/doctypes/new', \Doctype\controllers\FirstLevelController::class . ':initDoctypes');
 
 //Emails
-$app->post('/emails', \Email\controllers\EmailController::class . ':create');
+$app->post('/emails', \Email\controllers\EmailController::class . ':send');
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
@@ -214,6 +214,7 @@ $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplat
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
 
 //Notes
+$app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplateList');
 $app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
 
@@ -248,11 +249,11 @@ $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 
 //Resources
 $app->post('/resources', \Resource\controllers\ResController::class . ':create');
-$app->put('/resources/lock', \Resource\controllers\ResController::class . ':lock');
 $app->post('/res', \Resource\controllers\ResController::class . ':createRes');
 $app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
 $app->get('/res/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
 $app->get('/res/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
+$app->get('/res/{resId}/acknowledgementReceipt/{id}', \Resource\controllers\ResController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
@@ -264,15 +265,19 @@ $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::c
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions', \Resource\controllers\ResourceListController::class . ':getActions');
+$app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/lock', \Resource\controllers\ResourceListController::class . ':lock');
+$app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/unlock', \Resource\controllers\ResourceListController::class . ':unlock');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/filters', \Resource\controllers\ResourceListController::class . ':getFilters');
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/exports', \Resource\controllers\ExportController::class . ':updateExport');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/summarySheets', \Resource\controllers\SummarySheetController::class . ':createList');
+$app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':checkAcknowledgementReceipt');
 
 //SignatureBook
-$app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');
-$app->get('/{basketId}/signatureBook/resList/details', \SignatureBook\controllers\SignatureBookController::class . ':getDetailledResList');
-$app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \SignatureBook\controllers\SignatureBookController::class . ':getSignatureBook');
+$app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');
+$app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources/{resId}', \SignatureBook\controllers\SignatureBookController::class . ':getSignatureBook');
 $app->get('/signatureBook/{resId}/attachments', \SignatureBook\controllers\SignatureBookController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \SignatureBook\controllers\SignatureBookController::class . ':getIncomingMailAndAttachmentsById');
 $app->put('/signatureBook/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignFile');

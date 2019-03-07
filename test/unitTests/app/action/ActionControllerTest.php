@@ -25,12 +25,12 @@ class ActionsControllerTest extends TestCase
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'keyword'          => 'indexing',
-            'label_action'     => 'TEST-LABEL',
-            'id_status'        => '_NOSTATUS_',
-            'action_page'      => 'index_mlb',
-            'history'          => true,
-            'origin'           => 'apps',
+            'keyword'       => 'indexing',
+            'label_action'  => 'TEST-LABEL',
+            'id_status'     => '_NOSTATUS_',
+            'actionPageId'  => 'index_mlb',
+            'history'       => true,
+            'origin'        => 'apps',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -46,7 +46,7 @@ class ActionsControllerTest extends TestCase
             'keyword'          => 'indexing',
             'label_action'     => '',
             'id_status'        => '',
-            'action_page'      => 'index_mlb',
+            'actionPageId'     => 'index_mlb',
             'history'          => true,
             'origin'           => 'apps',
         ];
@@ -57,11 +57,11 @@ class ActionsControllerTest extends TestCase
         
         $this->assertSame('Invalid Status', $responseBody->errors[0]);
         $this->assertSame('Invalid label action', $responseBody->errors[1]);
-        $this->assertSame('id_status is empty', $responseBody->errors[2]);  
-
+        $this->assertSame('id_status is empty', $responseBody->errors[2]);
     }
 
-    public function testRead(){
+    public function testRead()
+    {
         //  READ
         $environment      = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request          = \Slim\Http\Request::createFromEnvironment($environment);
@@ -80,18 +80,16 @@ class ActionsControllerTest extends TestCase
         $this->assertSame('index_mlb', $responseBody->action->action_page);
         $this->assertSame(true, $responseBody->action->history);
         $this->assertSame('apps', $responseBody->action->origin);
-        $this->assertSame(false, $responseBody->action->create_id);
 
         // FAIL READ
         $actionController = new \Action\controllers\ActionController();
         $response         = $actionController->getById($request, new \Slim\Http\Response(), ['id' => 'gaz']);
         $responseBody     = json_decode((string)$response->getBody());
-        $this->assertSame('Id is not a numeric', $responseBody->errors);
-
+        $this->assertSame('Route id is not an integer', $responseBody->errors);
     }
 
-    public function testReadList(){
-        //  READ LIST
+    public function testReadList()
+    {
         $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request      = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -111,7 +109,7 @@ class ActionsControllerTest extends TestCase
             'keyword'          => '',
             'label_action'     => 'TEST-LABEL_UPDATED',
             'id_status'        => 'COU',
-            'action_page'      => 'process',
+            'actionPageId'     => 'process',
             'history'          => false,
             'origin'           => 'apps',
         ];
@@ -128,7 +126,7 @@ class ActionsControllerTest extends TestCase
             'keyword'          => '',
             'label_action'     => 'TEST-LABEL_UPDATED',
             'id_status'        => 'COU',
-            'action_page'      => 'process',
+            'actionPageId'     => 'process',
             'history'          => false,
             'origin'           => 'apps',
         ];
@@ -138,7 +136,6 @@ class ActionsControllerTest extends TestCase
         $response         = $actionController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'gaz']);
         $responseBody     = json_decode((string)$response->getBody());
         $this->assertSame('Id is not a numeric', $responseBody->errors[0]);
-
     }
 
     public function testDelete()
@@ -166,8 +163,7 @@ class ActionsControllerTest extends TestCase
         $response         = $actionController->delete($request, new \Slim\Http\Response(), ['id' => 'gaz']);
         $responseBody     = json_decode((string)$response->getBody());
 
-        $this->assertSame('Id is not a numeric', $responseBody->errors);
-
+        $this->assertSame('Route id is not an integer', $responseBody->errors);
     }
 
     public function testGetInitAction()
@@ -183,9 +179,7 @@ class ActionsControllerTest extends TestCase
         $this->assertNotNull($responseBody->action);
         $this->assertNotNull($responseBody->categoriesList);
         $this->assertNotNull($responseBody->statuses);
-        $this->assertNotNull($responseBody->action_pagesList);
+        $this->assertNotNull($responseBody->actionPages);
         $this->assertNotNull($responseBody->keywordsList);
-
     }
-
 }

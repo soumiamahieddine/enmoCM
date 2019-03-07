@@ -166,7 +166,7 @@ abstract class TemplateModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
 
-        $datasources = [];
+        $datasource = [];
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/templates/xml/datasources.xml']);
         if ($loadedXml) {
@@ -211,5 +211,41 @@ abstract class TemplateModelAbstract
         }
 
         return $models;
+    }
+
+    public static function getWithAssociation(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
+
+        $aTemplates = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['templates, templates_association'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
+        return $aTemplates;
+    }
+
+    public static function checkEntities(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['data']);
+        ValidatorModel::arrayType($aArgs, ['data']);
+
+        $data = $aArgs['data'];
+        
+        $listEntities = DatabaseModel::select([
+        'select'    => ['ta.value_field', 'e.entity_label'],
+        'table'     => ['templates t','templates_association ta', 'entities e'],
+        'left_join' => ['ta.template_id = t.template_id', 'e.entity_id = ta.value_field'],
+        'where'     => empty($data['template_id']) ? ['t.template_target = ?', 't.template_attachment_type = ?', 'value_field in (?)'] : ['t.template_target = ?', 't.template_attachment_type = ?', 'value_field in (?)', 't.template_id != (?)' ],
+        'data'      => empty($data['template_id']) ? [$data['template_target'], $data['template_attachment_type'], $data['entities']]   : [$data['template_target'], $data['template_attachment_type'], $data['entities'], $data['template_id']],
+        'groupBy'   => ['ta.value_field', 'e.entity_label']
+        ]);
+        
+        return $listEntities;
     }
 }

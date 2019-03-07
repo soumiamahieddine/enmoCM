@@ -180,9 +180,9 @@ $tnlAdr = \Convert\models\AdrModel::getTypedDocumentAdrByResId([
     <?php
     if ($core->is_module_loaded('notes')) {
         require_once 'modules/notes/notes_tables.php';
-        $selectNotes = 'SELECT * FROM '.NOTES_TABLE.' WHERE identifier = ? AND coll_id = ? ORDER BY date_note DESC';
+        $selectNotes = 'SELECT * FROM '.NOTES_TABLE.' WHERE identifier = ? ORDER BY creation_date DESC';
         $dbNotes = new Database();
-        $stmtNote = $dbNotes->query($selectNotes, array($s_id, $_SESSION['collection_id_choice']));
+        $stmtNote = $dbNotes->query($selectNotes, array($s_id));
         $nbNotes = $stmtNote->rowCount(); ?>
     <!--<ul>
             <li>-->

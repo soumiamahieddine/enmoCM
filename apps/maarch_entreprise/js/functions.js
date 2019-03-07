@@ -1542,8 +1542,52 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                         if (typeof window['angularSignatureBookComponent'] != "undefined") {
                             window.angularSignatureBookComponent.componentAfterAction();
                         } else {
-                            window.top.location.hash = "";
-                            window.top.location.reload();
+                            
+                            var arr = window.top.location.href.split('&');
+                            arr.shift();
+
+                            var urlV2Param = {
+                                moduleId : '',
+                                resId : '',
+                                userId : '',
+                                groupId : '',
+                                basket_id : '',
+                                basketId : '',
+                                actionId : '',
+                            }
+
+                            arr.forEach(element => {
+                                if (element == 'module=basket') {
+                                    urlV2Param.moduleId = element.split('=')[1];
+                                }
+                                if (element.indexOf('baskets=') > -1 ) {
+                                    urlV2Param.basket_id = element.split('=')[1];
+                                }                                
+                                if (element.indexOf('basketId=') > -1 ) {
+                                    urlV2Param.basketId = element.split('=')[1];
+                                }
+                                if (element.indexOf('resId=') > -1 ) {
+                                    urlV2Param.resId = element.split('=')[1];
+                                }
+                                if (element.indexOf('userId=') > -1 ) {
+                                    urlV2Param.userId = element.split('=')[1];
+                                }
+                                if (element.indexOf('groupIdSer=') > -1 ) {
+                                    urlV2Param.groupId = element.split('=')[1];
+                                }
+                                if (element.indexOf('defaultAction=') > -1 ) {
+                                    urlV2Param.actionId = element.split('=')[1];
+                                    urlV2Param.actionId = urlV2Param.actionId.split('#')[0];
+                                }
+                            });
+
+                            if (urlV2Param.basket_id.length > 0 && urlV2Param.moduleId.length > 0 && urlV2Param.resId.length > 0 && urlV2Param.userId.length > 0 &&  urlV2Param.groupId.length > 0 && urlV2Param.basketId.length > 0 && urlV2Param.actionId.length > 0) {
+                                triggerAngular('#/basketList/users/'+urlV2Param.userId+'/groups/'+urlV2Param.groupId+'/baskets/' + urlV2Param.basketId);
+                            } else {
+                                window.top.location.hash = "";
+                                window.top.location.reload();
+                            }
+                            
                         }
                     }
                 }

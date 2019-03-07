@@ -368,9 +368,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $content_note = str_replace("___", "\n", $content_note);
 
                 $stmt = $db->query(
-                    "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",
-                    array($res_id,$table,$userIdTypist,$content_note,$coll_id)
+                    "INSERT INTO notes (identifier, user_id, "
+                            . "creation_date, note_text ) VALUES (?,?,CURRENT_TIMESTAMP,?)",
+                    array($res_id,$userIdTypist,$content_note)
                 );
             }
             
@@ -415,9 +415,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $content_note = str_replace("___", "\n", $content_note);
             
             $stmt = $db->query(
-                "INSERT INTO notes (identifier, tablename, user_id, "
-                        . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",
-                array($res_id, $table, $userIdTypist, $content_note, $coll_id)
+                "INSERT INTO notes (identifier, user_id, "
+                        . "creation_date, note_text ) VALUES (?,?,CURRENT_TIMESTAMP,?)",
+                array($res_id, $userIdTypist, $content_note)
             );
         }
 

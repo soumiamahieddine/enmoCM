@@ -545,14 +545,14 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 }
                                 if ($_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp'] != '' && isset($templateOffice) && empty($_REQUEST['mailing'])) {
                                     $_SESSION['new_id'] = $id;
-                                    
+
+                                    $resource = file_get_contents($_SESSION['config']['tmppath'].$_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp']);
+                                    $pathInfo = pathinfo($_SESSION['config']['tmppath'].$_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp']);
                                     $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
                                         'collId'            => 'attachments_coll',
                                         'docserverTypeId'   => 'CONVERT',
-                                        'fileInfos'         => [
-                                            'tmpDir'            => $_SESSION['config']['tmppath'],
-                                            'tmpFileName'       => $_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp']
-                                        ]
+                                        'encodedResource'   => base64_encode($resource),
+                                        'format'            => $pathInfo['extension']
                                     ]);
 
                                     $result = \Convert\models\AdrModel::createAttachAdr([
@@ -1231,13 +1231,13 @@ if (isset($_POST['add']) && $_POST['add']) {
             $targetAdrVersion = true;
         }
 
+        $resource = file_get_contents($_SESSION['config']['tmppath'] . $_SESSION['upfile'][0]['fileNamePdfOnTmp']);
+        $pathInfo = pathinfo($_SESSION['config']['tmppath'] . $_SESSION['upfile'][0]['fileNamePdfOnTmp']);
         $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
             'collId'            => $targetCollId,
             'docserverTypeId'   => 'CONVERT',
-            'fileInfos'         => [
-                'tmpDir'            => $_SESSION['config']['tmppath'],
-                'tmpFileName'       => $_SESSION['upfile'][0]['fileNamePdfOnTmp']
-            ]
+            'encodedResource'   => base64_encode($resource),
+            'format'            => $pathInfo['extension']
         ]);
 
         $result = \Convert\models\AdrModel::createAttachAdr([

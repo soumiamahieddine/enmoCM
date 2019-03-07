@@ -2149,8 +2149,12 @@ abstract class lists_Abstract extends Database
             //Show column
             if ($showColumn[$actualColumn] === true) {
                 //Different background on ordered column
-                (strpos($this->orderField, $sortColumn[$actualColumn]) !== false) ?
-                    $columnStyle = ' style="background-image: url(static.php?filename=black_0.1.png);"' : $columnStyle = '';
+                if ($sortColumn[$actualColumn] === null) {
+                    $columnStyle = '';
+                } else {
+                    (strpos($this->orderField, $sortColumn[$actualColumn]) !== false) ?
+                        $columnStyle = ' style="background-image: url(static.php?filename=black_0.1.png);"' : $columnStyle = '';
+                }
 
                 //column
                 $column .= '<th'.$columnStyle.' width="'.$resultFirstRow[$actualColumn]['size']
@@ -2162,9 +2166,9 @@ abstract class lists_Abstract extends Database
                 if ($this->params['bool_sortColumn']) {
                     if ($sortColumn[$actualColumn] !== false) {
                         //Change color of sort icon
-                        ($this->order == 'desc' && (strpos($this->orderField, $sortColumn[$actualColumn]) !== false)) ?
+                        ($this->order == 'desc' && isset($sortColumn[$actualColumn]) && (strpos($this->orderField, $sortColumn[$actualColumn]) !== false)) ?
                             $sortImgDown = 'mCdarkOrange' : $sortImgDown = 'mCdarkBlue';
-                        ($this->order == 'asc' && (strpos($this->orderField, $sortColumn[$actualColumn]) !== false)) ?
+                        ($this->order == 'asc' && isset($sortColumn[$actualColumn]) && (strpos($this->orderField, $sortColumn[$actualColumn]) !== false)) ?
                             $sortImgUp = 'mCdarkOrange' : $sortImgUp = 'mCdarkBlue';
                         $column .= '<br/><br/>';
 
@@ -3347,7 +3351,7 @@ abstract class lists_Abstract extends Database
                     }
 
                     //Different background on ordered column
-                    (strpos($this->orderField, $resultTheLine[$column]['order']) !== false) ?
+                    isset($resultTheLine[$column]['order']) && (strpos($this->orderField, $resultTheLine[$column]['order']) !== false) ?
                         $columnStyle = ' style="background-image: url(static.php?filename=black_0.1.png);"' : $columnStyle = '';
 
                     //If there is action on line click

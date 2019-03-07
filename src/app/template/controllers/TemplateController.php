@@ -106,7 +106,19 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if ($data['template_type'] == 'OFFICE') {
+        if ($data['template_type'] == 'OFFICE_HTML' && !$data['jnlpUniqueId'] && !$data['uploadedFile'] && !$data['template_content']) {
+            return $response->withStatus(400)->withJson(['errors' => 'You must complete at least one of the two templates']);
+        }
+
+        if ($data['template_target'] == 'acknowledgementReceipt' && !empty($data['entities'])) {
+            $checkEntities = TemplateModel::checkEntities(['data' => $data]);
+            
+            if (!empty($checkEntities)) {
+                return $response->withJson(['checkEntities' => $checkEntities]);
+            }
+        }
+
+        if ($data['template_type'] == 'OFFICE' || ($data['template_type'] == 'OFFICE_HTML' && ($data['jnlpUniqueId'] || $data['uploadedFile']))) {
             if (empty($data['jnlpUniqueId']) && empty($data['uploadedFile'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Template file is missing']);
             }
@@ -133,13 +145,13 @@ class TemplateController
                 fclose($file);
             }
 
+            $resource = file_get_contents(CoreConfigModel::getTmpPath() . $fileOnTmp);
+            $pathInfo = pathinfo(CoreConfigModel::getTmpPath() . $fileOnTmp);
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'templates',
                 'docserverTypeId'   => 'TEMPLATES',
-                'fileInfos'         => [
-                    'tmpDir'            => CoreConfigModel::getTmpPath(),
-                    'tmpFileName'       => $fileOnTmp,
-                ]
+                'encodedResource'   => base64_encode($resource),
+                'format'            => $pathInfo['extension']
             ]);
             if (!empty($storeResult['errors'])) {
                 return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
@@ -182,11 +194,25 @@ class TemplateController
         $data = $request->getParams();
         $data['template_type'] = $template['template_type'];
         $data['template_target'] = $template['template_target'];
+        $data['template_id'] = $aArgs['id'];
+
         if (!TemplateController::checkData(['data' => $data])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if ($data['template_type'] == 'OFFICE' && (!empty($data['jnlpUniqueId']) || !empty($data['uploadedFile']))) {
+        if ($data['template_type'] == 'OFFICE_HTML' && empty($data['jnlpUniqueId']) && empty($data['uploadedFile']) && empty($data['template_content']) && empty($template['template_file_name'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'You must complete at least one of the two templates']);
+        }
+
+        if ($data['template_target'] == 'acknowledgementReceipt' && !empty($data['entities'])) {
+            $checkEntities = TemplateModel::checkEntities(['data' => $data]);
+            
+            if (!empty($checkEntities)) {
+                return $response->withJson(['checkEntities' => $checkEntities]);
+            }
+        }
+
+        if (($data['template_type'] == 'OFFICE' || $data['template_type'] == 'OFFICE_HTML') && (!empty($data['jnlpUniqueId']) || !empty($data['uploadedFile']))) {
             if (!empty($data['jnlpUniqueId'])) {
                 if (!empty($template['template_style']) && !Validator::stringType()->notEmpty()->validate($data['template_style'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
@@ -210,13 +236,13 @@ class TemplateController
                 fclose($file);
             }
 
+            $resource = file_get_contents(CoreConfigModel::getTmpPath() . $fileOnTmp);
+            $pathInfo = pathinfo(CoreConfigModel::getTmpPath() . $fileOnTmp);
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'templates',
                 'docserverTypeId'   => 'TEMPLATES',
-                'fileInfos'         => [
-                    'tmpDir'            => CoreConfigModel::getTmpPath(),
-                    'tmpFileName'       => $fileOnTmp,
-                ]
+                'encodedResource'   => base64_encode($resource),
+                'format'            => $pathInfo['extension']
             ]);
             if (!empty($storeResult['errors'])) {
                 return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
@@ -287,6 +313,10 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Template not found']);
         }
 
+        if ($template['template_target'] == 'acknowledgementReceipt') {
+            return $response->withStatus(400)->withJson(['errors' => 'Forbidden duplication']);
+        }
+
         if ($template['template_type'] == 'OFFICE') {
             $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
 
@@ -295,16 +325,18 @@ class TemplateController
             $docinfo['fileDestinationName'] .=  '.' . explode('.', $template['template_file_name'])[1];
 
             $pathToDocumentToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+            $resource = file_get_contents($pathToDocumentToCopy);
+
             $copyResult = DocserverController::copyOnDocServer([
-                'sourceFilePath'             => $pathToDocumentToCopy,
-                'destinationDir'             => $docinfo['destinationDir'],
-                'fileDestinationName'        => $docinfo['fileDestinationName']
+                'encodedResource'       => base64_encode($resource),
+                'destinationDir'        => $docinfo['destinationDir'],
+                'fileDestinationName'   => $docinfo['fileDestinationName']
             ]);
             if (!empty($copyResult['errors'])) {
                 return $response->withStatus(500)->withJson(['errors' => 'Template duplication failed : ' . $copyResult['errors']]);
             }
-            $template['template_path'] = str_replace(str_replace(DIRECTORY_SEPARATOR, '#', $docserver['path_template']), '', $copyResult['copyOnDocserver']['destinationDir']);
-            $template['template_file_name'] = $copyResult['copyOnDocserver']['fileDestinationName'];
+            $template['template_path'] = str_replace(str_replace(DIRECTORY_SEPARATOR, '#', $docserver['path_template']), '', $docinfo['destinationDir']);
+            $template['template_file_name'] = $docinfo['fileDestinationName'];
         }
 
         $template['template_label'] = 'Copie de ' . $template['template_label'];
@@ -347,7 +379,7 @@ class TemplateController
         ValidatorModel::notEmpty($aArgs, ['data']);
         ValidatorModel::arrayType($aArgs, ['data']);
 
-        $availableTypes = ['HTML', 'TXT', 'OFFICE'];
+        $availableTypes = ['HTML', 'TXT', 'OFFICE', 'OFFICE_HTML'];
         $data = $aArgs['data'];
 
         $check = Validator::stringType()->notEmpty()->validate($data['template_label']);
@@ -356,6 +388,15 @@ class TemplateController
 
         if ($data['template_type'] == 'HTML' || $data['template_type'] == 'TXT') {
             $check = $check && Validator::stringType()->notEmpty()->validate($data['template_content']);
+        }
+
+        if ($data['template_type'] == 'OFFICE_HTML') {
+            $check = $check && Validator::stringType()->validate($data['template_content']);
+            $check = $check && Validator::stringType()->notEmpty()->validate($data['template_attachment_type']);
+        }
+
+        if (!empty($data['entities'])) {
+            $check = $check && Validator::arrayType()->validate($data['entities']);
         }
 
         return $check;

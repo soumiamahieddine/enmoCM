@@ -405,6 +405,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
 
      /********* MESSAGE EXCHANGE PART ***************/
      include_once 'modules/sendmail/messageExchangeList.php';
+     include_once 'modules/sendmail/acknowledgementReceiptsList.php';
 
-     echo '{status : '.$status.", content : '".addslashes($debug.$content.$contentMessageExchange)."', error : '".addslashes($error)."'}";
+     echo '{status : '.$status.", content : '".addslashes($debug.$content.$contentMessageExchange.$contentAcknowledgementReceipts)."', error : '".addslashes($error)."'}";
  }

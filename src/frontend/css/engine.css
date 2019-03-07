@@ -400,3 +400,12 @@ h1.admin-app-name {
 .mat-tab-body-content {
     height: auto !important;
 }
+
+.no-padding-full-dialog .mat-dialog-container {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    height: 95vh !important;
+    width: 90vw !important;
+    overflow: hidden;
+}

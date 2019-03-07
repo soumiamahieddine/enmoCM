@@ -16,15 +16,18 @@ namespace SignatureBook\controllers;
 
 use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
+use Basket\models\ActionGroupBasketModel;
 use Basket\models\BasketModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Entity\models\ListInstanceModel;
+use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use Link\models\LinkModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\controllers\ResController;
+use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -49,8 +52,11 @@ class SignatureBookController
             return $response->withJson($documents);
         }
 
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_id', 'basket_clause']]);
+        $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
+
         $actions = [];
-        $rawActions = ActionModel::getForBasketPage(['basketId' => $aArgs['basketId'], 'groupId' => $aArgs['groupId']]);
+        $rawActions = ActionModel::getForBasketPage(['basketId' => $basket['basket_id'], 'groupId' => $group['group_id']]);
         foreach ($rawActions as $rawAction) {
             if ($rawAction['default_action_list'] == 'Y') {
                 $actions[] = ['value' => 'end_action', 'label' => $rawAction['label_action'] . ' ('. _BY_DEFAULT .')'];
@@ -67,11 +73,17 @@ class SignatureBookController
             }
         }
 
+        $defaultAction = ActionGroupBasketModel::get([
+            'select'    => ['id_action'],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'default_action_list = ?'],
+            'data'      => [$basket['basket_id'], $group['group_id'], 'Y']
+        ]);
+
         $actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $documents[0]['res_id'] : $documents[0]['alt_id']);
         $actionLabel .= " : {$documents[0]['title']}";
         $currentAction = [
-            'id' => ActionModel::getDefaultActionByGroupBasketId(['groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]),
-            'actionLabel' => $actionLabel
+            'id'            => $defaultAction[0]['id_action'],
+            'actionLabel'   => $actionLabel
         ];
         $listInstances = ListInstanceModel::get([
             'select'    => ['COUNT(*)'],
@@ -79,17 +91,23 @@ class SignatureBookController
             'data'      => [$aArgs['resId'], ['visa', 'sign']]
         ]);
 
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $owner = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $owner['user_id']]);
+        $resources = ResModel::getOnView([
+            'select'    => ['res_id'],
+            'where'     => [$whereClause]
+        ]);
 
         $datas = [];
         $datas['actions']               = $actions;
         $datas['attachments']           = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
         $datas['documents']             = $documents;
         $datas['currentAction']         = $currentAction;
-        $datas['resList']               = [];
+        $datas['resList']               = $resources;
         $datas['nbNotes']               = NoteModel::countByResId(['resId' => $resId, 'login' => $GLOBALS['userId']]);
         $datas['nbLinks']               = count(LinkModel::getByResId(['resId' => $resId]));
-        $datas['signatures']            = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
+        $datas['signatures']            = UserSignatureModel::getByUserSerialId(['userSerialid' => $currentUser['id']]);
         $datas['consigne']              = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']           = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']          = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
@@ -102,10 +120,12 @@ class SignatureBookController
     public function unsignFile(Request $request, Response $response, array $aArgs)
     {
         $data = $request->getParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['table']);
-        if (!$check) {
+        if (!Validator::stringType()->notEmpty()->validate($data['table'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         AttachmentModel::unsignAttachment(['table' => $data['table'], 'resId' => $aArgs['resId']]);
@@ -126,11 +146,19 @@ class SignatureBookController
 
     public function getIncomingMailAndAttachmentsById(Request $request, Response $response, array $aArgs)
     {
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
         return $response->withJson(SignatureBookController::getIncomingMailAndAttachmentsForSignatureBook(['resId' => $aArgs['resId']]));
     }
 
     public function getAttachmentsById(Request $request, Response $response, array $aArgs)
     {
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
         return $response->withJson(SignatureBookController::getAttachmentsForSignatureBook(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
     }
 
@@ -242,17 +270,11 @@ class SignatureBookController
                 continue;
             }
 
-            $collId = '';
             $realId = 0;
-            $isVersion = 'false';
             if ($value['res_id'] == 0) {
-                $collId = 'version_attachments_coll';
                 $realId = $value['res_id_version'];
-                $isVersion = 'true';
             } elseif ($value['res_id_version'] == 0) {
-                $collId = 'attachments_coll';
                 $realId = $value['res_id'];
-                $isVersion = 'false';
             }
 
             $viewerId = $realId;
@@ -313,10 +335,6 @@ class SignatureBookController
             $attachments[$key]['icon'] = $attachmentTypes[$value['attachment_type']]['icon'];
             $attachments[$key]['sign'] = $attachmentTypes[$value['attachment_type']]['sign'];
 
-            if (!in_array(strtoupper($value['format']), ['PDF', 'JPG', 'JPEG', 'PNG', 'GIF'])) {
-                $isVersion = 'false';
-            }
-
             if ($value['status'] == 'SIGN') {
                 $attachments[$key]['viewerLink'] = "../../rest/res/{$aArgs['resId']}/attachments/{$viewerId}/content?".rand();
             } else {
@@ -359,25 +377,34 @@ class SignatureBookController
         return array_values($attachments);
     }
 
-    public function getDetailledResList(Request $request, Response $response, array $aArgs)
+    public function getResources(Request $request, Response $response, array $aArgs)
     {
-        $resList = BasketModel::getResListById([
-            'basketId'  => $aArgs['basketId'],
-            'userId'    => $GLOBALS['userId'],
-            'select'    => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_id', 'basket_name']]);
+
+        $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $resources = ResModel::getOnView([
+            'select'    => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname'],
+            'where'     => [$whereClause]
         ]);
 
         $resListForAttachments = [];
-        $resListForRequest = [];
-        foreach ($resList as $key => $value) {
+        $resIds = [];
+        foreach ($resources as $value) {
             $resListForAttachments[$value['res_id']] = null;
-            $resListForRequest[] = $value['res_id'];
+            $resIds[] = $value['res_id'];
         }
 
         $attachmentsInResList = AttachmentModel::getOnView([
             'select'    => ['res_id_master', 'status', 'attachment_type'],
             'where'     => ['res_id_master in (?)', "attachment_type not in ('incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response')", "status not in ('DEL', 'TMP', 'OBS')"],
-            'data'      => [$resListForRequest]
+            'data'      => [$resIds]
         ]);
 
         $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -390,35 +417,26 @@ class SignatureBookController
             }
         }
 
-        foreach ($resList as $key => $value) {
+        foreach ($resources as $key => $value) {
             if (!empty($value['contact_id'])) {
-                $resList[$key]['sender'] = ContactModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
+                $resources[$key]['sender'] = ContactModel::getLabelledContactWithAddress(['contactId' => $value['contact_id'], 'addressId' => $value['address_id']]);
             } else {
-                $resList[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
+                $resources[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
             }
 
-            $priority = PriorityModel::getById(['id' => $value['priority'], 'select' => ['color', 'label']]);
-            $resList[$key]['creation_date'] = date(DATE_ATOM, strtotime($resList[$key]['creation_date']));
-            $resList[$key]['process_limit_date'] = (empty($resList[$key]['process_limit_date']) ? null : date(DATE_ATOM, strtotime($resList[$key]['process_limit_date'])));
-            $resList[$key]['allSigned'] = ($resListForAttachments[$value['res_id']] === null ? false : $resListForAttachments[$value['res_id']]);
-            if (!empty($priority)) {
-                $resList[$key]['priorityColor'] = $priority['color'];
-                $resList[$key]['priorityLabel'] = $priority['label'];
+            $resources[$key]['creation_date'] = date(DATE_ATOM, strtotime($resources[$key]['creation_date']));
+            $resources[$key]['process_limit_date'] = (empty($resources[$key]['process_limit_date']) ? null : date(DATE_ATOM, strtotime($resources[$key]['process_limit_date'])));
+            $resources[$key]['allSigned'] = ($resListForAttachments[$value['res_id']] === null ? false : $resListForAttachments[$value['res_id']]);
+            if (!empty($value['priority'])) {
+                $priority = PriorityModel::getById(['id' => $value['priority'], 'select' => ['color', 'label']]);
             }
-            unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
+            if (!empty($priority)) {
+                $resources[$key]['priorityColor'] = $priority['color'];
+                $resources[$key]['priorityLabel'] = $priority['label'];
+            }
+            unset($resources[$key]['priority'], $resources[$key]['contact_id'], $resources[$key]['address_id'], $resources[$key]['user_lastname'], $resources[$key]['user_firstname']);
         }
 
-        return $response->withJson(['resList' => $resList]);
-    }
-
-    public function getResList(Request $request, Response $response, array $aArgs)
-    {
-        $resList = BasketModel::getResListById([
-            'basketId'  => $aArgs['basketId'],
-            'userId'    => $GLOBALS['userId'],
-            'select'    => ['res_id']
-        ]);
-
-        return $response->withJson(['resList' => $resList]);
+        return $response->withJson(['resources' => $resources]);
     }
 }

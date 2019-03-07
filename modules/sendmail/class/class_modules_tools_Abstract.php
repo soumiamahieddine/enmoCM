@@ -725,10 +725,10 @@ abstract class SendmailAbstract extends Database
 
             for ($i=0; $i < count($notesArray); $i++) {
                 $stmt = $db->query(
-                    "select n.date_note, n.note_text, u.lastname, "
+                    "select n.creation_date, n.note_text, u.lastname, "
                     . "u.firstname from " . NOTES_TABLE . " n inner join ". USERS_TABLE
-                    . " u on n.user_id  = u.user_id where n.id = ? and identifier = ? and coll_id = ? order by date_note desc",
-                    array($notesArray[$i], $id, $coll_id)
+                    . " u on n.user_id  = u.user_id where n.id = ? and identifier = ? order by creation_date desc",
+                    array($notesArray[$i], $id)
                 );
 
                 if ($stmt->rowCount() > 0) {
@@ -737,7 +737,7 @@ abstract class SendmailAbstract extends Database
 
                     $user = functions::show_string($line->firstname . " " . $line->lastname);
                     $notes = functions::show_string($line->note_text);
-                    $date = functions::dateformat($line->date_note);
+                    $date = functions::dateformat($line->creation_date);
 
                     $content .= "<tr height='130px'>";
                     $content .= "<td width='15%'>";

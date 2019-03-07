@@ -323,11 +323,7 @@ class UserController
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname', 'user_id']]);
 
-        $listInstances = ListInstanceModel::get([
-            'select'    => [1],
-            'where'     => ['item_id = ?', 'difflist_type = ?', 'item_type = ?', 'item_mode = ?'],
-            'data'      => [$user['user_id'], 'entity_id', 'user_id', 'dest']
-        ]);
+        $listInstances = ListInstanceModel::getWhenOpenMailsByLogin(['select' => [1], 'login' => $user['user_id'], 'itemMode' => 'dest']);
         if (!empty($listInstances)) {
             return $response->withStatus(403)->withJson(['errors' => 'User is still present in listInstances']);
         }
@@ -342,8 +338,8 @@ class UserController
         }
 
         ListInstanceModel::delete([
-            'where' => ['item_id = ?', 'difflist_type = ?', 'item_type = ?'],
-            'data'  => [$user['user_id'], 'entity_id', 'user_id']
+            'where' => ['item_id = ?', 'difflist_type = ?', 'item_type = ?', 'item_mode != ?'],
+            'data'  => [$user['user_id'], 'entity_id', 'user_id', 'dest']
         ]);
         ListTemplateModel::delete([
             'where' => ['item_id = ?', 'object_type = ?', 'item_type = ?'],
@@ -382,11 +378,7 @@ class UserController
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname', 'user_id']]);
 
-        $listInstances = ListInstanceModel::get([
-            'select'    => [1],
-            'where'     => ['item_id = ?', 'difflist_type = ?', 'item_type = ?', 'item_mode = ?'],
-            'data'      => [$user['user_id'], 'entity_id', 'user_id', 'dest']
-        ]);
+        $listInstances = ListInstanceModel::getWhenOpenMailsByLogin(['select' => [1], 'login' => $user['user_id'], 'itemMode' => 'dest']);
         if (!empty($listInstances)) {
             return $response->withStatus(403)->withJson(['errors' => 'User is still present in listInstances']);
         }
@@ -401,8 +393,8 @@ class UserController
         }
 
         ListInstanceModel::delete([
-            'where' => ['item_id = ?', 'difflist_type = ?', 'item_type = ?'],
-            'data'  => [$user['user_id'], 'entity_id', 'user_id']
+            'where' => ['item_id = ?', 'difflist_type = ?', 'item_type = ?', 'item_mode != ?'],
+            'data'  => [$user['user_id'], 'entity_id', 'user_id', 'dest']
         ]);
         ListTemplateModel::delete([
             'where' => ['item_id = ?', 'object_type = ?', 'item_type = ?'],
@@ -771,10 +763,8 @@ class UserController
         $storeInfos = DocserverController::storeResourceOnDocServer([
             'collId'            => 'templates',
             'docserverTypeId'   => 'TEMPLATES',
-            'fileInfos'         => [
-                'tmpDir'        => CoreConfigModel::getTmpPath(),
-                'tmpFileName'   => $tmpName,
-            ]
+            'encodedResource'   => base64_encode($file),
+            'format'            => $ext
         ]);
 
         if (!file_exists($storeInfos['path_template']. str_replace('#', '/', $storeInfos['destination_dir']) .$storeInfos['file_destination_name'])) {

@@ -14,6 +14,7 @@
 
 namespace Resource\controllers;
 
+use Action\controllers\ActionMethodController;
 use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\ActionGroupBasketModel;
@@ -29,6 +30,7 @@ use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use Resource\models\ResourceListModel;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\AutoCompleteController;
@@ -143,14 +145,14 @@ class ResourceListController
             ]);
 
             foreach ($resources as $key => $resource) {
-                $formattedResources[$key]['res_id'] = $resource['res_id'];
-                $formattedResources[$key]['alt_identifier'] = $resource['alt_identifier'];
-                $formattedResources[$key]['barcode'] = $resource['barcode'];
-                $formattedResources[$key]['subject'] = $resource['subject'];
-                $formattedResources[$key]['statusLabel'] = $resource['status.label_status'];
-                $formattedResources[$key]['statusImage'] = $resource['status.img_filename'];
-                $formattedResources[$key]['priorityColor'] = $resource['priorities.color'];
-                $formattedResources[$key]['closing_date'] = $resource['closing_date'];
+                $formattedResources[$key]['res_id']           = $resource['res_id'];
+                $formattedResources[$key]['alt_identifier']   = $resource['alt_identifier'];
+                $formattedResources[$key]['barcode']          = $resource['barcode'];
+                $formattedResources[$key]['subject']          = $resource['subject'];
+                $formattedResources[$key]['statusLabel']      = $resource['status.label_status'];
+                $formattedResources[$key]['statusImage']      = $resource['status.img_filename'];
+                $formattedResources[$key]['priorityColor']    = $resource['priorities.color'];
+                $formattedResources[$key]['closing_date']     = $resource['closing_date'];
                 $formattedResources[$key]['countAttachments'] = 0;
                 foreach ($attachments as $attachment) {
                     if ($attachment['res_id_master'] == $resource['res_id']) {
@@ -204,7 +206,16 @@ class ResourceListController
             }
         }
 
-        return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'allResources' => $allResources]);
+        $defaultAction = ActionGroupBasketModel::get([
+            'select'    => ['id_action'],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'default_action_list = ?'],
+            'data'      => [$basket['basket_id'], $group['group_id'], 'Y']
+        ]);
+        if (!empty($defaultAction[0]['id_action'])) {
+            $defaultAction = ActionModel::getById(['select' => ['id', 'label_action', 'component'], 'id' => $defaultAction[0]['id_action']]);
+        }
+
+        return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'basket_id' => $basket['basket_id'], 'allResources' => $allResources, 'defaultAction' => $defaultAction]);
     }
 
     public function getFilters(Request $request, Response $response, array $aArgs)
@@ -234,12 +245,12 @@ class ResourceListController
 
         $wherePriorities = $where;
         $whereCategories = $where;
-        $whereStatuses = $where;
-        $whereEntities = $where;
-        $dataPriorities = $queryData;
-        $dataCategories = $queryData;
-        $dataStatuses = $queryData;
-        $dataEntities = $queryData;
+        $whereStatuses   = $where;
+        $whereEntities   = $where;
+        $dataPriorities  = $queryData;
+        $dataCategories  = $queryData;
+        $dataStatuses    = $queryData;
+        $dataEntities    = $queryData;
 
         if (isset($data['priorities'])) {
             if (empty($data['priorities'])) {
@@ -253,13 +264,13 @@ class ResourceListController
                     $tmpWhere = 'priority in (?)';
                 }
                 $dataCategories[] = explode(',', $replace);
-                $dataStatuses[] = explode(',', $replace);
-                $dataEntities[] = explode(',', $replace);
+                $dataStatuses[]   = explode(',', $replace);
+                $dataEntities[]   = explode(',', $replace);
             }
 
             $whereCategories[] = $tmpWhere;
-            $whereStatuses[] = $tmpWhere;
-            $whereEntities[] = $tmpWhere;
+            $whereStatuses[]   = $tmpWhere;
+            $whereEntities[]   = $tmpWhere;
         }
         if (isset($data['categories'])) {
             if (empty($data['categories'])) {
@@ -273,21 +284,21 @@ class ResourceListController
                     $tmpWhere = 'category_id in (?)';
                 }
                 $dataPriorities[] = explode(',', $replace);
-                $dataStatuses[] = explode(',', $replace);
-                $dataEntities[] = explode(',', $replace);
+                $dataStatuses[]   = explode(',', $replace);
+                $dataEntities[]   = explode(',', $replace);
             }
 
             $wherePriorities[] = $tmpWhere;
-            $whereStatuses[] = $tmpWhere;
-            $whereEntities[] = $tmpWhere;
+            $whereStatuses[]   = $tmpWhere;
+            $whereEntities[]   = $tmpWhere;
         }
         if (!empty($data['statuses'])) {
             $wherePriorities[] = 'status in (?)';
-            $dataPriorities[] = explode(',', $data['statuses']);
+            $dataPriorities[]  = explode(',', $data['statuses']);
             $whereCategories[] = 'status in (?)';
-            $dataCategories[] = explode(',', $data['statuses']);
-            $whereEntities[] = 'status in (?)';
-            $dataEntities[] = explode(',', $data['statuses']);
+            $dataCategories[]  = explode(',', $data['statuses']);
+            $whereEntities[]   = 'status in (?)';
+            $dataEntities[]    = explode(',', $data['statuses']);
         }
         if (isset($data['entities'])) {
             if (empty($data['entities'])) {
@@ -307,7 +318,7 @@ class ResourceListController
 
             $wherePriorities[] = $tmpWhere;
             $whereCategories[] = $tmpWhere;
-            $whereStatuses[] = $tmpWhere;
+            $whereStatuses[]   = $tmpWhere;
         }
         if (!empty($data['entitiesChildren'])) {
             $entities = explode(',', $data['entitiesChildren']);
@@ -318,11 +329,11 @@ class ResourceListController
             }
             if (!empty($entitiesChildren)) {
                 $wherePriorities[] = 'destination in (?)';
-                $dataPriorities[] = $entitiesChildren;
+                $dataPriorities[]  = $entitiesChildren;
                 $whereCategories[] = 'destination in (?)';
-                $dataCategories[] = $entitiesChildren;
-                $whereStatuses[] = 'destination in (?)';
-                $dataStatuses[] = $entitiesChildren;
+                $dataCategories[]  = $entitiesChildren;
+                $whereStatuses[]   = 'destination in (?)';
+                $dataStatuses[]    = $entitiesChildren;
             }
         }
 
@@ -407,8 +418,8 @@ class ResourceListController
 
         $priorities = (count($priorities) >= 2) ? $priorities : [];
         $categories = (count($categories) >= 2) ? $categories : [];
-        $statuses = (count($statuses) >= 2) ? $statuses : [];
-        $entities = (count($entities) >= 2) ? $entities : [];
+        $statuses   = (count($statuses) >= 2) ? $statuses : [];
+        $entities   = (count($entities) >= 2) ? $entities : [];
 
         $entitiesChildren = [];
         foreach ($entities as $entity) {
@@ -545,10 +556,220 @@ class ResourceListController
 
         $actions = [];
         foreach ($rawActions as $rawAction) {
-            $actions[] = ActionModel::getById(['id' => $rawAction['id_action'], 'select' => ['label_action', 'component']]);
+            $actions[] = $rawAction['id_action'];
+        }
+
+        if (!empty($actions)) {
+            $actions = ActionModel::get(['select' => ['id', 'label_action', 'component'], 'where' => ['id in (?)'], 'data' => [$actions], 'orderBy' => ['label_action']]);
         }
 
         return $response->withJson(['actions' => $actions]);
+    }
+
+    public function setAction(Request $request, Response $response, array $aArgs)
+    {
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_id', 'basket_name']]);
+        $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
+        $actionGroupBasket = ActionGroupBasketModel::get([
+            'select'    => [1],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'id_action = ?'],
+            'data'      => [$basket['basket_id'], $group['group_id'], $aArgs['actionId']]
+        ]);
+        if (empty($actionGroupBasket)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group basket']);
+        }
+
+        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component']]);
+        if (empty($action['component'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
+        }
+        if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
+        }
+
+        $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $resources = ResModel::getOnView([
+            'select'    => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
+            'data'      => [$body['resources']]
+        ]);
+        $resourcesInBasket = [];
+        foreach ($resources as $resource) {
+            $resourcesInBasket[] = $resource['res_id'];
+        }
+
+        if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+        }
+
+        $resourcesForAction = [];
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+            if (!$lock) {
+                $resourcesForAction[] = $resource['res_id'];
+            }
+        }
+
+        if (empty($resourcesForAction)) {
+            return $response->withJson(['success' => 'No resource to process']);
+        }
+
+        $body['data'] = empty($body['data']) ? [] : $body['data'];
+        $body['note'] = empty($body['note']) ? null : $body['note'];
+
+        $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
+        $methodResponses = [];
+        foreach ($resourcesForAction as $resId) {
+            if (!empty($method)) {
+                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data']]);
+                if (!empty($methodResponse['errors'])) {
+                    return $response->withStatus(500)->withJson(['errors' => $methodResponse['errors']]);
+                }
+                if ($methodResponse !== true) {
+                    //TODO array_merge keys avec errors
+                    $methodResponses = array_merge($methodResponses, $methodResponse);
+                }
+            }
+        }
+        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note']]);
+
+        if (!empty($methodResponses)) {
+            return $response->withJson($methodResponses);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public function lock(Request $request, Response $response, array $aArgs)
+    {
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause']]);
+        $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $resources = ResModel::getOnView([
+            'select'    => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
+            'data'      => [$body['resources']]
+        ]);
+        $resourcesInBasket = [];
+        foreach ($resources as $resource) {
+            $resourcesInBasket[] = $resource['res_id'];
+        }
+
+        if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+        }
+
+        $locked = 0;
+        $resourcesToLock = [];
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+
+            if (!$lock) {
+                $resourcesToLock[] = $resource['res_id'];
+            } else {
+                ++$locked;
+            }
+        }
+
+        if (!empty($resourcesToLock)) {
+            ResModel::update([
+                'set'   => ['locker_user_id' => $currentUser['id'], 'locker_time' => 'CURRENT_TIMESTAMP + interval \'1\' MINUTE'],
+                'where' => ['res_id in (?)'],
+                'data'  => [$resourcesToLock]
+            ]);
+        }
+
+        return $response->withJson(['lockedResources' => $locked]);
+    }
+
+    public function unlock(Request $request, Response $response, array $aArgs)
+    {
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause']]);
+        $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
+
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $resources = ResModel::getOnView([
+            'select'    => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
+            'data'      => [$body['resources']]
+        ]);
+        $resourcesInBasket = [];
+        foreach ($resources as $resource) {
+            $resourcesInBasket[] = $resource['res_id'];
+        }
+
+        if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+        }
+
+        $resourcesToUnlock = [];
+        foreach ($resources as $resource) {
+            if (!(!empty($resource['locker_user_id']) && $resource['locker_user_id'] != $currentUser['id'] && strtotime($resource['locker_time']) > time())) {
+                $resourcesToUnlock[] = $resource['res_id'];
+            }
+        }
+
+        if (!empty($resourcesToUnlock)) {
+            ResModel::update([
+                'set'   => ['locker_user_id' => null, 'locker_time' => null],
+                'where' => ['res_id in (?)'],
+                'data'  => [$resourcesToUnlock]
+            ]);
+        }
+
+        return $response->withStatus(204);
     }
 
     public static function listControl(array $aArgs)

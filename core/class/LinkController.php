@@ -32,7 +32,7 @@ class LinkController
 
         foreach ($arrayToFormat as $key => $value) {
             //GET RES INFOS
-            $infos = get_general_data($_SESSION['current_basket']['coll_id'], $key, 'full');
+            $infos = get_general_data('letterbox_coll', $key, 'full');
             $stmt = $db->query('SELECT dest_user, status FROM res_letterbox WHERE res_id = ?', array($key));
             $otherInfos = $stmt->fetchObject();
             $chronoNumber = $this->getAltIdentifier($key);
@@ -129,13 +129,8 @@ class LinkController
                 $return .= '\''.$delParent.'\' ,';
                 $return .= '\'del\',';
 
-                if ($_SESSION['current_basket']['coll_id'] == 'letterbox_coll') {
-                    $return .= '\'res_view_letterbox\'';
-                } elseif ($_SESSION['current_basket']['coll_id'] == 'business_coll') {
-                    $return .= '\'res_view_business\'';
-                } else {
-                    $return .= '\'\'';
-                }
+                $return .= '\'res_view_letterbox\'';
+
                 $return .= ');}';
                 $return .= '">';
                 $return .= '<i class="fa fa-unlink fa-2x" title="'._DEL_LINK.'" style="cursor:pointer;"></i>';
