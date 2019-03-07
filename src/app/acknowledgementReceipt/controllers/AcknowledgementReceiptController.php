@@ -14,25 +14,26 @@
 
 namespace AcknowledgementReceipt\controllers;
 
-use setasign\Fpdi\Tcpdf\Fpdi;
-use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
-use SrcCore\controllers\PreparedClauseController;
-use User\models\UserModel;
-use Basket\models\BasketModel;
-use Resource\models\ResModel;
-use Resource\controllers\ResController;
-use Docserver\models\DocserverModel;
-use Docserver\models\DocserverTypeModel;
-use Resource\controllers\StoreController;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Respect\Validation\Validator;
-use Resource\controllers\ResourceListController;
-use Contact\models\ContactModel;
-use SrcCore\models\DatabaseModel;
-use Doctype\models\DoctypeExtModel;
-use Template\models\TemplateModel;
+use User\models\UserModel;
+use Resource\models\ResModel;
+use setasign\Fpdi\Tcpdf\Fpdi;
+use Basket\models\BasketModel;
 use Entity\models\EntityModel;
+use Contact\models\ContactModel;
+use Respect\Validation\Validator;
+use SrcCore\models\DatabaseModel;
+use Template\models\TemplateModel;
+use Doctype\models\DoctypeExtModel;
+use Docserver\models\DocserverModel;
+use Resource\controllers\ResController;
+use Docserver\models\DocserverTypeModel;
+use Resource\controllers\StoreController;
+use History\controllers\HistoryController;
+use Resource\controllers\ResourceListController;
+use SrcCore\controllers\PreparedClauseController;
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 
 class AcknowledgementReceiptController
 {
@@ -306,5 +307,67 @@ class AcknowledgementReceiptController
         }
 
         return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+    }
+
+    public function getAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $mainDocument = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'fingerprint'], 'resId' => $aArgs['resId']]);
+        $extDocument = ResModel::getExtById(['select' => ['category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
+        if (empty($mainDocument) || empty($extDocument)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $document = AcknowledgementReceiptModel::getByIds([
+            'select'  => ['docserver_id', 'path', 'filename', 'fingerprint'],
+            'ids'      => [$aArgs['id']]
+        ]);
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document[0]['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document[0]['path']) . $document[0]['filename'];
+
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument]);
+        if (!empty($document[0]['fingerprint']) && $document[0]['fingerprint'] != $fingerprint) {
+            return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
+        }
+
+        $fileContent = file_get_contents($pathToDocument);
+
+        if ($fileContent === false) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+        $pathInfo = pathinfo($pathToDocument);
+
+        $response->write($fileContent);
+        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
+
+        HistoryController::add([
+            'tableName' => 'acknowledgement_receipt',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'VIEW',
+            'info'      => _ACKNOWLEDGEMENT_RECEIPT_DISPLAYING . " : {$aArgs['id']}",
+            'moduleId'  => 'res',
+            'eventId'   => 'acknowledgementreceiptview',
+        ]);
+
+        if ($mimeType == 'text/plain') {
+            $mimeType = 'text/html';
+        }
+
+        return $response->withHeader('Content-Type', $mimeType);
     }
 }

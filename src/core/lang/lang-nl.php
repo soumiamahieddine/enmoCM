@@ -460,3 +460,5 @@ define('_AR_DISPLAYING', 'Displaying acknowledgement receipt_TO_TRANSLATE');
 
 define('_M2M_ACTION_DONE', 'in werking gesteld door');
 define('_M2M_ENTITY_DESTINATION', 'De brief is in de dienst');
+
+define('_ACKNOWLEDGEMENT_RECEIPT_DISPLAYING', 'Displaying acknowledgement receipt_TO_TRANSLATE');

@@ -459,3 +459,5 @@ define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Mettre à jour la date d\'envoi des
 
 define("_M2M_ACTION_DONE", "actionné par");
 define("_M2M_ENTITY_DESTINATION", "Le courrier est dans l'entité");
+
+define('_ACKNOWLEDGEMENT_RECEIPT_DISPLAYING', 'Visualisation de l\'accusé de réception');

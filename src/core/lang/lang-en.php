@@ -459,3 +459,5 @@ define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'update acknowledgement send date');
 
 define("_M2M_ACTION_DONE", "done by");
 define("_M2M_ENTITY_DESTINATION", "Mail is in the department");
+
+define('_ACKNOWLEDGEMENT_RECEIPT_DISPLAYING', 'Displaying acknowledgement receipt');
