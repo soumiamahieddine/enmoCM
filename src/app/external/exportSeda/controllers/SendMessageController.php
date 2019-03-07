@@ -24,9 +24,9 @@ class SendMessageController
 
         $adapter = '';
         if ($channel == 'url') {
-            $adapter = new AdapterWS();
+            $adapter = new AdapterWSController();
         } elseif ($channel == 'email') {
-            $adapter = new AdapterEmail();
+            $adapter = new AdapterEmailController();
         } else {
             return false;
         }
