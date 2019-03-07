@@ -24,11 +24,12 @@ $where_tab[] = " res_id = ? ";
 //Build where
 $where = implode(' and ', $where_tab);
 
-//Order
-$orderstr = "order by send_date desc";
 
+//Order
+$list->setOrderField('send_date');
+$orderstr = 'order by send_date desc NULLS LAST';
 //Request
-$tab=$request->PDOselect($select, $where, [$identifier], $orderstr, $_SESSION['config']['databasetype']);
+$tab=$request->PDOselect($select, $where, [$identifier], $orderstr, $_SESSION['config']['databasetype'], 50000);
 
 if (!empty($tab)) {
     //Result Array
@@ -87,7 +88,7 @@ if (!empty($tab)) {
                     $tab[$i][$j]["align"]       = "left";
                     $tab[$i][$j]["valign"]      = "bottom";
                     $tab[$i][$j]["show"]        = true;
-                    $tab[$i][$j]["order"]       = 'contact_address_id';
+                    $tab[$i][$j]["order"]       = false;
                 }
                 if ($tab[$i][$j][$value]=="creation_date") {
                     $tab[$i][$j]["label"]       = _CREATION_DATE;
@@ -120,9 +121,12 @@ if (!empty($tab)) {
     $paramsTab['pageTitle']         = '<br><br>'._ACKNOWLEDGEMENT_RECEIPTS;                   //Titre de la page
     $paramsTab['bool_bigPageTitle'] = false;                                              //Affichage du titre en grand
     $paramsTab['bool_showToolbar'] = false;                                              //Affichage de la toolbar
-    $paramsTab['urlParameters']     = 'identifier='.$identifier."&origin=".$origin.'&display=true'.$parameters;            //Parametres d'url supplementaires
+    $paramsTab['bool_showBottomToolbar'] = false;
+    $paramsTab['urlParameters']     = 'identifier='.$identifier.'&origin=acknowledgement&display=true'.$parameters;            //Parametres d'url supplementaires
     $paramsTab['listHeight']        = '100%';                                             //Hauteur de la liste
     $paramsTab['listCss']           = $css;                                               //CSS
+    $paramsTab['linesToShow']       = $_SESSION['save_list']['full_count'];
+    
     
     //Action icons array
     $paramsTab['actionIcons'] = array();
