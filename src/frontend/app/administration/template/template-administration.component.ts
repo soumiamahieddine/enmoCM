@@ -78,8 +78,8 @@ export class TemplateAdministrationComponent implements OnInit {
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template.template_target = '';
-                        this.template.template_type   = 'OFFICE';
-                        this.loading                  = false;
+                        this.template.template_type = 'OFFICE';
+                        this.loading = false;
 
                     });
             } else {
@@ -92,16 +92,16 @@ export class TemplateAdministrationComponent implements OnInit {
                         this.setInitialValue(data);
                         this.template = data.template;
                         this.headerService.setHeader(this.lang.templateModification, this.template.template_label);
-                        this.loading  = false;
-                        if(this.template.template_type=='HTML'){
+                        this.loading = false;
+                        if (this.template.template_type == 'HTML') {
                             this.initMce('textarea#templateHtml');
                         }
-                        if(this.template.template_type=='OFFICE_HTML'){
+                        if (this.template.template_type == 'OFFICE_HTML') {
                             this.initMce('textarea#templateOfficeHtml');
                         }
                         if (this.template.template_style == '' && this.template.template_file_name != null) {
                             this.buttonFileName = this.template.template_file_name;
-                        } else if (this.template.template_style != ''){
+                        } else if (this.template.template_style != '') {
                             this.buttonFileName = this.template.template_style;
                         }
 
@@ -110,13 +110,13 @@ export class TemplateAdministrationComponent implements OnInit {
                         }
                     });
             }
-            if(!this.template.template_attachment_type){
+            if (!this.template.template_attachment_type) {
                 this.template.template_attachment_type = 'all';
             }
         });
     }
 
-    initMce(selectorId:string) {
+    initMce(selectorId: string) {
         setTimeout(() => {
             tinymce.remove('textarea');
             //LOAD EDITOR TINYMCE for MAIL SIGN
@@ -150,17 +150,17 @@ export class TemplateAdministrationComponent implements OnInit {
         }, 20);
     }
 
-    setInitialValue(data:any) {
+    setInitialValue(data: any) {
         this.extensionModels = [];
         data.templatesModels.forEach((model: any) => {
             if (this.extensionModels.indexOf(model.fileExt) == -1) {
                 this.extensionModels.push(model.fileExt);
-            } 
+            }
         });
         this.defaultTemplatesList = data.templatesModels;
 
-        this.attachmentTypesList  = data.attachmentTypes;
-        this.datasourcesList      = data.datasources;
+        this.attachmentTypesList = data.attachmentTypes;
+        this.datasourcesList = data.datasources;
         setTimeout(() => {
             $j('#jstree')
                 .on('select_node.jstree', function (e: any, data: any) {
@@ -204,10 +204,10 @@ export class TemplateAdministrationComponent implements OnInit {
             if (this.template.uploadedFile.label == "") {
                 this.template.uploadedFile.label = this.template.uploadedFile.name;
             }
-            
+
             var reader = new FileReader();
             reader.readAsDataURL(fileInput.target.files[0]);
-            
+
             reader.onload = function (value: any) {
                 window['angularTemplateComponent'].componentAfterUpload(value.target.result);
             };
@@ -227,16 +227,16 @@ export class TemplateAdministrationComponent implements OnInit {
     startJnlp() {
         if (this.creationMode) {
             this.jnlpValue.objectType = 'templateCreation';
-            for(let element of this.defaultTemplatesList){
-                if(this.template.template_style == element.fileExt + ': ' + element.fileName){
+            for (let element of this.defaultTemplatesList) {
+                if (this.template.template_style == element.fileExt + ': ' + element.fileName) {
                     this.jnlpValue.objectId = element.filePath;
                 }
             }
         } else {
             this.jnlpValue.objectType = 'templateModification';
-            this.jnlpValue.objectId   = this.template.template_id;
+            this.jnlpValue.objectId = this.template.template_id;
         }
-        this.jnlpValue.table    = 'templates';
+        this.jnlpValue.table = 'templates';
         this.jnlpValue.uniqueId = 0;
         this.jnlpValue.cookies = document.cookie;
 
@@ -254,12 +254,12 @@ export class TemplateAdministrationComponent implements OnInit {
     checkLockFile() {
         this.intervalLockFile = setInterval(() => {
             this.http.get(this.coreUrl + 'rest/jnlp/lock/' + this.template.jnlpUniqueId)
-            .subscribe((data: any) => {
-                this.lockFound = data.lockFileFound;
-                if(!this.lockFound){
-                    clearInterval(this.intervalLockFile);
-                }
-            });
+                .subscribe((data: any) => {
+                    this.lockFound = data.lockFileFound;
+                    if (!this.lockFound) {
+                        clearInterval(this.intervalLockFile);
+                    }
+                });
         }, 1000)
     }
 
@@ -267,13 +267,13 @@ export class TemplateAdministrationComponent implements OnInit {
         let r = confirm(this.lang.confirmDuplicate);
 
         if (r) {
-            this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', {'id': this.template.template_id})
-            .subscribe((data:any) => {
-                this.notify.success(this.lang.templateDuplicated);
-                this.router.navigate(['/administration/templates/' + data.id]);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
+            this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', { 'id': this.template.template_id })
+                .subscribe((data: any) => {
+                    this.notify.success(this.lang.templateDuplicated);
+                    this.router.navigate(['/administration/templates/' + data.id]);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
         }
     }
 
@@ -287,10 +287,10 @@ export class TemplateAdministrationComponent implements OnInit {
             return;
         }
 
-        if (this.template.template_type=='HTML') {
+        if (this.template.template_type == 'HTML') {
             this.template.template_content = tinymce.get('templateHtml').getContent();
         }
-        if (this.template.template_type=='OFFICE_HTML') {
+        if (this.template.template_type == 'OFFICE_HTML') {
             this.template.template_content = tinymce.get('templateOfficeHtml').getContent();
 
             if (this.template.template_content == '' && !this.template.template_style) {
@@ -303,8 +303,8 @@ export class TemplateAdministrationComponent implements OnInit {
                 this.template.template_style = '';
             }
             this.http.post(this.coreUrl + 'rest/templates', this.template)
-                .subscribe((data:any) => {
-                    if(data.checkEntities) {
+                .subscribe((data: any) => {
+                    if (data.checkEntities) {
                         this.config = {
                             data: {
                                 entitiesList: data.checkEntities,
@@ -324,8 +324,8 @@ export class TemplateAdministrationComponent implements OnInit {
                 this.template.template_style = '';
             }
             this.http.put(this.coreUrl + 'rest/templates/' + this.template.template_id, this.template)
-                .subscribe((data:any) => {
-                    if(data.checkEntities) {
+                .subscribe((data: any) => {
+                    if (data.checkEntities) {
                         this.config = {
                             data: {
                                 entitiesList: data.checkEntities,
@@ -343,10 +343,10 @@ export class TemplateAdministrationComponent implements OnInit {
         }
     }
 
-    displayDatasources(datasource:any) {
-        if (datasource.target=='notification' && this.template.template_target == 'notifications') {
+    displayDatasources(datasource: any) {
+        if (datasource.target == 'notification' && this.template.template_target == 'notifications') {
             return true;
-        } else if (datasource.target=='document' && this.template.template_target != 'notifications') {
+        } else if (datasource.target == 'document' && this.template.template_target != 'notifications') {
             return true;
         }
         return false;
@@ -360,7 +360,7 @@ export class TemplateAdministrationComponent implements OnInit {
             this.initMce('textarea#templateHtml');
         } else if (this.template.template_target == 'notes') {
             this.template.template_type = 'TXT';
-        } else if(this.template.template_target == 'acknowledgementReceipt'){
+        } else if (this.template.template_target == 'acknowledgementReceipt') {
             this.template.template_type = 'OFFICE_HTML';
             this.template.template_attachment_type = '';
             this.initMce('textarea#templateOfficeHtml');
@@ -370,7 +370,7 @@ export class TemplateAdministrationComponent implements OnInit {
     fileImported() {
         this.buttonFileName = this.template.uploadedFile.name;
     }
-    
+
     fileToImport() {
         this.buttonFileName = this.lang.importFile;
     }
@@ -385,11 +385,11 @@ export class TemplateAdministrationComponent implements OnInit {
     styleUrls: ['template-administration-checkEntities-modal.scss']
 })
 export class TemplateAdministrationCheckEntitiesModalComponent {
-    lang: any  = LANG;
-    
+    lang: any = LANG;
+
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<TemplateAdministrationCheckEntitiesModalComponent>) {
     }
 
-    ngOnInit(): void {}
-    
+    ngOnInit(): void { }
+
 }

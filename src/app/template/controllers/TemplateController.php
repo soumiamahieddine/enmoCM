@@ -113,7 +113,7 @@ class TemplateController
         if ($data['template_target'] == 'acknowledgementReceipt' && !empty($data['entities'])) {
             $checkEntities = TemplateModel::checkEntities(['data' => $data]);
             
-            if(!empty($checkEntities)){
+            if (!empty($checkEntities)) {
                 return $response->withJson(['checkEntities' => $checkEntities]);
             }
         }
@@ -207,7 +207,7 @@ class TemplateController
         if ($data['template_target'] == 'acknowledgementReceipt' && !empty($data['entities'])) {
             $checkEntities = TemplateModel::checkEntities(['data' => $data]);
             
-            if(!empty($checkEntities)){
+            if (!empty($checkEntities)) {
                 return $response->withJson(['checkEntities' => $checkEntities]);
             }
         }
@@ -313,7 +313,7 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Template not found']);
         }
 
-        if($template['template_target'] == 'acknowledgementReceipt') {
+        if ($template['template_target'] == 'acknowledgementReceipt') {
             return $response->withStatus(400)->withJson(['errors' => 'Forbidden duplication']);
         }
 
