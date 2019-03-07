@@ -392,11 +392,10 @@ define('_AR_ALREADY_SEND', 'Acknowledgement receipt already send');
 define('_AR_ALREADY_GENERATED', 'Acknowledgement receipt generated but not sent');
 define('_NO_CONTACT', 'No associated contact');
 define('_USER_MISSING_INFORMATIONS', 'Missing informations in contact card');
-define('_NO_TEMPLATE', 'No template ');
-define('_NO_EMAIL_TEMPLATE', 'No electronic template ');
-define('_NO_PAPER_TEMPLATE', 'No paper template ');
-define('_AR_SEND_ERROR', 'Error in acknowledgements receipt already sent');
-define('_FOR_ENTITY', 'for this entity: ');
+define('_NO_TEMPLATE', 'No template');
+define('_NO_EMAIL_TEMPLATE', 'No electronic template');
+define('_NO_PAPER_TEMPLATE', 'No paper template');
+define('_FOR_ENTITY', 'for this entity:');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Number of read folders');

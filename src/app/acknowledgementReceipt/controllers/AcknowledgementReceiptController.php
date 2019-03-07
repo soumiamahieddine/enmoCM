@@ -199,7 +199,7 @@ class AcknowledgementReceiptController
 
             if (empty($template[0])) {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_TEMPLATE . '\'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . $entity['entity_label'] ];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' .$entity['entity_label'] ];
                 continue;
             }
 
@@ -285,7 +285,7 @@ class AcknowledgementReceiptController
                 if (!empty($contact['email'])) {
                     if (empty($template[0]['template_content'])) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE . '\'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . $entity['entity_label'] ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' . $entity['entity_label'] ];
                         continue 2;
                     } else {
                         $email += 1;
@@ -293,7 +293,7 @@ class AcknowledgementReceiptController
                 } elseif (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'])) {
                     if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE . '\'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . $entity['entity_label'] ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' . $entity['entity_label'] ];
                         continue 2;
                     } else {
                         $paper += 1;
