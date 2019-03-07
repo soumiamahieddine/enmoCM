@@ -15,7 +15,8 @@
                 <div class="example-loading-shade" *ngIf="isLoadingResults">
                     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
                 </div>
-                <div *ngIf="(resultsLength == 0 && this.filtersListService.getUrlFilters() == '') && !isLoadingResults" class="emptyBasket">
+                <div *ngIf="(resultsLength == 0 && this.filtersListService.getUrlFilters() == '') && !isLoadingResults"
+                    class="emptyBasket">
                     <div class="emptyBasket_content">
                         <div class="emptyBasket_icon">
                             <i class="fa fa-inbox"></i>
@@ -25,11 +26,13 @@
                         </div>
                     </div>
                 </div>
-                <div [style.display]="(resultsLength > 0 || this.filtersListService.getUrlFilters() != '') ? 'block' : 'none'" class="row" style="margin:0px;">
+                <div [style.display]="(resultsLength > 0 || this.filtersListService.getUrlFilters() != '') ? 'block' : 'none'"
+                    class="row" style="margin:0px;">
                     <div class="col-md-12" style="display:flex;">
                         <app-filters-tool style="flex:1;" #filtersTool [currentBasketInfo]="currentBasketInfo"
                             [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
-                            [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)" (refreshEventAfterAction)="refreshDaoAfterAction()" (refreshEvent)="refreshDao()"></app-filters-tool>
+                            [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)" (refreshEventAfterAction)="refreshDaoAfterAction()"
+                            (refreshEvent)="refreshDao()"></app-filters-tool>
                         <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="10" class="paginatorResultList"></mat-paginator>
                     </div>
                 </div>
@@ -76,7 +79,7 @@
                                         (click)="$event.stopPropagation();"></mat-checkbox>
                                 </div>
                                 <div class="resultCol" [class]="data.cssClasses.join(' ')" *ngFor="let data of displayedMainData"
-                                     style="cursor: pointer;" title="{{defaultAction.label_action}}" (click)="$event.stopPropagation();launch(defaultAction,row)">
+                                    style="cursor: pointer;" title="{{defaultAction.label_action}}" (click)="$event.stopPropagation();launch(defaultAction,row)">
                                     <span *ngIf="data.value == 'alt_identifier'">
                                         <mat-icon [ngStyle]="{'color': row.priorityColor}" color="primary" class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x"
                                             title="{{row.statusLabel}}" style="cursor: crosshair;" (click)="$event.stopPropagation();filterThis(row.statusLabel)"></mat-icon><br />
@@ -126,21 +129,28 @@
 
             <app-filters-list *ngIf="filtersListService.filterMode" [listProperties]="this.listProperties"
                 (refreshEvent)="refreshDao()"></app-filters-list>
-                <div style="display:flex;">
-                    <button mat-icon-button (click)="snav2.close()" style="font-size: 25px;">
-                        <mat-icon class="fa fa-arrow-right"></mat-icon>
-                    </button>
-                </div>
+            <div style="display:flex;">
+                <button mat-icon-button (click)="snav2.close()" style="font-size: 25px;">
+                    <mat-icon class="fa fa-arrow-right"></mat-icon>
+                </button>
+            </div>
             <div style="display:flex;justify-content: center;padding: 30px;">
                 {{this.currentResource.alt_identifier}}
             </div>
-            <mat-tab-group>
+            <mat-tab-group [(selectedIndex)]="selectedDiffusionTab">
                 <mat-tab label="{{lang.diffusionList}}">
                     <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
                 </mat-tab>
-                </mat-tab-group>
+                <mat-tab label="{{lang.visa}}" [disabled]="appVisaWorkflow.getVisaCount() == 0">
+                    <app-visa-workflow #appVisaWorkflow [injectDatas]="injectDatasParam"></app-visa-workflow>
+                </mat-tab>
+                <mat-tab label="{{lang.avis}}" [disabled]="appAvisWorkflow.getAvisCount() == 0">
+                    <app-avis-workflow #appAvisWorkflow [injectDatas]="injectDatasParam"></app-avis-workflow>
+                </mat-tab>
+            </mat-tab-group>
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>
 </div>
-<app-actions-list (triggerEvent)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo"></app-actions-list>
+<app-actions-list (triggerEvent)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true" [totalRes]="allResInBasket.length"
+    [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo"></app-actions-list>

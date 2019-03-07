@@ -140,7 +140,6 @@ export class DiffusionsListComponent implements OnInit {
                 this.diffList[element.id].items = [];
             });
             Object.keys(data).forEach(diffusionRole => {
-                console.log(data[diffusionRole]);
                 data[diffusionRole].forEach((line:any) => {
                     this.diffList[line.item_mode].items.push(line);
                 });

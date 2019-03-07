@@ -46,6 +46,8 @@ import { NoteEditorComponent }                  from './notes/note-editor.compon
 import { NotesListComponent }                   from './notes/notes.component';
 import { AttachmentsListComponent }             from './attachments/attachments-list.component';
 import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
+import { VisaWorkflowComponent }             from './visa/visa-workflow.component';
+import { AvisWorkflowComponent }             from './avis/avis-workflow.component';
 
 
 
@@ -73,6 +75,8 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         NoteEditorComponent,
         AttachmentsListComponent,
         DiffusionsListComponent,
+        VisaWorkflowComponent,
+        AvisWorkflowComponent,
         FiltersListComponent,
         FiltersToolComponent,
         SummarySheetComponent,
@@ -97,7 +101,6 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
         InfoChangePasswordModalComponent,
         NotesListComponent,
         AttachmentsListComponent,
-        DiffusionsListComponent,
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,

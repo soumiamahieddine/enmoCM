@@ -18,6 +18,8 @@ import { FiltersToolComponent } from './filters/filters-tool.component';
 
 import { ActionsListComponent } from '../actions/actions-list.component';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
+import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 
 
 declare function $j(selector: any): any;
@@ -85,10 +87,13 @@ export class BasketListComponent implements OnInit {
 
     selectedRes: number[] = [];
     allResInBasket: number[] = [];
+    selectedDiffusionTab: number = 0;
 
     @ViewChild('actionsListContext') actionsList: ActionsListComponent;
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
     @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
+    @ViewChild('appVisaWorkflow') appVisaWorkflow: VisaWorkflowComponent;
+    @ViewChild('appAvisWorkflow') appAvisWorkflow: AvisWorkflowComponent;
 
     currentSelectedChrono: string = '';
 
@@ -215,9 +220,12 @@ export class BasketListComponent implements OnInit {
         if(this.injectDatasParam.resId == row.res_id && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
+            this.selectedDiffusionTab = 0;
             this.currentResource = row;
             this.injectDatasParam.resId = row.res_id;
             this.appDiffusionsList.loadListinstance(row.res_id);
+            this.appVisaWorkflow.loadWorkflow(row.res_id);
+            this.appAvisWorkflow.loadWorkflow(row.res_id);
             this.sidenavRight.open();
         }
 
@@ -225,6 +233,7 @@ export class BasketListComponent implements OnInit {
             data: { resId: row.res_id, chrono: row.alt_identifier },
         });*/
     }
+
 
     refreshDao() {
         this.paginator.pageIndex = this.listProperties.page;
