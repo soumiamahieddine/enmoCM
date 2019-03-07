@@ -15,7 +15,13 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
     loadingInit: boolean = false;
-    acknowledgement: any;
+    acknowledgement: any = {
+        alReadyGenerated : {},
+        alReadySend : {},
+        noSendAR : {},
+        sendEmail : 0,
+        sendPaper : 0
+    };
 
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
     loadingExport: boolean;
@@ -26,6 +32,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
         this.loadingInit = true;
         this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkAcknowledgementReceipt', {resources : this.data.selectedRes})
         .subscribe((data : any) => {
+            console.log(data);
             this.acknowledgement = data;
             this.loadingInit = false;
         }, (err) => {
