@@ -44,9 +44,8 @@ export class DiffusionsListComponent implements OnInit {
                         };
                     }
                 });
-                console.log(this.diffList);
-                if (!this.injectDatas) {
-                    this.loadListinstance(100);
+                if (this.injectDatas.resId > 0) {
+                    this.loadListinstance(this.injectDatas.resId);
                 } else {
                     this.loadListModel('COU');
                     
@@ -135,7 +134,21 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     loadListinstance(resId: number) {
-
+        this.loading = true;
+        this.http.get("../../rest/res/" + resId + "/listinstance").subscribe((data: any) => {
+            this.availableRoles.forEach(element => {
+                this.diffList[element.id].items = [];
+            });
+            Object.keys(data).forEach(diffusionRole => {
+                console.log(data[diffusionRole]);
+                data[diffusionRole].forEach((line:any) => {
+                    this.diffList[line.item_mode].items.push(line);
+                });
+            });
+            this.loading = false;
+        }, (err: any) => {
+            this.notify.handleErrors(err);
+        });
     }
 
     deleteItem(roleId:string, index: number) {

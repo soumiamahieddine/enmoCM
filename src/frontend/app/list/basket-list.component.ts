@@ -42,6 +42,12 @@ export class BasketListComponent implements OnInit {
     public innerHtml: SafeHtml;
     basketUrl: string;
     homeData: any;
+    
+    injectDatasParam = {
+        resId: 0,
+        editable: false
+    };
+    currentResource: any = {};
 
     filtersChange = new EventEmitter();
 
@@ -82,6 +88,7 @@ export class BasketListComponent implements OnInit {
 
     @ViewChild('actionsListContext') actionsList: ActionsListComponent;
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
+    @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
 
     currentSelectedChrono: string = '';
 
@@ -205,9 +212,18 @@ export class BasketListComponent implements OnInit {
     }
 
     openDiffusionSheet(row: any): void {
-        this.bottomSheet.open(DiffusionsListComponent, {
+        if(this.injectDatasParam.resId == row.res_id && this.sidenavRight.opened) {
+            this.sidenavRight.close();
+        } else {
+            this.currentResource = row;
+            this.injectDatasParam.resId = row.res_id;
+            this.appDiffusionsList.loadListinstance(row.res_id);
+            this.sidenavRight.open();
+        }
+
+        /*this.bottomSheet.open(DiffusionsListComponent, {
             data: { resId: row.res_id, chrono: row.alt_identifier },
-        });
+        });*/
     }
 
     refreshDao() {

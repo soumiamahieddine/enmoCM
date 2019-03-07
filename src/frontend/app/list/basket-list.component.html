@@ -118,15 +118,27 @@
                 </table>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 mode="over" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'
+        <mat-sidenav #snav2 mode="side" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'
             [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode"
-            [ngStyle]="{'width': mobileMode ? '80%' : '40%'}" autoFocus="false">
+            [ngStyle]="{'width': mobileMode ? '80%' : '30%'}" autoFocus="false">
             <div *ngIf="innerHtml && !filtersListService.filterMode" [matTooltip]="currentChrono" [innerHTML]="innerHtml"
                 style="height: 100%;overflow: hidden;"></div>
 
             <app-filters-list *ngIf="filtersListService.filterMode" [listProperties]="this.listProperties"
                 (refreshEvent)="refreshDao()"></app-filters-list>
-
+                <div style="display:flex;">
+                    <button mat-icon-button (click)="snav2.close()" style="font-size: 25px;">
+                        <mat-icon class="fa fa-arrow-right"></mat-icon>
+                    </button>
+                </div>
+            <div style="display:flex;justify-content: center;padding: 30px;">
+                {{this.currentResource.alt_identifier}}
+            </div>
+            <mat-tab-group>
+                <mat-tab label="{{lang.diffusionList}}">
+                    <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
+                </mat-tab>
+                </mat-tab-group>
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>

@@ -19,7 +19,6 @@ export class RedirectActionComponent implements OnInit {
 
     entities: any[] = [];
     injectDatasParam = {
-        modes: ['diffList'],
         entities: ['DSI'],
         editable: [true]
     };
