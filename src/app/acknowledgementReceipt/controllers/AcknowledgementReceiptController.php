@@ -220,7 +220,7 @@ class AcknowledgementReceiptController
                 $sendedPaper = 0;
                 $generatedPaper = 0;
                 $generatedEmail = 0;
-                $sendError = 0;
+                $sendedError = 0;
                 $canSendEmail = false;
                 $canSendPaper = false;
 
