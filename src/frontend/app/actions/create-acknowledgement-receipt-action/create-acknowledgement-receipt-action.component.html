@@ -12,7 +12,7 @@
             <div *ngIf="acknowledgement.alreadySend.number">
                 <div class="alert-message alert-message-info acknowledgementList" role="alert">
                     <p>
-                        <b>{{acknowledgement.alreadySend.number}}</b> accusé(s) de réception déjà envoyé(s) :
+                        <b>{{acknowledgement.alreadySend.number}}</b> {{lang.arAlreadySend}} :
                     </p>
                     <ul>
                         <li *ngFor="let info of acknowledgement.alreadySend.list">
@@ -21,9 +21,21 @@
                     </ul>
                 </div>
             </div>
+            <div *ngIf="acknowledgement.alreadyGenerated.number">
+                <div class="alert-message alert-message-info acknowledgementList" role="alert">
+                    <p>
+                        <b>{{acknowledgement.alreadyGenerated.number}}</b> {{lang.arAlreadyGenerated}} :
+                    </p>
+                    <ul>
+                        <li *ngFor="let info of acknowledgement.alreadyGenerated.list">
+                            {{info.alt_identifier}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
             <div *ngIf="acknowledgement.noSendAR.number">
                 <div class="alert-message alert-message-danger acknowledgementList" role="alert">
-                    <p><b>{{acknowledgement.noSendAR.number}}</b> accusé(s) de réception impossible à envoyer :</p>
+                    <p><b>{{acknowledgement.noSendAR.number}}</b> {{lang.canNotSendAr}} :</p>
                     <ul>
                         <li *ngFor="let info of acknowledgement.noSendAR.list">
                             <b >{{info.alt_identifier != null ? info.alt_identifier : lang.undefined}}</b> : {{info.info}}
@@ -35,11 +47,11 @@
             <div *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper" class="alert-message alert-message-success acknowledgementList" role="alert" style="padding: 10px;">
                <div *ngIf="acknowledgement.sendEmail">
                     <b>{{acknowledgement.sendEmail}}</b>
-                    accusé(s) de réception électronique prêt à être envoyé(s)
+                    {{lang.readyToSendElectronicAr}}
                </div>
                <div *ngIf="acknowledgement.sendPaper">
                     <b>{{acknowledgement.sendPaper}}</b>
-                    accusé(s) de réception papier prêt à être généré(s)
+                    {{lang.readyToGeneratePaperAr}}
                </div>
             </div>
         </div>

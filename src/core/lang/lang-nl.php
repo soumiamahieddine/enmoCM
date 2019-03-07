@@ -387,7 +387,6 @@ define('_PURGE_LETTER', 'De brief vrijmaken na de archivering');
 define('_RESET_LETTER', 'Reset van het verwerkingscircuit');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Bevestiging en bijwerking van de vertrekdatum');
 define('_NOT_INCOMING_CATEGORY', 'Categorie verschillend van \'Inkomende post\''); //_TO_TRANSLATE
-define('_AR_ALREADY_SEND', 'Ontvangstbevestiging reeds verzonden'); //_TO_TRANSLATE
 define('_AR_ALREADY_GENERATED', 'Ontvangstbevestiging gegenereerd maar niet verzonden'); //_TO_TRANSLATE
 define('_NO_CONTACT', 'Geen bijbehorend contact'); //_TO_TRANSLATE
 define('_USER_MISSING_INFORMATIONS', 'Ontbrekende informatie op de contactkaart'); //_TO_TRANSLATE

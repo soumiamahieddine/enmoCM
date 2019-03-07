@@ -388,8 +388,6 @@ define('_PURGE_LETTER', 'Purger le courrier apres l\'archivage');
 define('_RESET_LETTER', 'Remise à zéro du circuit de traitement');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Confirmation et mise à jour de la date de départ');
 define('_NOT_INCOMING_CATEGORY', 'Catégorie différente de \'Courrier arrivée\'');
-define('_AR_ALREADY_SEND', 'Accusé de réception déjà envoyé');
-define('_AR_ALREADY_GENERATED', 'Accusé de réception généré mais non envoyé');
 define('_NO_CONTACT', 'Pas de contact associé');
 define('_USER_MISSING_INFORMATIONS', 'Informations incomplètes sur la fiche du contact');
 define('_NO_TEMPLATE', 'Pas de modèle');
