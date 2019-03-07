@@ -856,6 +856,8 @@ INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, f
 VALUES ('TEMPLATES', 'Modèles de documents', 'Y', 'NONE');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, fingerprint_mode)
 VALUES ('ARCHIVETRANSFER', 'Archives numériques', 'Y', 'SHA256');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled)
+VALUES ('ACKNOWLEDGEMENT_RECEIPTS', 'Acknowledgement Receipts', 'Y');
 
 TRUNCATE TABLE docservers;
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
@@ -888,6 +890,8 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 VALUES ('TEMPLATES', 'TEMPLATES', 'Dépôt des modèles de documents', 'N', 50000000000, 71511, '/opt/maarch/docservers/DDS1/templates/', '2012-04-01 14:49:05.095119', 'templates');
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
 VALUES ('ARCHIVETRANSFER', 'ARCHIVETRANSFER', 'Dépôt des archives numériques', 'N', 50000000000, 1, '/opt/maarch/docservers/DDS1/archive_transfer/', '2017-01-13 14:47:49.197164', 'archive_transfer_coll');
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
+VALUES ('ACKNOWLEDGEMENT_RECEIPTS', 'ACKNOWLEDGEMENT_RECEIPTS', 'Acknowledgement Receipts', 'N', 50000000000, 0, '/opt/maarch/docservers/acknowledgment_receipts/', '2019-04-19 22:22:22.201904', 'letterbox_coll');
 
 ------------
 --SUPERADMIN USER
