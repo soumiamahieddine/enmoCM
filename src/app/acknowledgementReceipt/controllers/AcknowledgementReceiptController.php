@@ -156,8 +156,6 @@ class AcknowledgementReceiptController
 
         $data['resources'] = array_slice($data['resources'], 0, 500);
         foreach ($data['resources'] as $resId) {
-            $canSendEmail = true;
-            $canSendPaper = true;
             $ext = ResModel::getExtById(['select' => ['res_id', 'category_id', 'address_id', 'is_multicontacts', 'alt_identifier'], 'resId' => $resId]);
 
             //Check
@@ -220,9 +218,6 @@ class AcknowledgementReceiptController
                 $sendedPaper = 0;
                 $generatedPaper = 0;
                 $generatedEmail = 0;
-                $sendedError = 0;
-                $canSendEmail = false;
-                $canSendPaper = false;
 
                 foreach ($acknowledgements as $acknowledgement) {
                     if ($acknowledgement['format'] == 'html') {
@@ -230,42 +225,24 @@ class AcknowledgementReceiptController
                             $sendedEmail += 1;
                         } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
                             $generatedEmail += 1;
-                        } else {
-                            $sendedError +=1;
                         }
                     } elseif ($acknowledgement['format'] == 'pdf') {
                         if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
                             $sendedPaper += 1;
                         } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
                             $generatedPaper += 1;
-                        } else {
-                            $sendedError +=1;
                         }
                     }
                 }
                 
-                if ($sendedError > 0) {
-                    $noSendAR['number'] += 1;
-                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_SEND_ERROR ];
-                    continue;
-                }
-
                 if ($sendedEmail + $sendedPaper == sizeof($acknowledgements)) {
                     $alreadySend['number'] += 1;
-                    $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_SEND ];
-                    continue;
+                    $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier']];
                 }
 
                 if ($generatedEmail + $generatedPaper > 0) {
                     $alreadyGenerated['number'] += 1;
-                    $alreadyGenerated['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_GENERATED ];
-
-                    if ($generatedEmail > 0) {
-                        $canSendEmail = true;
-                    }
-                    if ($generatedPaper > 0) {
-                        $canSendPaper = true;
-                    }
+                    $alreadyGenerated['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier']];
                 }
             }
 
@@ -323,14 +300,9 @@ class AcknowledgementReceiptController
                     }
                 }
             }
-            
-            if ($email > 0 && $canSendEmail) {
-                $sendEmail += $email;
-            }
 
-            if ($paper > 0 && $canSendPaper) {
-                $sendPaper += $paper;
-            }
+            $sendEmail += $email;
+            $sendPaper += $paper;
         }
 
         return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
