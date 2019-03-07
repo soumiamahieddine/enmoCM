@@ -99,9 +99,9 @@ export class TemplateAdministrationComponent implements OnInit {
                         if(this.template.template_type=='OFFICE_HTML'){
                             this.initMce('textarea#templateOfficeHtml');
                         }
-                        if (this.template.template_style == '') {
+                        if (this.template.template_style == '' && this.template.template_file_name != null) {
                             this.buttonFileName = this.template.template_file_name;
-                        } else {
+                        } else if (this.template.template_style != ''){
                             this.buttonFileName = this.template.template_style;
                         }
 

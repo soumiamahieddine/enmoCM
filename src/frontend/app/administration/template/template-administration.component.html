@@ -4,7 +4,7 @@
             [opened]="mobileQuery.matches ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-nav-list *ngIf="!creationMode">
+            <mat-nav-list *ngIf="!creationMode && !loading">
                 <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item *ngIf="!lockFound && template.template_target != 'acknowledgementReceipt'" (click)="duplicateTemplate()">
                     <mat-icon color="primary" mat-list-icon class="fa fa-copy"></mat-icon>
@@ -177,8 +177,8 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
-                                        <mat-form-field *ngIf="creationMode || template.template_style">
-                                            <mat-select id="template_style" [disabled]="!creationMode" name="template_style" title="{{lang.defaultTemplate}}" placeholder="{{lang.chosenModel}}"
+                                        <mat-form-field>
+                                            <mat-select id="template_style" [disabled]="!creationMode && template.template_file_name != null" name="template_style" title="{{lang.defaultTemplate}}" placeholder="{{lang.chosenModel}}"
                                                 [(ngModel)]="template.template_style" (ngModelChange)="resetFileUploaded()">
                                                 <mat-optgroup label="{{lang.loadedFile}} :">
                                                     <mat-option (click)="clickOnUploader('uploadSignFileOfficeHtml')" style="text-align: center;" value="uploadFile">
@@ -196,8 +196,12 @@
                                                 </ng-container>
                                             </mat-select>
                                         </mat-form-field>
-                                        <button mat-raised-button color="default" type="button" (click)="$event.stopPropagation();startJnlp()" *ngIf="((creationMode && template.template_style != 'uploadFile' && template.template_style) || (!creationMode))" [disabled]="lockFound">{{lang.templateEdition}}</button>
-                                        <button mat-raised-button color="default" type="button" (click)="$event.stopPropagation();clickOnUploader('uploadSignFileOfficeHtml')" *ngIf="((creationMode && template.template_style && template.template_style == 'uploadFile') || (!creationMode))" [disabled]="lockFound">{{lang.importFile}}</button>        
+                                        <button mat-raised-button color="default" type="button" (click)="$event.stopPropagation();startJnlp()" 
+                                                *ngIf="template.template_file_name != null || (template.template_style != 'uploadFile' && template.template_style)" 
+                                                [disabled]="lockFound">{{lang.templateEdition}}</button>
+                                        <button mat-raised-button color="default" type="button" (click)="$event.stopPropagation();clickOnUploader('uploadSignFileOfficeHtml')" 
+                                                *ngIf="template.template_file_name != null || (template.template_style && template.template_style == 'uploadFile')" 
+                                                [disabled]="lockFound">{{lang.importFile}}</button>
                                     </div>
                                 </mat-tab>
                             </mat-tab-group>
