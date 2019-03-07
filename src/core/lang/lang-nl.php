@@ -386,7 +386,7 @@ define('_CHECK_REPLY', 'Controle van het antwoord op de transfer');
 define('_PURGE_LETTER', 'De brief vrijmaken na de archivering');
 define('_RESET_LETTER', 'Reset van het verwerkingscircuit');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Bevestiging en bijwerking van de vertrekdatum');
-define('_NOT_INCOMING_CATEGORY', 'Categorie verschillend van \'Inkomende post\'' ); //_TO_TRANSLATE
+define('_NOT_INCOMING_CATEGORY', 'Categorie verschillend van \'Inkomende post\''); //_TO_TRANSLATE
 define('_AR_ALREADY_SEND', 'Ontvangstbevestiging reeds verzonden'); //_TO_TRANSLATE
 define('_AR_ALREADY_GENERATED', 'Ontvangstbevestiging gegenereerd maar niet verzonden'); //_TO_TRANSLATE
 define('_NO_CONTACT', 'Geen bijbehorend contact'); //_TO_TRANSLATE
@@ -395,7 +395,7 @@ define('_NO_TEMPLATE', 'Geen sjabloon '); //_TO_TRANSLATE
 define('_NO_EMAIL_TEMPLATE', 'Geen elektronisch sjabloon '); //_TO_TRANSLATE
 define('_NO_PAPER_TEMPLATE', 'Geen papieren sjabloon '); //_TO_TRANSLATE
 define('_AR_SEND_ERROR', 'Fout in reeds verzonden ontvangstbevestigingen'); //_TO_TRANSLATE
-define( '_FOR_ENTITY', 'voor deze entiteit : ');
+define('_FOR_ENTITY', 'voor deze entiteit : ');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Aantal geraadpleegde mappen');
@@ -458,3 +458,6 @@ define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Create acknowledgement receipt_TO_TRA
 define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'update acknowledgement send date_TO_TRANSLATE');
 
 define('_AR_DISPLAYING', 'Displaying acknowledgement receipt_TO_TRANSLATE');
+
+define('_M2M_ACTION_DONE', 'in werking gesteld door');
+define('_M2M_ENTITY_DESTINATION', 'De brief is in de dienst');

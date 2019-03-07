@@ -387,7 +387,7 @@ define('_CHECK_REPLY', 'Vérification de la réponse au transfert');
 define('_PURGE_LETTER', 'Purger le courrier apres l\'archivage');
 define('_RESET_LETTER', 'Remise à zéro du circuit de traitement');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Confirmation et mise à jour de la date de départ');
-define('_NOT_INCOMING_CATEGORY', 'Catégorie différente de \'Courrier arrivée\'' );
+define('_NOT_INCOMING_CATEGORY', 'Catégorie différente de \'Courrier arrivée\'');
 define('_AR_ALREADY_SEND', 'Accusé de réception déjà envoyé');
 define('_AR_ALREADY_GENERATED', 'Accusé de réception généré mais non envoyé');
 define('_NO_CONTACT', 'Pas de contact associé');
@@ -396,7 +396,7 @@ define('_NO_TEMPLATE', 'Pas de modèle ');
 define('_NO_EMAIL_TEMPLATE', 'Pas de modèle électronique ');
 define('_NO_PAPER_TEMPLATE', 'Pas de modèle papier ');
 define('_AR_SEND_ERROR', 'Erreur dans les accusés de réception déjà envoyés');
-define( '_FOR_ENTITY', 'pour l\'entité : ');
+define('_FOR_ENTITY', 'pour l\'entité : ');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');
@@ -457,3 +457,6 @@ define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'Utilisateur créé dans Maarch Parap
 
 define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Créer les accusés de réception');
 define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Mettre à jour la date d\'envoi des accusés de réception');
+
+define("_M2M_ACTION_DONE", "actionné par");
+define("_M2M_ENTITY_DESTINATION", "Le courrier est dans l'entité");

@@ -14,10 +14,12 @@
 
 namespace MessageExchange\controllers;
 
+use DateTime;
+use User\models\UserModel;
 use Resource\models\ResModel;
 use Action\models\ActionModel;
-use SendMessageExchangeController;
-use SrcCore\models\CoreConfigModel;
+use MessageExchange\models\MessageExchangeModel;
+use ExportSeda\controllers\SendMessageController;
 
 class MessageExchangeReviewController
 {
@@ -48,7 +50,8 @@ class MessageExchangeReviewController
             $reviewObject = new \stdClass();
             $reviewObject->Comment = array();
             $reviewObject->Comment[0] = new \stdClass();
-            $reviewObject->Comment[0]->value = '['.date('d/m/Y H:i:s').'] "'.$actionInfo['label_action'].'" '._M2M_ACTION_DONE.' '.$_SESSION['user']['entities'][0]['ENTITY_LABEL'].'. '._M2M_ENTITY_DESTINATION.' : '.$messageExchangeData['entity_label'];
+            $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
+            $reviewObject->Comment[0]->value = '['.date('d/m/Y H:i:s').'] "'.$actionInfo['label_action'].'" '._M2M_ACTION_DONE.' '.$primaryEntity['entity_label'].'. '._M2M_ENTITY_DESTINATION.' : '.$messageExchangeData['entity_label'];
 
             $date = new DateTime();
             $reviewObject->Date = $date->format(DateTime::ATOM);
@@ -62,9 +65,8 @@ class MessageExchangeReviewController
             $reviewObject->UnitIdentifier = new \stdClass();
             $reviewObject->UnitIdentifier->value = $messageExchangeData['reference_number'];
 
-            $RequestSeda = new \RequestSeda();
-            $messageExchangeReply = $RequestSeda->getMessageByReference($messageExchangeData['reference_number'].'_ReplySent');
-            $dataObject = json_decode($messageExchangeReply->data);
+            $messageExchangeReply = MessageExchangeModel::getMessageByReference(['reference' => $messageExchangeData['reference_number'].'_ReplySent']);
+            $dataObject = json_decode($messageExchangeReply[0]['data']);
             $reviewObject->OriginatingAgency = $dataObject->TransferringAgency;
             $reviewObject->ArchivalAgency = $dataObject->ArchivalAgency;
 
@@ -73,16 +75,13 @@ class MessageExchangeReviewController
                 $reviewObject->ArchivalAgency->OrganizationDescriptiveMetadata->Communication[0]->value = $tab[0].'saveMessageExchangeReview';
             }
 
-            $sendMessage = new \SendMessage();
-
             $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_Notification';
-
-            $tmpPath = CoreConfigModel::getTmpPath();
-            $filePath = $sendMessage->generateMessageFile($reviewObject, 'ArchiveModificationNotification', $tmpPath);
+            
+            $filePath = SendMessageController::generateMessageFile(['messageObject' => $reviewObject, 'type' => 'ArchiveModificationNotification']);
 
             $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_NotificationSent';
             $reviewObject->TransferringAgency = $reviewObject->OriginatingAgency;
-            $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $reviewObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveModificationNotification', 'file_path' => $filePath]);
+            $messageId = SendMessageExchangeController::saveMessageExchange(['dataObject' => $reviewObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveModificationNotification', 'file_path' => $filePath, 'userId' => $aArgs['userId']]);
 
             $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_Notification';
 
@@ -95,8 +94,9 @@ class MessageExchangeReviewController
             $reviewObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->Title[0] = '[CAPTUREM2M_NOTIFICATION]'.date('Ymd_his');
 
             $reviewObject->TransferringAgency->OrganizationDescriptiveMetadata = new \stdClass();
-            $reviewObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $_SESSION['user']['UserId'];
-            $sendMessage->send($reviewObject, $messageId, 'ArchiveModificationNotification');
+            $reviewObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $aArgs['userId'];
+
+            SendMessageController::send($reviewObject, $messageId, 'ArchiveModificationNotification');
         }
     }
 }
