@@ -414,6 +414,7 @@ export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugi
     lang: any               = LANG;
     loadModel: boolean      = false;
     loadInstance: boolean   = false;
+    modalTitle: string      = this.lang.confirmAction;
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UsersAdministrationRedirectModalComponent>) {
         super(http, ['users']);
@@ -432,6 +433,11 @@ export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugi
                 this.data.isResDestUser = true;
             }
         } else {
+            if (this.data.userDestRedirect.mode == 'delete') {
+                this.modalTitle = this.lang.unableToDelete;
+            } else {
+                this.modalTitle = this.lang.unableToSuspend;
+            }
             //get listModel
             if (this.data.listTemplateEntities.length > 0) {
                 this.data.inTemplateList = true;
