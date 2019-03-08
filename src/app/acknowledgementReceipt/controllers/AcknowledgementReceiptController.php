@@ -209,7 +209,7 @@ class AcknowledgementReceiptController
             //Verify sending
             $acknowledgements = AcknowledgementReceiptModel::get([
                 'select'    => ['res_id', 'type', 'format', 'creation_date', 'send_date'],
-                'where'     => ['res_id = (?)', 'type = (?)'],
+                'where'     => ['res_id = ?', 'type = ?'],
                 'data'      => [$resId, $templateAttachmentType],
             ]);
 
