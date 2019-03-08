@@ -379,6 +379,16 @@ export class TemplateAdministrationComponent implements OnInit {
         this.fileToImport();
         this.template.uploadedFile = null;
     }
+
+    loadTab (event:any) {
+        if (event.index === 0) {
+            this.initMce('textarea#templateOfficeHtml');
+        } else {
+            if (this.template.template_file_name == null && this.template.template_style == null) {
+                this.buttonFileName = this.lang.importFile;
+            }
+        }
+    }
 }
 @Component({
     templateUrl: "template-administration-checkEntities-modal.component.html",

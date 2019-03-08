@@ -158,7 +158,7 @@
                         </div>
 
                         <div class="form-group" *ngIf="template.template_type=='OFFICE_HTML'">
-                            <mat-tab-group (selectedTabChange)="initMce('textarea#templateOfficeHtml')">
+                            <mat-tab-group (selectedTabChange)="loadTab($event);">
                                 <mat-tab label="{{lang.electronicTemplate}}">
                                     <div class="form-group" *ngIf="template.template_type=='OFFICE_HTML'">
                                         <div class="col-sm-12">
