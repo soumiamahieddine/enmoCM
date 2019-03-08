@@ -26,6 +26,8 @@ use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
+use Template\models\TemplateModel;
+use Resource\models\ResModel;
 
 class NoteController
 {
@@ -124,15 +126,37 @@ class NoteController
         return ['encodedDocument' => base64_encode($fileContent)];
     }
 
-    public static function getTemplateList(Request $request, Response $response, array $aArgs)
+    public static function getTemplateListByResId(Request $request, Response $response, array $aArgs)
     {
-        //get user entities
-        $userEntities = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+        $check = Validator::intVal()->notEmpty()->validate($aArgs['resId']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'resId is empty or not an integer']);
+        }
 
-        $userEntities = array_column($userEntities, 'entity_id');
+        if (!empty($aArgs['resId']) && !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
 
-        //get templates note
-        $aReturn = NoteModel::getTemplateList(['entityIds' => $userEntities, 'select' => ['template_label', 'template_content']]);
+        //get all templates note
+        $tmpAllNotes = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_id', 'template_label', 'template_content']]);
+
+        //get entity resource
+        $resEntity = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination']]);
+
+        if (!empty($resEntity['destination'])) {
+            //get retricted templates note
+            $aReturn = TemplateModel::getWithAssociation(['select' => ['DISTINCT(templates.template_id), template_label', 'template_content'], 'where' => ['template_target = ?', 'value_field = ?', 'templates.template_id = templates_association.template_id'], 'data' => ['notes', $resEntity['destination']], 'orderBy' => ['template_label']]);
+        } else {
+            $aReturn = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
+        }
+
+        return $response->withJson($aReturn);
+    }
+
+    public static function getAllTemplateList(Request $request, Response $response)
+    {
+        //get all templates note
+        $aReturn = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
 
         return $response->withJson($aReturn);
     }

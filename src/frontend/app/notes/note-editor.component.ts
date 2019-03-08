@@ -18,7 +18,7 @@ export class NoteEditorComponent implements AfterViewInit {
 
     content: string = '';
 
-    @Input('mode') mode: any;
+    @Input('resIds') resIds: any[];
 
     constructor(public http: HttpClient) { }
 
@@ -49,10 +49,18 @@ export class NoteEditorComponent implements AfterViewInit {
 
     getTemplatesNote() {
         if (this.templatesNote.length == 0) {
-            this.http.get("../../rest/notes/templates")
-            .subscribe((data: any) => {
-                this.templatesNote = data;
-            });
+            if (this.resIds.length == 1) {
+                this.http.get("../../rest/res/" + this.resIds[0] + "/notes/templates")
+                .subscribe((data: any) => {
+                    this.templatesNote = data;
+                });
+            } else {
+                this.http.get("../../rest/notes/templates")
+                .subscribe((data: any) => {
+                    this.templatesNote = data;
+                });
+            }
+            
         }
     }
 }

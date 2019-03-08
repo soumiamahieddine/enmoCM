@@ -214,7 +214,8 @@ $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplat
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
 
 //Notes
-$app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplateList');
+$app->get('/res/{resId}/notes/templates', \Note\controllers\NoteController::class . ':getTemplateListByResId');
+$app->get('/notes/templates', \Note\controllers\NoteController::class . ':getAllTemplateList');
 $app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
 

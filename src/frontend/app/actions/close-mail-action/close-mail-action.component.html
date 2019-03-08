@@ -11,7 +11,7 @@
             <div class="alert-message alert-message-success" role="alert" style="margin-top: 30px;" [innerHTML]="lang.updateClosingDate"></div>
         </div>
         <div class="col-md-12">
-            <app-note-editor #noteEditor></app-note-editor>
+            <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
         </div>
     </div>
 </div>
