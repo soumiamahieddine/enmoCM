@@ -52,12 +52,12 @@ export class NoteEditorComponent implements AfterViewInit {
             if (this.resIds.length == 1) {
                 this.http.get("../../rest/res/" + this.resIds[0] + "/notes/templates")
                 .subscribe((data: any) => {
-                    this.templatesNote = data;
+                    this.templatesNote = data['templates'];
                 });
             } else {
                 this.http.get("../../rest/notes/templates")
                 .subscribe((data: any) => {
-                    this.templatesNote = data;
+                    this.templatesNote = data['templates'];
                 });
             }
             
