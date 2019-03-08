@@ -42,6 +42,11 @@ function triggerAngular(locationToGo) {
                         head.appendChild(script);
                     }
                 });
+                var style = document.createElement('link');
+                style.rel = 'stylesheet';
+                style.href = "../../node_modules/jstree-bootstrap-theme/dist/themes/proton/style.min.css";
+                style.media = "screen";
+                head.appendChild(style);
 
                 var meta = document.createElement('meta');
                 meta.name = 'viewport';
