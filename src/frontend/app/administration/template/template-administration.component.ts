@@ -225,7 +225,7 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     startJnlp() {
-        if (this.creationMode) {
+        if (this.creationMode || (this.template.template_file_name == null  && this.template.template_path == null)) {
             this.jnlpValue.objectType = 'templateCreation';
             for (let element of this.defaultTemplatesList) {
                 if (this.template.template_style == element.fileExt + ': ' + element.fileName) {
