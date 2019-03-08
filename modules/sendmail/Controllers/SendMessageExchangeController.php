@@ -31,15 +31,9 @@ class SendMessageExchangeController
             return ['errors' => "wrong identifier"];
         }
 
-        if (empty($mlbCollExt['exp_contact_id']) && empty($mlbCollExt['dest_contact_id'])) {
-            return ['errors' => "no contact"];
-        }
-
-        if ($mlbCollExt['exp_contact_id'] != null) {
-            $contact_id = $mlbCollExt['exp_contact_id'];
-        } else {
-            $contact_id = $mlbCollExt['dest_contact_id'];
-        }
+        // if (empty($mlbCollExt['exp_contact_id']) && empty($mlbCollExt['dest_contact_id'])) {
+        //     return ['errors' => "no contact"];
+        // }
 
         /***************** GET MAIL INFOS *****************/
         $AllUserEntities = \Entity\models\EntityModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);

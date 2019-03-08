@@ -24,10 +24,10 @@ class AdapterWSController
         $res     = TransferController::transfer('maarchcourrier', $message[0]['reference'], $type);
 
         if ($res['status'] == 1) {
-            MessageExchangeModel::updateStatusMessage(['reference' => $message->reference, 'status' => 'E']);
+            MessageExchangeModel::updateStatusMessage(['reference' => $message[0]['reference'], 'status' => 'E']);
             return $res;
         }
 
-        MessageExchangeModel::updateStatusMessage(['reference' => $message->reference, 'status' => 'S']);
+        MessageExchangeModel::updateStatusMessage(['reference' => $message[0]['reference'], 'status' => 'S']);
     }
 }

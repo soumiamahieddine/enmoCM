@@ -106,7 +106,11 @@ if (!empty($tab)) {
                 }
                 if ($tab[$i][$j][$value]=="account_id") {
                     $userInfo = \User\models\UserModel::getByLogin(['login' => $tab[$i][$j]["value"]]);
-                    $tab[$i][$j]["value"]       = $userInfo['firstname'] . " " . $userInfo['lastname'] . " (".$sender_org_name.")";
+                    $senderName = '';
+                    if(!empty($sender_org_name)){
+                        $senderName = ' ('.$sender_org_name.')';
+                    }
+                    $tab[$i][$j]["value"]       = $userInfo['firstname'] . " " . $userInfo['lastname'] . $senderName;
                     $tab[$i][$j]["label"]       = _SENDER;
                     $tab[$i][$j]["size"]        = "20";
                     $tab[$i][$j]["label_align"] = "left";

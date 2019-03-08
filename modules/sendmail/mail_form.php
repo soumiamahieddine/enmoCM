@@ -1046,7 +1046,7 @@ if ($mode == 'add') {
             $content .= '<br/></td>';
             $content .= '</tr>';
             //To
-            if (count($emailArray['to']) > 0) {
+            if (!empty($emailArray['to']) && count($emailArray['to']) > 0) {
                 $_SESSION['adresses']['to'] = array();
                 $_SESSION['adresses']['to'] = $emailArray['to'];
             }
@@ -1065,7 +1065,7 @@ if ($mode == 'add') {
                 $content .= '<tr><td align="right" nowrap width="10%"></td><td width="90%">'._COMMUNICATION_TYPE.' : '.$emailArray['communicationType'].'</td></tr>';
             } else {
                 //CC
-                if (count($emailArray['cc']) > 0) {
+                if (!empty($emailArray['cc']) && count($emailArray['cc']) > 0) {
                     $_SESSION['adresses']['cc'] = array();
                     $_SESSION['adresses']['cc'] = $emailArray['cc'];
                 }
@@ -1076,7 +1076,7 @@ if ($mode == 'add') {
                 $content .= '</div></td>';
                 $content .= '</tr>';
                 //CCI
-                if (count($emailArray['cci']) > 0) {
+                if (!empty($emailArray['cci']) && count($emailArray['cci']) > 0) {
                     $_SESSION['adresses']['cci'] = array();
                     $_SESSION['adresses']['cci'] = $emailArray['cci'];
                 }
