@@ -21,7 +21,7 @@ export class ViewDocActionComponent implements OnInit {
     ngOnInit(): void {
         this.docUrl = '../../rest/res/' + this.data.selectedRes[0] + '/content';
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
-                "<iframe style='position: absolute;width: 100%;height: 100%;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
+                "<iframe style='position: absolute;width: 100%;height: 100%;border: none;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
                 "</iframe>");
     }
 }

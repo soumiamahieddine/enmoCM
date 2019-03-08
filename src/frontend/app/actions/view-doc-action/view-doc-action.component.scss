@@ -1,4 +1,12 @@
 .mat-dialog-content {
     margin: 0;
     padding: 0;
+    height: 98%;
+    max-height: 98%;
+    overflow: inherit;
+}
+
+button {
+    float: right;
+    top: -5px;
 }
