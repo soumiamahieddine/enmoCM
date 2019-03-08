@@ -20,8 +20,7 @@ declare function $j(selector: any): any;
     styleUrls: [
         '../../../node_modules/bootstrap/dist/css/bootstrap.min.css',
         '../css/maarch-material.css',
-        '../css/engine.css',
-        '../css/jstree-custom.min.css', //treejs module
+        '../css/engine.scss',
         '../../../node_modules/ng2-dnd/bundles/style.css'
     ],
     viewProviders: [MatIconRegistry],

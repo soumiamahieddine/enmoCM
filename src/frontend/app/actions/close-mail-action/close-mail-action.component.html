@@ -8,7 +8,7 @@
             {{lang.makeActionOn}} 
             <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
             <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b> ?
-            <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;" [innerHTML]="lang.updateClosingDate"></div>
+            <div class="alert-message alert-message-success" role="alert" style="margin-top: 30px;" [innerHTML]="lang.updateClosingDate"></div>
         </div>
         <div class="col-md-12">
             <app-note-editor #noteEditor></app-note-editor>

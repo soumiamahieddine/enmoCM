@@ -5,10 +5,10 @@
     </div>
     <div class="chooseMode" *ngIf="redirectMode == ''">
         <div>
-            <button mat-raised-button color="primary" (click)="loadEntities()">Vers un service</button>
+            <button mat-raised-button (click)="loadEntities()">Vers un service</button>
         </div>
         <div>
-            <button mat-raised-button color="primary" (click)="redirectMode = 'user'">Vers un utilisateur</button>
+            <button mat-raised-button (click)="redirectMode = 'user'">Vers un utilisateur</button>
         </div>
     </div>
     <div *ngIf="redirectMode == 'entity'" class="row" style="display: flex;">
