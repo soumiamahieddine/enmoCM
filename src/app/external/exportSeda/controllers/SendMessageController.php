@@ -31,7 +31,7 @@ class SendMessageController
             return false;
         }
 
-        $res = $adapter->send($messageId, $type);
+        $res = $adapter->send($messageObject, $messageId, $type);
 
         return $res;
     }

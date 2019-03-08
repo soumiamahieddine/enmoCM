@@ -18,7 +18,7 @@ use MessageExchange\models\MessageExchangeModel;
 
 class AdapterWSController
 {
-    public function send($messageId, $type)
+    public function send($messageObject, $messageId, $type)
     {
         $message = MessageExchangeModel::getMessageByIdentifier(['messageId' => $messageId]);
         $res     = TransferController::transfer('maarchcourrier', $message[0]['reference'], $type);

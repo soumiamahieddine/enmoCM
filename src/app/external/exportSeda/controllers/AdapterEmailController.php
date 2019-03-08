@@ -15,6 +15,7 @@
 namespace ExportSeda\controllers;
 
 use Sendmail\Models\MailModel;
+use SrcCore\models\CoreConfigModel;
 use MessageExchange\models\MessageExchangeModel;
 
 class AdapterEmailController
@@ -24,7 +25,7 @@ class AdapterEmailController
         $res['status'] = 0;
         $res['content'] = '';
 
-        $xml = simplexml_load_file('../xml' . DIRECTORY_SEPARATOR . "config.xml");
+        $xml = CoreConfigModel::getXmlLoaded(['path' => 'modules/export_seda/xml/config.xml']);
         $gec = strtolower($xml->M2M->gec);
 
         if ($gec == 'maarch_courrier') {
