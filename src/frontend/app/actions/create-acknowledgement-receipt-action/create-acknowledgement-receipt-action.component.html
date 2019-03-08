@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div *ngIf="acknowledgement.noSendAR.number">
-                <div class="alert-message alert-message-danger acknowledgementList" role="alert">
+                <div class="alert-message alert-message-info acknowledgementList" role="alert">
                     <p><b>{{acknowledgement.noSendAR.number}}</b> {{lang.canNotSendAr}} :</p>
                     <ul>
                         <li *ngFor="let info of acknowledgement.noSendAR.list">
