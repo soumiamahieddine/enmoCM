@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-diffusions-list',
@@ -59,12 +59,19 @@ export class DiffusionsListComponent implements OnInit {
         if (event.previousContainer === event.container) {
             //moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else if (event.container.id != 'dest') {
-            console.log(event);
             transferArrayItem(event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex);
         }
+    }
+
+    noReturnPredicate() {
+        return false;
+    }
+
+    allPredicate() {
+        return true;
     }
 
     loadListModel(entityId: string) {
@@ -128,9 +135,6 @@ export class DiffusionsListComponent implements OnInit {
                 "requested_signature": false
             });
         this.loading = false;
-        //this.roles = Object.keys(this.data);
-        //this.listinstance = this.data;
-        //this.loading = false;
     }
 
     loadListinstance(resId: number) {

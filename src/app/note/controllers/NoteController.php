@@ -136,8 +136,8 @@ class NoteController
         }
 
         $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination']]);
-
-        if (!empty($resEntity['destination'])) {
+        
+        if (!empty($resource['destination'])) {
             $templates = TemplateModel::getWithAssociation(['select' => ['DISTINCT(templates.template_id), template_label', 'template_content'], 'where' => ['template_target = ?', 'value_field = ?', 'templates.template_id = templates_association.template_id'], 'data' => ['notes', $resource['destination']], 'orderBy' => ['template_label']]);
         } else {
             $templates = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);

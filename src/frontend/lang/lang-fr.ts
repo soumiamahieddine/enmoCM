@@ -899,6 +899,6 @@ export const LANG_FR = {
     "arAlreadyGenerated"                     : "accusé(s) de réception déjà généré(s)",
     "canNotSendAr"                          : "accusé(s) de réception impossible à envoyer",
     "readyToSendElectronicAr"               : "accusé(s) de réception électronique prêt à être envoyé(s)",
-    "readyToGeneratePaperAr"                    : "accusé(s) de réception papier prêt à être généré(s)"
-
+    "readyToGeneratePaperAr"                    : "accusé(s) de réception papier prêt à être généré(s)",
+    "noteTemplates"                             : "Modèles d'annotations",
 };

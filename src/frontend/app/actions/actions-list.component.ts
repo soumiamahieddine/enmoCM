@@ -301,13 +301,20 @@ export class ActionsListComponent implements OnInit {
     }
 
     redirectAction() {
-        this.dialog.open(RedirectActionComponent, {
+        const dialogRef = this.dialog.open(RedirectActionComponent, {
             data: {
                 contextMode: this.contextMode,
                 contextChrono: this.contextMenuTitle,
                 selectedRes: this.selectedRes,
                 action: this.currentAction,
                 currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
             }
         });
     }

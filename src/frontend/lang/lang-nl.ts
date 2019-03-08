@@ -902,4 +902,5 @@ export const LANG_NL = {
     "arAlreadyGenerated"                     : "Acknowledgement receipt generated but not sent", //_TO_TRANSLATE
     "readyToSendElectronicAr"               : "electronic acknowledgement receipt ready to be send", //_TO_TRANSLATE
     "readyToGeneratePaperAr"                    : "paper acknowledgement receipt ready to be generated", //_TO_TRANSLATE
+    "noteTemplates"                             : "Note Templates", //_TO_TRANSLATE
 };

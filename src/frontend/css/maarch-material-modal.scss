@@ -12,6 +12,7 @@
 .mat-dialog-content {
   padding-top: 10px !important;
   position: relative;
+  max-height: 80vh !important;
 }
 
 .mat-dialog-actions, .mat-dialog-title {
