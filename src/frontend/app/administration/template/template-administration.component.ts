@@ -14,6 +14,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "template-administration.component.html",
+    styleUrls: ['template-administration.component.scss'],
     providers: [NotificationService]
 })
 export class TemplateAdministrationComponent implements OnInit {
@@ -264,16 +265,18 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     duplicateTemplate() {
-        let r = confirm(this.lang.confirmDuplicate);
+        if (!this.lockFound && this.template.template_target != 'acknowledgementReceipt') {
+            let r = confirm(this.lang.confirmDuplicate);
 
-        if (r) {
-            this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', { 'id': this.template.template_id })
-                .subscribe((data: any) => {
-                    this.notify.success(this.lang.templateDuplicated);
-                    this.router.navigate(['/administration/templates/' + data.id]);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
+            if (r) {
+                this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', { 'id': this.template.template_id })
+                    .subscribe((data: any) => {
+                        this.notify.success(this.lang.templateDuplicated);
+                        this.router.navigate(['/administration/templates/' + data.id]);
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+            }
         }
     }
 
