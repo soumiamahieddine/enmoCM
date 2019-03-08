@@ -642,12 +642,18 @@ class ResourceListController
         foreach ($resourcesForAction as $resId) {
             if (!empty($method)) {
                 $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data']]);
+
                 if (!empty($methodResponse['errors'])) {
-                    return $response->withStatus(500)->withJson(['errors' => $methodResponse['errors']]);
+                    if (empty($methodResponses['errors'])) {
+                        $methodResponses['errors'] = [];
+                    }
+                    $methodResponses['errors'] = array_merge($methodResponses['errors'], $methodResponse['errors']);
                 }
-                if ($methodResponse !== true) {
-                    //TODO array_merge keys avec errors
-                    $methodResponses = array_merge($methodResponses, $methodResponse);
+                if (!empty($methodResponse['data'])) {
+                    if (empty($methodResponses['data'])) {
+                        $methodResponses['data'] = [];
+                    }
+                    $methodResponses['data'] = array_merge($methodResponses['data'], $methodResponse['data']);
                 }
             }
         }

@@ -126,38 +126,30 @@ class NoteController
         return ['encodedDocument' => base64_encode($fileContent)];
     }
 
-    public static function getTemplateListByResId(Request $request, Response $response, array $aArgs)
+    public static function getTemplatesByResId(Request $request, Response $response, array $aArgs)
     {
-        $check = Validator::intVal()->notEmpty()->validate($aArgs['resId']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'resId is empty or not an integer']);
+        if (!Validator::intVal()->notEmpty()->validate($aArgs['resId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
         }
-
-        if (!empty($aArgs['resId']) && !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        //get all templates note
-        $tmpAllNotes = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_id', 'template_label', 'template_content']]);
-
-        //get entity resource
-        $resEntity = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination']]);
+        $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination']]);
 
         if (!empty($resEntity['destination'])) {
-            //get retricted templates note
-            $aReturn = TemplateModel::getWithAssociation(['select' => ['DISTINCT(templates.template_id), template_label', 'template_content'], 'where' => ['template_target = ?', 'value_field = ?', 'templates.template_id = templates_association.template_id'], 'data' => ['notes', $resEntity['destination']], 'orderBy' => ['template_label']]);
+            $templates = TemplateModel::getWithAssociation(['select' => ['DISTINCT(templates.template_id), template_label', 'template_content'], 'where' => ['template_target = ?', 'value_field = ?', 'templates.template_id = templates_association.template_id'], 'data' => ['notes', $resource['destination']], 'orderBy' => ['template_label']]);
         } else {
-            $aReturn = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
+            $templates = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
         }
 
-        return $response->withJson($aReturn);
+        return $response->withJson(['templates' => $templates]);
     }
 
-    public static function getAllTemplateList(Request $request, Response $response)
+    public static function getTemplates(Request $request, Response $response)
     {
-        //get all templates note
-        $aReturn = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
+        $templates = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
 
-        return $response->withJson($aReturn);
+        return $response->withJson(['templates' => $templates]);
     }
 }

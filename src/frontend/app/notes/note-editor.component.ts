@@ -50,7 +50,7 @@ export class NoteEditorComponent implements AfterViewInit {
     getTemplatesNote() {
         if (this.templatesNote.length == 0) {
             if (this.resIds.length == 1) {
-                this.http.get("../../rest/res/" + this.resIds[0] + "/notes/templates")
+                this.http.get("../../rest/notes/templates/resources/" + this.resIds[0])
                 .subscribe((data: any) => {
                     this.templatesNote = data['templates'];
                 });

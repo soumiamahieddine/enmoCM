@@ -179,6 +179,6 @@ trait AcknowledgementReceiptTrait
             }
         }
 
-        return ['ids' => $ids, 'errors' => $errors];
+        return ['data' => $ids, 'errors' => $errors];
     }
 }
