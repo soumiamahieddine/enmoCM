@@ -159,8 +159,8 @@ trait AcknowledgementReceiptTrait
         }
         foreach ($emailsToSend as $email) {
             $isSent = EmailController::createEmail([
-                'userId' => $currentUser['id'],
-                'data' => [
+                'userId'    => $currentUser['id'],
+                'data'      => [
                     'sender'        => empty($entity['email']) ? ['email' => $currentUser['mail']] : ['email' => $entity['email'], 'entityId' => $entity['id']],
                     'recipients'    => [$email['email']],
                     'object'        => '[AR] ' . (empty($resource['subject']) ? '' : substr($resource['subject'], 0, 100)),
@@ -168,13 +168,14 @@ trait AcknowledgementReceiptTrait
                     'document'      => ['id' => $aArgs['resId'], 'isLinked' => false, 'original' => true],
                     'isHtml'        => true,
                     'status'        => 'TO_SEND'
+                ],
+                'options'   => [
+                    'acknowledgementReceiptId' => $email['id']
                 ]
             ]);
 
             if (!empty($isSent['errors'])) {
                 $errors[] = "Send Email error AR {$email['id']}: {$isSent['errors']}";
-            } else {
-                AcknowledgementReceiptModel::update(['set' => ['send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$email['id']]]);
             }
         }
 

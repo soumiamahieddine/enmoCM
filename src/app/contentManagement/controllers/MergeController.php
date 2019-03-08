@@ -103,7 +103,7 @@ class MergeController
         }
 
         //User
-        $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname']]);
+        $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname', 'phone', 'mail', 'initials']]);
 
         //Contact
         $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$args['contactAddressId']]])[0];

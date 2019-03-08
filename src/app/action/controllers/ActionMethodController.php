@@ -28,7 +28,7 @@ class ActionMethodController
     use AcknowledgementReceiptTrait;
 
     const COMPONENTS_ACTIONS = [
-        'confirmAction'                         => null,
+        'confirmAction'                         => 'createAcknowledgementReceipts',
         'closeMailAction'                       => 'closeMailAction',
         'closeAndIndexAction'                   => 'closeAndIndexAction',
         'updateDepartureDateAction'             => 'updateDepartureDateAction',

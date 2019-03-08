@@ -155,7 +155,8 @@ class PasswordModel
     public static function encrypt(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['password']);
- 
+        ValidatorModel::stringType($aArgs, ['password']);
+
         $enc_key = CoreConfigModel::getEncryptKey();
         
         $cipher_method = 'AES-128-CTR';
@@ -168,7 +169,8 @@ class PasswordModel
     public static function decrypt(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['cryptedPassword']);
- 
+        ValidatorModel::stringType($aArgs, ['cryptedPassword']);
+
         $enc_key = CoreConfigModel::getEncryptKey();
         
         $cipher_method = 'AES-128-CTR';

@@ -30,6 +30,7 @@ use Resource\controllers\ResController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -58,7 +59,7 @@ class EmailController
     {
         ValidatorModel::notEmpty($args, ['userId', 'data']);
         ValidatorModel::intVal($args, ['userId']);
-        ValidatorModel::arrayType($args, ['data']);
+        ValidatorModel::arrayType($args, ['data', 'options']);
 
         $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
 
@@ -90,14 +91,13 @@ class EmailController
         ]);
 
         if ($args['data']['status'] != 'DRAFT') {
-            $isSent = EmailController::sendEmail(['emailId' => $id, 'userId' => $args['userId']]);
-
-            if (!empty($isSent['success'])) {
-                EmailModel::update(['set' => ['status' => 'SENT', 'send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$id]]);
-            } else {
-                EmailModel::update(['set' => ['status' => 'ERROR'], 'where' => ['id = ?'], 'data' => [$id]]);
-                return ['errors' => $isSent['errors'], 'code' => 502];
+            $customId = CoreConfigModel::getCustomId();
+            if (empty($customId)) {
+                $customId = 'null';
             }
+            $encryptKey = CoreConfigModel::getEncryptKey();
+            $options = empty($args['options']) ? '' : serialize($args['options']);
+            exec("/usr/bin/php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
         }
 
         return true;

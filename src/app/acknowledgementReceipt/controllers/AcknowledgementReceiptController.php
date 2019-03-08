@@ -28,7 +28,6 @@ use Template\models\TemplateModel;
 use Doctype\models\DoctypeExtModel;
 use Docserver\models\DocserverModel;
 use Resource\controllers\ResController;
-use Docserver\models\DocserverTypeModel;
 use Resource\controllers\StoreController;
 use History\controllers\HistoryController;
 use Resource\controllers\ResourceListController;
@@ -134,7 +133,6 @@ class AcknowledgementReceiptController
         }
 
         $data = $request->getParsedBody();
-        //$data = $request->getParams();
 
         if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
@@ -268,8 +266,6 @@ class AcknowledgementReceiptController
             $paper = 0;
             foreach ($contactsToProcess as $contactToProcess) {
                 if (empty($contactToProcess)) {
-                    $email = 0;
-                    $paper = 0;
                     $noSendAR['number'] += 1;
                     $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_CONTACT ];
                     continue 2;
