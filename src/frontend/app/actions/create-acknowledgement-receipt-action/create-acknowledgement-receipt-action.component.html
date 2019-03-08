@@ -56,7 +56,7 @@
             </div>
         </div>
         <div class="col-md-12" *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">
-            <app-note-editor #noteEditor></app-note-editor>
+            <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
         </div>
     </div>
 </div>
