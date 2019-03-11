@@ -192,7 +192,7 @@ if (isset($_POST['delete_folder'])) {
                     $notes_tools    = new notes();
                     
                     //Count notes
-                    $nbr_notes = $notes_tools->countUserNotes($_SESSION['current_folder_id']);
+                    $nbr_notes = $notes_tools->countUserNotes($_SESSION['current_folder_id'], 'folder');
                     if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
                     //Notes iframe
                     ?>

@@ -41,8 +41,17 @@ if (isset($_REQUEST['identifier']) && !empty($_REQUEST['identifier'])) {
 }
 
 //Origin
-if (isset($_REQUEST['origin']) && !empty($_REQUEST['origin'])) $origin = $_REQUEST['origin'];
- 
+if (isset($_REQUEST['origin']) && !empty($_REQUEST['origin'])) {
+    $origin = $_REQUEST['origin'];
+}
+
+if (empty($origin) || $origin != 'folder') {
+    $right = \Resource\controllers\ResController::hasRightByResId(['resId' => $identifier, 'userId' => $_SESSION['user']['UserId']]);
+    if (!$right) {
+        exit(_NO_RIGHT_TXT);
+    }
+}
+
 //Extra parameters
 if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size='.$_REQUEST['size'];
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&order='.$_REQUEST['order'];
@@ -105,8 +114,14 @@ if (isset($_REQUEST['load'])) {
     $where_tab = array();
     //
     $where_tab[] = "identifier = ?";
+    $where_tab[] = "type = ?";
     $where_tab[] = "notes.id in (select notes.id from notes left join note_entities on notes.id = note_entities.note_id where item_id IS NULL OR item_id = '".$_SESSION['user']['primaryentity']['id']."' or notes.user_id = '".$_SESSION['user']['UserId']."')";
     $arrayPDO = array($identifier);
+    if (empty($origin) || $origin != 'folder') {
+        $arrayPDO[] = 'resource';
+    } else {
+        $arrayPDO[] = 'folder';
+    }
 
     //Build where
     $where = implode(' and ', $where_tab);

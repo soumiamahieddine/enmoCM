@@ -136,7 +136,6 @@ class PriorityControllerTest extends TestCase
         foreach ($responseBody->priorities as $value) {
             $this->assertNotEmpty($value->id);
             $this->assertNotEmpty($value->label);
-            $this->assertInternalType('int', $value->order);
         }
     }
 }

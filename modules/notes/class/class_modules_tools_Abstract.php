@@ -170,13 +170,13 @@ abstract class notes_Abstract
          }
     }
     
-    public function countUserNotes($id) {
+    public function countUserNotes($id, $type = 'resource') {
         $not_nbr = 0;
         $db = new Database();
 
         $stmt = $db->query("SELECT id, identifier, user_id, creation_date, note_text FROM "
                             . NOTES_TABLE 
-                            . " WHERE identifier = ? order by creation_date desc", array($id));
+                            . " WHERE identifier = ? and type = ? order by creation_date desc", array($id, $type));
 
        while ($res = $stmt->fetchObject())
        {
