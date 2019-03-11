@@ -119,11 +119,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
             
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -140,11 +141,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-
+            this.unlock();
+            
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -161,11 +163,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-
+            this.unlock();
+            
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -182,11 +185,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-
+            this.unlock();
+            
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -203,11 +207,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-
+            this.unlock();
+            
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -224,11 +229,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-
+            this.unlock();
+            
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -245,11 +251,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-
+            this.unlock();
+            
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -266,11 +273,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-
+            this.unlock();
+            
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -287,11 +295,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -320,11 +329,12 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
             } else {
-                this.unlock();
+                this.unlockRest();
             }
         });
     }
@@ -392,6 +402,9 @@ export class ActionsListComponent implements OnInit {
 
     unlock() {
         clearInterval(this.currentLock);
+    }
+
+    unlockRest() {
         this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/unlock', { resources: this.arrRes })
             .subscribe((data: any) => { }, (err: any) => { });
     }
