@@ -150,7 +150,9 @@ trait AcknowledgementReceiptTrait
             if (!empty($contact['email'])) {
                 $emailsToSend[] = ['id' => $id, 'email' => $contact['email'], 'encodedHtml' => $mergedDocument['encodedDocument']];
             }
-            $ids[] = $id;
+            if ($format == 'pdf') {
+                $ids[] = $id;
+            }
         }
         DatabaseModel::commitTransaction();
 
