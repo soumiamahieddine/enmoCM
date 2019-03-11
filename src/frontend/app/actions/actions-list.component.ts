@@ -119,10 +119,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
+            
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
@@ -139,10 +140,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
@@ -159,10 +161,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
@@ -179,10 +182,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
@@ -199,10 +203,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
@@ -219,10 +224,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
@@ -239,10 +245,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
@@ -259,10 +266,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
@@ -279,10 +287,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
@@ -311,10 +320,11 @@ export class ActionsListComponent implements OnInit {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlock();
             }
         });
     }
