@@ -281,7 +281,6 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.template);
         this.template.entities = $j('#jstree').jstree(true).get_checked();
         if (this.template.template_target != 'notifications') {
             this.template.template_datasource = 'letterbox_attachment';
