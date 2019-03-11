@@ -97,7 +97,7 @@ class EmailController
             }
             $encryptKey = CoreConfigModel::getEncryptKey();
             $options = empty($args['options']) ? '' : serialize($args['options']);
-            exec("/usr/bin/php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+            exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
         }
 
         return true;
