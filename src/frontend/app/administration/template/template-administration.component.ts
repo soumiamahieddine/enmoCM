@@ -226,7 +226,7 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     startJnlp() {
-        if (this.creationMode || (this.template.template_file_name == null  && this.template.template_path == null)) {
+        if (this.creationMode || (this.template.template_file_name == null && this.template.template_path == null)) {
             this.jnlpValue.objectType = 'templateCreation';
             for (let element of this.defaultTemplatesList) {
                 if (this.template.template_style == element.fileExt + ': ' + element.fileName) {
@@ -281,11 +281,13 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
+        console.log(this.template);
         this.template.entities = $j('#jstree').jstree(true).get_checked();
         if (this.template.template_target != 'notifications') {
             this.template.template_datasource = 'letterbox_attachment';
         }
-        if (this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && (this.template.template_type == 'OFFICE' || (this.template.template_type == 'OFFICE_HTML' && this.template.template_style))) {
+
+        if (this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && !this.template.template_file_name && (this.template.template_type == 'OFFICE' || this.template.template_type == 'OFFICE_HTML')) {
             alert(this.lang.editModelFirst);
             return;
         }
@@ -383,7 +385,7 @@ export class TemplateAdministrationComponent implements OnInit {
         this.template.uploadedFile = null;
     }
 
-    loadTab (event:any) {
+    loadTab(event: any) {
         if (event.index === 0) {
             this.initMce('textarea#templateOfficeHtml');
         } else {
