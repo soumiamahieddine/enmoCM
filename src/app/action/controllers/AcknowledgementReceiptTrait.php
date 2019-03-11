@@ -132,7 +132,8 @@ trait AcknowledgementReceiptTrait
             ]);
             if (!empty($storeResult['errors'])) {
                 DatabaseModel::rollbackTransaction();
-                return ['errors' => '[storeResource] ' . $storeResult['errors']];
+                $errors[] = $storeResult['errors'];
+                return ['errors' => $errors];
             }
 
             $id = AcknowledgementReceiptModel::create([
