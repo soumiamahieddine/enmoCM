@@ -286,7 +286,7 @@ export class TemplateAdministrationComponent implements OnInit {
             this.template.template_datasource = 'letterbox_attachment';
         }
 
-        if (this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && !this.template.template_file_name && (this.template.template_type == 'OFFICE' || this.template.template_type == 'OFFICE_HTML')) {
+        if (this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && !this.template.template_file_name && this.template.template_style && (this.template.template_type == 'OFFICE' || this.template.template_type == 'OFFICE_HTML')) {
             alert(this.lang.editModelFirst);
             return;
         }
