@@ -302,7 +302,7 @@ class AcknowledgementReceiptController
             if ($paper > 0) {
                 $sendPaper += $paper;
             }
-            if($email > 0 || $paper > 0) {
+            if ($email > 0 || $paper > 0) {
                 $sendList[] = $resId;
             }
         }
@@ -357,7 +357,7 @@ class AcknowledgementReceiptController
         $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
 
         HistoryController::add([
-            'tableName' => 'acknowledgement_receipt',
+            'tableName' => 'acknowledgement_receipts',
             'recordId'  => $aArgs['id'],
             'eventType' => 'VIEW',
             'info'      => _ACKNOWLEDGEMENT_RECEIPT_DISPLAYING . " : {$aArgs['id']}",
