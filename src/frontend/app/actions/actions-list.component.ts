@@ -189,7 +189,7 @@ export class ActionsListComponent implements OnInit {
 
     createAcknowledgementReceiptsAction() {
         const dialogRef = this.dialog.open(CreateAcknowledgementReceiptActionComponent, {
-            width: '500px',
+            width: '600px',
             data: {
                 contextMode: this.contextMode,
                 contextChrono: this.contextMenuTitle,
