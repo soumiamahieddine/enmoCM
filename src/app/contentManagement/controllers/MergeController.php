@@ -94,7 +94,7 @@ class MergeController
         if (!empty($resource['nature_id'])) {
             $resource['nature_id'] = ResModel::getNatureLabel(['nature_id' => $resource['nature_id']]);
         }
-        $doctype = DoctypeExtModel::getById(['typeId' => $resource['type_id'], 'select' => ['process_delay', 'process_mode']]);
+        $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_delay', 'process_mode']]);
         $resource['process_delay'] = $doctype['process_delay'];
         $resource['process_mode'] = $doctype['process_mode'];
 
