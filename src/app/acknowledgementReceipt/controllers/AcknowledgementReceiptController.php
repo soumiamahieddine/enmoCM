@@ -138,8 +138,14 @@ class AcknowledgementReceiptController
             return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
         }
         
-        $sendEmail = 0;
-        $sendPaper = 0;
+        $sendEmail = [
+            'number'    => 0,
+            'list'      => [],
+        ];
+        $sendPaper = [
+            'number'    => 0,
+            'list'      => [],
+        ];
         $noSendAR = [
             'number'    => 0,
             'list'      => [],
@@ -298,8 +304,14 @@ class AcknowledgementReceiptController
                 }
             }
 
-            $sendEmail += $email;
-            $sendPaper += $paper;
+            if ($email > 0) {
+                $sendEmail['number'] += $email;
+                $sendEmail['list'][] = $resId;
+            }
+            if ($paper > 0) {
+                $sendPaper['number'] += $paper;
+                $sendPaper['list'][] = $resId;
+            }
         }
 
         return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
