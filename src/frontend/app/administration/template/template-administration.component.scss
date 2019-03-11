@@ -6,3 +6,13 @@
 .mat-list-item.disabled:focus,.mat-list-item.disabled:hover,.mat-list-item.disabled:active {
     background: initial;
 }
+
+.selectFile {
+    text-align: center;
+
+    .mat-option-text {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+}
