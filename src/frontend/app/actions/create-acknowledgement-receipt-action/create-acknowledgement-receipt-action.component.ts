@@ -19,8 +19,9 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
         alReadyGenerated : {},
         alReadySend : {},
         noSendAR : {},
-        sendEmail : {list: [], number: 0},
-        sendPaper : {list: [], number: 0}
+        sendEmail : 0,
+        sendPaper : 0,
+        sendList : []
     };
 
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
@@ -43,7 +44,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
     onSubmit(): void {
         this.loading = true;
         let sendElements: any;
-        sendElements = this.acknowledgement.sendEmail.list.concat(this.acknowledgement.sendPaper.list);
+        sendElements = this.acknowledgement.sendList;
         this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : sendElements, note : this.noteEditor.getNoteContent()})
             .subscribe((data: any) => {
                 if(data.data != null){

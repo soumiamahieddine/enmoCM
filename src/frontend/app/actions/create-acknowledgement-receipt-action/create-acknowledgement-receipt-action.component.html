@@ -5,7 +5,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <p *ngIf="acknowledgement.sendEmail.number || acknowledgement.sendPaper.number">{{lang.makeActionOn}}
+            <p *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">{{lang.makeActionOn}}
                 <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
                 <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}}
                     {{lang.elements}}</b>&nbsp;?</p>
@@ -44,24 +44,24 @@
                 </div>
             </div>
             
-            <div *ngIf="acknowledgement.sendEmail.number || acknowledgement.sendPaper.number" class="alert-message alert-message-success acknowledgementList" role="alert" style="padding: 10px;">
-               <div *ngIf="acknowledgement.sendEmail.number">
-                    <b>{{acknowledgement.sendEmail.number}}</b>
+            <div *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper" class="alert-message alert-message-success acknowledgementList" role="alert" style="padding: 10px;">
+               <div *ngIf="acknowledgement.sendEmail">
+                    <b>{{acknowledgement.sendEmail}}</b>
                     {{lang.readyToSendElectronicAr}}
                </div>
-               <div *ngIf="acknowledgement.sendPaper.number">
-                    <b>{{acknowledgement.sendPaper.number}}</b>
+               <div *ngIf="acknowledgement.sendPaper">
+                    <b>{{acknowledgement.sendPaper}}</b>
                     {{lang.readyToGeneratePaperAr}}
                </div>
             </div>
         </div>
-        <div class="col-md-12" *ngIf="acknowledgement.sendEmail.number || acknowledgement.sendPaper.number">
+        <div class="col-md-12" *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">
             <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
         </div>
     </div>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button mat-button color="primary" [disabled]="loading || (!acknowledgement.sendEmail.number && !acknowledgement.sendPaper.number)"
+    <button mat-raised-button mat-button color="primary" [disabled]="loading || (!acknowledgement.sendEmail && !acknowledgement.sendPaper)"
         (click)="onSubmit()">{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>
