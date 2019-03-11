@@ -1,16 +1,5 @@
-.mat-dialog-content {
-    position: relative;
-    overflow: hidden;
-}
-
 .fullWidth {
     width: 70vw;
-}
-
-.mat-dialog-actions,
-.mat-dialog-title {
-    justify-content: center;
-    text-align: center;
 }
 
 .highlight {
@@ -43,7 +32,6 @@
         background: white;
         position: absolute;
         top: 5px;
-        letter-spacing: 3px;
         left: 30px;
         padding: 0px;
         margin: 0px;

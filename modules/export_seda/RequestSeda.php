@@ -481,6 +481,12 @@ class RequestSeda
     {
         $queryParams = [];
 
+        if (!empty($_SESSION['user']['UserId'])) {
+            $userId = $_SESSION['user']['UserId'];
+        } else {
+            $userId = $GLOBALS['userId'];
+        }
+
         if (empty($messageObject->messageId)) {
             $messageObject->messageId = $this->generateUniqueId();
         }
@@ -571,7 +577,7 @@ class RequestSeda
             $queryParams[] = $status; // Status
             $queryParams[] = $messageObject->date; // Date
             $queryParams[] = $messageObject->MessageIdentifier->value; // Reference
-            $queryParams[] = $_SESSION['user']['UserId']; // Account Id
+            $queryParams[] = $userId; // Account Id
             $queryParams[] = $messageObject->TransferringAgency->Identifier->value; // Sender org identifier id
             $queryParams[] = $aArgs['SenderOrgNAme']; //SenderOrgNAme
             $queryParams[] = $messageObject->ArchivalAgency->Identifier->value; // Recipient org identifier id

@@ -70,7 +70,9 @@ if (empty($_GET['defaultAction'])) {
     $_GET['defaultAction'] = $_SESSION['current_basket']['default_action'];
 }
 
-if (!empty($_GET['resId'])) {
+if (empty($_GET['resId'])) {
+    $_GET['resId'] = "'none'";
+} elseif (!empty($_GET['resId'])) {
     require_once('core/class/class_security.php');
     $security = new security();
     $aResId = explode(',', $_GET['resId']);
@@ -79,10 +81,6 @@ if (!empty($_GET['resId'])) {
             exit(_NO_RIGHT_TXT);
         };
     }
-}
-
-if (empty($_GET['resId'])) {
-    $_GET['resId'] = "'none'";
 }
 
 $_SESSION['urlV2Basket'] = $_GET;

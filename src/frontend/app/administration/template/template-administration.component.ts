@@ -14,6 +14,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "template-administration.component.html",
+    styleUrls: ['template-administration.component.scss'],
     providers: [NotificationService]
 })
 export class TemplateAdministrationComponent implements OnInit {
@@ -225,7 +226,7 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     startJnlp() {
-        if (this.creationMode) {
+        if (this.creationMode || (this.template.template_file_name == null && this.template.template_path == null)) {
             this.jnlpValue.objectType = 'templateCreation';
             for (let element of this.defaultTemplatesList) {
                 if (this.template.template_style == element.fileExt + ': ' + element.fileName) {
@@ -264,16 +265,18 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     duplicateTemplate() {
-        let r = confirm(this.lang.confirmDuplicate);
+        if (!this.lockFound && this.template.template_target != 'acknowledgementReceipt') {
+            let r = confirm(this.lang.confirmDuplicate);
 
-        if (r) {
-            this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', { 'id': this.template.template_id })
-                .subscribe((data: any) => {
-                    this.notify.success(this.lang.templateDuplicated);
-                    this.router.navigate(['/administration/templates/' + data.id]);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
+            if (r) {
+                this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', { 'id': this.template.template_id })
+                    .subscribe((data: any) => {
+                        this.notify.success(this.lang.templateDuplicated);
+                        this.router.navigate(['/administration/templates/' + data.id]);
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+            }
         }
     }
 
@@ -282,7 +285,8 @@ export class TemplateAdministrationComponent implements OnInit {
         if (this.template.template_target != 'notifications') {
             this.template.template_datasource = 'letterbox_attachment';
         }
-        if (this.creationMode && this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && (this.template.template_type == 'OFFICE' || (this.template.template_type == 'OFFICE_HTML' && this.template.template_style))) {
+
+        if (this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && !this.template.template_file_name && this.template.template_style && (this.template.template_type == 'OFFICE' || this.template.template_type == 'OFFICE_HTML')) {
             alert(this.lang.editModelFirst);
             return;
         }
@@ -378,6 +382,16 @@ export class TemplateAdministrationComponent implements OnInit {
     resetFileUploaded() {
         this.fileToImport();
         this.template.uploadedFile = null;
+    }
+
+    loadTab(event: any) {
+        if (event.index === 0) {
+            this.initMce('textarea#templateOfficeHtml');
+        } else {
+            if (this.template.template_file_name == null && this.template.template_style == null) {
+                this.buttonFileName = this.lang.importFile;
+            }
+        }
     }
 }
 @Component({

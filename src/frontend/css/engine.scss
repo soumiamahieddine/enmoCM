@@ -1,3 +1,6 @@
+@import 'maarch-material-modal.scss';
+@import 'maarch-material-alert.scss';
+
 /******* CORECTION BUG CSS WITH V1 (A SUPPRIMER A LA FIN) *********/
 
 .page-header h1 {
@@ -377,6 +380,7 @@ h1.admin-app-name {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100%;
 }
 
 #searchInput .mat-form-field-infix {
@@ -403,7 +407,6 @@ h1.admin-app-name {
 
 .no-padding-full-dialog .mat-dialog-container {
     margin: 0;
-    padding: 0;
     position: relative;
     height: 95vh !important;
     width: 90vw !important;

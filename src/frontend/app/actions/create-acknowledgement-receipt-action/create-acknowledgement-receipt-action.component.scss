@@ -1,13 +1,3 @@
-.mat-dialog-content {
-    position: relative;
-}
-
-.mat-dialog-actions,
-.mat-dialog-title {
-    justify-content: center;
-    text-align: center;
-}
-
 .highlight {
     font-size: 110%;
 }
@@ -24,93 +14,20 @@
     overflow: hidden;
 }
 
-.alert-message {
-    margin: 20px 0;
-    padding: 0px;
-    border-left: 3px solid #eee;
-}
-
-.alert-message h4 {
-    margin-top: 0;
-    margin-bottom: 5px;
-}
-
-.alert-message p:last-child {
-    margin-bottom: 0;
-}
-
-.alert-message code {
-    background-color: #fff;
-    border-radius: 3px;
-}
-
-.alert-message-success {
-    background-color: #F4FDF0;
-    border-color: #3C763D;
-}
-
-.alert-message-success h4 {
-    color: #3C763D;
-}
-
-.alert-message-danger {
-    background-color: #8e3e521a;
-    border-color: #8e3e52;
-    color: #8e3e52;
-}
-
-.alert-message-danger h4 {
-    color: #8e3e52;
-}
-
-.alert-message-warning {
-    background-color: #fcf8f2;
-    border-color: #f0ad4e;
-}
-
-.alert-message-warning h4 {
-    color: #f0ad4e;
-}
-
-.alert-message-info {
-    background-color: #f4f8fa;
-    border-color: #5bc0de;
-}
-
-.alert-message-info h4 {
-    color: #5bc0de;
-}
-
-.alert-message-default {
-    background-color: #EEE;
-    border-color: #B4B4B4;
-}
-
-.alert-message-default h4 {
-    color: #000;
-}
-
-.alert-message-notice {
-    background-color: #FCFCDD;
-    border-color: #BDBD89;
-}
-
-.alert-message-notice h4 {
-    color: #444;
-}
-
 .acknowledgementList {
     ul {
         font-size: 12px;
         max-height: 100px;
         overflow: auto;
         padding-left: 25px;
+        padding-right: 5px;
+        padding-bottom: 10px;
+        margin-top: 10px;
     }
 
     p {
         //font-size: 18px;
         margin: 0;
-        padding: 10px;
         text-decoration: underline;
     }
 

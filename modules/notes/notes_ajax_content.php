@@ -244,10 +244,14 @@ switch ($mode) {
 
                 $userId = $_SESSION['user']['UserId'];
 
+                if (empty($_REQUEST['origin']) || $_REQUEST['origin'] != 'folder') {
+                    $type = 'resource';
+                } else {
+                    $type = 'folder';
+                }
                 $db->query(
-                    "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, creation_date, "
-                    . "user_id) VALUES (?, ?, CURRENT_TIMESTAMP, ?)",
-                    array($identifier, $notes, $userId)
+                    "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, creation_date, user_id, type) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?)",
+                    array($identifier, $notes, $userId, $type)
                 );
                 
                 //Last insert ID from sequence

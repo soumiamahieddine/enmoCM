@@ -9,16 +9,16 @@
     <mat-form-field *ngIf="injectDatas.editable" appearance="outline" floatLabel="never" [style.fontSize.px]="10">
         <input class="metaSearch" type="text" matInput placeholder="Ajouter une personne / une entité">
     </mat-form-field>
-    <div cdkDropListGroup>
+    <div cdkDropListGroup class="roleList">
         <ng-container *ngFor="let role of availableRoles">
             <h3 mat-subheader>{{role.label}}</h3>
             <mat-divider></mat-divider>
             <div cdkDropList [id]="role.id" #dataAvailableList="cdkDropList" [cdkDropListData]="diffList[role.id].items"
-                class="cdk-list" (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="role.id == 'dest' || !injectDatas.editable">
+                class="cdk-list" (cdkDropListDropped)="drop($event)" [cdkDropListEnterPredicate]="role.id == 'dest' ? noReturnPredicate : allPredicate" [cdkDropListDisabled]="role.id == 'dest' || !injectDatas.editable">
                 <div *ngIf="diffList[role.id].items.length === 0" style="opacity: 0.5;text-align: center;font-size: 10px;padding: 10px;">
-                    Acune personne
+                    Aucune personne
                 </div>
-                <mat-list-item *ngFor="let diffusion of diffList[role.id].items;let i=index" cdkDrag class="columns"
+                <mat-list-item *ngFor="let diffusion of diffList[role.id].items;let i=index" cdkDrag cdkDragBoundary=".roleList" class="columns"
                     [cdkDragDisabled]="diffusion.item_type == 'entity_id' || !injectDatas.editable" [class.notDraggable]="(diffusion.item_type == 'entity_id' || role.id == 'dest') && injectDatas.editable" [class.notEditable]="!injectDatas.editable">
                     <mat-icon *ngIf="diffusion.item_type == 'user_id'" mat-list-icon class="fa fa-2x" [ngClass]="[diffusion.item_mode == 'copy' ? 'fa-users' : 'fa-user']"
                         color="primary"></mat-icon>

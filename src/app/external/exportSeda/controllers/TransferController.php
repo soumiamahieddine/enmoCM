@@ -20,7 +20,7 @@ class TransferController
 {
     public static function transfer($target, $reference, $type = null)
     {
-        $xml            = CoreConfigModel::getXmlLoaded('modules/export_seda/xml/config.xml');
+        $xml            = CoreConfigModel::getXmlLoaded(['path' => 'modules/export_seda/xml/config.xml']);
         $adapter        = '';
         $res['status']  = 0;
         $res['content'] = '';

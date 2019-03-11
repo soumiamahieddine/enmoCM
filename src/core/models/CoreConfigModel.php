@@ -274,6 +274,7 @@ class CoreConfigModel
         /* CSS PARTS */
         $structure .= '<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" media="screen" />';
         $structure .= '<link rel="stylesheet" href="css/font-awesome-maarch/css/font-maarch.css" media="screen" />';
+        $structure .= '<link rel="stylesheet" href="../../node_modules/jstree-bootstrap-theme/dist/themes/proton/style.min.css" media="screen" />';
 
         $structure .= '</head>';
 

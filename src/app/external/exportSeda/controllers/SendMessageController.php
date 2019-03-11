@@ -31,7 +31,7 @@ class SendMessageController
             return false;
         }
 
-        $res = $adapter->send($messageId, $type);
+        $res = $adapter->send($messageObject, $messageId, $type);
 
         return $res;
     }
@@ -41,8 +41,8 @@ class SendMessageController
         $messageObject = $aArgs['messageObject'];
         $type          = $aArgs['type'];
 
-        $DOMTemplate = new DOMDocument();
-        $DOMTemplate->load('../../../../../modules/exportSeda/resources/'.$type.'.xml');
+        $DOMTemplate = new \DOMDocument();
+        $DOMTemplate->load('modules/export_seda/resources/'.$type.'.xml');
         $DOMTemplateProcessor = new DOMTemplateProcessorController($DOMTemplate);
         $DOMTemplateProcessor->setSource($type, $messageObject);
         $DOMTemplateProcessor->merge();

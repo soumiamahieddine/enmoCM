@@ -388,15 +388,13 @@ define('_PURGE_LETTER', 'Purge the mail after archiving');
 define('_RESET_LETTER', 'Reset workflow');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Confirm and update departure date');
 define('_NOT_INCOMING_CATEGORY', 'Not incomping category');
-define('_AR_ALREADY_SEND', 'Acknowledgement receipt already send');
-define('_AR_ALREADY_GENERATED', 'Acknowledgement receipt generated but not sent');
 define('_NO_CONTACT', 'No associated contact');
 define('_USER_MISSING_INFORMATIONS', 'Missing informations in contact card');
-define('_NO_TEMPLATE', 'No template ');
-define('_NO_EMAIL_TEMPLATE', 'No electronic template ');
-define('_NO_PAPER_TEMPLATE', 'No paper template ');
-define('_AR_SEND_ERROR', 'Error in acknowledgements receipt already sent');
-define('_FOR_ENTITY', 'for this entity: ');
+define('_NO_TEMPLATE', 'No template');
+define('_NO_EMAIL_TEMPLATE', 'No electronic template');
+define('_NO_PAPER_TEMPLATE', 'No paper template');
+define('_FOR_ENTITY', 'for this entity:');
+define('_NO_ENTITY', 'No entity associated with the mail');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Number of read folders');
@@ -460,3 +458,5 @@ define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'update acknowledgement send date');
 
 define("_M2M_ACTION_DONE", "done by");
 define("_M2M_ENTITY_DESTINATION", "Mail is in the department");
+
+define('_ACKNOWLEDGEMENT_RECEIPT_DISPLAYING', 'Displaying acknowledgement receipt');

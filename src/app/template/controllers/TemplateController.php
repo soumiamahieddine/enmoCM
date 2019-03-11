@@ -80,10 +80,12 @@ class TemplateController
         $attachmentModelsTmp = AttachmentModel::getAttachmentsTypesByXML();
         $attachmentTypes = [];
         foreach ($attachmentModelsTmp as $key => $value) {
-            $attachmentTypes[] = [
-                'label' => $value['label'],
-                'id'    => $key
-            ];
+            if ($value['show']) {
+                $attachmentTypes[] = [
+                    'label' => $value['label'],
+                    'id'    => $key
+                ];
+            }
         }
 
         return $response->withJson([
@@ -355,10 +357,12 @@ class TemplateController
         $attachmentModelsTmp = AttachmentModel::getAttachmentsTypesByXML();
         $attachmentTypes = [];
         foreach ($attachmentModelsTmp as $key => $value) {
-            $attachmentTypes[] = [
-                'label' => $value['label'],
-                'id'    => $key
-            ];
+            if ($value['show']) {
+                $attachmentTypes[] = [
+                    'label' => $value['label'],
+                    'id'    => $key
+                ];
+            }
         }
 
         $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']);

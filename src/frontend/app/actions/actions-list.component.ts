@@ -120,9 +120,11 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-
+            
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
@@ -140,9 +142,11 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-
+            
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
@@ -160,9 +164,11 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-
+            
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
@@ -180,16 +186,18 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-
+            
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
 
     createAcknowledgementReceiptsAction() {
         const dialogRef = this.dialog.open(CreateAcknowledgementReceiptActionComponent, {
-            width: '500px',
+            width: '600px',
             data: {
                 contextMode: this.contextMode,
                 contextChrono: this.contextMenuTitle,
@@ -200,9 +208,11 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-
+            
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
@@ -220,9 +230,11 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-
+            
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
@@ -240,9 +252,11 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-
+            
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
@@ -260,9 +274,11 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-
+            
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
@@ -283,6 +299,8 @@ export class ActionsListComponent implements OnInit {
 
             if (result == 'success') {
                 this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
@@ -301,13 +319,22 @@ export class ActionsListComponent implements OnInit {
     }
 
     redirectAction() {
-        this.dialog.open(RedirectActionComponent, {
+        const dialogRef = this.dialog.open(RedirectActionComponent, {
             data: {
                 contextMode: this.contextMode,
                 contextChrono: this.contextMenuTitle,
                 selectedRes: this.selectedRes,
                 action: this.currentAction,
                 currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
+            } else {
+                this.unlockRest();
             }
         });
     }
@@ -375,5 +402,10 @@ export class ActionsListComponent implements OnInit {
 
     unlock() {
         clearInterval(this.currentLock);
+    }
+
+    unlockRest() {
+        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/unlock', { resources: this.arrRes })
+            .subscribe((data: any) => { }, (err: any) => { });
     }
 }

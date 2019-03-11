@@ -20,7 +20,8 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
         alReadySend : {},
         noSendAR : {},
         sendEmail : 0,
-        sendPaper : 0
+        sendPaper : 0,
+        sendList : []
     };
 
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
@@ -32,7 +33,6 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
         this.loadingInit = true;
         this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkAcknowledgementReceipt', {resources : this.data.selectedRes})
         .subscribe((data : any) => {
-            console.log(data);
             this.acknowledgement = data;
             this.loadingInit = false;
         }, (err) => {
@@ -43,10 +43,15 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
 
     onSubmit(): void {
         this.loading = true;
-        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : this.data.selectedRes, note : this.noteEditor.getNoteContent()})
+        let sendElements: any;
+        sendElements = this.acknowledgement.sendList;
+        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : sendElements, note : this.noteEditor.getNoteContent()})
             .subscribe((data: any) => {
-                if(data != null){
-                    this.downloadAcknowledgementReceipt(data);
+                if(data && data.data != null){
+                    this.downloadAcknowledgementReceipt(data.data);
+                }
+                if(data && data.errors != null){
+                    this.notify.error(data.errors);
                 }
                 this.loading = false;
                 this.dialogRef.close('success');

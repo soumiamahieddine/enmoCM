@@ -26,6 +26,8 @@ use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
+use Template\models\TemplateModel;
+use Resource\models\ResModel;
 
 class NoteController
 {
@@ -124,16 +126,30 @@ class NoteController
         return ['encodedDocument' => base64_encode($fileContent)];
     }
 
-    public static function getTemplateList(Request $request, Response $response, array $aArgs)
+    public static function getTemplatesByResId(Request $request, Response $response, array $aArgs)
     {
-        //get user entities
-        $userEntities = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+        if (!Validator::intVal()->notEmpty()->validate($aArgs['resId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
+        }
+        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
 
-        $userEntities = array_column($userEntities, 'entity_id');
+        $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination']]);
+        
+        if (!empty($resource['destination'])) {
+            $templates = TemplateModel::getWithAssociation(['select' => ['DISTINCT(templates.template_id), template_label', 'template_content'], 'where' => ['template_target = ?', 'value_field = ?', 'templates.template_id = templates_association.template_id'], 'data' => ['notes', $resource['destination']], 'orderBy' => ['template_label']]);
+        } else {
+            $templates = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
+        }
 
-        //get templates note
-        $aReturn = NoteModel::getTemplateList(['entityIds' => $userEntities, 'select' => ['template_label', 'template_content']]);
+        return $response->withJson(['templates' => $templates]);
+    }
 
-        return $response->withJson($aReturn);
+    public static function getTemplates(Request $request, Response $response)
+    {
+        $templates = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
+
+        return $response->withJson(['templates' => $templates]);
     }
 }

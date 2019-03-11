@@ -1,0 +1,21 @@
+@import 'vars.scss';
+
+.mat-dialog-title {
+  margin: -24px !important;
+  margin-bottom: -24px !important;
+  margin-bottom: 0 !important;
+  background: $primary;
+  color: white;
+  padding: 5px;
+}
+
+.mat-dialog-content {
+  padding-top: 10px !important;
+  position: relative;
+  max-height: 80vh !important;
+}
+
+.mat-dialog-actions, .mat-dialog-title {
+  justify-content: center;
+  text-align: center;
+}

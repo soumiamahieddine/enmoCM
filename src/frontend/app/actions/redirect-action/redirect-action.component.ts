@@ -45,7 +45,6 @@ export class RedirectActionComponent implements OnInit {
             .subscribe((data: any) => {
                 this.entities = data['entities'];
                 this.loading = false;
-                console.log(this.entities);
                 setTimeout(() => {
                     $j('#jstree').jstree({
                         "checkbox": {

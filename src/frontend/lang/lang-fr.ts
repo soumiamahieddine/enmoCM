@@ -895,4 +895,10 @@ export const LANG_FR = {
     "acknowledgementSendDate"             : "Date d'envoi de l'accusé de reception",
     "updateAcknowledgementSendDate"             : "Cela mettra à jour la date d'envoi pour les accusés de réception papier",
     "mustCompleteAR"                        : "Veuillez compléter un des deux modèles d'AR",
+    "arAlreadySend"                     : "accusé(s) de réception déjà envoyé(s)",
+    "arAlreadyGenerated"                     : "accusé(s) de réception déjà généré(s)",
+    "canNotSendAr"                          : "accusé(s) de réception impossible à envoyer",
+    "readyToSendElectronicAr"               : "accusé(s) de réception électronique prêt à être envoyé(s)",
+    "readyToGeneratePaperAr"                    : "accusé(s) de réception papier prêt à être généré(s)",
+    "noteTemplates"                             : "Modèles d'annotations",
 };

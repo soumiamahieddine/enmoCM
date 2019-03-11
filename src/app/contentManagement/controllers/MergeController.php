@@ -16,6 +16,7 @@ namespace ContentManagement\controllers;
 
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
+use Doctype\models\DoctypeExtModel;
 use Entity\models\EntityModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
@@ -93,17 +94,25 @@ class MergeController
         if (!empty($resource['nature_id'])) {
             $resource['nature_id'] = ResModel::getNatureLabel(['nature_id' => $resource['nature_id']]);
         }
+        $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_delay', 'process_mode']]);
+        $resource['process_delay'] = $doctype['process_delay'];
+        $resource['process_mode'] = $doctype['process_mode'];
+
         if (!empty($resource['initiator'])) {
             $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['*']]);
-            if (!empty($initiator)) {
-                foreach ($initiator as $key => $value) {
-                    $resource['initiator_' . $key] = $value;
-                }
+            if (!empty($initiator['parent_entity_id'])) {
+                $parentInitiator = EntityModel::getByEntityId(['entityId' => $initiator['parent_entity_id'], 'select' => ['*']]);
+            }
+        }
+        if (!empty($resource['destination'])) {
+            $destination = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['*']]);
+            if (!empty($destination['parent_entity_id'])) {
+                $parentDestination = EntityModel::getByEntityId(['entityId' => $destination['parent_entity_id'], 'select' => ['*']]);
             }
         }
 
         //User
-        $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname']]);
+        $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname', 'phone', 'mail', 'initials']]);
 
         //Contact
         $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$args['contactAddressId']]])[0];
@@ -134,10 +143,14 @@ class MergeController
             $mergedNote .= "{$labelledUser} : {$creationDate} : {$note['note_text']}\n";
         }
 
-        $dataToBeMerge['res_letterbox'] = $resource;
-        $dataToBeMerge['user'] = $currentUser;
-        $dataToBeMerge['contact'] = $contact;
-        $dataToBeMerge['notes'] = $mergedNote;
+        $dataToBeMerge['res_letterbox']     = $resource;
+        $dataToBeMerge['initiator']         = empty($initiator) ? [] : $initiator;
+        $dataToBeMerge['parentInitiator']   = empty($parentInitiator) ? [] : $parentInitiator;
+        $dataToBeMerge['destination']       = empty($destination) ? [] : $destination;
+        $dataToBeMerge['parentDestination'] = empty($parentDestination) ? [] : $parentDestination;
+        $dataToBeMerge['user']              = $currentUser;
+        $dataToBeMerge['contact']           = $contact;
+        $dataToBeMerge['notes']             = $mergedNote;
 
         return $dataToBeMerge;
     }

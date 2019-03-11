@@ -10,7 +10,7 @@
             <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b> ?
         </div>
         <div class="col-md-12">
-            <app-note-editor #noteEditor></app-note-editor>
+            <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
         </div>
     </div>
 </div>

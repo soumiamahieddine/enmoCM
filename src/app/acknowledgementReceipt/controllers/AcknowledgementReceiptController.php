@@ -14,25 +14,25 @@
 
 namespace AcknowledgementReceipt\controllers;
 
-use setasign\Fpdi\Tcpdf\Fpdi;
-use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
-use SrcCore\controllers\PreparedClauseController;
-use User\models\UserModel;
-use Basket\models\BasketModel;
-use Resource\models\ResModel;
-use Resource\controllers\ResController;
-use Docserver\models\DocserverModel;
-use Docserver\models\DocserverTypeModel;
-use Resource\controllers\StoreController;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Respect\Validation\Validator;
-use Resource\controllers\ResourceListController;
-use Contact\models\ContactModel;
-use SrcCore\models\DatabaseModel;
-use Doctype\models\DoctypeExtModel;
-use Template\models\TemplateModel;
+use User\models\UserModel;
+use Resource\models\ResModel;
+use setasign\Fpdi\Tcpdf\Fpdi;
+use Basket\models\BasketModel;
 use Entity\models\EntityModel;
+use Contact\models\ContactModel;
+use Respect\Validation\Validator;
+use SrcCore\models\DatabaseModel;
+use Template\models\TemplateModel;
+use Doctype\models\DoctypeExtModel;
+use Docserver\models\DocserverModel;
+use Resource\controllers\ResController;
+use Resource\controllers\StoreController;
+use History\controllers\HistoryController;
+use Resource\controllers\ResourceListController;
+use SrcCore\controllers\PreparedClauseController;
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 
 class AcknowledgementReceiptController
 {
@@ -56,7 +56,7 @@ class AcknowledgementReceiptController
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
         $acknowledgements = AcknowledgementReceiptModel::getByIds([
-            'select'  => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'send_date'],
+            'select'  => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'send_date', 'format'],
             'ids'     => $bodyData['resources'],
             'orderBy' => ['res_id']
         ]);
@@ -87,7 +87,7 @@ class AcknowledgementReceiptController
         $pdf->setPrintHeader(false);
 
         foreach ($acknowledgements as $value) {
-            if (empty($value['send_date'])) {
+            if (empty($value['send_date']) && $value['format'] == 'pdf') {
                 $docserver = DocserverModel::getByDocserverId(['docserverId' => $value['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
                 if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
@@ -133,12 +133,12 @@ class AcknowledgementReceiptController
         }
 
         $data = $request->getParsedBody();
-        //$data = $request->getParams();
 
         if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
         }
         
+        $sendList = [];
         $sendEmail = 0;
         $sendPaper = 0;
         $noSendAR = [
@@ -156,8 +156,6 @@ class AcknowledgementReceiptController
 
         $data['resources'] = array_slice($data['resources'], 0, 500);
         foreach ($data['resources'] as $resId) {
-            $canSendEmail = true;
-            $canSendPaper = true;
             $ext = ResModel::getExtById(['select' => ['res_id', 'category_id', 'address_id', 'is_multicontacts', 'alt_identifier'], 'resId' => $resId]);
 
             //Check
@@ -183,6 +181,13 @@ class AcknowledgementReceiptController
             //Verify template
             $resource = ResModel::getById(['select' => ['type_id', 'destination'], 'resId' => $resId]);
             $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
+
+            if (empty($resource['destination'])) {
+                $noSendAR['number'] += 1;
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_ENTITY];
+                continue;
+            }
+
             $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $resource['destination']]);
 
             if ($doctype['process_mode'] == 'SVA') {
@@ -201,7 +206,7 @@ class AcknowledgementReceiptController
 
             if (empty($template[0])) {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_TEMPLATE . '\'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . $entity['entity_label'] ];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' .$entity['entity_label'] ];
                 continue;
             }
 
@@ -211,61 +216,30 @@ class AcknowledgementReceiptController
             //Verify sending
             $acknowledgements = AcknowledgementReceiptModel::get([
                 'select'    => ['res_id', 'type', 'format', 'creation_date', 'send_date'],
-                'where'     => ['res_id = (?)', 'type = (?)'],
+                'where'     => ['res_id = ?', 'type = ?'],
                 'data'      => [$resId, $templateAttachmentType],
             ]);
 
             if (!empty($acknowledgements)) {
-                $sendedEmail = 0;
-                $sendedPaper = 0;
-                $generatedPaper = 0;
-                $generatedEmail = 0;
-                $sendedError = 0;
-                $canSendEmail = false;
-                $canSendPaper = false;
+                $sended = 0;
+                $generated = 0;
 
                 foreach ($acknowledgements as $acknowledgement) {
-                    if ($acknowledgement['format'] == 'html') {
-                        if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
-                            $sendedEmail += 1;
-                        } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
-                            $generatedEmail += 1;
-                        } else {
-                            $sendedError +=1;
-                        }
-                    } elseif ($acknowledgement['format'] == 'pdf') {
-                        if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
-                            $sendedPaper += 1;
-                        } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
-                            $generatedPaper += 1;
-                        } else {
-                            $sendedError +=1;
-                        }
+                    if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
+                        $sended += 1;
+                    } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
+                        $generated += 1;
                     }
                 }
                 
-                if ($sendedError > 0) {
-                    $noSendAR['number'] += 1;
-                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_SEND_ERROR ];
-                    continue;
+                if ($sended > 0) {
+                    $alreadySend['number'] += $sended;
+                    $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier']];
                 }
 
-                if ($sendedEmail + $sendedPaper == sizeof($acknowledgements)) {
-                    $alreadySend['number'] += 1;
-                    $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_SEND ];
-                    continue;
-                }
-
-                if ($generatedEmail + $generatedPaper > 0) {
-                    $alreadyGenerated['number'] += 1;
-                    $alreadyGenerated['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _AR_ALREADY_GENERATED ];
-
-                    if ($generatedEmail > 0) {
-                        $canSendEmail = true;
-                    }
-                    if ($generatedPaper > 0) {
-                        $canSendPaper = true;
-                    }
+                if ($generated > 0) {
+                    $alreadyGenerated['number'] += $generated;
+                    $alreadyGenerated['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier']];
                 }
             }
 
@@ -290,8 +264,6 @@ class AcknowledgementReceiptController
             $paper = 0;
             foreach ($contactsToProcess as $contactToProcess) {
                 if (empty($contactToProcess)) {
-                    $email = 0;
-                    $paper = 0;
                     $noSendAR['number'] += 1;
                     $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_CONTACT ];
                     continue 2;
@@ -308,7 +280,7 @@ class AcknowledgementReceiptController
                 if (!empty($contact['email'])) {
                     if (empty($template[0]['template_content'])) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE . '\'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . $entity['entity_label'] ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' . $entity['entity_label'] ];
                         continue 2;
                     } else {
                         $email += 1;
@@ -316,23 +288,87 @@ class AcknowledgementReceiptController
                 } elseif (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'])) {
                     if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE . '\'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . $entity['entity_label'] ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' . $entity['entity_label'] ];
                         continue 2;
                     } else {
                         $paper += 1;
                     }
                 }
             }
-            
-            if ($email > 0 && $canSendEmail) {
+
+            if ($email > 0) {
                 $sendEmail += $email;
             }
-
-            if ($paper > 0 && $canSendPaper) {
+            if ($paper > 0) {
                 $sendPaper += $paper;
+            }
+            if($email > 0 || $paper > 0) {
+                $sendList[] = $resId;
             }
         }
 
-        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+    }
+
+    public function getAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $mainDocument = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'fingerprint'], 'resId' => $aArgs['resId']]);
+        $extDocument = ResModel::getExtById(['select' => ['category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
+        if (empty($mainDocument) || empty($extDocument)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $document = AcknowledgementReceiptModel::getByIds([
+            'select'  => ['docserver_id', 'path', 'filename', 'fingerprint'],
+            'ids'      => [$aArgs['id']]
+        ]);
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document[0]['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document[0]['path']) . $document[0]['filename'];
+
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument]);
+        if (!empty($document[0]['fingerprint']) && $document[0]['fingerprint'] != $fingerprint) {
+            return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
+        }
+
+        $fileContent = file_get_contents($pathToDocument);
+
+        if ($fileContent === false) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+        $pathInfo = pathinfo($pathToDocument);
+
+        $response->write($fileContent);
+        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
+
+        HistoryController::add([
+            'tableName' => 'acknowledgement_receipt',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'VIEW',
+            'info'      => _ACKNOWLEDGEMENT_RECEIPT_DISPLAYING . " : {$aArgs['id']}",
+            'moduleId'  => 'res',
+            'eventId'   => 'acknowledgementreceiptview',
+        ]);
+
+        if ($mimeType == 'text/plain') {
+            $mimeType = 'text/html';
+        }
+
+        return $response->withHeader('Content-Type', $mimeType);
     }
 }

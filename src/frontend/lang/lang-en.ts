@@ -870,4 +870,9 @@ export const LANG_EN = {
     "acknowledgementSendDate"             : "Acknowledgement send date",
     "updateAcknowledgementSendDate"             : "This will update send date for paper acknowledgement receipt",
     "mustCompleteAR"                        : "You must complete one of two acknowledgement of receipts",
+    "arAlreadySend"                     : "Acknowledgement receipt already send",
+    "arAlreadyGenerated"                     : "Acknowledgement receipt generated but not sent",
+    "readyToSendElectronicAr"               : "electronic acknowledgement receipt ready to be send",
+    "readyToGeneratePaperAr"                    : "paper acknowledgement receipt ready to be generated",
+    "noteTemplates"                             : "Note Templates",
 };

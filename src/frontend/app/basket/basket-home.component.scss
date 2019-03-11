@@ -1,4 +1,8 @@
 .selectedBasket {
     border-left: solid 12px #F99830;
-    background: rgba(249, 152, 48, 0.14);;
+    background: rgba(249, 152, 48, 0.14);
+}
+
+.selectedBasket:focus {
+    background: rgba(249, 152, 48, 0.14);
 }

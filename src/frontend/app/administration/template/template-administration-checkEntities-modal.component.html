@@ -1,8 +1,8 @@
+<h1 mat-dialog-title>{{lang.templateAssociateEntities}}</h1>
 <mat-dialog-content >
-    <h2 mat-dialog-title>{{lang.templateAssociateEntities}}</h2>
     <div class="modal-body">
         <div class="alert alert-warning" role="alert">
-            <p><b>{{lang.templateCheckEntities}}{{lang['AR'+data.template_attachment_type]}}</b></p>
+            <p>{{lang.templateCheckEntities}}<b>{{lang['AR'+data.template_attachment_type]}}</b></p>
         </div>
         <mat-list>
             <mat-list-item *ngFor="let entity of data.entitiesList">

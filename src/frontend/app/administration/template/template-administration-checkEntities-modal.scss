@@ -3,21 +3,14 @@
     min-width: 30vw;
     max-height: 90vh;
     overflow: hidden !important;
+    padding: 24px !important;
 }
 
 .modal-body{
     min-height: auto;
 }
 
-mat-dialog-actions{
-    justify-content: center;
-}
-
 mat-list{
     overflow: auto;
     max-height: 50vh;
-}
-
-.mat-dialog-content h2{
-    margin-top: 20px;
 }

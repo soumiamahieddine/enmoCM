@@ -6,7 +6,7 @@
             <menu-nav></menu-nav>
             <mat-nav-list *ngIf="!creationMode && !loading">
                 <h3 mat-subheader>{{lang.actions}}</h3>
-                <a mat-list-item *ngIf="!lockFound && template.template_target != 'acknowledgementReceipt'" (click)="duplicateTemplate()">
+                <a mat-list-item [disableRipple]="lockFound || template.template_target == 'acknowledgementReceipt'" [class.disabled]="lockFound || template.template_target == 'acknowledgementReceipt'" (click)="duplicateTemplate()">
                     <mat-icon color="primary" mat-list-icon class="fa fa-copy"></mat-icon>
                     <p mat-line>
                         {{lang.duplicate}}
@@ -108,7 +108,7 @@
                                     <mat-select id="template_style" [disabled]="!creationMode" name="template_style" title="{{lang.defaultTemplate}}" placeholder="{{lang.chosenModel}}"
                                         [(ngModel)]="template.template_style" (ngModelChange)="resetFileUploaded()">
                                         <mat-optgroup label="{{lang.loadedFile}} :">
-                                            <mat-option (click)="clickOnUploader('uploadSignFileOffice')" style="text-align: center;" value="uploadFile">
+                                            <mat-option class="selectFile" (click)="clickOnUploader('uploadSignFileOffice')" value="uploadFile">
                                                 <mat-icon class="fa fa-paperclip" color="primary" style="height:auto;"></mat-icon> {{buttonFileName}}
                                             </mat-option>
                                         </mat-optgroup>
@@ -158,7 +158,7 @@
                         </div>
 
                         <div class="form-group" *ngIf="template.template_type=='OFFICE_HTML'">
-                            <mat-tab-group (selectedTabChange)="initMce('textarea#templateOfficeHtml')">
+                            <mat-tab-group (selectedTabChange)="loadTab($event);">
                                 <mat-tab label="{{lang.electronicTemplate}}">
                                     <div class="form-group" *ngIf="template.template_type=='OFFICE_HTML'">
                                         <div class="col-sm-12">

@@ -30,7 +30,11 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
     exit();
 }
 
-//var_dump($_REQUEST);
+$right = $sec->test_right_doc('letterbox_coll', $id);
+if (!$right) {
+    exit(_NO_RIGHT_TXT);
+}
+
 $small = false;
 $smallQuery = '';
 if ($_REQUEST['small'] == 'true') {
