@@ -56,7 +56,7 @@ class AcknowledgementReceiptController
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
         $acknowledgements = AcknowledgementReceiptModel::getByIds([
-            'select'  => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'send_date'],
+            'select'  => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'send_date', 'format'],
             'ids'     => $bodyData['resources'],
             'orderBy' => ['res_id']
         ]);
@@ -87,7 +87,7 @@ class AcknowledgementReceiptController
         $pdf->setPrintHeader(false);
 
         foreach ($acknowledgements as $value) {
-            if (empty($value['send_date'])) {
+            if (empty($value['send_date']) && $value['format'] == 'pdf') {
                 $docserver = DocserverModel::getByDocserverId(['docserverId' => $value['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
                 if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
