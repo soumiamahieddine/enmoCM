@@ -47,10 +47,10 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
         sendElements = this.acknowledgement.sendList;
         this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : sendElements, note : this.noteEditor.getNoteContent()})
             .subscribe((data: any) => {
-                if(data.data != null){
+                if(data && data.data != null){
                     this.downloadAcknowledgementReceipt(data.data);
                 }
-                if(data.errors != null){
+                if(data && data.errors != null){
                     this.notify.error(data.errors);
                 }
                 this.loading = false;
