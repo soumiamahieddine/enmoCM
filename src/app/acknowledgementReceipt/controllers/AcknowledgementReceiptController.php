@@ -226,34 +226,24 @@ class AcknowledgementReceiptController
             ]);
 
             if (!empty($acknowledgements)) {
-                $sendedEmail = 0;
-                $sendedPaper = 0;
-                $generatedPaper = 0;
-                $generatedEmail = 0;
+                $sended = 0;
+                $generated = 0;
 
                 foreach ($acknowledgements as $acknowledgement) {
-                    if ($acknowledgement['format'] == 'html') {
-                        if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
-                            $sendedEmail += 1;
-                        } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
-                            $generatedEmail += 1;
-                        }
-                    } elseif ($acknowledgement['format'] == 'pdf') {
-                        if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
-                            $sendedPaper += 1;
-                        } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
-                            $generatedPaper += 1;
-                        }
+                    if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
+                        $sended += 1;
+                    } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
+                        $generated += 1;
                     }
                 }
                 
-                if ($sendedEmail + $sendedPaper == sizeof($acknowledgements)) {
-                    $alreadySend['number'] += 1;
+                if ($sended > 0) {
+                    $alreadySend['number'] += $sended;
                     $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier']];
                 }
 
-                if ($generatedEmail + $generatedPaper > 0) {
-                    $alreadyGenerated['number'] += 1;
+                if ($generated > 0) {
+                    $alreadyGenerated['number'] += $generated;
                     $alreadyGenerated['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier']];
                 }
             }
