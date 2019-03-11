@@ -186,6 +186,13 @@ class AcknowledgementReceiptController
             //Verify template
             $resource = ResModel::getById(['select' => ['type_id', 'destination'], 'resId' => $resId]);
             $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
+
+            if (empty($resource['destination'])) {
+                $noSendAR['number'] += 1;
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_ENTITY];
+                continue;
+            }
+
             $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $resource['destination']]);
 
             if ($doctype['process_mode'] == 'SVA') {

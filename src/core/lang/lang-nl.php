@@ -394,6 +394,7 @@ define('_NO_TEMPLATE', 'Geen sjabloon'); //_TO_TRANSLATE
 define('_NO_EMAIL_TEMPLATE', 'Geen elektronisch sjabloon'); //_TO_TRANSLATE
 define('_NO_PAPER_TEMPLATE', 'Geen papieren sjabloon'); //_TO_TRANSLATE
 define('_FOR_ENTITY', 'voor deze entiteit :');
+define('_NO_ENTITY', 'Geen enkele entiteit geassocieerd met de post');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Aantal geraadpleegde mappen');

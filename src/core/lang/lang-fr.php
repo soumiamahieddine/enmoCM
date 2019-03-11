@@ -394,6 +394,7 @@ define('_NO_TEMPLATE', 'Pas de modèle');
 define('_NO_EMAIL_TEMPLATE', 'Pas de modèle électronique');
 define('_NO_PAPER_TEMPLATE', 'Pas de modèle papier');
 define('_FOR_ENTITY', 'pour l\'entité :');
+define('_NO_ENTITY', 'Pas d\'entité associée au courrier');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');
