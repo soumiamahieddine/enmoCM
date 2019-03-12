@@ -1049,7 +1049,7 @@ INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type
 ------------
 TRUNCATE TABLE actions;
 TRUNCATE TABLE actions_categories;
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (1, 'redirect', 'Redirect', 'NEW', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N', NULL, 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (1, 'redirect', 'Redirect', 'NEW', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N', NULL, 'redirectAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (2, '', 'Send to service', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (3, '', 'Send back to Mail Room', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (4, '', 'Save', '_NOSTATUS_', 'N', 'Y', 'process', 'N', 'apps', 'N', NULL, 'v1Action');
