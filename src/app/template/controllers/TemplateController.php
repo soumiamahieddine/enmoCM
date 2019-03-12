@@ -219,8 +219,8 @@ class TemplateController
                 if (!empty($template['template_style']) && !Validator::stringType()->notEmpty()->validate($data['template_style'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
                 }
-                $explodeStyle = explode('.', $data['template_file_name']);
-                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[count($explodeStyle) - 1]);
+                $explodeStyle = explode(':', $data['template_style']);
+                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
             } else {
                 if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
