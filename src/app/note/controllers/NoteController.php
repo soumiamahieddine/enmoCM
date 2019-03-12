@@ -126,29 +126,30 @@ class NoteController
         return ['encodedDocument' => base64_encode($fileContent)];
     }
 
-    public static function getTemplatesByResId(Request $request, Response $response, array $aArgs)
+    public static function getTemplates(Request $request, Response $response)
     {
-        if (!Validator::intVal()->notEmpty()->validate($aArgs['resId'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
-        }
-        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
+        $query = $request->getQueryParams();
 
-        $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination']]);
-        
-        if (!empty($resource['destination'])) {
-            $templates = TemplateModel::getWithAssociation(['select' => ['DISTINCT(templates.template_id), template_label', 'template_content'], 'where' => ['template_target = ?', 'value_field = ?', 'templates.template_id = templates_association.template_id'], 'data' => ['notes', $resource['destination']], 'orderBy' => ['template_label']]);
+        if (!empty($query['resId']) && is_numeric($query['resId'])) {
+            if (!ResController::hasRightByResId(['resId' => $query['resId'], 'userId' => $GLOBALS['userId']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            }
+
+            $resource = ResModel::getById(['resId' => $query['resId'], 'select' => ['destination']]);
+
+            if (!empty($resource['destination'])) {
+                $templates = TemplateModel::getWithAssociation([
+                    'select'    => ['DISTINCT(templates.template_id), template_label', 'template_content'],
+                    'where'     => ['template_target = ?', 'value_field = ?', 'templates.template_id = templates_association.template_id'],
+                    'data'      => ['notes', $resource['destination']],
+                    'orderBy'   => ['template_label']
+                ]);
+            } else {
+                $templates = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
+            }
         } else {
             $templates = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
         }
-
-        return $response->withJson(['templates' => $templates]);
-    }
-
-    public static function getTemplates(Request $request, Response $response)
-    {
-        $templates = TemplateModel::getByTarget(['template_target' => 'notes', 'select' => ['template_label', 'template_content']]);
 
         return $response->withJson(['templates' => $templates]);
     }
