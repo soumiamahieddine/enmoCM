@@ -46,9 +46,8 @@ export class DiffusionsListComponent implements OnInit {
                 });
                 if (this.injectDatas.resId > 0) {
                     this.loadListinstance(this.injectDatas.resId);
-                } else {
-                    this.loadListModel('COU');
-                    
+                } else if (this.injectDatas.entityId) {
+                    this.loadListModel(this.injectDatas.entityId);
                 }
             }, (err: any) => {
                 this.notify.error(err.error.errors);
@@ -74,7 +73,7 @@ export class DiffusionsListComponent implements OnInit {
         return true;
     }
 
-    loadListModel(entityId: string) {
+    loadListModel(entityId: number) {
         this.loading = true;
 
         this.availableRoles.forEach(element => {
@@ -82,59 +81,18 @@ export class DiffusionsListComponent implements OnInit {
         });
 
         // TO DO : ADD ROUTE
-        /*this.http.get("../../rest/???")
+        this.http.get("../../rest/listTemplates/entities/" + entityId)
             .subscribe((data: any) => {
+                data.listTemplate.forEach((element: any) => {
+                    console.log(element);
+                    if (element.item_mode == 'cc') {
+                        this.diffList['copy'].items.push(element);
+                    } else {
+                        this.diffList[element.item_mode].items.push(element);
+                    }
+                });
                 this.loading = false;
-            });*/
-
-        this.diffList['dest'].items.push(
-            {
-                "listinstance_id": 20,
-                "sequence": 0,
-                "item_mode": "dest",
-                "item_id": "bbain",
-                "item_type": "user_id",
-                "item_firstname": "Barbara",
-                "item_lastname": "BAIN",
-                "item_entity": "P\u00f4le Jeunesse et Sport",
-                "viewed": 0,
-                "process_date": null,
-                "process_comment": "",
-                "signatory": false,
-                "requested_signature": false
             });
-        this.diffList['copy'].items.push(
-            {
-                "listinstance_id": 21,
-                "sequence": 0,
-                "item_mode": "copy",
-                "item_id": "DSG",
-                "item_type": "entity_id",
-                "item_entity": "Secr\u00e9tariat G\u00e9n\u00e9ral",
-                "viewed": 0,
-                "process_date": null,
-                "process_comment": null,
-                "signatory": false,
-                "requested_signature": false
-            }
-        );
-        this.diffList['copy'].items.push(
-            {
-                "listinstance_id": 20,
-                "sequence": 0,
-                "item_mode": "copy",
-                "item_id": "bboule",
-                "item_type": "user_id",
-                "item_firstname": "Bruno",
-                "item_lastname": "Boule",
-                "item_entity": "Archives",
-                "viewed": 0,
-                "process_date": null,
-                "process_comment": "",
-                "signatory": false,
-                "requested_signature": false
-            });
-        this.loading = false;
     }
 
     loadListinstance(resId: number) {
@@ -144,7 +102,7 @@ export class DiffusionsListComponent implements OnInit {
                 this.diffList[element.id].items = [];
             });
             Object.keys(data).forEach(diffusionRole => {
-                data[diffusionRole].forEach((line:any) => {
+                data[diffusionRole].forEach((line: any) => {
                     this.diffList[line.item_mode].items.push(line);
                 });
             });
@@ -154,7 +112,7 @@ export class DiffusionsListComponent implements OnInit {
         });
     }
 
-    deleteItem(roleId:string, index: number) {
+    deleteItem(roleId: string, index: number) {
         this.diffList[roleId].items.splice(index, 1);
     }
 }

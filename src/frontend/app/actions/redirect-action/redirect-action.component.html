@@ -12,7 +12,7 @@
             <button mat-raised-button (click)="loadEntities()">Vers un service</button>
         </div>
         <div>
-            <button mat-raised-button (click)="redirectMode = 'user'">Vers un utilisateur</button>
+            <button mat-raised-button (click)="loadDestUser()">Vers un utilisateur</button>
         </div>
     </div>
     <div *ngIf="redirectMode == 'entity'" class="row" style="display: flex;">
@@ -39,7 +39,7 @@
         <div class="redirectContent" style="flex:2">
             <h2 style="top:-5px;">Nouvel atributaire :</h2>
             <div class="contentUser">
-                <mat-list>
+                <mat-list *ngIf="destUser != null">
                     <mat-list-item>
                         <mat-icon mat-list-icon class="fa fa-2x fa-user" color="primary"></mat-icon>
                         <h4 mat-line>{{destUser.item_firstname}}
@@ -48,6 +48,9 @@
                             {{destUser.item_entity}} </p>
                     </mat-list-item>
                 </mat-list>
+                <div *ngIf="destUser == null" class="noSelection">
+                    Aucune personne
+                </div>
             </div>
         </div>
     </div>

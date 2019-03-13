@@ -22,13 +22,9 @@ export class RedirectActionComponent implements OnInit {
         entities: ['DSI'],
         editable: [true]
     };
-    destUser: any = {
-        item_firstname : 'Patricia',
-        item_lastname : 'PETIT',
-        item_entity : 'Pôle Jeunesse et Sport',
-    };
-    currentEntity : any = {
-        'entity_label' : ''
+    destUser: any = null;
+    currentEntity: any = {
+        'entity_label': ''
     };
     redirectMode = '';
 
@@ -41,9 +37,17 @@ export class RedirectActionComponent implements OnInit {
     loadEntities() {
         this.redirectMode = 'entity';
 
-        this.http.get("../../rest/entities")
+        this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect")
             .subscribe((data: any) => {
+
                 this.entities = data['entities'];
+
+                this.entities.forEach(entity => {
+                    if (entity.entity_id == 'COU') {
+                    //if (entity.state.selected) {
+                        this.currentEntity = entity;
+                    }
+                });
                 this.loading = false;
                 setTimeout(() => {
                     $j('#jstree').jstree({
@@ -61,7 +65,6 @@ export class RedirectActionComponent implements OnInit {
                         },
                         "plugins": ["checkbox", "search", "sort"]
                     });
-                    $j('#jstree').jstree('select_node', this.entities[0]);
                     var to: any = false;
                     $j('#jstree_search').keyup(function () {
                         if (to) { clearTimeout(to); }
@@ -74,8 +77,8 @@ export class RedirectActionComponent implements OnInit {
                         // listen for event
                         .on('select_node.jstree', (e: any, data: any) => {
                             this.selectEntity();
-                            this.appDiffusionsList.loadListModel('toto');
-                            
+                            this.appDiffusionsList.loadListModel(this.currentEntity.serialId);
+
                         }).on('deselect_node.jstree', (e: any, data: any) => {
 
 
@@ -84,18 +87,36 @@ export class RedirectActionComponent implements OnInit {
                         .jstree();
                 }, 0);
                 setTimeout(() => {
-                    $j('#jstree').jstree('select_node', this.entities[0]);
+                    $j('#jstree').jstree('select_node', this.currentEntity);
                     this.selectEntity();
-                    
+
                 }, 200);
-                
+
             }, () => {
                 location.href = "index.php";
             });
     }
 
+    loadDestUser() {
+        this.redirectMode = 'user';
+        this.loading = true;
+        this.http.get("../../rest/res/" + this.data.selectedRes[0] + "/listinstance").subscribe((data: any) => {
+            Object.keys(data).forEach(diffusionRole => {
+                data[diffusionRole].forEach((line: any) => {
+                    if (line.item_mode == 'dest') {
+                        this.destUser = line;
+                    }
+                });
+            });
+            console.log(this.destUser);
+            this.loading = false;
+        }, (err: any) => {
+            this.notify.handleErrors(err);
+        });
+    }
+
     selectEntity() {
-        const ind = this.entities.map((e:any) => { return e.entity_id; }).indexOf($j('#jstree').jstree(true).get_selected()[0]);
+        const ind = this.entities.map((e: any) => { return e.entity_id; }).indexOf($j('#jstree').jstree(true).get_selected()[0]);
         this.currentEntity = this.entities[ind];
     }
 

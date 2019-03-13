@@ -22,16 +22,15 @@
                     [cdkDragDisabled]="diffusion.item_type == 'entity_id' || !injectDatas.editable" [class.notDraggable]="(diffusion.item_type == 'entity_id' || role.id == 'dest') && injectDatas.editable" [class.notEditable]="!injectDatas.editable">
                     <mat-icon *ngIf="diffusion.item_type == 'user_id'" mat-list-icon class="fa fa-2x" [ngClass]="[diffusion.item_mode == 'copy' ? 'fa-users' : 'fa-user']"
                         color="primary"></mat-icon>
-                    <h4 mat-line *ngIf="diffusion.item_type == 'user_id'">{{diffusion.item_firstname}}
-                        {{diffusion.item_lastname}}</h4>
+                    <h4 mat-line *ngIf="diffusion.item_type == 'user_id'">{{diffusion.idToDisplay}}</h4>
                     <p mat-line *ngIf="diffusion.item_type == 'user_id'" style="opacity:0.5;">
-                        {{diffusion.item_entity}} </p>
+                        {{diffusion.description}} </p>
                     <button mat-icon-button *ngIf="role.id != 'dest' && injectDatas.editable" (click)="deleteItem(role.id,i)">
                         <mat-icon class="fa fa-times" color="warn"></mat-icon>
                     </button>
                     <mat-icon *ngIf="diffusion.item_type == 'entity_id'" mat-list-icon class="fa fa-sitemap fa-2x"
                         color="primary"></mat-icon>
-                    <h4 *ngIf="diffusion.item_type == 'entity_id'" mat-line>{{diffusion.item_entity}}</h4>
+                    <h4 *ngIf="diffusion.item_type == 'entity_id'" mat-line>{{diffusion.idToDisplay}}</h4>
                     <p *ngIf="diffusion.item_type == 'entity_id'" mat-line style="opacity:0.5;"> &nbsp; </p>
                 </mat-list-item>
             </div>
