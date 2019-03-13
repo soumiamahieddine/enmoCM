@@ -42,7 +42,16 @@ class NoteController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $aNotes = NoteModel::getByResId(['select' => ['notes.id', 'firstname', 'lastname', 'entity_label', 'note_text', 'creation_date'], 'resId' => $aArgs['resId'], 'orderBy' => ['creation_date DESC']]);
+        $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
+        $aNotes = NoteModel::getByUserIdForResource(['select' => ['*'], 'resId' => $aArgs['resId'], 'userId' => $user['id']]);
+        
+        foreach($aNotes as $key => $aNote) {
+            $aUser = UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $aNote['user_id']]);
+            $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aNote['user_id']]);
+            $aNotes[$key]['firstname'] = $aUser['firstname'];
+            $aNotes[$key]['lastname'] = $aUser['lastname'];
+            $aNotes[$key]['entity_label'] = $primaryEntity['entity_label'];
+        }
 
         return $response->withJson($aNotes);
     }

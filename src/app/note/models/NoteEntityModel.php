@@ -49,4 +49,19 @@ class NoteEntityModel
 
         return true;
     }
+
+    public static function getWithEntityInfo(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $noteEntities = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['note_entities', 'entities'],
+            'left_join' => ['note_entities.item_id = entities.entity_id'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data']
+        ]);
+
+        return $noteEntities;
+    }
 }
