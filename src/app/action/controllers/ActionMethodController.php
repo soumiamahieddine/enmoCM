@@ -295,6 +295,8 @@ class ActionMethodController
 
         $allEntities = EntityModel::get(['select' => ['id', 'entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['parent_entity_id']]);
         foreach ($allEntities as $key => $value) {
+            $allEntities[$key]['id'] = $value['entity_id'];
+            $allEntities[$key]['serialId'] = $value['id'];
             if (empty($value['parent_entity_id'])) {
                 $allEntities[$key]['parent'] = '#';
                 $allEntities[$key]['icon'] = "fa fa-building";

@@ -23,7 +23,6 @@ use Entity\models\EntityModel;
 use SrcCore\models\DatabaseModel;
 use User\models\UserModel;
 use Resource\models\ResModel;
-use Group\models\ServiceModel;
 
 class ListInstanceController
 {
