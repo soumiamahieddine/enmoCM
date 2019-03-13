@@ -156,7 +156,6 @@ $app->get('/administration/doctypes/new', \Doctype\controllers\FirstLevelControl
 $app->post('/emails', \Email\controllers\EmailController::class . ':send');
 $app->delete('/emails/{id}', \Email\controllers\EmailController::class . ':delete');
 
-
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
 $app->post('/entities', \Entity\controllers\EntityController::class . ':create');
