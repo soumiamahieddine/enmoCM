@@ -54,6 +54,7 @@ define('_DOCTYPE_SECONDLEVEL_UPDATED', 'Sous-chemise modifiée');
 define('_DOCUMENT_NOT_FOUND', 'Document introuvable');
 define('_DOCUMENT_OUT_PERIMETER', 'Document en dehors du périmètre');
 define('_EMAIL_ADDED', 'Courriel ajouté');
+define('_EMAIL_REMOVED', 'Courriel supprimé');
 define('_ENTITY_CREATION', 'Création entité');
 define('_ENTITY_MODIFICATION', 'Modification entité');
 define('_ENTITY_SUPPRESSION', 'Suppression entité');

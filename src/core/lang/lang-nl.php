@@ -44,6 +44,7 @@ define('_DOCTYPE_SECONDLEVEL_UPDATED', 'Submap gewijzigd');
 define('_DOCUMENT_NOT_FOUND', 'Document onvindbaar');
 define('_DOCUMENT_OUT_PERIMETER', 'Document buiten de omtrek'); //_TO_TRANSLATE
 define('_EMAIL_ADDED', 'TO_TRANSLATE : Email added');
+define('_EMAIL_REMOVED', 'E-mail verwijderd');
 define('_ENTITY_CREATION', 'Aanmaak eenheid');
 define('_ENTITY_MODIFICATION', 'Wijziging eenheid');
 define('_ENTITY_SUPPRESSION', 'Verwijdering eenheid');

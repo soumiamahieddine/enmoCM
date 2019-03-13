@@ -329,4 +329,39 @@ class EmailController
 
         return ['success' => 'success'];
     }
+
+    public static function deleteEmail(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['userId', 'id']);
+        ValidatorModel::intVal($args, ['userId', 'id']);
+
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        if (empty($user)) {
+            return ['errors' => 'user not found'];
+        }
+
+        $email = EmailModel::getById(['select' => ['id', 'user_id'], 'id' => $args['id']]);
+        if (empty($email)) {
+            return ['errors' => 'email not found'];
+        }
+
+        if ($email['user_id'] != $user['id']) {
+            return ['errors' => 'email out of perimeter'];
+        }
+        
+        EmailModel::delete([
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'emails',
+            'recordId'     => $args['id'],
+            'eventType'    => 'DEL',
+            'eventId'      => 'emailDeletion',
+            'info'         => _EMAIL_REMOVED
+        ]);
+
+        return ['success' => 'email deleted'];
+    }
 }
