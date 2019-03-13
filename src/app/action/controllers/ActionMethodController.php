@@ -304,11 +304,12 @@ class ActionMethodController
             }
             if (in_array($value['entity_id'], $allowedEntities)) {
                 $allEntities[$key]['allowed'] = true;
+                $allEntities[$key]['state']['opened'] = true;
             } else {
                 $allEntities[$key]['allowed'] = false;
                 $allEntities[$key]['state']['disabled'] = true;
+                $allEntities[$key]['state']['opened'] = false;
             }
-            $allEntities[$key]['state']['opened'] = true;
             $allEntities[$key]['text'] = $value['entity_label'];
         }
 

@@ -13,7 +13,7 @@
 		</watermark>
 		<type_calendar>workingDay</type_calendar><!-- calendar or workingDay -->
 		<send_to_contact_with_mandatory_attachment>true</send_to_contact_with_mandatory_attachment><!-- if true, requirement to had a attachment, if false, no mandatory to had a attachment -->
-		<notes_in_print_page><!-- Libellé des notes dans la fiche de liaison -->
+		<notes_in_print_page><!-- Libellé des notes dans la fiche de liaison V1-->
 			<label>NOTE 1</label>
 			<label>NOTE 2</label>
 			<label>NOTE 3</label>
