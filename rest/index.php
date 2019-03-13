@@ -275,6 +275,7 @@ $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/act
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':checkAcknowledgementReceipt');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect', \Action\controllers\ActionMethodController::class . ':getRedirectInformations');
 
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');
