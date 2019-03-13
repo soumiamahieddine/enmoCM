@@ -41,7 +41,7 @@ abstract class EntityModelAbstract
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
 
         $aEntity = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
