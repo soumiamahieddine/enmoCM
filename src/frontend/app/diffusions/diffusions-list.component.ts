@@ -44,11 +44,11 @@ export class DiffusionsListComponent implements OnInit {
                         };
                     }
                 });
-                if (this.injectDatas.resId > 0) {
-                    this.loadListinstance(this.injectDatas.resId);
-                } else if (this.injectDatas.entityId) {
+                /*if (this.injectDatas.entityId) {
                     this.loadListModel(this.injectDatas.entityId);
-                }
+                } else if (this.injectDatas.resId > 0) {
+                    this.loadListinstance(this.injectDatas.resId);
+                }*/
             }, (err: any) => {
                 this.notify.error(err.error.errors);
             });
@@ -80,18 +80,21 @@ export class DiffusionsListComponent implements OnInit {
             this.diffList[element.id].items = [];
         });
 
-        // TO DO : ADD ROUTE
         this.http.get("../../rest/listTemplates/entities/" + entityId)
             .subscribe((data: any) => {
                 data.listTemplate.forEach((element: any) => {
-                    console.log(element);
                     if (element.item_mode == 'cc') {
                         this.diffList['copy'].items.push(element);
                     } else {
                         this.diffList[element.item_mode].items.push(element);
                     }
                 });
-                this.loading = false;
+                if (this.injectDatas.keepRoles.length > 0 && this.injectDatas.resId > 0) {
+                    this.injectListinstanceToKeep();
+                } else {
+                    this.loading = false;
+                }
+                
             });
     }
 
@@ -104,6 +107,21 @@ export class DiffusionsListComponent implements OnInit {
             Object.keys(data).forEach(diffusionRole => {
                 data[diffusionRole].forEach((line: any) => {
                     this.diffList[line.item_mode].items.push(line);
+                });
+            });
+            this.loading = false;
+        }, (err: any) => {
+            this.notify.handleErrors(err);
+        });
+    }
+
+    injectListinstanceToKeep() {
+        this.http.get("../../rest/res/" + this.injectDatas.resId + "/listinstance").subscribe((data: any) => {
+            Object.keys(data).forEach(diffusionRole => {
+                data[diffusionRole].forEach((line: any) => {
+                    if (this.injectDatas.keepRoles.indexOf(line.item_mode) > -1 && this.diffList[line.item_mode].items.map((e: any) => { return e.item_id; }).indexOf(line.item_id) == -1) {
+                        this.diffList[line.item_mode].items.push(line);
+                    }
                 });
             });
             this.loading = false;

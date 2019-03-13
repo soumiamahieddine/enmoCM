@@ -19,8 +19,9 @@ export class RedirectActionComponent implements OnInit {
 
     entities: any[] = [];
     injectDatasParam = {
-        entities: ['DSI'],
-        editable: [true]
+        resId: 0,
+        editable: true,
+        keepRoles: ['copy', 'avis'],
     };
     destUser: any = null;
     currentEntity: any = {
@@ -36,7 +37,9 @@ export class RedirectActionComponent implements OnInit {
 
     loadEntities() {
         this.redirectMode = 'entity';
-
+        if (this.data.selectedRes.length == 1) {
+            this.injectDatasParam.resId = this.data.selectedRes[0];
+        }
         this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect")
             .subscribe((data: any) => {
 
@@ -44,7 +47,7 @@ export class RedirectActionComponent implements OnInit {
 
                 this.entities.forEach(entity => {
                     if (entity.entity_id == 'COU') {
-                    //if (entity.state.selected) {
+                        //if (entity.state.selected) {
                         this.currentEntity = entity;
                     }
                 });
