@@ -330,23 +330,16 @@ class EmailController
         return ['success' => 'success'];
     }
 
-    public static function deleteEmail(array $args)
+    public static function delete(Request $request, Response $response, array $args)
     {
-        ValidatorModel::notEmpty($args, ['userId', 'id']);
-        ValidatorModel::intVal($args, ['userId', 'id']);
-
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        if (empty($user)) {
-            return ['errors' => 'user not found'];
-        }
 
-        $email = EmailModel::getById(['select' => ['id', 'user_id'], 'id' => $args['id']]);
+        $email = EmailModel::getById(['select' => ['user_id'], 'id' => $args['id']]);
         if (empty($email)) {
-            return ['errors' => 'email not found'];
+            return $response->withStatus(400)->withJson(['errors' => 'Email does not exist']);
         }
-
         if ($email['user_id'] != $user['id']) {
-            return ['errors' => 'email out of perimeter'];
+            return $response->withStatus(403)->withJson(['errors' => 'Email out of perimeter']);
         }
         
         EmailModel::delete([
@@ -362,6 +355,6 @@ class EmailController
             'info'         => _EMAIL_REMOVED
         ]);
 
-        return ['success' => 'email deleted'];
+        return $response->withStatus(204);
     }
 }
