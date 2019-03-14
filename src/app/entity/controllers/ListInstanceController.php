@@ -39,18 +39,18 @@ class ListInstanceController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $listinstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$args['resId'], 'entity_id']]);
-        foreach ($listinstances as $key => $value) {
+        $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$args['resId'], 'entity_id']]);
+        foreach ($listInstances as $key => $value) {
             if ($value['item_type'] == 'entity_id') {
-                $listTemplates[$key]['labelToDisplay'] = Entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
-                $listTemplates[$key]['descriptionToDisplay'] = '';
+                $listInstances[$key]['labelToDisplay'] = Entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                $listInstances[$key]['descriptionToDisplay'] = '';
             } else {
-                $listTemplates[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
-                $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
+                $listInstances[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
+                $listInstances[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
             }
         }
 
-        return $response->withJson(['listInstance' => $listinstances]);
+        return $response->withJson(['listInstance' => $listInstances]);
     }
 
     public function getVisaCircuitByResId(Request $request, Response $response, array $aArgs)
