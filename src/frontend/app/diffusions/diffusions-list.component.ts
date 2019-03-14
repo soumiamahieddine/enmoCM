@@ -17,6 +17,7 @@ export class DiffusionsListComponent implements OnInit {
     roles: any = [];
     loading: boolean = true;
     availableRoles: any[] = [];
+    keepRoles: any[] = [];
 
     diffList: any = {};
 
@@ -37,6 +38,9 @@ export class DiffusionsListComponent implements OnInit {
                             'label': element.label,
                             'items': []
                         };
+                    }
+                    if (element.keepInListInstance) {
+                        this.keepRoles.push(element.id);
                     }
                 });
                 /*if (this.injectDatas.entityId) {
@@ -84,7 +88,7 @@ export class DiffusionsListComponent implements OnInit {
                         this.diffList[element.item_mode].items.push(element);
                     }
                 });
-                if (this.injectDatas.keepRoles.length > 0 && this.injectDatas.resId > 0) {
+                if (this.keepRoles.length > 0 && this.injectDatas.resId > 0) {
                     this.injectListinstanceToKeep();
                 } else {
                     this.loading = false;
@@ -113,13 +117,15 @@ export class DiffusionsListComponent implements OnInit {
 
     injectListinstanceToKeep() {
         this.http.get("../../rest/resources/" + this.injectDatas.resId + "/listInstance").subscribe((data: any) => {
-            console.log(data);
             data.listInstance.forEach((element: any) => {
                 if (element.item_mode = 'cc') {
                     element.item_mode = 'copy';
                 }
-                if (this.injectDatas.keepRoles.indexOf(element.item_mode) > -1 && this.diffList[element.item_mode].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
+                if (this.keepRoles.indexOf(element.item_mode) > -1 && this.diffList[element.item_mode].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
                     this.diffList[element.item_mode].items.push(element);
+                }
+                if (this.injectDatas.keepInListinstance && element.item_mode == "dest" && this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
+                    this.diffList["copy"].items.push(element);
                 }
             });
             this.loading = false;

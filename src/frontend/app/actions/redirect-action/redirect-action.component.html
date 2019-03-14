@@ -7,7 +7,7 @@
     <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
     <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b>
     ?<br />
-    <div class="chooseMode" *ngIf="redirectMode == ''">
+    <div class="chooseMode" *ngIf="redirectMode == '' && !loading">
         <div>
             <button mat-raised-button (click)="loadEntities()">Vers un service</button>
         </div>
@@ -34,18 +34,27 @@
     </div>
     <div *ngIf="redirectMode == 'user'" class="row">
         <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
-            <input class="metaSearch" type="text" matInput placeholder="Rechercher un nouvel attributaire">
-        </mat-form-field>
+            <input class="searchUserRedirect" matInput placeholder="Rechercher un nouvel attributaire" [matAutocomplete]="auto" [formControl]="userRedirectCtrl" (click)="userRedirectCtrl.setValue('')">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changeDest($event)" isOpen="true">
+              <mat-option *ngFor="let user of filteredUserRedirect | async" [value]="user">
+                <mat-list>
+                    <mat-list-item>
+                      <mat-icon mat-list-icon class="fa fa-user" color="primary"></mat-icon>
+                      <p mat-line> {{user.labelToDisplay}} </p>
+                    </mat-list-item>
+                  </mat-list>                  
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         <div class="redirectContent" style="flex:2">
             <h2 style="top:-5px;">Nouvel atributaire :</h2>
             <div class="contentUser">
                 <mat-list *ngIf="destUser != null">
                     <mat-list-item>
                         <mat-icon mat-list-icon class="fa fa-2x fa-user" color="primary"></mat-icon>
-                        <h4 mat-line>{{destUser.item_firstname}}
-                            {{destUser.item_lastname}}</h4>
+                        <h4 mat-line>{{destUser.labelToDisplay}}</h4>
                         <p mat-line style="opacity:0.5;">
-                            {{destUser.item_entity}} </p>
+                            {{destUser.descriptionToDisplay}} </p>
                     </mat-list-item>
                 </mat-list>
                 <div *ngIf="destUser == null" class="noSelection">
@@ -53,6 +62,7 @@
                 </div>
             </div>
         </div>
+        <div *ngIf="keepDestForRedirection && oldUser != null" class="alert-message alert-message-info" role="alert" style="margin-top: 30px;"><b>{{oldUser.labelToDisplay}}</b> sera automatiquement mise <b>en copie</b></div>
     </div>
 
     <div class="row" *ngIf="redirectMode != ''">
