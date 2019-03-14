@@ -64,9 +64,10 @@ class UserController
             $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
             $users = [];
             if (!empty($entities)) {
-                $users = UserEntityModel::getUsersByEntities([
+                $users = UserEntityModel::getWithUsers([
                     'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
-                    'entities'  => $entities
+                    'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
+                    'data'      => [$entities, 'DEL']
                 ]);
             }
             $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail']]);
@@ -1375,9 +1376,10 @@ class UserController
                 }
                 if ($GLOBALS['userId'] != 'superadmin') {
                     $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-                    $users = UserEntityModel::getUsersByEntities([
+                    $users = UserEntityModel::getWithUsers([
                         'select'    => ['users.id'],
-                        'entities'  => $entities
+                        'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
+                        'data'      => [$entities, 'DEL']
                     ]);
                     $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id']]);
                     $users = array_merge($users, $usersNoEntities);

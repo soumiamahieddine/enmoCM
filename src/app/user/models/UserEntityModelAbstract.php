@@ -188,18 +188,19 @@ abstract class UserEntityModelAbstract
         return true;
     }
 
-    public static function getUsersByEntities(array $aArgs)
+    public static function getWithUsers(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['entities']);
-        ValidatorModel::arrayType($aArgs, ['entities', 'select']);
+        ValidatorModel::notEmpty($aArgs, ['select', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
 
-        $aUsers = DatabaseModel::select([
+        $users = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users, users_entities'],
-            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)', 'status != ?'],
-            'data'      => [$aArgs['entities'], 'DEL']
+            'table'     => ['users', 'users_entities'],
+            'left_join' => ['users.user_id = users_entities.user_id'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data']
         ]);
 
-        return $aUsers;
+        return $users;
     }
 }
