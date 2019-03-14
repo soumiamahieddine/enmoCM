@@ -103,7 +103,8 @@ class PreProcessActionController
                 $users = UserEntityModel::getWithUsers([
                     'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname'],
                     'where'     => ['users_entities.entity_id in (?)', 'status not in (?)'],
-                    'data'      => [$allowedEntities, ['DEL', 'ABS']]
+                    'data'      => [$allowedEntities, ['DEL', 'ABS']],
+                    'orderBy'   => ['lastname', 'firstname']
                 ]);
 
                 foreach ($users as $key => $user) {

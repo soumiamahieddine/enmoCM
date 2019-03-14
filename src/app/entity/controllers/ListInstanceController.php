@@ -75,15 +75,14 @@ class ListInstanceController
 
     public function update(Request $request, Response $response)
     {
-        $data = $request->getParams();
-
-        if (empty($data)) {
-            return $response->withStatus(400)->withJson(['errors' => 'listInstances is missing or is empty']);
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body is not set or not an array']);
         }
 
         DatabaseModel::beginTransaction();
 
-        foreach ($data as $ListInstanceByRes) {
+        foreach ($body as $ListInstanceByRes) {
             if (empty($ListInstanceByRes['resId'])) {
                 DatabaseModel::rollbackTransaction();
                 return $response->withStatus(400)->withJson(['errors' => 'resId is empty']);
