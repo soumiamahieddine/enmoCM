@@ -118,7 +118,7 @@ export class DiffusionsListComponent implements OnInit {
     injectListinstanceToKeep() {
         this.http.get("../../rest/resources/" + this.injectDatas.resId + "/listInstance").subscribe((data: any) => {
             data.listInstance.forEach((element: any) => {
-                if (element.item_mode = 'cc') {
+                if (element.item_mode == 'cc') {
                     element.item_mode = 'copy';
                 }
                 if (this.keepRoles.indexOf(element.item_mode) > -1 && this.diffList[element.item_mode].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {

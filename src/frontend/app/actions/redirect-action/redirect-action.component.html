@@ -15,6 +15,9 @@
             <button mat-raised-button (click)="loadDestUser()">Vers un utilisateur</button>
         </div>
     </div>
+    <div *ngIf="redirectMode == 'none' && !loading">
+        <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">Aucun paramétrage disponible</div>
+    </div>
     <div *ngIf="redirectMode == 'entity'" class="row" style="display: flex;">
         <div class="redirectContent" style="flex:2">
             <h2>Rediriger vers :</h2>
@@ -65,7 +68,7 @@
         <div *ngIf="keepDestForRedirection && oldUser != null" class="alert-message alert-message-info" role="alert" style="margin-top: 30px;"><b>{{oldUser.labelToDisplay}}</b> sera automatiquement mise <b>en copie</b></div>
     </div>
 
-    <div class="row" *ngIf="redirectMode != ''">
+    <div class="row" *ngIf="redirectMode != '' && redirectMode != 'none'">
         <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
     </div>
 </div>

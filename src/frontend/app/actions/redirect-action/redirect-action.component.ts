@@ -45,6 +45,7 @@ export class RedirectActionComponent implements OnInit {
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<RedirectActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void {
+        let noEntity = true;
         this.loading = true;
         this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect/entity")
             .subscribe((data: any) => {
@@ -56,15 +57,21 @@ export class RedirectActionComponent implements OnInit {
                     if (entity.state.selected) {
                         this.currentEntity = entity;
                     }
+                    if (entity.allowed) {
+                        noEntity = false;
+                    }
                 });
 
                 this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect/users")
                     .subscribe((data: any) => {
                         this.userListRedirect = data.users;
                         this.keepDestForRedirection = data.keepDestForRedirection;
-                        if (this.userListRedirect.length == 0 && this.entities.length > 0) {
+                        if (this.userListRedirect.length == 0 && noEntity) {
+                            this.redirectMode = 'none';
+                            this.loading = false;
+                        } else if (this.userListRedirect.length == 0 && !noEntity) {
                             this.loadEntities();
-                        } else if (this.userListRedirect.length > 0 && this.entities.length == 0) {
+                        } else if (this.userListRedirect.length > 0 && noEntity) {
                             this.loadDestUser();
                         } else {
                             this.loading = false;
