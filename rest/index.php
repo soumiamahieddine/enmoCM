@@ -199,7 +199,7 @@ $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':ge
 
 //Listinstance
 $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
-$app->get('/res/{resId}/listinstance', \Entity\controllers\ListInstanceController::class . ':getListByResId');
+$app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
 $app->get('/res/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/res/{resId}/avisCircuit', \Entity\controllers\ListInstanceController::class . ':getAvisCircuitByResId');
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');

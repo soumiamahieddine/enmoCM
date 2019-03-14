@@ -268,7 +268,7 @@ class ListTemplateController
 
         foreach ($listTemplates as $key => $value) {
             if ($value['item_type'] == 'entity_id') {
-                $listTemplates[$key]['labelToDisplay'] = entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                $listTemplates[$key]['labelToDisplay'] = Entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
                 $listTemplates[$key]['descriptionToDisplay'] = '';
             } else {
                 $listTemplates[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);

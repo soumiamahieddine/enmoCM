@@ -33,25 +33,24 @@ class ListInstanceController
         return $response->withJson($listinstance);
     }
 
-    public function getListByResId(Request $request, Response $response, array $aArgs)
+    public function getByResId(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => $args['resId'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
-        $listinstances = ListInstanceModel::getListByResId(['select' => ['listinstance_id', 'sequence', 'CASE WHEN item_mode=\'cc\' THEN \'copy\' ELSE item_mode END', 'item_id', 'item_type', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment', 'signatory', 'requested_signature'], 'id' => $aArgs['resId']]);
-        
-        $roles = EntityModel::getRoles();
 
-        $listinstancesFormat = [];
-        foreach ($listinstances as $key2 => $listinstance) {
-            foreach ($roles as $key => $role) {
-                if ($role['id'] == $listinstance['item_mode']) {
-                    $listinstancesFormat[$role['label']][] = $listinstance;
-                }
+        $listinstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$args['resId'], 'entity_id']]);
+        foreach ($listinstances as $key => $value) {
+            if ($value['item_type'] == 'entity_id') {
+                $listTemplates[$key]['labelToDisplay'] = Entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                $listTemplates[$key]['descriptionToDisplay'] = '';
+            } else {
+                $listTemplates[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
+                $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
             }
         }
 
-        return $response->withJson($listinstancesFormat);
+        return $response->withJson(['listInstance' => $listinstances]);
     }
 
     public function getVisaCircuitByResId(Request $request, Response $response, array $aArgs)
