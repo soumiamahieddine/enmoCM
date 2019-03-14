@@ -60,6 +60,6 @@
     </div>
 </div>
 <div mat-dialog-actions class="actions">
-    <button *ngIf="redirectMode != ''" mat-raised-button mat-button color="primary" [disabled]="loading" (click)="onSubmit()">{{lang.validate}}</button>
+    <button *ngIf="redirectMode != ''" mat-raised-button mat-button color="primary" [disabled]="checkValidity()" (click)="onSubmit()">{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>

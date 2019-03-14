@@ -14,13 +14,8 @@ export class DiffusionsListComponent implements OnInit {
 
     lang: any = LANG;
     listinstance: any = [];
-    visaCircuit: any = [];
-    avisCircuit: any = [];
     roles: any = [];
     loading: boolean = true;
-    tabVisaCircuit: boolean = false;
-    tabAvisCircuit: boolean = false;
-    data: any;
     availableRoles: any[] = [];
 
     diffList: any = {};
@@ -94,20 +89,21 @@ export class DiffusionsListComponent implements OnInit {
                 } else {
                     this.loading = false;
                 }
-                
             });
     }
 
     loadListinstance(resId: number) {
         this.loading = true;
-        this.http.get("../../rest/res/" + resId + "/listinstance").subscribe((data: any) => {
-            this.availableRoles.forEach(element => {
-                this.diffList[element.id].items = [];
-            });
-            Object.keys(data).forEach(diffusionRole => {
-                data[diffusionRole].forEach((line: any) => {
-                    this.diffList[line.item_mode].items.push(line);
-                });
+        this.availableRoles.forEach(element => {
+            this.diffList[element.id].items = [];
+        });
+        this.http.get("../../rest/resources/" + resId + "/listInstance").subscribe((data: any) => {
+            data.listInstance.forEach((element: any) => {
+                if (element.item_mode == 'cc') {
+                    this.diffList['copy'].items.push(element);
+                } else {
+                    this.diffList[element.item_mode].items.push(element);
+                }
             });
             this.loading = false;
         }, (err: any) => {
@@ -116,13 +112,15 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     injectListinstanceToKeep() {
-        this.http.get("../../rest/res/" + this.injectDatas.resId + "/listinstance").subscribe((data: any) => {
-            Object.keys(data).forEach(diffusionRole => {
-                data[diffusionRole].forEach((line: any) => {
-                    if (this.injectDatas.keepRoles.indexOf(line.item_mode) > -1 && this.diffList[line.item_mode].items.map((e: any) => { return e.item_id; }).indexOf(line.item_id) == -1) {
-                        this.diffList[line.item_mode].items.push(line);
-                    }
-                });
+        this.http.get("../../rest/resources/" + this.injectDatas.resId + "/listInstance").subscribe((data: any) => {
+            console.log(data);
+            data.listInstance.forEach((element: any) => {
+                if (element.item_mode = 'cc') {
+                    element.item_mode = 'copy';
+                }
+                if (this.injectDatas.keepRoles.indexOf(element.item_mode) > -1 && this.diffList[element.item_mode].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
+                    this.diffList[element.item_mode].items.push(element);
+                }
             });
             this.loading = false;
         }, (err: any) => {
@@ -132,5 +130,17 @@ export class DiffusionsListComponent implements OnInit {
 
     deleteItem(roleId: string, index: number) {
         this.diffList[roleId].items.splice(index, 1);
+    }
+
+    getListinstance() {
+        return this.diffList;
+    }
+
+    getDestUser() {
+        if (this.diffList['dest']) {
+            return this.diffList['dest'].items;
+        } else {
+            return false;
+        }
     }
 }

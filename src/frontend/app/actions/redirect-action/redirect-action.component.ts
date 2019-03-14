@@ -25,6 +25,7 @@ export class RedirectActionComponent implements OnInit {
     };
     destUser: any = null;
     currentEntity: any = {
+        'serialId': 0,
         'entity_label': ''
     };
     redirectMode = '';
@@ -42,12 +43,11 @@ export class RedirectActionComponent implements OnInit {
         }
         this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect")
             .subscribe((data: any) => {
-
+                console.log(data);
                 this.entities = data['entities'];
 
                 this.entities.forEach(entity => {
-                    if (entity.entity_id == 'COU') {
-                        //if (entity.state.selected) {
+                    if (entity.state.selected) {
                         this.currentEntity = entity;
                     }
                 });
@@ -79,19 +79,20 @@ export class RedirectActionComponent implements OnInit {
                     $j('#jstree')
                         // listen for event
                         .on('select_node.jstree', (e: any, data: any) => {
-                            this.selectEntity();
-                            this.appDiffusionsList.loadListModel(this.currentEntity.serialId);
+                            this.selectEntity(data.node.original);
 
                         }).on('deselect_node.jstree', (e: any, data: any) => {
-
-
+                            this.currentEntity = {
+                                'serialId': 0,
+                                'entity_label': ''
+                            };
                         })
                         // create the instance
                         .jstree();
                 }, 0);
                 setTimeout(() => {
                     $j('#jstree').jstree('select_node', this.currentEntity);
-                    this.selectEntity();
+                    this.selectEntity(this.currentEntity);
 
                 }, 200);
 
@@ -111,16 +112,15 @@ export class RedirectActionComponent implements OnInit {
                     }
                 });
             });
-            console.log(this.destUser);
             this.loading = false;
         }, (err: any) => {
             this.notify.handleErrors(err);
         });
     }
 
-    selectEntity() {
-        const ind = this.entities.map((e: any) => { return e.entity_id; }).indexOf($j('#jstree').jstree(true).get_selected()[0]);
-        this.currentEntity = this.entities[ind];
+    selectEntity(entity: any) {
+        this.currentEntity = entity;
+        this.appDiffusionsList.loadListModel(entity.serialId);
     }
 
     onSubmit(): void {
@@ -133,5 +133,13 @@ export class RedirectActionComponent implements OnInit {
                 this.notify.handleErrors(err);
                 this.loading = false;
             });*/
+    }
+
+    checkValidity() {
+        if (this.redirectMode == 'entity' && this.appDiffusionsList && this.appDiffusionsList.getDestUser().length > 0 && this.currentEntity.serialId > 0 && !this.loading) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
