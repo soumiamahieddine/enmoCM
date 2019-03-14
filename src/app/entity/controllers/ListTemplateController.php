@@ -268,10 +268,10 @@ class ListTemplateController
 
         foreach ($listTemplates as $key => $value) {
             if ($value['item_type'] == 'entity_id') {
-                $listTemplates[$key]['idToDisplay'] = entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                $listTemplates[$key]['labelToDisplay'] = entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
                 $listTemplates[$key]['descriptionToDisplay'] = '';
             } else {
-                $listTemplates[$key]['idToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
+                $listTemplates[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                 $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
             }
         }
@@ -310,10 +310,6 @@ class ListTemplateController
 
     public function getTypeRoles(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         $unneededRoles = [];
         if ($aArgs['typeId'] == 'entity_id') {
             $unneededRoles = ['visa', 'sign'];

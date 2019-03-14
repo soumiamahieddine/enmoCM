@@ -240,6 +240,7 @@ class ActionMethodController
     public static function getRedirectInformations(Request $request, Response $response, array $args)
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']]);
 
         $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
         if (!empty($errors['errors'])) {
@@ -307,6 +308,9 @@ class ActionMethodController
             if (in_array($value['entity_id'], $allowedEntities)) {
                 $allEntities[$key]['allowed'] = true;
                 $allEntities[$key]['state']['opened'] = true;
+                if ($primaryEntity['entity_id'] == $value['entity_id']) {
+                    $allEntities[$key]['state']['selected'] = true;
+                }
             } else {
                 $allEntities[$key]['allowed'] = false;
                 $allEntities[$key]['state']['disabled'] = true;
@@ -346,7 +350,10 @@ class ActionMethodController
 
         $allowedEntities = array_unique($allowedEntities);
 
-        $users = UserEntityModel::getUsersByEntities(['select' => ['DISTINCT id', 'users.user_id', 'firstname', 'lastname'], 'entities' => $allowedEntities]);
+        $users = [];
+        if (!empty($allowedEntities)) {
+            $users = UserEntityModel::getUsersByEntities(['select' => ['DISTINCT id', 'users.user_id', 'firstname', 'lastname'], 'entities' => $allowedEntities]);
+        }
 
         return $response->withJson(['entities' => $allEntities, 'users' => $users]);
     }
