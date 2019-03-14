@@ -54,7 +54,6 @@ abstract class ParameterModelAbstract
         return $parameter[0];
     }
 
-
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);

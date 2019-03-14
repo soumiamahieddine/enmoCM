@@ -277,8 +277,8 @@ $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/act
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
 //PreProcess
-$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':checkAcknowledgementReceipt');
-$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect/{mode}', \Action\controllers\PreProcessActionMethodController::class . ':getRedirectInformations');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect/{mode}', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
 
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');
