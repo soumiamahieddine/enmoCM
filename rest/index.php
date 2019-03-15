@@ -216,7 +216,6 @@ $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplat
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
 
 //Notes
-$app->get('/res/{resId}/notes/templates', \Note\controllers\NoteController::class . ':getTemplatesByResId');
 $app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplates');
 $app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
@@ -278,7 +277,7 @@ $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportControlle
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
 //PreProcess
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
-$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect/{mode}', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
 
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');

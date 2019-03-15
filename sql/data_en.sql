@@ -566,7 +566,6 @@ TRUNCATE TABLE listmodels;
 DELETE FROM entities WHERE entity_id = 'ACME';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ACME', 'ACME – A Company that Makes Everything', 'ACME – A Company that Makes Everything', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'ACME' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('ACME', 'entity_id', 0, '', 'user_id', 'dest', 'ACME – A Company that Makes Everything','ACME – A Company that Makes Everything', '', 'Y');
 DELETE FROM entities WHERE entity_id = 'CAB';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CAB', 'Presidency', 'Presidency', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', 'ACME', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'CAB' AND object_type = 'entity_id';
@@ -660,11 +659,9 @@ INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, 
 DELETE FROM entities WHERE entity_id = 'ELUS';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ELUS', 'Board', 'Board', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', 'ACME', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'ELUS' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('ELUS', 'entity_id', 0, '', 'user_id', 'dest', 'Board','Board', '', 'Y');
 DELETE FROM entities WHERE entity_id = 'ACME_FC';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ACME_FC', 'ACME Football Club', 'ACME Football Club', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'ACME_FC' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('ACME_FC', 'entity_id', 0, '', 'user_id', 'dest', 'ACME Football Club','ACME Football Club', '', 'Y');
 
 -- Create BASKETS
 TRUNCATE TABLE baskets;
@@ -1028,7 +1025,7 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('folder_id_increment', '', 200, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('work_batch_autoimport_id', NULL, 1, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('postindexing_workbatch', NULL, 1, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.10.1', NULL, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '19.04.1', NULL, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', '', 0, NULL);
 INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('defaultDepartment', 'Département par défaut sélectionné dans le formulaire des adresses', NULL, 75, NULL);
 INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', 'Bienvenue dans votre <b>G</b>estion <b>E</b>lectronique du <b>C</b>ourrier.');
