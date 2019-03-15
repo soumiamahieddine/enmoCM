@@ -875,4 +875,12 @@ export const LANG_EN = {
     "readyToSendElectronicAr"               : "electronic acknowledgement receipt ready to be send",
     "readyToGeneratePaperAr"                    : "paper acknowledgement receipt ready to be generated",
     "noteTemplates"                             : "Note Templates",
+    "toAService"                                : "To a service",
+    "toAnUser"                                  : "To an user",
+    "NoSettingsAvailable"                       : "No setting available",
+    "RedirectTo"                                : "Redirect to",
+    "NewAssignee"                               : "New assignee",
+    "NoPerson"                                  : "No person",
+    "willBeAutomaticallyInCopy"                 : "will be automatically <b>in copy</b>",
+    "confirm"                                   : "Confirm",
 };

@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Confirmer "{{data.action.label_action}}"</h1>
+<h1 mat-dialog-title>{{lang.confirm}} "{{data.action.label_action}}"</h1>
 <div mat-dialog-content *ngIf="!loadingInit">
     <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
         <mat-spinner style="margin:auto;"></mat-spinner>

@@ -901,4 +901,12 @@ export const LANG_FR = {
     "readyToSendElectronicAr"               : "accusé(s) de réception électronique prêt(s) à être envoyé(s)",
     "readyToGeneratePaperAr"                    : "accusé(s) de réception papier prêt(s) à être généré(s)",
     "noteTemplates"                             : "Modèles d'annotations",
+    "toAService"                                : "Vers un service",
+    "toAnUser"                                  : "Vers un utilisateur",
+    "NoSettingsAvailable"                       : "Aucun paramétrage disponible",
+    "RedirectTo"                                : "Rediriger vers",
+    "NewAssignee"                               : "Nouvel attributaire",
+    "NoPerson"                                  : "Aucune personne",
+    "willBeAutomaticallyInCopy"                 : "sera automatiquement mise <b>en copie</b>",
+    "confirm"                                   : "Confirmer",
 };

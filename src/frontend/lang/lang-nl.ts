@@ -903,4 +903,12 @@ export const LANG_NL = {
     "readyToSendElectronicAr"               : "electronic acknowledgement receipt ready to be send", //_TO_TRANSLATE
     "readyToGeneratePaperAr"                    : "paper acknowledgement receipt ready to be generated", //_TO_TRANSLATE
     "noteTemplates"                             : "Note Templates", //_TO_TRANSLATE
+    "toAService"                                : "Naar een dienst", //_TO_TRANSLATE
+    "toAnUser"                                  : "Naar een gebruiker", //_TO_TRANSLATE
+    "NoSettingsAvailable"                       : "Geen instellingen beschikbaar", //_TO_TRANSLATE
+    "RedirectTo"                                : "Doorverwijzen naar", //_TO_TRANSLATE
+    "NewAssignee"                               : "Nieuwe ontvanger", //_TO_TRANSLATE
+    "NoPerson"                                  : "Geen persoon", //_TO_TRANSLATE
+    "willBeAutomaticallyInCopy"                 : "wordt automatisch <b>gekopieerd</b>", //_TO_TRANSLATE
+    "confirm"                                   : "Bevestigen", //_TO_TRANSLATE
 };

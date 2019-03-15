@@ -9,18 +9,18 @@
     ?<br />
     <div class="chooseMode" *ngIf="redirectMode == '' && !loading">
         <div>
-            <button mat-stroked-button color="primary" (click)="loadEntities()"><i class="fa fa-sitemap"></i>Vers un service</button>
+            <button mat-stroked-button color="primary" (click)="loadEntities()"><i class="fa fa-sitemap"></i>{{lang.toAService}}</button>
         </div>
         <div>
-            <button mat-stroked-button color="primary" (click)="loadDestUser()"><i class="fa fa-user"></i> Vers un utilisateur</button>
+            <button mat-stroked-button color="primary" (click)="loadDestUser()"><i class="fa fa-user"></i>{{lang.toAnUser}}</button>
         </div>
     </div>
     <div *ngIf="redirectMode == 'none' && !loading">
-        <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">Aucun paramétrage disponible</div>
+        <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">{{lang.NoSettingsAvailable}}</div>
     </div>
     <div *ngIf="redirectMode == 'entity'" class="row" style="display: flex;">
         <div class="redirectContent" style="flex:2">
-            <h2>Rediriger vers :</h2>
+            <h2>{{lang.RedirectTo}} :</h2>
             <div class="contentEntities">
                 <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
                     <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="redirectContent" style="flex:1">
-            <h2 title="{{currentEntity.entity_label}}">Liste de diffusion "{{currentEntity.entity_label}}" :</h2>
+            <h2 title="{{currentEntity.entity_label}}">{{lang.diffusionList}} "{{currentEntity.entity_label}}" :</h2>
             <div class="contentEntities">
                 <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
             </div>
@@ -50,7 +50,7 @@
             </mat-autocomplete>
           </mat-form-field>
         <div class="redirectContent" style="flex:2">
-            <h2 style="top:-5px;">Nouvel atributaire :</h2>
+            <h2 style="top:-5px;">{{lang.NewAssignee}} :</h2>
             <div class="contentUser">
                 <mat-list *ngIf="destUser != null">
                     <mat-list-item>
@@ -61,11 +61,11 @@
                     </mat-list-item>
                 </mat-list>
                 <div *ngIf="destUser == null" class="noSelection">
-                    Aucune personne
+                    {{lang.NoPerson}}
                 </div>
             </div>
         </div>
-        <div *ngIf="keepDestForRedirection && oldUser != null" class="alert-message alert-message-info" role="alert" style="margin-top: 30px;"><b>{{oldUser.labelToDisplay}}</b> sera automatiquement mise <b>en copie</b></div>
+        <div *ngIf="keepDestForRedirection && oldUser != null" class="alert-message alert-message-info" role="alert" style="margin-top: 30px;"><b>{{oldUser.labelToDisplay}}</b> <span [innerHTML]="lang.willBeAutomaticallyInCopy"></span></div>
     </div>
 
     <div class="row" *ngIf="redirectMode != '' && redirectMode != 'none'">
