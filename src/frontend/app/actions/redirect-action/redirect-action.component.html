@@ -9,10 +9,10 @@
     ?<br />
     <div class="chooseMode" *ngIf="redirectMode == '' && !loading">
         <div>
-            <button mat-raised-button (click)="loadEntities()">Vers un service</button>
+            <button mat-stroked-button color="primary" (click)="loadEntities()"><i class="fa fa-sitemap"></i>Vers un service</button>
         </div>
         <div>
-            <button mat-raised-button (click)="loadDestUser()">Vers un utilisateur</button>
+            <button mat-stroked-button color="primary" (click)="loadDestUser()"><i class="fa fa-user"></i> Vers un utilisateur</button>
         </div>
     </div>
     <div *ngIf="redirectMode == 'none' && !loading">
