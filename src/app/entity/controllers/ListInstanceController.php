@@ -21,6 +21,7 @@ use Respect\Validation\Validator;
 use Resource\controllers\ResController;
 use Entity\models\EntityModel;
 use SrcCore\models\DatabaseModel;
+use User\models\UserEntityModel;
 use User\models\UserModel;
 use Resource\models\ResModel;
 
@@ -132,9 +133,24 @@ class ListInstanceController
                     ListInstanceModel::create($instance);
 
                     if ($instance['item_mode'] == 'dest') {
-                        $entity = UserModel::getPrimaryEntityByUserId(['userId' => $instance['item_id']]);
+                        $set = ['dest_user' => $instance['item_id']];
+                        $changeDestination = true;
+                        $entities = UserEntityModel::get(['select' => ['entity_id', 'primary_entity'], 'where' => ['user_id = ?'], 'data' => [$instance['item_id']]]);
+                        $resource = ResModel::getById(['select' => ['destination'], 'resId' => [$instance['res_id']]]);
+                        foreach ($entities as $entity) {
+                            if ($entity['entity_id'] == $resource['destination']) {
+                                $changeDestination = false;
+                            }
+                            if ($entity['primary_entity'] == 'Y') {
+                                $primaryEntity = $entity['entity_id'];
+                            }
+                        }
+                        if ($changeDestination && !empty($primaryEntity)) {
+                            $set['destination'] = $primaryEntity;
+                        }
+
                         ResModel::update([
-                            'set'   => ['dest_user' => $instance['item_id'], 'destination' => $entity['entity_id']],
+                            'set'   => $set,
                             'where' => ['res_id = ?'],
                             'data'  => [$instance['res_id']]
                         ]);
