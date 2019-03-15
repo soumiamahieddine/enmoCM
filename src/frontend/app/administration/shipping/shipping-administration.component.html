@@ -1,0 +1,109 @@
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-sidenav-container autosize class="admin-sidenav-container">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
+            <menu-shortcut></menu-shortcut>
+            <menu-nav></menu-nav>
+            <mat-nav-list>
+                <h3 mat-subheader>{{lang.actions}}</h3>
+                <!--<a mat-list-item (click)="snav2.toggle();">
+                    <mat-icon color="primary" mat-list-icon class="fas fa-signal"></mat-icon>
+                    <p mat-line>
+                        {{lang.checkSendmail}}
+                    </p>
+                </a>-->
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading" class="card-app-content">
+                <form class="form-horizontal" (ngSubmit)="onSubmit()" #shippingForm="ngForm">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="shipping.label" required name="label" id="label" title="{{lang.label}}"
+                                    type="text" placeholder="{{lang.label}}" maxlength="255">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="shipping.description" required name="description" id="description"
+                                    title="{{lang.description}}" type="text" placeholder="{{lang.description}}"
+                                    maxlength="255">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8">
+                            <mat-list role="list">
+                                <mat-list-item role="listitem" *ngFor="let option of shapingOptions">
+                                    <mat-slide-toggle color="primary">{{option}}</mat-slide-toggle>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                        <div class="col-sm-4">
+                            <mat-radio-group class="radio-group" [(ngModel)]="shipping.sendMode">
+                                <mat-radio-button *ngFor="let mode of sendModes" [value]="mode" color="primary">
+                                    {{mode}}
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8">
+                            <mat-radio-group class="radio-group" [(ngModel)]="shipping.envelopMode">
+                                <mat-radio-button *ngFor="let mode of envelopModes" [value]="mode" color="primary">
+                                    {{mode}}
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                        <div class="col-sm-4">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="shipping.first_page_price" required name="first_page_price"
+                                    id="first_page_price" title="{{lang.first_page_price}}" type="text" placeholder="{{lang.first_page_price}}"
+                                    maxlength="255">
+                                <span matSuffix>&nbsp;€</span>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="shipping.next_page_price" required name="next_page_price"
+                                    id="next_page_price" title="{{lang.next_page_price}}" type="text" placeholder="{{lang.next_page_price}}"
+                                    maxlength="255">
+                                <span matSuffix>&nbsp;€</span>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="shipping.postage_price" required name="postage_price" id="postage_price"
+                                    title="{{lang.postage_price}}" type="text" placeholder="{{lang.postage_price}}"
+                                    maxlength="255">
+                                <span matSuffix>&nbsp;€</span>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="shipping.login" required name="label" id="login" title="{{lang.login}}"
+                                    type="text" placeholder="{{lang.login}}" maxlength="255">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="shipping.password" required name="password" id="password"
+                                    title="{{lang.password}}" type="password" placeholder="{{lang.password}}" maxlength="255">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
+            <mat-list>
+                <h3 mat-subheader>Action(s)</h3>
+            </mat-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
+</div>

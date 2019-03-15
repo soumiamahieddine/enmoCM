@@ -424,4 +424,16 @@
     <enabled>true</enabled>
     <angular>true</angular>
   </SERVICE>
+  <SERVICE>
+    <id>admin_shipping</id>
+    <name>_SHIPPING_ADMIN</name>
+    <comment>_SHIPPING_ADMIN_DESC</comment>
+    <servicepage>/administration/shipping</servicepage>
+    <servicetype>admin</servicetype>
+    <category>supervision</category>
+    <system_service>false</system_service>
+    <style>fas fa-shipping-fast</style>
+    <enabled>true</enabled>
+    <angular>true</angular>
+  </SERVICE>
 </root>

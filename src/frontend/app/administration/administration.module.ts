@@ -43,10 +43,11 @@ import { DocserverAdministrationComponent }             from './docserver/docser
 import { TemplatesAdministrationComponent }             from './template/templates-administration.component';
 import { TemplateAdministrationComponent, TemplateAdministrationCheckEntitiesModalComponent }              from './template/template-administration.component';
 import { SecuritiesAdministrationComponent }            from './security/securities-administration.component';
-import { SendmailAdministrationComponent }            from './sendmail/sendmail-administration.component';
+import { SendmailAdministrationComponent }              from './sendmail/sendmail-administration.component';
 
-import { TechnicalAdministrationComponent }            from './technical/technical-administration.component';
-import { ListAdministrationComponent }            from './basket/list/list-administration.component';
+import { TechnicalAdministrationComponent }             from './technical/technical-administration.component';
+import { ListAdministrationComponent }                  from './basket/list/list-administration.component';
+import { ShippingAdministrationComponent }              from './shipping/shipping-administration.component';
 
 @NgModule({
     imports:      [
@@ -102,7 +103,8 @@ import { ListAdministrationComponent }            from './basket/list/list-admin
         TechnicalAdministrationComponent,
         ListAdministrationComponent,
         ListAdministrationComponent,
-        TemplateAdministrationCheckEntitiesModalComponent
+        TemplateAdministrationCheckEntitiesModalComponent,
+        ShippingAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
