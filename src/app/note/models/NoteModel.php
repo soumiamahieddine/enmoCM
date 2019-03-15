@@ -190,7 +190,7 @@ class NoteModel
             'select'   => $aArgs['select'],
             'where'    => ['identifier = ?'],
             'data'     => [$aArgs['resId']],
-            'order_by' => ['identifier']
+            'order_by' => ['identifier desc']
         ]);
 
         $notes = [];
