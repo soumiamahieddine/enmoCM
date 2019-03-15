@@ -461,3 +461,8 @@ define("_M2M_ACTION_DONE", "done by");
 define("_M2M_ENTITY_DESTINATION", "Mail is in the department");
 
 define('_ACKNOWLEDGEMENT_RECEIPT_DISPLAYING', 'Displaying acknowledgement receipt');
+
+define("_EMAIL_DRAFT", "Draft");
+define("_EMAIL_WAIT", "Waiting to be send");
+define("_EMAIL_SENT", "Sent");
+define("_EMAIL_ERROR", "Error when sending");

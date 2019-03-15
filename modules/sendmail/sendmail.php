@@ -37,13 +37,13 @@ require_once 'modules'.DIRECTORY_SEPARATOR.'sendmail'.DIRECTORY_SEPARATOR.'sendm
 require_once 'modules'.DIRECTORY_SEPARATOR.'sendmail'.DIRECTORY_SEPARATOR
     .'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
 
-$core_tools = new core_tools();
-$request = new request();
-$list = new lists();
+$core_tools     = new core_tools();
+$request        = new request();
+$list           = new lists();
 $sendmail_tools = new sendmail();
 
 $identifier = '';
-$origin = '';
+$origin     = '';
 $parameters = '';
 
 //Collection ID
@@ -100,7 +100,9 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
  if (isset($_REQUEST['load'])) {
      $core_tools->load_lang();
      $core_tools->load_html();
-     $core_tools->load_header('', true, false); ?><body><?php
+     $core_tools->load_header('', true, false); ?>
+
+<body><?php
     $core_tools->load_js();
 
      //Load list
@@ -113,7 +115,11 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
          echo $listContent;
      } else {
          echo '<span class="error">'._ERROR_IN_PARAMETERS.'</span>';
-     } ?><div id="container" style="width:100%;min-height:0px;height:0px;"></div></body></html><?php
+     } ?>
+    <div id="container" style="width:100%;min-height:0px;height:0px;"></div>
+</body>
+
+</html><?php
  } else {
      //If size is full change some parameters
      if (isset($_REQUEST['size'])
@@ -138,33 +144,30 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
      }
 
      //Table or view
-        $select[EMAILS_TABLE] = array(); //Emails
+        $select['emails'] = array(); //Emails
         $select[USERS_TABLE] = array(); //Users
 
     //Fields
      array_push(
-         $select[EMAILS_TABLE],
-         'email_id',
-         'res_id',
+         $select['emails'],
+         'id as email_id',
+         'document->>\'id\' as res_id',
          'creation_date',
          'user_id',
-            'email_object',
-         'email_object as email_object_short',
-         'sender_email',
-         'user_id as email_expediteur',
-         'to_list as email_destinataire',
-         'email_id as id',
-            'coll_id',
-         'email_status',
-         'email_status as status_img',
-         'email_status as status_label'
+         'object as email_object_short',
+         'sender as sender_email',
+         'recipients as email_destinataire',
+         'id',
+         'status as email_status',
+         'status as status_img'
      );    //Emails
         array_push($select[USERS_TABLE], 'user_id', 'firstname', 'lastname', 'mail');  //Users
 
     //Where clause
      $where_tab = array();
 
-     $where_tab[] = ' res_id = '.$identifier.' ';
+     $where_tab[] = ' document->>\'id\' = \''.$identifier.'\' ';
+     $where_tab[] = 'emails.user_id = users.id';
 
      //Build where
      $where = implode(' and ', $where_tab);
@@ -187,24 +190,23 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
          $limit = 'default';
      }
 
-    
      //Request
      $tab = $request->PDOselect(
-            $select,
-         $where,
-         array(),
-         $orderstr,
-            $_SESSION['config']['databasetype'],
-         $limit,
-         true,
-         EMAILS_TABLE,
-         USERS_TABLE,
-            'user_id',
-         true,
-         false,
-         false,
-         $_REQUEST['start']
-        );
+        $select,
+        $where,
+        array(),
+        $orderstr,
+        $_SESSION['config']['databasetype'],
+        $limit,
+        false,
+        '',
+        '',
+        '',
+        true,
+        false,
+        false,
+        $_REQUEST['start']
+    );
      // $request->show();
 
      //Result Array
@@ -241,24 +243,9 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
                          $tab[$i][$j]['show'] = false;
                          $tab[$i][$j]['order'] = 'user_id';
                      }
-                     if ($tab[$i][$j][$value] == 'firstname') {
-                         $firstname = $request->show_string($tab[$i][$j]['value']);
-                     }
-                     if ($tab[$i][$j][$value] == 'lastname') {
-                         $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']).' '.$firstname;
-                         $tab[$i][$j]['label'] = _USER;
-                         $tab[$i][$j]['size'] = $sizeUser;
-                         $tab[$i][$j]['label_align'] = 'left';
-                         $tab[$i][$j]['align'] = 'left';
-                         $tab[$i][$j]['valign'] = 'bottom';
-                         $tab[$i][$j]['show'] = false;
-                         $tab[$i][$j]['order'] = 'lastname';
-                     }
-
                      if ($tab[$i][$j][$value] == 'email_destinataire') {
-                         $tab_dest = explode(',', $tab[$i][$j]['value']);
+                         $tab_dest = (array)json_decode(htmlspecialchars_decode($tab[$i][$j]['value'], ENT_QUOTES | ENT_HTML401));
                          $tab[$i][$j]['value'] = implode(', ', $tab_dest);
-                         $tab[$i][$j]['value'] = $tab[$i][$j]['value'];
                          $tab[$i][$j]['label'] = _RECIPIENT;
                          $tab[$i][$j]['size'] = $sizeObject;
                          $tab[$i][$j]['label_align'] = 'left';
@@ -266,16 +253,6 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
                          $tab[$i][$j]['valign'] = 'bottom';
                          $tab[$i][$j]['show'] = true;
                          $tab[$i][$j]['order'] = 'email_destinataire';
-                     }
-                     if ($tab[$i][$j][$value] == 'email_object') {
-                         $tab[$i][$j]['value'] = addslashes($tab[$i][$j]['value']);
-                         $tab[$i][$j]['label'] = _EMAIL_OBJECT;
-                         $tab[$i][$j]['size'] = $sizeObject;
-                         $tab[$i][$j]['label_align'] = 'left';
-                         $tab[$i][$j]['align'] = 'left';
-                         $tab[$i][$j]['valign'] = 'bottom';
-                         $tab[$i][$j]['show'] = false;
-                         $tab[$i][$j]['order'] = 'email_object';
                      }
                      if ($tab[$i][$j][$value] == 'email_object_short') {
                          $tab[$i][$j]['value'] = $request->cut_string($request->show_string($tab[$i][$j]['value']), $cutString);
@@ -287,41 +264,19 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
                          $tab[$i][$j]['show'] = true;
                          $tab[$i][$j]['order'] = 'email_object_short';
                      }
-                     if ($tab[$i][$j][$value] == 'status_label') {
-                         $tab[$i][$j]['value'] = addslashes($_SESSION['sendmail']['status'][$tab[$i][$j]['value']]['label']);
-                         $tab[$i][$j]['label'] = _STATUS;
-                         $tab[$i][$j]['size'] = '1';
-                         $tab[$i][$j]['label_align'] = 'left';
-                         $tab[$i][$j]['align'] = 'left';
-                         $tab[$i][$j]['valign'] = 'bottom';
-                         $tab[$i][$j]['show'] = false;
-                         $tab[$i][$j]['order'] = 'status_label';
-                     }
                      if ($tab[$i][$j][$value] == 'status_img') {
-                         $tab[$i][$j]['value'] = '<img src="'
-                                .$_SESSION['config']['businessappurl'].'static.php?module=sendmail&filename='
-                                .$_SESSION['sendmail']['status'][$tab[$i][$j]['value']]['img'].'" title="'
-                                .$_SESSION['sendmail']['status'][$tab[$i][$j]['value']]['label'].'" width="20" height="20" />';
+                         $tab[$i][$j]['value'] = \Email\controllers\EmailController::emailStatus(['status' => $tab[$i][$j]['value']]);
                          $tab[$i][$j]['label'] = _STATUS;
-                         $tab[$i][$j]['size'] = '1';
+                         $tab[$i][$j]['size'] = '10';
                          $tab[$i][$j]['label_align'] = 'left';
                          $tab[$i][$j]['align'] = 'left';
                          $tab[$i][$j]['valign'] = 'bottom';
                          $tab[$i][$j]['show'] = true;
                          $tab[$i][$j]['order'] = 'status_img';
                      }
-                     if ($tab[$i][$j][$value] == 'mail') {
-                         $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                         $tab[$i][$j]['label'] = _SENDER;
-                         $tab[$i][$j]['size'] = $sizeUser;
-                         $tab[$i][$j]['label_align'] = 'left';
-                         $tab[$i][$j]['align'] = 'left';
-                         $tab[$i][$j]['valign'] = 'bottom';
-                         $tab[$i][$j]['show'] = false;
-                         $tab[$i][$j]['order'] = 'mail';
-                     }
                      if ($tab[$i][$j][$value] == 'sender_email') {
-                         $tab[$i][$j]['value'] = $sendmail_tools->explodeSenderEmail($tab[$i][$j]['value']);
+                         $senderInfo = (array)json_decode(htmlspecialchars_decode($tab[$i][$j]['value'], ENT_QUOTES | ENT_HTML401));
+                         $tab[$i][$j]['value'] = $senderInfo['email'];
 
                          $tab[$i][$j]['label'] = _SENDER;
                          $tab[$i][$j]['size'] = '20';
@@ -332,7 +287,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
                          $tab[$i][$j]['order'] = 'sender_email';
                      }
                      if ($tab[$i][$j][$value] == 'id') {
-                         $tab[$i][$j]['value'] = ($sendmail_tools->haveJoinedFiles($tab[$i][$j]['value'])) ?
+                         $tab[$i][$j]['value'] = (\Email\models\EmailModel::hasJoinFiles(['id' => $tab[$i][$j]['value']])) ?
                                 '<i class="fa fa-paperclip fa-2x" title="'._JOINED_FILES.'"></i>' :
                                     '';
                          $tab[$i][$j]['label'] = false;

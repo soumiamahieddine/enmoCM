@@ -125,7 +125,7 @@ class EmailController
                 'object'                => empty($args['data']['object']) ? null : $args['data']['object'],
                 'body'                  => empty($args['data']['body']) ? null : $args['data']['body'],
                 'document'              => empty($args['data']['document']) ? null : json_encode($args['data']['document']),
-                'isHtml'                => $args['data']['isHtml'] ? 'true' : 'false',
+                'is_html'                => $args['data']['isHtml'] ? 'true' : 'false',
                 'status'                => $args['data']['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING'
             ],
             'where' => ['id = ?'],
@@ -405,5 +405,18 @@ class EmailController
         ]);
 
         return $response->withStatus(204);
+    }
+
+    public static function emailStatus(array $args)
+    {
+        if ($args['status'] == 'SENT') {
+            return _EMAIL_SENT;
+        } elseif ($args['status'] == 'ERROR') {
+            return _EMAIL_ERROR;
+        } elseif ($args['status'] == 'WAITING') {
+            return _EMAIL_WAIT;
+        } else {
+            return _EMAIL_DRAFT;
+        }
     }
 }

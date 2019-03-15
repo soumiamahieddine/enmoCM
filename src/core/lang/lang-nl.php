@@ -463,3 +463,8 @@ define('_M2M_ACTION_DONE', 'in werking gesteld door');
 define('_M2M_ENTITY_DESTINATION', 'De brief is in de dienst');
 
 define('_ACKNOWLEDGEMENT_RECEIPT_DISPLAYING', 'Displaying acknowledgement receipt_TO_TRANSLATE');
+
+define("_EMAIL_DRAFT", "Draft_TO_TRANSLATE");
+define("_EMAIL_WAIT", "Waiting to be send_TO_TRANSLATE");
+define("_EMAIL_SENT", "Sent_TO_TRANSLATE");
+define("_EMAIL_ERROR", "Error when sending_TO_TRANSLATE");

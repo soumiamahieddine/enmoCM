@@ -461,3 +461,8 @@ define("_M2M_ACTION_DONE", "actionné par");
 define("_M2M_ENTITY_DESTINATION", "Le courrier est dans l'entité");
 
 define('_ACKNOWLEDGEMENT_RECEIPT_DISPLAYING', 'Visualisation de l\'accusé de réception');
+
+define("_EMAIL_DRAFT", "Brouillon");
+define("_EMAIL_WAIT", "En attente d'envoi");
+define("_EMAIL_SENT", "Envoyé");
+define("_EMAIL_ERROR", "Erreur lors de l'envoi");
