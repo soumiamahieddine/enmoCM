@@ -47,11 +47,12 @@ export class RedirectActionComponent implements OnInit {
     ngOnInit(): void {
         let noEntity = true;
         this.loading = true;
-        this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect/entity")
+        this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect")
             .subscribe((data: any) => {
                 console.log(data);
-                this.injectDatasParam.keepDestForRedirection = data.keepDestForRedirection;
                 this.entities = data['entities'];
+                this.userListRedirect = data.users;
+                this.keepDestForRedirection = data.keepDestForRedirection;
 
                 this.entities.forEach(entity => {
                     if (entity.state.selected) {
@@ -62,23 +63,16 @@ export class RedirectActionComponent implements OnInit {
                     }
                 });
 
-                this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect/users")
-                    .subscribe((data: any) => {
-                        this.userListRedirect = data.users;
-                        this.keepDestForRedirection = data.keepDestForRedirection;
-                        if (this.userListRedirect.length == 0 && noEntity) {
-                            this.redirectMode = 'none';
-                            this.loading = false;
-                        } else if (this.userListRedirect.length == 0 && !noEntity) {
-                            this.loadEntities();
-                        } else if (this.userListRedirect.length > 0 && noEntity) {
-                            this.loadDestUser();
-                        } else {
-                            this.loading = false;
-                        }
-                    }, () => {
-                        location.href = "index.php";
-                    });
+                if (this.userListRedirect.length == 0 && noEntity) {
+                    this.redirectMode = 'none';
+                    this.loading = false;
+                } else if (this.userListRedirect.length == 0 && !noEntity) {
+                    this.loadEntities();
+                } else if (this.userListRedirect.length > 0 && noEntity) {
+                    this.loadDestUser();
+                } else {
+                    this.loading = false;
+                }
 
             }, () => {
                 location.href = "index.php";

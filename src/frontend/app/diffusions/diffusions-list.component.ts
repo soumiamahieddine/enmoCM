@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angular/cdk/drag-drop';
+import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+
+declare function $j(selector: any): any;
 
 @Component({
     selector: 'app-diffusions-list',
@@ -10,7 +13,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angul
     styleUrls: ['diffusions-list.component.scss'],
     providers: [NotificationService]
 })
-export class DiffusionsListComponent implements OnInit {
+export class DiffusionsListComponent extends AutoCompletePlugin implements OnInit {
 
     lang: any = LANG;
     listinstance: any = [];
@@ -23,7 +26,9 @@ export class DiffusionsListComponent implements OnInit {
 
     @Input('injectDatas') injectDatas: any;
 
-    constructor(public http: HttpClient, private notify: NotificationService) { }
+    constructor(public http: HttpClient, private notify: NotificationService) {
+        super(http, ['usersAndEntities']);
+    }
 
     ngOnInit(): void {
         this.http.get("../../rest/listTemplates/types/entity_id/roles")
@@ -148,5 +153,31 @@ export class DiffusionsListComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    addElem(element: any) {
+
+        if (this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.id) == -1) {
+            let itemType = '';
+            if (element.type == 'user') {
+                itemType = 'user_id';
+            } else {
+                itemType = 'entity_id';
+            }
+    
+            const newElemListModel = {
+                difflist_type: "entity_id",
+                item_type: itemType,
+                item_id: element.id,
+                labelToDisplay: element.idToDisplay,
+                descriptionToDisplay: element.otherInfo,
+                item_mode: "copy"
+            };
+            this.diffList['copy'].items.unshift(newElemListModel);
+        }
+        
+        $j('.userDiffList').val('');
+        $j('.userDiffList').blur();
+        
     }
 }
