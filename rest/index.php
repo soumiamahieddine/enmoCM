@@ -154,6 +154,7 @@ $app->get('/administration/doctypes/new', \Doctype\controllers\FirstLevelControl
 
 //Emails
 $app->post('/emails', \Email\controllers\EmailController::class . ':send');
+$app->delete('/emails/{id}', \Email\controllers\EmailController::class . ':delete');
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
@@ -198,7 +199,7 @@ $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':ge
 
 //Listinstance
 $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
-$app->get('/res/{resId}/listinstance', \Entity\controllers\ListInstanceController::class . ':getListByResId');
+$app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
 $app->get('/res/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/res/{resId}/avisCircuit', \Entity\controllers\ListInstanceController::class . ':getAvisCircuitByResId');
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');
@@ -209,12 +210,13 @@ $app->post('/listTemplates', \Entity\controllers\ListTemplateController::class .
 $app->get('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':getById');
 $app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':update');
 $app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
+$app->get('/listTemplates/entities/{entityId}', \Entity\controllers\ListTemplateController::class . ':getByEntityId');
 $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
 
 //Notes
-$app->get('/notes/templates/resources/{resId}', \Note\controllers\NoteController::class . ':getTemplatesByResId');
+$app->get('/res/{resId}/notes/templates', \Note\controllers\NoteController::class . ':getTemplatesByResId');
 $app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplates');
 $app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
@@ -274,7 +276,9 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/su
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
-$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':checkAcknowledgementReceipt');
+//PreProcess
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect/{mode}', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
 
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');

@@ -18,6 +18,7 @@ use Basket\models\ActionGroupBasketModel;
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
 use Basket\models\GroupBasketModel;
+use Basket\models\GroupBasketRedirectModel;
 use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use Group\models\GroupModel;
@@ -247,7 +248,7 @@ class BasketController
                     'data'      => [$aArgs['id'], $group['group_id'], $actionIds],
                     'orderBy'   => ['"order"']
                 ]);
-                $redirects = BasketModel::getGroupActionRedirect([
+                $redirects = GroupBasketRedirectModel::get([
                     'select'    => ['entity_id', 'action_id', 'keyword', 'redirect_mode'],
                     'where'     => ['basket_id = ?', 'group_id = ?', 'action_id in (?)'],
                     'data'      => [$aArgs['id'], $group['group_id'], $actionIds]
@@ -363,7 +364,7 @@ class BasketController
                 }
                 if (!empty($groupAction['redirects'])) {
                     foreach ($groupAction['redirects'] as $redirect) {
-                        BasketModel::createGroupActionRedirect([
+                        GroupBasketRedirectModel::create([
                             'id'            => $aArgs['id'],
                             'groupId'       => $data['group_id'],
                             'actionId'      => $groupAction['id'],
@@ -450,7 +451,7 @@ class BasketController
                 }
                 if (!empty($groupAction['redirects'])) {
                     foreach ($groupAction['redirects'] as $redirect) {
-                        BasketModel::createGroupActionRedirect([
+                        GroupBasketRedirectModel::create([
                             'id'            => $aArgs['id'],
                             'groupId'       => $aArgs['groupId'],
                             'actionId'      => $groupAction['id'],

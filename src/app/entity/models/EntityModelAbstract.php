@@ -41,7 +41,7 @@ abstract class EntityModelAbstract
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
 
         $aEntity = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -397,8 +397,9 @@ abstract class EntityModelAbstract
         if ($loadedXml) {
             foreach ($loadedXml->ROLES->ROLE as $value) {
                 $roles[] = [
-                    'id'    => (string)$value->id,
-                    'label' => defined((string)$value->label) ? constant((string)$value->label) : (string)$value->label
+                    'id'                    => (string)$value->id,
+                    'label'                 => defined((string)$value->label) ? constant((string)$value->label) : (string)$value->label,
+                    'keepInListInstance'    => empty((string)$value->keep_in_diffusion_list) || (string)$value->keep_in_diffusion_list != 'true' ? false : true,
                 ];
             }
         }

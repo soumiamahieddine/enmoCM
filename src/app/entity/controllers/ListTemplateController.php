@@ -257,6 +257,28 @@ class ListTemplateController
         return $response->withJson(['success' => 'success']);
     }
 
+    public function getByEntityId(Request $request, Response $response, array $args)
+    {
+        $entity = EntityModel::getById(['select' => ['entity_id'], 'id' => $args['entityId']]);
+        if (empty($entity)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
+        }
+
+        $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => ['object_id = ?', 'object_type = ?'], 'data' => [$entity['entity_id'], 'entity_id']]);
+
+        foreach ($listTemplates as $key => $value) {
+            if ($value['item_type'] == 'entity_id') {
+                $listTemplates[$key]['labelToDisplay'] = Entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                $listTemplates[$key]['descriptionToDisplay'] = '';
+            } else {
+                $listTemplates[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
+                $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
+            }
+        }
+
+        return $response->withJson(['listTemplate' => $listTemplates]);
+    }
+
     public function updateByUserWithEntityDest(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
@@ -288,10 +310,6 @@ class ListTemplateController
 
     public function getTypeRoles(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         $unneededRoles = [];
         if ($aArgs['typeId'] == 'entity_id') {
             $unneededRoles = ['visa', 'sign'];

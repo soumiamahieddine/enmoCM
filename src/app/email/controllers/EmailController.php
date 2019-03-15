@@ -103,6 +103,56 @@ class EmailController
         return true;
     }
 
+    public static function updateEmail(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['userId', 'data', 'emailId']);
+        ValidatorModel::intVal($args, ['userId', 'emailId']);
+        ValidatorModel::arrayType($args, ['data', 'options']);
+
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+
+        $check = EmailController::controlCreateEmail(['login' => $user['user_id'], 'data' => $args['data']]);
+        if (!empty($check['errors'])) {
+            return ['errors' => $check['errors'], 'code' => $check['code']];
+        }
+
+        $id = EmailModel::update([
+            'set' => [
+                'sender'                => json_encode($args['data']['sender']),
+                'recipients'            => json_encode($args['data']['recipients']),
+                'cc'                    => empty($args['data']['cc']) ? '[]' : json_encode($args['data']['cc']),
+                'cci'                   => empty($args['data']['cci']) ? '[]' : json_encode($args['data']['cci']),
+                'object'                => empty($args['data']['object']) ? null : $args['data']['object'],
+                'body'                  => empty($args['data']['body']) ? null : $args['data']['body'],
+                'document'              => empty($args['data']['document']) ? null : json_encode($args['data']['document']),
+                'isHtml'                => $args['data']['isHtml'] ? 'true' : 'false',
+                'status'                => $args['data']['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING'
+            ],
+            'where' => ['id = ?'],
+            'data' => [$args['emailId']]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'emails',
+            'recordId'     => $id,
+            'eventType'    => 'UP',
+            'eventId'      => 'emailModification',
+            'info'         => _EMAIL_UPDATED
+        ]);
+
+        if ($args['data']['status'] != 'DRAFT') {
+            $customId = CoreConfigModel::getCustomId();
+            if (empty($customId)) {
+                $customId = 'null';
+            }
+            $encryptKey = CoreConfigModel::getEncryptKey();
+            $options = empty($args['options']) ? '' : serialize($args['options']);
+            exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+        }
+
+        return true;
+    }
+
     public static function sendEmail(array $args)
     {
         ValidatorModel::notEmpty($args, ['emailId', 'userId']);
@@ -192,7 +242,6 @@ class EmailController
         if (!empty($email['document'])) {
             $email['document'] = (array)json_decode($email['document']);
             if ($email['document']['isLinked']) {
-
                 $encodedDocument = ResController::getEncodedDocument(['resId' => $email['document']['id'], 'original' => $email['document']['original']]);
                 if (empty($encodedDocument['errors'])) {
                     $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), $encodedDocument['fileName']);
@@ -219,7 +268,7 @@ class EmailController
 
         $phpmailer->Timeout = 30;
         $phpmailer->SMTPDebug = 1;
-        $phpmailer->Debugoutput = function($str) {
+        $phpmailer->Debugoutput = function ($str) {
             if (strpos($str, 'SMTP ERROR') !== false) {
                 HistoryController::add([
                     'tableName'    => 'emails',
@@ -328,5 +377,33 @@ class EmailController
         }
 
         return ['success' => 'success'];
+    }
+
+    public static function delete(Request $request, Response $response, array $args)
+    {
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $email = EmailModel::getById(['select' => ['user_id'], 'id' => $args['id']]);
+        if (empty($email)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Email does not exist']);
+        }
+        if ($email['user_id'] != $user['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Email out of perimeter']);
+        }
+        
+        EmailModel::delete([
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'emails',
+            'recordId'     => $args['id'],
+            'eventType'    => 'DEL',
+            'eventId'      => 'emailDeletion',
+            'info'         => _EMAIL_REMOVED
+        ]);
+
+        return $response->withStatus(204);
     }
 }

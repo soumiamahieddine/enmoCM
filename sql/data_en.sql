@@ -1033,6 +1033,7 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('defaultDepartment', 'Département par défaut sélectionné dans le formulaire des adresses', NULL, 75, NULL);
 INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', 'Bienvenue dans votre <b>G</b>estion <b>E</b>lectronique du <b>C</b>ourrier.');
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Taille des imagettes', '750x900');
+INSERT INTO parameters (id, description, param_value_int) VALUES ('keepDestForRedirection', 'If actived (1), put recipient in copy for diffusion list when redirecting', 0);
 
 ------------
 --DIFFLIST_TYPES
@@ -1049,7 +1050,7 @@ INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type
 ------------
 TRUNCATE TABLE actions;
 TRUNCATE TABLE actions_categories;
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (1, 'redirect', 'Redirect', 'NEW', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N', NULL, 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (1, 'redirect', 'Redirect', 'NEW', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N', NULL, 'redirectAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (2, '', 'Send to service', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (3, '', 'Send back to Mail Room', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (4, '', 'Save', '_NOSTATUS_', 'N', 'Y', 'process', 'N', 'apps', 'N', NULL, 'v1Action');

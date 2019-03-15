@@ -54,6 +54,7 @@ define('_DOCTYPE_SECONDLEVEL_UPDATED', 'Doctype second level edited');
 define('_DOCUMENT_NOT_FOUND', 'Document not found');
 define('_DOCUMENT_OUT_PERIMETER', 'Document out of perimeter');
 define('_EMAIL_ADDED', 'Email added');
+define('_EMAIL_REMOVED', 'Email removed');
 define('_ENTITY_CREATION', 'Entity creation');
 define('_ENTITY_MODIFICATION', 'Entity modification');
 define('_ENTITY_SUPPRESSION', 'Entity suppression');

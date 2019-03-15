@@ -88,36 +88,6 @@ abstract class ListInstanceModelAbstract
         return true;
     }
 
-    public static function getListByResId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::arrayType($aArgs, ['select']);
-
-        $aListinstance = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['listinstance', 'users', 'users_entities', 'entities'],
-            'left_join' => ['listinstance.item_id = users.user_id', 'users_entities.user_id = users.user_id', 'entities.entity_id = users_entities.entity_id'],
-            'where'     => ['res_id = ?', 'item_type = ?', 'difflist_type = ?', 'primary_entity = ?'],
-            'data'      => [$aArgs['id'], 'user_id', 'entity_id', 'Y'],
-            'order_by'  => ['listinstance_id ASC'],
-        ]);
-
-        unset($aArgs['select'][5]);
-        unset($aArgs['select'][6]);
-
-        $aListinstance2 = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['listinstance', 'entities'],
-            'left_join' => ['listinstance.item_id = entities.entity_id'],
-            'where'     => ['res_id = ?', 'item_type = ?', 'difflist_type = ?'],
-            'data'      => [$aArgs['id'], 'entity_id', 'entity_id'],
-            'order_by'  => ['listinstance_id ASC'],
-        ]);
-
-        return array_merge($aListinstance, $aListinstance2);
-    }
-
     public static function getVisaCircuitByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);

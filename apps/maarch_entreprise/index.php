@@ -99,6 +99,10 @@ if (isset($_SESSION['config']['corepath'])) {
     }
 }
 
+if (!empty($_SESSION['user']['UserId'])) {
+    $GLOBALS['userId'] = $_SESSION['user']['UserId'];
+}
+
 if (!isset($_SESSION['user']['UserId'])
     && $_REQUEST['page'] <> 'login'
     && $_REQUEST['page'] <> 'log'

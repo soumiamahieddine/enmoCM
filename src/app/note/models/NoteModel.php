@@ -190,27 +190,30 @@ class NoteModel
             'select'   => $aArgs['select'],
             'where'    => ['identifier = ?'],
             'data'     => [$aArgs['resId']],
-            'order_by' => ['identifier']
+            'order_by' => ['identifier desc']
         ]);
 
         $notes = [];
         foreach ($allNotes as $note) {
             $allowed = false;
+
             if ($note['user_id'] == $user['user_id']) {
                 $allowed = true;
-            } else {
-                $noteEntities = NoteEntityModel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$note['id']]]);
-                if (!empty($noteEntities)) {
-                    foreach ($noteEntities as $noteEntity) {
-                        if (in_array($noteEntity['item_id'], $userEntities)) {
-                            $allowed = true;
-                            break;
-                        }
-                    }
-                } else {
-                    $allowed = true;
-                }
             }
+
+            $noteEntities = NoteEntityModel::getWithEntityInfo(['select' => ['item_id', 'short_label'], 'where' => ['note_id = ?'], 'data' => [$note['id']]]);
+            if (!empty($noteEntities)) {
+                foreach ($noteEntities as $noteEntity) {
+                    $note['entities_restriction'][] = ['short_label' => $noteEntity['short_label'], 'item_id' => [$noteEntity['item_id']]];
+
+                    if (in_array($noteEntity['item_id'], $userEntities)) {
+                        $allowed = true;
+                    }
+                }
+            } else {
+                $allowed = true;
+            }
+
             if ($allowed) {
                 $notes[] = $note;
             }

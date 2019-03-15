@@ -424,7 +424,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $new_difflist = $diffList->list_difflist_roles_to_keep($res_id, $coll_id, $new_difflist['difflist_type'], $new_difflist);
         
         // If feature activated, put old dest in copy
-        if ($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
+        $parameter = \Parameter\models\ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'keepDestForRedirection']);
+        if (!empty($parameter['param_value_int'])) {
             // Get old dest
             $stmt = $db->query(
                 "select * "
@@ -532,7 +533,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     $_SESSION['redirect']['diff_list']['dest']['users'][0]['viewed'] = $res->viewed;
                     $newDestViewed = $res->viewed;
                 }
-                if ($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
+                $parameter = \Parameter\models\ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'keepDestForRedirection']);
+                if (!empty($parameter['param_value_int'])) {
                     $lastDestViewed = 0;
                     // Récupère le nombre de fois où l'ancien destinataire principal a vu le document
                     $stmt = $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'", array($coll_id,$arr_id[$i]));
@@ -584,7 +586,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 // Update dest_user in res table
                 $stmt = $db->query("update ".$table." set dest_user = ? where res_id = ?", array($values_form[$j]['VALUE'],$arr_id[$i]));
                 $list->set_main_dest($values_form[$j]['VALUE'], $coll_id, $arr_id[$i], 'DOC', 'user_id', $newDestViewed);
-                if ($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
+                $parameter = \Parameter\models\ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'keepDestForRedirection']);
+                if (!empty($parameter['param_value_int'])) {
                     array_push($difflist['copy']['users'], array('user_id' => $_SESSION['user']['UserId'], 'lastname' => $_SESSION['user']['LastName'], 'firstname' => $_SESSION['user']['FirstName'], 'entity_id' => $_SESSION['user']['primaryentity']['id'], 'viewed' => $lastDestViewed));
                 }
                 $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[$i], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true);
