@@ -627,7 +627,6 @@ abstract class business_app_tools_Abstract extends Database
         $_SESSION['features'] = array();
         //Defines all features by  default at 'false'
         $_SESSION['features']['search_notes']                    = "false";
-        $_SESSION['features']['dest_to_copy_during_redirection'] = "false";
         $_SESSION['features']['show_types_tree']                 = "false";
         $_SESSION['features']['watermark']                       = array();
         $_SESSION['features']['watermark']['enabled']            = "false";
@@ -648,7 +647,6 @@ abstract class business_app_tools_Abstract extends Database
         if ($xmlfeatures) {
             $feats = $xmlfeatures->FEATURES;
             $_SESSION['features']['search_notes']                    = (string) $feats->search_notes;
-            $_SESSION['features']['dest_to_copy_during_redirection'] = (string) $feats->dest_to_copy_during_redirection;
             $_SESSION['features']['show_types_tree']                 = (string) $feats->show_types_tree;
             $watermark = $feats->watermark;
             $_SESSION['features']['watermark']['enabled']    = (string) $watermark->enabled;
