@@ -280,6 +280,13 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ch
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 
+//shipping
+$app->get('/shippings', \Shipping\controllers\ShippingController::class . ':get');
+$app->get('/shippings/{id}', \Shipping\controllers\ShippingController::class . ':getById');
+$app->post('/shippings', \Shipping\controllers\ShippingController::class . ':create');
+$app->put('/shippings/{id}', \Shipping\controllers\ShippingController::class . ':update');
+$app->delete('/shippings/{id}', \Shipping\controllers\ShippingController::class . ':delete');
+
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources/{resId}', \SignatureBook\controllers\SignatureBookController::class . ':getSignatureBook');
