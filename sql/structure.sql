@@ -1557,7 +1557,7 @@ CREATE TABLE listinstance_history
 listinstance_history_id bigint NOT NULL DEFAULT nextval('listinstance_history_id_seq'::regclass),
 coll_id character varying(50) NOT NULL,
 res_id bigint NOT NULL,
-updated_by_user character varying(128) NOT NULL,
+user_id INTEGER NOT NULL,
 updated_date timestamp without time zone NOT NULL,
 CONSTRAINT listinstance_history_pkey PRIMARY KEY (listinstance_history_id)
 )

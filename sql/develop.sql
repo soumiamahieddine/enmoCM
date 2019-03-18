@@ -135,26 +135,6 @@ END$$;
 UPDATE baskets SET basket_clause = regexp_replace(basket_clause,'recommendation_limit_date','opinion_limit_date','g');
 UPDATE baskets SET basket_res_order = regexp_replace(basket_res_order,'recommendation_limit_date','opinion_limit_date','g');
 
-/* REFACTORING */
-ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
-DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
-UPDATE res_letterbox SET locker_user_id = NULL;
-ALTER TABLE res_letterbox ALTER COLUMN locker_user_id DROP DEFAULT;
-ALTER TABLE res_letterbox ALTER COLUMN locker_user_id TYPE INTEGER USING locker_user_id::integer;
-ALTER TABLE res_letterbox ALTER COLUMN locker_user_id SET DEFAULT NULL;
-ALTER TABLE notes DROP COLUMN IF EXISTS tablename;
-ALTER TABLE notes DROP COLUMN IF EXISTS coll_id;
-ALTER TABLE notes DROP COLUMN IF EXISTS type;
-ALTER TABLE notes ADD COLUMN type CHARACTER VARYING (32) DEFAULT 'resource' NOT NULL;
-DO $$ BEGIN
-  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'notes') AND attname = 'date_note') = 1 THEN
-	  ALTER TABLE notes RENAME COLUMN date_note TO creation_date;
-	  ALTER sequence notes_seq RENAME TO notes_id_seq;
-  END IF;
-END$$;
-ALTER TABLE res_mark_as_read DROP COLUMN IF EXISTS coll_id;
-
-
 /* PARAM LIST DISPLAY */
 UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_attachments' OR result_page = 'list_copies';
 UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]' WHERE result_page = 'list_with_avis';
@@ -198,6 +178,35 @@ INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled) V
 DELETE FROM docservers WHERE docserver_id = 'ACKNOWLEDGEMENT_RECEIPTS';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
 VALUES ('ACKNOWLEDGEMENT_RECEIPTS', 'ACKNOWLEDGEMENT_RECEIPTS', 'Dépôt des AR', 'N', 50000000000, 0, '/opt/maarch/docservers/acknowledgment_receipts/', '2019-04-19 22:22:22.201904', 'letterbox_coll');
+
+/* REFACTORING */
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
+DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
+UPDATE res_letterbox SET locker_user_id = NULL;
+ALTER TABLE res_letterbox ALTER COLUMN locker_user_id DROP DEFAULT;
+ALTER TABLE res_letterbox ALTER COLUMN locker_user_id TYPE INTEGER USING locker_user_id::integer;
+ALTER TABLE res_letterbox ALTER COLUMN locker_user_id SET DEFAULT NULL;
+ALTER TABLE notes DROP COLUMN IF EXISTS tablename;
+ALTER TABLE notes DROP COLUMN IF EXISTS coll_id;
+ALTER TABLE notes DROP COLUMN IF EXISTS type;
+ALTER TABLE notes ADD COLUMN type CHARACTER VARYING (32) DEFAULT 'resource' NOT NULL;
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'notes') AND attname = 'date_note') = 1 THEN
+	  ALTER TABLE notes RENAME COLUMN date_note TO creation_date;
+	  ALTER sequence notes_seq RENAME TO notes_id_seq;
+  END IF;
+END$$;
+ALTER TABLE res_mark_as_read DROP COLUMN IF EXISTS coll_id;
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'listinstance_history') AND attname = 'updated_by_user') THEN
+    ALTER TABLE listinstance_history DROP COLUMN IF EXISTS user_id;
+    ALTER TABLE listinstance_history ADD COLUMN user_id integer;
+    UPDATE listinstance_history set user_id = (select id FROM users where users.user_id = listinstance_history.updated_by_user);
+    ALTER TABLE listinstance_history ALTER COLUMN user_id set not null;
+    ALTER TABLE listinstance_history DROP COLUMN IF EXISTS updated_by_user;
+  END IF;
+END$$;
+
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS

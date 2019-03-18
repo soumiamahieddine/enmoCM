@@ -603,8 +603,10 @@ abstract class diffusion_list_Abstract extends functions
 
     public function save_listinstance_history($coll_id, $res_id, $difflistType)
     {
+        $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $_SESSION['user']['UserId']]);
+
         $db = new Database();
-        $db->query('INSERT INTO listinstance_history (coll_id, res_id, updated_by_user, updated_date) VALUES (?, ?, ?, current_timestamp)', array($coll_id, $res_id, $_SESSION['user']['UserId']));
+        $db->query('INSERT INTO listinstance_history (coll_id, res_id, user_id, updated_date) VALUES (?, ?, ?, current_timestamp)', array($coll_id, $res_id, $user['id']));
         $listinstance_history_id = $db->lastInsertId('listinstance_history_id_seq');
 
         $stmt = $db->query('SELECT * FROM listinstance WHERE res_id = ? and coll_id = ? and difflist_type = ?', array($res_id, $coll_id, $difflistType));
