@@ -281,11 +281,12 @@ $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/act
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 
 //shipping
-$app->get('/shippings', \Shipping\controllers\ShippingController::class . ':get');
-$app->get('/shippings/{id}', \Shipping\controllers\ShippingController::class . ':getById');
-$app->post('/shippings', \Shipping\controllers\ShippingController::class . ':create');
-$app->put('/shippings/{id}', \Shipping\controllers\ShippingController::class . ':update');
-$app->delete('/shippings/{id}', \Shipping\controllers\ShippingController::class . ':delete');
+$app->get('/administration/shippings', \Shipping\controllers\ShippingController::class . ':get');
+$app->get('/administration/shippings/new', \Shipping\controllers\ShippingController::class . ':initShipping');
+$app->get('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':getById');
+$app->post('/administration/shippings', \Shipping\controllers\ShippingController::class . ':create');
+$app->put('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':update');
+$app->delete('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':delete');
 
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');

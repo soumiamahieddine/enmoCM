@@ -81,7 +81,7 @@ abstract class ShippingModelAbstract
                 'description'   => $aArgs['description'],
                 'options'       => $aArgs['options'],
                 'fee'           => $aArgs['fee'],
-                'entity_ids'    => $aArgs['entity_ids'],
+                'entities'      => $aArgs['entities'],
                 'account'       => $aArgs['account'],
             ],
             'where'     => ['id = ?'],

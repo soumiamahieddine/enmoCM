@@ -12,12 +12,14 @@
 
 namespace Shipping\controllers;
 
+use Entity\models\EntityModel;
+use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Shipping\models\ShippingModel;
-use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\PasswordModel;
 
 class ShippingController
 {
@@ -27,7 +29,7 @@ class ShippingController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['shippings' => ShippingModel::get(['id', 'label', 'description', 'options', 'fee', 'entity_ids'])]);
+        return $response->withJson(['shippings' => ShippingModel::get(['id', 'label', 'description', 'options', 'fee', 'entities'])]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -44,6 +46,21 @@ class ShippingController
         if (empty($shippingInfo)) {
             return $response->withStatus(400)->withJson(['errors' => 'Shipping does not exist']);
         }
+        
+        $shippingInfo['account'] = (array)json_decode($shippingInfo['account']);
+        $shippingInfo['account']['password'] = '';
+        $shippingInfo['options']  = (array)json_decode($shippingInfo['options']);
+        $shippingInfo['fee']      = (array)json_decode($shippingInfo['fee']);
+        $shippingInfo['entities'] = (array)json_decode($shippingInfo['entities']);
+
+        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']);
+        foreach ($entities as $key => $entity) {
+            $entities[$key]['state']['selected'] = false;
+            if (in_array($entity['id'], $shippingInfo['entities'])) {
+                $entities[$key]['state']['selected'] = true;
+            }
+        }
+        $shippingInfo['entities'] = $entities;
 
         return $response->withJson($shippingInfo);
     }
@@ -61,6 +78,14 @@ class ShippingController
             return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
 
+        if (!empty($body['account']['password'])) {
+            $body['account']['password'] = PasswordModel::encrypt(['password' => $body['account']['password']]);
+        }
+
+        $body['options']  = json_encode($body['options']);
+        $body['fee']      = json_encode($body['fee']);
+        $body['entities'] = json_encode($body['entities']);
+        $body['account']  = json_encode($body['account']);
         $id = ShippingModel::create($body);
 
         HistoryController::add([
@@ -88,6 +113,18 @@ class ShippingController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
+        if (!empty($body['account']['password'])) {
+            $body['account']['password'] = PasswordModel::encrypt(['password' => $body['account']['password']]);
+        } else {
+            $shippingInfo = ShippingModel::getById(['id' => $aArgs['id'], 'select' => ['account']]);
+            $body['account']['password'] = $shippingInfo['account']->password;
+        }
+
+        $body['options']  = json_encode($body['options']);
+        $body['fee']      = json_encode($body['fee']);
+        $body['entities'] = json_encode($body['entities']);
+        $body['account']  = json_encode($body['account']);
+
         ShippingModel::update($body);
 
         HistoryController::add([
@@ -108,7 +145,7 @@ class ShippingController
         }
 
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+            return $response->withStatus(400)->withJson(['errors' => 'id is not an integer']);
         }
 
         $shippingInfo = ShippingModel::getById(['id' => $aArgs['id'], 'select' => ['label']]);
@@ -122,10 +159,11 @@ class ShippingController
             'info'      => _SHIPPING_DELETED. ' : ' . $shippingInfo['label']
         ]);
 
-        return $response->withJson(['shippings' => ShippingModel::get()]);
+        $shippings = ShippingModel::get(['select' => ['id', 'label', 'description', 'options', 'fee', 'entities']]);
+        return $response->withJson(['shippings' => $shippings]);
     }
 
-    protected function control($aArgs, $mode)
+    protected function checkData($aArgs, $mode)
     {
         $errors = [];
 
@@ -137,6 +175,12 @@ class ShippingController
             }
             if (empty($shippingInfo)) {
                 $errors[] = 'Shipping does not exist';
+            }
+        } else {
+            if (!empty($aArgs['account'])) {
+                if (!Validator::notEmpty()->validate($aArgs['account']['id']) || !Validator::notEmpty()->validate($aArgs['account']['password'])) {
+                    $errors[] = 'account id or password is empty';
+                }
             }
         }
            
@@ -150,17 +194,33 @@ class ShippingController
         }
 
         if (!empty($aArgs['entities'])) {
-            if (Validator::arrayType()->validate($aArgs['entities'])) {
+            if (!Validator::arrayType()->validate($aArgs['entities'])) {
                 $errors[] = 'entities must be an array';
             }
-        }
-
-        if (!empty($aArgs['account'])) {
-            if (Validator::notEmpty()->validate($aArgs['id']) && Validator::notEmpty()->validate($aArgs['password'])) {
-                $errors[] = 'account id or password is empty';
+            foreach ($aArgs['entities'] as $entity) {
+                $info = EntityModel::getByEntityId(['entityId' => $entity, 'select' => ['id']]);
+                if (empty($info)) {
+                    $errors[] = $entity . ' does not exists';
+                }
             }
         }
 
         return $errors;
+    }
+
+    public function initShipping(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_shippings', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']);
+        foreach ($entities as $key => $entity) {
+            $entities[$key]['state']['selected'] = false;
+        }
+
+        return $response->withJson([
+            'entities' => $entities,
+        ]);
     }
 }
