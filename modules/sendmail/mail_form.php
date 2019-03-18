@@ -894,7 +894,11 @@ if ($mode == 'add') {
                             .'" title="'.$note
                             .'"><input type="checkbox" id="note_'.$id.'" name="notes[]"';
 
-                        (in_array($id, $emailArray['notes'])) ? $checked = ' checked="checked"' : $checked = '';
+                        if (!empty($emailArray['notes']) && in_array($id, $emailArray['notes'])) {
+                            $checked = ' checked="checked"' ;
+                        } else {
+                            $checked = '';
+                        }
 
                         $content .= ' '.$checked
                             .' class="check" value="'
@@ -1291,7 +1295,11 @@ if ($mode == 'add') {
                             .'" title="'.$note
                             .'"><input type="checkbox" disabled="disabled" id="note_'.$id.'" name="notes[]"';
 
-                        (in_array($id, $emailArray['notes'])) ? $checked = ' checked="checked"' : $checked = '';
+                        if (!empty($emailArray['notes']) && in_array($id, $emailArray['notes'])) {
+                            $checked = ' checked="checked"' ;
+                        } else {
+                            $checked = '';
+                        }
 
                         $content .= ' '.$checked
                             .' class="check" value="'
