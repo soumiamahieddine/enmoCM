@@ -19,7 +19,6 @@ export class ShippingsAdministrationComponent implements OnInit {
     
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
-    coreUrl: string;
     lang: any = LANG;
 
     shippings: any[] = [];
@@ -56,23 +55,7 @@ export class ShippingsAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        //FOR EXAMPLE
-        this.shippings = [
-            {
-                id: 1,
-                label: 'Envoi vers maileva',
-                description: 'Envoi vers maileva'
-            }
-        ];
-        setTimeout(() => {
-            this.dataSource = new MatTableDataSource(this.shippings);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-        }, 0);
-        this.loading = false;
-        //
-
-        /*this.http.get(this.coreUrl + '../../rest/shippings')
+        this.http.get('../../rest/shippings')
             .subscribe((data: any) => {
                 this.shippings = data.shippings;
 
@@ -81,16 +64,15 @@ export class ShippingsAdministrationComponent implements OnInit {
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);
-
                 this.loading = false;
-            });*/
+            });
     }
 
     deleteShipping(id: number) {
         let r = confirm(this.lang.deleteMsg);
 
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/shippings/' + id)
+            this.http.delete('../../rest/shippings/' + id)
                 .subscribe((data: any) => {
                     this.shippings = data.shippings;
                     this.dataSource = new MatTableDataSource(this.shippings);

@@ -30,13 +30,20 @@ export class ShippingAdministrationComponent implements OnInit {
     shipping: any = {
         label: '',
         description: '',
-        shapingOptions: ['color', 'both_sides', 'address_page'],
-        envelopMode: 'small_simple',
-        sendMode: 'fast',
-        first_page_price: 0,
-        next_page_price: 0,
-        postage_price: 0,
-        login: ''
+        options: {
+            shapingOptions: ['color', 'both_sides', 'address_page'],
+            envelopMode: 'small_simple',
+            sendMode: 'fast',
+        },
+        fee: {
+            first_page_price: 0,
+            next_page_price: 0,
+            postage_price: 0,
+        },
+        account : {
+            id: '',
+            password: ''
+        }
     };
     shippingClone: any = null;
 
@@ -92,13 +99,20 @@ export class ShippingAdministrationComponent implements OnInit {
                 this.shipping = {
                     label: 'Envoi vers maileva',
                     description: 'Envoi vers maileva',
-                    shapingOptions: ['color', 'address_page'],
-                    envelopMode: 'small_double',
-                    sendMode: 'economic',
-                    first_page_price: 0.10,
-                    next_page_price: 0.30,
-                    postage_price: 3,
-                    login: 'test'
+                    options: {
+                        shapingOptions: ['color', 'address_page'],
+                        envelopMode: 'small_double',
+                        sendMode: 'economic',
+                    },
+                    fee: {
+                        first_page_price: 0.10,
+                        next_page_price: 0.30,
+                        postage_price: 3,
+                    },
+                    account : {
+                        id: 'maileva',
+                        password: ''
+                    }
                 };
                 this.shippingClone = JSON.parse(JSON.stringify(this.shipping));
                 this.loading = false;
@@ -134,11 +148,11 @@ export class ShippingAdministrationComponent implements OnInit {
     }
 
     toggleShapingOption(option: string) {
-        const index = this.shipping.shapingOptions.indexOf(option);
+        const index = this.shipping.options.shapingOptions.indexOf(option);
         if (index > -1) {
-            this.shipping.shapingOptions.splice(index, 1);
+            this.shipping.options.shapingOptions.splice(index, 1);
         } else {
-            this.shipping.shapingOptions.push(option);
+            this.shipping.options.shapingOptions.push(option);
         }
     }
 
