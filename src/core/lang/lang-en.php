@@ -466,3 +466,7 @@ define("_EMAIL_DRAFT", "Draft");
 define("_EMAIL_WAIT", "Waiting to be send");
 define("_EMAIL_SENT", "Sent");
 define("_EMAIL_ERROR", "Error when sending");
+
+define("_SHIPPING_ADDED", "Shipping added");
+define("_SHIPPING_UPDATED", "Shipping updated");
+define("_SHIPPING_DELETED", "Shipping deleted");

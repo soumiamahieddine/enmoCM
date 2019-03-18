@@ -1567,6 +1567,20 @@ process_comment character varying(255),
 CONSTRAINT listinstance_history_details_pkey PRIMARY KEY (listinstance_history_details_id)
 ) WITH ( OIDS=FALSE );
 
+/* SHIPPINGS */
+DROP TABLE IF EXISTS shippings;
+CREATE TABLE shippings
+(
+id serial NOT NULL,
+label character varying(64) NOT NULL,
+description character varying(255) NOT NULL,
+options json DEFAULT '{}',
+fee json DEFAULT '{}',
+entities json DEFAULT '{}',
+account json DEFAULT '{}',
+CONSTRAINT shippings_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 
 --VIEWS
 -- view for letterbox

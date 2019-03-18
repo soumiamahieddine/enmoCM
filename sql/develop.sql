@@ -79,6 +79,21 @@ CONSTRAINT emails_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
+/* SHIPPINGS */
+DROP TABLE IF EXISTS shippings;
+CREATE TABLE shippings
+(
+id serial NOT NULL,
+label character varying(64) NOT NULL,
+description character varying(255) NOT NULL,
+options json DEFAULT '{}',
+fee json DEFAULT '{}',
+entities json DEFAULT '{}',
+account json DEFAULT '{}',
+CONSTRAINT shippings_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
 /* SERVICES */
 DO $$ BEGIN
   IF (SELECT count(group_id) FROM usergroups_services WHERE service_id IN ('edit_recipient_in_process', 'edit_recipient_outside_process')) = 0 THEN

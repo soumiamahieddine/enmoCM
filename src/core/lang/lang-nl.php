@@ -468,3 +468,7 @@ define("_EMAIL_DRAFT", "Draft_TO_TRANSLATE");
 define("_EMAIL_WAIT", "Waiting to be send_TO_TRANSLATE");
 define("_EMAIL_SENT", "Sent_TO_TRANSLATE");
 define("_EMAIL_ERROR", "Error when sending_TO_TRANSLATE");
+
+define("_SHIPPING_ADDED", "Shipping added_TO_TRANSLATE");
+define("_SHIPPING_UPDATED", "Shipping updated_TO_TRANSLATE");
+define("_SHIPPING_DELETED", "Shipping deleted_TO_TRANSLATE");

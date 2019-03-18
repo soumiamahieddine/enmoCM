@@ -466,3 +466,7 @@ define("_EMAIL_DRAFT", "Brouillon");
 define("_EMAIL_WAIT", "En attente d'envoi");
 define("_EMAIL_SENT", "Envoyé");
 define("_EMAIL_ERROR", "Erreur lors de l'envoi");
+
+define("_SHIPPING_ADDED", "Envoi postal ajouté");
+define("_SHIPPING_UPDATED", "Envoi postal mis à jour");
+define("_SHIPPING_DELETED", "Envoi postal supprimé");
