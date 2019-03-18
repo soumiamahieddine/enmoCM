@@ -100,6 +100,12 @@ class MergeController
 
         if (!empty($resource['initiator'])) {
             $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['*']]);
+            if (!empty($initiator)) {
+                foreach ($initiator as $key => $value) {
+                    $resource["initiator_{$key}"] = $value;
+                }
+            }
+
             if (!empty($initiator['parent_entity_id'])) {
                 $parentInitiator = EntityModel::getByEntityId(['entityId' => $initiator['parent_entity_id'], 'select' => ['*']]);
             }

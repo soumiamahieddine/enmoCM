@@ -122,15 +122,16 @@ abstract class UserModelAbstract
     {
         ValidatorModel::notEmpty($args, ['login']);
         ValidatorModel::stringType($args, ['login']);
+        ValidatorModel::arrayType($args, ['select']);
 
         static $users;
 
-        if (!empty($users[$args['login']])) {
+        if (!empty($users[$args['login']]) && !empty($args['select']) && $args['select'] == ['id']) {
             return $users[$args['login']];
         }
 
         $user = DatabaseModel::select([
-            'select'    => ['*'],
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['user_id = ?'],
             'data'      => [$args['login']]

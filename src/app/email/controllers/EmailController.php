@@ -125,8 +125,8 @@ class EmailController
         $user = UserModel::getById(['id' => $emailArray['user_id'], 'select' => ['user_id']]);
         $email['userId'] = $user['user_id'];
 
-        $email['attachments'] = array();
-        $email['attachments_version'] = array();
+        $email['attachments'] = [];
+        $email['attachments_version'] = [];
 
         if (!empty($document['attachments'])) {
             $document['attachments'] = (array)$document['attachments'];
@@ -151,7 +151,7 @@ class EmailController
         $email['sendDate']          = $emailArray['send_date'];
 
         if (!empty($sender['entityId'])) {
-            $entity = \Entity\models\EntityModel::getById(['select' => ['entity_id'], 'id' => $sender['entityId']]);
+            $entity = EntityModel::getById(['select' => ['entity_id'], 'id' => $sender['entityId']]);
             $email['sender_email'] = $entity['entity_id'] . ',' . $sender['email'];
         } else {
             $email['sender_email'] = $sender['email'];
