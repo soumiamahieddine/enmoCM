@@ -32,15 +32,15 @@
                     </div>
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
-                    <ng-container matColumnDef="description">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.description}}</mat-header-cell>
+                    <ng-container matColumnDef="label">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.label}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
-                        {{element.description}} </mat-cell>
+                        {{element.label}} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="value">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.value}}</mat-header-cell>
+                    <ng-container matColumnDef="description">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                        {{element.value}} </mat-cell>
+                        {{element.description}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>

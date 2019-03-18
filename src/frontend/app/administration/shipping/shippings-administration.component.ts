@@ -22,7 +22,7 @@ export class ShippingsAdministrationComponent implements OnInit {
     coreUrl: string;
     lang: any = LANG;
 
-    shippings: any = {};
+    shippings: any[] = [];
 
     loading: boolean = false;
 
@@ -56,7 +56,23 @@ export class ShippingsAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + '../../rest/shippings')
+        //FOR EXAMPLE
+        this.shippings = [
+            {
+                id: 1,
+                label: 'Envoi vers maileva',
+                description: 'Envoi vers maileva'
+            }
+        ];
+        setTimeout(() => {
+            this.dataSource = new MatTableDataSource(this.shippings);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+        }, 0);
+        this.loading = false;
+        //
+
+        /*this.http.get(this.coreUrl + '../../rest/shippings')
             .subscribe((data: any) => {
                 this.shippings = data.shippings;
 
@@ -67,7 +83,7 @@ export class ShippingsAdministrationComponent implements OnInit {
                 }, 0);
 
                 this.loading = false;
-            });
+            });*/
     }
 
     deleteShipping(id: number) {

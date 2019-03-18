@@ -5,6 +5,7 @@ import { LANG } from '../../translate.component';
 import { MatSidenav } from '@angular/material';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
+import { ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any): any;
 
@@ -24,16 +25,18 @@ export class ShippingAdministrationComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
+    creationMode: boolean = true;
 
     shipping: any = {
-        label : '',
-        description : '',
-        shapingOptions : ['color', 'both_sides', 'address_page'],
-        envelopMode : 'small_simple',
-        sendMode : 'fast',
-        first_page_price : 0,
-        next_page_price : 0,
-        postage_price : 0,
+        label: '',
+        description: '',
+        shapingOptions: ['color', 'both_sides', 'address_page'],
+        envelopMode: 'small_simple',
+        sendMode: 'fast',
+        first_page_price: 0,
+        next_page_price: 0,
+        postage_price: 0,
+        login: ''
     };
     shippingClone: any = null;
 
@@ -56,9 +59,9 @@ export class ShippingAdministrationComponent implements OnInit {
         'registered_mail_ar'
     ];
 
-    
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
+
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private notify: NotificationService, private headerService: HeaderService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -66,26 +69,58 @@ export class ShippingAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.shippingCreation);
+
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.shippingClone = JSON.parse(JSON.stringify(this.shipping));
 
-        this.loading = false;
 
-        /*this.http.get('../../rest/administration/shipping')
-            .subscribe((data: any) => {
+        this.route.params.subscribe(params => {
+            if (typeof params['id'] == "undefined") {
+                this.headerService.setHeader(this.lang.shippingCreation);
+
+                this.creationMode = true;
+                this.shippingClone = JSON.parse(JSON.stringify(this.shipping));
+
                 this.loading = false;
-            }, (err) => {
-                this.notify.handleErrors(err);
-            });*/
 
-            
+            } else {
+                this.headerService.setHeader(this.lang.shippingModification);
+                this.creationMode = false;
+
+                //FOR EXEMPLE
+                this.shipping = {
+                    label: 'Envoi vers maileva',
+                    description: 'Envoi vers maileva',
+                    shapingOptions: ['color', 'address_page'],
+                    envelopMode: 'small_double',
+                    sendMode: 'economic',
+                    first_page_price: 0.10,
+                    next_page_price: 0.30,
+                    postage_price: 3,
+                    login: 'test'
+                };
+                this.shippingClone = JSON.parse(JSON.stringify(this.shipping));
+                this.loading = false;
+                //
+
+                /*this.http.get('../../rest/administration/shipping/'+params['id'])
+                    .subscribe((data: any) => {
+                        this.shipping = data.shipping
+                        this.shippingClone = JSON.parse(JSON.stringify(this.shipping));
+                        this.loading = false;
+                    }, (err) => {
+                        this.notify.handleErrors(err);
+                    });*/
+
+            }
+        });
+
+
     }
 
     onSubmit() {
-        /*this.http.put('../../rest/configurations/admin_email_server', this.shipping)
+        /*this.http.put('../../rest/administration/shipping', this.shipping)
             .subscribe((data: any) => {
                 this.shippingClone = JSON.parse(JSON.stringify(this.shipping));
                 this.notify.success(this.lang.configurationUpdated);
@@ -96,6 +131,15 @@ export class ShippingAdministrationComponent implements OnInit {
 
     checkModif() {
         return (JSON.stringify(this.shippingClone) === JSON.stringify(this.shipping));
+    }
+
+    toggleShapingOption(option: string) {
+        const index = this.shipping.shapingOptions.indexOf(option);
+        if (index > -1) {
+            this.shipping.shapingOptions.splice(index, 1);
+        } else {
+            this.shipping.shapingOptions.push(option);
+        }
     }
 
     cancelModification() {
