@@ -255,6 +255,89 @@ class CurlModel
         return $curlConfig;
     }
 
+    public static function execSimple(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['url', 'method']);
+        ValidatorModel::stringType($args, ['url', 'method', 'user', 'password']);
+        ValidatorModel::arrayType($args, ['headers', 'body', 'queryParams', 'basicAuth', 'bearerAuth']);
+
+        $opts = [CURLOPT_RETURNTRANSFER => true];
+
+        //Headers
+        if (!empty($args['headers'])) {
+            $opts[CURLOPT_HTTPHEADER] = $args['headers'];
+        }
+        //Auth
+        if (!empty($args['basicAuth'])) {
+            $opts[CURLOPT_HTTPHEADER][] = 'Authorization: Basic ' . base64_encode($args['basicAuth']['user']. ':' .$args['basicAuth']['password']);
+        }
+        if (!empty($args['bearerAuth'])) {
+            $opts[CURLOPT_HTTPHEADER][] = 'Authorization: Bearer ' . $args['bearerAuth']['token'];
+        }
+
+        if (!empty($args['queryParams'])) {
+            $args['url'] .= '?';
+            $i = 0;
+            foreach ($args['queryParams'] as $queryKey => $queryParam) {
+                if ($i > 0) {
+                    $args['url'] .= '&';
+                }
+                $args['url'] .= "{$queryKey}={$queryParam}";
+                ++$i;
+            }
+        }
+        $opts[CURLOPT_URL] = $args['url'];
+
+
+        if (!empty($args['body'])) {
+            if (empty($args['toto'])) {
+                $opts[CURLOPT_POSTFIELDS] = json_encode($args['body']);
+            } else {
+                $opts[CURLOPT_POSTFIELDS] = $args['body'];
+            }
+        }
+        if ($args['method'] == 'POST') {
+            if (empty($args['toto'])) {
+                $opts[CURLOPT_POST] = true;
+            }
+        } elseif ($args['method'] == 'PUT' || $args['method'] == 'PATCH' || $args['method'] == 'DELETE') {
+            $opts[CURLOPT_CUSTOMREQUEST] = $args['method'];
+        }
+
+        $curl = curl_init();
+        curl_setopt_array($curl, $opts);
+        $rawResponse = curl_exec($curl);
+        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $error = curl_error($curl);
+        curl_close($curl);
+
+        LogsController::add([
+            'isTech'    => true,
+            'moduleId'  => 'curl',
+            'level'     => 'DEBUG',
+            'tableName' => '',
+            'recordId'  => 'execSimple',
+            'eventType' => 'Exec Curl : ' . $args['url'],
+            'eventId'   => $rawResponse
+        ]);
+
+        if (!empty($error)) {
+            LogsController::add([
+                'isTech'    => true,
+                'moduleId'  => 'curl',
+                'level'     => 'ERROR',
+                'tableName' => '',
+                'recordId'  => '',
+                'eventType' => 'Error Exec Curl : ' . $error,
+                'eventId'   => $rawResponse
+            ]);
+
+            return ['errors' => $error];
+        }
+
+        return json_decode($rawResponse, true);
+    }
+
     public static function isEnabled(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['curlCallId']);

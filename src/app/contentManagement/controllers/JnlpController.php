@@ -18,7 +18,6 @@ use Docserver\models\DocserverModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use Template\models\TemplateModel;
 
@@ -32,7 +31,7 @@ class JnlpController
 
         $coreUrl = str_replace('rest/', '', \Url::coreurl());
         $tmpPath = CoreConfigModel::getTmpPath();
-        $jnlpUniqueId = DatabaseModel::uniqueId();
+        $jnlpUniqueId = CoreConfigModel::uniqueId();
         $jnlpFileName = $GLOBALS['userId'] . '_maarchCM_' . $jnlpUniqueId;
         $jnlpFileNameExt = $jnlpFileName . '.jnlp';
 

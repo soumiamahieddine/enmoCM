@@ -12,26 +12,20 @@
 
 namespace Action\controllers;
 
-use Basket\models\BasketModel;
-use Basket\models\GroupBasketRedirectModel;
-use Entity\models\EntityModel;
-use Group\models\GroupModel;
+use Attachment\models\AttachmentModel;
+use Convert\controllers\ConvertPdfController;
+use Docserver\models\DocserverModel;
 use History\controllers\HistoryController;
 use Note\models\NoteModel;
-use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Action\models\ResMarkAsReadModel;
 use Action\models\BasketPersistenceModel;
 use Action\models\ActionModel;
-use Slim\Http\Request;
-use Slim\Http\Response;
-use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\CurlModel;
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use MessageExchange\controllers\MessageExchangeReviewController;
-use User\models\UserEntityModel;
-use User\models\UserModel;
 
 class ActionMethodController
 {
@@ -233,6 +227,108 @@ class ActionMethodController
             'user_id'   => $GLOBALS['userId'],
             'basket_id' => $aArgs['data']['basketId']
         ]);
+
+        return true;
+    }
+
+    public static function maileva(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $curlAuth = CurlModel::execSimple([
+            'url'           => 'https://api.sandbox.aws.maileva.net/authentication/oauth2/token',
+            'basicAuth'     => ['user' => 'd80cafd2bf3b42c79dc84f4dc8e6acea', 'password' => 'aaa7833f3e9e48e68bbe3e727b5b5360'],
+            'headers'       => ['Content-Type: application/x-www-form-urlencoded'],
+            'method'        => 'POST',
+            'queryParams'   => ['grant_type' => 'password', 'username' => 'sandbox.562', 'password' => 'lgileb']
+        ]);
+
+        $token = $curlAuth['access_token'];
+        $sendingName = CoreConfigModel::uniqueId();
+
+        $curl = CurlModel::execSimple([
+            'url'           => 'https://api.sandbox.aws.maileva.net/mail/v1/sendings',
+            'bearerAuth'    => ['token' => $token],
+            'headers'       => ['Content-Type: application/json'],
+            'method'        => 'POST',
+            'body'          => ['name' => $sendingName]
+        ]);
+        $curl = CurlModel::execSimple([
+            'url'           => 'https://api.sandbox.aws.maileva.net/mail/v1/sendings',
+            'bearerAuth'    => ['token' => $token],
+            'method'        => 'GET'
+        ]);
+
+        foreach ($curl['sendings'] as $sending) {
+            if ($sending['name'] == $sendingName) {
+                $sendingId = $sending['id'];
+            }
+        }
+
+        $attachments = AttachmentModel::getOnView(['select' => ['res_id', 'res_id_version'], 'where' => ['res_id_master = ?'], 'data' => [$args['resId']]]);
+        $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $attachments[0]['res_id'], 'collId' => 'attachment_coll', 'isVersion' => false]);
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            //TODO
+            return ['errors' => 'Docserver does not exist'];
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+        if (!file_exists($pathToDocument)) {
+            //TODO
+            return ['errors' => 'Document not found on docserver'];
+        }
+
+        $curl = CurlModel::execSimple([
+            'url'           => "https://api.sandbox.aws.maileva.net/mail/v1/sendings/{$sendingId}/documents",
+            'bearerAuth'    => ['token' => $token],
+            'headers'       => ['Content-Type: multipart/form-data'],
+            'method'        => 'POST',
+            'body'          => ['document' => CurlModel::makeCurlFile(['path' => $pathToDocument]), 'metadata' => ['priority' => 0, 'name' => 'tata']],
+            'toto'          => 1
+        ]);
+        $curl = CurlModel::execSimple([
+            'url'           => "https://api.sandbox.aws.maileva.net/mail/v1/sendings/{$sendingId}/documents",
+            'bearerAuth'    => ['token' => $token],
+            'method'        => 'GET'
+        ]);
+
+        $curl = CurlModel::execSimple([
+            'url'           => "https://api.sandbox.aws.maileva.net/mail/v1/sendings/{$sendingId}/recipients",
+            'bearerAuth'    => ['token' => $token],
+            'headers'       => ['Content-Type: application/json'],
+            'method'        => 'POST',
+            'body'          => [
+                "address_line_1"    => "La Poste",
+                "address_line_2"    => "Me Eva DUPONT",
+                "address_line_3"    => "Résidence des Peupliers",
+                "address_line_4"    => "33 avenue de Paris",
+                "address_line_5"    => "BP 356",
+                "address_line_6"    => "75000 Paris",
+                "country_code"      => "FR"
+            ],
+        ]);
+        $curl = CurlModel::execSimple([
+            'url'           => "https://api.sandbox.aws.maileva.net/mail/v1/sendings/{$sendingId}/options",
+            'bearerAuth'    => ['token' => $token],
+            'headers'       => ['Content-Type: application/json'],
+            'method'        => 'PATCH',
+            'body'          => [
+                'postage_type'              => "FAST", //ECONOMIC
+                'color_printing'            => true,
+                'duplex_printing'           => true,
+                'optional_address_sheet'    => false
+            ],
+        ]);
+        $curl = CurlModel::execSimple([
+            'url'           => "https://api.sandbox.aws.maileva.net/mail/v1/sendings/{$sendingId}/submit",
+            'bearerAuth'    => ['token' => $token],
+            'headers'       => ['Content-Type: application/json'],
+            'method'        => 'POST'
+        ]);
+
 
         return true;
     }

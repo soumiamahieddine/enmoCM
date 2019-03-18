@@ -15,6 +15,7 @@
 namespace Entity\controllers;
 
 use Group\models\ServiceModel;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
@@ -116,7 +117,7 @@ class ListTemplateController
                 }
             }
         } else {
-            $data['object_id'] = $data['object_type'] . '_' . DatabaseModel::uniqueId();
+            $data['object_id'] = $data['object_type'] . '_' . CoreConfigModel::uniqueId();
         }
 
         $checkItems = ListTemplateController::checkItems(['items' => $data['items']]);

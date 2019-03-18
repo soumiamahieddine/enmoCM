@@ -13,6 +13,7 @@
 
 namespace Priority\models;
 
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
@@ -63,7 +64,7 @@ abstract class PriorityModelAbstract
         ValidatorModel::intVal($aArgs, ['delays']);
 
         //working_days => true (monday to friday) => false (monday to sunday)
-        $id = DatabaseModel::uniqueId();
+        $id = CoreConfigModel::uniqueId();
         DatabaseModel::insert([
             'table'         => 'priorities',
             'columnsValues' => [
