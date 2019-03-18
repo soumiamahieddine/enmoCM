@@ -35,6 +35,7 @@ import { TemplatesAdministrationComponent }             from './template/templat
 import { TemplateAdministrationComponent }              from './template/template-administration.component';
 import { SecuritiesAdministrationComponent }            from './security/securities-administration.component';
 import { SendmailAdministrationComponent }              from './sendmail/sendmail-administration.component';
+import { ShippingsAdministrationComponent }             from './shipping/shippings-administration.component';
 import { ShippingAdministrationComponent }              from './shipping/shipping-administration.component';
 
 @NgModule({
@@ -85,7 +86,8 @@ import { ShippingAdministrationComponent }              from './shipping/shippin
             { path: 'administration/templates/:id', component: TemplateAdministrationComponent },
             { path: 'administration/securities', component: SecuritiesAdministrationComponent },
             { path: 'administration/sendmail', component: SendmailAdministrationComponent },
-            { path: 'administration/shipping', component: ShippingAdministrationComponent },
+            { path: 'administration/shippings', component: ShippingsAdministrationComponent },
+            { path: 'administration/shippings/:id', component: ShippingAdministrationComponent },
         ]),
     ],
     exports: [

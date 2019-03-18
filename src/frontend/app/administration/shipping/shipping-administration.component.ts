@@ -66,9 +66,11 @@ export class ShippingAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.shippingAdmin);
+        this.headerService.setHeader(this.lang.shippingCreation);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
+
+        this.shippingClone = JSON.parse(JSON.stringify(this.shipping));
 
         this.loading = false;
 
@@ -94,5 +96,9 @@ export class ShippingAdministrationComponent implements OnInit {
 
     checkModif() {
         return (JSON.stringify(this.shippingClone) === JSON.stringify(this.shipping));
+    }
+
+    cancelModification() {
+        this.shipping = JSON.parse(JSON.stringify(this.shippingClone));
     }
 }

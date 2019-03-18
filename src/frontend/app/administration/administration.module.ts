@@ -47,6 +47,7 @@ import { SendmailAdministrationComponent }              from './sendmail/sendmai
 
 import { TechnicalAdministrationComponent }             from './technical/technical-administration.component';
 import { ListAdministrationComponent }                  from './basket/list/list-administration.component';
+import { ShippingsAdministrationComponent }              from './shipping/shippings-administration.component';
 import { ShippingAdministrationComponent }              from './shipping/shipping-administration.component';
 
 @NgModule({
@@ -104,6 +105,7 @@ import { ShippingAdministrationComponent }              from './shipping/shippin
         ListAdministrationComponent,
         ListAdministrationComponent,
         TemplateAdministrationCheckEntitiesModalComponent,
+        ShippingsAdministrationComponent,
         ShippingAdministrationComponent
     ],
     entryComponents: [

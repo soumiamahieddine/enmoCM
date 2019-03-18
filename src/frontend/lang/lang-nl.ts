@@ -911,4 +911,26 @@ export const LANG_NL = {
     "NoPerson"                                  : "Geen persoon", //_TO_TRANSLATE
     "willBeAutomaticallyInCopy"                 : "wordt automatisch <b>gekopieerd</b>", //_TO_TRANSLATE
     "confirm"                                   : "Bevestigen", //_TO_TRANSLATE
+    "shipping_color"                            : "Color", //_TO_TRANSLATE
+    "shipping_both_sides"                            : "Both sides", //_TO_TRANSLATE
+    "shipping_address_page"                            : "Address page", //_TO_TRANSLATE
+    "shipping_fast"                            : "Fast (J+2)", //_TO_TRANSLATE
+    "shipping_economic"                            : "Economic (J+4)", //_TO_TRANSLATE
+    "shipping_registered_mail"                            : "Registered mail", //_TO_TRANSLATE
+    "shipping_registered_mail_ar"                            : "Registered mail AR", //_TO_TRANSLATE
+    "shipping_small_simple"                            : "Small format (DL) - Simple window", //_TO_TRANSLATE
+    "shipping_small_double"                            : "Small format (DL) - Double window", //_TO_TRANSLATE
+    "shipping_big_a4"                            : "Big format A4 (C4)", //_TO_TRANSLATE
+    "shipping_first_page_price"                            : "1st page", //_TO_TRANSLATE
+    "shipping_next_page_price"                            : "Next page(s)", //_TO_TRANSLATE
+    "shipping_postage_price"                            : "Postage", //_TO_TRANSLATE
+    "shipping_maxWeightInfo"                            : "up to 20g", //_TO_TRANSLATE
+    "shapingOptions"                            : "Shapings options", //_TO_TRANSLATE
+    "sendModes"                            : "Send modes", //_TO_TRANSLATE
+    "envelopModes"                            : "Envelop types", //_TO_TRANSLATE
+    "pricesInformations"                            : "Prices informations", //_TO_TRANSLATE
+    "shippingModification"                            : "Shipping modification", //_TO_TRANSLATE
+    "shippingCreation"                            : "Shipping creation", //_TO_TRANSLATE
+    "shippingDeleted"                            : "Shipping deleted", //_TO_TRANSLATE
+    "shippings"                            : "Shippings", //_TO_TRANSLATE
 };
