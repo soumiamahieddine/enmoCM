@@ -103,7 +103,64 @@ class EmailController
         return true;
     }
 
-    public static function updateEmail(array $args)
+    public static function getById(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+        
+        $emailArray  = EmailModel::getById(['id' => $args['id']]);
+        $document      = (array)json_decode($emailArray['document']);
+
+        if (!ResController::hasRightByResId(['resId' => $document['id'], 'userId' => $GLOBALS['userId']])) {
+            return ['errors' => 'Document out of perimeter', 'code' => 403];
+        }
+
+        $sender        = (array)json_decode($emailArray['sender']);
+        $email['to']   = (array)json_decode($emailArray['recipients']);
+        $email['cc']   = (array)json_decode($emailArray['cc']);
+        $email['cci']  = (array)json_decode($emailArray['cci']);
+        $email['id']    = $emailArray['id'];
+        $email['resId'] = $document['id'];
+
+        $user = UserModel::getById(['id' => $emailArray['user_id'], 'select' => ['user_id']]);
+        $email['userId'] = $user['user_id'];
+
+        $email['attachments'] = array();
+        $email['attachments_version'] = array();
+
+        if (!empty($document['attachments'])) {
+            $document['attachments'] = (array)$document['attachments'];
+            foreach ($document['attachments'] as $attachment) {
+                $attachment = (array)$attachment;
+                if ($attachment['isVersion']) {
+                    $email['attachments_version'][] = $attachment['id'];
+                } else {
+                    $email['attachments'][] = $attachment['id'];
+                }
+            }
+        }
+
+        $email['notes'] = $document['notes'];
+
+        $email['object']            = $emailArray['object'];
+        $email['body']              = $emailArray['body'];
+        $email['resMasterAttached'] = ($document['isLinked']) ? 'Y' : 'N';
+        $email['isHtml']            = ($emailArray['is_html']) ? 'Y' : 'N';
+        $email['status']            = $emailArray['status'];
+        $email['creationDate']      = $emailArray['creation_date'];
+        $email['sendDate']          = $emailArray['send_date'];
+
+        if (!empty($sender['entityId'])) {
+            $entity = \Entity\models\EntityModel::getById(['select' => ['entity_id'], 'id' => $sender['entityId']]);
+            $email['sender_email'] = $entity['entity_id'] . ',' . $sender['email'];
+        } else {
+            $email['sender_email'] = $sender['email'];
+        }
+
+        return $email;
+    }
+
+    public static function update(array $args)
     {
         ValidatorModel::notEmpty($args, ['userId', 'data', 'emailId']);
         ValidatorModel::intVal($args, ['userId', 'emailId']);

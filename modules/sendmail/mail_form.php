@@ -116,7 +116,9 @@ $path_to_script = $_SESSION['config']['businessappurl']
 $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
-?><body><?php
+?>
+
+<body><?php
 $core_tools->load_js();
 
 $aUserEntities = \User\models\UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
@@ -608,11 +610,11 @@ if ($mode == 'add') {
     $content .= '</form>';
     $content .= '</div>';
 
-    //UPDATE OR TRANSFER
+//UPDATE OR TRANSFER
 } elseif ($mode == 'up' || $mode == 'transfer') {
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
         $id = $_REQUEST['id'];
-        $emailArray = $sendmail_tools->getEmail($id);
+        $emailArray = \Email\controllers\EmailController::getById(['id' => $id]);
 
         //Check if mail exists
         if (count($emailArray) > 0) {
@@ -1017,7 +1019,7 @@ if ($mode == 'add') {
         if ($formContent == 'messageExchange') {
             $emailArray = ReadMessageExchangeController::getMessageExchange(['id' => $id]);
         } else {
-            $emailArray = $sendmail_tools->getEmail($id, false);
+            $emailArray = \Email\controllers\EmailController::getById(['id' => $id]);
         }
 
         //Check if mail exists
@@ -1386,4 +1388,7 @@ if ($mode == 'add') {
 }
 echo $content;
 
-?></body></html>
+?>
+</body>
+
+</html>

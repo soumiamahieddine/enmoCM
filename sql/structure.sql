@@ -1467,32 +1467,6 @@ CREATE TABLE priorities
 )
 WITH (OIDS=FALSE);
 
--- sendmail module
-CREATE TABLE sendmail
-(
-  email_id serial NOT NULL,
-  coll_id character varying(32) NOT NULL,
-  res_id bigint,
-  user_id character varying(128) NOT NULL,
-  to_list text DEFAULT NULL,
-  cc_list text DEFAULT NULL,
-  cci_list text DEFAULT NULL,
-  email_object character varying(255) DEFAULT NULL,
-  email_body text,
-  is_res_master_attached character varying(1) NOT NULL DEFAULT 'Y',
-  res_version_id_list character varying(255) DEFAULT NULL,
-  res_attachment_id_list character varying(255) DEFAULT NULL,
-  res_version_att_id_list character varying(255) DEFAULT NULL,
-  note_id_list character varying(255) DEFAULT NULL,
-  is_html character varying(1) NOT NULL DEFAULT 'Y',
-  email_status character varying(1) NOT NULL DEFAULT 'D',
-  creation_date timestamp without time zone NOT NULL,
-  send_date timestamp without time zone DEFAULT NULL,
-  sender_email character varying(255) DEFAULT NULL,
-  message_exchange_id text DEFAULT NULL,
-  CONSTRAINT sendmail_pkey PRIMARY KEY (email_id )
- );
-
 -- fileplan module
 DROP SEQUENCE IF EXISTS fp_fileplan_positions_position_id_seq;
 CREATE SEQUENCE fp_fileplan_positions_position_id_seq

@@ -74,32 +74,6 @@ abstract class SendmailAbstract extends Database
         $_SESSION['history']['maildel'] = (string) $hist->maildel;
     }
 
-    public function countUserEmails($id, $coll_id, $owner=false)
-    {
-        $nbr = 0;
-        $db = new Database();
-        $arrayPDO = array();
-        if ($owner=== true) {
-            $where = " and user_id = :user_id ";
-            $arrayPDO = array(":user_id" => $_SESSION['user']['UserId']);
-        } else {
-            $where = "";
-        }
-
-        $arrayPDO = array_merge($arrayPDO, array(":res_id" => $id));
-        $arrayPDO = array_merge($arrayPDO, array(":coll_id" => $coll_id));
-        $stmt = $db->query(
-            "select email_id from "
-            . EMAILS_TABLE
-            . " where res_id = :res_id and coll_id = :coll_id ".$where,
-            $arrayPDO
-        );
-        // $db->show();
-        $nbr = $stmt->rowCount();
-
-        return $nbr;
-    }
-
     public function CheckEmailAdress($adress)
     {
         $error = '';
@@ -254,81 +228,7 @@ abstract class SendmailAbstract extends Database
         return $htmlContent;
     }
 
-    public function getEmail($id, $owner=true)
-    {
-        $email = array();
-        if (!empty($id)) {
-            $db = new Database();
-            if ($owner=== true) {
-                $where = " and user_id = ? ";
-                $arrayPDO = array($_SESSION['user']['UserId']);
-                $stmt = $db->query(
-                    "select * from "
-                    . EMAILS_TABLE
-                    . " where email_id = ? " . $where,
-                    array( $id, $_SESSION['user']['UserId'])
-                );
-            } else {
-                $where = "";
-                $stmt = $db->query(
-                    "select * from "
-                    . EMAILS_TABLE
-                    . " where email_id = ? " . $where,
-                    array($id)
-                );
-            }
-
-            if ($stmt->rowCount() > 0) {
-                $res             = $stmt->fetchObject();
-                $email['id']     = $res->email_id;
-                $email['collId'] = $res->coll_id;
-                $email['resId']  = $res->res_id;
-                $email['userId'] = $res->user_id;
-                $email['to'] = array();
-                if (!empty($res->to_list)) {
-                    $email['to'] = explode(',', $res->to_list);
-                }
-                $email['cc'] = array();
-                if (!empty($res->cc_list)) {
-                    $email['cc'] = explode(',', $res->cc_list);
-                }
-                $email['cci'] = array();
-                if (!empty($res->cci_list)) {
-                    $email['cci'] = explode(',', $res->cci_list);
-                }
-                $email['version'] = array();
-                if (!empty($res->res_version_id_list)) {
-                    $email['version'] = explode(',', $res->res_version_id_list);
-                }
-                $email['attachments'] = array();
-                if (!empty($res->res_attachment_id_list)) {
-                    $email['attachments'] = explode(',', $res->res_attachment_id_list);
-                }
-                $email['attachments_version'] = array();
-                if (!empty($res->res_version_att_id_list)) {
-                    $email['attachments_version'] = explode(',', $res->res_version_att_id_list);
-                }
-                $email['notes'] = array();
-                if (!empty($res->note_id_list)) {
-                    $email['notes'] = explode(',', $res->note_id_list);
-                }
-                $email['object']            = $this->show_string($res->email_object);
-                $body                       = str_replace('###', ';', $res->email_body);
-                $body                       = str_replace('___', '--', $body);
-                $email['body']              = $this->show_string($body);
-                $email['resMasterAttached'] = $res->is_res_master_attached;
-                $email['isHtml']            = $res->is_html;
-                $email['status']            = $res->email_status;
-                $email['creationDate']      = $this->format_date_db($res->creation_date);
-                $email['sendDate']          = $this->format_date_db($res->send_date);
-                $email['sender_email']      = $res->sender_email;
-            }
-        }
-
-        return $email;
-    }
-
-    public function updateAdressInputField($ajaxPath, $adressArray, $inputField, $readOnly=false)
+    public function updateAdressInputField($ajaxPath, $adressArray, $inputField, $readOnly = false)
     {
         $content = '';
         //Init with loading div
@@ -352,7 +252,7 @@ abstract class SendmailAbstract extends Database
         return $content;
     }
 
-    public function updateContactInputField($ajaxPath, $adressArray, $inputField, $readOnly=false)
+    public function updateContactInputField($ajaxPath, $adressArray, $inputField, $readOnly = false)
     {
         $content = '<div id="loading_'.$inputField.'" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></i></div>';
         //Get info from session array and display tag

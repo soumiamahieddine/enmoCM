@@ -71,7 +71,7 @@ TRUNCATE TABLE tags_entities;
 
 TRUNCATE TABLE tag_res;
 
-TRUNCATE TABLE sendmail;
+TRUNCATE TABLE emails;
 
 TRUNCATE TABLE notif_event_stack;
 ALTER SEQUENCE notif_event_stack_seq restart WITH 1;
