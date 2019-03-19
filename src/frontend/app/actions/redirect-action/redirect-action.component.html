@@ -42,8 +42,10 @@
               <mat-option *ngFor="let user of filteredUserRedirect | async" [value]="user">
                 <mat-list>
                     <mat-list-item>
-                      <mat-icon mat-list-icon class="fa fa-user" color="primary"></mat-icon>
-                      <p mat-line> {{user.labelToDisplay}} </p>
+                      <mat-icon mat-list-icon class="fa fa-user" color="primary" style="padding-top:0px;"></mat-icon>
+                      <h4 mat-line>{{user.labelToDisplay}}</h4>
+                        <p mat-line style="opacity:0.5;line-height: 15px;font-size: 10px;">
+                            {{user.descriptionToDisplay}} </p>
                     </mat-list-item>
                   </mat-list>                  
               </mat-option>
