@@ -28,6 +28,7 @@ class ShippingControllerTest extends TestCase
                 'sendMode'   => 'fast'
             ],
             'fee'             => ['first_page' => 1, 'next_page' => 2, 'postage_price' => 12],
+            'entities'        => ['COU', 'PJS'],
             'account'         => ['id' => 'toto', 'password' => '1234']
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -78,6 +79,7 @@ class ShippingControllerTest extends TestCase
         $this->assertSame(1, $responseBody->fee->first_page);
         $this->assertSame(2, $responseBody->fee->next_page);
         $this->assertSame(12, $responseBody->fee->postage_price);
+        $this->assertNotNull($responseBody->entities);
 
         ######## ERROR #############
         $response  = $shipping->getById($request, new \Slim\Http\Response(), ['id' => 999999999]);
@@ -144,6 +146,7 @@ class ShippingControllerTest extends TestCase
         $this->assertSame(10, $responseBody->fee->first_page);
         $this->assertSame(20, $responseBody->fee->next_page);
         $this->assertSame(12, $responseBody->fee->postage_price);
+        $this->assertNotNull($responseBody->entities);
     }
 
     public function testDelete()
@@ -161,5 +164,22 @@ class ShippingControllerTest extends TestCase
         $response = $shipping->delete($request, new \Slim\Http\Response(), ['id' => 'myid']);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('id is not an integer', $responseBody->errors);
+    }
+
+    public function testInitShipping()
+    {
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $shipping    = new \Shipping\controllers\ShippingController();
+
+        $response  = $shipping->initShipping($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->entities);
+
+        foreach ($responseBody->entities as $value) {
+            $this->assertNotNull($value->entity_id);
+            $this->assertNotNull($value->entity_label);
+        }
     }
 }
