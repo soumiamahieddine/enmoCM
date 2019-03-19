@@ -21,8 +21,8 @@ class ListInstanceHistoryDetailModel
 {
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['listinstance_history_id', 'resId', 'item_id', 'item_type', 'item_mode', 'added_by_user', 'added_by_entity', 'difflist_type']);
-        ValidatorModel::intVal($args, ['listinstance_history_id', 'resId', 'sequence']);
+        ValidatorModel::notEmpty($args, ['listinstance_history_id', 'res_id', 'item_id', 'item_type', 'item_mode', 'added_by_user', 'added_by_entity', 'difflist_type']);
+        ValidatorModel::intVal($args, ['listinstance_history_id', 'res_id', 'sequence']);
         ValidatorModel::stringType($args, ['item_type', 'item_id', 'item_mode', 'added_by_user', 'added_by_entity', 'difflist_type', 'process_date', 'process_comment']);
 
         DatabaseModel::insert([

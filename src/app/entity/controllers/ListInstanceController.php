@@ -185,7 +185,7 @@ class ListInstanceController
                     ResModel::update([
                         'set'   => $set,
                         'where' => ['res_id = ?'],
-                        'data'  => [$instance['res_id']]
+                        'data'  => [$ListInstanceByRes['resId']]
                     ]);
                 }
             }
