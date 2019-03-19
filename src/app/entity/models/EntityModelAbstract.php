@@ -31,6 +31,7 @@ abstract class EntityModelAbstract
             'table'     => empty($aArgs['table']) ? ['entities'] : $aArgs['table'],
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'left_join' => empty($aArgs['left_join']) ? [] : $aArgs['left_join'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
             'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);

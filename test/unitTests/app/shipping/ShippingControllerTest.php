@@ -69,16 +69,17 @@ class ShippingControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertNotEmpty($responseBody);
-        $this->assertSame('TEST', $responseBody->label);
-        $this->assertSame('description du TEST', $responseBody->description);
-        $this->assertSame('color', $responseBody->options->shaping[0]);
-        $this->assertSame('both_sides', $responseBody->options->shaping[1]);
-        $this->assertSame('address_page', $responseBody->options->shaping[2]);
-        $this->assertSame('small_simple', $responseBody->options->envelopMode);
-        $this->assertSame('fast', $responseBody->options->sendMode);
-        $this->assertSame(1, $responseBody->fee->first_page);
-        $this->assertSame(2, $responseBody->fee->next_page);
-        $this->assertSame(12, $responseBody->fee->postage_price);
+        $this->assertSame('TEST', $responseBody->shipping->label);
+        $this->assertSame('description du TEST', $responseBody->shipping->description);
+        $this->assertSame('color', $responseBody->shipping->options->shaping[0]);
+        $this->assertSame('both_sides', $responseBody->shipping->options->shaping[1]);
+        $this->assertSame('address_page', $responseBody->shipping->options->shaping[2]);
+        $this->assertSame('small_simple', $responseBody->shipping->options->envelopMode);
+        $this->assertSame('fast', $responseBody->shipping->options->sendMode);
+        $this->assertSame(1, $responseBody->shipping->fee->first_page);
+        $this->assertSame(2, $responseBody->shipping->fee->next_page);
+        $this->assertSame(12, $responseBody->shipping->fee->postage_price);
+        $this->assertNotNull($responseBody->shipping->entities);
         $this->assertNotNull($responseBody->entities);
 
         ######## ERROR #############
@@ -137,15 +138,15 @@ class ShippingControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertNotEmpty($responseBody);
-        $this->assertSame('TEST 2', $responseBody->label);
-        $this->assertSame('description du test 2', $responseBody->description);
-        $this->assertSame('color', $responseBody->options->shaping[0]);
-        $this->assertSame('address_page', $responseBody->options->shaping[1]);
-        $this->assertSame('big_simple', $responseBody->options->envelopMode);
-        $this->assertSame('fast', $responseBody->options->sendMode);
-        $this->assertSame(10, $responseBody->fee->first_page);
-        $this->assertSame(20, $responseBody->fee->next_page);
-        $this->assertSame(12, $responseBody->fee->postage_price);
+        $this->assertSame('TEST 2', $responseBody->shipping->label);
+        $this->assertSame('description du test 2', $responseBody->shipping->description);
+        $this->assertSame('color', $responseBody->shipping->options->shaping[0]);
+        $this->assertSame('address_page', $responseBody->shipping->options->shaping[1]);
+        $this->assertSame('big_simple', $responseBody->shipping->options->envelopMode);
+        $this->assertSame('fast', $responseBody->shipping->options->sendMode);
+        $this->assertSame(10, $responseBody->shipping->fee->first_page);
+        $this->assertSame(20, $responseBody->shipping->fee->next_page);
+        $this->assertSame(12, $responseBody->shipping->fee->postage_price);
         $this->assertNotNull($responseBody->entities);
     }
 

@@ -54,10 +54,11 @@ class ShippingController
         $shippingInfo['entities'] = (array)json_decode($shippingInfo['entities']);
 
         $allEntities = EntityModel::get([
-            'select' => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
-            'table' => ['entities e1, entities e2'],
-            'where' => ['e1.enabled = ?', 'e1.parent_entity_id = e2.entity_id'],
-            'data' => ['Y']
+            'select'    => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
+            'table'     => ['entities e1', 'entities e2'],
+            'left_join' => ['e1.parent_entity_id = e2.entity_id'],
+            'where'     => ['e1.enabled = ?'],
+            'data'      => ['Y']
         ]);
 
         foreach ($allEntities as $key => $value) {
@@ -79,9 +80,7 @@ class ShippingController
             $allEntities[$key]['text'] = $value['entity_label'];
         }
 
-        $shippingInfo['entities'] = $allEntities;
-
-        return $response->withJson($shippingInfo);
+        return $response->withJson(['shipping' => $shippingInfo, 'entities' => $allEntities]);
     }
 
     public function create(Request $request, Response $response)
@@ -234,10 +233,11 @@ class ShippingController
         }
 
         $allEntities = EntityModel::get([
-            'select' => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
-            'table' => ['entities e1, entities e2'],
-            'where' => ['e1.enabled = ?', 'e1.parent_entity_id = e2.entity_id'],
-            'data' => ['Y']
+            'select'    => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
+            'table'     => ['entities e1', 'entities e2'],
+            'left_join' => ['e1.parent_entity_id = e2.entity_id'],
+            'where'     => ['e1.enabled = ?'],
+            'data'      => ['Y']
         ]);
 
         print_r($allEntities);
@@ -250,7 +250,7 @@ class ShippingController
                 $allEntities[$key]['parent'] = (string)$value['parent_id'];
                 $allEntities[$key]['icon']   = "fa fa-sitemap";
             }
-            $allEntities[$key]['state']['opened']   = false;
+
             $allEntities[$key]['allowed']           = true;
             $allEntities[$key]['state']['opened']   = true;
 
