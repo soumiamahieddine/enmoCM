@@ -240,8 +240,16 @@ export class BasketListComponent implements OnInit {
         this.filtersChange.emit();
     }
 
+    refreshHomeBasket(){
+        this.http.get('../../rest/home')
+        .subscribe((data: any) => {
+            this.homeData = data;
+        });
+    }
+
     refreshDaoAfterAction() {
         this.refreshDao();
+        this.refreshHomeBasket();
         const e:any = {checkd : false};
         this.toggleAllRes(e); 
     }
