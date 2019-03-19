@@ -144,7 +144,24 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
     }
 
     getListinstance() {
-        return this.diffList;
+        let listInstanceFormatted: any = [];
+
+        Object.keys(this.diffList).forEach(role => {
+            if (this.diffList[role].items.length > 0) {
+                this.diffList[role].items.forEach((element:any) => {
+                    listInstanceFormatted.push({
+                        difflist_type : element.difflist_type !== undefined ? element.difflist_type : element.object_type,
+                        item_id : element.item_id,
+                        item_mode : element.item_mode,
+                        item_type : element.item_type,
+                        process_date : element.process_date !== undefined ? element.process_date : null,
+                        process_comment : element.process_comment,    
+                    });
+                });
+            }
+        });
+
+        return listInstanceFormatted;
     }
 
     getDestUser() {

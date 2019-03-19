@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/internal/operators/startWith';
 import { map } from 'rxjs/operators';
+import { NoteEditorComponent } from '../../notes/note-editor.component';
 
 declare function $j(selector: any): any;
 
@@ -41,6 +42,7 @@ export class RedirectActionComponent implements OnInit {
     filteredUserRedirect: Observable<any[]>;
 
     @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
+    @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<RedirectActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
@@ -49,7 +51,6 @@ export class RedirectActionComponent implements OnInit {
         this.loading = true;
         this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect")
             .subscribe((data: any) => {
-                console.log(data);
                 this.entities = data['entities'];
                 this.userListRedirect = data.users;
                 this.keepDestForRedirection = data.keepDestForRedirection;
@@ -160,7 +161,7 @@ export class RedirectActionComponent implements OnInit {
             difflist_type: "entity_id",
             item_mode: "dest",
             item_type: "user_id",
-            item_id: "aackermann",
+            item_id: user.user_id,
             labelToDisplay: user.labelToDisplay,
             descriptionToDisplay: user.descriptionToDisplay
         };
@@ -185,14 +186,33 @@ export class RedirectActionComponent implements OnInit {
 
     onSubmit(): void {
         this.loading = true;
-        /*this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : this.data.selectedRes})
-            .subscribe((data: any) => {
-                this.loading = false;
-                this.dialogRef.close('success');
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-                this.loading = false;
-            });*/
+        if (this.redirectMode == 'user') {
+            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: this.diffusionListDestRedirect, note: this.noteEditor.getNoteContent() })
+                .subscribe((data: any) => {
+                    if (data && data.errors != null) {
+                        this.notify.error(data.errors);
+                    }
+                    this.loading = false;
+                    this.dialogRef.close('success');
+
+                }, (err: any) => {
+                    this.notify.handleErrors(err);
+                    this.loading = false;
+                });
+        } else {
+            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: this.appDiffusionsList.getListinstance(), note: this.noteEditor.getNoteContent() })
+                .subscribe((data: any) => {
+                    if (data && data.errors != null) {
+                        this.notify.error(data.errors);
+                    }
+                    this.loading = false;
+                    this.dialogRef.close('success');
+
+                }, (err: any) => {
+                    this.notify.handleErrors(err);
+                    this.loading = false;
+                });
+        }
     }
 
     checkValidity() {
