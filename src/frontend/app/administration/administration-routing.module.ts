@@ -87,6 +87,7 @@ import { ShippingAdministrationComponent }              from './shipping/shippin
             { path: 'administration/securities', component: SecuritiesAdministrationComponent },
             { path: 'administration/sendmail', component: SendmailAdministrationComponent },
             { path: 'administration/shippings', component: ShippingsAdministrationComponent },
+            { path: 'administration/shippings/new', component: ShippingAdministrationComponent },
             { path: 'administration/shippings/:id', component: ShippingAdministrationComponent },
         ]),
     ],

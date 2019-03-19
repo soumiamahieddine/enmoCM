@@ -240,13 +240,14 @@ class ShippingController
             'data' => ['Y']
         ]);
 
+        print_r($allEntities);
         foreach ($allEntities as $key => $value) {
-            $allEntities[$key]['id'] = $value['id'];
+            $allEntities[$key]['id'] = (string)$value['id'];
             if (empty($value['parent_id'])) {
                 $allEntities[$key]['parent'] = '#';
                 $allEntities[$key]['icon']   = "fa fa-building";
             } else {
-                $allEntities[$key]['parent'] = $value['parent_id'];
+                $allEntities[$key]['parent'] = (string)$value['parent_id'];
                 $allEntities[$key]['icon']   = "fa fa-sitemap";
             }
             $allEntities[$key]['state']['opened']   = false;

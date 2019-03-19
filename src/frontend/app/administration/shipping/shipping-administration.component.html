@@ -29,13 +29,14 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="formType ratio-4">
+                        <div class="formType ratio-2">
                             <div class="formType-title">
                                 {{lang.shapingOptions}}
                             </div>
                             <mat-list role="list">
                                 <mat-list-item role="listitem" *ngFor="let option of shapingOptions">
-                                    <mat-slide-toggle color="primary" name="{{option}}" [checked]="shipping.options.shapingOptions.indexOf(option) > -1" (change)="toggleShapingOption(option)">{{lang['shipping_'+option]}}</mat-slide-toggle>
+                                    <mat-slide-toggle color="primary" name="{{option}}" [checked]="shipping.options.shapingOptions.indexOf(option) > -1"
+                                        (change)="toggleShapingOption(option)">{{lang['shipping_'+option]}}</mat-slide-toggle>
                                 </mat-list-item>
                             </mat-list>
                         </div>
@@ -51,7 +52,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="formType ratio-4">
+                        <div class="formType ratio-2">
                             <div class="formType-title">
                                 {{lang.envelopModes}}
                             </div>
@@ -111,15 +112,16 @@
                             </div>
                             <div class="col-sm-6">
                                 <mat-form-field>
-                                    <input matInput [(ngModel)]="shipping.account.id" required name="login" id="login" title="{{lang.login}}"
-                                        type="text" placeholder="{{lang.id}}" maxlength="255">
+                                    <input matInput [(ngModel)]="shipping.account.id" required name="login" id="login"
+                                        title="{{lang.login}}" type="text" placeholder="{{lang.id}}" maxlength="255">
                                 </mat-form-field>
                             </div>
                             <div class="col-sm-6">
                                 <mat-form-field>
-                                    <input matInput [(ngModel)]="shipping.account.password" required name="password" id="password"
-                                        title="{{lang.password}}" type="password" placeholder="{{lang.password}}"
-                                        maxlength="255">
+                                    <input name="password" [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="shipping.account.password"
+                                        matInput [placeholder]="creationMode === false ? this.lang.passwordModification : this.lang.password" [required]="creationMode">
+                                    <mat-icon color="primary" style="cursor: pointer;" matSuffix (click)="hidePassword = !hidePassword" maxlength="255"
+                                        class="fa fa-2x" [ngClass]="[hidePassword ? 'fa-eye-slash' : 'fa-eye']"></mat-icon>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -134,9 +136,15 @@
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
-            fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
+            fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : true" style="overflow-x:hidden;width:400px;">
             <mat-list>
-                <h3 mat-subheader>Action(s)</h3>
+                <h3 mat-subheader>{{lang.chooseEntityAssociationModel}}</h3>
+                <div style="padding:10px;">
+                    <mat-form-field>
+                        <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
+                    </mat-form-field>
+                    <div id="jstree"></div>
+                </div>
             </mat-list>
         </mat-sidenav>
     </mat-sidenav-container>
