@@ -290,16 +290,10 @@ class CurlModel
 
 
         if (!empty($args['body'])) {
-            if (empty($args['toto'])) {
-                $opts[CURLOPT_POSTFIELDS] = json_encode($args['body']);
-            } else {
-                $opts[CURLOPT_POSTFIELDS] = $args['body'];
-            }
+            $opts[CURLOPT_POSTFIELDS] = json_encode($args['body']);
         }
         if ($args['method'] == 'POST') {
-            if (empty($args['toto'])) {
-                $opts[CURLOPT_POST] = true;
-            }
+            $opts[CURLOPT_POST] = true;
         } elseif ($args['method'] == 'PUT' || $args['method'] == 'PATCH' || $args['method'] == 'DELETE') {
             $opts[CURLOPT_CUSTOMREQUEST] = $args['method'];
         }

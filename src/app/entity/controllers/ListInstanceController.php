@@ -23,6 +23,7 @@ use Respect\Validation\Validator;
 use Resource\controllers\ResController;
 use Entity\models\EntityModel;
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
 use Resource\models\ResModel;
@@ -83,19 +84,33 @@ class ListInstanceController
             return $response->withStatus(400)->withJson(['errors' => 'Body is not set or not an array']);
         }
 
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $controller = ListInstanceController::updateListInstance(['data' => $body, 'userId' => $currentUser['id']]);
+        if (!empty($controller['errors'])) {
+            return $response->withStatus($controller['code'])->withJson(['errors' => $controller['errors']]);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public static function updateListInstance(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['data', 'userId']);
+        ValidatorModel::arrayType($args, ['data']);
+        ValidatorModel::intVal($args, ['userId']);
+
         DatabaseModel::beginTransaction();
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId']]);
-
-        foreach ($body as $ListInstanceByRes) {
+        foreach ($args['data'] as $ListInstanceByRes) {
             if (empty($ListInstanceByRes['resId'])) {
                 DatabaseModel::rollbackTransaction();
-                return $response->withStatus(400)->withJson(['errors' => 'resId is empty']);
+                return ['errors' => 'resId is empty', 'code' => 400];
             }
 
             if (!Validator::intVal()->validate($ListInstanceByRes['resId']) || !ResController::hasRightByResId(['resId' => $ListInstanceByRes['resId'], 'userId' => $GLOBALS['userId']])) {
                 DatabaseModel::rollbackTransaction();
-                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+                return ['errors' => 'Document out of perimeter', 'code' => 403];
             }
 
             if (empty($ListInstanceByRes['listInstances'])) {
@@ -116,7 +131,7 @@ class ListInstanceController
                 $listControl = ['res_id', 'item_id', 'item_type', 'item_mode', 'difflist_type'];
                 foreach($listControl as $itemControl){
                     if (empty($instance[$itemControl])) {
-                        return $response->withStatus(400)->withJson(['errors' => $itemControl . ' are empty']);
+                        return ['errors' => $itemControl . ' are empty', 'code' => 400];
                     }
                 }
 
@@ -128,13 +143,13 @@ class ListInstanceController
                     $user = UserModel::getByLogin(['login' => $instance['item_id']]);
                     if (empty($user) || $user['status'] != "OK") {
                         DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'User not found or not active']);
+                        return ['errors' => 'User not found or not active', 'code' => 400];
                     }
                 } elseif ($instance['item_type'] == 'entity_id') {
                     $entity = EntityModel::getByEntityId(['entityId' => $instance['item_id']]);
                     if (empty($entity) || $entity['enabled'] != "Y") {
                         DatabaseModel::rollbackTransaction();
-                        return $response->withStatus(400)->withJson(['errors' => 'Entity not found or not active']);
+                        return ['errors' => 'Entity not found or not active', 'code' => 400];
                     }
                 }
 
@@ -165,7 +180,7 @@ class ListInstanceController
                 }
             }
 
-            $listInstanceHistoryId = ListInstanceHistoryModel::create(['resId' => $ListInstanceByRes['resId'], 'userId' => $currentUser['id']]);
+            $listInstanceHistoryId = ListInstanceHistoryModel::create(['resId' => $ListInstanceByRes['resId'], 'userId' => $args['userId']]);
             foreach ($listInstances as $listInstance) {
                 ListInstanceHistoryDetailModel::create([
                     'listinstance_history_id'   => $listInstanceHistoryId,
@@ -185,6 +200,6 @@ class ListInstanceController
 
         DatabaseModel::commitTransaction();
 
-        return $response->withStatus(204);
+        return ['success' => 'success'];
     }
 }

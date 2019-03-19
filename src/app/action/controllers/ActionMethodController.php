@@ -15,6 +15,7 @@ namespace Action\controllers;
 use Attachment\models\AttachmentModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
+use Entity\controllers\ListInstanceController;
 use History\controllers\HistoryController;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
@@ -26,6 +27,7 @@ use SrcCore\models\ValidatorModel;
 use SrcCore\models\CurlModel;
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use MessageExchange\controllers\MessageExchangeReviewController;
+use User\models\UserModel;
 
 class ActionMethodController
 {
@@ -34,6 +36,7 @@ class ActionMethodController
     const COMPONENTS_ACTIONS = [
         'confirmAction'                         => null,
         'closeMailAction'                       => 'closeMailAction',
+        'redirectAction'                        => 'redirect',
         'closeAndIndexAction'                   => 'closeAndIndexAction',
         'updateDepartureDateAction'             => 'updateDepartureDateAction',
         'enabledBasketPersistenceAction'        => 'enabledBasketPersistenceAction',
@@ -227,6 +230,22 @@ class ActionMethodController
             'user_id'   => $GLOBALS['userId'],
             'basket_id' => $aArgs['data']['basketId']
         ]);
+
+        return true;
+    }
+
+    public static function redirect(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId', 'data']);
+        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::arrayType($args, ['data']);
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $controller = ListInstanceController::updateListInstance(['data' => $args['data'], 'userId' => $currentUser['id']]);
+        if (!empty($controller['errors'])) {
+            return ['errors' => $controller['errors']];
+        }
 
         return true;
     }
