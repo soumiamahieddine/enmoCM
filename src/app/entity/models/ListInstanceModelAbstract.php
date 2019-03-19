@@ -58,6 +58,35 @@ abstract class ListInstanceModelAbstract
         return $aListinstance[0];
     }
 
+    public static function create(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['res_id', 'item_id', 'item_type', 'item_mode', 'added_by_user', 'added_by_entity', 'difflist_type']);
+        ValidatorModel::intVal($args, ['res_id', 'item_id', 'sequence']);
+        ValidatorModel::stringType($args, ['item_type', 'item_mode', 'added_by_user', 'added_by_entity', 'difflist_type', 'process_date', 'process_comment']);
+
+        DatabaseModel::insert([
+            'table'         => 'listinstance',
+            'columnsValues' => [
+                'coll_id'                   => 'letterbox_coll',
+                'res_id'                    => $args['res_id'],
+                'listinstance_type'         => 'DOC',
+                'sequence'                  => $args['sequence'],
+                'item_id'                   => $args['item_id'],
+                'item_type'                 => $args['item_type'],
+                'item_mode'                 => $args['item_mode'],
+                'added_by_user'             => $args['added_by_user'],
+                'added_by_entity'           => $args['added_by_entity'],
+                'visible'                   => 'Y',
+                'viewed'                    => 0,
+                'difflist_type'             => $args['difflist_type'],
+                'process_date'              => $args['process_date'],
+                'process_comment'           => $args['process_comment']
+            ]
+        ]);
+
+        return true;
+    }
+
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['where', 'data']);
@@ -122,19 +151,6 @@ abstract class ListInstanceModelAbstract
         ]);
 
         return $aListinstance;
-    }
-
-    public static function create(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['res_id']);
-        ValidatorModel::intVal($aArgs, ['res_id']);
-
-        DatabaseModel::insert([
-            'table'         => 'listinstance',
-            'columnsValues' => $aArgs
-        ]);
-
-        return true;
     }
 
     public static function getCurrentStepByResId(array $aArgs)

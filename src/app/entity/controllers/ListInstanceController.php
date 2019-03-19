@@ -100,6 +100,9 @@ class ListInstanceController
         ValidatorModel::arrayType($args, ['data']);
         ValidatorModel::intVal($args, ['userId']);
 
+        $currentUser = UserModel::getById(['select' => ['user_id'], 'id' => $args['userId']]);
+        $primaryEntity = UserModel::getPrimaryEntityById(['id' => $args['userId']]);
+
         DatabaseModel::beginTransaction();
 
         foreach ($args['data'] as $ListInstanceByRes) {
@@ -128,16 +131,12 @@ class ListInstanceController
             ]);
 
             foreach ($ListInstanceByRes['listInstances'] as $instance) {
-                $listControl = ['res_id', 'item_id', 'item_type', 'item_mode', 'difflist_type'];
+                $listControl = ['item_id', 'item_type', 'item_mode', 'difflist_type'];
                 foreach ($listControl as $itemControl) {
                     if (empty($instance[$itemControl])) {
                         return ['errors' => $itemControl . ' are empty', 'code' => 400];
                     }
                 }
-
-                unset($instance['listinstance_id']);
-                unset($instance['requested_signature']);
-                unset($instance['signatory']);
 
                 if ($instance['item_type'] == 'user_id') {
                     $user = UserModel::getByLogin(['login' => $instance['item_id']]);
@@ -153,7 +152,18 @@ class ListInstanceController
                     }
                 }
 
-                ListInstanceModel::create($instance);
+                ListInstanceModel::create([
+                    'res_id'            => $ListInstanceByRes['resId'],
+                    'sequence'          => 0,
+                    'item_id'           => $instance['item_id'],
+                    'item_type'         => $instance['item_type'],
+                    'item_mode'         => $instance['item_mode'],
+                    'added_by_user'     => $currentUser['user_id'],
+                    'added_by_entity'   => $primaryEntity['entity_id'],
+                    'difflist_type'     => $instance['difflist_type'],
+                    'process_date'      => $instance['process_date'],
+                    'process_comment'   => $instance['process_comment']
+                ]);
 
                 if ($instance['item_mode'] == 'dest') {
                     $set = ['dest_user' => $instance['item_id']];
@@ -165,11 +175,11 @@ class ListInstanceController
                             $changeDestination = false;
                         }
                         if ($entity['primary_entity'] == 'Y') {
-                            $primaryEntity = $entity['entity_id'];
+                            $destPrimaryEntity = $entity['entity_id'];
                         }
                     }
-                    if ($changeDestination && !empty($primaryEntity)) {
-                        $set['destination'] = $primaryEntity;
+                    if ($changeDestination && !empty($destPrimaryEntity)) {
+                        $set['destination'] = $destPrimaryEntity;
                     }
 
                     ResModel::update([
