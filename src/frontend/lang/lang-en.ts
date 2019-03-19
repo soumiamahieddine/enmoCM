@@ -903,6 +903,8 @@ export const LANG_EN = {
     "pricesInformations"                            : "Prices informations",
     "shippingModification"                            : "Shipping modification",
     "shippingCreation"                            : "Shipping creation",
+    "shippingAdded"                            : "Shipping added",
+    "shippingUpdated"                            : "Shipping updated",
     "shippingDeleted"                            : "Shipping deleted",
     "shippings"                            : "Shippings",
 };

@@ -240,7 +240,6 @@ class ShippingController
             'data'      => ['Y']
         ]);
 
-        print_r($allEntities);
         foreach ($allEntities as $key => $value) {
             $allEntities[$key]['id'] = (string)$value['id'];
             if (empty($value['parent_id'])) {

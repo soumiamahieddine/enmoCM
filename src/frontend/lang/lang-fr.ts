@@ -929,6 +929,8 @@ export const LANG_FR = {
     "pricesInformations"                            : "Tarifs indicatifs",
     "shippingModification"                            : "Modification du canal d'envoi",
     "shippingCreation"                            : "Création du canal d'envoi",
+    "shippingAdded"                            : "Canal d'envoi ajouté",
+    "shippingUpdated"                            : "Canal d'envoi modifié",
     "shippingDeleted"                            : "Canal d'envoi supprimé",
     "shippings"                            : "Canaux d'envoi",
 };

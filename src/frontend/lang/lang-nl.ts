@@ -931,6 +931,8 @@ export const LANG_NL = {
     "pricesInformations"                            : "Prices informations", //_TO_TRANSLATE
     "shippingModification"                            : "Shipping modification", //_TO_TRANSLATE
     "shippingCreation"                            : "Shipping creation", //_TO_TRANSLATE
+    "shippingAdded"                            : "Shipping added", //_TO_TRANSLATE
+    "shippingUpdated"                            : "Shipping updated", //_TO_TRANSLATE
     "shippingDeleted"                            : "Shipping deleted", //_TO_TRANSLATE
     "shippings"                            : "Shippings", //_TO_TRANSLATE
 };
