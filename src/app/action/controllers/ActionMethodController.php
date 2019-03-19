@@ -242,7 +242,7 @@ class ActionMethodController
 
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        $controller = ListInstanceController::updateListInstance(['data' => ['resId' => $args['resId'], 'listInstances' => $args['data']], 'userId' => $currentUser['id']]);
+        $controller = ListInstanceController::updateListInstance(['data' => [['resId' => $args['resId'], 'listInstances' => $args['data']]], 'userId' => $currentUser['id']]);
         if (!empty($controller['errors'])) {
             return ['errors' => [$controller['errors']]];
         }
