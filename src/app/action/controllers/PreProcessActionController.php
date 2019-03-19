@@ -63,7 +63,6 @@ class PreProcessActionController
         $allEntities = [];
 
         foreach (['ENTITY', 'USERS'] as $mode) {
-
             $entityRedirects = GroupBasketRedirectModel::get([
                 'select'    => ['entity_id', 'keyword'],
                 'where'     => ['basket_id = ?', 'group_id = ?', 'action_id = ?', 'redirect_mode = ?'],
@@ -185,7 +184,7 @@ class PreProcessActionController
                 continue;
             }
 
-            if (!ResController::hasRightByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$resId], 'userId' => $GLOBALS['userId']])) {
                 $noSendAR['number'] += 1;
                 $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _DOCUMENT_OUT_PERIMETER ];
                 continue;
@@ -331,7 +330,7 @@ class PreProcessActionController
 
     public function isDestinationChanging(Request $request, Response $response, array $args)
     {
-        if (!ResController::hasRightByResId(['resId' => $args['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 

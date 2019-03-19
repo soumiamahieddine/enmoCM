@@ -63,7 +63,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
 
     downloadAcknowledgementReceipt(data : any) {
         this.loadingExport = true;
-        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/acknowledgementReceipt', { 'resources' : data }, { responseType: "blob" })
+        this.http.post('../../rest/acknowledgementReceipt', { 'resources' : data }, { responseType: "blob" })
             .subscribe((data) => {
                 let downloadLink = document.createElement('a');
                 downloadLink.href = window.URL.createObjectURL(data);

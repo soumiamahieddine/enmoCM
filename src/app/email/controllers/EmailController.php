@@ -111,7 +111,7 @@ class EmailController
         $emailArray  = EmailModel::getById(['id' => $args['id']]);
         $document      = (array)json_decode($emailArray['document']);
 
-        if (!ResController::hasRightByResId(['resId' => $document['id'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$document['id']], 'userId' => $GLOBALS['userId']])) {
             return ['errors' => 'Document out of perimeter', 'code' => 403];
         }
 
@@ -379,7 +379,7 @@ class EmailController
             if (!$check) {
                 return ['errors' => 'Data document errors', 'code' => 400];
             }
-            if (!ResController::hasRightByResId(['resId' => $args['data']['document']['id'], 'userId' => $args['login']])) {
+            if (!ResController::hasRightByResId(['resId' => [$args['data']['document']['id']], 'userId' => $args['login']])) {
                 return ['errors' => 'Document out of perimeter', 'code' => 403];
             }
             if (!empty($args['data']['document']['attachments'])) {

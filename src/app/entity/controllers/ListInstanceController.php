@@ -39,7 +39,7 @@ class ListInstanceController
 
     public function getByResId(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => $args['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -59,7 +59,7 @@ class ListInstanceController
 
     public function getVisaCircuitByResId(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         $listinstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment', 'signatory', 'requested_signature'], 'id' => $aArgs['resId']]);
@@ -69,7 +69,7 @@ class ListInstanceController
 
     public function getAvisCircuitByResId(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         $listinstances = ListInstanceModel::getAvisCircuitByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment'], 'id' => $aArgs['resId']]);
@@ -108,7 +108,7 @@ class ListInstanceController
                 return ['errors' => 'resId is empty', 'code' => 400];
             }
 
-            if (!Validator::intVal()->validate($ListInstanceByRes['resId']) || !ResController::hasRightByResId(['resId' => $ListInstanceByRes['resId'], 'userId' => $GLOBALS['userId']])) {
+            if (!Validator::intVal()->validate($ListInstanceByRes['resId']) || !ResController::hasRightByResId(['resId' => [$ListInstanceByRes['resId']], 'userId' => $GLOBALS['userId']])) {
                 DatabaseModel::rollbackTransaction();
                 return ['errors' => 'Document out of perimeter', 'code' => 403];
             }
@@ -129,7 +129,7 @@ class ListInstanceController
 
             foreach ($ListInstanceByRes['listInstances'] as $instance) {
                 $listControl = ['res_id', 'item_id', 'item_type', 'item_mode', 'difflist_type'];
-                foreach($listControl as $itemControl){
+                foreach ($listControl as $itemControl) {
                     if (empty($instance[$itemControl])) {
                         return ['errors' => $itemControl . ' are empty', 'code' => 400];
                     }

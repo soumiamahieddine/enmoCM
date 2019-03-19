@@ -53,7 +53,7 @@ class ReconciliationController
             'orderBy' => ['res_id DESC']
         ])[0];
 
-        if (!Validator::intVal()->validate($info['res_id_master']) || !ResController::hasRightByResId(['resId' => $info['res_id_master'], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($info['res_id_master']) || !ResController::hasRightByResId(['resId' => [$info['res_id_master']], 'userId' => $GLOBALS['userId']])) {
             return ['errors' => 'Document out of perimeter'];
         }
 
@@ -181,15 +181,14 @@ class ReconciliationController
             'orderBy' => ['res_id DESC']
         ])[0];
 
-        if (!Validator::intVal()->validate($attachment['res_id_master']) || !ResController::hasRightByResId(['resId' => $attachment['res_id_master'], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($attachment['res_id_master']) || !ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         if ($attachment == false) {
             return $response->withStatus(500)->withJson(['errors' => '[ReconciliationController checkAttachment] ' . _NO_ATTACHMENT_CHRONO]);
-        }else{
+        } else {
             return $response->withJson(array('result' => 'OK'));
         }
-
     }
 }
