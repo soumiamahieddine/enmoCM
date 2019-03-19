@@ -195,6 +195,14 @@ DELETE FROM docservers WHERE docserver_id = 'ACKNOWLEDGEMENT_RECEIPTS';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
 VALUES ('ACKNOWLEDGEMENT_RECEIPTS', 'ACKNOWLEDGEMENT_RECEIPTS', 'Dépôt des AR', 'N', 50000000000, 0, '/opt/maarch/docservers/acknowledgment_receipts/', '2019-04-19 22:22:22.201904', 'letterbox_coll');
 
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'sve_start_date') = 1 THEN
+    INSERT INTO acknowledgement_receipts (res_id, type, format, user_id, contact_address_id, creation_date, send_date, docserver_id, path, filename, fingerprint) 
+    SELECT res_id, 'simple', 'html', 0, 0, sve_start_date, sve_start_date, 0, 0, 0, 0 FROM res_letterbox WHERE sve_start_date is not null;
+    ALTER TABLE res_letterbox DROP COLUMN IF EXISTS sve_start_date;
+  END IF;
+END$$;
+
 /* REFACTORING */
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
 DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
