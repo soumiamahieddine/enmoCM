@@ -53,14 +53,28 @@ class ShippingController
         $shippingInfo['fee']      = (array)json_decode($shippingInfo['fee']);
         $shippingInfo['entities'] = (array)json_decode($shippingInfo['entities']);
 
-        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']);
-        foreach ($entities as $key => $entity) {
-            $entities[$key]['state']['selected'] = false;
-            if (in_array($entity['id'], $shippingInfo['entities'])) {
-                $entities[$key]['state']['selected'] = true;
+        $allEntities = EntityModel::get(['select' => ['id', 'entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['parent_entity_id']]);
+        foreach ($allEntities as $key => $value) {
+            $allEntities[$key]['id'] = $value['entity_id'];
+            $allEntities[$key]['serialId'] = $value['id'];
+            if (empty($value['parent_entity_id'])) {
+                $allEntities[$key]['parent'] = '#';
+                $allEntities[$key]['icon']   = "fa fa-building";
+            } else {
+                $allEntities[$key]['parent'] = $value['parent_entity_id'];
+                $allEntities[$key]['icon']   = "fa fa-sitemap";
             }
+            $allEntities[$key]['state']['opened'] = false;
+            $allEntities[$key]['allowed']         = true;
+            if (in_array($value['id'], $shippingInfo['entities'])) {
+                $allEntities[$key]['state']['opened']   = true;
+                $allEntities[$key]['state']['selected'] = true;
+            }
+
+            $allEntities[$key]['text'] = $value['entity_label'];
         }
-        $shippingInfo['entities'] = $entities;
+
+        $shippingInfo['entities'] = $allEntities;
 
         return $response->withJson($shippingInfo);
     }
@@ -89,7 +103,7 @@ class ShippingController
         $id = ShippingModel::create($body);
 
         HistoryController::add([
-            'tableName' => 'shipping',
+            'tableName' => 'shippings',
             'recordId'  => $id,
             'eventType' => 'ADD',
             'eventId'   => 'shippingadd',
@@ -128,7 +142,7 @@ class ShippingController
         ShippingModel::update($body);
 
         HistoryController::add([
-            'tableName' => 'shipping',
+            'tableName' => 'shippings',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
             'eventId'   => 'shippingup',
@@ -152,7 +166,7 @@ class ShippingController
         ShippingModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([
-            'tableName' => 'shipping',
+            'tableName' => 'shippings',
             'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
             'eventId'   => 'shippingdel',
@@ -198,7 +212,7 @@ class ShippingController
                 $errors[] = 'entities must be an array';
             }
             foreach ($aArgs['entities'] as $entity) {
-                $info = EntityModel::getByEntityId(['entityId' => $entity, 'select' => ['id']]);
+                $info = EntityModel::getById(['id' => $entity, 'select' => ['id']]);
                 if (empty($info)) {
                     $errors[] = $entity . ' does not exists';
                 }
@@ -214,13 +228,26 @@ class ShippingController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']);
-        foreach ($entities as $key => $entity) {
-            $entities[$key]['state']['selected'] = false;
+        $allEntities = EntityModel::get(['select' => ['id', 'entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['parent_entity_id']]);
+        foreach ($allEntities as $key => $value) {
+            $allEntities[$key]['id'] = $value['entity_id'];
+            $allEntities[$key]['serialId'] = $value['id'];
+            if (empty($value['parent_entity_id'])) {
+                $allEntities[$key]['parent'] = '#';
+                $allEntities[$key]['icon']   = "fa fa-building";
+            } else {
+                $allEntities[$key]['parent'] = $value['parent_entity_id'];
+                $allEntities[$key]['icon']   = "fa fa-sitemap";
+            }
+            $allEntities[$key]['state']['opened']   = false;
+            $allEntities[$key]['allowed']           = true;
+            $allEntities[$key]['state']['opened']   = true;
+
+            $allEntities[$key]['text'] = $value['entity_label'];
         }
 
         return $response->withJson([
-            'entities' => $entities,
+            'entities' => $allEntities,
         ]);
     }
 }

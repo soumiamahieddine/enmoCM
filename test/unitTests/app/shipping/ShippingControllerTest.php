@@ -28,7 +28,7 @@ class ShippingControllerTest extends TestCase
                 'sendMode'   => 'fast'
             ],
             'fee'             => ['first_page' => 1, 'next_page' => 2, 'postage_price' => 12],
-            'entities'        => ['COU', 'PJS'],
+            'entities'        => [1, 2],
             'account'         => ['id' => 'toto', 'password' => '1234']
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
