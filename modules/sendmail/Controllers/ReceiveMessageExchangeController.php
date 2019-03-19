@@ -285,12 +285,12 @@ class ReceiveMessageExchangeController
         array_push($aDataContact, ['column' => 'is_external_contact', 'value' => 'Y', 'type' => 'string',  'table' => 'contacts_v2']);
 
         array_push($aDataContact, ['column' => 'contact_purpose_id',  'value' => $defaultConfigAddress['contact_purpose_id'],      'type' => 'integer', 'table' => 'contact_addresses']);
-        array_push($aDataContact, ['column' => 'external_contact_id', 'value' => $transferringAgency->Identifier->value,           'type' => 'string',  'table' => 'contact_addresses']);
+        array_push($aDataContact, ['column' => 'external_id', 'value' => $transferringAgency->Identifier->value,           'type' => 'string',  'table' => 'contact_addresses']);
         array_push($aDataContact, ['column' => 'departement',         'value' => $transferringAgencyMetadata->Name,                'type' => 'string',  'table' => 'contact_addresses']);
 
         $contactAlreadyCreated = ContactModel::getOnView([
             'select'    => ['contact_id', 'ca_id'],
-            'where'     => ['external_contact_id = ?'],
+            'where'     => ["external_id->>'m2m' = ?"],
             'data'      => [$transferringAgency->Identifier->value],
             'limit'     => 1
         ]);
@@ -298,7 +298,7 @@ class ReceiveMessageExchangeController
             $contact['contactId'] = $contactAlreadyCreated[0]['contact_id'];
             $contact['addressId'] = $contactAlreadyCreated[0]['ca_id'];
         } else {
-            $contact = ContactModel::CreateContactM2M(['data' => $aDataContact, 'contactCommunication' => $transferringAgencyMetadata->Communication[0]->value]);
+            $contact = ContactModel::createContactM2M(['data' => $aDataContact, 'contactCommunication' => $transferringAgencyMetadata->Communication[0]->value]);
         }
         $contactCommunicationExisted = ContactModel::getContactCommunication([
             "contactId" => $contact['contactId']

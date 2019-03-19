@@ -144,7 +144,8 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
     $_SESSION['m_admin']['address']['IS_PRIVATE']         = $request->show_string($line->is_private);
     $_SESSION['m_admin']['address']['SALUTATION_HEADER']  = $request->show_string($line->salutation_header);
     $_SESSION['m_admin']['address']['SALUTATION_FOOTER']  = $request->show_string($line->salutation_footer);
-    $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID']= $request->show_string($line->external_contact_id);
+    $externalId = (array)json_decode($line->external_id);
+    $_SESSION['m_admin']['address']['M2M_ID'] = $externalId['m2m'];
 
     $core_tools2->load_js();
 

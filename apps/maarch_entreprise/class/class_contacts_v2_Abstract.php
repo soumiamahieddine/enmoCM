@@ -1364,7 +1364,8 @@ abstract class contacts_v2_Abstract extends Database
                     $_SESSION['m_admin']['address']['IS_PRIVATE'] = functions::show_string($line->is_private);
                     $_SESSION['m_admin']['address']['SALUTATION_HEADER'] = functions::show_string($line->salutation_header);
                     $_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = functions::show_string($line->salutation_footer);
-                    $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'] = functions::show_string($line->external_contact_id);
+                    $externalId = (array)json_decode($line->external_id);
+                    $_SESSION['m_admin']['address']['M2M_ID'] = $externalId['m2m'];
                     $_SESSION['m_admin']['address']['BAN_ID'] = functions::show_string($line->ban_id);
                 } else {
                     unset($_SESSION['address_up_error']);
@@ -1943,12 +1944,12 @@ abstract class contacts_v2_Abstract extends Database
             </tr>
             <tr>
                 <td>
-                    <label for="external_contact_id" style="width:auto;">
-                        <?php echo _EXTERNAL_CONTACT_ID; ?>:</label>
+                    <label for="m2m_id" style="width:auto;">
+                        <?php echo _M2M_ID; ?>:</label>
                 </td>
                 <td align="right">
-                    <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="external_contact_id"
-                        id="external_contact_id" type="text" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'])); ?>"
+                    <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="m2m_id"
+                        id="m2m_id" type="text" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['address']['M2M_ID'])); ?>"
                     />
                     <span class="blue_asterisk" style="visibility:hidden;">*</span>
                 </td>
@@ -2241,7 +2242,7 @@ abstract class contacts_v2_Abstract extends Database
                         .'phone , email , address_num, address_street, '
                         .'address_complement, address_town, '
                         .'address_postal_code, address_country, other_data,'
-                        .' title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer, external_contact_id, ban_id) VALUES (?, ?, 
+                        .' title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer, external_id, ban_id) VALUES (?, ?, 
                             ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
                 $arrayPDO = array($_SESSION['contact']['current_contact_id'], $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'], $_SESSION['m_admin']['address']['DEPARTEMENT'],
@@ -2249,7 +2250,7 @@ abstract class contacts_v2_Abstract extends Database
                     $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_COMP'],
                     $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'], $_SESSION['m_admin']['address']['OTHER_DATA'],
                     $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['WEBSITE'], $_SESSION['m_admin']['address']['OCCUPANCY'],
-                    $_SESSION['user']['UserId'], $entity_id, $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'], $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'], $_SESSION['m_admin']['address']['BAN_ID'], );
+                    $_SESSION['user']['UserId'], $entity_id, $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'], json_encode(['m2m' => $_SESSION['m_admin']['address']['M2M_ID']]), $_SESSION['m_admin']['address']['BAN_ID'], );
 
                 $db->query($query, $arrayPDO);
                 if ($_SESSION['history']['addressadd']) {
@@ -2340,6 +2341,11 @@ abstract class contacts_v2_Abstract extends Database
                 header('location: '.$path_contacts);
                 exit;
             } elseif ($mode == 'up') {
+                $contactToUpdate = \Contact\models\ContactModel::getByAddressId(['addressId' => $_SESSION['m_admin']['address']['ID'], 'select' => ['external_id']]);
+                $externalId = (array)json_decode($contactToUpdate['external_id']);
+                $externalId['m2m'] = empty($_SESSION['m_admin']['address']['M2M_ID']) ? null : $_SESSION['m_admin']['address']['M2M_ID'];
+                $externalId = json_encode($externalId);
+
                 $query = 'UPDATE '.$_SESSION['tablename']['contact_addresses'].' 
                       SET contact_purpose_id = ?
                         , departement = ?
@@ -2361,7 +2367,7 @@ abstract class contacts_v2_Abstract extends Database
                         , is_private = ?
                         , salutation_header = ?
                         , salutation_footer = ?
-                        , external_contact_id = ?
+                        , external_id = ?
                         , ban_id = ?
                         ';
 
@@ -2371,7 +2377,7 @@ abstract class contacts_v2_Abstract extends Database
                     $_SESSION['m_admin']['address']['LASTNAME'], $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['FUNCTION'], $_SESSION['m_admin']['address']['PHONE'],
                     $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['OCCUPANCY'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_COMP'],
                     $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'], $_SESSION['m_admin']['address']['WEBSITE'],
-                    $_SESSION['m_admin']['address']['OTHER_DATA'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'], $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'], $_SESSION['m_admin']['address']['BAN_ID'],
+                    $_SESSION['m_admin']['address']['OTHER_DATA'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'], $externalId, $_SESSION['m_admin']['address']['BAN_ID'],
                     $_SESSION['m_admin']['address']['ID'], );
 
                 $db->query($query, $arrayPDO);
@@ -2418,12 +2424,12 @@ abstract class contacts_v2_Abstract extends Database
             $_REQUEST['new_id'], 'no', _CONTACT_PURPOSE.' ', 'yes', 0, 255
         );
 
-        if ($_REQUEST['external_contact_id'] != '') {
-            $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'] = $func->wash(
-                $_REQUEST['external_contact_id'], 'no', _EXTERNAL_CONTACT_ID.' ', 'yes', 0, 255
+        if ($_REQUEST['m2m_id'] != '') {
+            $_SESSION['m_admin']['address']['M2M_ID'] = $func->wash(
+                $_REQUEST['m2m_id'], 'no', _M2M_ID.' ', 'yes', 0, 255
             );
         } else {
-            $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'] = '';
+            $_SESSION['m_admin']['address']['M2M_ID'] = '';
         }
 
         if ($_REQUEST['departement'] != '') {
@@ -3410,13 +3416,13 @@ abstract class contacts_v2_Abstract extends Database
             </tr>
             <tr>
                 <td>
-                    <label for="external_contact_id" style="width:auto;">
-                        <?php echo _EXTERNAL_CONTACT_ID; ?>:
+                    <label for="m2m_id" style="width:auto;">
+                        <?php echo _M2M_ID; ?>:
                         <label>
                 </td>
                 <td class="indexing_field" align="right">
-                    <input class="contact_field_margin readonly" disabled name="external_contact_id" id="external_contact_id" type="text" value="<?php if (isset($_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'])) {
-            functions::xecho($func->show_str($_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID']));
+                    <input class="contact_field_margin readonly" disabled name="m2m_id" id="m2m_id" type="text" value="<?php if (isset($_SESSION['m_admin']['address']['M2M_ID'])) {
+            functions::xecho($func->show_str($_SESSION['m_admin']['address']['M2M_ID']));
         } ?>" />
                     <span class="blue_asterisk" style="visibility:hidden;">*</span>
                 </td>

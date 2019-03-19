@@ -8,6 +8,7 @@
 UPDATE parameters SET param_value_string = '19.04.1' WHERE id = 'database_version';
 
 DROP VIEW IF EXISTS res_view_letterbox;
+DROP VIEW IF EXISTS view_contacts;
 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
 ALTER TABLE res_letterbox ADD COLUMN external_signatory_book_id integer;
@@ -221,6 +222,14 @@ DO $$ BEGIN
     ALTER TABLE listinstance_history DROP COLUMN IF EXISTS updated_by_user;
   END IF;
 END$$;
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'contact_addresses') AND attname = 'external_contact_id') THEN
+    ALTER TABLE contact_addresses DROP COLUMN IF EXISTS external_id;
+    ALTER TABLE contact_addresses ADD COLUMN external_id json DEFAULT '{}';
+    UPDATE contact_addresses SET external_id = json_build_object('m2m', external_contact_id);
+    ALTER TABLE contact_addresses DROP COLUMN IF EXISTS external_contact_id;
+  END IF;
+END$$;
 
 
 /* RE-CREATE VIEW*/
@@ -397,3 +406,17 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
      LEFT JOIN contacts_v2 cont ON mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id
      LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
   WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
+
+DROP VIEW IF EXISTS view_contacts;
+CREATE OR REPLACE VIEW view_contacts AS
+ SELECT c.contact_id, c.contact_type, c.is_corporate_person, c.society, c.society_short, c.firstname AS contact_firstname
+, c.lastname AS contact_lastname, c.title AS contact_title, c.function AS contact_function, c.other_data AS contact_other_data
+, c.user_id AS contact_user_id, c.entity_id AS contact_entity_id, c.creation_date, c.update_date, c.enabled AS contact_enabled, ca.id AS ca_id
+, ca.contact_purpose_id, ca.departement, ca.firstname, ca.lastname, ca.title, ca.function, ca.occupancy
+, ca.address_num, ca.address_street, ca.address_complement, ca.address_town, ca.address_postal_code, ca.address_country
+, ca.phone, ca.email, ca.website, ca.salutation_header, ca.salutation_footer, ca.other_data, ca.user_id, ca.entity_id, ca.is_private, ca.enabled, ca.external_id
+, cp.label as contact_purpose_label, ct.label as contact_type_label
+   FROM contacts_v2 c
+   RIGHT JOIN contact_addresses ca ON c.contact_id = ca.contact_id
+   LEFT JOIN contact_purposes cp ON ca.contact_purpose_id = cp.id
+   LEFT JOIN contact_types ct ON c.contact_type = ct.id;

@@ -1854,7 +1854,7 @@ function show_admin_contacts(is_corporate, display) {
 function show_admin_external_contact(is_external, display) {
     var display_value = display || 'inline';
     var searchDirectory = $("search_directory");
-    var externalContactLabel = $("external_contact_id");
+    var externalContactLabel = $("m2m_id");
     if (is_external === false) {
         if (searchDirectory) {
             searchDirectory.style.display = "none";
