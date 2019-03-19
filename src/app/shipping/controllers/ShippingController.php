@@ -53,15 +53,20 @@ class ShippingController
         $shippingInfo['fee']      = (array)json_decode($shippingInfo['fee']);
         $shippingInfo['entities'] = (array)json_decode($shippingInfo['entities']);
 
-        $allEntities = EntityModel::get(['select' => ['id', 'entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['parent_entity_id']]);
+        $allEntities = EntityModel::get([
+            'select' => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
+            'table' => ['entities e1, entities e2'],
+            'where' => ['e1.enabled = ?', 'e1.parent_entity_id = e2.entity_id'],
+            'data' => ['Y']
+        ]);
+
         foreach ($allEntities as $key => $value) {
-            $allEntities[$key]['id'] = $value['entity_id'];
-            $allEntities[$key]['serialId'] = $value['id'];
-            if (empty($value['parent_entity_id'])) {
+            $allEntities[$key]['id'] = $value['id'];
+            if (empty($value['parent_id'])) {
                 $allEntities[$key]['parent'] = '#';
                 $allEntities[$key]['icon']   = "fa fa-building";
             } else {
-                $allEntities[$key]['parent'] = $value['parent_entity_id'];
+                $allEntities[$key]['parent'] = $value['parent_id'];
                 $allEntities[$key]['icon']   = "fa fa-sitemap";
             }
             $allEntities[$key]['state']['opened'] = false;
@@ -228,15 +233,20 @@ class ShippingController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $allEntities = EntityModel::get(['select' => ['id', 'entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['parent_entity_id']]);
+        $allEntities = EntityModel::get([
+            'select' => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
+            'table' => ['entities e1, entities e2'],
+            'where' => ['e1.enabled = ?', 'e1.parent_entity_id = e2.entity_id'],
+            'data' => ['Y']
+        ]);
+
         foreach ($allEntities as $key => $value) {
-            $allEntities[$key]['id'] = $value['entity_id'];
-            $allEntities[$key]['serialId'] = $value['id'];
-            if (empty($value['parent_entity_id'])) {
+            $allEntities[$key]['id'] = $value['id'];
+            if (empty($value['parent_id'])) {
                 $allEntities[$key]['parent'] = '#';
                 $allEntities[$key]['icon']   = "fa fa-building";
             } else {
-                $allEntities[$key]['parent'] = $value['parent_entity_id'];
+                $allEntities[$key]['parent'] = $value['parent_id'];
                 $allEntities[$key]['icon']   = "fa fa-sitemap";
             }
             $allEntities[$key]['state']['opened']   = false;
