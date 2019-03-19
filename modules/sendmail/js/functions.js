@@ -222,7 +222,7 @@ function validEmailForm(path, form_id) {
     });
 }
 
-function validEmailFormForSendToContact(path, form_id, path2, status) {
+function validEmailFormForSendToContact(path, form_id) {
     tinyMCE.triggerSave();
     new Ajax.Request(path,
     {
@@ -234,7 +234,7 @@ function validEmailFormForSendToContact(path, form_id, path2, status) {
             eval("response = "+answer.responseText);
             if(response.status == 0){
                 eval(response.exec_js);
-                changeStatusForActionSendToContact(path2, status);
+                parent.document.getElementById('storage').click();
                 window.parent.destroyModal('form_email');
             } else {
                 alert(response.error);
@@ -243,19 +243,6 @@ function validEmailFormForSendToContact(path, form_id, path2, status) {
         }
     });
 }
-
- function changeStatusForActionSendToContact(path, status){
-    new Ajax.Request(path,
-    {
-        asynchronous:false,
-        method:'post',
-        parameters: {status : status},   
-        encoding: 'UTF-8',                       
-        onSuccess : function(){
-          parent.document.getElementById('storage').click();
-        }
-    });
- }
 
 function extractEmailAdress(field, item) {
     var fullAdress = item.innerHTML;

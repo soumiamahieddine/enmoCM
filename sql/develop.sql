@@ -375,7 +375,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,
-    r.sve_start_date,
     r.subject,
     r.identifier,
     r.title,

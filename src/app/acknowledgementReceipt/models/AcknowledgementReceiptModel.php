@@ -67,6 +67,22 @@ class AcknowledgementReceiptModel
         return $aTemplates;
     }
 
+    public static function getSveStartDate(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['resIds']);
+        ValidatorModel::arrayType($aArgs, ['select', 'orderBy', 'resIds', 'groupBy']);
+
+        $aTemplates = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['acknowledgement_receipts'],
+            'where'     => ['res_id in (?)'],
+            'data'      => $aArgs['resIds'],
+            'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy']
+        ]);
+
+        return $aTemplates;
+    }
+
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'type', 'format', 'userId', 'contactAddressId', 'docserverId', 'path', 'filename', 'fingerprint']);

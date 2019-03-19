@@ -117,11 +117,6 @@ export class ExportComponent implements OnInit {
             isFunction: false
         },
         {
-            value: 'sve_start_date',
-            label: this.lang.sveStartDate,
-            isFunction: false
-        },
-        {
             value: 'subject',
             label: this.lang.subject,
             isFunction: false

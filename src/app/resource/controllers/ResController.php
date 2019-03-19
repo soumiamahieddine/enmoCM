@@ -14,6 +14,7 @@
 
 namespace Resource\controllers;
 
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
@@ -674,6 +675,11 @@ class ResController
             }
         }
         $select = explode(',', $data['select']);
+
+        $sve_start_date = false;
+        if (in_array('sve_start_date', $select)) {
+            $sve_start_date = true;
+        }
         
         if (!PreparedClauseController::isRequestValid(['select' => $select, 'clause' => $data['clause'], 'orderBy' => $data['orderBy'], 'limit' => $data['limit'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_REQUEST]);
@@ -693,12 +699,33 @@ class ResController
         }
 
         $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $data['orderBy'], 'limit' => $data['limit']]);
-        if ($data['withFile'] === true) {
+        if (!empty($resources) && $data['withFile'] === true) {
             foreach ($resources as $key => $res) {
                 $path = ResDocserverModel::getSourceResourcePath(['resId' => $res['res_id'], 'resTable' => 'res_letterbox', 'adrTable' => 'null']);
                 $file = file_get_contents($path);
                 $base64Content = base64_encode($file);
                 $resources[$key]['fileBase64Content'] = $base64Content;
+            }
+        }
+        if (!empty($resources) && $sve_start_date) {
+            $aResId = [];
+            foreach ($resources as $res) {
+                $aResId[] = $res['res_id'];
+            }
+            $aSveStartDate = AcknowledgementReceiptModel::getSveStartDate([
+                'select'  => ['res_id', 'max(send_date) as send_date'],
+                'resIds'  => $aResId,
+                'where'   => ['send_date IS NOT NULL', 'send_date != \'\''],
+                'groupBy' => ['res_id']
+            ]);
+            foreach ($resources as $key => $res) {
+                $resources[$key]['sve_start_date'] = null;
+                foreach ($aSveStartDate as $valueSveStartDate) {
+                    if ($res['res_id'] == $valueSveStartDate['res_id']) {
+                        $resources[$key]['sve_start_date'] = $valueSveStartDate['send_date'];
+                        break;
+                    }
+                }
             }
         }
 

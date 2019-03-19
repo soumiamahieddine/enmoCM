@@ -1349,7 +1349,6 @@ CREATE TABLE res_letterbox
   opinion_limit_date timestamp without time zone default NULL,
   department_number_id text,
   barcode text,
-  sve_start_date TIMESTAMP without time zone,
   external_signatory_book_id integer,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
@@ -1727,7 +1726,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,
-    r.sve_start_date,
     r.subject,
     r.identifier,
     r.title,
