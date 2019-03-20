@@ -131,7 +131,7 @@ abstract class UserModelAbstract
         }
 
         $user = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['users'],
             'where'     => ['user_id = ?'],
             'data'      => [$args['login']]
