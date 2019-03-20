@@ -167,6 +167,10 @@ class ShippingController
         }
 
         $shippingInfo = ShippingModel::getById(['id' => $aArgs['id'], 'select' => ['label']]);
+        if (empty($shippingInfo)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Shipping does not exist']);
+        }
+
         ShippingModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([

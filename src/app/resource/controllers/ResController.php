@@ -677,7 +677,8 @@ class ResController
         $select = explode(',', $data['select']);
 
         $sve_start_date = false;
-        if (in_array('sve_start_date', $select)) {
+        if ($keySve = array_search('sve_start_date', $select)) {
+            unset($select[$keySve]);
             $sve_start_date = true;
         }
         
@@ -712,8 +713,8 @@ class ResController
             foreach ($resources as $res) {
                 $aResId[] = $res['res_id'];
             }
-            $aSveStartDate = AcknowledgementReceiptModel::getSveStartDate([
-                'select'  => ['res_id', 'max(send_date) as send_date'],
+            $aSveStartDate = AcknowledgementReceiptModel::getByResIds([
+                'select'  => ['res_id', 'min(send_date) as send_date'],
                 'resIds'  => $aResId,
                 'where'   => ['send_date IS NOT NULL', 'send_date != \'\''],
                 'groupBy' => ['res_id']
