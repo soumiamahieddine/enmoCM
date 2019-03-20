@@ -26,7 +26,7 @@ abstract class ShippingModelAbstract
 
         $shippings = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['shippings'],
+            'table'     => ['shipping_templates'],
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
@@ -44,7 +44,7 @@ abstract class ShippingModelAbstract
 
         $shipping = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'  => ['shippings'],
+            'table'  => ['shipping_templates'],
             'where'  => ['id = ?'],
             'data'   => [$aArgs['id']]
         ]);
@@ -58,11 +58,11 @@ abstract class ShippingModelAbstract
 
     public static function create(array $aArgs)
     {
-        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'shippings_id_seq']);
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'shipping_templates_id_seq']);
 
         $aArgs['id'] = $nextSequenceId;
         DatabaseModel::insert([
-            'table'         => 'shippings',
+            'table'         => 'shipping_templates',
             'columnsValues' => $aArgs
         ]);
 
@@ -75,7 +75,7 @@ abstract class ShippingModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
         
         DatabaseModel::update([
-            'table'     => 'shippings',
+            'table'     => 'shipping_templates',
             'set'       => [
                 'label'         => $aArgs['label'],
                 'description'   => $aArgs['description'],
@@ -97,7 +97,7 @@ abstract class ShippingModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
 
         DatabaseModel::delete([
-            'table' => 'shippings',
+            'table' => 'shipping_templates',
             'where' => ['id = ?'],
             'data'  => [$aArgs['id']]
         ]);

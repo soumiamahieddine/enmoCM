@@ -80,9 +80,9 @@ CONSTRAINT emails_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
-/* SHIPPINGS */
-DROP TABLE IF EXISTS shippings;
-CREATE TABLE shippings
+/* SHIPPING TEMPLATES */
+DROP TABLE IF EXISTS shipping_templates;
+CREATE TABLE shipping_templates
 (
 id serial NOT NULL,
 label character varying(64) NOT NULL,
@@ -91,7 +91,7 @@ options json DEFAULT '{}',
 fee json DEFAULT '{}',
 entities json DEFAULT '{}',
 account json DEFAULT '{}',
-CONSTRAINT shippings_pkey PRIMARY KEY (id)
+CONSTRAINT shipping_templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 

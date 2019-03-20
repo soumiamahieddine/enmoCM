@@ -107,7 +107,7 @@ class ShippingController
         $id = ShippingModel::create($body);
 
         HistoryController::add([
-            'tableName' => 'shippings',
+            'tableName' => 'shipping_templates',
             'recordId'  => $id,
             'eventType' => 'ADD',
             'eventId'   => 'shippingadd',
@@ -146,7 +146,7 @@ class ShippingController
         ShippingModel::update($body);
 
         HistoryController::add([
-            'tableName' => 'shippings',
+            'tableName' => 'shipping_templates',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
             'eventId'   => 'shippingup',
@@ -174,7 +174,7 @@ class ShippingController
         ShippingModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([
-            'tableName' => 'shippings',
+            'tableName' => 'shipping_templates',
             'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
             'eventId'   => 'shippingdel',
