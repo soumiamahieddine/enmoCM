@@ -81,15 +81,15 @@ $businessAppTools->compare_base_version(
 );
 
 //LGI TEST FOR SMARTPHONE
-if ($core->detectSmartphone()) {
-    $confirmScript = '<script>';
-    $confirmScript .= 'if(confirm("' . _ACCESS_SMARTPHONE . '")){';
-    $confirmScript .= 'window.location.href="smartphone/hello.php"';
-    $confirmScript .= '}';
-    $confirmScript .= '</script>';
+// if ($core->detectSmartphone()) {
+//     $confirmScript = '<script>';
+//     $confirmScript .= 'if(confirm("' . _ACCESS_SMARTPHONE . '")){';
+//     $confirmScript .= 'window.location.href="smartphone/hello.php"';
+//     $confirmScript .= '}';
+//     $confirmScript .= '</script>';
     
-    echo $confirmScript;
-}
+//     echo $confirmScript;
+// }
 
 $core->load_html();
 $core->load_header('', true, false);
