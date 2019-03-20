@@ -173,17 +173,17 @@ class EmailController
             return ['errors' => $check['errors'], 'code' => $check['code']];
         }
 
-        $id = EmailModel::update([
+        EmailModel::update([
             'set' => [
-                'sender'                => json_encode($args['data']['sender']),
-                'recipients'            => json_encode($args['data']['recipients']),
-                'cc'                    => empty($args['data']['cc']) ? '[]' : json_encode($args['data']['cc']),
-                'cci'                   => empty($args['data']['cci']) ? '[]' : json_encode($args['data']['cci']),
-                'object'                => empty($args['data']['object']) ? null : $args['data']['object'],
-                'body'                  => empty($args['data']['body']) ? null : $args['data']['body'],
-                'document'              => empty($args['data']['document']) ? null : json_encode($args['data']['document']),
-                'is_html'                => $args['data']['isHtml'] ? 'true' : 'false',
-                'status'                => $args['data']['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING'
+                'sender'      => json_encode($args['data']['sender']),
+                'recipients'  => json_encode($args['data']['recipients']),
+                'cc'          => empty($args['data']['cc']) ? '[]' : json_encode($args['data']['cc']),
+                'cci'         => empty($args['data']['cci']) ? '[]' : json_encode($args['data']['cci']),
+                'object'      => empty($args['data']['object']) ? null : $args['data']['object'],
+                'body'        => empty($args['data']['body']) ? null : $args['data']['body'],
+                'document'    => empty($args['data']['document']) ? null : json_encode($args['data']['document']),
+                'is_html'     => $args['data']['isHtml'] ? 'true' : 'false',
+                'status'      => $args['data']['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING'
             ],
             'where' => ['id = ?'],
             'data' => [$args['emailId']]
@@ -191,7 +191,7 @@ class EmailController
 
         HistoryController::add([
             'tableName'    => 'emails',
-            'recordId'     => $id,
+            'recordId'     => $args['emailId'],
             'eventType'    => 'UP',
             'eventId'      => 'emailModification',
             'info'         => _EMAIL_UPDATED
@@ -204,7 +204,7 @@ class EmailController
             }
             $encryptKey = CoreConfigModel::getEncryptKey();
             $options = empty($args['options']) ? '' : serialize($args['options']);
-            exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+            exec("php src/app/email/scripts/sendEmail.php {$customId} {$args['emailId']} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
         }
 
         return true;

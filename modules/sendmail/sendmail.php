@@ -1,22 +1,10 @@
 <?php
-/*
+
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 *
-*    Copyright 2008,2013 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -366,7 +354,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
                                     .$parameters."');",
             'class' => 'change',
             'tooltip' => _UPDATE,
-            'disabledRules' => "@@user_id@@ != '".$_SESSION['user']['UserId']."' || @@email_status@@ == 'I'",
+            'disabledRules' => "@@user_id@@ != '".$_SESSION['user']['UserId']."'",
         );
      array_push($paramsTab['actionIcons'], $update);
      $transfer = array(
@@ -376,7 +364,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
                                     .$parameters."');",
             'icon' => 'share',
             'tooltip' => _TRANSFER_EMAIL,
-            'disabledRules' => "@@user_id@@ != '".$_SESSION['user']['UserId']."' || @@email_status@@ != 'S'",
+            'disabledRules' => "@@user_id@@ != '".$_SESSION['user']['UserId']."' || @@email_status@@ != 'SENT'",
         );
      array_push($paramsTab['actionIcons'], $transfer);
 
