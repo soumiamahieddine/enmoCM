@@ -12,7 +12,7 @@
             <button mat-stroked-button color="primary" (click)="loadEntities()"><i class="fa fa-sitemap"></i>{{lang.toAService}}</button>
         </div>
         <div>
-            <button mat-stroked-button color="primary" (click)="loadDestUser()"><i class="fa fa-user"></i>{{lang.toAnUser}}</button>
+            <button mat-stroked-button color="primary" (click)="initDestUser()"><i class="fa fa-user"></i>{{lang.toAnUser}}</button>
         </div>
     </div>
     <div *ngIf="redirectMode == 'none' && !loading">
