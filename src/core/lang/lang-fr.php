@@ -225,6 +225,7 @@ define('_LOAD_STATUSES_SESSION', 'Chargement des status en session');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', "Paramétrage des status d'indexation");
 define('_ADD_LINKS', 'Ajouter des liaisons');
 define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche détail');
+define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
 define('_ATTACHMENTS_COMMENT', 'Gestion des pièces jointes');
 define('_BASKETS_COMMENT', 'Bannettes');
 define('_CASES_COMMENT', 'Affaires');

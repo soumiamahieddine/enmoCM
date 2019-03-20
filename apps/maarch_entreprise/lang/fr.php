@@ -4372,6 +4372,9 @@ if (!defined('_PRINT_DETAILS_SERVICE')) {
 if (!defined('_PRINT_DETAILS')) {
     define('_PRINT_DETAILS', 'Imprimer fiche de liaison');
 }
+if (!defined('_PRINT_DOC_DETAILS_FROM_LIST')) {
+    define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
+}
 if (!defined('_PRINT_DOC_FROM_LIST')) {
     define('_PRINT_DOC_FROM_LIST', 'Imprimer les fiches de liaison des documents');
 }

@@ -225,6 +225,7 @@ define('_LOAD_STATUSES_SESSION', 'Load Status session');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Indexation status configuration');
 define('_ADD_LINKS', 'Add connection');
 define('_PRINT_DETAILS_SERVICE', 'Print the liaison sheet from the detail sheet');
+define('_PRINT_DOC_DETAILS_FROM_LIST', 'Print the liaison sheets from the results lists');
 define('_ATTACHMENTS_COMMENT', 'Attachments management');
 define('_BASKETS_COMMENT', 'Baskets');
 define('_CASES_COMMENT', 'Cases');

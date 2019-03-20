@@ -205,7 +205,6 @@ END$$;
 
 /* REFACTORING */
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
-DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
 UPDATE res_letterbox SET locker_user_id = NULL;
 ALTER TABLE res_letterbox ALTER COLUMN locker_user_id DROP DEFAULT;
 ALTER TABLE res_letterbox ALTER COLUMN locker_user_id TYPE INTEGER USING locker_user_id::integer;
