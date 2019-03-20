@@ -241,7 +241,9 @@ class EmailController
             $phpmailer->SMTPAuth = $configuration['auth'];
             if ($configuration['auth']) {
                 $phpmailer->Username = $configuration['user'];
-                $phpmailer->Password = PasswordModel::decrypt(['cryptedPassword' => $configuration['password']]);
+                if (!empty($configuration['password'])) {
+                    $phpmailer->Password = PasswordModel::decrypt(['cryptedPassword' => $configuration['password']]);
+                }
             }
 
             $emailFrom = empty($configuration['from']) ? $email['sender']['email'] : $configuration['from'];

@@ -225,6 +225,7 @@ DO $$ BEGIN
     ALTER TABLE listinstance_history DROP COLUMN IF EXISTS user_id;
     ALTER TABLE listinstance_history ADD COLUMN user_id integer;
     UPDATE listinstance_history set user_id = (select id FROM users where users.user_id = listinstance_history.updated_by_user);
+    UPDATE listinstance_history set user_id = 0 WHERE user_id IS NULL;
     ALTER TABLE listinstance_history ALTER COLUMN user_id set not null;
     ALTER TABLE listinstance_history DROP COLUMN IF EXISTS updated_by_user;
   END IF;

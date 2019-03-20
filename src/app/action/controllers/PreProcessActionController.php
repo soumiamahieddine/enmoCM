@@ -340,7 +340,7 @@ class PreProcessActionController
         }
 
         $changeDestination = true;
-        $entities = UserEntityModel::get(['select' => ['entity_id', 'primary_entity'], 'where' => ['user_id = ?'], 'data' => [$user['user_id']]]);
+        $entities = UserEntityModel::get(['select' => ['entity_id'], 'where' => ['user_id = ?'], 'data' => [$user['user_id']]]);
         $resource = ResModel::getById(['select' => ['destination'], 'resId' => $args['resId']]);
         foreach ($entities as $entity) {
             if ($entity['entity_id'] == $resource['destination']) {
