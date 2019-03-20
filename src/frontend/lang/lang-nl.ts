@@ -905,10 +905,10 @@ export const LANG_NL = {
     "noteTemplates"                             : "Note Templates", //_TO_TRANSLATE
     "toAService"                                : "Naar een dienst", //_TO_TRANSLATE
     "toAnUser"                                  : "Naar een gebruiker", //_TO_TRANSLATE
-    "NoSettingsAvailable"                       : "Geen instellingen beschikbaar", //_TO_TRANSLATE
-    "RedirectTo"                                : "Doorverwijzen naar", //_TO_TRANSLATE
-    "NewAssignee"                               : "Nieuwe ontvanger", //_TO_TRANSLATE
-    "NoPerson"                                  : "Geen persoon", //_TO_TRANSLATE
+    "noSettingsAvailable"                       : "Geen instellingen beschikbaar", //_TO_TRANSLATE
+    "redirectTo"                                : "Doorverwijzen naar", //_TO_TRANSLATE
+    "newAssignee"                               : "Nieuwe ontvanger", //_TO_TRANSLATE
+    "noPerson"                                  : "Geen persoon", //_TO_TRANSLATE
     "willBeAutomaticallyInCopy"                 : "wordt automatisch <b>gekopieerd</b>", //_TO_TRANSLATE
     "confirm"                                   : "Bevestigen", //_TO_TRANSLATE
     "shipping_color"                            : "Color", //_TO_TRANSLATE

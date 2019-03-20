@@ -16,11 +16,11 @@
         </div>
     </div>
     <div *ngIf="redirectMode == 'none' && !loading">
-        <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">{{lang.NoSettingsAvailable}}</div>
+        <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">{{lang.noSettingsAvailable}}</div>
     </div>
     <div *ngIf="redirectMode == 'entity'" class="row" style="display: flex;">
         <div class="redirectContent" style="flex:2">
-            <h2>{{lang.RedirectTo}} :</h2>
+            <h2>{{lang.redirectTo}} :</h2>
             <div class="contentEntities">
                 <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
                     <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
@@ -52,7 +52,7 @@
             </mat-autocomplete>
           </mat-form-field>
         <div class="redirectContent" style="flex:2">
-            <h2 style="top:-5px;">{{lang.NewAssignee}} :</h2>
+            <h2 style="top:-5px;">{{lang.newAssignee}} :</h2>
             <div class="contentUser">
                 <mat-list *ngIf="destUser != null">
                     <mat-list-item>
@@ -63,7 +63,7 @@
                     </mat-list-item>
                 </mat-list>
                 <div *ngIf="destUser == null" class="noSelection">
-                    {{lang.NoPerson}}
+                    {{lang.noPerson}}
                 </div>
             </div>
         </div>
