@@ -932,5 +932,6 @@ export const LANG_FR = {
     "shippingUpdated"                            : "Canal d'envoi modifié",
     "shippingDeleted"                            : "Canal d'envoi supprimé",
     "shippings"                            : "Envois postaux",
-    "mailevaAccount"                             : "Compte Maileva"
+    "mailevaAccount"                             : "Compte Maileva",
+    "destinationChangingInfo"                            : "Le courrier sera réattribué à l'entité",
 };

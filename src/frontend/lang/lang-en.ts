@@ -906,5 +906,6 @@ export const LANG_EN = {
     "shippingUpdated"                            : "Shipping updated",
     "shippingDeleted"                            : "Shipping deleted",
     "shippings"                            : "Shippings",
-    "mailevaAccount"                             : "Maileva account"
+    "mailevaAccount"                             : "Maileva account",
+    "destinationChangingInfo"                            : "This mail will be reassigned to this entity",
 };

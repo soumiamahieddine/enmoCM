@@ -934,5 +934,6 @@ export const LANG_NL = {
     "shippingUpdated"                            : "Shipping updated", //_TO_TRANSLATE
     "shippingDeleted"                            : "Shipping deleted", //_TO_TRANSLATE
     "shippings"                            : "Shippings", //_TO_TRANSLATE
-    "mailevaAccount"                             : "Maileva account" //_TO_TRANSLATE
+    "mailevaAccount"                             : "Maileva account", //_TO_TRANSLATE
+    "destinationChangingInfo"              : "This mail will be reassigned to this entity", //_TO_TRANSLATE
 };

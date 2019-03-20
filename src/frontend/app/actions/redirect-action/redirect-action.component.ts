@@ -40,6 +40,7 @@ export class RedirectActionComponent implements OnInit {
     userListRedirect: any[] = [];
     userRedirectCtrl = new FormControl();
     filteredUserRedirect: Observable<any[]>;
+    isDestinationChanging: boolean = false;
 
     @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
@@ -54,6 +55,7 @@ export class RedirectActionComponent implements OnInit {
                 this.entities = data['entities'];
                 this.userListRedirect = data.users;
                 this.keepDestForRedirection = data.keepDestForRedirection;
+                this.injectDatasParam.keepDestForRedirection = data.keepDestForRedirection;
 
                 this.entities.forEach(entity => {
                     if (entity.state.selected) {
@@ -156,7 +158,18 @@ export class RedirectActionComponent implements OnInit {
     }
 
     changeDest(event: any) {
+        
         let user = event.option.value;
+        this.isDestinationChanging = false;
+        if (this.data.selectedRes.length == 1) {
+            this.http.get('../../rest/resources/' + this.data.selectedRes[0] + '/users/' + user.id + '/isDestinationChanging')
+            .subscribe((data: any) => {
+                this.isDestinationChanging = data.isDestinationChanging;
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
+        }
+
         this.destUser = {
             difflist_type: "entity_id",
             item_mode: "dest",
@@ -165,6 +178,21 @@ export class RedirectActionComponent implements OnInit {
             labelToDisplay: user.labelToDisplay,
             descriptionToDisplay: user.descriptionToDisplay
         };
+        if (this.keepDestForRedirection) {
+            let isInCopy = false;
+            let newCopy = null;
+            this.diffusionListDestRedirect.forEach((element: any) => {
+                if (element.item_mode == 'cc' && element.item_id == user.user_id) {
+                    isInCopy = true;
+                }
+            });
+
+            if (!isInCopy) {
+                newCopy = this.oldUser;
+                newCopy.item_mode = 'cc';
+                this.diffusionListDestRedirect.push(newCopy);
+            }
+        }
         this.diffusionListDestRedirect.splice(this.diffusionListDestRedirect.map((e: any) => { return e.item_mode; }).indexOf('dest'), 1);
         this.diffusionListDestRedirect.push(this.destUser)
 

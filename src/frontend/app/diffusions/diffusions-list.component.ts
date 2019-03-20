@@ -93,7 +93,7 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
                         this.diffList[element.item_mode].items.push(element);
                     }
                 });
-                if (this.keepRoles.length > 0 && this.injectDatas.resId > 0) {
+                if ((this.keepRoles.length > 0 || this.injectDatas.keepDestForRedirection) && this.injectDatas.resId > 0) {
                     this.injectListinstanceToKeep();
                 } else {
                     this.loading = false;
@@ -129,7 +129,7 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
                 if (this.keepRoles.indexOf(element.item_mode) > -1 && this.diffList[element.item_mode].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
                     this.diffList[element.item_mode].items.push(element);
                 }
-                if (this.injectDatas.keepInListinstance && element.item_mode == "dest" && this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
+                if (this.injectDatas.keepDestForRedirection && element.item_mode == "dest" && this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
                     this.diffList["copy"].items.push(element);
                 }
             });
