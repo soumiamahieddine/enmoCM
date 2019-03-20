@@ -14,31 +14,22 @@
 
 namespace AcknowledgementReceipt\controllers;
 
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Docserver\models\DocserverModel;
+use History\controllers\HistoryController;
+use Resource\controllers\ResController;
+use Resource\controllers\StoreController;
+use Respect\Validation\Validator;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use User\models\UserModel;
-use Resource\models\ResModel;
-use setasign\Fpdi\Tcpdf\Fpdi;
-use Basket\models\BasketModel;
-use Respect\Validation\Validator;
-use Docserver\models\DocserverModel;
-use Resource\controllers\ResController;
-use Resource\controllers\StoreController;
-use History\controllers\HistoryController;
-use Resource\controllers\ResourceListController;
-use SrcCore\controllers\PreparedClauseController;
-use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 
 class AcknowledgementReceiptController
 {
-    public function createPaperAcknowledgement(Request $request, Response $response, array $aArgs)
+    public function createPaperAcknowledgement(Request $request, Response $response)
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-
-        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
-        if (!empty($errors['errors'])) {
-            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
-        }
 
         $bodyData = $request->getParsedBody();
 
@@ -47,8 +38,6 @@ class AcknowledgementReceiptController
         }
 
         $bodyData['resources'] = array_slice($bodyData['resources'], 0, 500);
-        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name']]);
-        $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
         $acknowledgements = AcknowledgementReceiptModel::getByIds([
             'select'  => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'send_date', 'format'],
@@ -58,23 +47,10 @@ class AcknowledgementReceiptController
 
         $resourcesInBasket = [];
         foreach ($acknowledgements as $acknowledgement) {
-            $resourcesInBasket[$acknowledgement['res_id']] = $acknowledgement['res_id'];
+            $resourcesInBasket[] = $acknowledgement['res_id'];
         }
 
-        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-        $rawResourcesInBasket = ResModel::getOnView([
-            'select'    => ['res_id'],
-            'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
-            'data'      => [$resourcesInBasket]
-        ]);
-
-        $allResourcesInBasket = [];
-        foreach ($rawResourcesInBasket as $rawResourceInBasket) {
-            $allResourcesInBasket[$rawResourceInBasket['res_id']] = $rawResourceInBasket['res_id'];
-        }
-
-        $aDiff = array_diff($resourcesInBasket, $allResourcesInBasket);
-        if (!empty($aDiff)) {
+        if (!ResController::hasRightByResId(['resId' => $resourcesInBasket, 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Documents out of perimeter']);
         }
 
@@ -119,19 +95,13 @@ class AcknowledgementReceiptController
 
     public function getAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
-        $mainDocument = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'fingerprint'], 'resId' => $aArgs['resId']]);
-        $extDocument = ResModel::getExtById(['select' => ['category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
-        if (empty($mainDocument) || empty($extDocument)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
         $document = AcknowledgementReceiptModel::getByIds([
             'select'  => ['docserver_id', 'path', 'filename', 'fingerprint'],
-            'ids'      => [$aArgs['id']]
+            'ids'     => [$aArgs['id']]
         ]);
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document[0]['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);

@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angular/cdk/drag-drop';
+import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+
+declare function $j(selector: any): any;
 
 @Component({
     selector: 'app-diffusions-list',
@@ -10,7 +13,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angul
     styleUrls: ['diffusions-list.component.scss'],
     providers: [NotificationService]
 })
-export class DiffusionsListComponent implements OnInit {
+export class DiffusionsListComponent extends AutoCompletePlugin implements OnInit {
 
     lang: any = LANG;
     listinstance: any = [];
@@ -23,7 +26,9 @@ export class DiffusionsListComponent implements OnInit {
 
     @Input('injectDatas') injectDatas: any;
 
-    constructor(public http: HttpClient, private notify: NotificationService) { }
+    constructor(public http: HttpClient, private notify: NotificationService) {
+        super(http, ['usersAndEntities']);
+    }
 
     ngOnInit(): void {
         this.http.get("../../rest/listTemplates/types/entity_id/roles")
@@ -88,7 +93,7 @@ export class DiffusionsListComponent implements OnInit {
                         this.diffList[element.item_mode].items.push(element);
                     }
                 });
-                if (this.keepRoles.length > 0 && this.injectDatas.resId > 0) {
+                if ((this.keepRoles.length > 0 || this.injectDatas.keepDestForRedirection) && this.injectDatas.resId > 0) {
                     this.injectListinstanceToKeep();
                 } else {
                     this.loading = false;
@@ -124,7 +129,7 @@ export class DiffusionsListComponent implements OnInit {
                 if (this.keepRoles.indexOf(element.item_mode) > -1 && this.diffList[element.item_mode].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
                     this.diffList[element.item_mode].items.push(element);
                 }
-                if (this.injectDatas.keepInListinstance && element.item_mode == "dest" && this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
+                if (this.injectDatas.keepDestForRedirection && element.item_mode == "dest" && this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
                     this.diffList["copy"].items.push(element);
                 }
             });
@@ -139,7 +144,24 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     getListinstance() {
-        return this.diffList;
+        let listInstanceFormatted: any = [];
+
+        Object.keys(this.diffList).forEach(role => {
+            if (this.diffList[role].items.length > 0) {
+                this.diffList[role].items.forEach((element:any) => {
+                    listInstanceFormatted.push({
+                        difflist_type : element.difflist_type !== undefined ? element.difflist_type : element.object_type,
+                        item_id : element.item_id,
+                        item_mode : role == 'copy' ? 'cc' : role,
+                        item_type : element.item_type,
+                        process_date : element.process_date !== undefined ? element.process_date : null,
+                        process_comment : element.process_comment,    
+                    });
+                });
+            }
+        });
+
+        return listInstanceFormatted;
     }
 
     getDestUser() {
@@ -148,5 +170,31 @@ export class DiffusionsListComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    addElem(element: any) {
+
+        if (this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.id) == -1) {
+            let itemType = '';
+            if (element.type == 'user') {
+                itemType = 'user_id';
+            } else {
+                itemType = 'entity_id';
+            }
+    
+            const newElemListModel = {
+                difflist_type: "entity_id",
+                item_type: itemType,
+                item_id: element.id,
+                labelToDisplay: element.idToDisplay,
+                descriptionToDisplay: element.otherInfo,
+                item_mode: "copy"
+            };
+            this.diffList['copy'].items.unshift(newElemListModel);
+        }
+        
+        $j('.userDiffList').val('');
+        $j('.userDiffList').blur();
+        
     }
 }

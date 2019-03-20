@@ -2358,8 +2358,8 @@ if (!defined('_IS_EXTERNAL_CONTACT')) {
 if (!defined('_SEARCH_DIRECTORY')) {
     define('_SEARCH_DIRECTORY', 'Directory search');
 }
-if (!defined('_EXTERNAL_CONTACT_ID')) {
-    define('_EXTERNAL_CONTACT_ID', 'External contact ID');
+if (!defined('_M2M_ID')) {
+    define('_M2M_ID', 'M2GEC ID');
 }
 if (!defined('_CONTACT_ID')) {
     define('_CONTACT_ID', 'Contact ID');
@@ -4303,6 +4303,9 @@ if (!defined('_PRINT_DETAILS_SERVICE')) {
 }
 if (!defined('_PRINT_DETAILS')) {
     define('_PRINT_DETAILS', 'Print liaison sheet');
+}
+if (!defined('_PRINT_DOC_DETAILS_FROM_LIST')) {
+    define('_PRINT_DOC_DETAILS_FROM_LIST', 'Print the liaison sheets from the results lists');
 }
 if (!defined('_PRINT_LIST')) {
     define('_PRINT_LIST', 'Print the list');

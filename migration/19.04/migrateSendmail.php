@@ -60,7 +60,8 @@ foreach ($customs as $custom) {
         if (empty($sender[1])) {
             $sender = ['email' => $sender[0]];
         } else {
-            $sender = ['email' => $sender[1], 'entityId' => $sender[0]];
+            $entity = \Entity\models\EntityModel::getByEntityId(['entityId' => $sender[0], 'select' => ['id']]);
+            $sender = ['email' => $sender[1], 'entityId' => $entity['id']];
         }
         $recipients = explode(',', $sendmail['to_list']);
         $cc = explode(',', $sendmail['cc_list']);

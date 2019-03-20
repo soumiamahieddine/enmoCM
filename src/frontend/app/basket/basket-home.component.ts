@@ -47,4 +47,11 @@ export class BasketHomeComponent implements OnInit {
             this.snavL.close();
         }
     }
+
+    refreshBasketHome(){
+        this.http.get(this.coreUrl + "rest/home")
+            .subscribe((data: any) => {
+                this.homeData = data;
+            });
+    }
 }

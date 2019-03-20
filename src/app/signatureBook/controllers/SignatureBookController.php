@@ -43,7 +43,7 @@ class SignatureBookController
     {
         $resId = $aArgs['resId'];
 
-        if (!ResController::hasRightByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$resId], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -124,7 +124,7 @@ class SignatureBookController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -146,7 +146,7 @@ class SignatureBookController
 
     public function getIncomingMailAndAttachmentsById(Request $request, Response $response, array $aArgs)
     {
-        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -155,7 +155,7 @@ class SignatureBookController
 
     public function getAttachmentsById(Request $request, Response $response, array $aArgs)
     {
-        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 

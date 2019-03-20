@@ -118,23 +118,31 @@ abstract class UserModelAbstract
         return true;
     }
 
-    public static function getByLogin(array $aArgs)
+    public static function getByLogin(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['login']);
-        ValidatorModel::stringType($aArgs, ['login']);
+        ValidatorModel::notEmpty($args, ['login']);
+        ValidatorModel::stringType($args, ['login']);
+        ValidatorModel::arrayType($args, ['select']);
 
-        $aUser = DatabaseModel::select([
+        static $users;
+
+        if (!empty($users[$args['login']]) && !empty($args['select']) && $args['select'] == ['id']) {
+            return $users[$args['login']];
+        }
+
+        $user = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['login']]
+            'data'      => [$args['login']]
         ]);
 
-        if (empty($aUser)) {
+        if (empty($user)) {
             return [];
         }
+        $users[$args['login']] = $user[0];
 
-        return $aUser[0];
+        return $users[$args['login']];
     }
     
     public static function getByLowerLogin(array $aArgs)

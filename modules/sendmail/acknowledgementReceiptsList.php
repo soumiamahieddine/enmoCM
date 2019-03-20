@@ -13,7 +13,8 @@ array_push(
     "user_id",
     "contact_address_id",
     "creation_date",
-    "send_date"
+    "send_date",
+    "docserver_id"
 );
     
 //Where clause
@@ -70,8 +71,12 @@ if (!empty($tab)) {
                 }
                 if ($tab[$i][$j][$value]=="user_id") {
                     $tab[$i][$j]["label"]       = _CREATE_BY;
-                    $userInfo = \User\models\UserModel::getById(['id' => $tab[$i][$j]["value"]]);
-                    $tab[$i][$j]["value"]       = $userInfo['firstname'] . " " . $userInfo['lastname'];
+                    $user = _UNDEFINED;
+                    if (!empty($tab[$i][$j]["value"])) {
+                        $userInfo = \User\models\UserModel::getById(['id' => $tab[$i][$j]["value"]]);
+                        $user = $userInfo['firstname'] . " " . $userInfo['lastname'];
+                    }
+                    $tab[$i][$j]["value"]       = $user;
                     $tab[$i][$j]["size"]        = "3";
                     $tab[$i][$j]["label_align"] = "left";
                     $tab[$i][$j]["align"]       = "left";
@@ -81,7 +86,10 @@ if (!empty($tab)) {
                 }
                 if ($tab[$i][$j][$value]=="contact_address_id") {
                     $tab[$i][$j]["label"]       = _CONTACT;
-                    $contactInfo = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $tab[$i][$j]["value"]]);
+                    $contactInfo = _UNDEFINED;
+                    if (!empty($tab[$i][$j]["value"])) {
+                        $contactInfo = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $tab[$i][$j]["value"]]);
+                    }
                     $tab[$i][$j]["value"]       = $contactInfo;
                     $tab[$i][$j]["size"]        = "4";
                     $tab[$i][$j]["label_align"] = "left";
@@ -136,7 +144,7 @@ if (!empty($tab)) {
         "script"    => "window.open('../../rest/res/".$identifier."/acknowledgementReceipt/@@id@@','acknowledgementReceipt');",
         "icon"      =>  'eye',
         "tooltip"   =>  _VIEW_DOC,
-        "disabledRules" => "empty(@@id@@)"
+        "disabledRules" => "empty(@@id@@) || empty(@@docserver_id@@)"
     );
     array_push($paramsTab['actionIcons'], $download);
     

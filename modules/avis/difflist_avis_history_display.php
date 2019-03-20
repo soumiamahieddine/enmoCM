@@ -74,7 +74,7 @@ $urlParameters = '';
 
 //Fields
     //Documents
-    array_push($select[$view], "listinstance_history_id", "res_id", "updated_by_user", "updated_date");
+    array_push($select[$view], "listinstance_history_id", "res_id", "updated_date", 'user_id');
 
 //Where clause
     $where_tab = array();
@@ -142,20 +142,16 @@ $urlParameters = '';
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]="res_id";
                 }
-
-                if ($tab[$i][$j][$value]=="updated_by_user") {
-                    $tab[$i][$j]["label"]=_UPDATED_BY_USER;
-                    $db = new Database();
-                    $stmt = $db->query("SELECT firstname, lastname FROM users WHERE user_id = ?", array($tab[$i][$j]['value']));
-                    $user = $stmt->fetchObject();
-                    $tab[$i][$j]['value'] =  ucwords($user->lastname) . " " . functions::show_string(ucfirst($user->firstname));
+                if ($tab[$i][$j][$value]=="user_id") {
+                    $tab[$i][$j]["label"] = _UPDATED_BY_USER;
+                    $tab[$i][$j]['value'] =  \User\models\UserModel::getLabelledUserById(['id' => $tab[$i][$j]['value']]);
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]="updated_by_user";
+                    $tab[$i][$j]["order"]="user_id";
                 }
 
                 if ($tab[$i][$j][$value]=="updated_date") {

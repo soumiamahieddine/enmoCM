@@ -115,7 +115,7 @@ abstract class ContactModelAbstract
         ValidatorModel::stringType($aArgs, [
             'departement', 'addressFirstname', 'addressLastname', 'addressTitle', 'addressFunction', 'occupancy', 'addressNum', 'addressStreet', 'addressComplement',
             'addressTown', 'addressZip', 'addressCountry', 'phone', 'email', 'website', 'salutationHeader', 'salutationFooter', 'addressOtherData',
-            'userId', 'entityId', 'isPrivate', 'external_contact_id'
+            'userId', 'entityId', 'isPrivate', 'external_id'
         ]);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contact_addresses_id_seq']);
@@ -146,7 +146,7 @@ abstract class ContactModelAbstract
                 'other_data'            => $aArgs['otherData'],
                 'user_id'               => $aArgs['userId'],
                 'entity_id'             => $aArgs['entityId'],
-                'external_contact_id'   => $aArgs['external_contact_id'],
+                'external_id'           => $aArgs['external_id'],
                 'is_private'            => $aArgs['isPrivate'],
                 'enabled'               => 'Y'
             ]
@@ -192,6 +192,7 @@ abstract class ContactModelAbstract
 
         $fullAddress = ContactModel::getFullAddressById($aArgs);
         $fullAddress = $fullAddress[0];
+        $fullAddress['external_id'] = (array)json_decode($fullAddress['external_id']);
 
         if ($fullAddress['is_corporate_person'] == 'Y') {
             $contactName = strtoupper($fullAddress['society']) . ' ' ;
@@ -204,8 +205,8 @@ abstract class ContactModelAbstract
                 $contactName .= '(' . $fullAddress['society'] . ') ';
             }
         }
-        if (!empty($fullAddress['external_contact_id'])) {
-            $contactName .= ' - <b>' . $fullAddress['external_contact_id'] . '</b> ';
+        if (!empty($fullAddress['external_id']['m2m'])) {
+            $contactName .= ' - <b>' . $fullAddress['external_id']['m2m'] . '</b> ';
         }
         if ($fullAddress['is_private'] == 'Y') {
             $contactName .= '('._CONFIDENTIAL_ADDRESS.')';
@@ -420,7 +421,7 @@ abstract class ContactModelAbstract
         return '';
     }
 
-    public static function CreateContactM2M(array $aArgs)
+    public static function createContactM2M(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['data', 'contactCommunication']);
 
@@ -429,14 +430,15 @@ abstract class ContactModelAbstract
         $formatedDataContact = [];
         $formatedDataAddress = [];
 
+        $contact_exists = false;
         foreach ($aArgs['data'] as $key => $value) {
             // On regarde si le contact existe déjà
-            if (strtoupper($value['column']) == strtoupper('external_contact_id') && ($value['value'] <> "" || $value['value'] <> null)) {
+            if (strtoupper($value['column']) == strtoupper('external_id') && ($value['value'] <> "" || $value['value'] <> null)) {
                 try {
                     $res = DatabaseModel::select([
                         'select' => ['contact_id', 'ca_id'],
                         'table'  => ['view_contacts'],
-                        'where'  => ['external_contact_id = ?', 'enabled = ?'],
+                        'where'  => ["external_id->>'m2m' = ?", 'enabled = ?'],
                         'data'   => [$value['value'], 'Y'],
                     ]);
 
@@ -462,7 +464,9 @@ abstract class ContactModelAbstract
 
             $aArgs['data'][$key]['column'] = strtolower($value['column']);
 
-            if ($value['table'] == "contacts_v2") {
+            if ($value['column'] == 'external_id') {
+                $formatedDataContact[$value['column']] = json_encode(['m2m' => $value['value']]);
+            } elseif ($value['table'] == "contacts_v2") {
                 $formatedDataContact[$value['column']] = $value['value'];
             } elseif ($value['table'] == "contact_addresses") {
                 $formatedDataAddress[$value['column']] = $value['value'];

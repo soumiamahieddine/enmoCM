@@ -1122,7 +1122,7 @@ CREATE TABLE contact_addresses
   entity_id character varying(32) NOT NULL,
   is_private character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
-  external_contact_id character varying(128),
+  external_id json DEFAULT '{}',
   ban_id character varying(128),
   CONSTRAINT contact_addresses_pkey PRIMARY KEY  (id)
 ) WITH (OIDS=FALSE);
@@ -1349,7 +1349,6 @@ CREATE TABLE res_letterbox
   opinion_limit_date timestamp without time zone default NULL,
   department_number_id text,
   barcode text,
-  sve_start_date TIMESTAMP without time zone,
   external_signatory_book_id integer,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
@@ -1467,32 +1466,6 @@ CREATE TABLE priorities
 )
 WITH (OIDS=FALSE);
 
--- sendmail module
-CREATE TABLE sendmail
-(
-  email_id serial NOT NULL,
-  coll_id character varying(32) NOT NULL,
-  res_id bigint,
-  user_id character varying(128) NOT NULL,
-  to_list text DEFAULT NULL,
-  cc_list text DEFAULT NULL,
-  cci_list text DEFAULT NULL,
-  email_object character varying(255) DEFAULT NULL,
-  email_body text,
-  is_res_master_attached character varying(1) NOT NULL DEFAULT 'Y',
-  res_version_id_list character varying(255) DEFAULT NULL,
-  res_attachment_id_list character varying(255) DEFAULT NULL,
-  res_version_att_id_list character varying(255) DEFAULT NULL,
-  note_id_list character varying(255) DEFAULT NULL,
-  is_html character varying(1) NOT NULL DEFAULT 'Y',
-  email_status character varying(1) NOT NULL DEFAULT 'D',
-  creation_date timestamp without time zone NOT NULL,
-  send_date timestamp without time zone DEFAULT NULL,
-  sender_email character varying(255) DEFAULT NULL,
-  message_exchange_id text DEFAULT NULL,
-  CONSTRAINT sendmail_pkey PRIMARY KEY (email_id )
- );
-
 -- fileplan module
 DROP SEQUENCE IF EXISTS fp_fileplan_positions_position_id_seq;
 CREATE SEQUENCE fp_fileplan_positions_position_id_seq
@@ -1557,7 +1530,7 @@ CREATE TABLE listinstance_history
 listinstance_history_id bigint NOT NULL DEFAULT nextval('listinstance_history_id_seq'::regclass),
 coll_id character varying(50) NOT NULL,
 res_id bigint NOT NULL,
-updated_by_user character varying(128) NOT NULL,
+user_id INTEGER NOT NULL,
 updated_date timestamp without time zone NOT NULL,
 CONSTRAINT listinstance_history_pkey PRIMARY KEY (listinstance_history_id)
 )
@@ -1593,6 +1566,20 @@ process_comment character varying(255),
 CONSTRAINT listinstance_history_details_pkey PRIMARY KEY (listinstance_history_details_id)
 ) WITH ( OIDS=FALSE );
 
+/* SHIPPINGS */
+DROP TABLE IF EXISTS shippings;
+CREATE TABLE shippings
+(
+id serial NOT NULL,
+label character varying(64) NOT NULL,
+description character varying(255) NOT NULL,
+options json DEFAULT '{}',
+fee json DEFAULT '{}',
+entities json DEFAULT '{}',
+account json DEFAULT '{}',
+CONSTRAINT shippings_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 
 --VIEWS
 -- view for letterbox
@@ -1739,7 +1726,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,
-    r.sve_start_date,
     r.subject,
     r.identifier,
     r.title,
@@ -1808,7 +1794,7 @@ CREATE OR REPLACE VIEW view_contacts AS
 , c.user_id AS contact_user_id, c.entity_id AS contact_entity_id, c.creation_date, c.update_date, c.enabled AS contact_enabled, ca.id AS ca_id
 , ca.contact_purpose_id, ca.departement, ca.firstname, ca.lastname, ca.title, ca.function, ca.occupancy
 , ca.address_num, ca.address_street, ca.address_complement, ca.address_town, ca.address_postal_code, ca.address_country
-, ca.phone, ca.email, ca.website, ca.salutation_header, ca.salutation_footer, ca.other_data, ca.user_id, ca.entity_id, ca.is_private, ca.enabled, ca.external_contact_id
+, ca.phone, ca.email, ca.website, ca.salutation_header, ca.salutation_footer, ca.other_data, ca.user_id, ca.entity_id, ca.is_private, ca.enabled, ca.external_id
 , cp.label as contact_purpose_label, ct.label as contact_type_label
    FROM contacts_v2 c
    RIGHT JOIN contact_addresses ca ON c.contact_id = ca.contact_id

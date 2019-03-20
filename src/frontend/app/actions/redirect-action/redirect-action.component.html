@@ -9,18 +9,18 @@
     ?<br />
     <div class="chooseMode" *ngIf="redirectMode == '' && !loading">
         <div>
-            <button mat-raised-button (click)="loadEntities()">Vers un service</button>
+            <button mat-stroked-button color="primary" (click)="loadEntities()"><i class="fa fa-sitemap"></i>{{lang.toAService}}</button>
         </div>
         <div>
-            <button mat-raised-button (click)="loadDestUser()">Vers un utilisateur</button>
+            <button mat-stroked-button color="primary" (click)="initDestUser()"><i class="fa fa-user"></i>{{lang.toAnUser}}</button>
         </div>
     </div>
     <div *ngIf="redirectMode == 'none' && !loading">
-        <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">Aucun paramétrage disponible</div>
+        <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">{{lang.noSettingsAvailable}}</div>
     </div>
     <div *ngIf="redirectMode == 'entity'" class="row" style="display: flex;">
         <div class="redirectContent" style="flex:2">
-            <h2>Rediriger vers :</h2>
+            <h2>{{lang.redirectTo}} :</h2>
             <div class="contentEntities">
                 <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
                     <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="redirectContent" style="flex:1">
-            <h2 title="{{currentEntity.entity_label}}">Liste de diffusion "{{currentEntity.entity_label}}" :</h2>
+            <h2 title="{{currentEntity.entity_label}}">{{lang.diffusionList}} "{{currentEntity.entity_label}}" :</h2>
             <div class="contentEntities">
                 <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
             </div>
@@ -42,15 +42,17 @@
               <mat-option *ngFor="let user of filteredUserRedirect | async" [value]="user">
                 <mat-list>
                     <mat-list-item>
-                      <mat-icon mat-list-icon class="fa fa-user" color="primary"></mat-icon>
-                      <p mat-line> {{user.labelToDisplay}} </p>
+                      <mat-icon mat-list-icon class="fa fa-user" color="primary" style="padding-top:0px;"></mat-icon>
+                      <h4 mat-line>{{user.labelToDisplay}}</h4>
+                        <p mat-line style="opacity:0.5;line-height: 15px;font-size: 10px;">
+                            {{user.descriptionToDisplay}} </p>
                     </mat-list-item>
                   </mat-list>                  
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
         <div class="redirectContent" style="flex:2">
-            <h2 style="top:-5px;">Nouvel atributaire :</h2>
+            <h2 style="top:-5px;">{{lang.newAssignee}} :</h2>
             <div class="contentUser">
                 <mat-list *ngIf="destUser != null">
                     <mat-list-item>
@@ -61,11 +63,12 @@
                     </mat-list-item>
                 </mat-list>
                 <div *ngIf="destUser == null" class="noSelection">
-                    Aucune personne
+                    {{lang.noPerson}}
                 </div>
             </div>
         </div>
-        <div *ngIf="keepDestForRedirection && oldUser != null" class="alert-message alert-message-info" role="alert" style="margin-top: 30px;"><b>{{oldUser.labelToDisplay}}</b> sera automatiquement mise <b>en copie</b></div>
+        <div *ngIf="isDestinationChanging" class="alert-message alert-message-info" role="alert" style="margin-top: 30px;">{{lang.destinationChangingInfo}} <b>{{destUser.descriptionToDisplay}}</b></div>
+        <div *ngIf="keepDestForRedirection && oldUser != null" class="alert-message alert-message-info" role="alert" style="margin-top: 30px;"><b>{{oldUser.labelToDisplay}}</b>&nbsp;<span [innerHTML]="lang.willBeAutomaticallyInCopy"></span></div>
     </div>
 
     <div class="row" *ngIf="redirectMode != '' && redirectMode != 'none'">

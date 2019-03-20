@@ -24,6 +24,7 @@ return array(
     'SrcCore\\' => array($baseDir . '/src/core'),
     'Slim\\' => array($vendorDir . '/slim/slim/Slim'),
     'SignatureBook\\' => array($baseDir . '/src/app/signatureBook'),
+    'Shipping\\' => array($baseDir . '/src/app/shipping'),
     'Sendmail\\' => array($baseDir . '/modules/sendmail'),
     'Respect\\Validation\\' => array($vendorDir . '/respect/validation/library'),
     'Resource\\' => array($baseDir . '/src/app/resource'),

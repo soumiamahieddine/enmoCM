@@ -29,13 +29,13 @@ $query    = "SELECT result, SUM(confidence) AS score, ca_id FROM (";
 
 $subQuery[1]=
     "SELECT CASE WHEN is_corporate_person = 'Y' THEN UPPER(society) ELSE COALESCE(contact_firstname, '') || ' ' || UPPER(COALESCE(contact_lastname, '')) END || "
-    . " ' - ' || external_contact_id || ' - ' || COALESCE(contact_purpose_label, '') || ' : ' || "
+    . " ' - ' || external_id->>'m2m' || ' - ' || COALESCE(contact_purpose_label, '') || ' : ' || "
     . " COALESCE(firstname, '') || ' ' || UPPER(COALESCE(lastname, ''))|| ' ' || COALESCE(address_num, '') || ' ' || COALESCE(address_street, '') || ' ' || COALESCE(address_postal_code, '')|| ' ' || COALESCE(address_town, '')|| ' ' || UPPER(COALESCE(address_country, ''))"
     ." || '(Moyen de communication : ' || cc.value || ')' AS result, "
         . ' %d AS confidence, ca_id'
     . " FROM view_contacts left join contact_communication cc on view_contacts.contact_id = cc.contact_id"
     . " WHERE  "
-        . " enabled = 'Y' AND cc.value <> '' AND external_contact_id <> '' AND external_contact_id IS NOT NULL"
+        . " enabled = 'Y' AND cc.value <> '' AND external_id->>'m2m' <> '' AND external_id->>'m2m' IS NOT NULL"
         . " AND ("
             . " (LOWER(contact_lastname) LIKE LOWER('%s') OR LOWER(lastname) LIKE LOWER('%s'))"
             . " OR (LOWER(contact_firstname) LIKE LOWER('%s') OR LOWER(firstname) LIKE LOWER('%s'))"

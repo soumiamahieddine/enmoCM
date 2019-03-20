@@ -764,7 +764,7 @@ if (!defined('_IS_CORPORATE_PERSON')) { define('_IS_CORPORATE_PERSON', 'Rechtspe
 if (!defined('_IS_INTERNAL_CONTACT')) { define('_IS_INTERNAL_CONTACT', 'Intern contact');}
 if (!defined('_IS_EXTERNAL_CONTACT')) { define('_IS_EXTERNAL_CONTACT', 'Extern contact');}
 if (!defined('_SEARCH_DIRECTORY')) { define('_SEARCH_DIRECTORY', 'Opzoeking telefoonboek');}
-if (!defined('_EXTERNAL_CONTACT_ID')) { define('_EXTERNAL_CONTACT_ID', 'Gebruikersnaam extern contact');}
+if (!defined('_M2M_ID')) { define('_M2M_ID', 'Gebruikersnaam M2GEC');}
 if (!defined('_INDIVIDUAL')) { define('_INDIVIDUAL', 'Privépersoon');}
 if (!defined('_CONTACT_TARGET')) { define('_CONTACT_TARGET', 'Voor welk contact kan dit type gebruikt worden?');}
 if (!defined('_CONTACT_TARGET_LIST')) { define('_CONTACT_TARGET_LIST', 'Doel van het contacttype');}
@@ -1409,6 +1409,7 @@ if (!defined('_ITEM_FOLDER')) { define('_ITEM_FOLDER', 'Organisch klassement');}
 if (!defined('_CHOOSE_CURRENT_STATUS')) { define('_CHOOSE_CURRENT_STATUS', 'Huidige status bewaren');}
 if (!defined('_PRINT_DETAILS_SERVICE')) { define('_PRINT_DETAILS_SERVICE', 'De verbindingsfiche vanuit de detailfiche afdrukken');}
 if (!defined('_PRINT_DETAILS')) { define('_PRINT_DETAILS', 'De verbindingsfiche afdrukken');}
+if (!defined('_PRINT_DOC_DETAILS_FROM_LIST')) { define('_PRINT_DOC_DETAILS_FROM_LIST', 'De verbindingsfiche vanuit de resultatenlijsten afdrukken');}
 if (!defined('_PRINT_DOC_FROM_LIST')) { define('_PRINT_DOC_FROM_LIST', 'De verbindingsfiches van de documenten afdrukken');}
 if (!defined('_PRINT_LIST')) { define('_PRINT_LIST', 'De lijst afdrukken');}
 if (!defined('_PRINT_CATEGORY')) { define('_PRINT_CATEGORY', 'Categorie');}

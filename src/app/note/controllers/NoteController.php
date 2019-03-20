@@ -38,14 +38,14 @@ class NoteController
             return $response->withStatus(400)->withJson(['errors' => 'resId is empty or not an integer']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
         $aNotes = NoteModel::getByUserIdForResource(['select' => ['*'], 'resId' => $aArgs['resId'], 'userId' => $user['id']]);
         
-        foreach($aNotes as $key => $aNote) {
+        foreach ($aNotes as $key => $aNote) {
             $aUser = UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $aNote['user_id']]);
             $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aNote['user_id']]);
             $aNotes[$key]['firstname'] = $aUser['firstname'];
@@ -65,7 +65,7 @@ class NoteController
             return $response->withStatus(400)->withJson(['errors' => 'Data note_text is empty or not a string']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         
@@ -78,7 +78,7 @@ class NoteController
                     return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
                 }
                 
-                $entity = entitymodel::getByEntityId(['select' => ['id'], 'entityId' => $entityId]);
+                $entity = Entitymodel::getByEntityId(['select' => ['id'], 'entityId' => $entityId]);
                 if (empty($entity['id'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
                 }
@@ -140,7 +140,7 @@ class NoteController
         $query = $request->getQueryParams();
 
         if (!empty($query['resId']) && is_numeric($query['resId'])) {
-            if (!ResController::hasRightByResId(['resId' => $query['resId'], 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$query['resId']], 'userId' => $GLOBALS['userId']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
 

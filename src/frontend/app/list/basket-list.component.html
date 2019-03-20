@@ -4,7 +4,7 @@
             [opened]="mobileMode ? false : true" autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '400px'}">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <basket-home *ngIf="homeData" [homeData]="homeData" [snavL]="snav" [currentBasketInfo]="currentBasketInfo"></basket-home>
+            <basket-home *ngIf="homeData" #basketHome [homeData]="homeData" [snavL]="snav" [currentBasketInfo]="currentBasketInfo"></basket-home>
             <mat-divider></mat-divider>
         </mat-sidenav>
         <mat-sidenav-content>

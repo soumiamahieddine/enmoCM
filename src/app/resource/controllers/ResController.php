@@ -14,6 +14,7 @@
 
 namespace Resource\controllers;
 
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
@@ -207,7 +208,7 @@ class ResController
             if (empty($document)) {
                 return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
             }
-            if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$document['res_id']], 'userId' => $GLOBALS['userId']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
     
@@ -228,7 +229,7 @@ class ResController
 
     public function getFileContent(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -397,7 +398,7 @@ class ResController
         }
 
         $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
-        if (ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
                 'select'    => ['docserver_id', 'path', 'filename'],
                 'resId'     => $aArgs['resId'],
@@ -483,7 +484,7 @@ class ResController
             if (empty($document)) {
                 return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
             }
-            if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$document['res_id']], 'userId' => $GLOBALS['userId']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
             ResModel::update(['set' => ['external_id' => $mail['external_id'] , 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
@@ -581,7 +582,10 @@ class ResController
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::arrayType($aArgs, ['resId']);
+
+        $aArgs['resId'] = array_unique($aArgs['resId']);
+        $nbResId = count($aArgs['resId']);
 
         if ($aArgs['userId'] == 'superadmin') {
             return true;
@@ -599,8 +603,8 @@ class ResController
         }
 
         if (!empty($groupsClause)) {
-            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$groupsClause})"], 'data' => [$aArgs['resId']]]);
-            if (!empty($res)) {
+            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$groupsClause})"], 'data' => [$aArgs['resId']]]);
+            if (!empty($res) && count($res) == $nbResId) {
                 return true;
             }
         }
@@ -631,8 +635,8 @@ class ResController
 
         if (!empty($basketsClause)) {
             try {
-                $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$basketsClause})"], 'data' => [$aArgs['resId']]]);
-                if (!empty($res)) {
+                $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$basketsClause})"], 'data' => [$aArgs['resId']]]);
+                if (!empty($res) && count($res) == $nbResId) {
                     return true;
                 }
             } catch (\Exception $e) {
@@ -671,6 +675,11 @@ class ResController
             }
         }
         $select = explode(',', $data['select']);
+
+        $sve_start_date = false;
+        if (in_array('sve_start_date', $select)) {
+            $sve_start_date = true;
+        }
         
         if (!PreparedClauseController::isRequestValid(['select' => $select, 'clause' => $data['clause'], 'orderBy' => $data['orderBy'], 'limit' => $data['limit'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_REQUEST]);
@@ -690,12 +699,33 @@ class ResController
         }
 
         $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $data['orderBy'], 'limit' => $data['limit']]);
-        if ($data['withFile'] === true) {
+        if (!empty($resources) && $data['withFile'] === true) {
             foreach ($resources as $key => $res) {
                 $path = ResDocserverModel::getSourceResourcePath(['resId' => $res['res_id'], 'resTable' => 'res_letterbox', 'adrTable' => 'null']);
                 $file = file_get_contents($path);
                 $base64Content = base64_encode($file);
                 $resources[$key]['fileBase64Content'] = $base64Content;
+            }
+        }
+        if (!empty($resources) && $sve_start_date) {
+            $aResId = [];
+            foreach ($resources as $res) {
+                $aResId[] = $res['res_id'];
+            }
+            $aSveStartDate = AcknowledgementReceiptModel::getSveStartDate([
+                'select'  => ['res_id', 'max(send_date) as send_date'],
+                'resIds'  => $aResId,
+                'where'   => ['send_date IS NOT NULL', 'send_date != \'\''],
+                'groupBy' => ['res_id']
+            ]);
+            foreach ($resources as $key => $res) {
+                $resources[$key]['sve_start_date'] = null;
+                foreach ($aSveStartDate as $valueSveStartDate) {
+                    if ($res['res_id'] == $valueSveStartDate['res_id']) {
+                        $resources[$key]['sve_start_date'] = $valueSveStartDate['send_date'];
+                        break;
+                    }
+                }
             }
         }
 
@@ -714,7 +744,7 @@ class ResController
 
     public function isAllowedForCurrentUser(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withJson(['isAllowed' => false]);
         }
 

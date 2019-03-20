@@ -61,6 +61,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
             'SrcCore\\' => 8,
             'Slim\\' => 5,
             'SignatureBook\\' => 14,
+            'Shipping\\' => 9,
             'Sendmail\\' => 9,
         ),
         'R' => 
@@ -225,6 +226,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'SignatureBook\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/signatureBook',
+        ),
+        'Shipping\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/shipping',
         ),
         'Sendmail\\' => 
         array (

@@ -260,7 +260,7 @@ class UserController
         $listInstanceResIds = [];
         $listInstances = ListInstanceModel::getWhenOpenMailsByLogin(['select' => ['listinstance.res_id', 'res_letterbox.destination'], 'login' => $user['user_id'], 'itemMode' => 'dest']);
         foreach ($listInstances as $listInstance) {
-            if (!ResController::hasRightByResId(['resId' => $listInstance['res_id'], 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$listInstance['res_id']], 'userId' => $GLOBALS['userId']])) {
                 $isListInstanceDeletable = false;
             }
             $listInstanceResIds[] = $listInstance['res_id'];

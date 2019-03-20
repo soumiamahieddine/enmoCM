@@ -187,10 +187,10 @@ class NoteModel
         }
 
         $allNotes = NoteModel::get([
-            'select'   => $aArgs['select'],
-            'where'    => ['identifier = ?'],
-            'data'     => [$aArgs['resId']],
-            'order_by' => ['identifier desc']
+            'select'    => $aArgs['select'],
+            'where'     => ['identifier = ?'],
+            'data'      => [$aArgs['resId']],
+            'orderBy'   => ['id desc']
         ]);
 
         $notes = [];

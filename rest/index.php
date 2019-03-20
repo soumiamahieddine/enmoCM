@@ -216,7 +216,6 @@ $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplat
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
 
 //Notes
-$app->get('/res/{resId}/notes/templates', \Note\controllers\NoteController::class . ':getTemplatesByResId');
 $app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplates');
 $app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
@@ -275,10 +274,19 @@ $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/exp
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/summarySheets', \Resource\controllers\SummarySheetController::class . ':createList');
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
-$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
+$app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
 //PreProcess
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
-$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect/{mode}', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
+$app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
+
+//shipping
+$app->get('/administration/shippings', \Shipping\controllers\ShippingController::class . ':get');
+$app->get('/administration/shippings/new', \Shipping\controllers\ShippingController::class . ':initShipping');
+$app->get('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':getById');
+$app->post('/administration/shippings', \Shipping\controllers\ShippingController::class . ':create');
+$app->put('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':update');
+$app->delete('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':delete');
 
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');

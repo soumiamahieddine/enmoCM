@@ -225,6 +225,7 @@ define('_LOAD_STATUSES_SESSION', 'Load Status session');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Indexation status configuration');
 define('_ADD_LINKS', 'Add connection');
 define('_PRINT_DETAILS_SERVICE', 'Print the liaison sheet from the detail sheet');
+define('_PRINT_DOC_DETAILS_FROM_LIST', 'Print the liaison sheets from the results lists');
 define('_ATTACHMENTS_COMMENT', 'Attachments management');
 define('_BASKETS_COMMENT', 'Baskets');
 define('_CASES_COMMENT', 'Cases');
@@ -461,3 +462,15 @@ define("_M2M_ACTION_DONE", "done by");
 define("_M2M_ENTITY_DESTINATION", "Mail is in the department");
 
 define('_ACKNOWLEDGEMENT_RECEIPT_DISPLAYING', 'Displaying acknowledgement receipt');
+
+define("_EMAIL_DRAFT", "Draft");
+define("_EMAIL_WAIT", "Waiting to be send");
+define("_EMAIL_SENT", "Sent");
+define("_EMAIL_ERROR", "Error when sending");
+
+define("_SHIPPING_ADDED", "Shipping added");
+define("_SHIPPING_UPDATED", "Shipping updated");
+define("_SHIPPING_DELETED", "Shipping deleted");
+
+define("_SHIPPINGS_ADMIN", "Shippings admin");
+define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva");

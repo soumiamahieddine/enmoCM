@@ -84,7 +84,6 @@ export class VisaWorkflowComponent implements OnInit {
         this.visaWorkflow.items = [];
         this.http.get("../../rest/res/" + resId + "/visaCircuit")
          .subscribe((data: any) => {
-            console.log(data);
             data.forEach((element:any) => {
                 this.visaWorkflow.items.push(element);
             });

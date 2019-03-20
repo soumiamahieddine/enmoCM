@@ -62,17 +62,13 @@ if ($_SESSION['features']['send_to_contact_with_mandatory_attachment'] == true &
 
 function _parse($text)
 {
-    //...
     $text = str_replace("\r\n", PHP_EOL, $text);
     $text = str_replace("\r", PHP_EOL, $text);
-
-    //
     $text = str_replace(PHP_EOL, "\\n ", $text);
     return $text;
 }
 function _parse_error($text)
 {
-    //...
     $text = str_replace("###", "\\n ", $text);
     return $text;
 }
@@ -468,7 +464,7 @@ switch ($mode) {
                                         $entityInfo = \Entity\models\EntityModel::getByEntityId(['entityId' => $aSenderInfo[0], 'select' => ['id']]);
                                     }
 
-                                    $isSent = \Email\controllers\EmailController::updateEmail([
+                                    $isSent = \Email\controllers\EmailController::update([
                                         'userId'    => $userInfo['id'],
                                         'emailId'   => $id,
                                         'data'      => [
@@ -520,54 +516,9 @@ switch ($mode) {
         if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
             $id = $_REQUEST['id'];
             
-            //Keep object
-            $object = $request->protect_string_db($_REQUEST['object']);
-            
-            //Delete mail
-            $request->query("delete from " . EMAILS_TABLE . " where email_id = " . $id);
-            
-            //Delete email from stack too ???
-            $request->query("delete from " . _NOTIF_EVENT_STACK_TABLE_NAME
-                . " where table_name = '" . EMAILS_TABLE . "' and record_id = '" . $id . "'");
-            
-            //History
-            if ($_SESSION['history']['mailadd']) {
-                $hist = new history();
-                if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "folder") {
-                    $hist->add(
-                        $table,
-                        $identifier,
-                        "UP",
-                        'folderup',
-                        _EMAIL_REMOVED . _ON_FOLDER_NUM
-                        . $identifier . ' (' . $id . ') : "' . $request->cut_string($object, 254) .'"',
-                        $_SESSION['config']['databasetype'],
-                        'sendmail'
-                    );
-                } elseif (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "document") {
-                    $hist->add(
-                        $view,
-                        $identifier,
-                        "UP",
-                        'resup',
-                        _EMAIL_REMOVED . _ON_DOC_NUM
-                        . $identifier . ' (' . $id . ') : "' . $request->cut_string($object, 254) .'"',
-                        $_SESSION['config']['databasetype'],
-                        'sendmail'
-                    );
-                }
-
-                $hist->add(
-                    EMAILS_TABLE,
-                    $id,
-                    "DEL",
-                    'maildel',
-                    _EMAIL_REMOVED . ' (' . $id . ') : "'
-                    . $request->cut_string($object, 254) .'"',
-                    $_SESSION['config']['databasetype'],
-                    'sendmail'
-                );
-            }
+            $environment   = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+            $request       = \Slim\Http\Request::createFromEnvironment($environment);
+            \Email\controllers\EmailController::delete($request, new \Slim\Http\Response(), ['id' => $id]);
             
             //Reload and show message
             $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._EMAIL_REMOVED."';";
@@ -611,35 +562,35 @@ switch ($mode) {
         }
     break;
     case 'destUser':
-    if (isset($_REQUEST['for']) && isset($_REQUEST['field']) && isset($_REQUEST['contactAddress'])) {
-        if (isset($_REQUEST['contactAddress']) && !empty($_REQUEST['contactAddress'])) {
-            $contactAddress = trim($_REQUEST['contactAddress']);
-            if (!isset($_SESSION['adresses'][$_REQUEST['field']])) {
-                $_SESSION['adresses'][$_REQUEST['field']] = array();
-            }
-
-            if ($_REQUEST['for'] == 'add') {
-                $contactLabel         = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $contactAddress]);
-                $contactInfo          = \Contact\models\ContactModel::getFullAddressById(['addressId' => $contactAddress]);
-                $contactCommunication = \Contact\models\ContactModel::getContactCommunication(['contactId' => $contactInfo[0]['contact_id']]);
-                $_SESSION['adresses'][$_REQUEST['field']][$contactAddress] = $contactLabel.'. ('._COMMUNICATION_TYPE.' : '.$contactCommunication['value'].'))';
-            } elseif ($_REQUEST['for'] == 'del') {
-                unset($_SESSION['adresses'][$_REQUEST['field']][$_REQUEST['index']]);
-                //If no adresse for field, unset the entire sub-array
-                if (count($_SESSION['adresses'][$_REQUEST['field']]) == 0) {
-                    unset($_SESSION['adresses'][$_REQUEST['field']]);
+        if (isset($_REQUEST['for']) && isset($_REQUEST['field']) && isset($_REQUEST['contactAddress'])) {
+            if (isset($_REQUEST['contactAddress']) && !empty($_REQUEST['contactAddress'])) {
+                $contactAddress = trim($_REQUEST['contactAddress']);
+                if (!isset($_SESSION['adresses'][$_REQUEST['field']])) {
+                    $_SESSION['adresses'][$_REQUEST['field']] = array();
                 }
-            }
 
-            $content = $sendmail_tools->updateContactInputField($path_to_script, $_SESSION['adresses'], $_REQUEST['field']);
+                if ($_REQUEST['for'] == 'add') {
+                    $contactLabel         = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $contactAddress]);
+                    $contactInfo          = \Contact\models\ContactModel::getFullAddressById(['addressId' => $contactAddress]);
+                    $contactCommunication = \Contact\models\ContactModel::getContactCommunication(['contactId' => $contactInfo[0]['contact_id']]);
+                    $_SESSION['adresses'][$_REQUEST['field']][$contactAddress] = $contactLabel.'. ('._COMMUNICATION_TYPE.' : '.$contactCommunication['value'].'))';
+                } elseif ($_REQUEST['for'] == 'del') {
+                    unset($_SESSION['adresses'][$_REQUEST['field']][$_REQUEST['index']]);
+                    //If no adresse for field, unset the entire sub-array
+                    if (count($_SESSION['adresses'][$_REQUEST['field']]) == 0) {
+                        unset($_SESSION['adresses'][$_REQUEST['field']]);
+                    }
+                }
+
+                $content = $sendmail_tools->updateContactInputField($path_to_script, $_SESSION['adresses'], $_REQUEST['field']);
+            } else {
+                $error = $request->wash_html(_EMAIL.' '._IS_EMPTY.'!', 'NONE');
+                $status = 1;
+            }
         } else {
-            $error = $request->wash_html(_EMAIL.' '._IS_EMPTY.'!', 'NONE');
+            $error = $request->wash_html(_UNKNOW_ERROR.'!', 'NONE');
             $status = 1;
         }
-    } else {
-        $error = $request->wash_html(_UNKNOW_ERROR.'!', 'NONE');
-        $status = 1;
-    }
     break;
     case 'download':
         require_once 'modules/export_seda/RequestSeda.php';

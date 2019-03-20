@@ -59,94 +59,88 @@ class PreProcessActionController
             'SAME_LEVEL_ENTITIES'   => '@sisters_entities[@my_primary_entity]'
         ];
 
-        if ($args['mode'] == 'users') {
-            $mode = 'USERS';
-        } else {
-            $mode = 'ENTITY';
-        }
+        $users = [];
+        $allEntities = [];
 
-        $entityRedirects = GroupBasketRedirectModel::get([
-            'select'    => ['entity_id', 'keyword'],
-            'where'     => ['basket_id = ?', 'group_id = ?', 'action_id = ?', 'redirect_mode = ?'],
-            'data'      => [$basket['basket_id'], $group['group_id'], $args['actionId'], $mode]
-        ]);
+        foreach (['ENTITY', 'USERS'] as $mode) {
+            $entityRedirects = GroupBasketRedirectModel::get([
+                'select'    => ['entity_id', 'keyword'],
+                'where'     => ['basket_id = ?', 'group_id = ?', 'action_id = ?', 'redirect_mode = ?'],
+                'data'      => [$basket['basket_id'], $group['group_id'], $args['actionId'], $mode]
+            ]);
 
-        $allowedEntities = [];
-        $clauseToProcess = '';
-        foreach ($entityRedirects as $entityRedirect) {
-            if (!empty($entityRedirect['entity_id'])) {
-                $allowedEntities[] = $entityRedirect['entity_id'];
-            } elseif (!empty($entityRedirect['keyword'])) {
-                if (!empty($keywords[$entityRedirect['keyword']])) {
-                    if (!empty($clauseToProcess)) {
-                        $clauseToProcess .= ', ';
+            $allowedEntities = [];
+            $clauseToProcess = '';
+            foreach ($entityRedirects as $entityRedirect) {
+                if (!empty($entityRedirect['entity_id'])) {
+                    $allowedEntities[] = $entityRedirect['entity_id'];
+                } elseif (!empty($entityRedirect['keyword'])) {
+                    if (!empty($keywords[$entityRedirect['keyword']])) {
+                        if (!empty($clauseToProcess)) {
+                            $clauseToProcess .= ', ';
+                        }
+                        $clauseToProcess .= $keywords[$entityRedirect['keyword']];
                     }
-                    $clauseToProcess .= $keywords[$entityRedirect['keyword']];
                 }
             }
-        }
 
-        if (!empty($clauseToProcess)) {
-            $preparedClause = PreparedClauseController::getPreparedClause(['clause' => $clauseToProcess, 'login' => $user['user_id']]);
-            $preparedEntities = EntityModel::get(['select' => ['entity_id'], 'where' => ['enabled = ?', "entity_id in {$preparedClause}"], 'data' => ['Y']]);
-            foreach ($preparedEntities as $preparedEntity) {
-                $allowedEntities[] = $preparedEntity['entity_id'];
-            }
-        }
-
-        $allowedEntities = array_unique($allowedEntities);
-
-        $redirectInformations = [];
-        if ($args['mode'] == 'users') {
-            $users = [];
-            if (!empty($allowedEntities)) {
-                $users = UserEntityModel::getWithUsers([
-                    'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname'],
-                    'where'     => ['users_entities.entity_id in (?)', 'status not in (?)'],
-                    'data'      => [$allowedEntities, ['DEL', 'ABS']],
-                    'orderBy'   => ['lastname', 'firstname']
-                ]);
-
-                foreach ($users as $key => $user) {
-                    $users[$key]['labelToDisplay'] = "{$user['firstname']} {$user['lastname']}";
+            if (!empty($clauseToProcess)) {
+                $preparedClause = PreparedClauseController::getPreparedClause(['clause' => $clauseToProcess, 'login' => $user['user_id']]);
+                $preparedEntities = EntityModel::get(['select' => ['entity_id'], 'where' => ['enabled = ?', "entity_id in {$preparedClause}"], 'data' => ['Y']]);
+                foreach ($preparedEntities as $preparedEntity) {
+                    $allowedEntities[] = $preparedEntity['entity_id'];
                 }
             }
-            $redirectInformations['users'] = $users;
-        } else {
-            $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']]);
 
-            $allEntities = EntityModel::get(['select' => ['id', 'entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['parent_entity_id']]);
-            foreach ($allEntities as $key => $value) {
-                $allEntities[$key]['id'] = $value['entity_id'];
-                $allEntities[$key]['serialId'] = $value['id'];
-                if (empty($value['parent_entity_id'])) {
-                    $allEntities[$key]['parent'] = '#';
-                    $allEntities[$key]['icon'] = "fa fa-building";
-                } else {
-                    $allEntities[$key]['parent'] = $value['parent_entity_id'];
-                    $allEntities[$key]['icon'] = "fa fa-sitemap";
-                }
-                if (in_array($value['entity_id'], $allowedEntities)) {
-                    $allEntities[$key]['allowed'] = true;
-                    $allEntities[$key]['state']['opened'] = true;
-                    if ($primaryEntity['entity_id'] == $value['entity_id']) {
-                        $allEntities[$key]['state']['selected'] = true;
+            $allowedEntities = array_unique($allowedEntities);
+
+            if ($mode == 'USERS') {
+                if (!empty($allowedEntities)) {
+                    $users = UserEntityModel::getWithUsers([
+                        'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname'],
+                        'where'     => ['users_entities.entity_id in (?)', 'status not in (?)'],
+                        'data'      => [$allowedEntities, ['DEL', 'ABS']],
+                        'orderBy'   => ['lastname', 'firstname']
+                    ]);
+
+                    foreach ($users as $key => $user) {
+                        $users[$key]['labelToDisplay'] = "{$user['firstname']} {$user['lastname']}";
+                        $users[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']])['entity_label'];
                     }
-                } else {
-                    $allEntities[$key]['allowed'] = false;
-                    $allEntities[$key]['state']['disabled'] = true;
+                }
+            } elseif ($mode == 'ENTITY') {
+                $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']]);
+
+                $allEntities = EntityModel::get(['select' => ['id', 'entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['parent_entity_id']]);
+                foreach ($allEntities as $key => $value) {
+                    $allEntities[$key]['id'] = $value['entity_id'];
+                    $allEntities[$key]['serialId'] = $value['id'];
+                    if (empty($value['parent_entity_id'])) {
+                        $allEntities[$key]['parent'] = '#';
+                        $allEntities[$key]['icon'] = "fa fa-building";
+                    } else {
+                        $allEntities[$key]['parent'] = $value['parent_entity_id'];
+                        $allEntities[$key]['icon'] = "fa fa-sitemap";
+                    }
                     $allEntities[$key]['state']['opened'] = false;
+                    if (in_array($value['entity_id'], $allowedEntities)) {
+                        $allEntities[$key]['allowed'] = true;
+                        if ($primaryEntity['entity_id'] == $value['entity_id']) {
+                            $allEntities[$key]['state']['opened'] = true;
+                            $allEntities[$key]['state']['selected'] = true;
+                        }
+                    } else {
+                        $allEntities[$key]['allowed'] = false;
+                        $allEntities[$key]['state']['disabled'] = true;
+                    }
+                    $allEntities[$key]['text'] = $value['entity_label'];
                 }
-                $allEntities[$key]['text'] = $value['entity_label'];
             }
-            $redirectInformations['entities'] = $allEntities;
         }
 
         $parameter = ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'keepDestForRedirection']);
 
-        $redirectInformations['keepDestForRedirection'] = !empty($parameter['param_value_int']);
-
-        return $response->withJson($redirectInformations);
+        return $response->withJson(['entities' => $allEntities, 'users' => $users, 'keepDestForRedirection' => !empty($parameter['param_value_int'])]);
     }
 
     public function checkAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
@@ -190,7 +184,7 @@ class PreProcessActionController
                 continue;
             }
 
-            if (!ResController::hasRightByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$resId], 'userId' => $GLOBALS['userId']])) {
                 $noSendAR['number'] += 1;
                 $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _DOCUMENT_OUT_PERIMETER ];
                 continue;
@@ -332,5 +326,28 @@ class PreProcessActionController
         }
 
         return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+    }
+
+    public function isDestinationChanging(Request $request, Response $response, array $args)
+    {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
+        }
+
+        $changeDestination = true;
+        $entities = UserEntityModel::get(['select' => ['entity_id'], 'where' => ['user_id = ?'], 'data' => [$user['user_id']]]);
+        $resource = ResModel::getById(['select' => ['destination'], 'resId' => $args['resId']]);
+        foreach ($entities as $entity) {
+            if ($entity['entity_id'] == $resource['destination']) {
+                $changeDestination = false;
+            }
+        }
+
+        return $response->withJson(['isDestinationChanging' => $changeDestination]);
     }
 }

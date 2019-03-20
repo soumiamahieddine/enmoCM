@@ -34,7 +34,9 @@ import { DocserverAdministrationComponent }             from './docserver/docser
 import { TemplatesAdministrationComponent }             from './template/templates-administration.component';
 import { TemplateAdministrationComponent }              from './template/template-administration.component';
 import { SecuritiesAdministrationComponent }            from './security/securities-administration.component';
-import { SendmailAdministrationComponent }            from './sendmail/sendmail-administration.component';
+import { SendmailAdministrationComponent }              from './sendmail/sendmail-administration.component';
+import { ShippingsAdministrationComponent }             from './shipping/shippings-administration.component';
+import { ShippingAdministrationComponent }              from './shipping/shipping-administration.component';
 
 @NgModule({
     imports: [
@@ -84,6 +86,9 @@ import { SendmailAdministrationComponent }            from './sendmail/sendmail-
             { path: 'administration/templates/:id', component: TemplateAdministrationComponent },
             { path: 'administration/securities', component: SecuritiesAdministrationComponent },
             { path: 'administration/sendmail', component: SendmailAdministrationComponent },
+            { path: 'administration/shippings', component: ShippingsAdministrationComponent },
+            { path: 'administration/shippings/new', component: ShippingAdministrationComponent },
+            { path: 'administration/shippings/:id', component: ShippingAdministrationComponent },
         ]),
     ],
     exports: [

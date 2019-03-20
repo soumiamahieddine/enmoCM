@@ -55,7 +55,7 @@ foreach ($customs as $custom) {
                 $db->query($query, []);
             }
 
-            $id = \SrcCore\models\DatabaseModel::uniqueId();
+            $id = \SrcCore\models\CoreConfigModel::uniqueId();
             $query = "INSERT INTO priorities (id, label, color, working_days, delays, default_priority, \"order\") VALUES (?, ?, ?, ?, ?, ?, ?)";
             $db->query($query, [
                 $id,

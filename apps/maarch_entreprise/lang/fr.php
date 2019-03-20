@@ -2388,8 +2388,8 @@ if (!defined('_IS_EXTERNAL_CONTACT')) {
 if (!defined('_SEARCH_DIRECTORY')) {
     define('_SEARCH_DIRECTORY', 'Recherche annuaire');
 }
-if (!defined('_EXTERNAL_CONTACT_ID')) {
-    define('_EXTERNAL_CONTACT_ID', 'Identifiant contact externe');
+if (!defined('_M2M_ID')) {
+    define('_M2M_ID', 'Identifiant M2GEC');
 }
 if (!defined('_CONTACT_ID')) {
     define('_CONTACT_ID', 'ID Contact');
@@ -4371,6 +4371,9 @@ if (!defined('_PRINT_DETAILS_SERVICE')) {
 }
 if (!defined('_PRINT_DETAILS')) {
     define('_PRINT_DETAILS', 'Imprimer fiche de liaison');
+}
+if (!defined('_PRINT_DOC_DETAILS_FROM_LIST')) {
+    define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
 }
 if (!defined('_PRINT_DOC_FROM_LIST')) {
     define('_PRINT_DOC_FROM_LIST', 'Imprimer les fiches de liaison des documents');

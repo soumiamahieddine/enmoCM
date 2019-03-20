@@ -225,6 +225,7 @@ define('_LOAD_STATUSES_SESSION', 'Chargement des status en session');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', "Paramétrage des status d'indexation");
 define('_ADD_LINKS', 'Ajouter des liaisons');
 define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche détail');
+define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
 define('_ATTACHMENTS_COMMENT', 'Gestion des pièces jointes');
 define('_BASKETS_COMMENT', 'Bannettes');
 define('_CASES_COMMENT', 'Affaires');
@@ -461,3 +462,15 @@ define("_M2M_ACTION_DONE", "actionné par");
 define("_M2M_ENTITY_DESTINATION", "Le courrier est dans l'entité");
 
 define('_ACKNOWLEDGEMENT_RECEIPT_DISPLAYING', 'Visualisation de l\'accusé de réception');
+
+define("_EMAIL_DRAFT", "Brouillon");
+define("_EMAIL_WAIT", "En attente d'envoi");
+define("_EMAIL_SENT", "Envoyé");
+define("_EMAIL_ERROR", "Erreur lors de l'envoi");
+
+define("_SHIPPING_ADDED", "Envoi postal ajouté");
+define("_SHIPPING_UPDATED", "Envoi postal mis à jour");
+define("_SHIPPING_DELETED", "Envoi postal supprimé");
+
+define("_SHIPPINGS_ADMIN", "Envois postaux");
+define("_SHIPPINGS_ADMIN_DESC", "Configurer les modèles d'envois postaux, par exemple pour Maileva");

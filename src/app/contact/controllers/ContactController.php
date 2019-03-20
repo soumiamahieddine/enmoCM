@@ -77,6 +77,7 @@ class ContactController
         $contactId = ContactModel::create($data);
 
         $data['contactId'] = $contactId;
+        $data['external_id'] = empty($data['external_id']) ? '{}' : json_encode($data['external_id']);
         $addressId = ContactModel::createAddress($data);
 
         if (empty($contactId) || empty($addressId)) {
@@ -126,6 +127,7 @@ class ContactController
         } elseif ($data['isPrivate'] != 'N') {
             $data['isPrivate'] = 'Y';
         }
+        $data['external_id'] = empty($data['external_id']) ? '{}' : json_encode($data['external_id']);
 
         $data['contactId'] = $aArgs['id'];
         $addressId = ContactModel::createAddress($data);
@@ -165,13 +167,18 @@ class ContactController
         }
 
         $contact = ContactModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
-        $address = ContactModel::getByAddressId(['addressId' => $aArgs['addressId'], 'select' => [1]]);
+        $address = ContactModel::getByAddressId(['addressId' => $aArgs['addressId'], 'select' => ['external_id']]);
         if (empty($contact) || empty($address)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contact or address do not exist']);
         }
 
         $data = $request->getParams();
         unset($data['contact_id'], $data['id'], $data['user_id']);
+        if (!empty($data['external_id'])) {
+            $data['external_id'] =  array_merge((array)json_encode($address['external_id']), $data['external_id']);
+        } else {
+            $data['external_id'] = $address['external_id'];
+        }
 
         ContactModel::updateAddress(['set' => $data, 'where' => ['contact_id = ?', 'id = ?'], 'data' => [$aArgs['id'], $aArgs['addressId']]]);
 

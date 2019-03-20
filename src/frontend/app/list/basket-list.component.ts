@@ -20,6 +20,7 @@ import { ActionsListComponent } from '../actions/actions-list.component';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
 import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
+import { BasketHomeComponent } from '../basket/basket-home.component';
 
 
 declare function $j(selector: any): any;
@@ -94,6 +95,7 @@ export class BasketListComponent implements OnInit {
     @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
     @ViewChild('appVisaWorkflow') appVisaWorkflow: VisaWorkflowComponent;
     @ViewChild('appAvisWorkflow') appAvisWorkflow: AvisWorkflowComponent;
+    @ViewChild('basketHome') basketHome: BasketHomeComponent;
 
     currentSelectedChrono: string = '';
 
@@ -242,6 +244,7 @@ export class BasketListComponent implements OnInit {
 
     refreshDaoAfterAction() {
         this.refreshDao();
+        this.basketHome.refreshBasketHome();
         const e:any = {checkd : false};
         this.toggleAllRes(e); 
     }
