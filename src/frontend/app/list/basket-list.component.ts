@@ -243,6 +243,7 @@ export class BasketListComponent implements OnInit {
     }
 
     refreshDaoAfterAction() {
+        this.sidenavRight.close();
         this.refreshDao();
         this.basketHome.refreshBasketHome();
         const e:any = {checkd : false};

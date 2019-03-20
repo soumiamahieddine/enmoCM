@@ -21,6 +21,8 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
     loading: boolean = true;
     availableRoles: any[] = [];
     keepRoles: any[] = [];
+    currentEntityId: number = 0;
+    userDestList: any[] = [];
 
     diffList: any = {};
 
@@ -79,7 +81,8 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
 
     loadListModel(entityId: number) {
         this.loading = true;
-
+        this.currentEntityId = entityId;
+        this.userDestList = [];
         this.availableRoles.forEach(element => {
             this.diffList[element.id].items = [];
         });
@@ -162,6 +165,62 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
         });
 
         return listInstanceFormatted;
+    }
+
+    loadDestUserList() {
+        if (this.currentEntityId > 0 && this.userDestList.length == 0) {
+            this.userDestList = [
+                {
+                    id: 0,
+                    user_id: 'ppetit',
+                    labelToDisplay: 'Patricia PETIT',
+                    descriptionToDisplay: 'Pôle jeunesse et sport',
+                },
+                {
+                    id: 0,
+                    user_id: 'ppetit',
+                    labelToDisplay: 'Patricia PETIT',
+                    descriptionToDisplay: 'Pôle jeunesse et sport',
+                },
+                {
+                    id: 0,
+                    user_id: 'ppetit',
+                    labelToDisplay: 'Patricia PETIT',
+                    descriptionToDisplay: 'Pôle jeunesse et sport',
+                },
+                {
+                    id: 0,
+                    user_id: 'ppetit',
+                    labelToDisplay: 'Patricia PETIT',
+                    descriptionToDisplay: 'Pôle jeunesse et sport',
+                },
+                {
+                    id: 0,
+                    user_id: 'ppetit',
+                    labelToDisplay: 'Patricia PETIT',
+                    descriptionToDisplay: 'Pôle jeunesse et sport',
+                }
+            ];
+            /*this.http.get("../../rest/entities/" + this.currentEntityId + "/destUser")
+            .subscribe((data: any) => {
+                
+                this.loading = false;
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });*/
+        }
+    }
+
+    changeDest(user: any) {
+        const newDest = {
+            difflist_type: "entity_id",
+            item_type: "user_id",
+            item_id: user.user_id,
+            labelToDisplay: user.labelToDisplay,
+            descriptionToDisplay: user.descriptionToDisplay,
+            item_mode: "dest"
+        };
+        this.diffList['dest'].items[0] = newDest;
     }
 
     getDestUser() {

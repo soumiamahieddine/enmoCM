@@ -31,7 +31,8 @@ export class RedirectActionComponent implements OnInit {
     destUser: any = null;
     oldUser: any = null;
     keepDestForRedirection: boolean = false;
-    diffusionListDestRedirect: any = null;
+    currentDiffusionListDestRedirect: any = [];
+    diffusionListDestRedirect: any = [];
     currentEntity: any = {
         'serialId': 0,
         'entity_label': ''
@@ -72,7 +73,7 @@ export class RedirectActionComponent implements OnInit {
                 } else if (this.userListRedirect.length == 0 && !noEntity) {
                     this.loadEntities();
                 } else if (this.userListRedirect.length > 0 && noEntity) {
-                    this.initDestUser();
+                    this.loadDestUser();
                 } else {
                     this.loading = false;
                 }
@@ -118,10 +119,7 @@ export class RedirectActionComponent implements OnInit {
                     this.selectEntity(data.node.original);
 
                 }).on('deselect_node.jstree', (e: any, data: any) => {
-                    this.currentEntity = {
-                        'serialId': 0,
-                        'entity_label': ''
-                    };
+                    $j('#jstree').jstree('select_node', data.node.original);
                 })
                 // create the instance
                 .jstree();
@@ -133,72 +131,82 @@ export class RedirectActionComponent implements OnInit {
         }, 200);
     }
 
-    initDestUser() {
+    loadDestUser() {
         this.redirectMode = 'user';
         this.filteredUserRedirect = this.userRedirectCtrl.valueChanges
             .pipe(
                 startWith(''),
                 map(user => user ? this._filterUserRedirect(user) : this.userListRedirect.slice())
             );
-        setTimeout(() => {
-            $j('.searchUserRedirect').click();  
-        }, 200); 
+
+        if (this.data.selectedRes.length == 1) {
+            this.http.get("../../rest/resources/" + this.data.selectedRes[0] + "/listInstance").subscribe((data: any) => {
+                this.diffusionListDestRedirect = data.listInstance;
+                Object.keys(data).forEach(diffusionRole => {
+                    data[diffusionRole].forEach((line: any) => {
+                        if (line.item_mode == 'dest') {
+                            this.oldUser = line;
+                        }
+                    });
+                });
+                $j('.searchUserRedirect').click();
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
+        } else {
+            this.keepDestForRedirection = false;
+            setTimeout(() => {
+                $j('.searchUserRedirect').click();
+            }, 200);
+        }
     }
 
     changeDest(event: any) {
+        this.currentDiffusionListDestRedirect = this.diffusionListDestRedirect
+        let user = event.option.value;
+        
 
-        this.http.get("../../rest/resources/" + this.data.selectedRes[0] + "/listInstance").subscribe((data: any) => {
-            this.diffusionListDestRedirect = data.listInstance;
-            Object.keys(data).forEach(diffusionRole => {
-                data[diffusionRole].forEach((line: any) => {
-                    if (line.item_mode == 'dest') {
-                        this.oldUser = line;
-                    }
-                });
-            });
-            let user = event.option.value;
+        this.destUser = {
+            difflist_type: "entity_id",
+            item_mode: "dest",
+            item_type: "user_id",
+            item_id: user.user_id,
+            labelToDisplay: user.labelToDisplay,
+            descriptionToDisplay: user.descriptionToDisplay
+        };
+
+        if (this.data.selectedRes.length == 1) {
             this.isDestinationChanging = false;
-            if (this.data.selectedRes.length == 1) {
-                this.http.get('../../rest/resources/' + this.data.selectedRes[0] + '/users/' + user.id + '/isDestinationChanging')
-                    .subscribe((data: any) => {
-                        this.isDestinationChanging = data.isDestinationChanging;
-                    }, (err: any) => {
-                        this.notify.handleErrors(err);
-                    });
-            }
-
-            this.destUser = {
-                difflist_type: "entity_id",
-                item_mode: "dest",
-                item_type: "user_id",
-                item_id: user.user_id,
-                labelToDisplay: user.labelToDisplay,
-                descriptionToDisplay: user.descriptionToDisplay
-            };
-            if (this.keepDestForRedirection) {
-                let isInCopy = false;
-                let newCopy = null;
-                this.diffusionListDestRedirect.forEach((element: any) => {
-                    if (element.item_mode == 'cc' && element.item_id == user.user_id) {
-                        isInCopy = true;
-                    }
+            this.http.get('../../rest/resources/' + this.data.selectedRes[0] + '/users/' + user.id + '/isDestinationChanging')
+                .subscribe((data: any) => {
+                    this.isDestinationChanging = data.isDestinationChanging;
+                }, (err: any) => {
+                    this.notify.handleErrors(err);
                 });
 
-                if (!isInCopy) {
-                    newCopy = this.oldUser;
-                    newCopy.item_mode = 'cc';
-                    this.diffusionListDestRedirect.push(newCopy);
+                if (this.keepDestForRedirection) {
+                    let isInCopy = false;
+                    let newCopy = null;
+                    this.currentDiffusionListDestRedirect.forEach((element: any) => {
+                        if (element.item_mode == 'cc' && element.item_id == this.oldUser.item_id) {
+                            isInCopy = true;
+                        }
+                    });
+        
+                    if (!isInCopy) {
+                        newCopy = this.oldUser;
+                        newCopy.item_mode = 'cc';
+                        this.currentDiffusionListDestRedirect.push(newCopy);
+                    }
                 }
-            }
-            this.diffusionListDestRedirect.splice(this.diffusionListDestRedirect.map((e: any) => { return e.item_mode; }).indexOf('dest'), 1);
-            this.diffusionListDestRedirect.push(this.destUser)
+                this.currentDiffusionListDestRedirect.splice(this.currentDiffusionListDestRedirect.map((e: any) => { return e.item_mode; }).indexOf('dest'), 1);
+        } else {
+            this.isDestinationChanging = true;
+        }    
+        this.currentDiffusionListDestRedirect.push(this.destUser);
 
-            this.userRedirectCtrl.reset();
-            $j('.searchUserRedirect').blur();
-
-        }, (err: any) => {
-            this.notify.handleErrors(err);
-        });
+        this.userRedirectCtrl.reset();
+        $j('.searchUserRedirect').blur();
     }
 
     private _filterUserRedirect(value: string): any[] {
@@ -216,7 +224,7 @@ export class RedirectActionComponent implements OnInit {
     onSubmit(): void {
         this.loading = true;
         if (this.redirectMode == 'user') {
-            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: this.diffusionListDestRedirect, note: this.noteEditor.getNoteContent() })
+            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: this.currentDiffusionListDestRedirect, note: this.noteEditor.getNoteContent() })
                 .subscribe((data: any) => {
                     if (data && data.errors != null) {
                         this.notify.error(data.errors);
@@ -247,7 +255,7 @@ export class RedirectActionComponent implements OnInit {
     checkValidity() {
         if (this.redirectMode == 'entity' && this.appDiffusionsList && this.appDiffusionsList.getDestUser().length > 0 && this.currentEntity.serialId > 0 && !this.loading) {
             return false;
-        } if (this.redirectMode == 'user' && this.diffusionListDestRedirect != null && this.destUser != null && !this.loading) {
+        } if (this.redirectMode == 'user' && this.currentDiffusionListDestRedirect.length > 0 && this.destUser != null && !this.loading) {
             return false;
         } else {
             return true;
