@@ -52,18 +52,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="formType ratio-2">
-                            <div class="formType-title">
-                                {{lang.envelopModes}}
-                            </div>
-                            <mat-radio-group class="radio-group" name="envelopMode" [(ngModel)]="shipping.options.envelopMode">
-                                <mat-radio-button *ngFor="let mode of envelopModes" name="{{mode}}" [value]="mode"
-                                    color="primary">
-                                    {{lang['shipping_'+mode]}}
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                        <div class="formType ratio-1" style="flex-direction: column;">
+                        <div class="formType ratio-2" style="flex-direction: column;">
                             <div class="formType-title">
                                 {{lang.pricesInformations}}
                             </div>
@@ -104,11 +93,12 @@
                                 {{lang.shipping_maxWeightInfo}}
                             </div>
                         </div>
+                        <div class="formType ratio-1" style="border:0px"></div>
                     </div>
                     <div class="form-group">
                         <div class="formType ratio-1">
                             <div class="formType-title">
-                                Compte Maileva
+                                {{lang.mailevaAccount}}
                             </div>
                             <div class="col-sm-6">
                                 <mat-form-field>

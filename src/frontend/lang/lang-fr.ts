@@ -925,12 +925,12 @@ export const LANG_FR = {
     "shipping_maxWeightInfo"                            : "Jusqu'à 20g",
     "shapingOptions"                            : "Options de mise en page",
     "sendModes"                            : "Modes d'envoi",
-    "envelopModes"                            : "Types d'enveloppes",
     "pricesInformations"                            : "Tarifs indicatifs",
     "shippingModification"                            : "Modification du canal d'envoi",
     "shippingCreation"                            : "Création du canal d'envoi",
     "shippingAdded"                            : "Canal d'envoi ajouté",
     "shippingUpdated"                            : "Canal d'envoi modifié",
     "shippingDeleted"                            : "Canal d'envoi supprimé",
-    "shippings"                            : "Canaux d'envoi",
+    "shippings"                            : "Envois postaux",
+    "mailevaAccount"                             : "Compte Maileva"
 };

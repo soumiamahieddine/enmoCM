@@ -24,7 +24,6 @@ class ShippingControllerTest extends TestCase
             'description'     => 'description du TEST',
             'options'         => [
                 'shaping'    => ['color', 'both_sides', 'address_page'],
-                'envelopMode' => 'small_simple',
                 'sendMode'   => 'fast'
             ],
             'fee'             => ['first_page' => 1, 'next_page' => 2, 'postage_price' => 12],
@@ -44,7 +43,6 @@ class ShippingControllerTest extends TestCase
             'description'     => 'description du TEST',
             'options'         => [
                 'shaping'     => ['color', 'both_sides', 'address_page'],
-                'envelopMode' => 'small_simple',
                 'sendMode'    => 'fast'
             ],
             'fee'             => ['first_page' => 1, 'next_page' => 2, 'postage_price' => 12],
@@ -74,7 +72,6 @@ class ShippingControllerTest extends TestCase
         $this->assertSame('color', $responseBody->shipping->options->shaping[0]);
         $this->assertSame('both_sides', $responseBody->shipping->options->shaping[1]);
         $this->assertSame('address_page', $responseBody->shipping->options->shaping[2]);
-        $this->assertSame('small_simple', $responseBody->shipping->options->envelopMode);
         $this->assertSame('fast', $responseBody->shipping->options->sendMode);
         $this->assertSame(1, $responseBody->shipping->fee->first_page);
         $this->assertSame(2, $responseBody->shipping->fee->next_page);
@@ -114,7 +111,6 @@ class ShippingControllerTest extends TestCase
             'description'     => 'description du test 2',
             'options'         => [
                 'shaping'    => ['color', 'address_page'],
-                'envelopMode' => 'big_simple',
                 'sendMode'   => 'fast'
             ],
             'fee'             => ['first_page' => 10, 'next_page' => 20, 'postage_price' => 12],
@@ -142,7 +138,6 @@ class ShippingControllerTest extends TestCase
         $this->assertSame('description du test 2', $responseBody->shipping->description);
         $this->assertSame('color', $responseBody->shipping->options->shaping[0]);
         $this->assertSame('address_page', $responseBody->shipping->options->shaping[1]);
-        $this->assertSame('big_simple', $responseBody->shipping->options->envelopMode);
         $this->assertSame('fast', $responseBody->shipping->options->sendMode);
         $this->assertSame(10, $responseBody->shipping->fee->first_page);
         $this->assertSame(20, $responseBody->shipping->fee->next_page);

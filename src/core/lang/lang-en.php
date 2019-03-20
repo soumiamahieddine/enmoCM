@@ -470,3 +470,6 @@ define("_EMAIL_ERROR", "Error when sending");
 define("_SHIPPING_ADDED", "Shipping added");
 define("_SHIPPING_UPDATED", "Shipping updated");
 define("_SHIPPING_DELETED", "Shipping deleted");
+
+define("_SHIPPINGS_ADMIN", "Shippings admin");
+define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva");

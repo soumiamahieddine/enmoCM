@@ -899,7 +899,6 @@ export const LANG_EN = {
     "shipping_maxWeightInfo"                            : "up to 20g",
     "shapingOptions"                            : "Shapings options",
     "sendModes"                            : "Send modes",
-    "envelopModes"                            : "Envelop types",
     "pricesInformations"                            : "Prices informations",
     "shippingModification"                            : "Shipping modification",
     "shippingCreation"                            : "Shipping creation",
@@ -907,4 +906,5 @@ export const LANG_EN = {
     "shippingUpdated"                            : "Shipping updated",
     "shippingDeleted"                            : "Shipping deleted",
     "shippings"                            : "Shippings",
+    "mailevaAccount"                             : "Maileva account"
 };

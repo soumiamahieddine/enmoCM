@@ -472,3 +472,6 @@ define("_EMAIL_ERROR", "Error when sending_TO_TRANSLATE");
 define("_SHIPPING_ADDED", "Shipping added_TO_TRANSLATE");
 define("_SHIPPING_UPDATED", "Shipping updated_TO_TRANSLATE");
 define("_SHIPPING_DELETED", "Shipping deleted_TO_TRANSLATE");
+
+define("_SHIPPINGS_ADMIN", "Shippings admin_TO_TRANSLATE");
+define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva_TO_TRANSLATE");

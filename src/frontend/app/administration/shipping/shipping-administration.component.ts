@@ -32,7 +32,6 @@ export class ShippingAdministrationComponent implements OnInit {
         description: '',
         options: {
             shapingOptions: [],
-            envelopMode: 'small_simple',
             sendMode: 'fast',
         },
         fee: {
@@ -57,17 +56,11 @@ export class ShippingAdministrationComponent implements OnInit {
         'address_page',
     ];
 
-    envelopModes: string[] = [
-        'small_simple',
-        'small_double',
-        'big_a4',
-    ];
-
     sendModes: string[] = [
         'fast',
-        'economic',
-        'registered_mail',
-        'registered_mail_ar'
+        'economic'
+        // 'registered_mail',
+        // 'registered_mail_ar'
     ];
     hidePassword: boolean = true;
 

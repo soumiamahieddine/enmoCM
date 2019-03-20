@@ -927,7 +927,6 @@ export const LANG_NL = {
     "shipping_maxWeightInfo"                            : "up to 20g", //_TO_TRANSLATE
     "shapingOptions"                            : "Shapings options", //_TO_TRANSLATE
     "sendModes"                            : "Send modes", //_TO_TRANSLATE
-    "envelopModes"                            : "Envelop types", //_TO_TRANSLATE
     "pricesInformations"                            : "Prices informations", //_TO_TRANSLATE
     "shippingModification"                            : "Shipping modification", //_TO_TRANSLATE
     "shippingCreation"                            : "Shipping creation", //_TO_TRANSLATE
@@ -935,4 +934,5 @@ export const LANG_NL = {
     "shippingUpdated"                            : "Shipping updated", //_TO_TRANSLATE
     "shippingDeleted"                            : "Shipping deleted", //_TO_TRANSLATE
     "shippings"                            : "Shippings", //_TO_TRANSLATE
+    "mailevaAccount"                             : "Maileva account" //_TO_TRANSLATE
 };
