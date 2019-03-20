@@ -827,7 +827,7 @@ class PrintFunctions
         $query_template = 'SELECT ';
             $query_template .= 'id, ';
             $query_template .= 'user_id, ';
-            $query_template .= 'date_note, ';
+            $query_template .= 'creation_date, ';
             $query_template .= 'note_text ';
         $query_template .= 'FROM ';
             $query_template .= 'notes ';
@@ -850,7 +850,7 @@ class PrintFunctions
 				$return .= "- " 
                     //. $result->id . " " 
                     . _PRINT_THE . " " 
-                    . functions::format_date_db($result->date_note, false) 
+                    . functions::format_date_db($result->creation_date, false) 
                     . " " . _BY . " " . $userInfos . " : " . $result->note_text . "\r\n"
 				. "__________________________________"
 				. "__________________________________"
