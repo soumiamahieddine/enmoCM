@@ -509,17 +509,4 @@ class EmailController
 
         return $response->withStatus(204);
     }
-
-    public static function emailStatus(array $args)
-    {
-        if ($args['status'] == 'SENT') {
-            return _EMAIL_SENT;
-        } elseif ($args['status'] == 'ERROR') {
-            return _EMAIL_ERROR;
-        } elseif ($args['status'] == 'WAITING') {
-            return _EMAIL_WAIT;
-        } else {
-            return _EMAIL_DRAFT;
-        }
-    }
 }

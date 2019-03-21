@@ -12,7 +12,6 @@
 try {
     include_once "core/class/class_db.php";
     include_once "core/class/class_security.php";
-    include_once "modules/sendmail/sendmail_tables.php";
 } catch (Exception $e) {
     functions::xecho($e->getMessage()).' // ';
 }
@@ -759,6 +758,19 @@ abstract class SendmailAbstract extends Database
         } else {
             $explode = explode(",", $senderEmail);
             return $explode[1];
+        }
+    }
+
+    public function emailStatus(array $args)
+    {
+        if ($args['status'] == 'SENT') {
+            return _EMAIL_SENT;
+        } elseif ($args['status'] == 'ERROR') {
+            return _EMAIL_ERROR;
+        } elseif ($args['status'] == 'WAITING') {
+            return _EMAIL_WAIT;
+        } else {
+            return _EMAIL_DRAFT;
         }
     }
 }

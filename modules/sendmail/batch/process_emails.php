@@ -33,8 +33,7 @@ while ($state <> 'END') {
          * [LOAD_EMAIL : List the records to proceed]
          */
         case 'LOAD_EMAILS':
-            $query = "SELECT * FROM " . EMAILS_TABLE
-                . " WHERE email_status = 'W' and send_date is NULL";
+            $query = "SELECT * FROM sendmail WHERE email_status = 'W' and send_date is NULL";
             $stmt = Bt_doQuery($GLOBALS['db'], $query);
             $totalEmailsToProcess = $stmt->rowCount();
             $currentEmail = 0;
@@ -396,8 +395,7 @@ while ($state <> 'END') {
                     }
                 }
                 //Update emails table
-                $query = "UPDATE " . EMAILS_TABLE
-                    . " SET send_date = CURRENT_TIMESTAMP "
+                $query = "UPDATE sendmail SET send_date = CURRENT_TIMESTAMP "
                     . ", email_status = ? "
                     . " WHERE email_id = ? ";
                 $stmt = Bt_doQuery($GLOBALS['db'], $query, array($exec_result, $email->email_id));
@@ -436,8 +434,3 @@ array_map('unlink', glob($_SESSION['config']['tmppath']."/*"));
 
 //unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
-
-
-
-
-

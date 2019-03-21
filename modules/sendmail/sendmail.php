@@ -18,10 +18,10 @@
  * @version  $Revision$
  * @ingroup  sendmail
  */
+
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php';
 require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             .'class'.DIRECTORY_SEPARATOR.'class_lists.php';
-require_once 'modules'.DIRECTORY_SEPARATOR.'sendmail'.DIRECTORY_SEPARATOR.'sendmail_tables.php';
 require_once 'modules'.DIRECTORY_SEPARATOR.'sendmail'.DIRECTORY_SEPARATOR
     .'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
 
@@ -253,7 +253,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
                          $tab[$i][$j]['order'] = 'email_object_short';
                      }
                      if ($tab[$i][$j][$value] == 'status_img') {
-                         $tab[$i][$j]['value'] = \Email\controllers\EmailController::emailStatus(['status' => $tab[$i][$j]['value']]);
+                         $tab[$i][$j]['value'] = $sendmail_tools->emailStatus(['status' => $tab[$i][$j]['value']]);
                          $tab[$i][$j]['label'] = _STATUS;
                          $tab[$i][$j]['size'] = '10';
                          $tab[$i][$j]['label_align'] = 'left';
