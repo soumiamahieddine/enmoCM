@@ -97,7 +97,8 @@ array_push(
     'updated_by',
     'validation_date',
     'format',
-    'in_signature_book'
+    'in_signature_book',
+    'in_send_attach'
 );
 
 $where = " (res_id_master = ? and coll_id = ? and status <> 'DEL' and status <> 'OBS' and (status <> 'TMP' or (typist = ? and status = 'TMP')))";

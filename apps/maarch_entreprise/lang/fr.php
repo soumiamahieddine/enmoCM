@@ -5241,3 +5241,6 @@ if (!defined('_ELECTRONIC')) {
 if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
     define('_ACKNOWLEDGEMENT_RECEIPTS', 'Accusés de réception');
 }
+if (!defined('_PUT_IN_SEND_ATTACH')) {
+    define('_PUT_IN_SEND_ATTACH', 'Intégrer aux envois');
+}

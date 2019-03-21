@@ -5079,3 +5079,6 @@ if (!defined('_ELECTRONIC')) {
 if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
     define('_ACKNOWLEDGEMENT_RECEIPTS', 'Acknowledgement of receipts');
 }
+if (!defined('_PUT_IN_SEND_ATTACH')) {
+    define('_PUT_IN_SEND_ATTACH', 'Put in send attachement');
+}

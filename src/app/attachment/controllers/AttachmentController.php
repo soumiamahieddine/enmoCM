@@ -98,6 +98,25 @@ class AttachmentController
         return $response->withJson(['success' => 'success']);
     }
 
+    public function setInSendAttachment(Request $request, Response $response, array $aArgs)
+    {
+        //TODO Controle de droit de modification de cet attachment
+
+        $data = $request->getParams();
+
+        $data['isVersion'] = filter_var($data['isVersion'], FILTER_VALIDATE_BOOLEAN);
+
+        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $data['isVersion']]);
+
+        if (empty($attachment)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
+        }
+
+        AttachmentModel::setInSendAttachment(['id' => $aArgs['id'], 'isVersion' => $data['isVersion'], 'inSendAttachment' => !$attachment['in_send_attach']]);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
     public function getThumbnailContent(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['resId']) || !Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $GLOBALS['userId']])) {

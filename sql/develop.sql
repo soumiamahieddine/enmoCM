@@ -170,6 +170,12 @@ UPDATE actions SET component = 'resMarkAsReadAction' WHERE action_page = 'mark_a
 UPDATE actions SET component = 'signatureBookAction' WHERE action_page = 'visa_mail';
 UPDATE actions SET component = 'redirectAction' WHERE action_page = 'redirect';
 
+/*SHIPPING*/
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS in_send_attach;
+ALTER TABLE res_attachments ADD COLUMN in_send_attach boolean NOT NULL DEFAULT false;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS in_send_attach;
+ALTER TABLE res_version_attachments ADD COLUMN in_send_attach boolean NOT NULL DEFAULT false;
+
 /* Acknowledgement Receipts */
 DROP TABLE IF EXISTS acknowledgement_receipts;
 CREATE TABLE acknowledgement_receipts
@@ -238,7 +244,6 @@ DO $$ BEGIN
     ALTER TABLE contact_addresses DROP COLUMN IF EXISTS external_contact_id;
   END IF;
 END$$;
-
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
@@ -427,3 +432,17 @@ CREATE OR REPLACE VIEW view_contacts AS
    RIGHT JOIN contact_addresses ca ON c.contact_id = ca.contact_id
    LEFT JOIN contact_purposes cp ON ca.contact_purpose_id = cp.id
    LEFT JOIN contact_types ct ON c.contact_type = ct.id;
+
+DROP VIEW IF EXISTS res_view_attachments;
+CREATE OR REPLACE VIEW res_view_attachments AS
+  SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, in_send_attach, signatory_user_serial_id
+  FROM res_version_attachments
+  UNION ALL
+  SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, in_send_attach, signatory_user_serial_id
+  FROM res_attachments;

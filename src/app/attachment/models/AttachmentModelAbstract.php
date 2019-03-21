@@ -212,6 +212,35 @@ abstract class AttachmentModelAbstract
         return true;
     }
 
+    public static function setInSendAttachment(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::boolType($aArgs, ['inSendAttachment', 'isVersion']);
+
+        if ($aArgs['isVersion'] == true) {
+            $table = 'res_version_attachments';
+        } else {
+            $table = 'res_attachments';
+        }
+        if ($aArgs['inSendAttachment']) {
+            $aArgs['inSendAttachment'] =  'true';
+        } else {
+            $aArgs['inSendAttachment'] =  'false';
+        }
+
+        DatabaseModel::update([
+            'table'     => $table,
+            'set'       => [
+                'in_send_attach'   => $aArgs['inSendAttachment']
+            ],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['id']],
+        ]);
+
+        return true;
+    }
+
     public static function hasAttachmentsSignedForUserById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'user_serial_id', 'isVersion']);

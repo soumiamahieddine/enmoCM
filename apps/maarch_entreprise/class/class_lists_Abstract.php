@@ -1624,19 +1624,40 @@ abstract class lists_Abstract extends Database
             if ($value['column'] == 'in_signature_book') {
                 $inSignatureBook = $value['value'];
             }
+            if ($value['column'] == 'in_send_attach') {
+                $inSendAttach = $value['value'];
+            }
         }
-
-        $return = '<input type="checkbox" name="final" id="final" align="left"';
-
-        if (!empty($inSignatureBook)) {
-            $return .= 'checked ';
-        }
+        
 
         $isVersion = 'false';
         if ($resultTheLine[1]['value'] > 1) {
             $isVersion = 'true';
         }
-        $return .= 'onclick="setAttachmentInSignatureBook('.$resultTheLine[0]['value'].', '.$isVersion.');"/>'._PUT_IN_SIGNATORY_BOOK;
+
+        $return = '<div>';
+
+        $return .= '<input type="checkbox" name="sendAttach" id="sendAttach" align="left"';
+
+        if (!empty($inSendAttach)) {
+            $return .= 'checked ';
+        }
+
+        $return .= 'onclick="setSendAttachment('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label for="sendAttach">'._PUT_IN_SEND_ATTACH.'</label>';
+
+        $return .= '</div>';
+
+        $return .= '<div>';
+
+        $return .= '<input type="checkbox" name="final" id="final" align="left"';
+
+        if (!empty($inSignatureBook)) {
+            $return .= 'checked ';
+        }
+
+        $return .= 'onclick="setAttachmentInSignatureBook('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label for="final">'._PUT_IN_SIGNATORY_BOOK.'</label>';
+
+        $return .= '</div>';
 
         return $return;
     }

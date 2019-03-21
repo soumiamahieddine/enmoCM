@@ -288,6 +288,7 @@ $app->get('/administration/shippings/{id}', \Shipping\controllers\ShippingContro
 $app->post('/administration/shippings', \Shipping\controllers\ShippingController::class . ':create');
 $app->put('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':update');
 $app->delete('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':delete');
+$app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
 
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');

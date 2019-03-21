@@ -3958,3 +3958,23 @@ function displayAddMailing() {
         $j("#addMailing").show();
     }
 }
+
+
+function setSendAttachment(id, isVersion) {
+    $j.ajax({
+        url: '../../rest/attachments/' + id + '/inSendAttachment',
+        type: 'PUT',
+        dataType: 'json',
+        data: {
+            isVersion: isVersion
+        },
+        success: function (answer) {
+            if (typeof window.parent['angularSignatureBookComponent'] !== "undefined") {
+                window.parent.angularSignatureBookComponent.componentAfterAttach("left");
+            }
+        },
+        error: function (err) {
+            alert("Une erreur s'est produite : " + err.responseJSON.exception[0].message);
+        }
+    });
+}
