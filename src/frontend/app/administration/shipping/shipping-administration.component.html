@@ -28,8 +28,8 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="formType ratio-2">
+                    <div class="form-group" style="flex-direction: row; flex-wrap: wrap;">
+                        <div class="formType ratio-2 col-sm-12">
                             <div class="formType-title">
                                 {{lang.shapingOptions}}
                             </div>
@@ -40,7 +40,7 @@
                                 </mat-list-item>
                             </mat-list>
                         </div>
-                        <div class="formType ratio-1">
+                        <div class="formType ratio-1 col-sm-12">
                             <div class="formType-title">
                                 {{lang.sendModes}}
                             </div>
@@ -51,7 +51,7 @@
                             </mat-radio-group>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="flex-direction: row; flex-wrap: wrap;">
                         <div class="formType ratio-2" style="flex-direction: column;">
                             <div class="formType-title">
                                 {{lang.pricesInformations}}
@@ -114,8 +114,8 @@
                         </div>
                     </div>
                    
-                    <div class="form-group">
-                        <div class="col-md-12 text-center" style="padding:10px;">
+                    <div class="form-group" style="flex-direction: row; align-items: center">
+                        <div class="col-sm-12 text-center" style="padding:10px;">
                             <button mat-raised-button type="submit" color="primary" [disabled]="checkModif() || !shippingForm.valid">{{lang.validate}}</button>
                             <button mat-raised-button type="button" color="default" [disabled]="checkModif()" (click)="cancelModification()">{{lang.cancel}}</button>
                         </div>
