@@ -472,5 +472,5 @@ define("_SHIPPING_ADDED", "Envoi postal ajouté");
 define("_SHIPPING_UPDATED", "Envoi postal mis à jour");
 define("_SHIPPING_DELETED", "Envoi postal supprimé");
 
-define("_SHIPPINGS_ADMIN", "Envois postaux");
+define("_SHIPPINGS_ADMIN", "Modèles d'envois postaux");
 define("_SHIPPINGS_ADMIN_DESC", "Configurer les modèles d'envois postaux, par exemple pour Maileva");
