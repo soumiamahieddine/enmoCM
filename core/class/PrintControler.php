@@ -821,8 +821,6 @@ class PrintFunctions
 	function retrieve_notes($libelle)
 	{
 		$db = new Database();
-		
-		$collection = $this->collection;
         
         $query_template = 'SELECT ';
             $query_template .= 'id, ';
@@ -833,8 +831,6 @@ class PrintFunctions
             $query_template .= 'notes ';
         $query_template .= 'WHERE ';
                 $query_template .= "identifier = ##res_id## ";
-            $query_template .= "AND ";
-                $query_template .= "coll_id = '" . $collection . "' ";
 			//EXCLUDE PRIVATE NOTES
 			$query_template .= "AND id not in (select note_id from note_entities) ";
 			$query_template .= "order by id";
