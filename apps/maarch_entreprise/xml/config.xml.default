@@ -4,7 +4,7 @@
         <databaseserver>localhost</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarch</databasename>
+        <databasename>MaarchCourrier</databasename>
         <databaseuser>maarch</databaseuser>
         <databasepassword>maarch</databasepassword>
         <databasesearchlimit>500</databasesearchlimit>
