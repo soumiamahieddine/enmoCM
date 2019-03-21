@@ -229,7 +229,7 @@ class ShippingController
 
         if (!empty($aArgs['fee'])) {
             foreach ($aArgs['fee'] as $value) {
-                if (!empty($value) && !Validator::intVal()->positive()->validate($value)) {
+                if (!empty($value) && !Validator::floatVal()->positive()->validate($value)) {
                     $errors[] = 'fee must be an array with positive values';
                 }
             }

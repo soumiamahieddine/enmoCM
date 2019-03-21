@@ -93,29 +93,27 @@
                                 {{lang.shipping_maxWeightInfo}}
                             </div>
                         </div>
-                        <div class="formType ratio-1" style="border:0px"></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="formType ratio-1">
+                        <div class="formType ratio-1" style="flex-direction: column; justify-content: center;">
                             <div class="formType-title">
                                 {{lang.mailevaAccount}}
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <mat-form-field>
                                     <input matInput [(ngModel)]="shipping.account.id" required name="login" id="login"
                                         title="{{lang.login}}" type="text" placeholder="{{lang.id}}" maxlength="255">
                                 </mat-form-field>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <mat-form-field>
                                     <input name="password" [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="shipping.account.password"
                                         matInput [placeholder]="creationMode === false ? this.lang.passwordModification : this.lang.password" [required]="creationMode">
                                     <mat-icon color="primary" style="cursor: pointer;" matSuffix (click)="hidePassword = !hidePassword" maxlength="255"
                                         class="fa fa-2x" [ngClass]="[hidePassword ? 'fa-eye-slash' : 'fa-eye']"></mat-icon>
                                 </mat-form-field>
-                            </div>
+                            </div>                       
                         </div>
                     </div>
+                   
                     <div class="form-group">
                         <div class="col-md-12 text-center" style="padding:10px;">
                             <button mat-raised-button type="submit" color="primary" [disabled]="checkModif() || !shippingForm.valid">{{lang.validate}}</button>
