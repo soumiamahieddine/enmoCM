@@ -105,7 +105,7 @@ class RequestSeda
         $query = "SELECT * FROM notes WHERE identifier = ?";
         $this->statement['getNotes'] = $this->db->prepare($query);
 
-        $query = "SELECT * FROM sendmail WHERE res_id = ?";
+        $query = "SELECT * FROM emails WHERE document->>'id' = ?";
         $this->statement['getMails'] = $this->db->prepare($query);
 
         $query = "SELECT * FROM doctypes WHERE type_id = ?";

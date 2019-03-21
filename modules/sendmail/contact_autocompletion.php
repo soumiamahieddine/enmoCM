@@ -29,7 +29,7 @@ $query    = "SELECT result, SUM(confidence) AS score, ca_id FROM (";
 
 $subQuery[1]=
     "SELECT CASE WHEN is_corporate_person = 'Y' THEN UPPER(society) ELSE COALESCE(contact_firstname, '') || ' ' || UPPER(COALESCE(contact_lastname, '')) END || "
-    . " ' - ' || external_id->>'m2m' || ' - ' || COALESCE(contact_purpose_label, '') || ' : ' || "
+    . " ' - ' || CAST (external_id->>'m2m' as VARCHAR) || ' - ' || COALESCE(contact_purpose_label, '') || ' : ' || "
     . " COALESCE(firstname, '') || ' ' || UPPER(COALESCE(lastname, ''))|| ' ' || COALESCE(address_num, '') || ' ' || COALESCE(address_street, '') || ' ' || COALESCE(address_postal_code, '')|| ' ' || COALESCE(address_town, '')|| ' ' || UPPER(COALESCE(address_country, ''))"
     ." || '(Moyen de communication : ' || cc.value || ')' AS result, "
         . ' %d AS confidence, ca_id'
@@ -92,8 +92,14 @@ for ($i=0; $i<$l; $i++) {
     }
     echo "<li style='font-size: 8pt; background-color:$color;' title='confiance:".$score."%' id='".$res->ca_id."'>". $res->result ."</li>";
 }
-if($nb == 0) echo "<li></li>";
+if ($nb == 0) {
+    echo "<li></li>";
+}
 echo "</ul>";
 
-if($nb == 0) echo "<p align='left' style='background-color:LemonChiffon;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >...</p>"; 
-if($nb > $m) echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
+if ($nb == 0) {
+    echo "<p align='left' style='background-color:LemonChiffon;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >...</p>";
+}
+if ($nb > $m) {
+    echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
+}

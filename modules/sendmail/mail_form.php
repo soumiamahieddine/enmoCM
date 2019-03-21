@@ -18,6 +18,7 @@
  * @version  $Revision$
  * @ingroup  sendmail
  */
+
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php';
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
 require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
@@ -33,13 +34,13 @@ require_once 'modules'.DIRECTORY_SEPARATOR.'sendmail'.DIRECTORY_SEPARATOR
 require_once 'modules/sendmail/class/class_email_signatures.php';
 require_once 'modules/sendmail/Controllers/ReadMessageExchangeController.php';
 
-$core_tools = new core_tools();
-$request = new request();
-$sec = new security();
-$is = new indexing_searching_app();
-$users_tools = new class_users();
+$core_tools     = new core_tools();
+$request        = new request();
+$sec            = new security();
+$is             = new indexing_searching_app();
+$users_tools    = new class_users();
 $sendmail_tools = new sendmail();
-$db = new Database();
+$db             = new Database();
 
 $parameters = '';
 
@@ -60,8 +61,8 @@ if (isset($_REQUEST['identifier']) && !empty($_REQUEST['identifier'])) {
 if (isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) {
     $collId = trim($_REQUEST['coll_id']);
     $parameters .= '&coll_id='.$_REQUEST['coll_id'];
-    $view = $sec->retrieve_view_from_coll_id($collId);
-    $table = $sec->retrieve_table_from_coll($collId);
+    $view   = $sec->retrieve_view_from_coll_id($collId);
+    $table  = $sec->retrieve_table_from_coll($collId);
 }
 
 //Keep some origin parameters
@@ -119,12 +120,13 @@ if (empty($userEntities)) {
     $userEntities = [''];
 }
 
-$userTemplates = \SrcCore\models\DatabaseModel::select(['select' => ['distinct t.template_id', 't.template_label', 't.template_content'],
-                                                    'table' => ['templates t', 'templates_association ta'],
-                                                    'left_join' => ['t.template_id = ta.template_id'],
-                                                    'where' => ['t.template_target = \'sendmail\'', '(ta.value_field is null or value_field in (?))'],
-                                                    'data' => [$userEntities],
-                                                ]);
+$userTemplates = \SrcCore\models\DatabaseModel::select([
+    'select'    => ['distinct t.template_id', 't.template_label', 't.template_content'],
+    'table'     => ['templates t', 'templates_association ta'],
+    'left_join' => ['t.template_id = ta.template_id'],
+    'where'     => ['t.template_target = \'sendmail\'', '(ta.value_field is null or value_field in (?))'],
+    'data'      => [$userEntities],
+]);
 
 //ADD
 if ($mode == 'add') {
@@ -220,11 +222,11 @@ if ($mode == 'add') {
     $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span> <label>'
         ._SEND_TO_SHORT.'</label></td>';
 
-    $exp_user_id = null;
-    $dest_user_id = null;
-    $exp_contact_id = null;
+    $exp_user_id     = null;
+    $dest_user_id    = null;
+    $exp_contact_id  = null;
     $dest_contact_id = null;
-    $db = new Database();
+    $db              = new Database();
     $stmt = $db->query('SELECT res_id, category_id, address_id, exp_user_id, dest_user_id, admission_date, exp_contact_id, dest_contact_id
                 FROM mlb_coll_ext 
                 WHERE (( exp_contact_id is not null 
