@@ -214,7 +214,7 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
                 item_type: itemType,
                 item_id: element.id,
                 labelToDisplay: element.idToDisplay,
-                descriptionToDisplay: element.otherInfo,
+                descriptionToDisplay: element.descriptionToDisplay,
                 item_mode: "copy"
             };
             this.diffList['copy'].items.unshift(newElemListModel);
