@@ -163,6 +163,7 @@ $app->get('/entities/{id}', \Entity\controllers\EntityController::class . ':getB
 $app->put('/entities/{id}', \Entity\controllers\EntityController::class . ':update');
 $app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':delete');
 $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
+$app->get('/entities/{id}/users', \Entity\controllers\EntityController::class . ':getUsersById');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
 $app->put('/entities/{id}/status', \Entity\controllers\EntityController::class . ':updateStatus');
 $app->get('/entityTypes', \Entity\controllers\EntityController::class . ':getTypes');

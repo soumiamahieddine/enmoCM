@@ -458,6 +458,28 @@ class EntityController
         return $response->withJson(['success' => 'success']);
     }
 
+    public function getUsersById(Request $request, Response $response, array $aArgs)
+    {
+        $entity = entitymodel::getById(['id' => $aArgs['id'], 'select' => ['entity_id']]);
+        if (empty($entity)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        }
+
+        $users = UserEntityModel::getWithUsers([
+            'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname'],
+            'where'     => ['users_entities.entity_id = ?', 'status not in (?)'],
+            'data'      => [$entity['entity_id'], ['DEL', 'ABS']],
+            'orderBy'   => ['lastname', 'firstname']
+        ]);
+
+        foreach ($users as $key => $user) {
+            $users[$key]['labelToDisplay'] = "{$user['firstname']} {$user['lastname']}";
+            $users[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']])['entity_label'];
+        }
+
+        return $response->withJson(['users' => $users]);
+    }
+
     public function getTypes(Request $request, Response $response)
     {
         return $response->withJson(['types' => EntityModel::getTypes()]);

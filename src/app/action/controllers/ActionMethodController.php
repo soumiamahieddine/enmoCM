@@ -16,6 +16,7 @@ use Attachment\models\AttachmentModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Entity\controllers\ListInstanceController;
+use Entity\models\ListInstanceModel;
 use History\controllers\HistoryController;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
@@ -242,7 +243,13 @@ class ActionMethodController
 
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        $controller = ListInstanceController::updateListInstance(['data' => [['resId' => $args['resId'], 'listInstances' => $args['data']]], 'userId' => $currentUser['id']]);
+        $listInstances = [];
+        if (!empty($args['data']['onlyRedirectDest'])) {
+            $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?', 'difflist_type = ?', 'item_mode != ?'], 'data' => [$args['resId'], 'entity_id', 'dest']]);
+        }
+
+        $listInstances = array_merge($listInstances, $args['data']['listInstances']);
+        $controller = ListInstanceController::updateListInstance(['data' => [['resId' => $args['resId'], 'listInstances' => $listInstances]], 'userId' => $currentUser['id']]);
         if (!empty($controller['errors'])) {
             return ['errors' => [$controller['errors']]];
         }

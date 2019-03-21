@@ -140,9 +140,11 @@ abstract class UserModelAbstract
         if (empty($user)) {
             return [];
         }
-        $users[$args['login']] = $user[0];
+        if (empty($args['select']) || in_array('id', $args['select'])) {
+            $users[$args['login']] = $user[0];
+        }
 
-        return $users[$args['login']];
+        return $user[0];
     }
     
     public static function getByLowerLogin(array $aArgs)
