@@ -210,23 +210,6 @@ abstract class SendmailAbstract extends Database
         return $text;
     }
 
-    public function cleanHtml($htmlContent)
-    {
-        $htmlContent = str_replace(';', '###', $htmlContent);
-        $htmlContent = str_replace('--', '___', $htmlContent);
-
-        $allowedTags = '<html><head><body><title>'; //Structure
-        $allowedTags .= '<h1><h2><h3><h4><h5><h6><b><i><tt><u><strike><blockquote><pre><blink><font><big><small><sup><sub><strong><em>'; // Text formatting
-        $allowedTags .='<p><br><hr><center><div><span>'; // Text position
-        $allowedTags .= '<li><ol><ul><dl><dt><dd>'; // Lists
-        $allowedTags .= '<img><a>'; // Multimedia
-        $allowedTags .= '<table><tr><td><th><tbody><thead><tfooter><caption>'; // Tables
-        $allowedTags .= '<form><input><textarea><select>'; // Forms
-        $htmlContent = strip_tags($htmlContent, $allowedTags);
-
-        return $htmlContent;
-    }
-
     public function updateAdressInputField($ajaxPath, $adressArray, $inputField, $readOnly = false)
     {
         $content = '';

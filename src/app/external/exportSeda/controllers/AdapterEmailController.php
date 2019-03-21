@@ -31,11 +31,18 @@ class AdapterEmailController
 
         if ($gec == 'maarch_courrier') {
             $document = ['id' => $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->OriginatingSystemId, 'isLinked' => false, 'original' => false];
-            $userInfo = UserModel::getByLogin(['login' => $messageObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier, 'select' => ['id']]);
+            $userInfo = UserModel::getByLogin(['login' => $messageObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier, 'select' => ['id', 'mail']]);
+
+            if (!empty($messageObject->TransferringAgency->OrganizationDescriptiveMetadata->Contact[0]->Communication[1]->value)) {
+                $senderEmail = $messageObject->TransferringAgency->OrganizationDescriptiveMetadata->Contact[0]->Communication[1]->value;
+            } else {
+                $senderEmail = $userInfo['mail'];
+            }
+
             EmailController::createEmail([
                 'userId'    => $userInfo['id'],
                 'data'      => [
-                    'sender'        => ['email' => $messageObject->TransferringAgency->OrganizationDescriptiveMetadata->Contact[0]->Communication[1]->value],
+                    'sender'        => ['email' => $senderEmail],
                     'recipients'    => [$messageObject->ArchivalAgency->OrganizationDescriptiveMetadata->Communication[0]->value],
                     'cc'            => '',
                     'cci'           => '',
