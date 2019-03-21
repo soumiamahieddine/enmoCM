@@ -18,6 +18,7 @@ use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Configuration\models\ConfigurationModel;
 use Email\models\EmailModel;
+use Email\scripts\EmailScript;
 use Entity\models\EntityModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
@@ -49,7 +50,8 @@ class EmailController
         $isSent = EmailController::createEmail(['userId' => $user['id'], 'data' => $body]);
 
         if (!empty($isSent['errors'])) {
-            return $response->withStatus($isSent['code'])->withJson(['errors' => $isSent['errors']]);
+            $httpCode = empty($isSent['code']) ? 400 : $isSent['code'];
+            return $response->withStatus($httpCode)->withJson(['errors' => $isSent['errors']]);
         }
 
         return $response->withStatus(204);
@@ -90,6 +92,7 @@ class EmailController
             'info'         => _EMAIL_ADDED
         ]);
 
+        $isSent = ['success' => 'success'];
         if ($args['data']['status'] != 'DRAFT') {
             $customId = CoreConfigModel::getCustomId();
             if (empty($customId)) {
@@ -97,10 +100,19 @@ class EmailController
             }
             $encryptKey = CoreConfigModel::getEncryptKey();
             $options = empty($args['options']) ? '' : serialize($args['options']);
-            exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+            if ($args['data']['status'] == 'EXPRESS') {
+                $isSent = EmailController::sendEmail(['emailId' => $id, 'userId' => $args['userId']]);
+                if (!empty($isSent['success'])) {
+                    EmailModel::update(['set' => ['status' => 'SENT', 'send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$id]]);
+                } else {
+                    EmailModel::update(['set' => ['status' => 'ERROR'], 'where' => ['id = ?'], 'data' => [$id]]);
+                }
+            } else {
+                exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+            }
         }
 
-        return true;
+        return $isSent;
     }
 
     public static function getById(array $args)

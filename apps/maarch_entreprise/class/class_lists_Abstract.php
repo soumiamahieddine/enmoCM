@@ -28,7 +28,7 @@
  *
  * @file
  *
- * @author Yves Christian Kpakpo <dev@maarch.org>
+ * @author <dev@maarch.org>
  * @date $date$
  *
  * @version $Revision$
@@ -2152,8 +2152,7 @@ abstract class lists_Abstract extends Database
                 if ($sortColumn[$actualColumn] === null) {
                     $columnStyle = '';
                 } else {
-                    (strpos($this->orderField, $sortColumn[$actualColumn]) !== false) ?
-                        $columnStyle = ' style="background-image: url(static.php?filename=black_0.1.png);"' : $columnStyle = '';
+                    $columnStyle = (is_string($sortColumn[$actualColumn]) && strpos($this->orderField, $sortColumn[$actualColumn]) !== false) ? ' style="background-image: url(static.php?filename=black_0.1.png);"' : '';
                 }
 
                 //column
@@ -3351,7 +3350,7 @@ abstract class lists_Abstract extends Database
                     }
 
                     //Different background on ordered column
-                    isset($resultTheLine[$column]['order']) && (strpos($this->orderField, $resultTheLine[$column]['order']) !== false) ?
+                    isset($resultTheLine[$column]['order']) && is_string($resultTheLine[$column]['order']) && (strpos($this->orderField, $resultTheLine[$column]['order']) !== false) ?
                         $columnStyle = ' style="background-image: url(static.php?filename=black_0.1.png);"' : $columnStyle = '';
 
                     //If there is action on line click
