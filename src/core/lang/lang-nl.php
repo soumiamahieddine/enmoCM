@@ -476,3 +476,5 @@ define("_SHIPPING_DELETED", "Shipping deleted_TO_TRANSLATE");
 
 define("_SHIPPINGS_ADMIN", "Shippings admin_TO_TRANSLATE");
 define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva_TO_TRANSLATE");
+
+define("_SEND_SHIPPING", "Send a mailpiece_TO_TRANSLATE");

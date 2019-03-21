@@ -507,4 +507,16 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>send_shipping</ID>
+        <LABEL>_SEND_SHIPPING</LABEL>
+        <NAME>send_shipping</NAME>
+        <component>sendShippingAction</component>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
 </ROOT>

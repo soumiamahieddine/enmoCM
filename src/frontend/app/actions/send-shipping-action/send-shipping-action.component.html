@@ -1,0 +1,107 @@
+<h1 mat-dialog-title>{{data.action.label_action}}</h1>
+<div mat-dialog-content>
+    <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
+        <mat-spinner style="margin:auto;"></mat-spinner>
+    </div>
+    <mat-sidenav-container autosize>
+        <mat-sidenav-content style="background: white;">
+            <div class="row" style="margin: 0;">
+                <div class="col-md-12">
+                    {{lang.makeActionOn}}
+                    <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
+                    <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}}
+                        {{lang.elements}}</b> ?
+                </div>
+                <div class="col-md-12" style="padding-top: 10px;">
+                    <mat-form-field>
+                        <mat-label>Canal d'envoi</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let shipping of shippings" [value]="shipping">
+                                {{shipping.label}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                    <div *ngIf="mailsNotSend.length > 0">
+                        <div class="alert-message alert-message-danger mailList" role="alert">
+                            <p>
+                                <b>3</b> Courriers non eligibles :
+                            </p>
+                            <ul>
+                                <li *ngFor="let mail of mailsNotSend">
+                                    {{mail.alt_identifier}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="formType" style="flex-direction: column;">
+                        <div class="formType-title">
+                            {{lang.pricesInformations}} *
+                        </div>
+                        <div class="priceContent">
+                            <mat-form-field appearance="outline">
+                                <input matInput [(ngModel)]="totalPrice" required name="totalPrice" id="totalPrice"
+                                    title="Prix total" type="number" disabled>
+                                <span matSuffix>&nbsp;€</span>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="priceInfo">
+                        * Selon les paramètres définis dans le modèle
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
+                </div>
+            </div>
+        </mat-sidenav-content>
+        <mat-sidenav mode="side" fixedTopGap="56" position='end' opened style="width: 50%;">
+            <div class="formType" style="flex-direction: column;">
+                <div class="formType-title">
+                    Pièce(s) jointe(s)
+                </div>
+                <div class="pjList">
+                    <span>
+                        80x80
+                    </span>
+                    <span>
+                        80x80
+                    </span>
+                    <span>
+                        80x80
+                    </span>
+                    <span>
+                        80x80
+                    </span>
+                    <span>
+                        80x80
+                    </span>
+                    <span>
+                        80x80
+                    </span>
+                    <span>
+                        80x80
+                    </span>
+                    <span>
+                        80x80
+                    </span>
+                    <span>
+                        80x80
+                    </span>
+                    <span>
+                        80x80
+                    </span>
+                </div>
+            </div>
+        </mat-sidenav>
+    </mat-sidenav-container>
+</div>
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button mat-button color="primary" [disabled]="loading"
+        (click)="onSubmit()">{{lang.validate}}</button>
+    <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
+</div>

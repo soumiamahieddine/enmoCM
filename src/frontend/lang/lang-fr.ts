@@ -934,4 +934,7 @@ export const LANG_FR = {
     "shippings"                            : "Modèles d'envois postaux",
     "mailevaAccount"                             : "Compte Maileva",
     "destinationChangingInfo"                            : "Le courrier sera réattribué à l'entité",
+    "destinationChangingInfoMass"                            : "Les courriers issus d'une entité externe à",
+    "destinationChangingInfoMass2"                            : "seront redirigés à l'entité",
+    
 };

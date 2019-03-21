@@ -164,7 +164,7 @@ export class RedirectActionComponent implements OnInit {
     changeDest(event: any) {
         this.currentDiffusionListDestRedirect = this.diffusionListDestRedirect
         let user = event.option.value;
-        
+
 
         this.destUser = {
             difflist_type: "entity_id",
@@ -184,25 +184,25 @@ export class RedirectActionComponent implements OnInit {
                     this.notify.handleErrors(err);
                 });
 
-                if (this.keepDestForRedirection) {
-                    let isInCopy = false;
-                    let newCopy = null;
-                    this.currentDiffusionListDestRedirect.forEach((element: any) => {
-                        if (element.item_mode == 'cc' && element.item_id == this.oldUser.item_id) {
-                            isInCopy = true;
-                        }
-                    });
-        
-                    if (!isInCopy) {
-                        newCopy = this.oldUser;
-                        newCopy.item_mode = 'cc';
-                        this.currentDiffusionListDestRedirect.push(newCopy);
+            if (this.keepDestForRedirection) {
+                let isInCopy = false;
+                let newCopy = null;
+                this.currentDiffusionListDestRedirect.forEach((element: any) => {
+                    if (element.item_mode == 'cc' && element.item_id == this.oldUser.item_id) {
+                        isInCopy = true;
                     }
+                });
+
+                if (!isInCopy) {
+                    newCopy = this.oldUser;
+                    newCopy.item_mode = 'cc';
+                    this.currentDiffusionListDestRedirect.push(newCopy);
                 }
-                this.currentDiffusionListDestRedirect.splice(this.currentDiffusionListDestRedirect.map((e: any) => { return e.item_mode; }).indexOf('dest'), 1);
+            }
+            this.currentDiffusionListDestRedirect.splice(this.currentDiffusionListDestRedirect.map((e: any) => { return e.item_mode; }).indexOf('dest'), 1);
         } else {
             this.isDestinationChanging = true;
-        }    
+        }
         this.currentDiffusionListDestRedirect.push(this.destUser);
 
         this.userRedirectCtrl.reset();
@@ -224,7 +224,7 @@ export class RedirectActionComponent implements OnInit {
     onSubmit(): void {
         this.loading = true;
         if (this.redirectMode == 'user') {
-            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: this.currentDiffusionListDestRedirect, note: this.noteEditor.getNoteContent() })
+            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: { onlyRedirectDest: true, listInstances: this.currentDiffusionListDestRedirect }, note: this.noteEditor.getNoteContent() })
                 .subscribe((data: any) => {
                     if (data && data.errors != null) {
                         this.notify.error(data.errors);
@@ -237,7 +237,7 @@ export class RedirectActionComponent implements OnInit {
                     this.loading = false;
                 });
         } else {
-            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: this.appDiffusionsList.getListinstance(), note: this.noteEditor.getNoteContent() })
+            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: { listInstances: this.appDiffusionsList.getListinstance() }, note: this.noteEditor.getNoteContent() })
                 .subscribe((data: any) => {
                     if (data && data.errors != null) {
                         this.notify.error(data.errors);

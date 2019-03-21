@@ -36,6 +36,7 @@ import { UpdateDepartureDateActionComponent }   from './actions/update-departure
 import { ProcessActionComponent }               from './actions/process-action/process-action.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
+import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -93,6 +94,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         ProcessActionComponent,
         ViewDocActionComponent,
         RedirectActionComponent,
+        SendShippingActionComponent,
         ActionsListComponent,
     ],
     entryComponents: [
@@ -114,6 +116,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         UpdateDepartureDateActionComponent,
         ProcessActionComponent,
         RedirectActionComponent,
+        SendShippingActionComponent,
         ViewDocActionComponent
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],

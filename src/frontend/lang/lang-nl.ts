@@ -936,4 +936,6 @@ export const LANG_NL = {
     "shippings"                            : "Shippings templates", //_TO_TRANSLATE
     "mailevaAccount"                             : "Maileva account", //_TO_TRANSLATE
     "destinationChangingInfo"              : "This mail will be reassigned to this entity", //_TO_TRANSLATE
+    "destinationChangingInfoMass"                            : "These mails following external entity of", //_TO_TRANSLATE
+    "destinationChangingInfoMass2"                            : "will be redirected to entity", //_TO_TRANSLATE
 };

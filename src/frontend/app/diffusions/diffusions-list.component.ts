@@ -4,6 +4,7 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angular/cdk/drag-drop';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+import { ConstantPool } from '@angular/compiler';
 
 declare function $j(selector: any): any;
 
@@ -169,45 +170,13 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
 
     loadDestUserList() {
         if (this.currentEntityId > 0 && this.userDestList.length == 0) {
-            this.userDestList = [
-                {
-                    id: 0,
-                    user_id: 'ppetit',
-                    labelToDisplay: 'Patricia PETIT',
-                    descriptionToDisplay: 'Pôle jeunesse et sport',
-                },
-                {
-                    id: 0,
-                    user_id: 'ppetit',
-                    labelToDisplay: 'Patricia PETIT',
-                    descriptionToDisplay: 'Pôle jeunesse et sport',
-                },
-                {
-                    id: 0,
-                    user_id: 'ppetit',
-                    labelToDisplay: 'Patricia PETIT',
-                    descriptionToDisplay: 'Pôle jeunesse et sport',
-                },
-                {
-                    id: 0,
-                    user_id: 'ppetit',
-                    labelToDisplay: 'Patricia PETIT',
-                    descriptionToDisplay: 'Pôle jeunesse et sport',
-                },
-                {
-                    id: 0,
-                    user_id: 'ppetit',
-                    labelToDisplay: 'Patricia PETIT',
-                    descriptionToDisplay: 'Pôle jeunesse et sport',
-                }
-            ];
-            /*this.http.get("../../rest/entities/" + this.currentEntityId + "/destUser")
+            this.http.get("../../rest/entities/" + this.currentEntityId + "/users")
             .subscribe((data: any) => {
-                
+                this.userDestList = data.users;
                 this.loading = false;
             }, (err: any) => {
                 this.notify.handleErrors(err);
-            });*/
+            });
         }
     }
 
@@ -232,7 +201,6 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
     }
 
     addElem(element: any) {
-
         if (this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.id) == -1) {
             let itemType = '';
             if (element.type == 'user') {

@@ -908,4 +908,6 @@ export const LANG_EN = {
     "shippings"                            : "Shippings templates",
     "mailevaAccount"                             : "Maileva account",
     "destinationChangingInfo"                            : "This mail will be reassigned to this entity",
+    "destinationChangingInfoMass"                            : "These mails following external entity of",
+    "destinationChangingInfoMass2"                            : "will be redirected to entity",
 };

@@ -17,6 +17,7 @@ import { UpdateDepartureDateActionComponent } from './update-departure-date-acti
 import { Router } from '@angular/router';
 import { ViewDocActionComponent } from './view-doc-action/view-doc-action.component';
 import { RedirectActionComponent } from './redirect-action/redirect-action.component';
+import { SendShippingActionComponent } from './send-shipping-action/send-shipping-action.component';
 
 @Component({
     selector: 'app-actions-list',
@@ -320,6 +321,28 @@ export class ActionsListComponent implements OnInit {
 
     redirectAction() {
         const dialogRef = this.dialog.open(RedirectActionComponent, {
+            data: {
+                contextMode: this.contextMode,
+                contextChrono: this.contextMenuTitle,
+                selectedRes: this.selectedRes,
+                action: this.currentAction,
+                currentBasketInfo: this.currentBasketInfo
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.unlock();
+
+            if (result == 'success') {
+                this.endAction();
+            } else {
+                this.unlockRest();
+            }
+        });
+    }
+
+    sendShippingAction() {
+        const dialogRef = this.dialog.open(SendShippingActionComponent, {
+            width: '900px',
             data: {
                 contextMode: this.contextMode,
                 contextChrono: this.contextMenuTitle,

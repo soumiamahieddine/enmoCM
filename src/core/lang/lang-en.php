@@ -474,3 +474,5 @@ define("_SHIPPING_DELETED", "Shipping deleted");
 
 define("_SHIPPINGS_ADMIN", "Shippings admin");
 define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva");
+
+define("_SEND_SHIPPING", "Send a mailpiece");
