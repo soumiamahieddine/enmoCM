@@ -58,12 +58,22 @@ abstract class ShippingModelAbstract
 
     public static function create(array $aArgs)
     {
+        ValidatorModel::notEmpty($aArgs, ['label', 'description']);
+        ValidatorModel::stringType($aArgs, ['label', 'description', 'options', 'fee', 'entities', 'account']);
+
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'shipping_templates_id_seq']);
 
-        $aArgs['id'] = $nextSequenceId;
         DatabaseModel::insert([
             'table'         => 'shipping_templates',
-            'columnsValues' => $aArgs
+            'columnsValues' => [
+                'id'             => $nextSequenceId,
+                'label'          => $aArgs['label'],
+                'description'    => $aArgs['description'],
+                'options'        => $aArgs['options'],
+                'fee'            => $aArgs['fee'],
+                'entities'       => $aArgs['entities'],
+                'account'        => $aArgs['account']
+            ]
         ]);
 
         return $nextSequenceId;
@@ -71,8 +81,9 @@ abstract class ShippingModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'description']);
         ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['label', 'description', 'options', 'fee', 'entities', 'account']);
         
         DatabaseModel::update([
             'table'     => 'shipping_templates',

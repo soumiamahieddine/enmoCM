@@ -104,7 +104,15 @@ class ShippingController
         $body['fee']      = json_encode($body['fee']);
         $body['entities'] = json_encode($body['entities']);
         $body['account']  = json_encode($body['account']);
-        $id = ShippingModel::create($body);
+
+        $id = ShippingModel::create([
+            'label'       => $body['label'],
+            'description' => $body['description'],
+            'options'     => $body['options'],
+            'fee'         => $body['fee'],
+            'entities'    => $body['entities'],
+            'account'     => $body['account']
+        ]);
 
         HistoryController::add([
             'tableName' => 'shipping_templates',
