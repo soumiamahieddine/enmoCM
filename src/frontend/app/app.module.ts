@@ -40,6 +40,7 @@ import { SendShippingActionComponent }               from './actions/send-shippi
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
+import { ToolsListComponent }                 from './list/tools/tools-list.component';
 import { SummarySheetComponent }                from './list/summarySheet/summary-sheet.component';
 import { ExportComponent }                      from './list/export/export.component';
 
@@ -80,6 +81,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         AvisWorkflowComponent,
         FiltersListComponent,
         FiltersToolComponent,
+        ToolsListComponent,
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,

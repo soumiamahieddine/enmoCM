@@ -938,4 +938,5 @@ export const LANG_NL = {
     "destinationChangingInfo"              : "This mail will be reassigned to this entity", //_TO_TRANSLATE
     "destinationChangingInfoMass"                            : "These mails following external entity of", //_TO_TRANSLATE
     "destinationChangingInfoMass2"                            : "will be redirected to entity", //_TO_TRANSLATE
+    "selected"                            : "selected", //_TO_TRANSLATE
 };

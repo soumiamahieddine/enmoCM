@@ -1,20 +1,16 @@
-<button *ngIf="!contextMode" (click)="loadActionList();" mat-icon-button [matMenuTriggerFor]="menu" title="{{lang.selectAction}}" [disabled]="selectedRes.length==0"
-    class="buttonArrowCheckboxTool">
-    <mat-icon fontSet="fas" fontIcon="fa-sort-down fa-2x"></mat-icon>
+<button *ngIf="!contextMode" (click)="loadActionList();" mat-stroked-button [matMenuTriggerFor]="menu">Actions <mat-icon
+        matSuffix class="fa fa-caret-down"></mat-icon>
 </button>
-<span *ngIf="contextMode" [matMenuTriggerFor]="menu" #menu2 style="position: absolute;" [style.left]="contextMenuPosition.x"
-    [style.top]="contextMenuPosition.y"></span>
+<span *ngIf="contextMode" [matMenuTriggerFor]="menu" #menu2 style="position: absolute;"
+    [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"></span>
 
-<mat-menu #menu="matMenu">
-    <div style="text-align: center;font-size: 10px;opacity: 0.5;margin-top:-15px;padding:5px;">
-        <ng-container *ngIf="!contextMode || (contextMode && this.selectedRes.length > 1)">
-            {{selectedRes.length}} {{lang.selectedElements}}
-        </ng-container>
-        <ng-container *ngIf="contextMode && this.selectedRes.length == 1">
-            {{this.contextMenuTitle}}
-        </ng-container>
+<mat-menu #menu="matMenu" [class]="'actionListMenu'">
+    <div *ngIf="contextMode && this.selectedRes.length == 1"
+        style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
+        {{this.contextMenuTitle}}
     </div>
-    <button *ngFor="let action of actionsList" [disabled]="action.component == ''" mat-menu-item (click)="launchEvent(action);">
+    <button *ngFor="let action of actionsList" [disabled]="action.component == '' || this.selectedRes.length == 0"
+        mat-menu-item (click)="launchEvent(action);">
         <span>{{action.label_action}}</span>
     </button>
 </mat-menu>

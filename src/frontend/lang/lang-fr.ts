@@ -936,5 +936,6 @@ export const LANG_FR = {
     "destinationChangingInfo"                            : "Le courrier sera réattribué à l'entité",
     "destinationChangingInfoMass"                            : "Les courriers issus d'une entité externe à",
     "destinationChangingInfoMass2"                            : "seront redirigés à l'entité",
+    "selected"                            : "sélectionné(s)",
     
 };

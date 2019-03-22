@@ -1,14 +1,14 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter, ComponentFactoryResolver, ViewContainerRef, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { merge, Observable, of as observableOf, fromEvent, Subscription } from 'rxjs';
+import { merge, Observable, of as observableOf  } from 'rxjs';
 import { NotificationService } from '../notification.service';
-import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet, MatMenu, MatMenuTrigger } from '@angular/material';
+import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet } from '@angular/material';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError } from 'rxjs/operators';
-import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 import { NotesListComponent } from '../notes/notes.component';
@@ -17,7 +17,7 @@ import { DiffusionsListComponent } from '../diffusions/diffusions-list.component
 import { FiltersToolComponent } from './filters/filters-tool.component';
 
 import { ActionsListComponent } from '../actions/actions-list.component';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay } from '@angular/cdk/overlay';
 import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
 import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 import { BasketHomeComponent } from '../basket/basket-home.component';
@@ -219,6 +219,12 @@ export class BasketListComponent implements OnInit {
     }
 
     openDiffusionSheet(row: any): void {
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        row.checked = true;
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
+
         if(this.injectDatasParam.resId == row.res_id && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
@@ -246,7 +252,7 @@ export class BasketListComponent implements OnInit {
         this.sidenavRight.close();
         this.refreshDao();
         this.basketHome.refreshBasketHome();
-        const e:any = {checkd : false};
+        const e:any = {checked : false};
         this.toggleAllRes(e); 
     }
 
