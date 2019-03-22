@@ -9,7 +9,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-class ShippingControllerTest extends TestCase
+class ShippingTemplateControllerTest extends TestCase
 {
     private static $id = null;
 
@@ -17,7 +17,7 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $aArgs = [
             'label'           => 'TEST',
@@ -61,7 +61,7 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response  = $shipping->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
@@ -89,7 +89,7 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response  = $shipping->get($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
@@ -119,7 +119,7 @@ class ShippingControllerTest extends TestCase
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
         $response = $shipping->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
 
         $responseBody = json_decode((string)$response->getBody());
@@ -128,7 +128,7 @@ class ShippingControllerTest extends TestCase
 
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response  = $shipping->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
@@ -149,7 +149,7 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response = $shipping->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
@@ -166,7 +166,7 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response  = $shipping->initShipping($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());

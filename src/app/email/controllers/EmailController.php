@@ -20,7 +20,6 @@ use Configuration\models\ConfigurationModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Email\models\EmailModel;
-use Email\scripts\EmailScript;
 use Entity\models\EntityModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;

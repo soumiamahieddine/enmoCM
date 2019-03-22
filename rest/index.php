@@ -279,15 +279,16 @@ $app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\Acknow
 //PreProcess
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
+//$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkShippings', \Action\controllers\PreProcessActionController::class . ':checkShippings');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 
 //shipping
-$app->get('/administration/shippings', \Shipping\controllers\ShippingController::class . ':get');
-$app->get('/administration/shippings/new', \Shipping\controllers\ShippingController::class . ':initShipping');
-$app->get('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':getById');
-$app->post('/administration/shippings', \Shipping\controllers\ShippingController::class . ':create');
-$app->put('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':update');
-$app->delete('/administration/shippings/{id}', \Shipping\controllers\ShippingController::class . ':delete');
+$app->get('/administration/shippings', \Shipping\controllers\ShippingTemplateController::class . ':get');
+$app->get('/administration/shippings/new', \Shipping\controllers\ShippingTemplateController::class . ':initShipping');
+$app->get('/administration/shippings/{id}', \Shipping\controllers\ShippingTemplateController::class . ':getById');
+$app->post('/administration/shippings', \Shipping\controllers\ShippingTemplateController::class . ':create');
+$app->put('/administration/shippings/{id}', \Shipping\controllers\ShippingTemplateController::class . ':update');
+$app->delete('/administration/shippings/{id}', \Shipping\controllers\ShippingTemplateController::class . ':delete');
 $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
 
 //SignatureBook
