@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input } from '@angular/core';
+import { Component, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -19,19 +19,20 @@ export class NoteEditorComponent implements AfterViewInit {
     content: string = '';
 
     @Input('resIds') resIds: any[];
+    @Input('addMode') addMode: boolean;
+    @Output('refreshNotes') refreshNotes = new EventEmitter<string>();
 
     constructor(public http: HttpClient) { }
 
     ngAfterViewInit() {
-        
+
     }
 
     addNote() {
-        /*this.http.get("../../rest/res/" + this.data.resId + "/notes")
-        .subscribe((data: any) => {
-            this.notes = data;
-            this.loading = false;
-        });*/
+        this.http.post("../../rest/res/" + this.resIds[0] + "/notes", { note_text: this.content })
+            .subscribe((data: any) => {
+                this.refreshNotes.emit(this.resIds[0]);
+            });
     }
 
     getNoteContent() {
@@ -44,7 +45,7 @@ export class NoteEditorComponent implements AfterViewInit {
         } else {
             this.content = template.template_content;
         }
-        
+
     }
 
     getTemplatesNote() {
@@ -53,10 +54,10 @@ export class NoteEditorComponent implements AfterViewInit {
             if (this.resIds.length == 1) {
                 params['resId'] = this.resIds[0];
             }
-            this.http.get("../../rest/notes/templates", {params: params})
-            .subscribe((data: any) => {
-                this.templatesNote = data['templates'];
-            });
+            this.http.get("../../rest/notes/templates", { params: params })
+                .subscribe((data: any) => {
+                    this.templatesNote = data['templates'];
+                });
 
         }
     }

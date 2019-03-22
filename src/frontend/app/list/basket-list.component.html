@@ -199,7 +199,7 @@
                     <mat-icon class="fa fa-arrow-right"></mat-icon>
                 </button>
             </div>
-            <app-panel-list #appPanelList></app-panel-list>
+            <app-panel-list #appPanelList (refreshBadgeNotes)="refreshBadgeNotes($event)"></app-panel-list>
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>

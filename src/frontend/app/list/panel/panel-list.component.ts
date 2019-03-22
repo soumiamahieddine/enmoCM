@@ -1,9 +1,11 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
 import { VisaWorkflowComponent } from '../../visa/visa-workflow.component';
 import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
 import { NotesListComponent } from '../../notes/notes.component';
+
+declare function $j(selector: any): any;
 
 @Component({
     selector: 'app-panel-list',
@@ -25,6 +27,8 @@ export class PanelListComponent implements OnInit {
     mode: string;
     icon: string;
     currentResource: any = {};
+
+    @Output('refreshBadgeNotes') refreshBadgeNotes = new EventEmitter<string>();
 
     @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
     @ViewChild('appVisaWorkflow') appVisaWorkflow: VisaWorkflowComponent;
@@ -59,6 +63,14 @@ export class PanelListComponent implements OnInit {
                 this.icon = 'fa-comments';
                 this.appNotesList.loadNotes(this.currentResource.res_id);
             }, 0);
+
+            setTimeout(() => {
+                $j('textarea').focus();
+            }, 200);
         }
+    }
+
+    reloadBadgeNotes(nb:any) {
+        this.refreshBadgeNotes.emit(nb);
     }
 }

@@ -139,6 +139,7 @@ export class BasketListComponent implements OnInit {
             };
             this.filtersListService.filterMode = false;
             this.selectedRes = [];
+            this.sidenavRight.close();
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(null);
 
@@ -220,6 +221,10 @@ export class BasketListComponent implements OnInit {
             this.appPanelList.loadComponent(mode, row);
             this.sidenavRight.open();
         }
+    }
+
+    refreshBadgeNotes(nb: number) {
+        this.currentResource.countNotes = nb;
     }
 
     openAttachSheet(row: any): void {

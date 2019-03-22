@@ -24,4 +24,4 @@
     </mat-tab>
 </mat-tab-group>
 
-<app-notes-list #appNotesList *ngIf="this.mode == 'note'" [injectDatas]="injectDatasParam"></app-notes-list>
+<app-notes-list #appNotesList *ngIf="this.mode == 'note'" [injectDatas]="injectDatasParam" (reloadBadgeNotes)="reloadBadgeNotes($event)"></app-notes-list>
