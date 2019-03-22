@@ -50,7 +50,7 @@
                     <div class="table-head">
                         <div class="table-head-result">
                             <mat-checkbox color="primary"
-                                [checked]="selectedRes.length == totalRes && selectedRes.length > 0"
+                                [checked]="selectedRes.length == allResInBasket.length && selectedRes.length > 0"
                                 [indeterminate]="selectedRes.length > 0 && selectedRes.length < allResInBasket.length"
                                 style="margin: 10px;padding-right: 10px;" title="{{lang.selectAllResInBasket}}"
                                 (change)="toggleAllRes($event)"></mat-checkbox>&nbsp;{{allResInBasket.length}}
@@ -196,6 +196,8 @@
 
             <app-filters-list *ngIf="filtersListService.filterMode" [listProperties]="this.listProperties"
                 (refreshEvent)="refreshDao()"></app-filters-list>
+
+            
             <div style="display:flex;">
                 <button mat-icon-button (click)="snav2.close()" style="font-size: 20px;color:#666;">
                     <mat-icon class="fa fa-arrow-right"></mat-icon>
