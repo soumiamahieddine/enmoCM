@@ -143,7 +143,8 @@ class ShippingTemplateController
             $body['account']['password'] = PasswordModel::encrypt(['password' => $body['account']['password']]);
         } else {
             $shippingInfo = ShippingTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['account']]);
-            $body['account']['password'] = $shippingInfo['account']->password;
+            $shippingInfo['account'] = json_decode($shippingInfo['account'], true);
+            $body['account']['password'] = $shippingInfo['account']['password'];
         }
 
         $body['options']  = json_encode($body['options']);
