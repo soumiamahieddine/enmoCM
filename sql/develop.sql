@@ -9,6 +9,7 @@ UPDATE parameters SET param_value_string = '19.04.1' WHERE id = 'database_versio
 
 DROP VIEW IF EXISTS res_view_letterbox;
 DROP VIEW IF EXISTS view_contacts;
+DROP VIEW IF EXISTS res_view_attachments;
 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
 ALTER TABLE res_letterbox ADD COLUMN external_signatory_book_id integer;
