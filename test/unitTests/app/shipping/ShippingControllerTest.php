@@ -23,7 +23,7 @@ class ShippingTemplateControllerTest extends TestCase
             'label'           => 'TEST',
             'description'     => 'description du TEST',
             'options'         => [
-                'shaping'    => ['color', 'both_sides', 'address_page'],
+                'shaping'    => ['color', 'duplexPrinting', 'addressPage'],
                 'sendMode'   => 'fast'
             ],
             'fee'             => ['first_page' => 1, 'next_page' => 2, 'postage_price' => 12],
@@ -42,7 +42,7 @@ class ShippingTemplateControllerTest extends TestCase
         $aArgs = [
             'description'     => 'description du TEST',
             'options'         => [
-                'shaping'     => ['color', 'both_sides', 'address_page'],
+                'shaping'     => ['color', 'duplexPrinting', 'addressPage'],
                 'sendMode'    => 'fast'
             ],
             'fee'             => ['first_page' => 1, 'next_page' => 2, 'postage_price' => 12],
@@ -70,8 +70,8 @@ class ShippingTemplateControllerTest extends TestCase
         $this->assertSame('TEST', $responseBody->shipping->label);
         $this->assertSame('description du TEST', $responseBody->shipping->description);
         $this->assertSame('color', $responseBody->shipping->options->shaping[0]);
-        $this->assertSame('both_sides', $responseBody->shipping->options->shaping[1]);
-        $this->assertSame('address_page', $responseBody->shipping->options->shaping[2]);
+        $this->assertSame('duplexPrinting', $responseBody->shipping->options->shaping[1]);
+        $this->assertSame('addressPage', $responseBody->shipping->options->shaping[2]);
         $this->assertSame('fast', $responseBody->shipping->options->sendMode);
         $this->assertSame(1, $responseBody->shipping->fee->first_page);
         $this->assertSame(2, $responseBody->shipping->fee->next_page);

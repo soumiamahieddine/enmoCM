@@ -912,8 +912,8 @@ export const LANG_NL = {
     "willBeAutomaticallyInCopy"                 : "wordt automatisch <b>gekopieerd</b>", //_TO_TRANSLATE
     "confirm"                                   : "Bevestigen", //_TO_TRANSLATE
     "shipping_color"                            : "Color", //_TO_TRANSLATE
-    "shipping_both_sides"                            : "Both sides", //_TO_TRANSLATE
-    "shipping_address_page"                            : "Address page", //_TO_TRANSLATE
+    "shipping_duplexPrinting"                            : "Both sides", //_TO_TRANSLATE
+    "shipping_addressPage"                            : "Address page", //_TO_TRANSLATE
     "shipping_fast"                            : "Fast (J+2)", //_TO_TRANSLATE
     "shipping_economic"                            : "Economic (J+4)", //_TO_TRANSLATE
     "shipping_registered_mail"                            : "Registered mail", //_TO_TRANSLATE

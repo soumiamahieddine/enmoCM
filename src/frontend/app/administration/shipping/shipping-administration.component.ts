@@ -52,8 +52,8 @@ export class ShippingAdministrationComponent implements OnInit {
 
     shapingOptions: string[] = [
         'color',
-        'both_sides',
-        'address_page',
+        'duplexPrinting',
+        'addressPage',
     ];
 
     sendModes: string[] = [
