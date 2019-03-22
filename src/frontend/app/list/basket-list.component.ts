@@ -21,6 +21,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
 import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 import { BasketHomeComponent } from '../basket/basket-home.component';
+import { PanelListComponent } from './panel/panel-list.component';
 
 
 declare function $j(selector: any): any;
@@ -80,6 +81,7 @@ export class BasketListComponent implements OnInit {
     listProperties: any = {};
     currentBasketInfo: any = {};
     currentChrono: string = '';
+    currentMode: string = '';
     defaultAction = {
         id: 19,
         component : 'processAction'
@@ -92,9 +94,7 @@ export class BasketListComponent implements OnInit {
 
     @ViewChild('actionsListContext') actionsList: ActionsListComponent;
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
-    @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
-    @ViewChild('appVisaWorkflow') appVisaWorkflow: VisaWorkflowComponent;
-    @ViewChild('appAvisWorkflow') appAvisWorkflow: AvisWorkflowComponent;
+    @ViewChild('appPanelList') appPanelList: PanelListComponent;
     @ViewChild('basketHome') basketHome: BasketHomeComponent;
 
     currentSelectedChrono: string = '';
@@ -205,11 +205,21 @@ export class BasketListComponent implements OnInit {
         location.href = "index.php?page=details&dir=indexing_searching&id=" + row.res_id;
     }
 
-    openBottomSheet(row: any): void {
-        this.bottomSheet.open(NotesListComponent, {
-            data: { resId: row.res_id, chrono: row.alt_identifier },
-            panelClass: 'note-width-bottom-sheet'
-        });
+    togglePanel(mode: string, row: any) {
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        row.checked = true;
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
+
+        if(this.currentResource.res_id == row.res_id && this.sidenavRight.opened && this.currentMode == mode) {
+            this.sidenavRight.close();
+        } else {
+            this.currentMode = mode;
+            this.currentResource = row;
+            this.appPanelList.loadComponent(mode, row);
+            this.sidenavRight.open();
+        }
     }
 
     openAttachSheet(row: any): void {
@@ -217,31 +227,6 @@ export class BasketListComponent implements OnInit {
             data: { resId: row.res_id, chrono: row.alt_identifier },
         });
     }
-
-    openDiffusionSheet(row: any): void {
-        let thisSelect = { checked : true };
-        let thisDeselect = { checked : false };
-        row.checked = true;
-        this.toggleAllRes(thisDeselect);
-        this.toggleRes(thisSelect, row);
-
-        if(this.injectDatasParam.resId == row.res_id && this.sidenavRight.opened) {
-            this.sidenavRight.close();
-        } else {
-            this.selectedDiffusionTab = 0;
-            this.currentResource = row;
-            this.injectDatasParam.resId = row.res_id;
-            this.appDiffusionsList.loadListinstance(row.res_id);
-            this.appVisaWorkflow.loadWorkflow(row.res_id);
-            this.appAvisWorkflow.loadWorkflow(row.res_id);
-            this.sidenavRight.open();
-        }
-
-        /*this.bottomSheet.open(DiffusionsListComponent, {
-            data: { resId: row.res_id, chrono: row.alt_identifier },
-        });*/
-    }
-
 
     refreshDao() {
         this.paginator.pageIndex = this.listProperties.page;

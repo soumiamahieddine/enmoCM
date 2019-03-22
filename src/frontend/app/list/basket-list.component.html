@@ -152,7 +152,7 @@
                                             title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
                                         <span class="main-info-action">
                                             <button mat-icon-button title="{{lang.notes}}"
-                                                (click)="$event.stopPropagation();openBottomSheet(row)"
+                                                (click)="$event.stopPropagation();togglePanel('note',row)"
                                                 [class.noData]="row.countNotes == 0">
                                                 <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas"
                                                     matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x">
@@ -166,7 +166,7 @@
                                                 </mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.diffusionList}}"
-                                                (click)="$event.stopPropagation();openDiffusionSheet(row)">
+                                                (click)="$event.stopPropagation();togglePanel('diffusion',row)">
                                                 <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"></mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.linkDetails}}"
@@ -194,40 +194,12 @@
             <div *ngIf="innerHtml && !filtersListService.filterMode" [matTooltip]="currentChrono"
                 [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div>
 
-            <app-filters-list *ngIf="filtersListService.filterMode" [listProperties]="this.listProperties"
-                (refreshEvent)="refreshDao()"></app-filters-list>
-
-            
             <div style="display:flex;">
                 <button mat-icon-button (click)="snav2.close()" style="font-size: 20px;color:#666;">
                     <mat-icon class="fa fa-arrow-right"></mat-icon>
                 </button>
             </div>
-            <ng-container *ngIf="this.currentResource">
-                <div style="font-size: 60px;opacity: 0.1;padding-bottom: 30px;text-align: center;">
-                    <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"></mat-icon>
-                </div>
-                <div style="display:flex;justify-content: center;align-items: center;color: #666;padding-bottom: 10px;">
-                    <mat-icon *ngIf="this.currentResource.statusImage !== undefined" [ngStyle]="{'color': this.currentResource.priorityColor}" color="primary"
-                        class="{{this.currentResource.statusImage.charAt(0)}}{{this.currentResource.statusImage.charAt(1)}} {{this.currentResource.statusImage}} {{this.currentResource.statusImage.charAt(0)}}{{this.currentResource.statusImage.charAt(1)}}-2x">
-                    </mat-icon>&nbsp;{{this.currentResource.alt_identifier}}
-                </div>
-                <div style="text-align: center;font-weight: bold;margin-bottom: 30px;padding-left: 10px;padding-right: 10px;" title="{{this.currentResource.subject}}">
-                    {{this.currentResource.subject | shorten: 50: '...'}}
-                </div>
-                
-                <mat-tab-group [(selectedIndex)]="selectedDiffusionTab" class="diffusionTab">
-                    <mat-tab label="{{lang.diffusionList}}">
-                        <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
-                    </mat-tab>
-                    <mat-tab label="{{lang.visa}}" [disabled]="appVisaWorkflow.getVisaCount() == 0">
-                        <app-visa-workflow #appVisaWorkflow [injectDatas]="injectDatasParam"></app-visa-workflow>
-                    </mat-tab>
-                    <mat-tab label="{{lang.avis}}" [disabled]="appAvisWorkflow.getAvisCount() == 0">
-                        <app-avis-workflow #appAvisWorkflow [injectDatas]="injectDatasParam"></app-avis-workflow>
-                    </mat-tab>
-                </mat-tab-group>
-            </ng-container>
+            <app-panel-list #appPanelList></app-panel-list>
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>
