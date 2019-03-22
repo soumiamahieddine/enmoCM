@@ -8,7 +8,7 @@
  */
 
 /**
-* @brief   Shipping Model Abstract
+* @brief   Shipping Template Model Abstract
 * @author  dev@maarch.org
 */
 
@@ -17,7 +17,7 @@ namespace Shipping\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-abstract class ShippingModelAbstract
+abstract class ShippingTemplateModelAbstract
 {
     public static function get(array $aArgs = [])
     {
