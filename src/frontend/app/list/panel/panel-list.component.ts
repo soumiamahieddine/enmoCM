@@ -40,8 +40,6 @@ export class PanelListComponent implements OnInit {
     ngOnInit(): void { }
 
     loadComponent(mode: string, data: any) {
-        console.log(mode);
-        console.log(data);
 
         this.mode = mode;
         this.currentResource = data;

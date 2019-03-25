@@ -1,3 +1,7 @@
+.mat-icon-button:disabled {
+    opacity: 0.5;
+}
+
 ::ng-deep.mat-tooltip {
     font-size: 14px;
 }

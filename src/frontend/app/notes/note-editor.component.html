@@ -1,6 +1,6 @@
 <mat-form-field appearance="outline">
     <textarea matInput placeholder="{{lang.addNote}}" [(ngModel)]="content"></textarea>
-    <button *ngIf="addMode" matSuffix mat-icon-button title="{{lang.send}}" (click)="addNote()">
+    <button *ngIf="addMode" matSuffix mat-icon-button title="{{lang.send}}" (click)="addNote()" [disabled]="content.trim() == ''">
         <mat-icon fontSet="far" fontIcon="fa-paper-plane fa-2x" style="color: #666;"></mat-icon>
     </button>
     <button matSuffix color="primary" mat-icon-button title="{{lang.noteTemplates}}" [matMenuTriggerFor]="menu" (click)="getTemplatesNote()">
