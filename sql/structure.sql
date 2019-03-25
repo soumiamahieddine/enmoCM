@@ -1576,7 +1576,7 @@ label character varying(64) NOT NULL,
 description character varying(255) NOT NULL,
 options json DEFAULT '{}',
 fee json DEFAULT '{}',
-entities json DEFAULT '{}',
+entities jsonb DEFAULT '{}',
 account json DEFAULT '{}',
 CONSTRAINT shipping_templates_pkey PRIMARY KEY (id)
 )

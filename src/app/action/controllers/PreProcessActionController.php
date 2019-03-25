@@ -13,6 +13,7 @@
 namespace Action\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Contact\models\ContactModel;
@@ -25,6 +26,7 @@ use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
+use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
@@ -326,6 +328,89 @@ class PreProcessActionController
         }
 
         return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+    }
+
+    public function checkShippings(Request $request, Response $response, array $aArgs)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        // $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        // if (!empty($errors['errors'])) {
+        //     return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        // }
+
+        $data = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+
+        $data['resources'] = array_slice($data['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Almost one resource is out of perimeter']);
+        }
+
+        $aDestination = ResModel::get([
+            'select' => ['destination'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$data['resources']]
+        ]);
+
+        $entities = [];
+        foreach ($aDestination as $values) {
+            $entities[] = $values['destination'];
+        }
+
+        $aTemplates = [];
+        if (!empty($entities)) {
+            $aEntities = EntityModel::get(['select' => ['id'], 'where' => ['entity_id in (?)'], 'data' => $entities]);
+
+            $entitiesId = [];
+            foreach ($aEntities as $value) {
+                if (!empty($value['id'])) {
+                    $entitiesId[] = (string)$value['id'];
+                }
+            }
+
+            $aTemplates = ShippingTemplateModel::getByEntities([
+                'select'   => ['id', 'label', 'description', 'options', 'fee'],
+                'entities' => $entitiesId
+            ]);
+    
+            foreach ($aTemplates as $key => $value) {
+                $aTemplates[$key]['options']  = json_decode($value['options'], true);
+                $aTemplates[$key]['fee']      = json_decode($value['fee'], true);
+            }
+        }
+
+        $aAttachments = AttachmentModel::getAttachmentToSend(['ids' => $data['resources']]);
+
+        $resources = [];
+        $canNotSend = [];
+
+        foreach ($data['resources'] as $valueResId) {
+            $resIdFound = false;
+            foreach ($aAttachments as $key => $attachment) {
+                if ($attachment['res_id_master'] == $valueResId) {
+                    // TODO Check Contact;
+                    $resources[$valueResId][] = $attachment;
+                    $resIdFound = true;
+                    unset($aAttachments[$key]);
+                    break;
+                }
+            }
+            if (!$resIdFound) {
+                $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                $canNotSend[$valueResId] = [$resInfo, 'Not attachment to send'];
+            }
+        }
+
+        return $response->withJson([
+            'shippingTemplates' => $aTemplates,
+            'entities'          => $entities,
+            'resources'         => $resources,
+            'canNotSend'        => $canNotSend
+        ]);
     }
 
     public function isDestinationChanging(Request $request, Response $response, array $args)

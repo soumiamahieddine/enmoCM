@@ -56,6 +56,21 @@ abstract class ShippingTemplateModelAbstract
         return $shipping[0];
     }
 
+    public static function getByEntities(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['entities']);
+        ValidatorModel::arrayType($aArgs, ['select', 'entities']);
+
+        $shippings = DatabaseModel::select([
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'  => ['shipping_templates'],
+            'where'  => ['entities @> ?'],
+            'data'   => [json_encode($aArgs['entities'])]
+        ]);
+
+        return $shippings;
+    }
+
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['label', 'description']);
