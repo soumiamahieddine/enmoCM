@@ -690,31 +690,7 @@ abstract class basket_Abstract extends Database
             $res = $stmt->fetchObject();
             $groupId = $res->group_id;
         }
-        $stmt = $db->query(
-            "select result_page from "
-            . GROUPBASKET_TABLE . " where group_id = ? and basket_id = ?",
-            array($groupId,$basketId)
-        );
-        $res = $stmt->fetchObject();
 
-        $basketIdPage = $res->result_page;
-        $tab['id_page'] = $basketIdPage;
-        // Retrieves the basket url (frame and no_frame modes)
-        $basketPathPageNoFrame = $this->retrieve_path_page(
-            $basketIdPage,
-            'no_frame'
-        );
-        $basketPathPageFrame = $this->retrieve_path_page(
-            $basketIdPage,
-            'frame'
-        );
-        $basketPathPageInclude = $this->retrieve_path_page(
-            $basketIdPage,
-            'include'
-        );
-        $tab['page_no_frame'] = $basketPathPageNoFrame;
-        $tab['page_frame'] = $basketPathPageFrame;
-        $tab['page_include'] = $basketPathPageInclude;
         // Gets actions of the basket
         // #TODO : make one method to get all actions : merge _getDefaultAction and _getActionsFromGroupbaket
         $tab['default_action'] = $this->_getDefaultAction(
@@ -781,39 +757,6 @@ abstract class basket_Abstract extends Database
         $basketOwner = $user['user_id'];
         $userAbs = $basketOwner;
 
-        $stmt = $db->query(
-            "select firstname, lastname from " . USERS_TABLE
-            . " where user_id = ? ",
-            array($userAbs)
-        );
-        $res = $stmt->fetchObject();
-        $nameUserAbs = $res->firstname . ' ' . $res->lastname;
-        $tab['name'] .= " (" . $nameUserAbs . ")";
-        $tab['desc'] .= " (" . $nameUserAbs . ")";
-        $tab['id'] .= "_" . $userAbs;
-
-        $group = \Group\models\GroupModel::getById(['select' => ['group_id'], 'id' => $redirectedBasket[0]['group_id']]);
-        $stmt = $db->query("select result_page from groupbasket where group_id = ? and basket_id = ?", array($group['group_id'], $basketId));
-        $res = $stmt->fetchObject();
-
-        $basketIdPage = $res->result_page;
-        $tab['id_page'] = $basketIdPage;
-        // Retrieves the basket url (frame and no_frame modes)
-        $basketPathPageNoFrame = $this->retrieve_path_page(
-            $basketIdPage,
-            'no_frame'
-        );
-        $basketPathPageFrame = $this->retrieve_path_page(
-            $basketIdPage,
-            'frame'
-        );
-        $basketPathPageInclude = $this->retrieve_path_page(
-            $basketIdPage,
-            'include'
-        );
-        $tab['page_no_frame'] = $basketPathPageNoFrame;
-        $tab['page_frame'] = $basketPathPageFrame;
-        $tab['page_include'] = $basketPathPageInclude;
         // Gets actions of the basket
         $tab['default_action'] = $this->_getDefaultAction(
             $basketId,

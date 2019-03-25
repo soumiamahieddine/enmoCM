@@ -373,7 +373,6 @@ CREATE TABLE groupbasket
   id serial NOT NULL,
   group_id character varying(32) NOT NULL,
   basket_id character varying(32) NOT NULL,
-  result_page character varying(255) DEFAULT 'show_list1.php'::character varying,
   list_display json DEFAULT '[]',
   CONSTRAINT groupbasket_pkey PRIMARY KEY (group_id, basket_id),
   CONSTRAINT groupbasket_unique_key UNIQUE (id)
