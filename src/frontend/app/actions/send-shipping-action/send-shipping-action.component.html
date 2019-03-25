@@ -1,9 +1,20 @@
 <h1 mat-dialog-title>{{data.action.label_action}}</h1>
-<div mat-dialog-content>
+<div mat-dialog-content [class.fullWidth]="shippings.length > 0" [class.fullHeight]="shippings.length > 0">
     <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
-    <mat-sidenav-container autosize>
+    <div *ngIf="shippings.length == 0" class="alert-message alert-message-danger mailList" role="alert">
+        Aucun modèle d'envoi disponibles pour ces entités :<br />
+        <div class="mailList">
+            <ul>
+                <li *ngFor="let entity of entitiesList">
+                    {{entity}}
+                </li>
+            </ul>
+        </div>
+        Veuiillez paramétrer un modèle dans <b>Administration</b> > <b>Modèles d'envois postaux</b>
+    </div>
+    <mat-sidenav-container *ngIf="shippings.length > 0" autosize style="height:100%;">
         <mat-sidenav-content style="background: white;">
             <div class="row" style="margin: 0;">
                 <div class="col-md-12">
@@ -15,28 +26,35 @@
                 <div class="col-md-12" style="padding-top: 10px;">
                     <mat-form-field>
                         <mat-label>Canal d'envoi</mat-label>
-                        <mat-select>
+                        <mat-select name="currentShipping" [(ngModel)]="currentShipping" required>
                             <mat-option *ngFor="let shipping of shippings" [value]="shipping">
                                 {{shipping.label}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col-md-12">
-                    <div *ngIf="mailsNotSend.length > 0">
+                <div class="col-md-12" *ngIf="attachList.length > 0">
+                    <div>
+                        <div class="alert-message alert-message-info mailList" role="alert">
+                            <b>{{attachList.length}}</b> document(s) prêt à l'envoi
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" *ngIf="mailsNotSend.length > 0">
+                    <div>
                         <div class="alert-message alert-message-danger mailList" role="alert">
                             <p>
-                                <b>3</b> Courriers non eligibles :
+                                <b>{{mailsNotSend.length}}</b> Courrier(s) non eligible(s) :
                             </p>
                             <ul>
                                 <li *ngFor="let mail of mailsNotSend">
-                                    {{mail.alt_identifier}}
+                                    <b>{{mail.chrono}}</b> : {{mail.reason}}
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div *ngIf="currentShipping != null" class="col-md-12">
                     <div class="formType" style="flex-direction: column;">
                         <div class="formType-title">
                             {{lang.pricesInformations}} *
@@ -46,8 +64,8 @@
                                 * Selon les paramètres définis dans le modèle
                             </div>
                             <mat-form-field appearance="outline">
-                                <input matInput [(ngModel)]="totalPrice" required name="totalPrice" id="totalPrice"
-                                    title="Prix total" type="number" disabled>
+                                <input matInput [(ngModel)]="currentShipping.fee" required name="totalPrice"
+                                    id="totalPrice" title="Prix total" type="number" disabled>
                                 <span matSuffix>&nbsp;€</span>
                             </mat-form-field>
                         </div>
@@ -59,44 +77,16 @@
                 </div>
             </div>
         </mat-sidenav-content>
-        <mat-sidenav mode="side" fixedTopGap="56" position='end' opened style="width: 50%;">
+        <mat-sidenav mode="side" fixedTopGap="56" position='end' [opened]="attachList.length > 0" style="width: 50%;">
             <div class="pjList">
-                <span>
-                    80x80
-                </span>
-                <span>
-                    80x80
-                </span>
-                <span>
-                    80x80
-                </span>
-                <span>
-                    80x80
-                </span>
-                <span>
-                    80x80
-                </span>
-                <span>
-                    80x80
-                </span>
-                <span>
-                    80x80
-                </span>
-                <span>
-                    80x80
-                </span>
-                <span>
-                    80x80
-                </span>
-                <span>
-                    80x80
-                </span>
+                <img title="{{attach.identifier}} : {{attach.title}}" *ngFor="let attach of attachList"
+                    src="../../rest/res/{{attach.res_id_master}}/attachments/{{attach.res_id}}/thumbnail" />
             </div>
         </mat-sidenav>
     </mat-sidenav-container>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button mat-button color="primary" [disabled]="loading"
+    <button mat-raised-button mat-button color="primary" [disabled]="loading || currentShipping == null || attachList.length == 0"
         (click)="onSubmit()">{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>

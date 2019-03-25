@@ -342,7 +342,6 @@ export class ActionsListComponent implements OnInit {
 
     sendShippingAction() {
         const dialogRef = this.dialog.open(SendShippingActionComponent, {
-            width: '900px',
             data: {
                 contextMode: this.contextMode,
                 contextChrono: this.contextMenuTitle,

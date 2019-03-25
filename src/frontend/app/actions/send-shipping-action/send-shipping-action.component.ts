@@ -16,50 +16,59 @@ export class SendShippingActionComponent implements OnInit {
     loading: boolean = false;
 
     shippings: any[] = [{
-        label: 'Envoi Maileva',
+        label: '',
         description: '',
         options: {
-            shapingOptions: ['color'],
-            sendMode: 'fast',
+            shapingOptions: [],
+            sendMode: '',
         },
-        fee: {
-            first_page_price: 0.1,
-            next_page_price: 0.3,
-            postage_price: 2,
-        },
+        fee: 0,
         account: {
             id: '',
             password: ''
         },
-        entities: []
     }];
 
-    mailsNotSend: any[] = [
-        {
-            res_id : 100,
-            alt_identifier : 'MAARCH/2019A/0001',
-            reason : 'noAdress'
-        } 
-    ]
+    currentShipping: any = null;
 
-    totalPrice : number = 10;
+    entitiesList: string [] = [];
+    attachList: any [] = [];
+
+    mailsNotSend: any[] = []
 
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
     
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendShippingActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.loading = true;
+
+        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id + '/checkShippings', {resources : this.data.selectedRes})
+            .subscribe((data: any) => {
+                this.shippings = data.shippingTemplates;
+                this.mailsNotSend = data.canNotSend;
+                this.entitiesList = data.entities;
+                this.attachList = data.resources;
+                this.loading = false;
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+                this.loading = false;
+            });
+    }
 
     onSubmit(): void {
         this.loading = true;
-        /*this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : this.data.selectedRes, note : this.noteEditor.getNoteContent()})
+
+        let realResSelected: string[] = this.attachList.map((e: any) => { return e.res_id_master; });
+
+        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note : this.noteEditor.getNoteContent()})
             .subscribe((data: any) => {
                 this.loading = false;
                 this.dialogRef.close('success');
             }, (err: any) => {
                 this.notify.handleErrors(err);
                 this.loading = false;
-            });*/
+            });
     }
     
 }
