@@ -757,6 +757,19 @@ abstract class basket_Abstract extends Database
         $basketOwner = $user['user_id'];
         $userAbs = $basketOwner;
 
+        $stmt = $db->query(
+            "select firstname, lastname from " . USERS_TABLE
+            . " where user_id = ? ",
+            array($userAbs)
+        );
+        $res = $stmt->fetchObject();
+        $nameUserAbs = $res->firstname . ' ' . $res->lastname;
+        $tab['name'] .= " (" . $nameUserAbs . ")";
+        $tab['desc'] .= " (" . $nameUserAbs . ")";
+        $tab['id'] .= "_" . $userAbs;
+
+        $group = \Group\models\GroupModel::getById(['select' => ['group_id'], 'id' => $redirectedBasket[0]['group_id']]);
+
         // Gets actions of the basket
         $tab['default_action'] = $this->_getDefaultAction(
             $basketId,
