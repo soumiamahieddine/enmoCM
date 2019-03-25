@@ -34,7 +34,7 @@ use SrcCore\models\DatabaseModel;
 use Template\models\TemplateModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
-//use setasign\Fpdi\Tcpdf\Fpdi;
+use setasign\Fpdi\Tcpdf\Fpdi;
 
 class PreProcessActionController
 {
@@ -402,17 +402,17 @@ class PreProcessActionController
                 }
                 if (!$resIdFound) {
                     $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                    $canNotSend[] = [$valueResId, $resInfo['alt_identifier'], 'Not attachment to send'];
+                    $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Not attachment to send'];
                 }
             }
     
-            foreach ($aTemplates as $key => $value) {
-                $infoFee = $value['fee'];
-                PreProcessActionController::calculFee([
-                    'fee'       => $infoFee,
-                    'resources' => $resources
-                ]);
-            }
+            // foreach ($aTemplates as $key => $value) {
+            //     $infoFee = $value['fee'];
+            //     PreProcessActionController::calculFee([
+            //         'fee'       => $infoFee,
+            //         'resources' => $resources
+            //     ]);
+            // }
         }
 
         return $response->withJson([
@@ -448,6 +448,7 @@ class PreProcessActionController
 
     public static function calculFee(array $aArgs)
     {
+        $fee = 0;
         foreach ($aArgs['resources'] as $value) {
             $realId = 0;
             if ($value['res_id'] == 0) {
@@ -461,7 +462,7 @@ class PreProcessActionController
             $docserver           = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment['docserver_id'], 'select' => ['path_template']]);
             $pathToDocument      = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment['path']) . $convertedAttachment['filename'];
 
-            $pdf = new Fpdi('P', 'pt');
+            $pdf = new Fpdi();
             $pageCount = $pdf->setSourceFile($pathToDocument);
         }
 
