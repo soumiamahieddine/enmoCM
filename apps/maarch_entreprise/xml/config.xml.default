@@ -4,7 +4,7 @@
         <databaseserver>localhost</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarch</databasename>
+        <databasename>MaarchCourrier</databasename>
         <databaseuser>maarch</databaseuser>
         <databasepassword>maarch</databasepassword>
         <databasesearchlimit>500</databasesearchlimit>
@@ -55,7 +55,7 @@
         <extensions>
             <table>mlb_coll_ext</table>
         </extensions>
-        <path_to_lucene_index>/var/docservers/indexes/letterbox_coll/</path_to_lucene_index>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/letterbox_coll/</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>
@@ -95,7 +95,7 @@
         <extensions>
             <table/>
         </extensions>
-        <path_to_lucene_index>/var/docservers/indexes/attachments_coll/</path_to_lucene_index>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/attachments_coll/</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>
@@ -119,7 +119,7 @@
         <extensions>
             <table/>
         </extensions>
-        <path_to_lucene_index>/var/docservers/indexes/version_attachments_coll/</path_to_lucene_index>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/version_attachments_coll/</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>

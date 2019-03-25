@@ -1,14 +1,14 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter, ComponentFactoryResolver, ViewContainerRef, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { merge, Observable, of as observableOf, fromEvent, Subscription } from 'rxjs';
+import { merge, Observable, of as observableOf  } from 'rxjs';
 import { NotificationService } from '../notification.service';
-import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet, MatMenu, MatMenuTrigger } from '@angular/material';
+import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet } from '@angular/material';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError } from 'rxjs/operators';
-import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 import { NotesListComponent } from '../notes/notes.component';
@@ -17,10 +17,11 @@ import { DiffusionsListComponent } from '../diffusions/diffusions-list.component
 import { FiltersToolComponent } from './filters/filters-tool.component';
 
 import { ActionsListComponent } from '../actions/actions-list.component';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay } from '@angular/cdk/overlay';
 import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
 import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 import { BasketHomeComponent } from '../basket/basket-home.component';
+import { PanelListComponent } from './panel/panel-list.component';
 
 
 declare function $j(selector: any): any;
@@ -80,6 +81,7 @@ export class BasketListComponent implements OnInit {
     listProperties: any = {};
     currentBasketInfo: any = {};
     currentChrono: string = '';
+    currentMode: string = '';
     defaultAction = {
         id: 19,
         component : 'processAction'
@@ -92,9 +94,7 @@ export class BasketListComponent implements OnInit {
 
     @ViewChild('actionsListContext') actionsList: ActionsListComponent;
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
-    @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
-    @ViewChild('appVisaWorkflow') appVisaWorkflow: VisaWorkflowComponent;
-    @ViewChild('appAvisWorkflow') appAvisWorkflow: AvisWorkflowComponent;
+    @ViewChild('appPanelList') appPanelList: PanelListComponent;
     @ViewChild('basketHome') basketHome: BasketHomeComponent;
 
     currentSelectedChrono: string = '';
@@ -139,6 +139,7 @@ export class BasketListComponent implements OnInit {
             };
             this.filtersListService.filterMode = false;
             this.selectedRes = [];
+            this.sidenavRight.close();
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(null);
 
@@ -205,11 +206,25 @@ export class BasketListComponent implements OnInit {
         location.href = "index.php?page=details&dir=indexing_searching&id=" + row.res_id;
     }
 
-    openBottomSheet(row: any): void {
-        this.bottomSheet.open(NotesListComponent, {
-            data: { resId: row.res_id, chrono: row.alt_identifier },
-            panelClass: 'note-width-bottom-sheet'
-        });
+    togglePanel(mode: string, row: any) {
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        row.checked = true;
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
+
+        if(this.currentResource.res_id == row.res_id && this.sidenavRight.opened && this.currentMode == mode) {
+            this.sidenavRight.close();
+        } else {
+            this.currentMode = mode;
+            this.currentResource = row;
+            this.appPanelList.loadComponent(mode, row);
+            this.sidenavRight.open();
+        }
+    }
+
+    refreshBadgeNotes(nb: number) {
+        this.currentResource.countNotes = nb;
     }
 
     openAttachSheet(row: any): void {
@@ -218,34 +233,16 @@ export class BasketListComponent implements OnInit {
         });
     }
 
-    openDiffusionSheet(row: any): void {
-        if(this.injectDatasParam.resId == row.res_id && this.sidenavRight.opened) {
-            this.sidenavRight.close();
-        } else {
-            this.selectedDiffusionTab = 0;
-            this.currentResource = row;
-            this.injectDatasParam.resId = row.res_id;
-            this.appDiffusionsList.loadListinstance(row.res_id);
-            this.appVisaWorkflow.loadWorkflow(row.res_id);
-            this.appAvisWorkflow.loadWorkflow(row.res_id);
-            this.sidenavRight.open();
-        }
-
-        /*this.bottomSheet.open(DiffusionsListComponent, {
-            data: { resId: row.res_id, chrono: row.alt_identifier },
-        });*/
-    }
-
-
     refreshDao() {
         this.paginator.pageIndex = this.listProperties.page;
         this.filtersChange.emit();
     }
 
     refreshDaoAfterAction() {
+        this.sidenavRight.close();
         this.refreshDao();
         this.basketHome.refreshBasketHome();
-        const e:any = {checkd : false};
+        const e:any = {checked : false};
         this.toggleAllRes(e); 
     }
 

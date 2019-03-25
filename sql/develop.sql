@@ -9,6 +9,7 @@ UPDATE parameters SET param_value_string = '19.04.1' WHERE id = 'database_versio
 
 DROP VIEW IF EXISTS res_view_letterbox;
 DROP VIEW IF EXISTS view_contacts;
+DROP VIEW IF EXISTS res_view_attachments;
 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
 ALTER TABLE res_letterbox ADD COLUMN external_signatory_book_id integer;
@@ -80,18 +81,18 @@ CONSTRAINT emails_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
-/* SHIPPINGS */
-DROP TABLE IF EXISTS shippings;
-CREATE TABLE shippings
+/* SHIPPING TEMPLATES */
+DROP TABLE IF EXISTS shipping_templates;
+CREATE TABLE shipping_templates
 (
 id serial NOT NULL,
 label character varying(64) NOT NULL,
 description character varying(255) NOT NULL,
 options json DEFAULT '{}',
 fee json DEFAULT '{}',
-entities json DEFAULT '{}',
+entities jsonb DEFAULT '{}',
 account json DEFAULT '{}',
-CONSTRAINT shippings_pkey PRIMARY KEY (id)
+CONSTRAINT shipping_templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
@@ -152,9 +153,15 @@ UPDATE baskets SET basket_clause = regexp_replace(basket_clause,'recommendation_
 UPDATE baskets SET basket_res_order = regexp_replace(basket_res_order,'recommendation_limit_date','opinion_limit_date','g');
 
 /* PARAM LIST DISPLAY */
-UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_attachments' OR result_page = 'list_copies';
-UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]' WHERE result_page = 'list_with_avis';
-UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getVisaWorkflow","cssClasses":[],"icon":"fa-list-ol"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_signatory';
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'groupbasket') AND attname = 'result_page') THEN
+    UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_attachments' OR result_page = 'list_copies';
+    UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]' WHERE result_page = 'list_with_avis';
+    UPDATE groupbasket SET list_display = '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getVisaWorkflow","cssClasses":[],"icon":"fa-list-ol"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]' WHERE result_page = 'list_with_signatory';
+
+    ALTER TABLE groupbasket DROP COLUMN IF EXISTS result_page;
+  END IF;
+END $$;
 
 /* ACTIONS */
 ALTER TABLE actions DROP COLUMN IF EXISTS component;
@@ -169,6 +176,12 @@ UPDATE actions SET component = 'disabledBasketPersistenceAction' WHERE action_pa
 UPDATE actions SET component = 'resMarkAsReadAction' WHERE action_page = 'mark_as_read';
 UPDATE actions SET component = 'signatureBookAction' WHERE action_page = 'visa_mail';
 UPDATE actions SET component = 'redirectAction' WHERE action_page = 'redirect';
+
+/*SHIPPING*/
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS in_send_attach;
+ALTER TABLE res_attachments ADD COLUMN in_send_attach boolean NOT NULL DEFAULT false;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS in_send_attach;
+ALTER TABLE res_version_attachments ADD COLUMN in_send_attach boolean NOT NULL DEFAULT false;
 
 /* Acknowledgement Receipts */
 DROP TABLE IF EXISTS acknowledgement_receipts;
@@ -238,7 +251,6 @@ DO $$ BEGIN
     ALTER TABLE contact_addresses DROP COLUMN IF EXISTS external_contact_id;
   END IF;
 END$$;
-
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
@@ -427,3 +439,17 @@ CREATE OR REPLACE VIEW view_contacts AS
    RIGHT JOIN contact_addresses ca ON c.contact_id = ca.contact_id
    LEFT JOIN contact_purposes cp ON ca.contact_purpose_id = cp.id
    LEFT JOIN contact_types ct ON c.contact_type = ct.id;
+
+DROP VIEW IF EXISTS res_view_attachments;
+CREATE OR REPLACE VIEW res_view_attachments AS
+  SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, in_send_attach, signatory_user_serial_id
+  FROM res_version_attachments
+  UNION ALL
+  SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, in_send_attach, signatory_user_serial_id
+  FROM res_attachments;

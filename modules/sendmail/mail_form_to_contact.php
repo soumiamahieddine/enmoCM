@@ -39,7 +39,6 @@ require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
     .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
     .'class_users.php';
 
-require_once 'modules/sendmail/sendmail_tables.php';
 require_once 'modules'.DIRECTORY_SEPARATOR.'sendmail'.DIRECTORY_SEPARATOR
     .'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
 require_once 'modules/sendmail/class/class_email_signatures.php';

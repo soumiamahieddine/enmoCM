@@ -130,11 +130,21 @@ class ListInstanceController
                 'data'  => [$ListInstanceByRes['resId'], $ListInstanceByRes['listInstances'][0]['difflist_type']]
             ]);
 
+            $recipientFound = false;
+            foreach ($ListInstanceByRes['listInstances'] as $instance) {
+                if ($instance['item_mode'] == 'dest') {
+                    $recipientFound = true;
+                }
+            }
+            if (!$recipientFound) {
+                return ['errors' => 'Dest is missing', 'code' => 403];
+            }
+
             foreach ($ListInstanceByRes['listInstances'] as $instance) {
                 $listControl = ['item_id', 'item_type', 'item_mode', 'difflist_type'];
                 foreach ($listControl as $itemControl) {
                     if (empty($instance[$itemControl])) {
-                        return ['errors' => $itemControl . ' are empty', 'code' => 400];
+                        return ['errors' => "ListInstance {$itemControl} is not set or empty", 'code' => 400];
                     }
                 }
 

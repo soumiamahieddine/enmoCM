@@ -1,13 +1,16 @@
-.buttonArrowCheckboxTool {
-    height: 20px;
-    width: 20px;
-    position: absolute;
-    left: 25px;
-    top: 7px;
+.mat-icon {
+    height: auto;
+}
 
-    .mat-icon {
-        height: 20px;
-        width: 20px;
-        margin-top: -30px;
+.mat-stroked-button {
+    border-radius: 20px;
+    border-color: #135F7F;
+    color: #135F7F;
+}
+
+::ng-deep.actionListMenu {
+    .mat-menu-content {
+        padding-top: 0;
+        padding-bottom: 0;
     }
 }

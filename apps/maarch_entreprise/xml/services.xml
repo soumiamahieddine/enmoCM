@@ -377,8 +377,8 @@
   </SERVICE>
   <SERVICE>
     <id>print_doc_details_from_list</id>
-    <name>_PRINT_DOC_DETAILS_FROM_LIST</name>
-    <comment>_PRINT_DOC_DETAILS_FROM_LIST</comment>
+    <name>_PRINT_DOC_DETAILS_FROM_SEARCH</name>
+    <comment>_PRINT_DOC_DETAILS_FROM_SEARCH</comment>
     <servicepage>print.php</servicepage>
     <servicetype>use</servicetype>
     <system_service>false</system_service>

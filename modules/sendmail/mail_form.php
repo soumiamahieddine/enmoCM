@@ -1,22 +1,10 @@
 <?php
-/*
+
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 *
-*    Copyright 2013 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -30,6 +18,7 @@
  * @version  $Revision$
  * @ingroup  sendmail
  */
+
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php';
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
 require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
@@ -39,19 +28,18 @@ require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
     .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
     .'class_users.php';
 
-require_once 'modules/sendmail/sendmail_tables.php';
 require_once 'modules'.DIRECTORY_SEPARATOR.'sendmail'.DIRECTORY_SEPARATOR
     .'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
 require_once 'modules/sendmail/class/class_email_signatures.php';
 require_once 'modules/sendmail/Controllers/ReadMessageExchangeController.php';
 
-$core_tools = new core_tools();
-$request = new request();
-$sec = new security();
-$is = new indexing_searching_app();
-$users_tools = new class_users();
+$core_tools     = new core_tools();
+$request        = new request();
+$sec            = new security();
+$is             = new indexing_searching_app();
+$users_tools    = new class_users();
 $sendmail_tools = new sendmail();
-$db = new Database();
+$db             = new Database();
 
 $parameters = '';
 
@@ -72,8 +60,8 @@ if (isset($_REQUEST['identifier']) && !empty($_REQUEST['identifier'])) {
 if (isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) {
     $collId = trim($_REQUEST['coll_id']);
     $parameters .= '&coll_id='.$_REQUEST['coll_id'];
-    $view = $sec->retrieve_view_from_coll_id($collId);
-    $table = $sec->retrieve_table_from_coll($collId);
+    $view   = $sec->retrieve_view_from_coll_id($collId);
+    $table  = $sec->retrieve_table_from_coll($collId);
 }
 
 //Keep some origin parameters
@@ -131,12 +119,13 @@ if (empty($userEntities)) {
     $userEntities = [''];
 }
 
-$userTemplates = \SrcCore\models\DatabaseModel::select(['select' => ['distinct t.template_id', 't.template_label', 't.template_content'],
-                                                    'table' => ['templates t', 'templates_association ta'],
-                                                    'left_join' => ['t.template_id = ta.template_id'],
-                                                    'where' => ['t.template_target = \'sendmail\'', '(ta.value_field is null or value_field in (?))'],
-                                                    'data' => [$userEntities],
-                                                ]);
+$userTemplates = \SrcCore\models\DatabaseModel::select([
+    'select'    => ['distinct t.template_id', 't.template_label', 't.template_content'],
+    'table'     => ['templates t', 'templates_association ta'],
+    'left_join' => ['t.template_id = ta.template_id'],
+    'where'     => ['t.template_target = \'sendmail\'', '(ta.value_field is null or value_field in (?))'],
+    'data'      => [$userEntities],
+]);
 
 //ADD
 if ($mode == 'add') {
@@ -232,11 +221,11 @@ if ($mode == 'add') {
     $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span> <label>'
         ._SEND_TO_SHORT.'</label></td>';
 
-    $exp_user_id = null;
-    $dest_user_id = null;
-    $exp_contact_id = null;
+    $exp_user_id     = null;
+    $dest_user_id    = null;
+    $exp_contact_id  = null;
     $dest_contact_id = null;
-    $db = new Database();
+    $db              = new Database();
     $stmt = $db->query('SELECT res_id, category_id, address_id, exp_user_id, dest_user_id, admission_date, exp_contact_id, dest_contact_id
                 FROM mlb_coll_ext 
                 WHERE (( exp_contact_id is not null 
@@ -980,7 +969,7 @@ if ($mode == 'add') {
             $content .= '<hr style="margin-top:5px;margin-bottom:2px;" />';
             $content .= '<div align="center">';
 
-            if ($emailArray['status'] != 'S') {
+            if ($emailArray['status'] != 'SENT') {
                 //Send button
                 $content .= ' <input type="button" name="valid" value="&nbsp;'._SEND_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
@@ -1126,13 +1115,13 @@ if ($mode == 'add') {
                 $content .= '</div>';
                 for ($i = 0; $i < count($joined_files); ++$i) {
                     //Get data
-                    $id = $joined_files[$i]['id'];
+                    $id          = $joined_files[$i]['id'];
                     $description = $joined_files[$i]['label'];
-                    $format = $joined_files[$i]['format'];
-                    $format = $joined_files[$i]['format'];
-                    $mime_type = $is->get_mime_type($joined_files[$i]['format']);
-                    $att_type = $joined_files[$i]['format'];
-                    $filesize = $joined_files[$i]['filesize'] / 1024;
+                    $format      = $joined_files[$i]['format'];
+                    $format      = $joined_files[$i]['format'];
+                    $mime_type   = $is->get_mime_type($joined_files[$i]['format']);
+                    $att_type    = $joined_files[$i]['format'];
+                    $filesize    = $joined_files[$i]['filesize'] / 1024;
                     ($filesize > 1) ? $filesize = ceil($filesize).' Ko' : $filesize = round($filesize, 2).' Octets';
 
                     //Show data

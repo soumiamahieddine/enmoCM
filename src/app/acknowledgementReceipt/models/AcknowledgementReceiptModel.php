@@ -54,22 +54,6 @@ class AcknowledgementReceiptModel
     public static function getByResIds(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['resIds']);
-        ValidatorModel::arrayType($aArgs, ['select', 'orderBy', 'resIds']);
-
-        $aTemplates = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['acknowledgement_receipts'],
-            'where'     => ['res_id in (?)'],
-            'data'      => $aArgs['resIds'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
-        ]);
-
-        return $aTemplates;
-    }
-
-    public static function getSveStartDate(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['resIds']);
         ValidatorModel::arrayType($aArgs, ['select', 'orderBy', 'resIds', 'groupBy']);
 
         $aTemplates = DatabaseModel::select([
@@ -77,6 +61,7 @@ class AcknowledgementReceiptModel
             'table'     => ['acknowledgement_receipts'],
             'where'     => ['res_id in (?)'],
             'data'      => $aArgs['resIds'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
             'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy']
         ]);
 

@@ -8,7 +8,7 @@
  */
 
 /**
-* @brief   Shipping Model Abstract
+* @brief   Shipping Template Model Abstract
 * @author  dev@maarch.org
 */
 
@@ -17,7 +17,7 @@ namespace Shipping\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-abstract class ShippingModelAbstract
+abstract class ShippingTemplateModelAbstract
 {
     public static function get(array $aArgs = [])
     {
@@ -26,7 +26,7 @@ abstract class ShippingModelAbstract
 
         $shippings = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['shippings'],
+            'table'     => ['shipping_templates'],
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
@@ -44,7 +44,7 @@ abstract class ShippingModelAbstract
 
         $shipping = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'  => ['shippings'],
+            'table'  => ['shipping_templates'],
             'where'  => ['id = ?'],
             'data'   => [$aArgs['id']]
         ]);
@@ -56,14 +56,39 @@ abstract class ShippingModelAbstract
         return $shipping[0];
     }
 
+    public static function getByEntities(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['entities']);
+        ValidatorModel::arrayType($aArgs, ['select', 'entities']);
+
+        $shippings = DatabaseModel::select([
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'  => ['shipping_templates'],
+            'where'  => ['entities @> ?'],
+            'data'   => [json_encode($aArgs['entities'])]
+        ]);
+
+        return $shippings;
+    }
+
     public static function create(array $aArgs)
     {
-        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'shippings_id_seq']);
+        ValidatorModel::notEmpty($aArgs, ['label', 'description']);
+        ValidatorModel::stringType($aArgs, ['label', 'description', 'options', 'fee', 'entities', 'account']);
 
-        $aArgs['id'] = $nextSequenceId;
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'shipping_templates_id_seq']);
+
         DatabaseModel::insert([
-            'table'         => 'shippings',
-            'columnsValues' => $aArgs
+            'table'         => 'shipping_templates',
+            'columnsValues' => [
+                'id'             => $nextSequenceId,
+                'label'          => $aArgs['label'],
+                'description'    => $aArgs['description'],
+                'options'        => $aArgs['options'],
+                'fee'            => $aArgs['fee'],
+                'entities'       => $aArgs['entities'],
+                'account'        => $aArgs['account']
+            ]
         ]);
 
         return $nextSequenceId;
@@ -71,11 +96,12 @@ abstract class ShippingModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'description']);
         ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['label', 'description', 'options', 'fee', 'entities', 'account']);
         
         DatabaseModel::update([
-            'table'     => 'shippings',
+            'table'     => 'shipping_templates',
             'set'       => [
                 'label'         => $aArgs['label'],
                 'description'   => $aArgs['description'],
@@ -97,7 +123,7 @@ abstract class ShippingModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
 
         DatabaseModel::delete([
-            'table' => 'shippings',
+            'table' => 'shipping_templates',
             'where' => ['id = ?'],
             'data'  => [$aArgs['id']]
         ]);

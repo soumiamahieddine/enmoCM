@@ -225,7 +225,7 @@ define('_LOAD_STATUSES_SESSION', 'Load Status session');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Indexation status configuration');
 define('_ADD_LINKS', 'Add connection');
 define('_PRINT_DETAILS_SERVICE', 'Print the liaison sheet from the detail sheet');
-define('_PRINT_DOC_DETAILS_FROM_LIST', 'Print the liaison sheets from the results lists');
+define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Print the liaison sheets from the search');
 define('_ATTACHMENTS_COMMENT', 'Attachments management');
 define('_BASKETS_COMMENT', 'Baskets');
 define('_CASES_COMMENT', 'Cases');
@@ -474,3 +474,5 @@ define("_SHIPPING_DELETED", "Shipping deleted");
 
 define("_SHIPPINGS_ADMIN", "Shippings admin");
 define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva");
+
+define("_SEND_SHIPPING", "Send a mailpiece");

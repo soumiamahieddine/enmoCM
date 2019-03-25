@@ -224,7 +224,7 @@ define('_LOAD_STATUSES_SESSION', 'Laden van statussen in sessie');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Instelling van de indexeringsstatussen');
 define('_ADD_LINKS', 'Verbindingen toevoegen');
 define('_PRINT_DETAILS_SERVICE', 'De verbindingsfiche vanuit de detailfiche afdrukken');
-define('_PRINT_DOC_DETAILS_FROM_LIST', 'De verbindingsfiche vanuit de resultatenlijsten afdrukken');
+define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'De verbindingsfiche vanuit de zoekopdracht afdrukken');
 define('_ATTACHMENTS_COMMENT', 'Beheer van de bijlagen');
 define('_BASKETS_COMMENT', 'Bakjes');
 define('_CASES_COMMENT', 'Zaken');
@@ -476,3 +476,5 @@ define("_SHIPPING_DELETED", "Shipping deleted_TO_TRANSLATE");
 
 define("_SHIPPINGS_ADMIN", "Shippings admin_TO_TRANSLATE");
 define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva_TO_TRANSLATE");
+
+define("_SEND_SHIPPING", "Send a mailpiece_TO_TRANSLATE");

@@ -36,9 +36,12 @@ import { UpdateDepartureDateActionComponent }   from './actions/update-departure
 import { ProcessActionComponent }               from './actions/process-action/process-action.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
+import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
+import { ToolsListComponent }                 from './list/tools/tools-list.component';
+import { PanelListComponent }                 from './list/panel/panel-list.component';
 import { SummarySheetComponent }                from './list/summarySheet/summary-sheet.component';
 import { ExportComponent }                      from './list/export/export.component';
 
@@ -79,6 +82,8 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         AvisWorkflowComponent,
         FiltersListComponent,
         FiltersToolComponent,
+        ToolsListComponent,
+        PanelListComponent,
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,
@@ -93,13 +98,13 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         ProcessActionComponent,
         ViewDocActionComponent,
         RedirectActionComponent,
+        SendShippingActionComponent,
         ActionsListComponent,
     ],
     entryComponents: [
         CustomSnackbarComponent,
         ConfirmModalComponent,
         InfoChangePasswordModalComponent,
-        NotesListComponent,
         AttachmentsListComponent,
         SummarySheetComponent,
         ExportComponent,
@@ -114,6 +119,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         UpdateDepartureDateActionComponent,
         ProcessActionComponent,
         RedirectActionComponent,
+        SendShippingActionComponent,
         ViewDocActionComponent
     ],
     providers: [ ShortcutMenuService, HeaderService, FiltersListService ],

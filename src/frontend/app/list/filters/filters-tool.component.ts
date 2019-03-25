@@ -1,15 +1,12 @@
-import { Component, OnInit, ViewEncapsulation, Input, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { MatSidenav, MatMenu, MatMenuTrigger, MatAutocompleteSelectedEvent, MatInput, MatAutocompleteTrigger, MatDialog } from '@angular/material';
+import { MatSidenav, MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatDialog } from '@angular/material';
 import { FiltersListService } from '../../../service/filtersList.service';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
-import { ExportComponent } from '../export/export.component';
-import { SummarySheetComponent } from '../summarySheet/summary-sheet.component';
-import { ActionsListComponent } from '../../actions/actions-list.component';
 
 
 declare function $j(selector: any): any;
@@ -23,7 +20,6 @@ export interface StateGroup {
     selector: 'app-filters-tool',
     templateUrl: 'filters-tool.component.html',
     styleUrls: ['filters-tool.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     providers: [LatinisePipe],
 })
 export class FiltersToolComponent implements OnInit {
@@ -60,8 +56,6 @@ export class FiltersToolComponent implements OnInit {
 
     isLoading: boolean = false;
 
-    @ViewChild('actionsList') actionsList: ActionsListComponent;
-    
     @Input('listProperties') listProperties: any;
     @Input('currentBasketInfo') currentBasketInfo: any;
 
@@ -281,34 +275,5 @@ export class FiltersToolComponent implements OnInit {
                 startWith(''),
                 map((value: any) => this._filterGroup(value))
             );
-    }
-
-    openListAdmin(): void {
-        this.dialog.open(ExportComponent, {
-            width: '800px',
-            data: {
-                ownerId: this.currentBasketInfo.ownerId,
-                groupId: this.currentBasketInfo.groupId,
-                basketId: this.currentBasketInfo.basketId,
-                selectedRes: this.selectedRes
-            }
-        });
-    }
-
-    openSummarySheet(): void {
-        this.dialog.open(SummarySheetComponent, {
-            panelClass: 'summary-sheet-dialog',
-            width: '800px',
-            data: {
-                ownerId: this.currentBasketInfo.ownerId,
-                groupId: this.currentBasketInfo.groupId,
-                basketId: this.currentBasketInfo.basketId,
-                selectedRes: this.selectedRes
-            }
-        });
-    }
-
-    toggleAll(e: any) {
-        this.toggleAllRes.emit(e);
     }
 }

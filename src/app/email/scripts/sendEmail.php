@@ -53,5 +53,7 @@ class EmailScript
         if (!empty($args['options']['acknowledgementReceiptId']) && !empty($isSent['success'])) {
             AcknowledgementReceiptModel::update(['set' => ['send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$args['options']['acknowledgementReceiptId']]]);
         }
+
+        return $isSent;
     }
 }

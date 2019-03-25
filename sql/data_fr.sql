@@ -898,58 +898,58 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 -- Create GROUPBASKET
 TRUNCATE TABLE groupbasket;
 DELETE FROM groupbasket WHERE basket_id = 'QualificationBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', 'QualificationBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('COURRIER', 'QualificationBasket');
 DELETE FROM groupbasket WHERE basket_id = 'IndexingBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', 'IndexingBasket', 'redirect_to_action');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'IndexingBasket', 'redirect_to_action');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'IndexingBasket', 'redirect_to_action');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('COURRIER', 'IndexingBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'IndexingBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'IndexingBasket');
 DELETE FROM groupbasket WHERE basket_id = 'CopyMailBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'CopyMailBasket', 'list_copies');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'CopyMailBasket', 'list_copies');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'CopyMailBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'CopyMailBasket');
 DELETE FROM groupbasket WHERE basket_id = 'RetourCourrier';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', 'RetourCourrier', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('COURRIER', 'RetourCourrier');
 DELETE FROM groupbasket WHERE basket_id = 'DdeAvisBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'DdeAvisBasket', 'list_with_avis');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'DdeAvisBasket', 'list_with_avis');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ELU', 'DdeAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'DdeAvisBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'DdeAvisBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('ELU', 'DdeAvisBasket');
 DELETE FROM groupbasket WHERE basket_id = 'SupAvisBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'SupAvisBasket', 'list_with_avis');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'SupAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'SupAvisBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'SupAvisBasket');
 DELETE FROM groupbasket WHERE basket_id = 'RetAvisBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'RetAvisBasket', 'list_with_avis');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'RetAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'RetAvisBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'RetAvisBasket');
 DELETE FROM groupbasket WHERE basket_id = 'ValidationBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESP_COURRIER', 'ValidationBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESP_COURRIER', 'ValidationBasket');
 DELETE FROM groupbasket WHERE basket_id = 'InValidationBasket';
 DELETE FROM groupbasket WHERE basket_id = 'MyBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'MyBasket', 'list_with_attachments');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'MyBasket', 'list_with_attachments');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ELU', 'MyBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'MyBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'MyBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('ELU', 'MyBasket');
 DELETE FROM groupbasket WHERE basket_id = 'LateMailBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'LateMailBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'LateMailBasket');
 DELETE FROM groupbasket WHERE basket_id = 'DepartmentBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'DepartmentBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'DepartmentBasket');
 DELETE FROM groupbasket WHERE basket_id = 'ParafBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'ParafBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'ParafBasket');
 DELETE FROM groupbasket WHERE basket_id = 'SuiviParafBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'SuiviParafBasket', 'list_with_attachments');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'SuiviParafBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'SuiviParafBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'SuiviParafBasket');
 DELETE FROM groupbasket WHERE basket_id = 'EsigARBasket';
 DELETE FROM groupbasket WHERE basket_id = 'EenvBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'EenvBasket', 'list_with_attachments');
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'EenvBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'EenvBasket');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'EenvBasket');
 DELETE FROM groupbasket WHERE basket_id = 'EenvARBasket';
 DELETE FROM groupbasket WHERE basket_id = 'ToArcBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ARCHIVISTE', 'ToArcBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('ARCHIVISTE', 'ToArcBasket');
 DELETE FROM groupbasket WHERE basket_id = 'SentArcBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ARCHIVISTE', 'SentArcBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('ARCHIVISTE', 'SentArcBasket');
 DELETE FROM groupbasket WHERE basket_id = 'AckArcBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ARCHIVISTE', 'AckArcBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('ARCHIVISTE', 'AckArcBasket');
 DELETE FROM groupbasket WHERE basket_id = 'ReconcilBasket';
 DELETE FROM groupbasket WHERE basket_id = 'NumericBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', 'NumericBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('COURRIER', 'NumericBasket');
 DELETE FROM groupbasket WHERE basket_id = 'SendToSignatoryBook';
-INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'SendToSignatoryBook', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'SendToSignatoryBook');
 
 -- Create Security
 TRUNCATE TABLE security;
@@ -1065,6 +1065,12 @@ TRUNCATE TABLE contacts_v2;
 INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (1, 100, 'Y', 'MAARCH', '', '', '', '', '', 'Editeur du logiciel libre Maarch', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', 'Y');
 INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (2, 102, 'Y', 'Préfecture de Maarch Les Bains', '', '', '', '', '', 'Préfecture de Maarch Les Bains', 'bblier', 'VILLE', '2018-04-18 12:43:54.97424', '2018-04-18 16:28:38.498185', 'Y');
 INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (3, 100, 'Y', 'ACME', '', '', '', '', '', 'Archivage et Conservation des Mémoires Electroniques', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', 'Y');
+INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (4, 106, 'N', '', '', 'Bernard', 'PASCONTENT', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
+INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (5, 106, 'N', '', '', 'Jacques', 'DUPONT', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
+INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (6, 106, 'N', '', '', 'Pierre', 'BRUNEL', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
+INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (7, 106, 'N', '', '', 'Eric', 'MACKIN', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
+INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (8, 106, 'N', '', '', 'Martin Donald', 'PELLE', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
+
 Select setval('contact_v2_id_seq', (select max(contact_id)+1 from contacts_v2), false);
 -- Default adresses
 TRUNCATE TABLE contact_addresses;
@@ -1073,6 +1079,12 @@ INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, 
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (3, 1, 1, '', 'Laurent', 'GIOVANNONI', 'title1', 'Directeur Général Adjoint', NULL, '11', 'Boulevard du Sud-Est', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'laurent.giovannoni@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled, external_id) VALUES (4, 2, 1, '', 'Nicolas', 'MARTIN', 'title1', '', NULL, '13', 'RUE LA PREFECTURE', '', 'MAARCH LES BAINS', '', '', '', '', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y', '{"m2m":"org_987654321_DGS_SF"}');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (5, 3, 1, '', 'Brigitte', 'BERGER', 'title1', 'Directrice Générale', NULL, '25', 'PLACE DES MIMOSAS', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'info@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (6, 4, 3, '', '', '', '', '', NULL, '25', 'route de Pampelone', '', 'MAARCH-LES-BAINS', '99000', '', '06 08 09 07 55', 'info@maarch.org', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (7, 5, 3, '', '', '', '', '', NULL, '1', 'rue du Peuplier', '', 'NANTERRE', '92000', '', '', 'info@maarch.org', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (8, 6, 3, '', '', '', '', '', NULL, '5', 'allée des Pommiers', '', 'MAARCH-LES-BAINS', '99000', '', '06 08 09 07 55', 'info@maarch.org', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (9, 7, 3, '', '', '', '', '', NULL, '13', 'rue du Square Carré', '', 'MAARCH-LES-BAINS', '99000', '', '06 11 12 13 14', 'info@maarch.org', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (10, 1, 1, '', 'Carole', 'COTIN', 'title1', 'Directrice Administrative et Qualité', NULL, '11', 'Boulevard du Sud-Est', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'carole.cotin@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (11, 8, 3, '', '', '', '', '', NULL, '17', 'rue de la Demande', '', 'MAARCH-LES-BAINS', '99000', '', '01 23 24 21 22', 'info@maarch.org', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
 Select setval('contact_addresses_id_seq', (select max(id)+1 from contact_addresses), false);
 -- Default contact_communication
 TRUNCATE TABLE contact_communication;
@@ -1294,6 +1306,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (505, 'closing_date IS NULL', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (506, 'closing_date IS NOT NULL', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (400, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (527, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'RESPONSABLE', 'CopyMailBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (113, '', 'RESPONSABLE', 'CopyMailBasket', 'Y', 'N', 'N');
@@ -1681,6 +1694,16 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (27, 'Réponse avec transmission LO', 'Réponse avec transmission LO', '', 'OFFICE', '0000#', 'rep_transmission.odt', 'ODT: rep_transmission', 'letterbox_attachment', 'attachments', 'response_project');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (28, 'Transmission LO', 'Transmission LO', '', 'OFFICE', '0000#', 'transmission.odt', 'ODT: transmission', 'letterbox_attachment', 'attachments', 'transmission');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (29, 'Courrier invitation PME LO', 'Courrier invitation PME LO', '', 'OFFICE', '0000#', 'invitation.odt', 'ODT: invitation', 'letterbox_attachment', 'attachments', 'outgoing_mail');
+
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (30, 'AR dérogation LO sans carré', 'AR derogation carte scolaire sans carré', '', 'OFFICE', '0000#', 'ar_derogation_sans_carre.odt', 'ODT: ARderogation', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (31, 'Réponse crèche LO sans carré', 'Réponse à une demande de place en crèche sans carré', '', 'OFFICE', '0000#', 'rep_creche_sans_carre.odt', 'ODT: Repddeplacecreche', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (32, 'Réponse générique LO sans carré', 'Modèle de réponse générique sans carré', '', 'OFFICE', '0000#', 'rep_standard_sans_carre.odt', 'ODT: standard_sign', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (33, 'Réponse générique MS sans carré', 'Modèle de réponse MS Office sans carré', '', 'OFFICE', '0000#', 'rep_standard_sans_carre.docx', 'DOCX: standard_sign', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (34, 'AR SVA LO sans carré', 'AR SVA LO sans carré', '', 'OFFICE', '0000#', 'ar_sva_sans_carre.odt', 'ODT: ar_sva', 'letterbox_attachment', 'attachments', 'sva');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (35, 'AR SVR LO sans carré', 'AR SVR LO sans carré', '', 'OFFICE', '0000#', 'ar_svr_sans_carre.odt', 'ODT: ar_svr', 'letterbox_attachment', 'attachments', 'svr');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (36, 'Réponse avec transmission LO sans carré', 'Réponse avec transmission LO sans carré', '', 'OFFICE', '0000#', 'rep_transmission_sans_carre.odt', 'ODT: rep_transmission', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (37, 'Transmission LO sans carré', 'Transmission LO sans carré', '', 'OFFICE', '0000#', 'transmission_sans_carre.odt', 'ODT: transmission', 'letterbox_attachment', 'attachments', 'transmission');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (38, 'Courrier invitation PME LO sans carré', 'Courrier invitation PME LO sans carré', '', 'OFFICE', '0000#', 'invitation_sans_carre.odt', 'ODT: invitation', 'letterbox_attachment', 'attachments', 'outgoing_mail');
 ------------
 --TEMPLATES réponses mail SVE
 --
@@ -1813,9 +1836,11 @@ INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
 -----
 -- Contacts completion ratio
 -----
+TRUNCATE TABLE contacts_filling;
 INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_threshold) VALUES (true, '["address_street","address_postal_code","address_town","lastname","firstname","phone","email"]', 33, 66);
 
 /* Configurations */
+TRUNCATE TABLE configurations;
 INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type" : "smtp", "host" : "smtp.gmail.com", "port" : 465, "user" : "", "password" : "", "auth" : true, "secure" : "ssl", "from" : "notifications@maarch.org", "charset" : "utf-8"}');
 
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise

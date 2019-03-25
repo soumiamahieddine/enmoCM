@@ -275,6 +275,7 @@ class CurlModel
             $opts[CURLOPT_HTTPHEADER][] = 'Authorization: Bearer ' . $args['bearerAuth']['token'];
         }
 
+        //QueryParams
         if (!empty($args['queryParams'])) {
             $args['url'] .= '?';
             $i = 0;
@@ -286,50 +287,67 @@ class CurlModel
                 ++$i;
             }
         }
-        $opts[CURLOPT_URL] = $args['url'];
 
-
+        //Body
         if (!empty($args['body'])) {
             $opts[CURLOPT_POSTFIELDS] = json_encode($args['body']);
         }
+        //MultipartBody
+        if (!empty($args['multipartBody'])) {
+            $boundary = uniqid();
+            $postData = CurlModel::createMultipartFormData(['boundary' => $boundary, 'body' => $args['multipartBody']]);
+            $opts[CURLOPT_HTTPHEADER][] = "Content-Type: multipart/form-data; boundary=-------------{$boundary}";
+            $opts[CURLOPT_POSTFIELDS] = $postData;
+        }
+        //Method
         if ($args['method'] == 'POST') {
             $opts[CURLOPT_POST] = true;
         } elseif ($args['method'] == 'PUT' || $args['method'] == 'PATCH' || $args['method'] == 'DELETE') {
             $opts[CURLOPT_CUSTOMREQUEST] = $args['method'];
         }
 
+        //Url
+        $opts[CURLOPT_URL] = $args['url'];
+
         $curl = curl_init();
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
+
         $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $error = curl_error($curl);
+        $errors = curl_error($curl);
         curl_close($curl);
 
         LogsController::add([
             'isTech'    => true,
             'moduleId'  => 'curl',
             'level'     => 'DEBUG',
-            'tableName' => '',
+            'tableName' => 'curl',
             'recordId'  => 'execSimple',
-            'eventType' => 'Exec Curl : ' . $args['url'],
-            'eventId'   => $rawResponse
+            'eventType' => "Url : {$args['url']} HttpCode : {$code} Errors : {$errors}",
+            'eventId'   => "Response : {$rawResponse}"
         ]);
 
-        if (!empty($error)) {
-            LogsController::add([
-                'isTech'    => true,
-                'moduleId'  => 'curl',
-                'level'     => 'ERROR',
-                'tableName' => '',
-                'recordId'  => '',
-                'eventType' => 'Error Exec Curl : ' . $error,
-                'eventId'   => $rawResponse
-            ]);
+        return ['code' => $code, 'response' => json_decode($rawResponse, true), 'errors' => $errors];
+    }
 
-            return ['errors' => $error];
+    private static function createMultipartFormData(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['boundary', 'body']);
+        ValidatorModel::stringType($args, ['boundary']);
+        ValidatorModel::arrayType($args, ['body']);
+
+        $delimiter = "-------------{$args['boundary']}";
+
+        $postData = '';
+        foreach ($args['body'] as $key => $value) {
+            $postData .= "--{$delimiter}\r\n";
+            $postData .= "Content-Disposition: form-data; name=\"{$key}\"\r\n";
+            $postData .= "\r\n";
+            $postData .= "{$value}\r\n";
         }
+        $postData .= "--{$delimiter}--\r\n";
 
-        return json_decode($rawResponse, true);
+        return $postData;
     }
 
     public static function isEnabled(array $aArgs)

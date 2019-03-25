@@ -5,7 +5,7 @@
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
 
-* @brief   ShippingController
+* @brief   ShippingTemplateController
 * @author  dev <dev@maarch.org>
 * @ingroup core
 */
@@ -16,12 +16,12 @@ use Entity\models\EntityModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
-use Shipping\models\ShippingModel;
+use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\PasswordModel;
 
-class ShippingController
+class ShippingTemplateController
 {
     public function get(Request $request, Response $response)
     {
@@ -29,7 +29,7 @@ class ShippingController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['shippings' => ShippingModel::get(['id', 'label', 'description', 'options', 'fee', 'entities'])]);
+        return $response->withJson(['shippings' => ShippingTemplateModel::get(['id', 'label', 'description', 'options', 'fee', 'entities'])]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -42,7 +42,7 @@ class ShippingController
             return $response->withStatus(400)->withJson(['errors' => 'id is not an integer']);
         }
 
-        $shippingInfo = ShippingModel::getById(['id' => $aArgs['id']]);
+        $shippingInfo = ShippingTemplateModel::getById(['id' => $aArgs['id']]);
         if (empty($shippingInfo)) {
             return $response->withStatus(400)->withJson(['errors' => 'Shipping does not exist']);
         }
@@ -91,7 +91,7 @@ class ShippingController
 
         $body = $request->getParsedBody();
         
-        $errors = ShippingController::checkData($body, 'create');
+        $errors = ShippingTemplateController::checkData($body, 'create');
         if (!empty($errors)) {
             return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
@@ -104,10 +104,18 @@ class ShippingController
         $body['fee']      = json_encode($body['fee']);
         $body['entities'] = json_encode($body['entities']);
         $body['account']  = json_encode($body['account']);
-        $id = ShippingModel::create($body);
+
+        $id = ShippingTemplateModel::create([
+            'label'       => $body['label'],
+            'description' => $body['description'],
+            'options'     => $body['options'],
+            'fee'         => $body['fee'],
+            'entities'    => $body['entities'],
+            'account'     => $body['account']
+        ]);
 
         HistoryController::add([
-            'tableName' => 'shippings',
+            'tableName' => 'shipping_templates',
             'recordId'  => $id,
             'eventType' => 'ADD',
             'eventId'   => 'shippingadd',
@@ -126,7 +134,7 @@ class ShippingController
         $body = $request->getParsedBody();
         $body['id'] = $aArgs['id'];
 
-        $errors = ShippingController::checkData($body, 'update');
+        $errors = ShippingTemplateController::checkData($body, 'update');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
@@ -134,8 +142,9 @@ class ShippingController
         if (!empty($body['account']['password'])) {
             $body['account']['password'] = PasswordModel::encrypt(['password' => $body['account']['password']]);
         } else {
-            $shippingInfo = ShippingModel::getById(['id' => $aArgs['id'], 'select' => ['account']]);
-            $body['account']['password'] = $shippingInfo['account']->password;
+            $shippingInfo = ShippingTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['account']]);
+            $shippingInfo['account'] = json_decode($shippingInfo['account'], true);
+            $body['account']['password'] = $shippingInfo['account']['password'];
         }
 
         $body['options']  = json_encode($body['options']);
@@ -143,10 +152,10 @@ class ShippingController
         $body['entities'] = json_encode($body['entities']);
         $body['account']  = json_encode($body['account']);
 
-        ShippingModel::update($body);
+        ShippingTemplateModel::update($body);
 
         HistoryController::add([
-            'tableName' => 'shippings',
+            'tableName' => 'shipping_templates',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
             'eventId'   => 'shippingup',
@@ -166,18 +175,22 @@ class ShippingController
             return $response->withStatus(400)->withJson(['errors' => 'id is not an integer']);
         }
 
-        $shippingInfo = ShippingModel::getById(['id' => $aArgs['id'], 'select' => ['label']]);
-        ShippingModel::delete(['id' => $aArgs['id']]);
+        $shippingInfo = ShippingTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['label']]);
+        if (empty($shippingInfo)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Shipping does not exist']);
+        }
+
+        ShippingTemplateModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([
-            'tableName' => 'shippings',
+            'tableName' => 'shipping_templates',
             'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
             'eventId'   => 'shippingdel',
             'info'      => _SHIPPING_DELETED. ' : ' . $shippingInfo['label']
         ]);
 
-        $shippings = ShippingModel::get(['select' => ['id', 'label', 'description', 'options', 'fee', 'entities']]);
+        $shippings = ShippingTemplateModel::get(['select' => ['id', 'label', 'description', 'options', 'fee', 'entities']]);
         return $response->withJson(['shippings' => $shippings]);
     }
 
@@ -189,7 +202,7 @@ class ShippingController
             if (!Validator::intVal()->validate($aArgs['id'])) {
                 $errors[] = 'Id is not a numeric';
             } else {
-                $shippingInfo = ShippingModel::getById(['id' => $aArgs['id']]);
+                $shippingInfo = ShippingTemplateModel::getById(['id' => $aArgs['id']]);
             }
             if (empty($shippingInfo)) {
                 $errors[] = 'Shipping does not exist';
@@ -219,6 +232,14 @@ class ShippingController
                 $info = EntityModel::getById(['id' => $entity, 'select' => ['id']]);
                 if (empty($info)) {
                     $errors[] = $entity . ' does not exists';
+                }
+            }
+        }
+
+        if (!empty($aArgs['fee'])) {
+            foreach ($aArgs['fee'] as $value) {
+                if (!empty($value) && !Validator::floatVal()->positive()->validate($value)) {
+                    $errors[] = 'fee must be an array with positive values';
                 }
             }
         }

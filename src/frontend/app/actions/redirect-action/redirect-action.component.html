@@ -3,32 +3,38 @@
     <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
-    {{lang.makeActionOn}}
-    <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
-    <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b>
-    ?<br />
+    <ng-container *ngIf="!loading">
+        {{lang.makeActionOn}}
+        <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
+        <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b>
+        ?<br />
+    </ng-container>
     <div class="chooseMode" *ngIf="redirectMode == '' && !loading">
         <div>
-            <button mat-stroked-button color="primary" (click)="loadEntities()"><i class="fa fa-sitemap"></i>{{lang.toAService}}</button>
+            <button mat-stroked-button color="primary" (click)="loadEntities()"><i
+                    class="fa fa-sitemap"></i>{{lang.toAService}}</button>
         </div>
         <div>
-            <button mat-stroked-button color="primary" (click)="initDestUser()"><i class="fa fa-user"></i>{{lang.toAnUser}}</button>
+            <button mat-stroked-button color="primary" (click)="loadDestUser()"><i
+                    class="fa fa-user"></i>{{lang.toAnUser}}</button>
         </div>
     </div>
     <div *ngIf="redirectMode == 'none' && !loading">
-        <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">{{lang.noSettingsAvailable}}</div>
+        <div class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">
+            {{lang.noSettingsAvailable}}</div>
     </div>
     <div *ngIf="redirectMode == 'entity'" class="row" style="display: flex;">
         <div class="redirectContent" style="flex:2">
             <h2>{{lang.redirectTo}} :</h2>
             <div class="contentEntities">
                 <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
-                    <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
+                    <input matInput id="jstree_search" name="jstree_search" type="text"
+                        placeholder="{{lang.searchEntities}}">
                 </mat-form-field>
                 <div id="jstree"></div>
             </div>
         </div>
-        <div class="redirectContent" style="flex:1">
+        <div class="redirectContent" style="flex:1;overflow: auto;">
             <h2 title="{{currentEntity.entity_label}}">{{lang.diffusionList}} "{{currentEntity.entity_label}}" :</h2>
             <div class="contentEntities">
                 <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
@@ -37,20 +43,22 @@
     </div>
     <div *ngIf="redirectMode == 'user'" class="row">
         <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
-            <input class="searchUserRedirect" matInput placeholder="Rechercher un nouvel attributaire" [matAutocomplete]="auto" [formControl]="userRedirectCtrl" (click)="userRedirectCtrl.setValue('')">
+            <input class="searchUserRedirect" matInput placeholder="Rechercher un nouvel attributaire"
+                [matAutocomplete]="auto" [formControl]="userRedirectCtrl" (click)="userRedirectCtrl.setValue('')">
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changeDest($event)" isOpen="true">
-              <mat-option *ngFor="let user of filteredUserRedirect | async" [value]="user">
-                <mat-list>
-                    <mat-list-item>
-                      <mat-icon mat-list-icon class="fa fa-user" color="primary" style="padding-top:0px;"></mat-icon>
-                      <h4 mat-line>{{user.labelToDisplay}}</h4>
-                        <p mat-line style="opacity:0.5;line-height: 15px;font-size: 10px;">
-                            {{user.descriptionToDisplay}} </p>
-                    </mat-list-item>
-                  </mat-list>                  
-              </mat-option>
+                <mat-option *ngFor="let user of filteredUserRedirect | async" [value]="user">
+                    <mat-list>
+                        <mat-list-item>
+                            <mat-icon mat-list-icon class="fa fa-user" color="primary" style="padding-top:0px;">
+                            </mat-icon>
+                            <h4 mat-line>{{user.labelToDisplay}}</h4>
+                            <p mat-line style="opacity:0.5;line-height: 15px;font-size: 10px;">
+                                {{user.descriptionToDisplay}} </p>
+                        </mat-list-item>
+                    </mat-list>
+                </mat-option>
             </mat-autocomplete>
-          </mat-form-field>
+        </mat-form-field>
         <div class="redirectContent" style="flex:2">
             <h2 style="top:-5px;">{{lang.newAssignee}} :</h2>
             <div class="contentUser">
@@ -67,15 +75,25 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="isDestinationChanging" class="alert-message alert-message-info" role="alert" style="margin-top: 30px;">{{lang.destinationChangingInfo}} <b>{{destUser.descriptionToDisplay}}</b></div>
-        <div *ngIf="keepDestForRedirection && oldUser != null" class="alert-message alert-message-info" role="alert" style="margin-top: 30px;"><b>{{oldUser.labelToDisplay}}</b>&nbsp;<span [innerHTML]="lang.willBeAutomaticallyInCopy"></span></div>
+        <div *ngIf="isDestinationChanging && data.selectedRes.length == 1" class="alert-message alert-message-info"
+            role="alert" style="margin-top: 30px;">{{lang.destinationChangingInfo}}
+            <b>{{destUser.descriptionToDisplay}}</b></div>
+        <div *ngIf="isDestinationChanging && data.selectedRes.length > 1" class="alert-message alert-message-info"
+            role="alert" style="margin-top: 30px;">{{lang.destinationChangingInfoMass}}
+            <b>{{destUser.labelToDisplay}}</b> {{lang.destinationChangingInfoMass2}}
+            <b>{{destUser.descriptionToDisplay}}</b></div>
+        <div *ngIf="keepDestForRedirection && oldUser != null" class="alert-message alert-message-info" role="alert"
+            style="margin-top: 30px;"><b>{{oldUser.labelToDisplay}}</b>&nbsp;<span
+                [innerHTML]="lang.willBeAutomaticallyInCopy"></span></div>
     </div>
 
     <div class="row" *ngIf="redirectMode != '' && redirectMode != 'none'">
         <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
     </div>
 </div>
-<div mat-dialog-actions class="actions">
-    <button *ngIf="redirectMode != ''" mat-raised-button mat-button color="primary" [disabled]="checkValidity()" (click)="onSubmit()">{{lang.validate}}</button>
-    <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
+<div *ngIf="!loading" mat-dialog-actions class="actions">
+    <button *ngIf="redirectMode != ''" mat-raised-button mat-button color="primary" [disabled]="checkValidity()"
+        (click)="onSubmit()">{{lang.validate}}</button>
+    <button mat-raised-button mat-button [disabled]="loading"
+        [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>

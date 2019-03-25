@@ -161,10 +161,10 @@ export class SendmailAdministrationComponent implements OnInit {
             "sender": { "email": this.currentUser.mail },
             "recipients": [this.recipientTest],
             "object": "[" + this.lang.doNotReply +"] " + this.lang.emailSendTest,
-            "status": "SENDMAILTEST",
+            "status": "EXPRESS",
             "body": this.lang.emailSendTest,
             "isHtml": false
-        }
+        };
         this.emailSendLoading = true;
 
         this.http.post('../../rest/emails', email)

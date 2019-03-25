@@ -4304,8 +4304,8 @@ if (!defined('_PRINT_DETAILS_SERVICE')) {
 if (!defined('_PRINT_DETAILS')) {
     define('_PRINT_DETAILS', 'Print liaison sheet');
 }
-if (!defined('_PRINT_DOC_DETAILS_FROM_LIST')) {
-    define('_PRINT_DOC_DETAILS_FROM_LIST', 'Print the liaison sheets from the results lists');
+if (!defined('_PRINT_DOC_DETAILS_FROM_SEARCH')) {
+    define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Print the liaison sheets from the search');
 }
 if (!defined('_PRINT_LIST')) {
     define('_PRINT_LIST', 'Print the list');
@@ -5078,4 +5078,7 @@ if (!defined('_ELECTRONIC')) {
 }
 if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
     define('_ACKNOWLEDGEMENT_RECEIPTS', 'Acknowledgement of receipts');
+}
+if (!defined('_PUT_IN_SEND_ATTACH')) {
+    define('_PUT_IN_SEND_ATTACH', 'Put in send attachement');
 }

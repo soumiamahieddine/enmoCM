@@ -912,8 +912,8 @@ export const LANG_NL = {
     "willBeAutomaticallyInCopy"                 : "wordt automatisch <b>gekopieerd</b>", //_TO_TRANSLATE
     "confirm"                                   : "Bevestigen", //_TO_TRANSLATE
     "shipping_color"                            : "Color", //_TO_TRANSLATE
-    "shipping_both_sides"                            : "Both sides", //_TO_TRANSLATE
-    "shipping_address_page"                            : "Address page", //_TO_TRANSLATE
+    "shipping_duplexPrinting"                            : "Both sides", //_TO_TRANSLATE
+    "shipping_addressPage"                            : "Address page", //_TO_TRANSLATE
     "shipping_fast"                            : "Fast (J+2)", //_TO_TRANSLATE
     "shipping_economic"                            : "Economic (J+4)", //_TO_TRANSLATE
     "shipping_registered_mail"                            : "Registered mail", //_TO_TRANSLATE
@@ -921,9 +921,9 @@ export const LANG_NL = {
     "shipping_small_simple"                            : "Small format (DL) - Simple window", //_TO_TRANSLATE
     "shipping_small_double"                            : "Small format (DL) - Double window", //_TO_TRANSLATE
     "shipping_big_a4"                            : "Big format A4 (C4)", //_TO_TRANSLATE
-    "shipping_first_page_price"                            : "1st page", //_TO_TRANSLATE
-    "shipping_next_page_price"                            : "Next page(s)", //_TO_TRANSLATE
-    "shipping_postage_price"                            : "Postage", //_TO_TRANSLATE
+    "shipping_firstPagePrice"                            : "1st page", //_TO_TRANSLATE
+    "shipping_nextPagePrice"                            : "Next page(s)", //_TO_TRANSLATE
+    "shipping_postagePrice"                            : "Postage", //_TO_TRANSLATE
     "shipping_maxWeightInfo"                            : "up to 20g", //_TO_TRANSLATE
     "shapingOptions"                            : "Shapings options", //_TO_TRANSLATE
     "sendModes"                            : "Send modes", //_TO_TRANSLATE
@@ -933,7 +933,10 @@ export const LANG_NL = {
     "shippingAdded"                            : "Shipping added", //_TO_TRANSLATE
     "shippingUpdated"                            : "Shipping updated", //_TO_TRANSLATE
     "shippingDeleted"                            : "Shipping deleted", //_TO_TRANSLATE
-    "shippings"                            : "Shippings", //_TO_TRANSLATE
+    "shippings"                            : "Shippings templates", //_TO_TRANSLATE
     "mailevaAccount"                             : "Maileva account", //_TO_TRANSLATE
     "destinationChangingInfo"              : "This mail will be reassigned to this entity", //_TO_TRANSLATE
+    "destinationChangingInfoMass"                            : "These mails following external entity of", //_TO_TRANSLATE
+    "destinationChangingInfoMass2"                            : "will be redirected to entity", //_TO_TRANSLATE
+    "selected"                            : "selected", //_TO_TRANSLATE
 };

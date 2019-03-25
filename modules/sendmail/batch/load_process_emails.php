@@ -180,10 +180,6 @@ try {
     );
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . "modules" . DIRECTORY_SEPARATOR . "sendmail"
-        . DIRECTORY_SEPARATOR . "sendmail_tables.php"
-    );
-    Bt_myInclude(
-        $GLOBALS['maarchDirectory'] . "modules" . DIRECTORY_SEPARATOR . "sendmail"
         . DIRECTORY_SEPARATOR . "class". DIRECTORY_SEPARATOR . "class_modules_tools.php"
     );
     Bt_myInclude(

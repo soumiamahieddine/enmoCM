@@ -821,20 +821,16 @@ class PrintFunctions
 	function retrieve_notes($libelle)
 	{
 		$db = new Database();
-		
-		$collection = $this->collection;
         
         $query_template = 'SELECT ';
             $query_template .= 'id, ';
             $query_template .= 'user_id, ';
-            $query_template .= 'date_note, ';
+            $query_template .= 'creation_date, ';
             $query_template .= 'note_text ';
         $query_template .= 'FROM ';
             $query_template .= 'notes ';
         $query_template .= 'WHERE ';
                 $query_template .= "identifier = ##res_id## ";
-            $query_template .= "AND ";
-                $query_template .= "coll_id = '" . $collection . "' ";
 			//EXCLUDE PRIVATE NOTES
 			$query_template .= "AND id not in (select note_id from note_entities) ";
 			$query_template .= "order by id";
@@ -850,7 +846,7 @@ class PrintFunctions
 				$return .= "- " 
                     //. $result->id . " " 
                     . _PRINT_THE . " " 
-                    . functions::format_date_db($result->date_note, false) 
+                    . functions::format_date_db($result->creation_date, false) 
                     . " " . _BY . " " . $userInfos . " : " . $result->note_text . "\r\n"
 				. "__________________________________"
 				. "__________________________________"

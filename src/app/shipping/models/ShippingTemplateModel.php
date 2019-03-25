@@ -8,14 +8,14 @@
 */
 
 /**
-* @brief Shipping Model
+* @brief Shipping Template Model
 * @author dev@maarch.org
 * @ingroup core
 */
 
 namespace Shipping\models;
 
-class ShippingModel extends ShippingModelAbstract
+class ShippingTemplateModel extends ShippingTemplateModelAbstract
 {
     // Do your stuff in this class
 }

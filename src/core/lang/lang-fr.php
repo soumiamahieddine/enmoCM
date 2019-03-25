@@ -225,7 +225,7 @@ define('_LOAD_STATUSES_SESSION', 'Chargement des status en session');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', "Paramétrage des status d'indexation");
 define('_ADD_LINKS', 'Ajouter des liaisons');
 define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche détail');
-define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
+define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Imprimer les fiches de liaison depuis la recherche');
 define('_ATTACHMENTS_COMMENT', 'Gestion des pièces jointes');
 define('_BASKETS_COMMENT', 'Bannettes');
 define('_CASES_COMMENT', 'Affaires');
@@ -472,5 +472,7 @@ define("_SHIPPING_ADDED", "Envoi postal ajouté");
 define("_SHIPPING_UPDATED", "Envoi postal mis à jour");
 define("_SHIPPING_DELETED", "Envoi postal supprimé");
 
-define("_SHIPPINGS_ADMIN", "Envois postaux");
+define("_SHIPPINGS_ADMIN", "Modèles d'envois postaux");
 define("_SHIPPINGS_ADMIN_DESC", "Configurer les modèles d'envois postaux, par exemple pour Maileva");
+
+define("_SEND_SHIPPING", "Envoyer un pli postal");

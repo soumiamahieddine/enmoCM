@@ -187,12 +187,26 @@ class CoreConfigModel
         return $loggingMethod;
     }
 
+    public static function getMailevaConfiguration()
+    {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/mailevaConfig.xml']);
+
+        $mailevaConfig = [];
+        if ($loadedXml) {
+            $mailevaConfig['uri']           = (string)$loadedXml->URI;
+            $mailevaConfig['clientId']      = (string)$loadedXml->CLIENT_ID;
+            $mailevaConfig['clientSecret']  = (string)$loadedXml->CLIENT_SECRET;
+        }
+
+        return $mailevaConfig;
+    }
+
     public static function getOzwilloConfiguration(array $aArgs = [])
     {
         ValidatorModel::stringType($aArgs, ['customId']);
 
-        if (empty($aArgs['customId'])) {
             $customId = CoreConfigModel::getCustomId();
+        if (empty($aArgs['customId'])) {
         } else {
             $customId = $aArgs['customId'];
         }

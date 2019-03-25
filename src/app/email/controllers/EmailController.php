@@ -17,16 +17,20 @@ namespace Email\controllers;
 use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Configuration\models\ConfigurationModel;
+use Docserver\models\DocserverModel;
+use Docserver\models\DocserverTypeModel;
 use Email\models\EmailModel;
 use Entity\models\EntityModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
+use MessageExchange\models\MessageExchangeModel;
 use Note\controllers\NoteController;
 use Note\models\NoteEntityModel;
 use Note\models\NoteModel;
 use PHPMailer\PHPMailer\PHPMailer;
 use Resource\controllers\ResController;
+use Resource\controllers\StoreController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -49,7 +53,8 @@ class EmailController
         $isSent = EmailController::createEmail(['userId' => $user['id'], 'data' => $body]);
 
         if (!empty($isSent['errors'])) {
-            return $response->withStatus($isSent['code'])->withJson(['errors' => $isSent['errors']]);
+            $httpCode = empty($isSent['code']) ? 400 : $isSent['code'];
+            return $response->withStatus($httpCode)->withJson(['errors' => $isSent['errors']]);
         }
 
         return $response->withStatus(204);
@@ -90,6 +95,7 @@ class EmailController
             'info'         => _EMAIL_ADDED
         ]);
 
+        $isSent = ['success' => 'success'];
         if ($args['data']['status'] != 'DRAFT') {
             $customId = CoreConfigModel::getCustomId();
             if (empty($customId)) {
@@ -97,10 +103,19 @@ class EmailController
             }
             $encryptKey = CoreConfigModel::getEncryptKey();
             $options = empty($args['options']) ? '' : serialize($args['options']);
-            exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+            if ($args['data']['status'] == 'EXPRESS') {
+                $isSent = EmailController::sendEmail(['emailId' => $id, 'userId' => $args['userId']]);
+                if (!empty($isSent['success'])) {
+                    EmailModel::update(['set' => ['status' => 'SENT', 'send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$id]]);
+                } else {
+                    EmailModel::update(['set' => ['status' => 'ERROR'], 'where' => ['id = ?'], 'data' => [$id]]);
+                }
+            } else {
+                exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+            }
         }
 
-        return true;
+        return $isSent;
     }
 
     public static function getById(array $args)
@@ -173,17 +188,17 @@ class EmailController
             return ['errors' => $check['errors'], 'code' => $check['code']];
         }
 
-        $id = EmailModel::update([
+        EmailModel::update([
             'set' => [
-                'sender'                => json_encode($args['data']['sender']),
-                'recipients'            => json_encode($args['data']['recipients']),
-                'cc'                    => empty($args['data']['cc']) ? '[]' : json_encode($args['data']['cc']),
-                'cci'                   => empty($args['data']['cci']) ? '[]' : json_encode($args['data']['cci']),
-                'object'                => empty($args['data']['object']) ? null : $args['data']['object'],
-                'body'                  => empty($args['data']['body']) ? null : $args['data']['body'],
-                'document'              => empty($args['data']['document']) ? null : json_encode($args['data']['document']),
-                'is_html'                => $args['data']['isHtml'] ? 'true' : 'false',
-                'status'                => $args['data']['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING'
+                'sender'      => json_encode($args['data']['sender']),
+                'recipients'  => json_encode($args['data']['recipients']),
+                'cc'          => empty($args['data']['cc']) ? '[]' : json_encode($args['data']['cc']),
+                'cci'         => empty($args['data']['cci']) ? '[]' : json_encode($args['data']['cci']),
+                'object'      => empty($args['data']['object']) ? null : $args['data']['object'],
+                'body'        => empty($args['data']['body']) ? null : $args['data']['body'],
+                'document'    => empty($args['data']['document']) ? null : json_encode($args['data']['document']),
+                'is_html'     => $args['data']['isHtml'] ? 'true' : 'false',
+                'status'      => $args['data']['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING'
             ],
             'where' => ['id = ?'],
             'data' => [$args['emailId']]
@@ -191,7 +206,7 @@ class EmailController
 
         HistoryController::add([
             'tableName'    => 'emails',
-            'recordId'     => $id,
+            'recordId'     => $args['emailId'],
             'eventType'    => 'UP',
             'eventId'      => 'emailModification',
             'info'         => _EMAIL_UPDATED
@@ -204,7 +219,7 @@ class EmailController
             }
             $encryptKey = CoreConfigModel::getEncryptKey();
             $options = empty($args['options']) ? '' : serialize($args['options']);
-            exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+            exec("php src/app/email/scripts/sendEmail.php {$customId} {$args['emailId']} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
         }
 
         return true;
@@ -296,31 +311,59 @@ class EmailController
             $phpmailer->AllowEmpty = true;
         }
 
-        //TODO M2M
+        //zip M2M
+        if ($email['message_exchange_id']) {
+            $messageExchange = MessageExchangeModel::getMessageByIdentifier(['messageId' => $email['message_exchange_id'], 'select' => ['docserver_id','path','filename','fingerprint','reference']]);
+            $docserver       = DocserverModel::getByDocserverId(['docserverId' => $messageExchange[0]['docserver_id']]);
+            $docserverType   = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id']]);
 
-        if (!empty($email['document'])) {
-            $email['document'] = (array)json_decode($email['document']);
-            if ($email['document']['isLinked']) {
-                $encodedDocument = ResController::getEncodedDocument(['resId' => $email['document']['id'], 'original' => $email['document']['original']]);
-                if (empty($encodedDocument['errors'])) {
-                    $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), $encodedDocument['fileName']);
-                }
+            $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchange[0]['path']);
+            $filePath      = $docserver['path_template'] . $pathDirectory . $messageExchange[0]['filename'];
+            $fingerprint   = StoreController::getFingerPrint([
+                'filePath' => $filePath,
+                'mode'     => $docserverType['fingerprint_mode'],
+            ]);
+
+            if ($fingerprint != $messageExchange[0]['fingerprint']) {
+                $email['document'] = (array)json_decode($email['document']);
+                return ['errors' => 'Pb with fingerprint of document. ResId master : ' . $email['document']['id']];
             }
-            if (!empty($email['document']['attachments'])) {
-                $email['document']['attachments'] = (array)$email['document']['attachments'];
-                foreach ($email['document']['attachments'] as $attachment) {
-                    $attachment = (array)$attachment;
-                    $encodedDocument = AttachmentController::getEncodedDocument(['id' => $attachment['id'], 'isVersion' => $attachment['isVersion'], 'original' => $attachment['original']]);
+
+            if (is_file($filePath)) {
+                $fileContent = file_get_contents($filePath);
+                if ($fileContent === false) {
+                    return ['errors' => 'Document not found on docserver'];
+                }
+
+                $title = preg_replace(utf8_decode('@[\\/:*?"<>|]@i'), '_', substr($messageExchange[0]['reference'], 0, 30));
+
+                $phpmailer->addStringAttachment($fileContent, $title . '.zip');
+            }
+        } else {
+            if (!empty($email['document'])) {
+                $email['document'] = (array)json_decode($email['document']);
+                if ($email['document']['isLinked']) {
+                    $encodedDocument = ResController::getEncodedDocument(['resId' => $email['document']['id'], 'original' => $email['document']['original']]);
                     if (empty($encodedDocument['errors'])) {
                         $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), $encodedDocument['fileName']);
                     }
                 }
-            }
-            if (!empty($email['document']['notes'])) {
-                $email['document']['notes'] = (array)$email['document']['notes'];
-                $encodedDocument = NoteController::getEncodedPdfByIds(['ids' => $email['document']['notes']]);
-                if (empty($encodedDocument['errors'])) {
-                    $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), 'notes.pdf');
+                if (!empty($email['document']['attachments'])) {
+                    $email['document']['attachments'] = (array)$email['document']['attachments'];
+                    foreach ($email['document']['attachments'] as $attachment) {
+                        $attachment = (array)$attachment;
+                        $encodedDocument = AttachmentController::getEncodedDocument(['id' => $attachment['id'], 'isVersion' => $attachment['isVersion'], 'original' => $attachment['original']]);
+                        if (empty($encodedDocument['errors'])) {
+                            $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), $encodedDocument['fileName']);
+                        }
+                    }
+                }
+                if (!empty($email['document']['notes'])) {
+                    $email['document']['notes'] = (array)$email['document']['notes'];
+                    $encodedDocument = NoteController::getEncodedPdfByIds(['ids' => $email['document']['notes']]);
+                    if (empty($encodedDocument['errors'])) {
+                        $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), 'notes.pdf');
+                    }
                 }
             }
         }
@@ -374,7 +417,7 @@ class EmailController
             return ['errors' => 'Data status is not a string or empty', 'code' => 400];
         }
 
-        if (!empty($args['data']['document'])) {
+        if (!empty($args['data']['document'] && !empty($args['data']['document']['id']))) {
             $check = Validator::intVal()->notEmpty()->validate($args['data']['document']['id']);
             $check = $check && Validator::boolType()->validate($args['data']['document']['isLinked']);
             $check = $check && Validator::boolType()->validate($args['data']['document']['original']);
@@ -464,18 +507,5 @@ class EmailController
         ]);
 
         return $response->withStatus(204);
-    }
-
-    public static function emailStatus(array $args)
-    {
-        if ($args['status'] == 'SENT') {
-            return _EMAIL_SENT;
-        } elseif ($args['status'] == 'ERROR') {
-            return _EMAIL_ERROR;
-        } elseif ($args['status'] == 'WAITING') {
-            return _EMAIL_WAIT;
-        } else {
-            return _EMAIL_DRAFT;
-        }
     }
 }

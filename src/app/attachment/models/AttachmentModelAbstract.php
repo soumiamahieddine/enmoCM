@@ -66,6 +66,23 @@ abstract class AttachmentModelAbstract
         return $aAttachment[0];
     }
 
+    public static function getAttachmentToSend(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['ids']);
+        ValidatorModel::arrayType($aArgs, ['select', 'orderBy', 'ids']);
+
+        $aAttachments = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'res_id_version', 'identifier', 'dest_address_id'] : $aArgs['select'],
+            'table'     => ['res_view_attachments'],
+            'where'     => ['res_id_master in (?)', 'status not in (?, ?)', 'attachment_type not in (?, ?)', 'in_send_attach = TRUE'],
+            'data'      => [$aArgs['ids'], 'OBS', 'DEL', 'converted_pdf', 'printed_folder'],
+            'groupBy'   => ['res_id_master', 'title', 'res_id', 'res_id_version', 'identifier', 'dest_address_id'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
+        ]);
+
+        return $aAttachments;
+    }
+
     public static function getListByResIdMaster(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -204,6 +221,35 @@ abstract class AttachmentModelAbstract
             'table'     => $table,
             'set'       => [
                 'in_signature_book'   => $aArgs['inSignatureBook']
+            ],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['id']],
+        ]);
+
+        return true;
+    }
+
+    public static function setInSendAttachment(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::boolType($aArgs, ['inSendAttachment', 'isVersion']);
+
+        if ($aArgs['isVersion'] == true) {
+            $table = 'res_version_attachments';
+        } else {
+            $table = 'res_attachments';
+        }
+        if ($aArgs['inSendAttachment']) {
+            $aArgs['inSendAttachment'] =  'true';
+        } else {
+            $aArgs['inSendAttachment'] =  'false';
+        }
+
+        DatabaseModel::update([
+            'table'     => $table,
+            'set'       => [
+                'in_send_attach'   => $aArgs['inSendAttachment']
             ],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['id']],

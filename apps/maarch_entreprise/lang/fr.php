@@ -4372,8 +4372,8 @@ if (!defined('_PRINT_DETAILS_SERVICE')) {
 if (!defined('_PRINT_DETAILS')) {
     define('_PRINT_DETAILS', 'Imprimer fiche de liaison');
 }
-if (!defined('_PRINT_DOC_DETAILS_FROM_LIST')) {
-    define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
+if (!defined('_PRINT_DOC_DETAILS_FROM_SEARCH')) {
+    define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Imprimer les fiches de liaison depuis la recherche');
 }
 if (!defined('_PRINT_DOC_FROM_LIST')) {
     define('_PRINT_DOC_FROM_LIST', 'Imprimer les fiches de liaison des documents');
@@ -5240,4 +5240,7 @@ if (!defined('_ELECTRONIC')) {
 }
 if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
     define('_ACKNOWLEDGEMENT_RECEIPTS', 'Accusés de réception');
+}
+if (!defined('_PUT_IN_SEND_ATTACH')) {
+    define('_PUT_IN_SEND_ATTACH', 'Intégrer aux envois');
 }

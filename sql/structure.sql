@@ -286,6 +286,7 @@ CREATE TABLE res_attachments
   tnl_path character varying(255) DEFAULT NULL::character varying,
   tnl_filename character varying(255) DEFAULT NULL::character varying,
   in_signature_book boolean DEFAULT FALSE,
+  in_send_attach boolean DEFAULT FALSE,
   signatory_user_serial_id int,
   convert_result character varying(10) DEFAULT NULL::character varying,
   convert_attempts integer DEFAULT NULL::integer,
@@ -372,7 +373,6 @@ CREATE TABLE groupbasket
   id serial NOT NULL,
   group_id character varying(32) NOT NULL,
   basket_id character varying(32) NOT NULL,
-  result_page character varying(255) DEFAULT 'show_list1.php'::character varying,
   list_display json DEFAULT '[]',
   CONSTRAINT groupbasket_pkey PRIMARY KEY (group_id, basket_id),
   CONSTRAINT groupbasket_unique_key UNIQUE (id)
@@ -1566,18 +1566,18 @@ process_comment character varying(255),
 CONSTRAINT listinstance_history_details_pkey PRIMARY KEY (listinstance_history_details_id)
 ) WITH ( OIDS=FALSE );
 
-/* SHIPPINGS */
-DROP TABLE IF EXISTS shippings;
-CREATE TABLE shippings
+/* SHIPPING TEMPLATES */
+DROP TABLE IF EXISTS shipping_templates;
+CREATE TABLE shipping_templates
 (
 id serial NOT NULL,
 label character varying(64) NOT NULL,
 description character varying(255) NOT NULL,
 options json DEFAULT '{}',
 fee json DEFAULT '{}',
-entities json DEFAULT '{}',
+entities jsonb DEFAULT '{}',
 account json DEFAULT '{}',
-CONSTRAINT shippings_pkey PRIMARY KEY (id)
+CONSTRAINT shipping_templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
@@ -1891,6 +1891,7 @@ CREATE TABLE res_version_attachments
   res_id_master bigint,
   attachment_id_master bigint,
   in_signature_book boolean DEFAULT FALSE,
+  in_send_attach boolean DEFAULT FALSE,
   signatory_user_serial_id int,
   convert_result character varying(10) DEFAULT NULL::character varying,
   convert_attempts integer DEFAULT NULL::integer,
@@ -1925,13 +1926,13 @@ CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
   creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
   filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, signatory_user_serial_id
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, in_send_attach, signatory_user_serial_id
   FROM res_version_attachments
   UNION ALL
   SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
   creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
   filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, signatory_user_serial_id
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, in_send_attach, signatory_user_serial_id
   FROM res_attachments;
 
 -- thesaurus

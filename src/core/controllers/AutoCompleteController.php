@@ -101,12 +101,14 @@ class AutoCompleteController
 
         $data = [];
         foreach ($users as $value) {
+            $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $value['user_id']]);
             $data[] = [
-                'type'          => 'user',
-                'id'            => $value['user_id'],
-                'serialId'      => $value['id'],
-                'idToDisplay'   => "{$value['firstname']} {$value['lastname']}",
-                'otherInfo'     => ''
+                'type'                  => 'user',
+                'id'                    => $value['user_id'],
+                'serialId'              => $value['id'],
+                'idToDisplay'           => "{$value['firstname']} {$value['lastname']}",
+                'descriptionToDisplay'  => empty($primaryEntity) ? '' : $primaryEntity['entity_label'],
+                'otherInfo'             => ''
             ];
         }
 

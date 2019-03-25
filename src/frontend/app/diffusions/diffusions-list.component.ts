@@ -4,6 +4,7 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angular/cdk/drag-drop';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+import { ConstantPool } from '@angular/compiler';
 
 declare function $j(selector: any): any;
 
@@ -21,6 +22,8 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
     loading: boolean = true;
     availableRoles: any[] = [];
     keepRoles: any[] = [];
+    currentEntityId: number = 0;
+    userDestList: any[] = [];
 
     diffList: any = {};
 
@@ -79,7 +82,8 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
 
     loadListModel(entityId: number) {
         this.loading = true;
-
+        this.currentEntityId = entityId;
+        this.userDestList = [];
         this.availableRoles.forEach(element => {
             this.diffList[element.id].items = [];
         });
@@ -164,6 +168,30 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
         return listInstanceFormatted;
     }
 
+    loadDestUserList() {
+        if (this.currentEntityId > 0 && this.userDestList.length == 0) {
+            this.http.get("../../rest/entities/" + this.currentEntityId + "/users")
+            .subscribe((data: any) => {
+                this.userDestList = data.users;
+                this.loading = false;
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
+        }
+    }
+
+    changeDest(user: any) {
+        const newDest = {
+            difflist_type: "entity_id",
+            item_type: "user_id",
+            item_id: user.user_id,
+            labelToDisplay: user.labelToDisplay,
+            descriptionToDisplay: user.descriptionToDisplay,
+            item_mode: "dest"
+        };
+        this.diffList['dest'].items[0] = newDest;
+    }
+
     getDestUser() {
         if (this.diffList['dest']) {
             return this.diffList['dest'].items;
@@ -173,7 +201,6 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
     }
 
     addElem(element: any) {
-
         if (this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.id) == -1) {
             let itemType = '';
             if (element.type == 'user') {
@@ -187,7 +214,7 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
                 item_type: itemType,
                 item_id: element.id,
                 labelToDisplay: element.idToDisplay,
-                descriptionToDisplay: element.otherInfo,
+                descriptionToDisplay: element.descriptionToDisplay,
                 item_mode: "copy"
             };
             this.diffList['copy'].items.unshift(newElemListModel);

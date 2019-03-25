@@ -9,7 +9,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-class ShippingControllerTest extends TestCase
+class ShippingTemplateControllerTest extends TestCase
 {
     private static $id = null;
 
@@ -17,16 +17,16 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $aArgs = [
             'label'           => 'TEST',
             'description'     => 'description du TEST',
             'options'         => [
-                'shaping'    => ['color', 'both_sides', 'address_page'],
+                'shaping'    => ['color', 'duplexPrinting', 'addressPage'],
                 'sendMode'   => 'fast'
             ],
-            'fee'             => ['first_page' => 1, 'next_page' => 2, 'postage_price' => 12],
+            'fee'             => ['firstPagePrice' => 1, 'nextPagePrice' => 2, 'postagePrice' => 12],
             'entities'        => [1, 2],
             'account'         => ['id' => 'toto', 'password' => '1234']
         ];
@@ -42,10 +42,10 @@ class ShippingControllerTest extends TestCase
         $aArgs = [
             'description'     => 'description du TEST',
             'options'         => [
-                'shaping'     => ['color', 'both_sides', 'address_page'],
+                'shaping'     => ['color', 'duplexPrinting', 'addressPage'],
                 'sendMode'    => 'fast'
             ],
-            'fee'             => ['first_page' => 1, 'next_page' => 2, 'postage_price' => 12],
+            'fee'             => ['firstPagePrice' => 1, 'nextPagePrice' => 2, 'postagePrice' => 12],
             'account'         => ['id' => 'toto', 'password' => '']
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -61,7 +61,7 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response  = $shipping->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
@@ -70,12 +70,12 @@ class ShippingControllerTest extends TestCase
         $this->assertSame('TEST', $responseBody->shipping->label);
         $this->assertSame('description du TEST', $responseBody->shipping->description);
         $this->assertSame('color', $responseBody->shipping->options->shaping[0]);
-        $this->assertSame('both_sides', $responseBody->shipping->options->shaping[1]);
-        $this->assertSame('address_page', $responseBody->shipping->options->shaping[2]);
+        $this->assertSame('duplexPrinting', $responseBody->shipping->options->shaping[1]);
+        $this->assertSame('addressPage', $responseBody->shipping->options->shaping[2]);
         $this->assertSame('fast', $responseBody->shipping->options->sendMode);
-        $this->assertSame(1, $responseBody->shipping->fee->first_page);
-        $this->assertSame(2, $responseBody->shipping->fee->next_page);
-        $this->assertSame(12, $responseBody->shipping->fee->postage_price);
+        $this->assertSame(1, $responseBody->shipping->fee->firstPagePrice);
+        $this->assertSame(2, $responseBody->shipping->fee->nextPagePrice);
+        $this->assertSame(12, $responseBody->shipping->fee->postagePrice);
         $this->assertNotNull($responseBody->shipping->entities);
         $this->assertNotNull($responseBody->entities);
 
@@ -89,7 +89,7 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response  = $shipping->get($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
@@ -113,13 +113,13 @@ class ShippingControllerTest extends TestCase
                 'shaping'    => ['color', 'address_page'],
                 'sendMode'   => 'fast'
             ],
-            'fee'             => ['first_page' => 10, 'next_page' => 20, 'postage_price' => 12],
+            'fee'             => ['firstPagePrice' => 10, 'nextPagePrice' => 20, 'postagePrice' => 12],
             'account'         => ['id' => 'toto', 'password' => '1234']
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
         $response = $shipping->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
 
         $responseBody = json_decode((string)$response->getBody());
@@ -128,7 +128,7 @@ class ShippingControllerTest extends TestCase
 
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response  = $shipping->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
@@ -139,9 +139,9 @@ class ShippingControllerTest extends TestCase
         $this->assertSame('color', $responseBody->shipping->options->shaping[0]);
         $this->assertSame('address_page', $responseBody->shipping->options->shaping[1]);
         $this->assertSame('fast', $responseBody->shipping->options->sendMode);
-        $this->assertSame(10, $responseBody->shipping->fee->first_page);
-        $this->assertSame(20, $responseBody->shipping->fee->next_page);
-        $this->assertSame(12, $responseBody->shipping->fee->postage_price);
+        $this->assertSame(10, $responseBody->shipping->fee->firstPagePrice);
+        $this->assertSame(20, $responseBody->shipping->fee->nextPagePrice);
+        $this->assertSame(12, $responseBody->shipping->fee->postagePrice);
         $this->assertNotNull($responseBody->entities);
     }
 
@@ -149,7 +149,7 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response = $shipping->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
@@ -166,7 +166,7 @@ class ShippingControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $shipping    = new \Shipping\controllers\ShippingController();
+        $shipping    = new \Shipping\controllers\ShippingTemplateController();
 
         $response  = $shipping->initShipping($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
