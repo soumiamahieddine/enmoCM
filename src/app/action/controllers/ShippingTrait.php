@@ -13,6 +13,8 @@
 namespace Action\controllers;
 
 use Attachment\models\AttachmentModel;
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Shipping\models\ShippingTemplateModel;
@@ -47,11 +49,30 @@ trait ShippingTrait
         $shippingTemplate['account'] = json_decode($shippingTemplate['account'], true);
 
         //TODO recup les bon attachments
-        $attachments = AttachmentModel::getOnView(['select' => ['res_id', 'res_id_version', 'title'], 'where' => ['res_id_master = ?'], 'data' => [$args['resId']]]);
+        $attachments = AttachmentModel::getOnView(['select' => ['res_id', 'res_id_version', 'title', 'dest_address_id'], 'where' => ['res_id_master = ?'], 'data' => [$args['resId']]]);
         if (empty($attachments)) {
             return true;
         }
         $attachments = [$attachments[0]]; //TODO Remove for test
+
+        $contacts = [];
+        foreach ($attachments as $attachment) {
+            if (empty($attachment['dest_address_id'])) {
+                return true;
+            }
+            $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$attachment['dest_address_id']]]);
+            if (empty($contact[0])) {
+                return true;
+            }
+            if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
+                return true;
+            }
+            $afnorAddress = ContactController::getContactAfnor($contact[0]);
+            if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6])) {
+                return true;
+            }
+            $contacts[] = $afnorAddress;
+        }
 
         $curlAuth = CurlModel::execSimple([
             'url'           => $mailevaConfig['uri'] . '/authentication/oauth2/token',
@@ -64,7 +85,6 @@ trait ShippingTrait
                 'password'      => PasswordModel::decrypt(['cryptedPassword' => $shippingTemplate['account']['password']])
             ]
         ]);
-
         if ($curlAuth['code'] != 200) {
             //TODO
             return ['errors' => 'Maileva authentication failed'];
@@ -72,7 +92,7 @@ trait ShippingTrait
         $token = $curlAuth['response']['access_token'];
 
         $errors = [];
-        foreach ($attachments as $attachment) {
+        foreach ($attachments as $key => $attachment) {
             $sendingName = CoreConfigModel::uniqueId();
             if (!empty($attachment['res_id'])) {
                 $isVersion = false;
@@ -150,20 +170,19 @@ trait ShippingTrait
                 'method'        => 'GET'
             ]);
 
-            //TODO Aller chercher le contact de l'attachment
             $createRecipient = CurlModel::execSimple([
                 'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/recipients",
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'POST',
                 'body'          => [
-                    "address_line_1"    => "La Poste",
-                    "address_line_2"    => "Me Eva DUPONT",
-                    "address_line_3"    => "Résidence des Peupliers",
-                    "address_line_4"    => "33 avenue de Paris",
-                    "address_line_5"    => "BP 356",
-                    "address_line_6"    => "75000 Paris",
-                    "country_code"      => "FR"
+                    "address_line_1"    => $contacts[$key][1],
+                    "address_line_2"    => $contacts[$key][2],
+                    "address_line_3"    => $contacts[$key][3],
+                    "address_line_4"    => $contacts[$key][4],
+                    "address_line_5"    => $contacts[$key][5],
+                    "address_line_6"    => $contacts[$key][6],
+                    "country_code"      => 'FR'
                 ],
             ]);
             if ($createRecipient['code'] != 201) {

@@ -327,6 +327,69 @@ class ContactController
         return $formattedAddress;
     }
 
+    public static function getContactAfnor(array $aArgs)
+    {
+        $afnorAddress = ['Afnor',
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+        ];
+
+        if ($aArgs['is_corporate_person'] == 'Y') {
+            // Ligne 1
+            $afnorAddress[1] = substr($aArgs['society'], 0, 38);
+
+            // Ligne 2
+            if (!empty($aArgs['title']) || !empty($aArgs['firstname']) || !empty($aArgs['lastname'])) {
+                $afnorAddress[2] = ContactController::controlLengthNameAfnor([
+                    'title'         => $aArgs['title'],
+                    'fullName'      => $aArgs['firstname'].' '.$aArgs['lastname'],
+                    'strMaxLength'  => 38
+                ]);
+            }
+        } else {
+            // Ligne 2
+            if (!empty($aArgs['contact_title']) || !empty($aArgs['contact_firstname']) || !empty($aArgs['contact_lastname'])) {
+                $afnorAddress[2] = ContactController::controlLengthNameAfnor([
+                    'title'         => $aArgs['contact_title'],
+                    'fullName'      => $aArgs['contact_firstname'].' '.$aArgs['contact_lastname'],
+                    'strMaxLength'  => 38
+                ]);
+            }
+
+        }
+        // Ligne 3
+        if (!empty($aArgs['address_complement'])) {
+            $afnorAddress[3] = substr($aArgs['address_complement'], 0, 38);
+        }
+
+        // Ligne 4
+        if (!empty($aArgs['address_num'])) {
+            $aArgs['address_num'] = TextFormatModel::normalize(['string' => $aArgs['address_num']]);
+            $aArgs['address_num'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_num']);
+            $aArgs['address_num'] = strtoupper($aArgs['address_num']);
+        }
+        if (!empty($aArgs['address_street'])) {
+            $aArgs['address_street'] = TextFormatModel::normalize(['string' => $aArgs['address_street']]);
+            $aArgs['address_street'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_street']);
+            $aArgs['address_street'] = strtoupper($aArgs['address_street']);
+        }
+        $afnorAddress[4] = substr($aArgs['address_num'].' '.$aArgs['address_street'], 0, 38);
+
+        // Ligne 5
+        $afnorAddress[5] = '';
+
+        // Ligne 6
+        $aArgs['address_postal_code'] = strtoupper($aArgs['address_postal_code']);
+        $aArgs['address_town'] = strtoupper($aArgs['address_town']);
+        $afnorAddress[6] = substr($aArgs['address_postal_code'].' '.$aArgs['address_town'], 0, 38);
+
+        return $afnorAddress;
+    }
+
     public static function controlLengthNameAfnor(array $aArgs)
     {
         $aCivility = ContactModel::getCivilities();
