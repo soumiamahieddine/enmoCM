@@ -921,9 +921,9 @@ export const LANG_NL = {
     "shipping_small_simple"                            : "Small format (DL) - Simple window", //_TO_TRANSLATE
     "shipping_small_double"                            : "Small format (DL) - Double window", //_TO_TRANSLATE
     "shipping_big_a4"                            : "Big format A4 (C4)", //_TO_TRANSLATE
-    "shipping_first_page_price"                            : "1st page", //_TO_TRANSLATE
-    "shipping_next_page_price"                            : "Next page(s)", //_TO_TRANSLATE
-    "shipping_postage_price"                            : "Postage", //_TO_TRANSLATE
+    "shipping_firstPagePrice"                            : "1st page", //_TO_TRANSLATE
+    "shipping_nextPagePrice"                            : "Next page(s)", //_TO_TRANSLATE
+    "shipping_postagePrice"                            : "Postage", //_TO_TRANSLATE
     "shipping_maxWeightInfo"                            : "up to 20g", //_TO_TRANSLATE
     "shapingOptions"                            : "Shapings options", //_TO_TRANSLATE
     "sendModes"                            : "Send modes", //_TO_TRANSLATE

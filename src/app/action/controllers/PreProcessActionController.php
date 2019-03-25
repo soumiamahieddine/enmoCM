@@ -17,6 +17,7 @@ use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Contact\models\ContactModel;
+use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
 use Entity\models\EntityModel;
@@ -26,6 +27,7 @@ use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -34,7 +36,6 @@ use SrcCore\models\DatabaseModel;
 use Template\models\TemplateModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
-use setasign\Fpdi\Tcpdf\Fpdi;
 
 class PreProcessActionController
 {
@@ -394,7 +395,7 @@ class PreProcessActionController
                 foreach ($aAttachments as $key => $attachment) {
                     if ($attachment['res_id_master'] == $valueResId) {
                         // TODO Check Contact;
-                        $resources[$valueResId][] = $attachment;
+                        $resources[] = $attachment;
                         $resIdFound = true;
                         unset($aAttachments[$key]);
                         break;
@@ -406,13 +407,17 @@ class PreProcessActionController
                 }
             }
     
-            // foreach ($aTemplates as $key => $value) {
-            //     $infoFee = $value['fee'];
-            //     PreProcessActionController::calculFee([
-            //         'fee'       => $infoFee,
-            //         'resources' => $resources
-            //     ]);
-            // }
+            foreach ($aTemplates as $key => $value) {
+                if (!empty($resources)) {
+                    $templateFee = PreProcessActionController::calculFee([
+                        'fee'       => $value['fee'],
+                        'resources' => $resources
+                    ]);
+                } else {
+                    $templateFee = 0;
+                }
+                $aTemplates[$key]['fee'] = $templateFee;
+            }
         }
 
         return $response->withJson([
@@ -464,6 +469,9 @@ class PreProcessActionController
 
             $pdf = new Fpdi();
             $pageCount = $pdf->setSourceFile($pathToDocument);
+
+            $attachmentFee = ($pageCount > 1) ? ($pageCount - 1) * $aArgs['fee']['nextPagePrice'] : 0 ;
+            $fee = $fee + $attachmentFee + $aArgs['fee']['firstPagePrice'] + $aArgs['fee']['postagePrice'];
         }
 
         return $fee;

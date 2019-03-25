@@ -35,9 +35,9 @@ export class ShippingAdministrationComponent implements OnInit {
             sendMode: 'fast',
         },
         fee: {
-            first_page_price: 0,
-            next_page_price: 0,
-            postage_price: 0,
+            firstPagePrice: 0,
+            nextPagePrice: 0,
+            postagePrice: 0,
         },
         account: {
             id: '',
