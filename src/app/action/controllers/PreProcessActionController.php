@@ -33,6 +33,7 @@ use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use Template\models\TemplateModel;
 use User\models\UserEntityModel;
@@ -337,10 +338,15 @@ class PreProcessActionController
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        // $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
-        // if (!empty($errors['errors'])) {
-        //     return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
-        // }
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
+        if (empty($mailevaConfig)) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => 'Maileva configuration does not exist']);
+        }
 
         $data = $request->getParsedBody();
 
@@ -375,9 +381,7 @@ class PreProcessActionController
 
             $entitiesId = [];
             foreach ($aEntities as $value) {
-                if (!empty($value['id'])) {
-                    $entitiesId[] = (string)$value['id'];
-                }
+                $entitiesId[] = (string)$value['id'];
             }
 
             $aTemplates = ShippingTemplateModel::getByEntities([
@@ -397,6 +401,7 @@ class PreProcessActionController
                 $resIdFound = false;
                 foreach ($aAttachments as $key => $attachment) {
                     if ($attachment['res_id_master'] == $valueResId) {
+                        $resIdFound = true;
                         if (empty($attachment['dest_address_id'])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'No contact attached'];
@@ -425,9 +430,7 @@ class PreProcessActionController
                         }
 
                         $resources[] = $attachment;
-                        $resIdFound = true;
                         unset($aAttachments[$key]);
-                        break;
                     }
                 }
 
