@@ -334,10 +334,10 @@ class PreProcessActionController
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        // $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
-        // if (!empty($errors['errors'])) {
-        //     return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
-        // }
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
 
         $data = $request->getParsedBody();
 
@@ -351,7 +351,7 @@ class PreProcessActionController
         }
 
         $aDestination = ResModel::get([
-            'select' => ['destination'],
+            'select' => ['distinct(destination)'],
             'where'  => ['res_id in (?)'],
             'data'   => [$data['resources']]
         ]);
@@ -401,15 +401,19 @@ class PreProcessActionController
             }
             if (!$resIdFound) {
                 $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                $canNotSend[$valueResId] = [$resInfo, 'Not attachment to send'];
+                $canNotSend[$valueResId] = [$resInfo['alt_identifier'], 'Not attachment to send'];
             }
         }
+
+        // TODO calcul fee
+        $fee = 0;
 
         return $response->withJson([
             'shippingTemplates' => $aTemplates,
             'entities'          => $entities,
             'resources'         => $resources,
-            'canNotSend'        => $canNotSend
+            'canNotSend'        => $canNotSend,
+            'fee'               => $fee
         ]);
     }
 
