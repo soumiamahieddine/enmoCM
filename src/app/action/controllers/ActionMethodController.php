@@ -41,7 +41,8 @@ class ActionMethodController
         'disabledBasketPersistenceAction'       => 'disabledBasketPersistenceAction',
         'resMarkAsReadAction'                   => 'resMarkAsReadAction',
         'createAcknowledgementReceiptsAction'   => 'createAcknowledgementReceipts',
-        'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction'
+        'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction',
+        'sendShippingAction'                    => 'createMailevaShippings'
     ];
 
     public static function terminateAction(array $aArgs)

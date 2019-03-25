@@ -32,44 +32,41 @@ trait ShippingTrait
         ValidatorModel::intVal($args, ['resId']);
         ValidatorModel::arrayType($args, ['data']);
 
-        //TODO remove after test
-        $args['data']['shippingTemplateId'] = 1;
-
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
-            //TODO
-            return ['errors' => 'Maileva configuration does not exist'];
+            return ['errors' => ['Maileva configuration does not exist']];
         }
         $shippingTemplate = ShippingTemplateModel::getById(['id' => $args['data']['shippingTemplateId']]);
         if (empty($shippingTemplate)) {
-            //TODO
-            return ['errors' => 'Shipping template does not exist'];
+            return ['errors' => ['Shipping template does not exist']];
         }
         $shippingTemplate['options'] = json_decode($shippingTemplate['options'], true);
         $shippingTemplate['account'] = json_decode($shippingTemplate['account'], true);
 
-        //TODO recup les bon attachments
-        $attachments = AttachmentModel::getOnView(['select' => ['res_id', 'res_id_version', 'title', 'dest_address_id'], 'where' => ['res_id_master = ?'], 'data' => [$args['resId']]]);
+        $attachments = AttachmentModel::getOnView([
+            'select'    => ['res_id', 'res_id_version', 'title', 'dest_address_id'],
+            'where'     => ['res_id_master = ?', 'in_send_attach = ?'],
+            'data'      => [$args['resId'], true]
+        ]);
         if (empty($attachments)) {
             return true;
         }
-        $attachments = [$attachments[0]]; //TODO Remove for test
 
         $contacts = [];
         foreach ($attachments as $attachment) {
             if (empty($attachment['dest_address_id'])) {
-                return true;
+                return ['errors' => ['Contact is empty for attachment']];
             }
             $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$attachment['dest_address_id']]]);
             if (empty($contact[0])) {
-                return true;
+                return ['errors' => ['Contact does not exist for attachment']];
             }
             if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
-                return true;
+                return ['errors' => ['Contact country is not France']];
             }
             $afnorAddress = ContactController::getContactAfnor($contact[0]);
             if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6])) {
-                return true;
+                return ['errors' => ['Contact is not fill enough for attachment']];
             }
             $contacts[] = $afnorAddress;
         }
@@ -86,8 +83,7 @@ trait ShippingTrait
             ]
         ]);
         if ($curlAuth['code'] != 200) {
-            //TODO
-            return ['errors' => 'Maileva authentication failed'];
+            return ['errors' => ['Maileva authentication failed']];
         }
         $token = $curlAuth['response']['access_token'];
 
@@ -110,8 +106,7 @@ trait ShippingTrait
                 'body'          => ['name' => $sendingName]
             ]);
             if ($createSending['code'] != 201) {
-                //TODO AttachmentId ??
-                $errors[] = 'Maileva sending creation failed';
+                $errors[] = "Maileva sending creation failed for attachment {$attachmentId}";
                 continue;
             }
 
@@ -121,8 +116,7 @@ trait ShippingTrait
                 'method'        => 'GET'
             ]);
             if ($sendings['code'] != 200) {
-                //TODO AttachmentId ??
-                $errors[] = 'Maileva get sendings failed';
+                $errors[] = "Maileva get sendings failed for attachment {$attachmentId}";
                 continue;
             }
 
@@ -132,22 +126,19 @@ trait ShippingTrait
                 }
             }
             if (empty($sendingId)) {
-                //TODO AttachmentId ??
-                $errors[] = 'Maileva sending id not found';
+                $errors[] = "Maileva sending id not found for attachment {$attachmentId}";
                 continue;
             }
 
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $attachmentId, 'collId' => 'attachment_coll', 'isVersion' => $isVersion]);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $attachmentId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
             $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
             if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
-                //TODO AttachmentId
-                $errors[] = 'Docserver does not exist';
+                $errors[] = "Docserver does not exist for attachment {$attachmentId}";
                 continue;
             }
             $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
             if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
-                //TODO AttachmentId
-                $errors[] = 'Document not found on docserver';
+                $errors[] = "Document not found on docserver for attachment {$attachmentId}";
                 continue;
             }
 
@@ -158,17 +149,9 @@ trait ShippingTrait
                 'multipartBody' => ['document' => file_get_contents($pathToDocument), 'metadata' => json_encode(['priority' => 0, 'name' => $attachment['title']])]
             ]);
             if ($createDocument['code'] != 201) {
-                //TODO AttachmentId ??
-                $errors[] = 'Maileva document creation failed';
+                $errors[] = "Maileva document creation failed for attachment {$attachmentId}";
                 continue;
             }
-
-            //TODO remove after test
-            $curl = CurlModel::execSimple([
-                'url'           => "https://api.sandbox.aws.maileva.net/mail/v1/sendings/{$sendingId}/documents",
-                'bearerAuth'    => ['token' => $token],
-                'method'        => 'GET'
-            ]);
 
             $createRecipient = CurlModel::execSimple([
                 'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/recipients",
@@ -186,8 +169,7 @@ trait ShippingTrait
                 ],
             ]);
             if ($createRecipient['code'] != 201) {
-                //TODO AttachmentId ??
-                $errors[] = 'Maileva recipient creation failed';
+                $errors[] = "Maileva recipient creation failed for attachment {$attachmentId}";
                 continue;
             }
 
@@ -204,8 +186,7 @@ trait ShippingTrait
                 ],
             ]);
             if ($setOptions['code'] != 200) {
-                //TODO AttachmentId ??
-                $errors[] = 'Maileva options modification failed';
+                $errors[] = "Maileva options modification failed for attachment {$attachmentId}";
                 continue;
             }
 
@@ -216,8 +197,7 @@ trait ShippingTrait
                 'method'        => 'POST'
             ]);
             if ($submit['code'] != 200) {
-                //TODO AttachmentId ??
-                $errors[] = 'Maileva submit failed';
+                $errors[] = "Maileva submit failed for attachment {$attachmentId}";
                 continue;
             }
         }

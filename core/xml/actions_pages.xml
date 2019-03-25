@@ -515,8 +515,5 @@ An action page is described in a ACTIONPAGE tag :
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
     </ACTIONPAGE>
 </ROOT>

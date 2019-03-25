@@ -572,6 +572,7 @@ class ResourceListController
         if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
         }
+        $body['resources'] = array_unique($body['resources']);
         $body['resources'] = array_slice($body['resources'], 0, 500);
 
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
