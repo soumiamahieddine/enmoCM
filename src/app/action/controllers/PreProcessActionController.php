@@ -34,6 +34,7 @@ use SrcCore\models\DatabaseModel;
 use Template\models\TemplateModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
+//use setasign\Fpdi\Tcpdf\Fpdi;
 
 class PreProcessActionController
 {
@@ -334,10 +335,10 @@ class PreProcessActionController
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
-        if (!empty($errors['errors'])) {
-            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
-        }
+        // $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        // if (!empty($errors['errors'])) {
+        //     return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        // }
 
         $data = $request->getParsedBody();
 
@@ -356,12 +357,15 @@ class PreProcessActionController
             'data'   => [$data['resources']]
         ]);
 
-        $entities = [];
+        $aTemplates = [];
+        $entities   = [];
+        $resources  = [];
+        $canNotSend = [];
+
         foreach ($aDestination as $values) {
             $entities[] = $values['destination'];
         }
 
-        $aTemplates = [];
         if (!empty($entities)) {
             $aEntities = EntityModel::get(['select' => ['id'], 'where' => ['entity_id in (?)'], 'data' => $entities]);
 
@@ -383,37 +387,39 @@ class PreProcessActionController
             }
         }
 
-        $aAttachments = AttachmentModel::getAttachmentToSend(['ids' => $data['resources']]);
-
-        $resources = [];
-        $canNotSend = [];
-
-        foreach ($data['resources'] as $valueResId) {
-            $resIdFound = false;
-            foreach ($aAttachments as $key => $attachment) {
-                if ($attachment['res_id_master'] == $valueResId) {
-                    // TODO Check Contact;
-                    $resources[$valueResId][] = $attachment;
-                    $resIdFound = true;
-                    unset($aAttachments[$key]);
-                    break;
+        if (!empty($aTemplates)) {
+            $aAttachments = AttachmentModel::getAttachmentToSend(['ids' => $data['resources']]);
+            foreach ($data['resources'] as $valueResId) {
+                $resIdFound = false;
+                foreach ($aAttachments as $key => $attachment) {
+                    if ($attachment['res_id_master'] == $valueResId) {
+                        // TODO Check Contact;
+                        $resources[$valueResId][] = $attachment;
+                        $resIdFound = true;
+                        unset($aAttachments[$key]);
+                        break;
+                    }
+                }
+                if (!$resIdFound) {
+                    $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                    $canNotSend[] = [$valueResId, $resInfo['alt_identifier'], 'Not attachment to send'];
                 }
             }
-            if (!$resIdFound) {
-                $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                $canNotSend[$valueResId] = [$resInfo['alt_identifier'], 'Not attachment to send'];
+    
+            foreach ($aTemplates as $key => $value) {
+                $infoFee = $value['fee'];
+                PreProcessActionController::calculFee([
+                    'fee'       => $infoFee,
+                    'resources' => $resources
+                ]);
             }
         }
-
-        // TODO calcul fee
-        $fee = 0;
 
         return $response->withJson([
             'shippingTemplates' => $aTemplates,
             'entities'          => $entities,
             'resources'         => $resources,
-            'canNotSend'        => $canNotSend,
-            'fee'               => $fee
+            'canNotSend'        => $canNotSend
         ]);
     }
 
@@ -438,5 +444,27 @@ class PreProcessActionController
         }
 
         return $response->withJson(['isDestinationChanging' => $changeDestination]);
+    }
+
+    public static function calculFee(array $aArgs)
+    {
+        foreach ($aArgs['resources'] as $value) {
+            $realId = 0;
+            if ($value['res_id'] == 0) {
+                $realId = $value['res_id_version'];
+                $isVersion = true;
+            } elseif ($value['res_id_version'] == 0) {
+                $realId = $value['res_id'];
+                $isVersion = false;
+            }
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $value['res_id'], 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $docserver           = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment['docserver_id'], 'select' => ['path_template']]);
+            $pathToDocument      = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment['path']) . $convertedAttachment['filename'];
+
+            $pdf = new Fpdi('P', 'pt');
+            $pageCount = $pdf->setSourceFile($pathToDocument);
+        }
+
+        return $fee;
     }
 }
