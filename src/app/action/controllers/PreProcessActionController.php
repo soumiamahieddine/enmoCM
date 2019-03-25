@@ -16,6 +16,7 @@ use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
+use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
@@ -364,7 +365,9 @@ class PreProcessActionController
         $canNotSend = [];
 
         foreach ($aDestination as $values) {
-            $entities[] = $values['destination'];
+            if (!empty($values['destination'])) {
+                $entities[] = $values['destination'];
+            }
         }
 
         if (!empty($entities)) {
@@ -394,13 +397,40 @@ class PreProcessActionController
                 $resIdFound = false;
                 foreach ($aAttachments as $key => $attachment) {
                     if ($attachment['res_id_master'] == $valueResId) {
-                        // TODO Check Contact;
+                        if (empty($attachment['dest_address_id'])) {
+                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'No contact attached'];
+                            unset($aAttachments[$key]);
+                            break;
+                        }
+                        $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$attachment['dest_address_id']]]);
+                        if (empty($contact[0])) {
+                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'No contact attached'];
+                            unset($aAttachments[$key]);
+                            break;
+                        }
+                        if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
+                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Only France available'];
+                            unset($aAttachments[$key]);
+                            break;
+                        }
+                        $afnorAddress = ContactController::getContactAfnor($contact[0]);
+                        if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6])) {
+                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Incomplete address'];
+                            unset($aAttachments[$key]);
+                            break;
+                        }
+
                         $resources[] = $attachment;
                         $resIdFound = true;
                         unset($aAttachments[$key]);
                         break;
                     }
                 }
+
                 if (!$resIdFound) {
                     $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                     $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Not attachment to send'];
