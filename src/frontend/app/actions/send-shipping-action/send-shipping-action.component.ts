@@ -31,19 +31,19 @@ export class SendShippingActionComponent implements OnInit {
 
     currentShipping: any = null;
 
-    entitiesList: string [] = [];
-    attachList: any [] = [];
+    entitiesList: string[] = [];
+    attachList: any[] = [];
 
     mailsNotSend: any[] = []
 
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
-    
+
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendShippingActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void {
         this.loading = true;
 
-        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id + '/checkShippings', {resources : this.data.selectedRes})
+        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id + '/checkShippings', { resources: this.data.selectedRes })
             .subscribe((data: any) => {
                 this.shippings = data.shippingTemplates;
                 this.mailsNotSend = data.canNotSend;
@@ -61,14 +61,19 @@ export class SendShippingActionComponent implements OnInit {
 
         let realResSelected: string[] = this.attachList.map((e: any) => { return e.res_id_master; });
 
-        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note : this.noteEditor.getNoteContent()})
+        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note: this.noteEditor.getNoteContent() })
             .subscribe((data: any) => {
+                if (data && data.data != null) {
+                    this.dialogRef.close('success');
+                }
+                if (data && data.errors != null) {
+                    this.notify.error(data.errors);
+                }
                 this.loading = false;
-                this.dialogRef.close('success');
             }, (err: any) => {
                 this.notify.handleErrors(err);
                 this.loading = false;
             });
     }
-    
+
 }
