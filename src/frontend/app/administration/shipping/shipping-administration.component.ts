@@ -76,7 +76,7 @@ export class ShippingAdministrationComponent implements OnInit {
     ngOnInit(): void {
 
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
