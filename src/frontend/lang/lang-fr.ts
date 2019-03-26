@@ -925,6 +925,7 @@ export const LANG_FR = {
     "shipping_maxWeightInfo"                            : "Jusqu'à 20g",
     "shapingOptions"                            : "Options de mise en page",
     "sendModes"                            : "Modes d'envoi",
+    "sendMode"                            : "Mode d'envoi",
     "pricesInformations"                            : "Tarifs indicatifs",
     "shippingModification"                      : "Modification du modèle d'envoi",
     "shippingCreation"                          : "Création du modèle d'envoi",

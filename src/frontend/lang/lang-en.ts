@@ -899,6 +899,7 @@ export const LANG_EN = {
     "shipping_maxWeightInfo"                            : "up to 20g",
     "shapingOptions"                            : "Shapings options",
     "sendModes"                            : "Send modes",
+    "sendMode"                            : "Send mode",
     "pricesInformations"                            : "Prices informations",
     "shippingModification"                            : "Shipping modification",
     "shippingCreation"                            : "Shipping creation",

@@ -57,11 +57,30 @@
                 <div *ngIf="currentShipping != null" class="col-md-12">
                     <div class="formType" style="flex-direction: column;">
                         <div class="formType-title">
-                            {{lang.pricesInformations}} *
+                            {{lang.pricesInformations}}
                         </div>
                         <div class="priceContent">
                             <div class="priceInfo">
-                                * Selon les paramètres définis dans le modèle
+                                <div class="col-md-6">
+                                    <p>
+                                        {{lang.sendMode}} :
+                                    </p>
+                                    <ul>
+                                        <li>
+                                            {{lang['shipping_'+currentShipping.options.sendMode]}}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>
+                                        {{lang.shapingOptions}} :
+                                    </p>
+                                    <ul>
+                                        <li *ngFor="let option of currentShipping.options.shapingOptions">
+                                            {{lang['shipping_'+option]}}
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <mat-form-field appearance="outline">
                                 <input matInput [(ngModel)]="currentShipping.fee" required name="totalPrice"
@@ -86,7 +105,8 @@
     </mat-sidenav-container>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button mat-button color="primary" [disabled]="loading || currentShipping == null || attachList.length == 0"
+    <button mat-raised-button mat-button color="primary"
+        [disabled]="loading || currentShipping == null || attachList.length == 0"
         (click)="onSubmit()">{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>
