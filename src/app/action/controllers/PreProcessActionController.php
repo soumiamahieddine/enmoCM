@@ -18,7 +18,6 @@ use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
-use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
 use Entity\models\EntityModel;
@@ -29,6 +28,7 @@ use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
+use Shipping\controllers\ShippingTemplateController;
 use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -444,7 +444,7 @@ class PreProcessActionController
     
             foreach ($aTemplates as $key => $value) {
                 if (!empty($resources)) {
-                    $templateFee = PreProcessActionController::calculFee([
+                    $templateFee = ShippingTemplateController::calculShippingFee([
                         'fee'       => $value['fee'],
                         'resources' => $resources
                     ]);
@@ -484,31 +484,5 @@ class PreProcessActionController
         }
 
         return $response->withJson(['isDestinationChanging' => $changeDestination]);
-    }
-
-    public static function calculFee(array $aArgs)
-    {
-        $fee = 0;
-        foreach ($aArgs['resources'] as $value) {
-            $realId = 0;
-            if ($value['res_id'] == 0) {
-                $realId = $value['res_id_version'];
-                $isVersion = true;
-            } elseif ($value['res_id_version'] == 0) {
-                $realId = $value['res_id'];
-                $isVersion = false;
-            }
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $value['res_id'], 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
-            $docserver           = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment['docserver_id'], 'select' => ['path_template']]);
-            $pathToDocument      = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment['path']) . $convertedAttachment['filename'];
-
-            $pdf = new Fpdi();
-            $pageCount = $pdf->setSourceFile($pathToDocument);
-
-            $attachmentFee = ($pageCount > 1) ? ($pageCount - 1) * $aArgs['fee']['nextPagePrice'] : 0 ;
-            $fee = $fee + $attachmentFee + $aArgs['fee']['firstPagePrice'] + $aArgs['fee']['postagePrice'];
-        }
-
-        return $fee;
     }
 }

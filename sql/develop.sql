@@ -95,6 +95,21 @@ account json DEFAULT '{}',
 CONSTRAINT shipping_templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+DROP TABLE IF EXISTS shippings;
+CREATE TABLE shippings
+(
+id serial NOT NULL,
+user_id INTEGER NOT NULL,
+attachment_id INTEGER NOT NULL,
+is_version boolean NOT NULL,
+options json DEFAULT '{}',
+fee FLOAT NOT NULL,
+recipient_entity_id INTEGER NOT NULL,
+account_id character varying(64) NOT NULL,
+creation_date timestamp without time zone NOT NULL,
+CONSTRAINT shippings_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 
 /* SERVICES */
 DO $$ BEGIN
@@ -246,11 +261,30 @@ END$$;
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'contact_addresses') AND attname = 'external_contact_id') THEN
     ALTER TABLE contact_addresses DROP COLUMN IF EXISTS external_id;
-    ALTER TABLE contact_addresses ADD COLUMN external_id json DEFAULT '{}';
+    ALTER TABLE contact_addresses ADD COLUMN external_id jsonb DEFAULT '{}';
     UPDATE contact_addresses SET external_id = json_build_object('m2m', external_contact_id);
     ALTER TABLE contact_addresses DROP COLUMN IF EXISTS external_contact_id;
   END IF;
 END$$;
+DO $$ BEGIN
+  IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_attachments' and column_name = 'external_id' and data_type != 'jsonb') THEN
+    ALTER TABLE res_attachments DROP COLUMN IF EXISTS external_id_tmp;
+    ALTER TABLE res_attachments ADD COLUMN external_id_tmp jsonb DEFAULT '{}';
+    UPDATE res_attachments SET external_id_tmp = json_build_object('signatureBookId', external_id);
+    ALTER TABLE res_attachments DROP COLUMN IF EXISTS external_id;
+	  ALTER TABLE res_attachments RENAME COLUMN external_id_tmp TO external_id;
+  END IF;
+END$$;
+DO $$ BEGIN
+  IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_version_attachments' and column_name = 'external_id' and data_type != 'jsonb') THEN
+    ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS external_id_tmp;
+    ALTER TABLE res_version_attachments ADD COLUMN external_id_tmp jsonb DEFAULT '{}';
+    UPDATE res_version_attachments SET external_id_tmp = json_build_object('signatureBookId', external_id);
+    ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS external_id;
+	  ALTER TABLE res_version_attachments RENAME COLUMN external_id_tmp TO external_id;
+  END IF;
+END$$;
+
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS

@@ -1580,6 +1580,20 @@ account json DEFAULT '{}',
 CONSTRAINT shipping_templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+CREATE TABLE shippings
+(
+id serial NOT NULL,
+user_id INTEGER NOT NULL,
+attachment_id INTEGER NOT NULL,
+is_version boolean NOT NULL,
+options json DEFAULT '{}',
+fee FLOAT NOT NULL,
+recipient_entity_id INTEGER NOT NULL,
+account_id character varying(64) NOT NULL,
+creation_date timestamp without time zone NOT NULL,
+CONSTRAINT shippings_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 
 --VIEWS
 -- view for letterbox
