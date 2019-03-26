@@ -4,7 +4,7 @@
 
 <mat-list *ngIf="!loading">
     <div *ngIf="diffList.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
-        AUCUNE LISTE DE DIFFUSION
+        {{lang.noDiffusionList}}
     </div>
     <mat-form-field *ngIf="injectDatas.editable" appearance="outline" floatLabel="never" [style.fontSize.px]="10">
         <input class="userDiffList" #autocompleteFilter type="text" placeholder="{{lang.addUserOrEntity}}" matInput
@@ -34,10 +34,10 @@
                 [cdkDropListEnterPredicate]="role.id == 'dest' ? noReturnPredicate : allPredicate"
                 [cdkDropListDisabled]="role.id == 'dest' || !injectDatas.editable">
                 <div *ngIf="diffList[role.id].items.length === 0" style="text-align:center;">
-                    <span style="opacity: 0.5;text-align: center;font-size: 10px;padding: 10px;">Aucune personne</span>
+                    <span style="opacity: 0.5;text-align: center;font-size: 10px;padding: 10px;">{{lang.noPerson}}</span>
                     <button mat-icon-button *ngIf="role.id == 'dest' && injectDatas.editable"
                         (click)="loadDestUserList()" [matMenuTriggerFor]="menuDestUserList"
-                        title="Choisir une autre personne de l'entité">
+                        title="lang.chooseAnotherEntityUser">
                         <mat-icon class="fa fa-edit" color="primary"></mat-icon>
                     </button>
                 </div>
@@ -58,7 +58,7 @@
                         {{diffusion.descriptionToDisplay}} </p>
                     <button mat-icon-button *ngIf="role.id == 'dest' && injectDatas.editable"
                         (click)="loadDestUserList()" [matMenuTriggerFor]="menuDestUserList"
-                        title="Choisir une autre personne de l'entité">
+                        title="lang.chooseAnotherEntityUser">
                         <mat-icon class="fa fa-edit" color="primary"></mat-icon>
                     </button>
                     <button mat-icon-button *ngIf="role.id != 'dest' && injectDatas.editable"

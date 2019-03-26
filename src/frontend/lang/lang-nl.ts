@@ -923,8 +923,7 @@ export const LANG_NL = {
     "shipping_big_a4"                            : "Big format A4 (C4)", //_TO_TRANSLATE
     "shipping_firstPagePrice"                            : "1st page", //_TO_TRANSLATE
     "shipping_nextPagePrice"                            : "Next page(s)", //_TO_TRANSLATE
-    "shipping_postagePrice"                            : "Postage", //_TO_TRANSLATE
-    "shipping_maxWeightInfo"                            : "up to 20g", //_TO_TRANSLATE
+    "shipping_postagePrice"                            : "Postage up to 20g", //_TO_TRANSLATE
     "shapingOptions"                            : "Shapings options", //_TO_TRANSLATE
     "sendModes"                            : "Send modes", //_TO_TRANSLATE
     "sendMode"                            : "Send mode", //_TO_TRANSLATE
@@ -935,9 +934,17 @@ export const LANG_NL = {
     "shippingUpdated"                            : "Shipping updated", //_TO_TRANSLATE
     "shippingDeleted"                            : "Shipping deleted", //_TO_TRANSLATE
     "shippings"                            : "Shippings templates", //_TO_TRANSLATE
+    "noShippingTemplate"                        : "No shipping templates available for these entities", //_TO_TRANSLATE
+    "doShippingParameter"                       : "Please set up a template in <b>Administration</b> > <b>Shippings templates</b>", //_TO_TRANSLATE
+    "shippingReadyToSend"                       : "document(s) ready to be sent", //_TO_TRANSLATE
+    "shippingNotEligible"                       : "Ineligible mail(s) ", //_TO_TRANSLATE
+    "accordingTemplateParameters"               : "According to the parameters defined in the model", //_TO_TRANSLATE
     "mailevaAccount"                             : "Maileva account", //_TO_TRANSLATE
     "destinationChangingInfo"              : "This mail will be reassigned to this entity", //_TO_TRANSLATE
     "destinationChangingInfoMass"                            : "These mails following external entity of", //_TO_TRANSLATE
     "destinationChangingInfoMass2"                            : "will be redirected to entity", //_TO_TRANSLATE
     "selected"                            : "selected", //_TO_TRANSLATE
+    "noDiffusionList"                           : "NO DIFFUSION LIST", //_TO_TRANSLATE
+    "chooseAnotherEntityUser"                   : "Choose another person from the entity", //_TO_TRANSLATE
+    "totalPrice"                                : "Total price", //_TO_TRANSLATE
 };
