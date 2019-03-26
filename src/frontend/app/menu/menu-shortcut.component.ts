@@ -3,8 +3,8 @@ import { Router }               from '@angular/router';
 import { HttpClient }           from '@angular/common/http';
 import { Location }             from '@angular/common';
 import { LANG }                 from '../translate.component';
-import { ShortcutMenuService }  from '../../service/shortcut-menu.service';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
+import { HeaderService } from '../../service/header.service';
 
 declare function $j(selector: any) : any;
 
@@ -28,7 +28,7 @@ export class MenuShortcutComponent implements OnInit {
     speedDialFabColumnDirection = 'column';
 
 
-    constructor(public http: HttpClient, private _location: Location, private _router: Router, public shortcut: ShortcutMenuService, public dialog: MatDialog) {
+    constructor(public http: HttpClient, private _location: Location, private _router: Router, public headerService: HeaderService, public dialog: MatDialog) {
         this.mobileMode = angularGlobals.mobileMode;
         this.router = _router;
         /**/
@@ -37,8 +37,8 @@ export class MenuShortcutComponent implements OnInit {
     ngOnInit(): void {      
         this.coreUrl = angularGlobals.coreUrl;
         setTimeout(() => {
-            if(this.shortcut.shortcutsData.user.indexingGroups.length > 0) {
-                this.shortcut.shortcutsData.user.indexingGroups.forEach((group: any) => {
+            if(this.headerService.user.indexingGroups.length > 0) {
+                this.headerService.user.indexingGroups.forEach((group: any) => {
                     this.speedDialFabButtons.push({
                         icon: 'fa fa-plus',
                         tooltip: this.lang.indexingWithProfile+' '+ group.label,

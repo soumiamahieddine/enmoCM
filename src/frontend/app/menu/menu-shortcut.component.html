@@ -5,22 +5,22 @@
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title style="justify-content: center;">
-                    {{shortcut.shortcutsData.user.firstname}} {{shortcut.shortcutsData.user.lastname | uppercase}}
+                    {{headerService.user.firstname}} {{headerService.user.lastname | uppercase}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list>
                 <mat-divider></mat-divider>
-                <mat-list-item *ngFor="let group of shortcut.shortcutsData.user.groups">
+                <mat-list-item *ngFor="let group of headerService.user.groups">
                     <p mat-line style="color:#666;opacity:0.5;"> {{group.group_desc}} </p>
                 </mat-list-item>
                 <h3 mat-subheader style="color:#666;">{{lang.groups}}</h3>
                 <mat-divider></mat-divider>
-                <mat-list-item *ngFor="let group of shortcut.shortcutsData.user.groups">
+                <mat-list-item *ngFor="let group of headerService.user.groups">
                     <p mat-line style="color:#666;opacity:0.5;"> {{group.group_desc}} </p>
                 </mat-list-item>
                 <h3 mat-subheader style="color:#666;">{{lang.entities}}</h3>
                 <mat-divider></mat-divider>
-                <mat-list-item *ngFor="let entity of shortcut.shortcutsData.user.entities">
+                <mat-list-item *ngFor="let entity of headerService.user.entities">
                     <p mat-line style="color:#666;opacity:0.5;"> {{entity.entity_label}} </p>
                 </mat-list-item>
             </mat-list>
@@ -30,7 +30,7 @@
 <mat-nav-list>
     <h3 mat-subheader>{{lang.shortcut}}</h3>
     <div class="button-row" style="padding-left: 10px;padding-right: 10px;display: flex;width: 300px;margin-top: -10px;margin-bottom: 10px;">
-        <ng-container *ngFor="let shortcut of shortcut.shortcutsData.menu">
+        <ng-container *ngFor="let shortcut of headerService.menu">
             <span style="flex:1;text-align: left;padding: 5px;" *ngIf="(shortcut.id == 'index_mlb' && speedDialFabButtons.length<=1) || (shortcut.id != 'index_mlb' && shortcut.shortcut == 'true')">
                 <button style="z-index: 9999;" color="default" mat-fab (click)="gotToMenu(shortcut);" matTooltip="{{shortcut.name}}"
                     matTooltipPosition="above">

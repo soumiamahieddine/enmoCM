@@ -4,7 +4,6 @@ import { SharedModule }                         from './app-common.module';
 
 import { CustomSnackbarComponent }              from './notification.service';
 import { ConfirmModalComponent }                from './confirmModal.component';
-import { ShortcutMenuService }                  from '../service/shortcut-menu.service';
 import { HeaderService }                        from '../service/header.service';
 import { FiltersListService }                   from '../service/filtersList.service';
 
@@ -122,7 +121,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         SendShippingActionComponent,
         ViewDocActionComponent
     ],
-    providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
+    providers: [ HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material';
+import { HeaderService } from '../service/header.service';
 
 /** Custom options the configure the tooltip's default show/hide delays. */
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
@@ -30,14 +31,16 @@ declare function $j(selector: any): any;
 })
 export class AppComponent {
 
-    constructor(iconReg: MatIconRegistry, sanitizer: DomSanitizer) {
+    constructor(iconReg: MatIconRegistry, sanitizer: DomSanitizer, public headerService: HeaderService) {
 
         iconReg.addSvgIcon('maarchLogo', sanitizer.bypassSecurityTrustResourceUrl('static.php?filename=logo_white.svg')).addSvgIcon('maarchLogoOnly', sanitizer.bypassSecurityTrustResourceUrl('img/logo_only_white.svg'));
         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
             angularGlobals.mobileMode = true;
         } else {
             angularGlobals.mobileMode = false;
-        } 
+        }
+
+        this.headerService.loadHeader();
 
         /*REMOVE AFTER FULL MAARCH V2*/
         $j('my-app').css({"display":"block"});
