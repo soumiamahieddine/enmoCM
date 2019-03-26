@@ -1,8 +1,16 @@
 @import '../../css/vars.scss';
 
 .basketList {
+    box-shadow:none;
+
     ::ng-deep.mat-expansion-panel-body {
         padding: 0;
+    }
+
+    .mat-expansion-panel-header-title {
+        color: rgba(0,0,0,0.54);
+        font-size: 14px;
+        font-weight: 500;
     }
 
     .mat-line {
@@ -21,11 +29,13 @@
 }
 .nbRes {
     color : $primary;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
+    min-width:auto;
 }
 .nbResZero {
     color : #666;
     font-size: 12px;
     font-weight: bold;
+    min-width:auto;
 }

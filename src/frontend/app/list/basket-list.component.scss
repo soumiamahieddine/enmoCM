@@ -48,63 +48,10 @@
   }
 }
 
-.panel-left {
+.panel-left, .panel-right {
   min-width: 300px;
-
-  &-title {
-    padding: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
-
-    color: #666;
-    display: flex;
-    align-items: center;
-
-    &-label,
-    &-tool {
-      flex: 1;
-      display: flex;
-      align-items: center;
-
-    }
-
-    &-tool {
-      justify-content: end;
-    }
-
-  }
-
-  &-menu {
-    &-shortcut {
-      span {
-        display: flex;
-        flex: 1;
-        justify-content: center;
-      }
-
-      .mat-mini-fab {
-        box-shadow: none;
-      }
-    }
-
-    &-basket {
-      box-shadow: none;
-
-      .mat-expansion-panel-header-title {
-        font-weight: bold;
-        color: #135F7F;
-      }
-
-      ::ng-deep.mat-expansion-panel-body {
-        padding: 0;
-      }
-    }
-
-    h3 {
-      font-size: 12px;
-      font-weight: 500;
-    }
-  }
+  box-shadow: none;
+  border: none;
 }
 
 .container {

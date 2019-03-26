@@ -173,7 +173,7 @@
             </div>
         </mat-sidenav-content>
         <mat-sidenav #snav2 mode="side" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'
-            [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;"
+            [opened]="mobileQuery.matches ? false : false" class="panel-right" style="overflow-x:hidden;"
             [class.docView]="!filtersListService.filterMode" [ngStyle]="{'width': mobileMode ? '80%' : '30%'}"
             autoFocus="false">
             <div *ngIf="innerHtml && !filtersListService.filterMode" [matTooltip]="currentChrono"
