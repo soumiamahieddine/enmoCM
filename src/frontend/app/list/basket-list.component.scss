@@ -28,13 +28,13 @@
     &-label,
     &-tool {
       flex: 1;
-      display: flex;
       align-items: center;
 
     }
 
     &-tool {
-      justify-content: end;
+      flex: none;
+      justify-content: flex-end;
     }
 
   }
@@ -71,6 +71,15 @@
     box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.09);
 
   }
+}
+
+.fullContainer {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.customContainerRight {
+  padding-right: 10px;
 }
 
 .mat-paginator {

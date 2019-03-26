@@ -1,5 +1,5 @@
 <div class="bg-head-title-tool">
-    <button mat-icon-button>
+    <button mat-icon-button *ngIf="!mobileMode">
         <mat-icon class="fa fa-search"></mat-icon>
     </button>
     <button mat-icon-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" matTooltip="{{lang.menu}}">
@@ -14,9 +14,12 @@
             </button>
         </ng-container>
     </mat-menu>
-    <button mat-button [matMenuTriggerFor]="menu" *ngIf="!mobileMode">
+    <button *ngIf="!mobileMode" mat-button  [matMenuTriggerFor]="menu">
         <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white; margin:0px 12px 8px 0px;"></mat-icon>
-        {{headerService.user.firstname | titlecase }} <b>{{headerService.user.lastname | uppercase}}</b>
+            {{headerService.user.firstname | titlecase }} <b>{{headerService.user.lastname | uppercase}}</b>
+    </button>
+    <button *ngIf="mobileMode" mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white;height: auto;"></mat-icon>
     </button>
     <mat-menu #menu="matMenu" class="headerMaarch">
         <canvas class="header-bg" width="250" height="70"

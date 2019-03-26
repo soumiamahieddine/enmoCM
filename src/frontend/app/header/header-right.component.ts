@@ -6,6 +6,8 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { IndexingGroupModalComponent } from '../menu/menu-shortcut.component';
 import { Router } from '@angular/router';
 
+declare var angularGlobals: any;
+
 @Component({
     selector: 'header-right',
     styleUrls: ['header-right.component.scss'],
@@ -19,9 +21,11 @@ export class HeaderRightComponent implements OnInit {
     dialogRef   : MatDialogRef<any>;
     config      : any       = {};
 
-    constructor(public http: HttpClient, private router: Router, public headerService: HeaderService, public dialog: MatDialog) { }
+    constructor(public http: HttpClient, private router: Router, public headerService: HeaderService, public dialog: MatDialog) {
+        this.mobileMode = angularGlobals.mobileMode;
+     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {}
 
     gotToMenu(shortcut:any) {
         if (shortcut.id == 'index_mlb' && this.headerService.user.indexingGroups.length > 1) {
