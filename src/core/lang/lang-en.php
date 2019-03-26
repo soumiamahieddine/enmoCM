@@ -476,3 +476,10 @@ define("_SHIPPINGS_ADMIN", "Shippings admin");
 define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva");
 
 define("_SEND_SHIPPING", "Send a mailpiece");
+
+define("_MAILEVA_CONFIG_DOES_NOT_EXIST", "Maileva configuration does not exist");
+define("_DATA_RESOURCES_FORMAT", "Data resources is empty or not an array");
+define("_NO_CONTACT_ATTACHED_FOR", "No contact attached for this attachment");
+define("_ONLY_FRANCE_AVAILABLE_FOR", "Address is not in France for this attachment");
+define("_INCOMPETE_ADDRESS_FOR", "Incomplete address for this attachment");
+define("_NO_ATTACHMENT_TO_SEND", "Not attachment to send");

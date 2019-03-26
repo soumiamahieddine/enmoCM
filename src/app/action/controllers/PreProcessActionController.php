@@ -338,25 +338,25 @@ class PreProcessActionController
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
-        if (!empty($errors['errors'])) {
-            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
-        }
+        // $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        // if (!empty($errors['errors'])) {
+        //     return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        // }
 
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
-            return $response->withStatus($errors['code'])->withJson(['errors' => 'Maileva configuration does not exist']);
+            return $response->withStatus($errors['code'])->withJson(['errors' => _MAILEVA_CONFIG_DOES_NOT_EXIST]);
         }
 
         $data = $request->getParsedBody();
 
         if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+            return $response->withStatus(400)->withJson(['errors' => _DATA_RESOURCES_FORMAT]);
         }
 
         $data['resources'] = array_slice($data['resources'], 0, 500);
         if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Almost one resource is out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => _DOCUMENT_OUT_PERIMETER]);
         }
 
         $aDestination = ResModel::get([
@@ -377,11 +377,13 @@ class PreProcessActionController
         }
 
         if (!empty($entities)) {
-            $aEntities = EntityModel::get(['select' => ['id'], 'where' => ['entity_id in (?)'], 'data' => $entities]);
+            $aEntities = EntityModel::get(['select' => ['id', 'entity_label'], 'where' => ['entity_id in (?)'], 'data' => $entities]);
 
             $entitiesId = [];
+            $entitiesInfos = [];
             foreach ($aEntities as $value) {
                 $entitiesId[] = (string)$value['id'];
+                $entitiesInfos[] = $value['entity_label'];
             }
 
             $aTemplates = ShippingTemplateModel::getByEntities([
@@ -404,27 +406,27 @@ class PreProcessActionController
                         $resIdFound = true;
                         if (empty($attachment['dest_address_id'])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'No contact attached'];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _NO_CONTACT_ATTACHED_FOR . ' : ' . $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$attachment['dest_address_id']]]);
                         if (empty($contact[0])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'No contact attached'];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _NO_CONTACT_ATTACHED_FOR . ' : ' . $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Only France available'];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _ONLY_FRANCE_AVAILABLE_FOR . ' : ' . $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $afnorAddress = ContactController::getContactAfnor($contact[0]);
                         if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Incomplete address'];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _INCOMPETE_ADDRESS_FOR . ' : ' . $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
@@ -436,7 +438,7 @@ class PreProcessActionController
 
                 if (!$resIdFound) {
                     $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                    $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Not attachment to send'];
+                    $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _NO_ATTACHMENT_TO_SEND];
                 }
             }
     
@@ -455,7 +457,7 @@ class PreProcessActionController
 
         return $response->withJson([
             'shippingTemplates' => $aTemplates,
-            'entities'          => $entities,
+            'entities'          => $entitiesInfos,
             'resources'         => $resources,
             'canNotSend'        => $canNotSend
         ]);

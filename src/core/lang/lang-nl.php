@@ -478,3 +478,10 @@ define("_SHIPPINGS_ADMIN", "Shippings admin_TO_TRANSLATE");
 define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva_TO_TRANSLATE");
 
 define("_SEND_SHIPPING", "Send a mailpiece_TO_TRANSLATE");
+
+define("_MAILEVA_CONFIG_DOES_NOT_EXIST", "Maileva configuration does not exist_TO_TRANSLATE");
+define("_DATA_RESOURCES_FORMAT", "Data resources is empty or not an array_TO_TRANSLATE");
+define("_NO_CONTACT_ATTACHED_FOR", "No contact attached for this attachment_TO_TRANSLATE");
+define("_ONLY_FRANCE_AVAILABLE_FOR", "Address is not in France for this attachment_TO_TRANSLATE");
+define("_INCOMPETE_ADDRESS_FOR", "Incomplete address for this attachment_TO_TRANSLATE");
+define("_NO_ATTACHMENT_TO_SEND", "Not attachment to send_TO_TRANSLATE");

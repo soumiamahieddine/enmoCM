@@ -912,7 +912,7 @@ export const LANG_FR = {
     "shipping_color"                            : "Couleur",
     "shipping_duplexPrinting"                            : "Recto verso",
     "shipping_addressPage"                            : "Page porte adresse",
-    "shipping_fast"                            : "Rapide (J+2)",
+    "shipping_fast"                            : "Prioritaire (J+2)",
     "shipping_economic"                            : "Economique (J+4)",
     "shipping_registered_mail"                            : "Recommandé",
     "shipping_registered_mail_ar"                            : "Recommandé AR",
