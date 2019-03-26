@@ -483,3 +483,6 @@ define("_NO_CONTACT_ATTACHED_FOR", "Aucun contact attaché pour cette pièce joi
 define("_ONLY_FRANCE_AVAILABLE_FOR", "L'adresse n'est pas en France pour cette pièce jointe");
 define("_INCOMPETE_ADDRESS_FOR", "Adresse incomplète pour cette pièce jointe");
 define("_NO_ATTACHMENT_TO_SEND", "Aucune pièce jointe à envoyer");
+
+define("_VIEW_DOCUMENTS_WITH_NOTES", "Voir les courriers annotés");
+define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "Voir les pièces jointes de type 'Document annoté'");

@@ -483,3 +483,6 @@ define("_NO_CONTACT_ATTACHED_FOR", "No contact attached for this attachment");
 define("_ONLY_FRANCE_AVAILABLE_FOR", "Address is not in France for this attachment");
 define("_INCOMPETE_ADDRESS_FOR", "Incomplete address for this attachment");
 define("_NO_ATTACHMENT_TO_SEND", "Not attachment to send");
+
+define("_VIEW_DOCUMENTS_WITH_NOTES", "View mail with notes");
+define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "View attachment of 'document_with_notes' type");

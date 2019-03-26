@@ -102,6 +102,11 @@ array_push(
 );
 
 $where = " (res_id_master = ? and coll_id = ? and status <> 'DEL' and status <> 'OBS' and (status <> 'TMP' or (typist = ? and status = 'TMP')))";
+
+if (!$core->test_service('view_documents_with_notes', 'attachments', false)) {
+    $where .= ' AND attachment_type <> \'document_with_notes\'';
+}
+
 $arrayPDO = array($resId, $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
 //Filtre sur le type
 if (isset($whereAttach) && $whereAttach <> '') {
@@ -115,7 +120,7 @@ $order_field = $list->getOrderField();
 if (!empty($order_field) && !empty($order)) {
     if ($_REQUEST['order_field'] == 'identifier') {
         $orderstr = "order by order_alphanum(identifier)"." ".$order;
-    } else if ($_REQUEST['order_field'] == 'priority') {
+    } elseif ($_REQUEST['order_field'] == 'priority') {
         $where .= ' and res_view_attachments.priority = priorities.id';
         $select['priorities'] = ['order', 'id'];
         $orderstr = 'order by priorities.order '.$order;
@@ -190,8 +195,8 @@ if (isset($_REQUEST['load'])) {
 </html>
 <?php
 } else {
-    $request = new request;
-    $attachArr = $request->PDOselect(
+        $request = new request;
+        $attachArr = $request->PDOselect(
         $select,
         $where,
         $arrayPDO,
@@ -207,219 +212,219 @@ if (isset($_REQUEST['load'])) {
         false,
         $_REQUEST['start']
     );
-    // $request->show();
+        // $request->show();
 
-    foreach ($attachArr as $key => $value) {
-        if ($attachArr[$key][0]["value"] == "0") {
-            array_shift($attachArr[$key]);
-            $attachArr[$key][0]["column"] = "res_id";
-        } else {
-            unset($attachArr[$key][1]);
-            $attachArr[$key] = array_values($attachArr[$key]);
+        foreach ($attachArr as $key => $value) {
+            if ($attachArr[$key][0]["value"] == "0") {
+                array_shift($attachArr[$key]);
+                $attachArr[$key][0]["column"] = "res_id";
+            } else {
+                unset($attachArr[$key][1]);
+                $attachArr[$key] = array_values($attachArr[$key]);
+            }
         }
-    }
 
-    for ($i = 0; $i < count($attachArr); $i ++) {
-        //$modifyValue = false;
-        if ($attachArr[$i][2]['value'] == 'TMP') {
-            $is_tmp=true;
-        } else {
-            $is_tmp=false;
-        }
-        for ($j = 0; $j < count($attachArr[$i]); $j ++) {
-            foreach (array_keys($attachArr[$i][$j]) as $value) {
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'res_id') {
-                    $attachArr[$i][$j]['res_id'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _ID;
-                    $attachArr[$i][$j]['size'] = '18';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = false;
-                    $attachArr[$i][$j]['order'] = 'res_id';
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'relation') {
-                    $attachArr[$i][$j]['relation'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _VERSION;
-                    $attachArr[$i][$j]['size'] = '18';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                    $attachArr[$i][$j]['order'] = 'relation';
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'identifier') {
-                    $attachArr[$i][$j]['identifier'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _CHRONO_NUMBER;
-                    $attachArr[$i][$j]['size'] = '18';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = false;
-                    $attachArr[$i][$j]['order'] = 'identifier';
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'attachment_type') {
-                    $attachArr[$i][$j]['value'] = $_SESSION['attachment_types'][$attachArr[$i][$j]['value']];
-                    $attachArr[$i][$j]['attachment_type'] = $_SESSION['attachment_types'][$attachArr[$i][$j]['value']];
-                    $attachArr[$i][$j]['label'] = _ATTACHMENT_TYPES;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'dest_contact_id') {
-                    if ($attachArr[$i][$j]['value'] <> 0 && $attachArr[$i][$j]['value'] <> '') {
-                        $stmt = $db->query("SELECT firstname, lastname, society FROM contacts_v2 WHERE contact_id = ? ", array($attachArr[$i][$j]['value']));
-                        $res = $stmt->fetchObject();
-                        $attachArr[$i][$j]['value'] = functions::protect_string_db($res->firstname) .' '. functions::protect_string_db($res->lastname) . ' '. functions::protect_string_db($res->society);
+        for ($i = 0; $i < count($attachArr); $i ++) {
+            //$modifyValue = false;
+            if ($attachArr[$i][2]['value'] == 'TMP') {
+                $is_tmp=true;
+            } else {
+                $is_tmp=false;
+            }
+            for ($j = 0; $j < count($attachArr[$i]); $j ++) {
+                foreach (array_keys($attachArr[$i][$j]) as $value) {
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'res_id') {
+                        $attachArr[$i][$j]['res_id'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _ID;
+                        $attachArr[$i][$j]['size'] = '18';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = false;
+                        $attachArr[$i][$j]['order'] = 'res_id';
                     }
-                    $attachArr[$i][$j]['dest_contact_id'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _DEST;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'dest_user') {
-                    if ($attachArr[$i][$j]['value'] != '') {
-                        $stmt = $db->query("SELECT firstname, lastname FROM users WHERE user_id = ? ", [$attachArr[$i][$j]['value']]);
-                        $res = $stmt->fetchObject();
-                        $attachArr[$i][$j]['value'] = functions::protect_string_db($res->firstname) .' '. functions::protect_string_db($res->lastname);
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'relation') {
+                        $attachArr[$i][$j]['relation'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _VERSION;
+                        $attachArr[$i][$j]['size'] = '18';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                        $attachArr[$i][$j]['order'] = 'relation';
                     }
-                    $attachArr[$i][$j]['dest_user'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _DEST;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'updated_by') {
-                    $stmt = $db->query("SELECT lastname FROM users WHERE user_id = ?", array($attachArr[$i][$j]['value']));
-                    $res = $stmt->fetchObject();
-                    $attachArr[$i][$j]['value'] = functions::protect_string_db($res->lastname);
-                    $attachArr[$i][$j]['updated_by'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _BBY;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                    $attachArr[$i][$j]['order'] = 'updated_by';
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'typist') {
-                    $stmt = $db->query("SELECT lastname FROM users WHERE user_id = ?", array($attachArr[$i][$j]['value']));
-                    $res = $stmt->fetchObject();
-                    $attachArr[$i][$j]['typist_id'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['value'] = functions::protect_string_db($res->lastname);
-                    $attachArr[$i][$j]['typist'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _BBY;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                    $attachArr[$i][$j]['order'] = 'typist';
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'title') {
-                    $attachArr[$i][$j]['title'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _OBJECT;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                    $attachArr[$i][$j]['order'] = 'title';
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'creation_date') {
-                    $attachArr[$i][$j]['value'] = $request->format_date_db(
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'identifier') {
+                        $attachArr[$i][$j]['identifier'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _CHRONO_NUMBER;
+                        $attachArr[$i][$j]['size'] = '18';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = false;
+                        $attachArr[$i][$j]['order'] = 'identifier';
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'attachment_type') {
+                        $attachArr[$i][$j]['value'] = $_SESSION['attachment_types'][$attachArr[$i][$j]['value']];
+                        $attachArr[$i][$j]['attachment_type'] = $_SESSION['attachment_types'][$attachArr[$i][$j]['value']];
+                        $attachArr[$i][$j]['label'] = _ATTACHMENT_TYPES;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'dest_contact_id') {
+                        if ($attachArr[$i][$j]['value'] <> 0 && $attachArr[$i][$j]['value'] <> '') {
+                            $stmt = $db->query("SELECT firstname, lastname, society FROM contacts_v2 WHERE contact_id = ? ", array($attachArr[$i][$j]['value']));
+                            $res = $stmt->fetchObject();
+                            $attachArr[$i][$j]['value'] = functions::protect_string_db($res->firstname) .' '. functions::protect_string_db($res->lastname) . ' '. functions::protect_string_db($res->society);
+                        }
+                        $attachArr[$i][$j]['dest_contact_id'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _DEST;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'dest_user') {
+                        if ($attachArr[$i][$j]['value'] != '') {
+                            $stmt = $db->query("SELECT firstname, lastname FROM users WHERE user_id = ? ", [$attachArr[$i][$j]['value']]);
+                            $res = $stmt->fetchObject();
+                            $attachArr[$i][$j]['value'] = functions::protect_string_db($res->firstname) .' '. functions::protect_string_db($res->lastname);
+                        }
+                        $attachArr[$i][$j]['dest_user'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _DEST;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'updated_by') {
+                        $stmt = $db->query("SELECT lastname FROM users WHERE user_id = ?", array($attachArr[$i][$j]['value']));
+                        $res = $stmt->fetchObject();
+                        $attachArr[$i][$j]['value'] = functions::protect_string_db($res->lastname);
+                        $attachArr[$i][$j]['updated_by'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _BBY;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                        $attachArr[$i][$j]['order'] = 'updated_by';
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'typist') {
+                        $stmt = $db->query("SELECT lastname FROM users WHERE user_id = ?", array($attachArr[$i][$j]['value']));
+                        $res = $stmt->fetchObject();
+                        $attachArr[$i][$j]['typist_id'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['value'] = functions::protect_string_db($res->lastname);
+                        $attachArr[$i][$j]['typist'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _BBY;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                        $attachArr[$i][$j]['order'] = 'typist';
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'title') {
+                        $attachArr[$i][$j]['title'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _OBJECT;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                        $attachArr[$i][$j]['order'] = 'title';
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'creation_date') {
+                        $attachArr[$i][$j]['value'] = $request->format_date_db(
                         $attachArr[$i][$j]['value'],
                         true
                     );
-                    $attachArr[$i][$j]['creation_date'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _CREATED;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'doc_date') {
-                    $attachArr[$i][$j]['value'] = $request->format_date_db(
+                        $attachArr[$i][$j]['creation_date'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _CREATED;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'doc_date') {
+                        $attachArr[$i][$j]['value'] = $request->format_date_db(
                         $attachArr[$i][$j]['value'],
                         true
                     );
-                    $attachArr[$i][$j]['doc_date'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _UPDATED_DATE;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'validation_date') {
-                    $attachArr[$i][$j]['value'] = $request->format_date_db(
+                        $attachArr[$i][$j]['doc_date'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _UPDATED_DATE;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'validation_date') {
+                        $attachArr[$i][$j]['value'] = $request->format_date_db(
                         $attachArr[$i][$j]['value'],
                         true
                     );
-                    $attachArr[$i][$j]['validation_date'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _BACK_DATE;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'status') {
-                    $stmt = $db->query("SELECT id, label_status, img_filename FROM status WHERE id = ?", array($attachArr[$i][$j]['value']));
-                    $res = $stmt->fetchObject();
-                    $img_class = substr($res->img_filename, 0, 2);
+                        $attachArr[$i][$j]['validation_date'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _BACK_DATE;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                    }
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'status') {
+                        $stmt = $db->query("SELECT id, label_status, img_filename FROM status WHERE id = ?", array($attachArr[$i][$j]['value']));
+                        $res = $stmt->fetchObject();
+                        $img_class = substr($res->img_filename, 0, 2);
 
-                    $attachArr[$i][$j]['value_bis'] = $attachArr[$i][$j]['value'];
-                    if ($is_tmp == true) {
-                        $attachArr[$i][$j]['value'] = '<span style="color:#135F7F;">'.functions::protect_string_db($res->label_status).'</span>';
-                    } else if ($res->id == 'TRA' || $res->id == 'SIGN') {
-                        $attachArr[$i][$j]['value'] = '<span style="color:green;"><i title="'.$res->label_status.'" style="font-size:20px;" class="'.$img_class.' '.$img_class.'-2x '.functions::protect_string_db($res->img_filename).'"></i><br/>'.$res->label_status.'</span>';
-                    } else {
-                        $attachArr[$i][$j]['value'] = '<i title="'.$res->label_status.'" style="font-size:20px;" class="'.$img_class.' '.$img_class.'-2x '.functions::protect_string_db($res->img_filename).'"></i><br/>'.$res->label_status;
+                        $attachArr[$i][$j]['value_bis'] = $attachArr[$i][$j]['value'];
+                        if ($is_tmp == true) {
+                            $attachArr[$i][$j]['value'] = '<span style="color:#135F7F;">'.functions::protect_string_db($res->label_status).'</span>';
+                        } elseif ($res->id == 'TRA' || $res->id == 'SIGN') {
+                            $attachArr[$i][$j]['value'] = '<span style="color:green;"><i title="'.$res->label_status.'" style="font-size:20px;" class="'.$img_class.' '.$img_class.'-2x '.functions::protect_string_db($res->img_filename).'"></i><br/>'.$res->label_status.'</span>';
+                        } else {
+                            $attachArr[$i][$j]['value'] = '<i title="'.$res->label_status.'" style="font-size:20px;" class="'.$img_class.' '.$img_class.'-2x '.functions::protect_string_db($res->img_filename).'"></i><br/>'.$res->label_status;
+                        }
+                        $attachArr[$i][$j]['status'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _STATUS;
+                        $attachArr[$i][$j]['size'] = '30';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                        $attachArr[$i][$j]['order'] = 'status';
                     }
-                    $attachArr[$i][$j]['status'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _STATUS;
-                    $attachArr[$i][$j]['size'] = '30';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                    $attachArr[$i][$j]['order'] = 'status';
-                }
-                if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'format') {
-                    $attachArr[$i][$j]['value'] = $request->show_string(
+                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'format') {
+                        $attachArr[$i][$j]['value'] = $request->show_string(
                         $attachArr[$i][$j]['value']
                     );
-                    $attachArr[$i][$j]['format'] = $attachArr[$i][$j]['value'];
-                    $attachArr[$i][$j]['label'] = _FORMAT;
-                    $attachArr[$i][$j]['size'] = '5';
-                    $attachArr[$i][$j]['label_align'] = 'left';
-                    $attachArr[$i][$j]['align'] = 'left';
-                    $attachArr[$i][$j]['valign'] = 'bottom';
-                    $attachArr[$i][$j]['show'] = true;
-                    $attachArr[$i][$j]['order'] = true;
-                    $attachArr[$i][$j]['order'] = 'format';
+                        $attachArr[$i][$j]['format'] = $attachArr[$i][$j]['value'];
+                        $attachArr[$i][$j]['label'] = _FORMAT;
+                        $attachArr[$i][$j]['size'] = '5';
+                        $attachArr[$i][$j]['label_align'] = 'left';
+                        $attachArr[$i][$j]['align'] = 'left';
+                        $attachArr[$i][$j]['valign'] = 'bottom';
+                        $attachArr[$i][$j]['show'] = true;
+                        $attachArr[$i][$j]['order'] = true;
+                        $attachArr[$i][$j]['order'] = 'format';
 
-                    if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j]['value'] == 'maarch') {
-                        //$modifyValue = true;
+                        if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j]['value'] == 'maarch') {
+                            //$modifyValue = true;
+                        }
                     }
                 }
             }
+            if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] <> '') {
+                array_push($attachArr[$i], array("fromDetail" => $_REQUEST['fromDetail'], "show" => false));
+            }
         }
-        if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] <> '') {
-            array_push($attachArr[$i], array("fromDetail" => $_REQUEST['fromDetail'], "show" => false));
-        }
-    }
 
-    //List
+        //List
     $listKey = 'res_id';                                                                    //Clé de la liste
     $paramsTab = array();                                                               //Initialiser le tableau de paramètres
     $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
@@ -431,19 +436,19 @@ if (isset($_REQUEST['load'])) {
     $paramsTab['urlParameters'] =  'display=true'.$parameters;            //Parametres supplémentaires
     $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
     $paramsTab['start'] = $_REQUEST['start'];
-    if (!empty($_REQUEST['noModification'])) {
-        $paramsTab['noModification'] = true;
-    }
-    if ($useTemplate && count($template_list) >0) {                                    //Templates
-        $paramsTab['templates'] = array();
-        $paramsTab['templates'] = $template_list;
-    }
-    $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
-    $paramsTab['downloadDocumentLink'] = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=view_attachment&res_id_master='.$_SESSION['doc_id'];
-    $paramsTab['visualizeDocumentLink'] = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=view_attachment&res_id_master='.$_SESSION['doc_id'].'&viewpdf=true';
+        if (!empty($_REQUEST['noModification'])) {
+            $paramsTab['noModification'] = true;
+        }
+        if ($useTemplate && count($template_list) >0) {                                    //Templates
+            $paramsTab['templates'] = array();
+            $paramsTab['templates'] = $template_list;
+        }
+        $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
+        $paramsTab['downloadDocumentLink'] = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=view_attachment&res_id_master='.$_SESSION['doc_id'];
+        $paramsTab['visualizeDocumentLink'] = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=view_attachment&res_id_master='.$_SESSION['doc_id'].'&viewpdf=true';
 
-    $content = $list->showList($attachArr, $paramsTab, $listKey);
-    $status = 0;
+        $content = $list->showList($attachArr, $paramsTab, $listKey);
+        $status = 0;
 
-    echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
-}
+        echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
+    }
