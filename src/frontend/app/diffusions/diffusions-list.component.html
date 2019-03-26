@@ -38,7 +38,7 @@
                     <button mat-icon-button *ngIf="role.id == 'dest' && injectDatas.editable"
                         (click)="loadDestUserList()" [matMenuTriggerFor]="menuDestUserList"
                         title="Choisir une autre personne de l'entité">
-                        <mat-icon class="fa fa-user-friends" color="primary"></mat-icon>
+                        <mat-icon class="fa fa-edit" color="primary"></mat-icon>
                     </button>
                 </div>
                 <mat-menu #menuDestUserList="matMenu">
@@ -59,7 +59,7 @@
                     <button mat-icon-button *ngIf="role.id == 'dest' && injectDatas.editable"
                         (click)="loadDestUserList()" [matMenuTriggerFor]="menuDestUserList"
                         title="Choisir une autre personne de l'entité">
-                        <mat-icon class="fa fa-user-friends" color="primary"></mat-icon>
+                        <mat-icon class="fa fa-edit" color="primary"></mat-icon>
                     </button>
                     <button mat-icon-button *ngIf="role.id != 'dest' && injectDatas.editable"
                         (click)="deleteItem(role.id,i)">
