@@ -82,7 +82,7 @@ if ($mode == 'normal') {
     $page_label = _SEARCH_ADV_SHORT;
     $page_id = 'search_adv_mlb';
     $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
-    /***********************************************************/
+/***********************************************************/
 } elseif ($mode == 'popup' || $mode == 'frame') {
     $core_tools->load_html();
     $core_tools->load_header('', true, false);
@@ -557,7 +557,7 @@ if ($core_tools->is_module_loaded('basket') == true) {
                                     && $_SESSION['user']['baskets'][$i]['id'] != 'InitBasket'
                                     && $_SESSION['user']['baskets'][$i]['id'] != 'RetourCourrier'
                                     && $_SESSION['user']['baskets'][$i]['id'] != 'QualificationBasket') { ?>
-                                        <option id="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>" value="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>" >[<?php echo _BASKET; ?>] <?php echo functions::xecho($_SESSION['user']['baskets'][$i]['desc']); ?></option>';
+                                        <option id="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['group_serial_id']) . functions::xecho('_') . functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>" value="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['group_serial_id']) . functions::xecho('_') . functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>" >[<?php echo _BASKET; ?>] <?php echo functions::xecho($_SESSION['user']['baskets'][$i]['group_desc']); ?> - <?php echo functions::xecho($_SESSION['user']['baskets'][$i]['name']); ?></option>';
                                 <?php }
                             }
                         }
