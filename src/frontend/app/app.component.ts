@@ -34,6 +34,8 @@ export class AppComponent {
     constructor(iconReg: MatIconRegistry, sanitizer: DomSanitizer, public headerService: HeaderService) {
 
         iconReg.addSvgIcon('maarchLogo', sanitizer.bypassSecurityTrustResourceUrl('static.php?filename=logo_white.svg')).addSvgIcon('maarchLogoOnly', sanitizer.bypassSecurityTrustResourceUrl('img/logo_only_white.svg'));
+        iconReg.addSvgIcon('maarchLogoFull', sanitizer.bypassSecurityTrustResourceUrl('static.php?filename=logo.svg')).addSvgIcon('maarchLogoOnlyDefault', sanitizer.bypassSecurityTrustResourceUrl('img/logo.svg'));
+
         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
             angularGlobals.mobileMode = true;
         } else {

@@ -25,6 +25,9 @@ import { SmdFabSpeedDialComponent,SmdFabSpeedDialTrigger, SmdFabSpeedDialActions
 
 
 /*MENU COMPONENT*/
+import { HeaderRightComponent }                 from './header/header-right.component';
+import { HeaderLeftComponent }                  from './header/header-left.component';
+import { HeaderPanelComponent }                  from './header/header-panel.component';
 import { MainHeaderComponent }                  from './menu/main-header.component';
 import { MenuComponent }                        from './menu/menu.component';
 import { MenuNavComponent }                     from './menu/menu-nav.component';
@@ -60,6 +63,9 @@ export class MyHammerConfig extends HammerGestureConfig {
         MenuComponent,
         MenuNavComponent,
         MenuShortcutComponent,
+        HeaderRightComponent,
+        HeaderLeftComponent,
+        HeaderPanelComponent,
         SearchHomeComponent,
         BasketHomeComponent,
         TimeAgoPipe,
@@ -76,6 +82,9 @@ export class MyHammerConfig extends HammerGestureConfig {
         MenuComponent,
         MenuNavComponent,
         MenuShortcutComponent,
+        HeaderRightComponent,
+        HeaderLeftComponent,
+        HeaderPanelComponent,
         SearchHomeComponent,
         BasketHomeComponent,
         BrowserModule,

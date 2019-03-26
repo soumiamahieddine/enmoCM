@@ -1,9 +1,8 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-
     <mat-sidenav-container class="example-container">
         <mat-sidenav #snavLeft mode="side" opened class="panel-left" #snav [mode]="mobileMode ? 'over' : 'side'"
             [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true" autoFocus="false"
-            style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '400px'}">
+            style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '350px'}">
+            <header-panel [snavLeft]="snav"></header-panel>
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <basket-home *ngIf="homeData" #basketHome [homeData]="homeData" [snavL]="snav"
@@ -14,24 +13,10 @@
             <div class="bg-head">
                 <div class="bg-head-title">
                     <div class="bg-head-title-label">
-                        <!--<button *ngIf="!snavLeft.opened" mat-icon-button (click)="snavLeft.open()" style="position: absolute;margin-left: -35px;">
-                        <mat-icon class="fa fa-bars"></mat-icon>
-                    </button>
-                    <b>Utilisateur</b>&nbsp;| Couriers à traiter-->
+                        <header-left [snavLeft]="snav"></header-left>
                     </div>
                     <div class="bg-head-title-tool">
-                        <!--<button mat-icon-button>
-                        <mat-icon class="fa fa-search"></mat-icon>
-                    </button>
-                    <button mat-icon-button [matMenuTriggerFor]="menu">
-                        <mat-icon class="fa fa-th"></mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item>Item 1</button>
-                        <button mat-menu-item>Item 2</button>
-                    </mat-menu>
-                    <mat-icon class="fa fa-user"></mat-icon>&nbsp;
-                    <span> Alex ORLUC</span>-->
+                       <header-right></header-right>
                     </div>
                 </div>
                 <div class="bg-head-content">
@@ -203,7 +188,6 @@
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>
-</div>
-<app-actions-list (triggerEvent)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true"
-    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo">
-</app-actions-list>
+    <app-actions-list (triggerEvent)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true"
+        [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo">
+    </app-actions-list>

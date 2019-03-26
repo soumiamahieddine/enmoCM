@@ -1,0 +1,23 @@
+.panelHeader {
+    display: flex;
+
+    &-logo {
+        flex: 1;
+    }
+
+    &-button {
+        display: flex;
+        align-items: center;
+
+        .mat-icon-button {
+            font-size: 25px;
+            color: #666;
+        }
+    }
+}
+
+.maarchLogo {
+    height: 80px;
+    width: auto;
+    padding: 20px;
+}
