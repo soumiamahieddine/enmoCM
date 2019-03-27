@@ -32,8 +32,9 @@ class MaarchParapheurController
             }
         }
         $html .= '</select><br /><br /><br /><br />';
-        $html .= '<input type="radio" name="objectSent" id="objectSentNote" value="mail" checked="checked" /><label for="objectSentNote" style="float: none;display: unset;">' . _MAIL_NOTE . '</label><br/>';
-        $html .= '<input type="radio" name="objectSent" id="objectSentSign" value="attachment" /><label for="objectSentSign" style="float: none;display: unset;">' . _ATTACHMENT_SIGNATURE .'</label><br /><br />';
+        $html .= '<input type="radio" name="objectSent" id="objectSentNote" value="mail" checked="checked" onclick="$j(\'#labelSendSignedResponse\').hide()"/><label for="objectSentNote" style="float: none;display: unset;">' . _MAIL_NOTE . '</label><br/>';
+        $html .= '<input type="radio" name="objectSent" id="objectSentSign" value="attachment" onclick="$j(\'#labelSendSignedResponse\').show()" /><label for="objectSentSign" style="float: none;display: unset;">' . _ATTACHMENT_SIGNATURE .'</label><br /><br /><br />';
+        $html .= '<span id="labelSendSignedResponse" style="display:none"><input type="checkbox" name="sendSignedResponse" id="sendSignedResponse" value="true"><label for="sendSignedResponse" style="float: none;display: unset;">Envoyer aussi les documents déjà signés</label></span><br/><br />';
 
         return $html;
     }
