@@ -1,9 +1,9 @@
 <div class="bg-head-title-tool">
     <button mat-icon-button *ngIf="!mobileMode">
-        <mat-icon class="fa fa-search"></mat-icon>
+        <mat-icon class="fa fa-search" style="font-size:22px;"></mat-icon>
     </button>
     <button mat-icon-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" matTooltip="{{lang.menu}}">
-        <mat-icon class="fa fa-th"></mat-icon>
+        <mat-icon class="fa fa-th" style="font-size:22px;"></mat-icon>
     </button>
     <mat-menu #applications="matMenu" class="headerMaarchShortcut">
         <ng-container *ngFor="let shortcut of headerService.menu">
