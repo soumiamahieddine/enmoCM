@@ -919,4 +919,5 @@ export const LANG_EN = {
     "noDiffusionList"                           : "NO DIFFUSION LIST",
     "chooseAnotherEntityUser"                   : "Choose another person from the entity",
     "totalPrice"                                : "Total price",
+    "noNote"                                    : "No note",
 };

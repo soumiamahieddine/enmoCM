@@ -945,4 +945,5 @@ export const LANG_FR = {
     "noDiffusionList"                           : "AUCUNE LISTE DE DIFFUSION",
     "chooseAnotherEntityUser"                   : "Choisir une autre personne de l'entité",
     "totalPrice"                                : "Prix total",
+    "noNote"                                    : "Aucune note",
 };
