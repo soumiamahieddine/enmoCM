@@ -93,7 +93,7 @@ class StoreController
         ValidatorModel::stringType($aArgs, ['collId', 'table', 'fileFormat', 'status']);
         ValidatorModel::arrayType($aArgs, ['data']);
 
-        if (!in_array($aArgs['table'], ['res_letterbox', 'res_attachments'])) {
+        if (!in_array($aArgs['table'], ['res_letterbox', 'res_attachments', 'res_version_attachments'])) {
             return ['errors' => '[storeResource] Table not valid'];
         }
 
@@ -126,6 +126,8 @@ class StoreController
                 $resId = ResModel::create($data);
             } elseif ($aArgs['table'] == 'res_attachments') {
                 $resId = AttachmentModel::create($data);
+            } elseif ($aArgs['table'] == 'res_version_attachments') {
+                $resId = AttachmentModel::createVersion($data);
             }
 
             return $resId;

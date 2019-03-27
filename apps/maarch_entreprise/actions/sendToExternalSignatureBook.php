@@ -179,10 +179,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             } elseif ($config['id'] == 'maarchParapheur') {
                 include_once 'modules/visa/class/MaarchParapheurController.php';
 
-                $processingUser     = get_value_fields($values_form, 'processingUser');
-                $objectSentNote     = get_value_fields($values_form, 'objectSentNote');
-                $objectSentSign     = get_value_fields($values_form, 'objectSentSign');
-                $sendSignedResponse = get_value_fields($values_form, 'sendSignedResponse');
+                $processingUser  = get_value_fields($values_form, 'processingUser');
+                $objectSentNote  = get_value_fields($values_form, 'objectSentNote');
+                $objectSentSign  = get_value_fields($values_form, 'objectSentSign');
 
                 if (!empty($objectSentNote)) {
                     $objectSent = $objectSentNote;
@@ -194,8 +193,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     'resIdMaster'        => $res_id,
                     'processingUser'     => $processingUser,
                     'objectSent'         => $objectSent,
-                    'userId'             => $_SESSION['user']['UserId'],
-                    'sendSignedResponse' => $sendSignedResponse
+                    'userId'             => $_SESSION['user']['UserId']
                 ]);
 
                 $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $processingUser]);

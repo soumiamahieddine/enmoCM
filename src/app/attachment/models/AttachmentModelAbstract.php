@@ -118,6 +118,23 @@ abstract class AttachmentModelAbstract
         return $nextSequenceId;
     }
 
+    public static function createVersion(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status']);
+        ValidatorModel::stringType($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status']);
+        ValidatorModel::intVal($aArgs, ['filesize']);
+
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_version_attachments_seq']);
+        $aArgs['res_id'] = $nextSequenceId;
+
+        DatabaseModel::insert([
+            'table'         => 'res_version_attachments',
+            'columnsValues' => $aArgs
+        ]);
+
+        return $nextSequenceId;
+    }
+
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);

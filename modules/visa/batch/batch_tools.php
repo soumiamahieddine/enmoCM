@@ -163,8 +163,8 @@ function Bt_createAttachment($aArgs = [])
         );
     }
 
-    if (!empty($aArgs['attachent_type'])) {
-        $attachmentType = $aArgs['attachent_type'];
+    if (!empty($aArgs['attachment_type'])) {
+        $attachmentType = $aArgs['attachment_type'];
     } else {
         $attachmentType = 'signed_response';
     }
@@ -173,6 +173,18 @@ function Bt_createAttachment($aArgs = [])
         $inSignatureBook = $aArgs['in_signature_book'];
     } else {
         $inSignatureBook = 'true';
+    }
+
+    if (!empty($aArgs['table'])) {
+        $table = $aArgs['table'];
+    } else {
+        $table = 'res_letterbox';
+    }
+
+    if (!empty($aArgs['relation'])) {
+        $relation = $aArgs['relation'];
+    } else {
+        $relation = 1;
     }
 
     $dataValue = [];
@@ -186,14 +198,14 @@ function Bt_createAttachment($aArgs = [])
     array_push($dataValue, ['column' => 'typist',           'value' => $aArgs['typist'],          'type' => 'string']);
     array_push($dataValue, ['column' => 'attachment_type',  'value' => $attachmentType,           'type' => 'string']);
     array_push($dataValue, ['column' => 'coll_id',          'value' => 'letterbox_coll',          'type' => 'string']);
-    array_push($dataValue, ['column' => 'relation',         'value' => 1,                         'type' => 'integer']);
+    array_push($dataValue, ['column' => 'relation',         'value' => $relation,                 'type' => 'integer']);
     array_push($dataValue, ['column' => 'in_signature_book','value' => $inSignatureBook,          'type' => 'bool']);
 
     $allDatas = [
         "encodedFile" => $aArgs['encodedFile'],
         "data"        => $dataValue,
         "collId"      => "letterbox_coll",
-        "table"       => "res_attachments",
+        "table"       => $table,
         "fileFormat"  => $aArgs['format'],
         "status"      => 'TRA'
     ];
@@ -255,7 +267,6 @@ function Bt_refusedSignedMail($aArgs = [])
 
 function Bt_processVisaWorkflow($aArgs = [])
 {
-
     $visaWorkflow = Bt_getVisaWorkflow(['resId' => $aArgs['res_id_master']]);
 
     $nbVisaWorkflow = $visaWorkflow->rowCount();
@@ -279,7 +290,7 @@ function Bt_processVisaWorkflow($aArgs = [])
                 $mailStatus = 'EVIS';
             }
             Bt_validatedMail(['status' => $mailStatus, 'resId' => $aArgs['res_id_master']]);
-        }else{
+        } else {
             Bt_validatedMail(['status' => $aArgs['validatedStatus'], 'resId' => $aArgs['res_id_master']]);
         }
     } else {
