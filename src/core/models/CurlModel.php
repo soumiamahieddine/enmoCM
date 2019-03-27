@@ -259,7 +259,7 @@ class CurlModel
     {
         ValidatorModel::notEmpty($args, ['url', 'method']);
         ValidatorModel::stringType($args, ['url', 'method', 'user', 'password']);
-        ValidatorModel::arrayType($args, ['headers', 'body', 'queryParams', 'basicAuth', 'bearerAuth']);
+        ValidatorModel::arrayType($args, ['headers', 'queryParams', 'basicAuth', 'bearerAuth']);
 
         $opts = [CURLOPT_RETURNTRANSFER => true, CURLOPT_HEADER => true];
 
@@ -290,7 +290,7 @@ class CurlModel
 
         //Body
         if (!empty($args['body'])) {
-            $opts[CURLOPT_POSTFIELDS] = json_encode($args['body']);
+            $opts[CURLOPT_POSTFIELDS] = $args['body'];
         }
         //MultipartBody
         if (!empty($args['multipartBody'])) {

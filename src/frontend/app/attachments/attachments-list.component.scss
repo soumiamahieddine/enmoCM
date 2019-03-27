@@ -2,16 +2,16 @@
 
 .mat-card {
     box-shadow: none;
-    border: solid 1px rgba(0, 0, 0, 0.12);
+    border: solid 1px #E0E0E0;
 }
 
 .infosPj {
+    background: #F9F9F9;
     box-shadow: 0 -5px 5px -5px #333;
     border-top: solid 1px rgba(0, 0, 0, 0.12);
     position: absolute;
     width: 100%;
     bottom: 0;
-    background: white;
     padding: 5px;
 
     .line {

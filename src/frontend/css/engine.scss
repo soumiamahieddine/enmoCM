@@ -1,61 +1,6 @@
 @import 'maarch-material-modal.scss';
 @import 'maarch-material-alert.scss';
-
-/******* CORECTION BUG CSS WITH V1 (A SUPPRIMER A LA FIN) *********/
-
-.page-header h1 {
-    margin-top: 10px !important;
-}
-
-#menu {
-    margin-top: 35px !important;
-}
-
-#menunav {
-    font-size: 90% !important;
-}
-
-#menu span {
-    background-size: 45% !important;
-}
-
-#gauchemenu {
-    top: 28px !important;
-    height: 38px !important;
-}
-
-#logo {
-    height: 66px !important;
-}
-
-#menunav {
-    width: 264px !important;
-}
-
-#ariane {
-    top: -5px !important;
-    font-size: 0.8em !important;
-}
-
-.footer_menu {
-    font-size: 0.7em !important;
-    height: 18px !important;
-}
-
-/************************************************************/
-
-.page-header {
-    margin-top: 0px;
-    border-bottom: none !important;
-}
-
-.page-header h1 {
-    font-size: 30px;
-}
-
-#container {
-    padding: 0px !important;
-}
+@import 'maarch-material-table.scss';
 
 .mat-form-field {
     width: 100% !important;
@@ -69,23 +14,7 @@ table tr:not(.filters) .mat-form-field {
     width: 200px !important;
 }
 
-/*HeaderV2*/
-
-#headerV2 .nav .open>a,
-.nav .open>a:focus,
-.nav .open>a:hover {
-    background-color: inherit !important;
-}
-
 /* modal part */
-
-.modal-content {
-    background-color: #135F7F !important;
-}
-
-.modal-header h4 {
-    color: white !important;
-}
 
 .modal-body {
     background-color: white;
@@ -99,41 +28,6 @@ table tr:not(.filters) .mat-form-field {
 .modal-body .list-group li {
     /*border-color: #135F7F !important;*/
     font-weight: bold;
-}
-
-.modal-footer {
-    background: white;
-}
-
-/*** FIX BUG EXPANSION PANEL MATERIAL WITH TABS (DELETE AFTER CORRECTION) ***/
-
-/* .mat-expansion-panel-header {
-    height: 48px;
-}
-
-.mat-expansion-panel-content:not(.mat-expanded):not(.ng-animating) {
-    display: none;
-} */
-
-/*********************************/
-
-/*** FIX FA ICON INSIDE MAT BUTTON ***/
-
-/*button .mat-icon {
-    height: auto;
-}*/
-
-/*********************************/
-
-.admin-headers-align .mat-expansion-panel-header-title,
-.admin-headers-align .mat-expansion-panel-header-description {
-    /*flex-basis: 0;*/
-    width: 50%;
-}
-
-.admin-headers-align .mat-expansion-panel-header-description {
-    justify-content: space-between;
-    align-items: center;
 }
 
 .mat-autocomplete-panel .mat-option {
@@ -188,14 +82,6 @@ table tr:not(.filters) .mat-form-field {
     z-index: 2;
 }
 
-h1.admin-app-name {
-    margin-left: 8px;
-}
-
-.admin-toolbar-title {
-    /*margin-left: 30px !important;*/
-}
-
 .admin-toolbar-title-small {
     color: #F99830 !important;
     opacity: 0.9;
@@ -224,21 +110,21 @@ h1.admin-app-name {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
 }
 
-.mat-row:hover {
-    background: #673ab71a;
-    -webkit-transition: background 0.5s ease-out;
-    -moz-transition: background 0.5s ease-out;
-    -o-transition: background 0.5s ease-out;
-    transition: background 0.5s ease-out;
-}
+// .mat-row:hover {
+//     background: #673ab71a;
+//     -webkit-transition: background 0.5s ease-out;
+//     -moz-transition: background 0.5s ease-out;
+//     -o-transition: background 0.5s ease-out;
+//     transition: background 0.5s ease-out;
+// }
 
-.mat-row {
-    background: white;
-    -webkit-transition: background 0.5s ease-out;
-    -moz-transition: background 0.5s ease-out;
-    -o-transition: background 0.5s ease-out;
-    transition: background 0.5s ease-out;
-}
+// .mat-row {
+//     background: white;
+//     -webkit-transition: background 0.5s ease-out;
+//     -moz-transition: background 0.5s ease-out;
+//     -o-transition: background 0.5s ease-out;
+//     transition: background 0.5s ease-out;
+// }
 
 .mat-cell {
     word-wrap: normal !important;
@@ -248,50 +134,6 @@ h1.admin-app-name {
 /* small display mode */
 
 @media all and (max-width: 768px) {
-
-    #container,
-    #content {
-        min-width: initial !important;
-    }
-
-    #header {
-        display: none;
-    }
-
-    #footer {
-        display: none;
-    }
-
-    .enableAtionBottomLeftSmarpthone {
-        z-index: 1;
-        position: fixed !important;
-        bottom: 3%;
-        left: 3%;
-    }
-
-    .enableAtionBottomCenterSmarpthone {
-        z-index: 1;
-        position: fixed !important;
-        right: 0;
-        left: 0;
-        margin-right: auto;
-        margin-left: auto;
-        bottom: 10px;
-    }
-
-    .enableAtionTopLeftSmarpthone {
-        z-index: 1;
-        position: fixed !important;
-        left: 3%;
-        top: 3%;
-    }
-
-    .enableAtionTopRightSmarpthone {
-        z-index: 1;
-        position: fixed !important;
-        right: 3%;
-        top: 3%;
-    }
 
     .admin-toolbar .mat-button {
         min-width: initial;
@@ -389,10 +231,6 @@ h1.admin-app-name {
 
 #searchInput .mat-form-field-label {
     opacity: 0.5;
-}
-
-.note-width-bottom-sheet {
-    width: 400px;
 }
 
 .mat-slide-toggle-label {

@@ -16,7 +16,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "home.component.html",
-    styleUrls: ['profile.component.css'],
+    styleUrls: ['home.component.scss'],
     providers: [NotificationService]
 })
 export class HomeComponent extends AutoCompletePlugin implements OnInit {

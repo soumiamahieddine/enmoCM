@@ -97,7 +97,7 @@
                                             </ng-container>
                                             <ng-container *ngIf="data.value == 'getCategory'">
                                                 <span *ngIf="!lang[data.displayValue]" style="opacity: 0.5"
-                                                    title="id: {{data.displayValue}}">_UNDEFINED</span>
+                                                    title="id: {{data.displayValue}}">{{lang.undefined}}</span>
                                                 <span *ngIf="lang[data.displayValue]"
                                                     title="{{lang[data.displayValue]}}">{{lang[data.displayValue]}}</span>
                                             </ng-container>

@@ -1,6 +1,6 @@
 <ng-container *ngIf="!loading">
     <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
-        AUCUN ATTACHEMENT
+        {{lang.noAttachement}}
     </div>
     <mat-card *ngFor="let attachment of attachments" [style.background-image]="'url('+attachment.thumbnailUrl+')'"
         style="padding:0;margin: 30px;min-height: 250px;background-size: cover;">

@@ -22,6 +22,7 @@ declare function $j(selector: any): any;
         '../../../node_modules/bootstrap/dist/css/bootstrap.min.css',
         '../css/maarch-material.css',
         '../css/engine.scss',
+        '../css/engine_2.scss',
         '../../../node_modules/ng2-dnd/bundles/style.css'
     ],
     viewProviders: [MatIconRegistry],

@@ -947,4 +947,5 @@ export const LANG_NL = {
     "noDiffusionList"                           : "NO DIFFUSION LIST", //_TO_TRANSLATE
     "chooseAnotherEntityUser"                   : "Choose another person from the entity", //_TO_TRANSLATE
     "totalPrice"                                : "Total price", //_TO_TRANSLATE
+    "noNote"                                    : "Geen notities", //_TO_TRANSLATE
 };

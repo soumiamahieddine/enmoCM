@@ -3,7 +3,7 @@
 </div>
 <ng-container *ngIf="!loading">
     <div *ngIf="notes.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
-        AUCUNE NOTE
+        {{lang.noNote}}
     </div>
     <app-note-editor #noteEditor [addMode]="true" [resIds]="resIds" (refreshNotes)="loadNotes($event)" style="margin: 20px;display: flex;"></app-note-editor>
     <mat-card *ngFor="let note of notes" style="margin-top: 10px;" [ngStyle]="{'background-color': note.entities_restriction ? 'rgba(255, 165, 0, 0.2)' : 'white'}">
