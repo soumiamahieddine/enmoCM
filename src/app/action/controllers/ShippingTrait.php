@@ -113,7 +113,7 @@ trait ShippingTrait
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'POST',
-                'body'          => ['name' => $sendingName]
+                'body'          => json_encode(['name' => $sendingName])
             ]);
             if ($createSending['code'] != 201) {
                 $errors[] = "Maileva sending creation failed for attachment {$attachmentId}";
@@ -159,7 +159,7 @@ trait ShippingTrait
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'POST',
-                'body'          => [
+                'body'          => json_encode([
                     "address_line_1"    => $contacts[$key][1],
                     "address_line_2"    => $contacts[$key][2],
                     "address_line_3"    => $contacts[$key][3],
@@ -167,7 +167,7 @@ trait ShippingTrait
                     "address_line_5"    => $contacts[$key][5],
                     "address_line_6"    => $contacts[$key][6],
                     "country_code"      => 'FR'
-                ],
+                ]),
             ]);
             if ($createRecipient['code'] != 201) {
                 $errors[] = "Maileva recipient creation failed for attachment {$attachmentId}";
@@ -179,12 +179,12 @@ trait ShippingTrait
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'PATCH',
-                'body'          => [
+                'body'          => json_encode([
                     'postage_type'              => strtoupper($shippingTemplate['options']['sendMode']),
                     'color_printing'            => in_array('color', $shippingTemplate['options']['shapingOptions']),
                     'duplex_printing'           => in_array('duplexPrinting', $shippingTemplate['options']['shapingOptions']),
                     'optional_address_sheet'    => in_array('addressPage', $shippingTemplate['options']['shapingOptions'])
-                ],
+                ]),
             ]);
             if ($setOptions['code'] != 200) {
                 $errors[] = "Maileva options modification failed for attachment {$attachmentId}";
