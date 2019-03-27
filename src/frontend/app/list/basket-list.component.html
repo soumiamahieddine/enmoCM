@@ -65,8 +65,8 @@
 
                             <ng-container matColumnDef="res_id">
                                 <td mat-cell *matCellDef="let row"
-                                    style="padding:0;border-top: solid 1px rgba(0, 0, 0, 0.12);"
-                                    [class.selected-data]="row.checked">
+                                    style="padding:0;border-top: solid 1px rgba(0, 0, 0, 0.12);cursor:pointer;"
+                                    [class.selected-data]="row.checked" (click)="launch(defaultAction,row);">
                                     <div *ngIf="!snav2.opened && !mobileMode && row.display.length > 0" class="sub-info">
                                         <span class="sub-info-data" [class]="data.cssClasses.join(' ')"
                                             *ngFor="let data of row.display" style="flex:1;white-space: pre;
@@ -144,7 +144,7 @@
                                                 </mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.attachments}}"
-                                                (click)="$event.stopPropagation();openAttachSheet(row)"
+                                                (click)="$event.stopPropagation();togglePanel('attachment',row)"
                                                 [class.noData]="row.countAttachments == 0">
                                                 <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas"
                                                     matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x">

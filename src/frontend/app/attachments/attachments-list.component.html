@@ -1,13 +1,23 @@
-<div *ngIf="loading" style="display:flex;height:100%;">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<div style="text-align:center;font-weight:bold;opacity:0.3;">{{data.chrono}} - {{lang.attachments}}</div>
-<mat-nav-list *ngIf="!loading" style="min-width:650px;">
+<ng-container *ngIf="!loading">
+    <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
+        AUCUN ATTACHEMENT
+    </div>
+    <mat-card *ngFor="let attachment of attachments" style="margin: 30px;">
+       <div class="thumbnailPj">
+        <img>
+       </div>
+       <div class="infosPj">
+
+       </div>
+    </mat-card>
+</ng-container>
+
+<!--<mat-nav-list *ngIf="!loading">
     <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
         AUCUN ATTACHEMENT
     </div>
     <ng-container *ngFor="let attachment of attachments">
-        <a target="_blank" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{data.resId}}&id={{attachment.res_id}}" mat-list-item (click)="openLink($event)" style="height:auto;">
+        <a target="_blank" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resIds[0]}}&id={{attachment.res_id}}" mat-list-item (click)="openLink($event)" style="height:auto;">
             <span mat-line>
                 <div style="display:flex;color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
                     <span style="flex:1;text-align: center;">
@@ -45,11 +55,8 @@
                         </div>
                     </div>
                 </div>
-
-
             </span>
         </a>
         <mat-divider style="margin:10px;"></mat-divider>
     </ng-container>
-
-</mat-nav-list>
+</mat-nav-list>-->

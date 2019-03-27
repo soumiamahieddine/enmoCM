@@ -1,10 +1,7 @@
-import { Component, AfterViewInit, Inject } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MAT_BOTTOM_SHEET_DATA } from '@angular/material';
-
-declare function $j(selector: any): any;
 
 @Component({
     selector: 'app-attachments-list',
@@ -12,20 +9,28 @@ declare function $j(selector: any): any;
     styleUrls: ['attachments-list.component.scss'],
     providers: [NotificationService]
 })
-export class AttachmentsListComponent implements AfterViewInit {
+export class AttachmentsListComponent implements OnInit {
 
     lang: any = LANG;
     attachments: any;
     attachmentTypes: any;
     loading: boolean = true;
+    resIds: number[] = [];
+    @Input('injectDatas') injectDatas: any;
+    @Output('reloadBadgeAttachments') reloadBadgeNotes = new EventEmitter<string>();
 
-    constructor(public http: HttpClient, @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) { }
+    constructor(public http: HttpClient) { }
 
-    ngAfterViewInit() {
-        this.http.get("../../rest/res/" + this.data.resId + "/attachments")
+    ngOnInit(): void { }
+
+    loadAttachments(resId: number) {
+        this.resIds[0] = resId;
+        this.loading = true;
+        this.http.get("../../rest/res/" + this.resIds[0] + "/attachments")
             .subscribe((data: any) => {
                 this.attachments = data.attachments;
                 this.attachmentTypes = data.attachment_types;
+                this.reloadBadgeNotes.emit(`${this.attachments.length}`);
                 this.loading = false;
             });
     }
