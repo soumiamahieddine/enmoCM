@@ -93,7 +93,7 @@ class ResourceListController
 
         $formattedResources = [];
         if (!empty($resIds)) {
-            $excludeAttachmentTypes = [''];
+            $excludeAttachmentTypes = ['converted_pdf', 'printed_folder'];
             if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
                 $excludeAttachmentTypes[] = 'document_with_notes';
             }
