@@ -29,6 +29,9 @@ export class AttachmentsListComponent implements OnInit {
         this.http.get("../../rest/res/" + this.resIds[0] + "/attachments")
             .subscribe((data: any) => {
                 this.attachments = data.attachments;
+                this.attachments.forEach((element: any) => {
+                    element.thumbnailUrl = '../../rest/res/' + this.resIds[0] + '/attachments/' + element.res_id + '/thumbnail';
+                });
                 this.attachmentTypes = data.attachment_types;
                 this.reloadBadgeNotes.emit(`${this.attachments.length}`);
                 this.loading = false;
