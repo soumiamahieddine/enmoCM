@@ -261,7 +261,7 @@ class CurlModel
         ValidatorModel::stringType($args, ['url', 'method', 'user', 'password']);
         ValidatorModel::arrayType($args, ['headers', 'body', 'queryParams', 'basicAuth', 'bearerAuth']);
 
-        $opts = [CURLOPT_RETURNTRANSFER => true];
+        $opts = [CURLOPT_RETURNTRANSFER => true, CURLOPT_HEADER => true];
 
         //Headers
         if (!empty($args['headers'])) {
@@ -312,10 +312,14 @@ class CurlModel
         $curl = curl_init();
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
-
         $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $errors = curl_error($curl);
         curl_close($curl);
+
+        $headers = substr($rawResponse, 0, $headerSize);
+        $headers = explode("\r\n", $headers);
+        $response = substr($rawResponse, $headerSize);
 
         LogsController::add([
             'isTech'    => true,
@@ -324,10 +328,10 @@ class CurlModel
             'tableName' => 'curl',
             'recordId'  => 'execSimple',
             'eventType' => "Url : {$args['url']} HttpCode : {$code} Errors : {$errors}",
-            'eventId'   => "Response : {$rawResponse}"
+            'eventId'   => "Response : {$response}"
         ]);
 
-        return ['code' => $code, 'response' => json_decode($rawResponse, true), 'errors' => $errors];
+        return ['code' => $code, 'headers' => $headers, 'response' => json_decode($response, true), 'errors' => $errors];
     }
 
     private static function createMultipartFormData(array $args)

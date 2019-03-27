@@ -71,7 +71,7 @@ trait ShippingTrait
             if (empty($contact[0])) {
                 return ['errors' => ['Contact does not exist for attachment']];
             }
-            if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
+            if (!empty($contact[0]['address_country']) && strtoupper(trim($contact[0]['address_country'])) != 'FRANCE') {
                 return ['errors' => ['Contact country is not France']];
             }
             $afnorAddress = ContactController::getContactAfnor($contact[0]);
@@ -119,20 +119,11 @@ trait ShippingTrait
                 $errors[] = "Maileva sending creation failed for attachment {$attachmentId}";
                 continue;
             }
-
-            $sendings = CurlModel::execSimple([
-                'url'           => $mailevaConfig['uri'] . '/mail/v1/sendings',
-                'bearerAuth'    => ['token' => $token],
-                'method'        => 'GET'
-            ]);
-            if ($sendings['code'] != 200) {
-                $errors[] = "Maileva get sendings failed for attachment {$attachmentId}";
-                continue;
-            }
-
-            foreach ($sendings['response']['sendings'] as $sending) {
-                if ($sending['name'] == $sendingName) {
-                    $sendingId = $sending['id'];
+            foreach ($createSending['headers'] as $header) {
+                if (strpos($header, 'Location:') !== false) {
+                    $sendingId = strrchr($header, '/');
+                    $sendingId = substr($sendingId, 1);
+                    break;
                 }
             }
             if (empty($sendingId)) {

@@ -31,7 +31,7 @@ class ShippingModel
             'columnsValues' => [
                 'user_id'               => $args['userId'],
                 'attachment_id'         => $args['attachmentId'],
-                'is_version'            => $args['isVersion'],
+                'is_version'            => empty($args['isVersion']) ? 'false' : 'true',
                 'options'               => $args['options'],
                 'fee'                   => $args['fee'],
                 'recipient_entity_id'   => $args['recipientEntityId'],
