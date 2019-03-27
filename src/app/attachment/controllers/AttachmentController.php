@@ -20,18 +20,19 @@ use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
+use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
+use Resource\controllers\StoreController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
-use Resource\controllers\StoreController;
+use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use Template\controllers\TemplateController;
-use SrcCore\models\DatabaseModel;
-use Resource\models\ResModel;
 
 class AttachmentController
 {
@@ -73,7 +74,12 @@ class AttachmentController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $attachments = AttachmentModel::getListByResIdMaster(['id' => $aArgs['resId']]);
+        $excludeAttachmentTypes = ['converted_pdf', 'printed_folder'];
+        if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
+            $excludeAttachmentTypes[] = 'document_with_notes';
+        }
+
+        $attachments = AttachmentModel::getListByResIdMaster(['id' => $aArgs['resId'], 'excludeAttachmentTypes' => $excludeAttachmentTypes]);
         $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
 
         return $response->withJson(['attachments'  => $attachments, 'attachment_types'  => $attachmentTypes]);

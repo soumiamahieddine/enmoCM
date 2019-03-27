@@ -123,10 +123,12 @@ if ($mode == 'normal') {
     $core_tools->load_html();
     $core_tools->load_header('', true, false);
     $core_tools->load_js();
-    $time = $core_tools->get_session_time_expire(); ?><body>
+    $time = $core_tools->get_session_time_expire(); ?>
+
+<body>
     <div id="container" style="height:auto;">
         <div class="error" id="main_error">
-                <?php functions::xecho($_SESSION['error']); ?>
+            <?php functions::xecho($_SESSION['error']); ?>
         </div>
         <div class="info" id="main_info">
             <?php functions::xecho($_SESSION['info']); ?>
@@ -160,19 +162,25 @@ if ($mode == 'normal') {
 
         $buttons = array();
         if (isset($_REQUEST['fromValidateMail'])) {
-            array_push($buttons, array('ID' => 'valid',
+            array_push(
+                $buttons,
+                array('ID' => 'valid',
                                         'LABEL' => _VALIDATE,
                                         'ACTION' => 'formList.submit();opener.$(\'to_link\').click();',
                                        )
                         );
         } elseif ($_SESSION['fromValidateMail'] == 'ok') {
-            array_push($buttons, array('ID' => 'valid',
+            array_push(
+                $buttons,
+                array('ID' => 'valid',
                                         'LABEL' => _VALIDATE,
                                         'ACTION' => 'formList.submit();',
                                        )
                         );
         } else {
-            array_push($buttons, array('ID' => 'valid',
+            array_push(
+                $buttons,
+                array('ID' => 'valid',
                                         'LABEL' => _VALIDATE,
                                         //'ACTION'    => 'formList.submit();opener.$(\'attach\').click();'
                                         'ACTION' => 'formList.submit();',
@@ -180,7 +188,9 @@ if ($mode == 'normal') {
                         );
         }
 
-        array_push($buttons, array('ID' => 'close',
+        array_push(
+            $buttons,
+            array('ID' => 'close',
                                     'LABEL' => _CLOSE_WINDOW,
                                     'ACTION' => 'window.top.close();',
                                    )
@@ -225,10 +235,32 @@ if ($mode == 'normal') {
 
 //Fields
     //Documents
-    array_push($select[$view],  'res_id', 'res_id as is_labeled', 'alt_identifier', 'priority', 'status', 'subject', 'category_id as category_img',
-                                'contact_firstname', 'contact_lastname', 'contact_society',
-                                'user_lastname', 'user_firstname', 'category_id', 'dest_user', 'type_label',
-                                'creation_date', 'entity_label', 'address_id', 'exp_user_id', 'doc_custom_n1 as count_attachment', 'is_multicontacts', 'filename', 'res_id as real_dest');
+    array_push(
+        $select[$view],
+        'res_id',
+        'res_id as is_labeled',
+        'alt_identifier',
+        'priority',
+        'status',
+        'subject',
+        'category_id as category_img',
+                                'contact_firstname',
+        'contact_lastname',
+        'contact_society',
+                                'user_lastname',
+        'user_firstname',
+        'category_id',
+        'dest_user',
+        'type_label',
+                                'creation_date',
+        'entity_label',
+        'address_id',
+        'exp_user_id',
+        'doc_custom_n1 as count_attachment',
+        'is_multicontacts',
+        'filename',
+        'res_id as real_dest'
+    );
     //Cases
     if ($core_tools->is_module_loaded('cases') == true) {
         array_push($select[$view], 'case_id', 'case_label', 'case_description');
@@ -308,7 +340,7 @@ if ($mode == 'normal') {
     if (!empty($order_field) && !empty($order)) {
         if ($_REQUEST['order_field'] == 'alt_identifier') {
             $orderstr = 'order by order_alphanum(alt_identifier)'.' '.$order;
-        } else if ($_REQUEST['order_field'] == 'priority') {
+        } elseif ($_REQUEST['order_field'] == 'priority') {
             $where_request .= ' and '.$view.'.priority = priorities.id';
             $select['priorities'] = ['order', 'id'];
             $orderstr = 'order by priorities.order '.$order;
@@ -412,7 +444,7 @@ if ($mode == 'normal') {
                     $query .= '( ';
                     $query .= 'item_id IN (';
 
-                   if(!empty($_SESSION['user']['entities'])){
+                    if (!empty($_SESSION['user']['entities'])) {
                         foreach ($_SESSION['user']['entities'] as $entitiestmpnote) {
                             $query .= '?, ';
                             $arrayPDO = array_merge($arrayPDO, array($entitiestmpnote['ENTITY_ID']));
@@ -601,7 +633,7 @@ if ($mode == 'normal') {
 
                     $priority = $_SESSION['mail_priorities'][$fakeId];
                     if (!empty($_SESSION['searching']['where_request_parameters'][':priorityChosen'])) {
-                        $priority = '<i style="background: #009dc5 none repeat scroll 0 0;border-radius: 4px;color: white;padding: 3px;" title="mot cible">'.$_SESSION['mail_priorities'][$fakeId].'</i>';    
+                        $priority = '<i style="background: #009dc5 none repeat scroll 0 0;border-radius: 4px;color: white;padding: 3px;" title="mot cible">'.$_SESSION['mail_priorities'][$fakeId].'</i>';
                     }
                     $tab[$i][$j]['value'] = $priority;
                     $tab[$i][$j]['label'] = _PRIORITY;
@@ -652,10 +684,14 @@ if ($mode == 'normal') {
                 }
 
                 if ($tab[$i][$j][$value] == 'count_attachment') {
+                    $excludeAttachmentTypes = ['converted_pdf', 'printed_folder'];
+                    if (!$core_tools->test_service('view_documents_with_notes', 'attachments', false)) {
+                        $excludeAttachmentTypes[] = 'document_with_notes';
+                    }
                     $query = "SELECT count(res_id) as total FROM res_view_attachments 
                             WHERE res_id_master = ? 
-                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN ('converted_pdf', 'print_folder') AND coll_id = ?  AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
-                    $arrayPDO = array($tab[$i][0]['res_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
+                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN (?) AND coll_id = ?  AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                    $arrayPDO = array($tab[$i][0]['res_id'], $excludeAttachmentTypes, $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
                     $stmt2 = $db->query($query, $arrayPDO);
                     $return_count = $stmt2->fetchObject();
 
@@ -796,8 +832,7 @@ if ($mode == 'normal') {
                             $formattedContact = \SrcCore\controllers\AutoCompleteController::getFormattedContact(['contact' => $return_stmt]);
                             $tab[$i][$j]['value'] = $formattedContact['contact']['contact'];
                         }
-                        
-                    } else if ($return_stmt->type == 'entity') {
+                    } elseif ($return_stmt->type == 'entity') {
                         $query = 'SELECT short_label FROM entities WHERE id = ?';
                         $arrayPDO = array($return_stmt->item_id);
                         $stmt2 = $db->query($query, $arrayPDO);
@@ -812,7 +847,7 @@ if ($mode == 'normal') {
                     }
                     if (empty(trim($tab[$i][$j]['value']))) {
                         $tab[$i][$j]['value'] = null;
-                    } else if ($_SESSION['mlb_search_current_category_id'] == 'outgoing') {
+                    } elseif ($_SESSION['mlb_search_current_category_id'] == 'outgoing') {
                         $tab[$i][$j]['value'] = '<b>'._TO_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
                     } else {
                         $tab[$i][$j]['value'] = '<b>'._FOR_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
@@ -883,7 +918,8 @@ if ($nbTab > 0) {
             $fileplan = new fileplan();
             if (
                     count($fileplan->getUserFileplan()) > 0
-                    || (count($fileplan->getEntitiesFileplan()) > 0
+                    || (
+                        count($fileplan->getEntitiesFileplan()) > 0
                         && $core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)
                         )
                 ) {
@@ -946,101 +982,85 @@ if ($nbTab > 0) {
     // $list->debug();
 
     /*************************Extra javascript***********************/ ?>
-    <script type="text/javascript">
-        var form_txt='<form name="frm_save_query" id="frm_save_query" action="#" method="post" class="forms" onsubmit="send_request(this.id, <?php echo "\'creation\'"; ?>);" ><h2><?php 
-            echo _SAVE_QUERY_TITLE; ?></h2><p><label for="query_name"><?php echo _QUERY_NAME; ?></label><input type="text" name="query_name" id="query_name" style="width:200px;" value=""/></p><br/><p class="buttons"><input type="submit" name="submit" id="submit" value="<?php 
+            <script type="text/javascript">
+                var form_txt = '<form name="frm_save_query" id="frm_save_query" action="#" method="post" class="forms" onsubmit="send_request(this.id, <?php echo "\'creation\'"; ?>);" ><h2><?php
+            echo _SAVE_QUERY_TITLE; ?></h2><p><label for="query_name"><?php echo _QUERY_NAME; ?></label><input type="text" name="query_name" id="query_name" style="width:200px;" value=""/></p><br/><p class="buttons"><input type="submit" name="submit" id="submit" value="<?php
             echo _VALIDATE; ?>" class="button"/> <input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL; ?>" class="button" onclick="destroyModal();"/></p></form>';
 
-        function send_request(form_id,form_action)
-        {
-        if(form_action == 'creation_ok'){
-            var q_name = form_id;
-            var q_creation = form_action;
-                $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
+                function send_request(form_id, form_action) {
+                    if (form_action == 'creation_ok') {
+                        var q_name = form_id;
+                        var q_creation = form_action;
+                        $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
 
-                new Ajax.Request('<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=manage_query',
-                {
-                    method:'post',
-                    parameters: {action : q_creation},
-                    onSuccess: function(answer){
-                        eval("response = "+answer.responseText)
-                        if(response.status == 0)
-                        {
-                            $('modal').innerHTML ='<h2><?php echo _QUERY_SAVED; ?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW; ?>" onclick="destroyModal();" class="button" />';
-                        }
-                        else if(response.status == 2)
-                        {
-                            $('modal').innerHTML = '<div class="error"><?php echo _SQL_ERROR; ?></div>'+form_txt;
-                            form.query_name.value = this.name;
-                        }
-                        else if(response.status == 3)
-                        {
-                            $('modal').innerHTML = '<div class="error"><?php echo _QUERY_NAME.' '._IS_EMPTY; ?></div>'+form_txt;
-                            form.query_name.value = this.name;
-                        }
-                        else
-                        {
-                            $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR; ?></div>'+form_txt;
-                            form.query_name.value = this.name;
-                        }
-                    },
-                    onFailure: function(){
-                        $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR; ?></div>'+form_txt;
-                        form.query_name.value = this.name;
-                       }
-                });
+                        new Ajax.Request('<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=manage_query', {
+                            method: 'post',
+                            parameters: {
+                                action: q_creation
+                            },
+                            onSuccess: function(answer) {
+                                eval("response = " + answer.responseText)
+                                if (response.status == 0) {
+                                    $('modal').innerHTML = '<h2><?php echo _QUERY_SAVED; ?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW; ?>" onclick="destroyModal();" class="button" />';
+                                } else if (response.status == 2) {
+                                    $('modal').innerHTML = '<div class="error"><?php echo _SQL_ERROR; ?></div>' + form_txt;
+                                    form.query_name.value = this.name;
+                                } else if (response.status == 3) {
+                                    $('modal').innerHTML = '<div class="error"><?php echo _QUERY_NAME.' '._IS_EMPTY; ?></div>' + form_txt;
+                                    form.query_name.value = this.name;
+                                } else {
+                                    $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR; ?></div>' + form_txt;
+                                    form.query_name.value = this.name;
+                                }
+                            },
+                            onFailure: function() {
+                                $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR; ?></div>' + form_txt;
+                                form.query_name.value = this.name;
+                            }
+                        });
 
 
-        }
-            var form = $(form_id);
-            if(form)
-            {
-                var q_name = form.query_name.value;
-                var q_creation = form_action;
-                $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
+                    }
+                    var form = $(form_id);
+                    if (form) {
+                        var q_name = form.query_name.value;
+                        var q_creation = form_action;
+                        $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
 
-                new Ajax.Request('<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=manage_query',
-                {
-                    method:'post',
-                    parameters: {name: q_name,
-                                action : q_creation},
-                    onSuccess: function(answer){
-                        eval("response = "+answer.responseText)
-                        if(response.status == 0)
-                        {
-                            $('modal').innerHTML ='<h2><?php echo _QUERY_SAVED; ?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW; ?>" onclick="destroyModal();" class="button" />';
-                        }
-                        else if(response.status == 2)
-                        {
-                            $('modal').innerHTML = '<div class="error"><?php echo _SQL_ERROR; ?></div>'+form_txt;
-                            form.query_name.value = this.name;
-                        }
-                        else if(response.status == 3)
-                        {
-                            $('modal').innerHTML = '<div class="error"><?php echo _QUERY_NAME.' '._IS_EMPTY; ?></div>'+form_txt;
-                            form.query_name.value = this.name;
-                        }
-                        else if(response.status == 4)
-                        {
-                            $('modal').innerHTML = '<form name="frm_save_query" id="<?php echo $_SESSION['seekName']; ?>" action="#" method="post" class="forms" onsubmit="send_request(this.id, <?php echo "\'creation_ok\'"; ?>);" ><h2><?php 
-            echo _SAVE_CONFIRM; ?></h2><p><b><?php echo _SAVED_ALREADY_EXIST; ?></b></p><p><?php echo _OK_FOR_CONFIRM; ?></p><br/><p class="buttons"><input type="submit" name="submit" id="submit" value="<?php 
+                        new Ajax.Request('<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=manage_query', {
+                            method: 'post',
+                            parameters: {
+                                name: q_name,
+                                action: q_creation
+                            },
+                            onSuccess: function(answer) {
+                                eval("response = " + answer.responseText)
+                                if (response.status == 0) {
+                                    $('modal').innerHTML = '<h2><?php echo _QUERY_SAVED; ?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW; ?>" onclick="destroyModal();" class="button" />';
+                                } else if (response.status == 2) {
+                                    $('modal').innerHTML = '<div class="error"><?php echo _SQL_ERROR; ?></div>' + form_txt;
+                                    form.query_name.value = this.name;
+                                } else if (response.status == 3) {
+                                    $('modal').innerHTML = '<div class="error"><?php echo _QUERY_NAME.' '._IS_EMPTY; ?></div>' + form_txt;
+                                    form.query_name.value = this.name;
+                                } else if (response.status == 4) {
+                                    $('modal').innerHTML = '<form name="frm_save_query" id="<?php echo $_SESSION['seekName']; ?>" action="#" method="post" class="forms" onsubmit="send_request(this.id, <?php echo "\'creation_ok\'"; ?>);" ><h2><?php
+            echo _SAVE_CONFIRM; ?></h2><p><b><?php echo _SAVED_ALREADY_EXIST; ?></b></p><p><?php echo _OK_FOR_CONFIRM; ?></p><br/><p class="buttons"><input type="submit" name="submit" id="submit" value="<?php
             echo _VALIDATE; ?>" class="button"/> <input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL; ?>" class="button" onclick="destroyModal();"/></p></form>';
-                        }
-                        else
-                        {
-                            $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR; ?></div>'+form_txt;
-                            form.query_name.value = this.name;
-                        }
-                    },
-                    onFailure: function(){
-                        $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR; ?></div>'+form_txt;
-                        form.query_name.value = this.name;
-                       }
-                });
-            }
-        }
-    </script>
-    <?php
+                                } else {
+                                    $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR; ?></div>' + form_txt;
+                                    form.query_name.value = this.name;
+                                }
+                            },
+                            onFailure: function() {
+                                $('modal').innerHTML = '<div class="error"><?php echo _SERVER_ERROR; ?></div>' + form_txt;
+                                form.query_name.value = this.name;
+                            }
+                        });
+                    }
+                }
+            </script>
+            <?php
      exit();
 } else {
     echo '<script type="text/javascript">window.top.location.href=\''.$url_error.'\';</script>';

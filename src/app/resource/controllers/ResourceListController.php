@@ -25,6 +25,7 @@ use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Group\models\GroupModel;
+use Group\models\ServiceModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
@@ -92,10 +93,15 @@ class ResourceListController
 
         $formattedResources = [];
         if (!empty($resIds)) {
+            $excludeAttachmentTypes = [''];
+            if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
+                $excludeAttachmentTypes[] = 'document_with_notes';
+            }
+
             $attachments = AttachmentModel::getOnView([
                 'select'    => ['COUNT(res_id)', 'res_id_master'],
-                'where'     => ['res_id_master in (?)', 'status not in (?)'],
-                'data'      => [$resIds, ['DEL', 'OBS']],
+                'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)'],
+                'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes],
                 'groupBy'   => ['res_id_master']
             ]);
 
@@ -157,6 +163,7 @@ class ResourceListController
                 foreach ($attachments as $attachment) {
                     if ($attachment['res_id_master'] == $resource['res_id']) {
                         $formattedResources[$key]['countAttachments'] = $attachment['count'];
+                        break;
                     }
                 }
                 $formattedResources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $GLOBALS['userId']]);
