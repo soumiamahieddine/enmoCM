@@ -60,6 +60,7 @@ $appId    = $_SESSION['config']['app_id'];
 // Destruction du cookie. La session est entièrement détruite et revenir sur le site attribuera un nouvel identifiant
 $args = array_merge(array(session_name(), ''), array_values(session_get_cookie_params()));
 $args[2] = time() - 3600;
+$args = array_slice($args, 0, 7);
 call_user_func_array('setcookie', $args);
 
 if (isset($_SESSION['web_sso_url'])) {
