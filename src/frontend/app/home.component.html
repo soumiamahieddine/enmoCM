@@ -22,12 +22,9 @@
             </div>
             <div class="bg-head-content" [class.fullContainer]="mobileMode">
                 <mat-card *ngIf="homeMessage"
-                    style="background: #135F7F;color: white;box-shadow: none;border: solid 2px white;width: 100%;border-radius: 20px;">
-                    <div style="display: flex">
-                        <div *ngIf="!mobileMode"
-                            style="text-align:center;flex: 1;background: url(static.php?filename=logo_only.svg);background-size: auto auto;height: 70px;background-size: contain;background-repeat: no-repeat;background-position: center;">
-                        </div>
-                        <div style="flex:10;padding-left: 10px;">
+                    style="background: #135F7F;color: white;box-shadow: none;border: solid 2px white;width: 100%;border-radius: 20px;padding-bottom: 40px;">
+                    <div style="display: flex;max-height: 250px;overflow: auto;">
+                        <div style="padding-left: 10px;">
                             <span [innerHTML]="homeMessage"></span>
                         </div>
                     </div>

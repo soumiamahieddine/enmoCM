@@ -25,6 +25,7 @@
     "ngx-pipes": "^2.4.6",
     "pdfjs-dist": "^2.0.943",
     "photoswipe": "^4.1.2",
+    "simple-pdf-viewer": "^2.0.3",
     "tinymce": "^4.9.4",
     "tooltipster": "^4.2.6",
     "uglify-es": "3.2.2",
