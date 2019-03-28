@@ -30,6 +30,7 @@ class ActionMethodController
 {
     use AcknowledgementReceiptTrait;
     use ShippingTrait;
+    use ExternalSignatoryBookTrait;
 
     const COMPONENTS_ACTIONS = [
         'confirmAction'                         => null,
@@ -40,6 +41,7 @@ class ActionMethodController
         'enabledBasketPersistenceAction'        => 'enabledBasketPersistenceAction',
         'disabledBasketPersistenceAction'       => 'disabledBasketPersistenceAction',
         'resMarkAsReadAction'                   => 'resMarkAsReadAction',
+        'sendExternalSignatoryBookAction'       => 'sendExternalSignatoryBookAction',
         'createAcknowledgementReceiptsAction'   => 'createAcknowledgementReceipts',
         'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction',
         'sendShippingAction'                    => 'createMailevaShippings'

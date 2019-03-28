@@ -208,9 +208,19 @@ abstract class AttachmentModelAbstract
         ValidatorModel::notEmpty($aArgs, ['table', 'resId', 'externalId']);
         ValidatorModel::intType($aArgs, ['resId']);
 
+        $aAttachment = DatabaseModel::select([
+            'select'    => ['external_id'],
+            'table'     => [$aArgs['table']],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resId']],
+        ]);
+
+        $externalId = json_decode($aAttachment[0]['external_id'], true);
+        $externalId['signatureBookId'] = empty($aArgs['externalId']) ? null : $aArgs['externalId'];
+
         DatabaseModel::update([
             'table'     => $aArgs['table'],
-            'set'       => ['status' => 'FRZ', 'external_id' => $aArgs['externalId']],
+            'set'       => ['status' => 'FRZ', 'external_id' => json_encode($externalId)],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);

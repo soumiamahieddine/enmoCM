@@ -124,6 +124,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         ),
         'E' => 
         array (
+            'ExternalSignatoryBook\\' => 22,
             'ExportSeda\\' => 11,
             'Entity\\' => 7,
             'Endroid\\QrCode\\' => 15,
@@ -359,6 +360,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'ExternalSignatoryBook\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/external/externalSignatoryBook',
         ),
         'ExportSeda\\' => 
         array (
