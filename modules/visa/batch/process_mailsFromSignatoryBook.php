@@ -321,7 +321,7 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
             $GLOBALS['logger']->write('Create refused version Attachment', 'INFO');
             Bt_createAttachment([
                 'res_id_master'   => $value->res_id_master,
-                'title'           => $value->title,
+                'title'           => '[REFUSE] ' . $value->title,
                 'identifier'      => $value->identifier,
                 'type_id'         => $value->type_id,
                 'dest_contact_id' => $value->dest_contact_id,
@@ -398,7 +398,7 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             $GLOBALS['logger']->write('Create refused version Attachment', 'INFO');
             Bt_createAttachment([
                 'res_id_master'   => $value->res_id_master,
-                'title'           => $value->title,
+                'title'           => '[REFUSE] ' . $value->title,
                 'identifier'      => $value->identifier,
                 'type_id'         => $value->type_id,
                 'dest_contact_id' => $value->dest_contact_id,
