@@ -123,6 +123,7 @@
     <mat-sidenav #snav2 [fixedInViewport]="mobileQuery.matches" position='end'
         [opened]="mobileQuery.matches ? false : false" [mode]="mobileMode ? 'over' : 'side'" class="panel-right"
         style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '30%'}" autoFocus="false">
-        <div *ngIf="innerHtml" [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div>
+        <pdf-viewer [src]="docUrl" [render-text]="true" [autoresize]="true" [original-size]="false" [show-all]="true"></pdf-viewer>
+        <!-- <div *ngIf="innerHtml" [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div> -->
     </mat-sidenav>
 </mat-sidenav-container>

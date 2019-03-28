@@ -11,7 +11,8 @@ import { RouterModule }                         from '@angular/router';
 import { DragDropModule }                         from '@angular/cdk/drag-drop';
 
 /*PLUGINS IMPORTS*/
-import { SimplePdfViewerModule }                from 'simple-pdf-viewer';
+import { PdfViewerModule }                      from 'ng2-pdf-viewer';
+//import { SimplePdfViewerModule }                from 'simple-pdf-viewer';
 import { NgStringPipesModule }                  from 'ngx-pipes';
 import { CookieService }                        from 'ngx-cookie-service';
 import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
@@ -54,7 +55,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         FormsModule,
         HttpClientModule,
         RouterModule,
-        SimplePdfViewerModule,
+        PdfViewerModule,
         NgStringPipesModule,
         AppMaterialModule,
         DragDropModule
@@ -98,7 +99,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,
-        SimplePdfViewerModule,
+        PdfViewerModule,
         NgStringPipesModule,
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,

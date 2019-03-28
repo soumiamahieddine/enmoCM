@@ -3,4 +3,6 @@
         <mat-icon class="fa fa-times-circle fa-2x"></mat-icon>
     </button>
 </h1>
-<div [innerHTML]="innerHtml"></div>
+<div style="overflow:auto;height: 100%;width: 100%;">
+    <pdf-viewer [src]="docUrl" [render-text]="true" [autoresize]="true" [original-size]="false" [show-all]="true"></pdf-viewer>
+</div>
