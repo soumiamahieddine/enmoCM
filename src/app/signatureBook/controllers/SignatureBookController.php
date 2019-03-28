@@ -123,11 +123,7 @@ class SignatureBookController
         if (!Validator::stringType()->notEmpty()->validate($data['table'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-
-        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
+        //TODO Check les droits de modif
         AttachmentModel::unsignAttachment(['table' => $data['table'], 'resId' => $aArgs['resId']]);
 
         $isVersion = ($data['table'] == 'res_attachments' ? 'false' : 'true');
