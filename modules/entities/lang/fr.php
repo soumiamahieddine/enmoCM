@@ -280,7 +280,7 @@ if (!defined('_THERE_ARE_NOW')) {
     define('_THERE_ARE_NOW', 'Il y a actuellement');
 }
 if (!defined('_DOC_IN_THE_DEPARTMENT')) {
-    define('_DOC_IN_THE_DEPARTMENT', "document(s) associé(s) à l'entité");
+    define('_DOC_IN_THE_DEPARTMENT', "courrier(s) associé(s) à l'entité");
 }
 if (!defined('_DEL_AND_REAFFECT')) {
     define('_DEL_AND_REAFFECT', 'Supprimer ET réaffecter');
@@ -298,7 +298,7 @@ if (!defined('_ENTITY_MANDATORY_FOR_REDIRECTION')) {
     define('_ENTITY_MANDATORY_FOR_REDIRECTION', 'Entité obligatoire pour la réaffectation');
 }
 if (!defined('_WARNING_MESSAGE_DEL_ENTITY')) {
-    define('_WARNING_MESSAGE_DEL_ENTITY', "Avertissement :<br> La suppression d'une entité entraine la réaffectation des documents et utilisateurs à une nouvelle entité mais réaffecte également les documents (courriers) en attente de traitement, les modèles de liste de diffusion et les modèles de réponses vers l'entité de remplacement.");
+    define('_WARNING_MESSAGE_DEL_ENTITY', "Avertissement :<br> La suppression d'une entité entraine la réaffectation des courriers et utilisateurs à une nouvelle entité mais réaffecte également les courriers en attente de traitement, les modèles de liste de diffusion et les modèles de réponses vers l'entité de remplacement.");
 }
 
 /******************** Keywords Helper ************/
@@ -388,7 +388,7 @@ if (!defined('_ENTITY_LATE_MAIL_DESC')) {
 
 /******************** Action put in copy ************/
 if (!defined('_ADD_COPY_FOR_DOC')) {
-    define('_ADD_COPY_FOR_DOC', 'Ajouter en copie pour le document');
+    define('_ADD_COPY_FOR_DOC', 'Ajouter en copie pour le courrier');
 }
 if (!defined('_VALIDATE_PUT_IN_COPY')) {
     define('_VALIDATE_PUT_IN_COPY', "Valider l'ajout en copie");
@@ -446,7 +446,7 @@ if (!defined('_ALL_LISTMODELS')) {
     define('_ALL_LISTMODELS', 'Toutes les listes');
 }
 if (!defined('_LISTMODELS_DESC')) {
-    define('_LISTMODELS_DESC', 'Modèles de listes de diffusion des documents et dossiers');
+    define('_LISTMODELS_DESC', 'Modèles de listes de diffusion des courriers et dossiers');
 }
 if (!defined('_LISTMODELS')) {
     define('_LISTMODELS', 'Modèles de listes de diffusion');
@@ -596,10 +596,10 @@ if (!defined('_COMMENT_FOR_SEP1')) {
     define('_COMMENT_FOR_SEP1', 'Placez ce separateur sur la pile de ');
 }
 if (!defined('_COMMENT_FOR_SEP2')) {
-    define('_COMMENT_FOR_SEP2', 'documents du type : ');
+    define('_COMMENT_FOR_SEP2', 'courriers du type : ');
 }
 if (!defined('_PRINT_SEP_WILL_BE_START')) {
-    define('_PRINT_SEP_WILL_BE_START', "L'impression des documents va débuter automatiquement.");
+    define('_PRINT_SEP_WILL_BE_START', "L'impression des courriers va débuter automatiquement.");
 }
 
 //print sep for mlb

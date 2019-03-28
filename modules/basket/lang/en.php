@@ -145,8 +145,6 @@ if (!defined("_WAITING_DISTRIB_LIST"))
     define("_WAITING_DISTRIB_LIST", "Mails list on hold of distribution");
 if (!defined("_NO_REDIRECT_RIGHT"))
     define("_NO_REDIRECT_RIGHT", "You haven't the right to redirect in this basket");
-if (!defined("_CLICK_LINE_BASKET1"))
-    define("_CLICK_LINE_BASKET1", "Click on a lign to consider a document");
 
 //DIFFUSION LIST
 if (!defined("_CHOOSE_DEPARTMENT_FIRST"))
@@ -158,9 +156,7 @@ if (!defined("_NO_LIST_DEFINED__FOR_THIS_DEPARTMENT"))
 if (!defined("_NO_LIST_DEFINED"))
     define("_NO_LIST_DEFINED", "No defined list");
 if (!defined("_REDIRECT_MAIL"))
-    define("_REDIRECT_MAIL", "Document redirection");
-if (!defined("_DISTRIBUTE_MAIL"))
-    define("_DISTRIBUTE_MAIL", "Document breakdown");
+    define("_REDIRECT_MAIL", "Mail redirection");
 if (!defined("_REDIRECT_TO_OTHER_DEP"))
     define("_REDIRECT_TO_OTHER_DEP", "To an other department");
 if (!defined("_REDIRECT_TO_USER"))
@@ -212,9 +208,9 @@ if (!defined("_VALID_LIST"))
 
 //LIST
 if (!defined("_COPY_LIST"))
-    define("_COPY_LIST", "Documents list on copy");
+    define("_COPY_LIST", "Mails list on copy");
 if (!defined("_PROCESS_LIST"))
-    define("_PROCESS_LIST", "Documents list to process");
+    define("_PROCESS_LIST", "Mails list to process");
 if (!defined("_CLICK_LINE_TO_VIEW"))
     define("_CLICK_LINE_TO_VIEW", "Click on a lign to view");
 if (!defined("_CLICK_LINE_TO_PROCESS"))

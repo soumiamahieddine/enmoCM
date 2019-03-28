@@ -37,7 +37,7 @@ if (!defined("_DETAILS_CASES"))
 if (!defined("_INDEX_CASES"))
     define("_INDEX_CASES", "Index de l'affaire");
 if (!defined("_DOCUMENTS_LIST_IN_THIS_CASE"))
-    define("_DOCUMENTS_LIST_IN_THIS_CASE", "Liste des documents de l'affaire");
+    define("_DOCUMENTS_LIST_IN_THIS_CASE", "Liste des courriers de l'affaire");
 if (!defined("_NOTES_FOR_THIS_CASES"))
     define("_NOTES_FOR_THIS_CASES", "Annotations de cette affaire");
 if (!defined("_HISTORY_CASES"))
@@ -75,19 +75,19 @@ if (!defined("_UPDATE_CASE"))
 if (!defined("_NEW_CASE"))
     define("_NEW_CASE","Nouvelle affaire");
 if (!defined("_RES_ATTACH_ON_CASE"))
-    define("_RES_ATTACH_ON_CASE","Document attaché à l'affaire");
+    define("_RES_ATTACH_ON_CASE","Courrier attaché à l'affaire");
 if (!defined("_RES_DETTACH_ON_CASE"))
-    define("_RES_DETTACH_ON_CASE","Document dettaché à l'affaire");
+    define("_RES_DETTACH_ON_CASE","Courrier dettaché de l'affaire");
 if (!defined("_JOIN_CASE"))
     define("_JOIN_CASE","Attacher à une affaire");
 if (!defined("_MODIFY_CASE"))
     define("_MODIFY_CASE","Attacher à une autre affaire");
 if (!defined("_JOIN_RES_ON_THIS_CASE"))
-    define("_JOIN_RES_ON_THIS_CASE","Attacher un document à l'affaire");
+    define("_JOIN_RES_ON_THIS_CASE","Attacher un courrier à l'affaire");
 if (!defined("_RESSOURCES_LINKED"))
-    define("_RESSOURCES_LINKED","Document attaché");
+    define("_RESSOURCES_LINKED","Courrier attaché");
 if (!defined("_RESSOURCES_NOT_LINKED"))
-    define("_RESSOURCES_NOT_LINKED","Ce document est déjà attaché");
+    define("_RESSOURCES_NOT_LINKED","Ce courrier est déjà attaché");
 if (!defined("_CASE"))
     define("_CASE","Affaire");
 if (!defined("_SEARCH_A_CASE"))
@@ -95,7 +95,7 @@ if (!defined("_SEARCH_A_CASE"))
 if (!defined("_CLOSED_CASE"))
     define("_CLOSED_CASE","Clôturée");
 if (!defined("_SEARCH_A_RES"))
-    define("_SEARCH_A_RES","Rechercher un document");
+    define("_SEARCH_A_RES","Rechercher un courrier");
 if (!defined("_CREATE_NEW_CASE"))
     define("_CREATE_NEW_CASE","Créer une nouvelle affaire");
 if (!defined("_ADD_CASES"))
@@ -129,4 +129,4 @@ if (!defined("_CLICK_HERE_TO_ACCESS_CASE"))
 if (!defined("_LABEL_MANDATORY"))
     define("_LABEL_MANDATORY","libellé de l'affaire obligatoire");
 if (!defined("_UNLINK_CASE"))
-    define("_UNLINK_CASE","Dissocier le document de l'affaire");
+    define("_UNLINK_CASE","Dissocier le courrier de l'affaire");

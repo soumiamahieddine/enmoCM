@@ -12,11 +12,11 @@
  *
  *   Maarch Framework is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+ *    along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
  */
 
 if (!defined("_SENDMAIL")) {
@@ -90,10 +90,10 @@ if (!defined("_HTML_OR_RAW")) {
     define("_HTML_OR_RAW", "Mise en forme avancée / Texte brut");
 }
 if (!defined("_DEFAULT_BODY")) {
-    define("_DEFAULT_BODY", "Votre message est prêt à  être envoyé avec les fichiers joints suivants :");
+    define("_DEFAULT_BODY", "Votre message est prêt à être envoyé avec les fichiers joints suivants :");
 }
 if (!defined("_NOTES_FILE")) {
-    define("_NOTES_FILE", "Annotations du document");
+    define("_NOTES_FILE", "Annotations du courrier");
 }
 if (!defined("_EMAIL_WRONG_FORMAT")) {
     define("_EMAIL_WRONG_FORMAT", "L'adresse courriel n'est pas dans le bon format");

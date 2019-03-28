@@ -134,10 +134,10 @@ if (!defined('_VALIDATE_MANUAL_DELIVERY')) {
     define('_VALIDATE_MANUAL_DELIVERY', 'De manuele verzending van het borderel valideren');
 }
 if (!defined('_NO_LETTER_PURGE')) {
-    define('_NO_LETTER_PURGE', 'Geen document om te verwijderen');
+    define('_NO_LETTER_PURGE', 'Geen brief om te verwijderen');
 }
 if (!defined('_PURGE')) {
-    define('_PURGE', 'document(en) verwijderd');
+    define('_PURGE', 'brieven verwijderd');
 }
 if (!defined('_ERROR_MESSAGE_ALREADY_SENT')) {
     define('_ERROR_MESSAGE_ALREADY_SENT', 'De archivering van een geselecteerde brief is reeds bezig u kan dezelfde brief geen tweede maal archiveren. Maak de selectie ongedaan om verder te gaan. Briefnummer aan het archiveren:');

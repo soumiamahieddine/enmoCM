@@ -65,7 +65,7 @@ if (!defined('_SEND_TO_AVIS_WF')) {
     define('_SEND_TO_AVIS_WF', 'Een (sequentiële) berichtenvraag verzenden');
 }
 if (!defined('_SEND_TO_AVIS_WF_DESC')) {
-    define('_SEND_TO_AVIS_WF_DESC', 'Opent een modaliteit die een berichtencircuit voor het document kan configureren.');
+    define('_SEND_TO_AVIS_WF_DESC', 'Opent een modaliteit die een berichtencircuit voor het brief kan configureren.');
 }
 if (!defined('_WAITING_FOR_AVIS')) {
     define('_WAITING_FOR_AVIS', 'In afwachting van bericht');
@@ -80,7 +80,7 @@ if (!defined('_PROCEED_WORKFLOW_AVIS_SIMPLE')) {
     define('_PROCEED_WORKFLOW_AVIS_SIMPLE', 'Een bericht uitzenden (parallel)');
 }
 if (!defined('_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC')) {
-    define('_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC', 'Werkt de uitgiftedatum bij van het bericht van de gebruiker die aanwezig is in het bericht in de verdelingslijst van het document (\'process_date\' van de tabel listinstance).');
+    define('_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC', 'Werkt de uitgiftedatum bij van het bericht van de gebruiker die aanwezig is in het bericht in de verdelingslijst van het brief (\'process_date\' van de tabel listinstance).');
 }
 if (!defined('_EMPTY_AVIS_WORKFLOW')) {
     define('_EMPTY_AVIS_WORKFLOW', 'Geen ingesteld berichtencircuit');
@@ -95,7 +95,7 @@ if (!defined('_NB_AVIS')) {
     define('_NB_AVIS', 'Aantal berichten');
 }
 if (!defined('_DOCUMENTS_LIST_WITH_AVIS')) {
-    define('_DOCUMENTS_LIST_WITH_AVIS', 'Lijst van de documenten met berichten');
+    define('_DOCUMENTS_LIST_WITH_AVIS', 'Lijst van de brieven met berichten');
 }
 if (!defined('_NB_AVIS_SENT')) {
     define('_NB_AVIS_SENT', 'Gegeven bericht(en)');

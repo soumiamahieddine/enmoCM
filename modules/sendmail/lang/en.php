@@ -70,7 +70,7 @@ if (!defined("_HTML_OR_RAW"))
 if (!defined("_DEFAULT_BODY"))
     define("_DEFAULT_BODY","Your email is ready to be send with this attachment file :");
 if (!defined("_NOTES_FILE"))
-    define("_NOTES_FILE", "Notes of document");
+    define("_NOTES_FILE", "Notes of mail");
 if (!defined("_EMAIL_WRONG_FORMAT"))
     define("_EMAIL_WRONG_FORMAT", "Email address is not in the right format");
      

@@ -41,10 +41,6 @@ if (!defined("_INDEX_ATTACHMENT"))
     define("_INDEX_ATTACHMENT", "Index an attachment");
 if (!defined("_INDEX_ATTACHMENT_DESC"))
     define("_INDEX_ATTACHMENT_DESC", "Index an attachment");
-if (!defined("_ATTACH_TO_DOC"))
-    define("_ATTACH_TO_DOC", "Attach as a response to an existing mail");
-if (!defined("_ATTACH_TO_DOC_NUM"))
-    define("_ATTACH_TO_DOC_NUM", "Attached to the document number");
 if (!defined("_VIEW_ATTACHMENTS"))
     define("_VIEW_ATTACHMENTS", "View attachments");
 if (!defined("_VIEW_ATTACHMENTS_DESC"))
@@ -199,7 +195,7 @@ if(!defined('_SAME_RES_ID_ERROR'))
 if(!defined('_GENERATE_CHRONO_NUMBER'))
     define('_GENERATE_CHRONO_NUMBER','Generate a chrono number');
 if(!defined('_CLOSE_INCOMING'))
-    define('_CLOSE_INCOMING','Close the incoming document');
+    define('_CLOSE_INCOMING','Close the incoming mail');
 if(!defined('_PLEASE_GENERATE_CHRONO_NUMBER'))
     define ('_PLEASE_GENERATE_CHRONO_NUMBER','Please, generate a new chrono number');
 if(!defined('_CHOOSE_CHRONO_NUMBER'))

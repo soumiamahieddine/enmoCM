@@ -32,10 +32,10 @@ if (!defined("_FILEPLAN_COMMENT")) {
     define("_FILEPLAN_COMMENT", "Plan de classement organisationnel");
 }
 if (!defined("_PUT_DOC_IN_FILEPLAN")) {
-    define("_PUT_DOC_IN_FILEPLAN", "Classer des documents");
+    define("_PUT_DOC_IN_FILEPLAN", "Classer des courriers");
 }
 if (!defined("_PUT_DOC_IN_FILEPLAN_COMMENT")) {
-    define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classer des documents dans le plan de classement organisationnel");
+    define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classer des courriers dans le plan de classement organisationnel");
 }
 if (!defined("_ADMIN_MODULE_FILEPLAN")) {
     define("_ADMIN_MODULE_FILEPLAN", "Plan de classement organisationnel");
@@ -49,7 +49,7 @@ if (!defined("_ADD_FILEPLAN")) {
     define("_ADD_FILEPLAN", "Créer un plan de classement");
 }
 if (!defined("_CREATE_YOUR_PERSONNAL_FILEPLAN")) {
-    define("_CREATE_YOUR_PERSONNAL_FILEPLAN", "Bienvenue dans la gestion de votre plan de classement personnel.<br />Créez un plan de classement personnel afin de pouvoir classer et retrouver plus rapidement vos documents.");
+    define("_CREATE_YOUR_PERSONNAL_FILEPLAN", "Bienvenue dans la gestion de votre plan de classement personnel.<br />Créez un plan de classement personnel afin de pouvoir classer et retrouver plus rapidement vos courriers.");
 }
 if (!defined("_FILEPLAN_NOT_EXISTS")) {
     define("_FILEPLAN_NOT_EXISTS", "Ce plan de classement n'existe pas");
@@ -88,7 +88,7 @@ if (!defined("_FILEPLAN_POSITIONS")) {
     define("_FILEPLAN_POSITIONS", "élément(s)");
 }
 if (!defined("_DOC_IN_FILEPLAN")) {
-    define("_DOC_IN_FILEPLAN", "documents");
+    define("_DOC_IN_FILEPLAN", "courriers");
 }
 if (!defined("_DELETE_FILEPLAN")) {
     define("_DELETE_FILEPLAN", "Supprimer le plan de classement");
@@ -121,10 +121,10 @@ if (!defined("_FILEPLAN_DISABLED")) {
     define("_FILEPLAN_DISABLED", "Plan de classement verrouillé");
 }
 if (!defined("_REMOVE_FILEPLAN_INFOS_1")) {
-    define("_REMOVE_FILEPLAN_INFOS_1", "Voulez-vous supprimez le plan de classement suivant et retirer les documents liés?");
+    define("_REMOVE_FILEPLAN_INFOS_1", "Voulez-vous supprimez le plan de classement suivant et retirer les courriers liés?");
 }
 if (!defined("_REMOVE_FILEPLAN_INFOS_2")) {
-    define("_REMOVE_FILEPLAN_INFOS_2", "Aucun document ne sera supprimé.");
+    define("_REMOVE_FILEPLAN_INFOS_2", "Aucun courrier ne sera supprimé.");
 }
 if (!defined("_CHOOSE_FILEPLAN")) {
     define("_CHOOSE_FILEPLAN", "Veuillez sélectionner un plan de classement");
@@ -135,7 +135,7 @@ if (!defined("_POSITION_PATH")) {
     define("_POSITION_PATH", "Chemin");
 }
 if (!defined("_NO_DOC_IN_POSITION")) {
-    define("_NO_DOC_IN_POSITION", "Aucun documents");
+    define("_NO_DOC_IN_POSITION", "Aucun courriers");
 }
     
 /*FORM*/
@@ -203,10 +203,10 @@ if (!defined("_REALLY_REMOVE_POSITION")) {
     define("_REALLY_REMOVE_POSITION", "Voulez-vous supprimez la position");
 }
 if (!defined("_REMOVE_POSITIONS_INFOS_1")) {
-    define("_REMOVE_POSITIONS_INFOS_1", "Voulez-vous supprimez les positions suivantes et retirer les documents liés?");
+    define("_REMOVE_POSITIONS_INFOS_1", "Voulez-vous supprimez les positions suivantes et retirer les courriers liés?");
 }
 if (!defined("_REMOVE_POSITIONS_INFOS_2")) {
-    define("_REMOVE_POSITIONS_INFOS_2", "Aucun document ne sera supprimé.");
+    define("_REMOVE_POSITIONS_INFOS_2", "Aucun courrier ne sera supprimé.");
 }
 if (!defined("_DELETE_POSITION")) {
     define("_DELETE_POSITION", "Supprimer");
@@ -216,19 +216,19 @@ if (!defined("_POSITION_REMOVED")) {
 }
     //SET
 if (!defined("_SET_DOC_TO_POSITION")) {
-    define("_SET_DOC_TO_POSITION", "Classer un/des document(s)");
+    define("_SET_DOC_TO_POSITION", "Classer un/des courrier(s)");
 }
 if (!defined("_DOC_ADDED_TO_POSITION")) {
-    define("_DOC_ADDED_TO_POSITION", "Document(s) affécté(s) à la position");
+    define("_DOC_ADDED_TO_POSITION", "Courrier(s) affécté(s) à la position");
 }
 if (!defined("_REMOVED_DOC_FROM_POSITION")) {
-    define("_REMOVED_DOC_FROM_POSITION", " Retirer le document de la position");
+    define("_REMOVED_DOC_FROM_POSITION", " Retirer le courrier de la position");
 }
 if (!defined("_REALLY_REMOVE_DOC_FROM_POSITION")) {
-    define("_REALLY_REMOVE_DOC_FROM_POSITION", "Voulez-vous retirer le document de la position");
+    define("_REALLY_REMOVE_DOC_FROM_POSITION", "Voulez-vous retirer le courrier de la position");
 }
 if (!defined("_DOC_REMOVED_FROM_POSITION")) {
-    define("_DOC_REMOVED_FROM_POSITION", "Document retiré de la position");
+    define("_DOC_REMOVED_FROM_POSITION", "Courrier retiré de la position");
 }
     //ERROR
 if (!defined("_ERROR_DURING_POSITION_ID_GENERATION")) {

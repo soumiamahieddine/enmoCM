@@ -31,7 +31,7 @@ if (!defined('_INDEX_CASES')) {
     define('_INDEX_CASES', 'Index van de zaak');
 }
 if (!defined('_DOCUMENTS_LIST_IN_THIS_CASE')) {
-    define('_DOCUMENTS_LIST_IN_THIS_CASE', 'Documentenlijst van de zaak');
+    define('_DOCUMENTS_LIST_IN_THIS_CASE', 'Lijst van brieven in de zaak');
 }
 if (!defined('_NOTES_FOR_THIS_CASES')) {
     define('_NOTES_FOR_THIS_CASES', 'Opmerkingen van deze zaak');
@@ -88,10 +88,10 @@ if (!defined('_NEW_CASE')) {
     define('_NEW_CASE', 'Nieuwe zaak');
 }
 if (!defined('_RES_ATTACH_ON_CASE')) {
-    define('_RES_ATTACH_ON_CASE', 'Bij de zaak gevoegd document');
+    define('_RES_ATTACH_ON_CASE', 'Bij de zaak gevoegd brief');
 }
 if (!defined('_RES_DETTACH_ON_CASE')) {
-    define('_RES_DETTACH_ON_CASE', 'Van de zaak verwijderd document');
+    define('_RES_DETTACH_ON_CASE', 'Van de zaak verwijderd brief');
 }
 if (!defined('_JOIN_CASE')) {
     define('_JOIN_CASE', 'Aan een zaak koppelen');
@@ -100,13 +100,13 @@ if (!defined('_MODIFY_CASE')) {
     define('_MODIFY_CASE', 'Bij een andere zaak voegen');
 }
 if (!defined('_JOIN_RES_ON_THIS_CASE')) {
-    define('_JOIN_RES_ON_THIS_CASE', 'Een document bij de zaak voegen');
+    define('_JOIN_RES_ON_THIS_CASE', 'Een brief bij de zaak voegen');
 }
 if (!defined('_RESSOURCES_LINKED')) {
-    define('_RESSOURCES_LINKED', 'Bijgevoegd document');
+    define('_RESSOURCES_LINKED', 'Bijgevoegd brief');
 }
 if (!defined('_RESSOURCES_NOT_LINKED')) {
-    define('_RESSOURCES_NOT_LINKED', 'Dit document is reeds bijgevoegd');
+    define('_RESSOURCES_NOT_LINKED', 'Dit brief is reeds bijgevoegd');
 }
 if (!defined('_CASE')) {
     define('_CASE', 'Zaak');
@@ -118,7 +118,7 @@ if (!defined('_CLOSED_CASE')) {
     define('_CLOSED_CASE', 'Afgesloten');
 }
 if (!defined('_SEARCH_A_RES')) {
-    define('_SEARCH_A_RES', 'Een document opzoeken');
+    define('_SEARCH_A_RES', 'Een brief opzoeken');
 }
 if (!defined('_CREATE_NEW_CASE')) {
     define('_CREATE_NEW_CASE', 'Een nieuwe zaak aanmaken');
@@ -169,5 +169,5 @@ if (!defined('_LABEL_MANDATORY')) {
     define('_LABEL_MANDATORY', 'omschrijving van de zaak verplicht');
 }
 if (!defined('_UNLINK_CASE')) {
-    define('_UNLINK_CASE', 'Document van de zaak ontkoppelen');
+    define('_UNLINK_CASE', 'Brief van de zaak ontkoppelen');
 }

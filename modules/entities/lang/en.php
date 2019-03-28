@@ -283,7 +283,7 @@ if (!defined('_THERE_ARE_NOW')) {
     define('_THERE_ARE_NOW', 'Now, there are ...');
 }
 if (!defined('_DOC_IN_THE_DEPARTMENT')) {
-    define('_DOC_IN_THE_DEPARTMENT', 'Associated document(s) to the department');
+    define('_DOC_IN_THE_DEPARTMENT', 'Associated mail(s) to the department');
 }
 if (!defined('_DEL_AND_REAFFECT')) {
     define('_DEL_AND_REAFFECT', 'Delete and reassign');
@@ -298,7 +298,7 @@ if (!defined('_ENTITY_MANDATORY_FOR_REDIRECTION')) {
     define('_ENTITY_MANDATORY_FOR_REDIRECTION', 'Mandatory department for the reassigment');
 }
 if (!defined('_WARNING_MESSAGE_DEL_ENTITY')) {
-    define('_WARNING_MESSAGE_DEL_ENTITY', 'Warning :<br> The department deletion leads to documents and users reassigment to a new department. It also reassigns documents (mails) on pending handling, the diffusion list templates and response templates toward a replacement department.');
+    define('_WARNING_MESSAGE_DEL_ENTITY', 'Warning :<br> The department deletion leads to mails and users reassigment to a new department. It also reassigns mails on pending handling, the diffusion list templates and response templates toward a replacement department.');
 }
 
 /******************** Keywords Helper ************/
@@ -382,7 +382,7 @@ if (!defined('_ENTITY_LATE_MAIL')) {
 
 /******************** Action put in copy ************/
 if (!defined('_ADD_COPY_FOR_DOC')) {
-    define('_ADD_COPY_FOR_DOC', 'Add on copy for the document');
+    define('_ADD_COPY_FOR_DOC', 'Add on copy for the mail');
 }
 if (!defined('_VALIDATE_PUT_IN_COPY')) {
     define('_VALIDATE_PUT_IN_COPY', 'Validate the addition on copy');
@@ -439,13 +439,13 @@ if (!defined('_ALL_LISTMODELS')) {
     define('_ALL_LISTMODELS', 'All the lists');
 }
 if (!defined('_LISTMODELS_DESC')) {
-    define('_LISTMODELS_DESC', 'Diffusion list templates of documents and folders');
+    define('_LISTMODELS_DESC', 'Diffusion list templates of mails and folders');
 }
 if (!defined('_LISTMODELS')) {
     define('_LISTMODELS', 'Diffusion list templates');
 }
 if (!defined('_MANAGE_LISTMODELS_DESC')) {
-    define('_MANAGE_LISTMODELS_DESC', 'Manage avis and visa circuit models, which can be used in document.');
+    define('_MANAGE_LISTMODELS_DESC', 'Manage avis and visa circuit models, which can be used in mail.');
 }
 if (!defined('_LISTMODEL')) {
     define('_LISTMODEL', 'List template(s)');
@@ -589,10 +589,10 @@ if (!defined('_COMMENT_FOR_SEP1')) {
     define('_COMMENT_FOR_SEP1', 'Put this delimiter on the stack of  ');
 }
 if (!defined('_COMMENT_FOR_SEP2')) {
-    define('_COMMENT_FOR_SEP2', 'documents type of');
+    define('_COMMENT_FOR_SEP2', 'mails type of');
 }
 if (!defined('_PRINT_SEP_WILL_BE_START')) {
-    define('_PRINT_SEP_WILL_BE_START', 'Documents printing will automatically start.');
+    define('_PRINT_SEP_WILL_BE_START', 'Mails printing will automatically start.');
 }
 
 //print sep for mlb

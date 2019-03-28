@@ -15,8 +15,16 @@ if (!defined("_SEND_DOCS_TO_RECOMMENDATION")) {
     define("_SEND_DOCS_TO_RECOMMENDATION", "Sent a recommendation request (parallel)");
 }
 
+if (!defined("_SEND_DOCS_TO_RECOMMENDATION_DESC")) {
+    define("_SEND_DOCS_TO_RECOMMENDATION_DESC", "Opens a modal to add or remove people in notification in the mailing list.");
+}
+
 if (!defined("_VALIDATE_RECOMMENDATION")) {
     define("_VALIDATE_RECOMMENDATION", "Validate the recommendation request(parallel)");
+}
+
+if (!defined("_VALIDATE_RECOMMENDATION_DESC")) {
+    define("_VALIDATE_RECOMMENDATION_DESC", "Allows you to add the person who checked the request to the notification request note.");
 }
 
 if (!defined("_AVIS_USER")) {
@@ -71,6 +79,10 @@ if (!defined("_SEND_TO_AVIS_WF")) {
     define("_SEND_TO_AVIS_WF", "Request for a recommendation (sequential)");
 }
 
+if (!defined("_SEND_TO_AVIS_WF_DESC")) {
+    define("_SEND_TO_AVIS_WF_DESC", "Opens a modal to configure a notification circuit for mail.");
+}
+
 if (!defined("_WAITING_FOR_AVIS")) {
     define("_WAITING_FOR_AVIS", "Recommendation on hold");
 }
@@ -79,8 +91,16 @@ if (!defined("_PROCEED_WORKFLOW_AVIS")) {
     define("_PROCEED_WORKFLOW_AVIS", "Issue an opinion (sequential)");
 }
 
+if (!defined("_PROCEED_WORKFLOW_AVIS_DESC")) {
+    define("_PROCEED_WORKFLOW_AVIS_DESC", "Updates the notification date of the current advisor in the notification circuit ('process_date' in the listinstance table).");
+}
+
 if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE")) {
     define("_PROCEED_WORKFLOW_AVIS_SIMPLE", "Issue an opinion (parallel)");
+}
+
+if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC")) {
+    define("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC", "Updates the notification date of the user present in the mail mailing list ('process_date' in the listinstance table).");
 }
 
 if (!defined("_EMPTY_AVIS_WORKFLOW")) {
@@ -89,6 +109,38 @@ if (!defined("_EMPTY_AVIS_WORKFLOW")) {
 
 if (!defined("_AVIS_SENT")) {
     define("_AVIS_SENT", "Notice given");
+}
+
+if (!defined("_AVIS_NB")) {
+    define("_AVIS_NB", "Notice n°");
+}
+
+if (!defined("_NB_AVIS")) {
+    define("_NB_AVIS", "Number of Notices");
+}
+
+if (!defined("_DOCUMENTS_LIST_WITH_AVIS")) {
+    define("_DOCUMENTS_LIST_WITH_AVIS", "List of mails with notices");
+}
+
+if (!defined("_NB_AVIS_SENT")) {
+    define("_NB_AVIS_SENT", "Notice given");
+}
+
+if (!defined("_WRITTEN_BY")) {
+    define("_WRITTEN_BY", "Written by");
+}
+
+if (!defined("_AVIS_NOTE")) {
+    define("_AVIS_NOTE", "Description of the request");
+}
+
+if (!defined("_VALIDATE_BY")) {
+    define("_VALIDATE_BY", "Validate by");
+}
+
+if (!defined("_AVIS_ROLE_UNAVAILABLE")) {
+    define("_AVIS_ROLE_UNAVAILABLE", "The role \"for advice\" is not available in the mailing list");
 }
 
 if (!defined("_ADD_AVIS_ROLE")) {

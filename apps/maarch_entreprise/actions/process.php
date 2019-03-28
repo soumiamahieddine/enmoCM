@@ -219,7 +219,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     } else {
         //MODAL HEADER
         $frm_str .= '<div style="margin:-10px;margin-bottom:10px;background-color: #135F7F;">';
-        $frm_str .= '<h2 class="tit" title="'._LETTER_NUM.$res_id.'" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'._PROCESS._DOCUMENT.' '.$chrono_number.' : ';
+        $frm_str .= '<h2 class="tit" title="'._LETTER_NUM.$res_id.'" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'._PROCESS._MAIL.' '.$chrono_number.' : ';
         $frm_str .= '</h2>';
         $frm_str .= '<div style="display:table-cell;vertical-align:middle;">';
     }

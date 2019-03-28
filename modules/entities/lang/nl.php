@@ -265,7 +265,7 @@ if (!defined('_THERE_ARE_NOW')) {
     define('_THERE_ARE_NOW', 'Er zijn momenteel');
 }
 if (!defined('_DOC_IN_THE_DEPARTMENT')) {
-    define('_DOC_IN_THE_DEPARTMENT', 'Document(en) aan de eenheid gekoppeld');
+    define('_DOC_IN_THE_DEPARTMENT', 'Brieven aan de eenheid gekoppeld');
 }
 if (!defined('_DEL_AND_REAFFECT')) {
     define('_DEL_AND_REAFFECT', 'Verwijderen EN opnieuw toewijzen');
@@ -283,7 +283,7 @@ if (!defined('_ENTITY_MANDATORY_FOR_REDIRECTION')) {
     define('_ENTITY_MANDATORY_FOR_REDIRECTION', 'Eenheid verplicht om opnieuw toe te wijzen');
 }
 if (!defined('_WARNING_MESSAGE_DEL_ENTITY')) {
-    define('_WARNING_MESSAGE_DEL_ENTITY', 'Waarschuwing :<br> De verwijdering van een eenheid leidt ertoe dat de documenten en de gebruikers aan een nieuwe eenheid worden toegewezen maar wijst eveneens de documenten (brieven) in afwachting van verwerking, de modellen van de verdelingslijst en de antwoordmodellen toe aan de vervangingseenheid.');
+    define('_WARNING_MESSAGE_DEL_ENTITY', 'Waarschuwing :<br> De verwijdering van een eenheid leidt ertoe dat de brieven en de gebruikers aan een nieuwe eenheid worden toegewezen maar wijst eveneens de brieven in afwachting van verwerking, de modellen van de verdelingslijst en de antwoordmodellen toe aan de vervangingseenheid.');
 }
 if (!defined('_HELP_KEYWORD1')) {
     define('_HELP_KEYWORD1', 'Alle eenheden die aan de verbonden gebruiker gekoppeld zijn Bevat geen subeenheden');
@@ -367,7 +367,7 @@ if (!defined('_ENTITY_LATE_MAIL_DESC')) {
     define('_ENTITY_LATE_MAIL_DESC', 'Om het aantal brieven weer te geven dat niet afgesloten werd en waarvan de verwerkingsdeadline overschreden werd.');
 }
 if (!defined('_ADD_COPY_FOR_DOC')) {
-    define('_ADD_COPY_FOR_DOC', 'In kopie toevoegen voor het document');
+    define('_ADD_COPY_FOR_DOC', 'In kopie toevoegen voor het brief');
 }
 if (!defined('_VALIDATE_PUT_IN_COPY')) {
     define('_VALIDATE_PUT_IN_COPY', 'De toevoeging in kopie valideren');
@@ -418,7 +418,7 @@ if (!defined('_ALL_LISTMODELS')) {
     define('_ALL_LISTMODELS', 'Alle lijsten');
 }
 if (!defined('_LISTMODELS_DESC')) {
-    define('_LISTMODELS_DESC', 'Modellen van verdelingslijsten van documenten en mappen');
+    define('_LISTMODELS_DESC', 'Modellen van verdelingslijsten van brieven en mappen');
 }
 if (!defined('_LISTMODELS')) {
     define('_LISTMODELS', 'Modellen verdelingslijsten');
@@ -553,10 +553,10 @@ if (!defined('_COMMENT_FOR_SEP1')) {
     define('_COMMENT_FOR_SEP1', 'Plaats deze separator op de stapel');
 }
 if (!defined('_COMMENT_FOR_SEP2')) {
-    define('_COMMENT_FOR_SEP2', 'documenten van het type:');
+    define('_COMMENT_FOR_SEP2', 'brieven van het type:');
 }
 if (!defined('_PRINT_SEP_WILL_BE_START')) {
-    define('_PRINT_SEP_WILL_BE_START', 'Het afdrukken van de documenten gaat automatisch van start.');
+    define('_PRINT_SEP_WILL_BE_START', 'Het afdrukken van de brieven gaat automatisch van start.');
 }
 if (!defined('_PRINT_SEPS')) {
     define('_PRINT_SEPS', 'Afdrukken van de separatoren');

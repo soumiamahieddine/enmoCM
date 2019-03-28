@@ -60,19 +60,19 @@ if (!defined("_TAG_LABEL_IS_EMPTY"))
 if (!defined("_NO_TAG"))
     define("_NO_TAG", "Pas de "._TAG_DEFAULT);
 if (!defined("_TAG_VIEW"))
-    define("_TAG_VIEW", "Voir les ".strtolower(_TAGS_DEFAULT)." des documents");
+    define("_TAG_VIEW", "Voir les ".strtolower(_TAGS_DEFAULT)." des courriers");
 if (!defined("_TAG_VIEW_DESC"))
     define("_TAG_VIEW_DESC", "Permet d'afficher le champ ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions et fiche détaillée.");
 if (!defined("_ADD_TAG"))
     define("_ADD_TAG", "Ajouter un ".strtolower(_TAG_DEFAULT));
 if (!defined("_ADD_TAG_TO_RES"))
-    define("_ADD_TAG_TO_RES", "Associer des ".strtolower(_TAGS_DEFAULT)." disponibles pour un document");
+    define("_ADD_TAG_TO_RES", "Associer des ".strtolower(_TAGS_DEFAULT)." disponibles pour un courrier");
 if (!defined("_CREATE_TAG"))
     define("_CREATE_TAG", "Créer des ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions");
 if (!defined("_CREATE_TAG_DESC"))
     define("_CREATE_TAG_DESC", "Permet d'enregistrer à la volée des ".strtolower(_TAGS_DEFAULT)." inexistants dans la base de données");
 if (!defined("_ADD_TAG_TO_RES_DESC"))
-    define("_ADD_TAG_TO_RES_DESC", "Permet d'associer des ".strtolower(_TAGS_DEFAULT)." à un document grâce au champ ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions et fiche détaillée");
+    define("_ADD_TAG_TO_RES_DESC", "Permet d'associer des ".strtolower(_TAGS_DEFAULT)." à un courrier grâce au champ ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions et fiche détaillée");
 if (!defined("_DELETE_TAG_TO_RES"))
     define("_DELETE_TAG_TO_RES", "Supprimer des ".strtolower(_TAGS_DEFAULT)." à une ressource");
 if (!defined("_DELETE_TAG_TO_RES_DESC"))
@@ -88,7 +88,7 @@ if (!defined("_TAGS"))
 if (!defined("_TAG_SEPARATOR_HELP"))
     define("_TAG_SEPARATOR_HELP", "Séparez les ".strtolower(_TAGS_DEFAULT)." en appuyant sur Entrée ou avec des virgules");
 if (!defined("_NB_DOCS_FOR_THIS_TAG"))
-    define("_NB_DOCS_FOR_THIS_TAG", "document(s) associé(s)");
+    define("_NB_DOCS_FOR_THIS_TAG", "courrier(s) associé(s)");
 if (!defined("_TAGOTHER_OPTIONS"))
     define("_TAGOTHER_OPTIONS", "Autres options");
 if (!defined("_TAG_FUSION_ACTIONLABEL"))

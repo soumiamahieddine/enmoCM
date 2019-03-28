@@ -60,13 +60,13 @@ if (!defined("_TAG_LABEL_IS_EMPTY"))
 if (!defined("_NO_TAG"))
     define("_NO_TAG", "No "._TAG_DEFAULT);
 if (!defined("_TAG_VIEW"))
-    define("_TAG_VIEW", "View the "._TAGS_DEFAULT." of the documents");
+    define("_TAG_VIEW", "View the "._TAGS_DEFAULT." of the mails");
 if (!defined("_TAG_VIEW_DESC"))
     define("_TAG_VIEW_DESC", "Allows to view "._TAGS_DEFAULT);
 if (!defined("_ADD_TAG"))
     define("_ADD_TAG", "Add a "._TAG_DEFAULT);
 if (!defined("_ADD_TAG_TO_RES"))
-    define("_ADD_TAG_TO_RES", "Associate the available "._TAGS_DEFAULT." to a document");
+    define("_ADD_TAG_TO_RES", "Associate the available "._TAGS_DEFAULT." to a mail");
 if (!defined("_CREATE_TAG"))
     define("_CREATE_TAG", "Create "._TAGS_DEFAULT);
 if (!defined("_ADD_TAG_TO_RES_DESC"))
@@ -86,7 +86,7 @@ if (!defined("_TAGS"))
 if (!defined("_TAG_SEPARATOR_HELP"))
     define("_TAG_SEPARATOR_HELP", "Separate tags by pressing on Enter or with commas");
 if (!defined("_NB_DOCS_FOR_THIS_TAG"))
-    define("_NB_DOCS_FOR_THIS_TAG", "tagged documents");
+    define("_NB_DOCS_FOR_THIS_TAG", "tagged mails");
 if (!defined("_TAGOTHER_OPTIONS"))
     define("_TAGOTHER_OPTIONS", "Other options");
 if (!defined("_TAG_FUSION_ACTIONLABEL"))

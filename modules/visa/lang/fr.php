@@ -56,7 +56,7 @@ if (!defined('_NO_RESPONSE_PROJECT_VISA')) {
     define('_NO_RESPONSE_PROJECT_VISA', 'Veuillez intégrer au moins une pièce jointe au parapheur.');
 }
 if (!defined('_MAIL_HAS_NO_RESPONSE_PROJECT')) {
-    define('_MAIL_HAS_NO_RESPONSE_PROJECT', 'Ces documents n\'ont pas de pièce jointe intégrée au parapheur');
+    define('_MAIL_HAS_NO_RESPONSE_PROJECT', 'Ces courriers n\'ont pas de pièce jointe intégrée au parapheur');
 }
 if (!defined('_NO_CONVERTED_PDF_VISA')) {
     define('_NO_CONVERTED_PDF_VISA', 'Veuillez éditer votre/vos pièce(s) jointe(s)');
@@ -161,7 +161,7 @@ if (!defined('_VISA_USERS')) {
 }
 
 if (!defined('_TMP_SIGNED_FILE_FAILED')) {
-    define('_TMP_SIGNED_FILE_FAILED', 'Echec de la génération document avec signature');
+    define('_TMP_SIGNED_FILE_FAILED', 'Echec de la génération du document avec signature');
 }
 
 if (!defined('NO_PLACE_SIGNATURE')) {

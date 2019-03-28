@@ -18,10 +18,10 @@ if (!defined('_FILEPLAN_COMMENT')) {
     define('_FILEPLAN_COMMENT', 'Organisatorisch klasseringsplan');
 }
 if (!defined('_PUT_DOC_IN_FILEPLAN')) {
-    define('_PUT_DOC_IN_FILEPLAN', 'Documenten klasseren');
+    define('_PUT_DOC_IN_FILEPLAN', 'Brieven klasseren');
 }
 if (!defined('_PUT_DOC_IN_FILEPLAN_COMMENT')) {
-    define('_PUT_DOC_IN_FILEPLAN_COMMENT', 'Documenten klasseren in het organisatorisch klasseringsplan');
+    define('_PUT_DOC_IN_FILEPLAN_COMMENT', 'Brieven klasseren in het organisatorisch klasseringsplan');
 }
 if (!defined('_ADMIN_MODULE_FILEPLAN')) {
     define('_ADMIN_MODULE_FILEPLAN', 'Organisatorisch klasseringsplan');
@@ -33,7 +33,7 @@ if (!defined('_ADD_FILEPLAN')) {
     define('_ADD_FILEPLAN', 'Een klasseringsplan aanmaken');
 }
 if (!defined('_CREATE_YOUR_PERSONNAL_FILEPLAN')) {
-    define('_CREATE_YOUR_PERSONNAL_FILEPLAN', 'Welkom bij het beheer van uw persoonlijk klasseringsplan.<br />Maak een persoonlijk klasseringsplan aan om uw documenten te kunnen klasseren en sneller terug te vinden.');
+    define('_CREATE_YOUR_PERSONNAL_FILEPLAN', 'Welkom bij het beheer van uw persoonlijk klasseringsplan.<br />Maak een persoonlijk klasseringsplan aan om uw brieven te kunnen klasseren en sneller terug te vinden.');
 }
 if (!defined('_FILEPLAN_NOT_EXISTS')) {
     define('_FILEPLAN_NOT_EXISTS', 'Dit klasseringsplan bestaat niet');
@@ -72,7 +72,7 @@ if (!defined('_FILEPLAN_POSITIONS')) {
     define('_FILEPLAN_POSITIONS', 'element(en)');
 }
 if (!defined('_DOC_IN_FILEPLAN')) {
-    define('_DOC_IN_FILEPLAN', 'documenten');
+    define('_DOC_IN_FILEPLAN', 'brieven');
 }
 if (!defined('_DELETE_FILEPLAN')) {
     define('_DELETE_FILEPLAN', 'Het klasseringsplan verwijderen');
@@ -105,10 +105,10 @@ if (!defined('_FILEPLAN_DISABLED')) {
     define('_FILEPLAN_DISABLED', 'Klasseringsplan vergrendeld');
 }
 if (!defined('_REMOVE_FILEPLAN_INFOS_1')) {
-    define('_REMOVE_FILEPLAN_INFOS_1', 'Wilt u het volgende klasseringsplan verwijderen en de eraan verbonden documenten ervan afhalen?');
+    define('_REMOVE_FILEPLAN_INFOS_1', 'Wilt u het volgende klasseringsplan verwijderen en de eraan verbonden breiven ervan afhalen?');
 }
 if (!defined('_REMOVE_FILEPLAN_INFOS_2')) {
-    define('_REMOVE_FILEPLAN_INFOS_2', 'Er zal geen enkel document verwijderd worden.');
+    define('_REMOVE_FILEPLAN_INFOS_2', 'Er zal geen enkel brief verwijderd worden.');
 }
 if (!defined('_CHOOSE_FILEPLAN')) {
     define('_CHOOSE_FILEPLAN', 'Selecteer een klasseringsplan');
@@ -117,7 +117,7 @@ if (!defined('_POSITION_PATH')) {
     define('_POSITION_PATH', 'Pad');
 }
 if (!defined('_NO_DOC_IN_POSITION')) {
-    define('_NO_DOC_IN_POSITION', 'Geen document');
+    define('_NO_DOC_IN_POSITION', 'Geen brief');
 }
 if (!defined('_POSITION_ID')) {
     define('_POSITION_ID', 'Gebruikersnaam van positie');
@@ -177,10 +177,10 @@ if (!defined('_REALLY_REMOVE_POSITION')) {
     define('_REALLY_REMOVE_POSITION', 'Wilt u de positie verwijderen');
 }
 if (!defined('_REMOVE_POSITIONS_INFOS_1')) {
-    define('_REMOVE_POSITIONS_INFOS_1', 'Wilt u de volgende posities verwijderen en de eraan verbonden documenten ervan afhalen?');
+    define('_REMOVE_POSITIONS_INFOS_1', 'Wilt u de volgende posities verwijderen en de eraan verbonden brieven ervan afhalen?');
 }
 if (!defined('_REMOVE_POSITIONS_INFOS_2')) {
-    define('_REMOVE_POSITIONS_INFOS_2', 'Er zal geen enkel document verwijderd worden.');
+    define('_REMOVE_POSITIONS_INFOS_2', 'Er zal geen enkel brief verwijderd worden.');
 }
 if (!defined('_DELETE_POSITION')) {
     define('_DELETE_POSITION', 'Verwijderen');
@@ -189,19 +189,19 @@ if (!defined('_POSITION_REMOVED')) {
     define('_POSITION_REMOVED', 'Verwijderde positie');
 }
 if (!defined('_SET_DOC_TO_POSITION')) {
-    define('_SET_DOC_TO_POSITION', 'Een document(en) klasseren');
+    define('_SET_DOC_TO_POSITION', 'Een brieven klasseren');
 }
 if (!defined('_DOC_ADDED_TO_POSITION')) {
-    define('_DOC_ADDED_TO_POSITION', 'Aan de positie toegewezen document(en)');
+    define('_DOC_ADDED_TO_POSITION', 'Aan de positie toegewezen brieven');
 }
 if (!defined('_REMOVED_DOC_FROM_POSITION')) {
-    define('_REMOVED_DOC_FROM_POSITION', 'Het document van de positie afhalen');
+    define('_REMOVED_DOC_FROM_POSITION', 'Het brief van de positie afhalen');
 }
 if (!defined('_REALLY_REMOVE_DOC_FROM_POSITION')) {
-    define('_REALLY_REMOVE_DOC_FROM_POSITION', 'Wil u het document van de positie afhalen');
+    define('_REALLY_REMOVE_DOC_FROM_POSITION', 'Wil u het brief van de positie afhalen');
 }
 if (!defined('_DOC_REMOVED_FROM_POSITION')) {
-    define('_DOC_REMOVED_FROM_POSITION', 'Document van de positie afgehaald');
+    define('_DOC_REMOVED_FROM_POSITION', 'Brief van de positie afgehaald');
 }
 if (!defined('_ERROR_DURING_POSITION_ID_GENERATION')) {
     define('_ERROR_DURING_POSITION_ID_GENERATION', 'Fout tijdens de aanmaak van de gebruikersnaam van de positie. (database error)');

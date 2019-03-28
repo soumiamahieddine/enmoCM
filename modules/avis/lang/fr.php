@@ -80,7 +80,7 @@ if (!defined("_SEND_TO_AVIS_WF")) {
 }
 
 if (!defined("_SEND_TO_AVIS_WF_DESC")) {
-    define("_SEND_TO_AVIS_WF_DESC", "Ouvre une modal permettant de configurer un circuit d'avis pour le document.");
+    define("_SEND_TO_AVIS_WF_DESC", "Ouvre une modal permettant de configurer un circuit d'avis pour le courrier.");
 }
 
 if (!defined("_WAITING_FOR_AVIS")) {
@@ -100,7 +100,7 @@ if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE")) {
 }
 
 if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC")) {
-    define("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC", "Met à jour la date d'émission d'avis de l'utilisateur présent en avis dans la liste de diffusion du document ('process_date' de la table listinstance).");
+    define("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC", "Met à jour la date d'émission d'avis de l'utilisateur présent en avis dans la liste de diffusion du courrier ('process_date' de la table listinstance).");
 }
 
 if (!defined("_EMPTY_AVIS_WORKFLOW")) {
@@ -120,7 +120,7 @@ if (!defined("_NB_AVIS")) {
 }
 
 if (!defined("_DOCUMENTS_LIST_WITH_AVIS")) {
-    define("_DOCUMENTS_LIST_WITH_AVIS", "Liste des documents avec avis");
+    define("_DOCUMENTS_LIST_WITH_AVIS", "Liste des courriers avec avis");
 }
 
 if (!defined("_NB_AVIS_SENT")) {

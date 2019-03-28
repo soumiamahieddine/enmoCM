@@ -183,9 +183,6 @@ if (!defined('_WAITING_DISTRIB_LIST')) {
 if (!defined('_NO_REDIRECT_RIGHT')) {
     define('_NO_REDIRECT_RIGHT', 'U hebt geen omleidingsrechten voor dit bakje');
 }
-if (!defined('_CLICK_LINE_BASKET1')) {
-    define('_CLICK_LINE_BASKET1', 'Klik op een lijn om een document te kwalificeren');
-}
 if (!defined('_CHOOSE_DEPARTMENT_FIRST')) {
     define('_CHOOSE_DEPARTMENT_FIRST', 'U moet eerst een dienst kiezen vooraleer toegang te krijgen tot de verdelingslijst');
 }
@@ -199,10 +196,7 @@ if (!defined('_NO_LIST_DEFINED')) {
     define('_NO_LIST_DEFINED', 'Geen lijst gedefinieerd');
 }
 if (!defined('_REDIRECT_MAIL')) {
-    define('_REDIRECT_MAIL', 'Omleiding van het document');
-}
-if (!defined('_DISTRIBUTE_MAIL')) {
-    define('_DISTRIBUTE_MAIL', 'Indeling van het document');
+    define('_REDIRECT_MAIL', 'Omleiding van het brief');
 }
 if (!defined('_REDIRECT_TO_OTHER_DEP')) {
     define('_REDIRECT_TO_OTHER_DEP', 'Naar een andere dienst');
@@ -274,10 +268,10 @@ if (!defined('_VALID_LIST')) {
     define('_VALID_LIST', 'De lijst bevestigen');
 }
 if (!defined('_COPY_LIST')) {
-    define('_COPY_LIST', 'Lijst van de documenten in kopie');
+    define('_COPY_LIST', 'Lijst van de brieven in kopie');
 }
 if (!defined('_PROCESS_LIST')) {
-    define('_PROCESS_LIST', 'Lijst van de te verwerken documenten');
+    define('_PROCESS_LIST', 'Lijst van de te verwerken brieven');
 }
 if (!defined('_CLICK_LINE_TO_VIEW')) {
     define('_CLICK_LINE_TO_VIEW', 'Klik op een lijn om weer te geven');

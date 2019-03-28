@@ -32,10 +32,10 @@ if (!defined("_FILEPLAN_COMMENT")) {
     define("_FILEPLAN_COMMENT", "organizational file plan");
 }
 if (!defined("_PUT_DOC_IN_FILEPLAN")) {
-    define("_PUT_DOC_IN_FILEPLAN", "Classify documents");
+    define("_PUT_DOC_IN_FILEPLAN", "Classify mails");
 }
 if (!defined("_PUT_DOC_IN_FILEPLAN_COMMENT")) {
-    define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classify documents in the organizational file plan");
+    define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classify mails in the organizational file plan");
 }
 if (!defined("_ADMIN_MODULE_FILEPLAN")) {
     define("_ADMIN_MODULE_FILEPLAN", "organizational file plan");
@@ -49,7 +49,7 @@ if (!defined("_ADD_FILEPLAN")) {
     define("_ADD_FILEPLAN", "Create a file plan");
 }
 if (!defined("_CREATE_YOUR_PERSONNAL_FILEPLAN")) {
-    define("_CREATE_YOUR_PERSONNAL_FILEPLAN", "Welcome to your personal file plan management.<br />Create a personal file plan to classify and find faster your documents.");
+    define("_CREATE_YOUR_PERSONNAL_FILEPLAN", "Welcome to your personal file plan management.<br />Create a personal file plan to classify and find faster your mails.");
 }
 if (!defined("_FILEPLAN_NOT_EXISTS")) {
     define("_FILEPLAN_NOT_EXISTS", "This file plan does not exist");
@@ -88,7 +88,7 @@ if (!defined("_FILEPLAN_POSITIONS")) {
     define("_FILEPLAN_POSITIONS", "Element(s)");
 }
 if (!defined("_DOC_IN_FILEPLAN")) {
-    define("_DOC_IN_FILEPLAN", "Documents");
+    define("_DOC_IN_FILEPLAN", "mails");
 }
 if (!defined("_DELETE_FILEPLAN")) {
     define("_DELETE_FILEPLAN", " Delete the file plan");
@@ -124,7 +124,7 @@ if (!defined("_REMOVE_FILEPLAN_INFOS_1")) {
     define("_REMOVE_FILEPLAN_INFOS_1", "Are you sure to want to delete the following file plan and remove linked files ?");
 }
 if (!defined("_REMOVE_FILEPLAN_INFOS_2")) {
-    define("_REMOVE_FILEPLAN_INFOS_2", "No document will be deleted.");
+    define("_REMOVE_FILEPLAN_INFOS_2", "No file will be deleted.");
 }
 if (!defined("_CHOOSE_FILEPLAN")) {
     define("_CHOOSE_FILEPLAN", "Please select a file plan");
@@ -135,7 +135,7 @@ if (!defined("_POSITION_PATH")) {
     define("_POSITION_PATH", "Path");
 }
 if (!defined("_NO_DOC_IN_POSITION")) {
-    define("_NO_DOC_IN_POSITION", "None of the documents");
+    define("_NO_DOC_IN_POSITION", "None of the mails");
 }
     
 /*FORM*/
@@ -203,10 +203,10 @@ if (!defined("_REALLY_REMOVE_POSITION")) {
     define("_REALLY_REMOVE_POSITION", "Are you sure to want to delete the position ?");
 }
 if (!defined("_REMOVE_POSITIONS_INFOS_1")) {
-    define("_REMOVE_POSITIONS_INFOS_1", "Do you want to delete the following positions et remove all the linked documents ?");
+    define("_REMOVE_POSITIONS_INFOS_1", "Do you want to delete the following positions et remove all the linked mails ?");
 }
 if (!defined("_REMOVE_POSITIONS_INFOS_2")) {
-    define("_REMOVE_POSITIONS_INFOS_2", "None of the document will be deleted.");
+    define("_REMOVE_POSITIONS_INFOS_2", "None of the mail will be deleted.");
 }
 if (!defined("_DELETE_POSITION")) {
     define("_DELETE_POSITION", "Delete");
@@ -216,19 +216,19 @@ if (!defined("_POSITION_REMOVED")) {
 }
     //SET
 if (!defined("_SET_DOC_TO_POSITION")) {
-    define("_SET_DOC_TO_POSITION", "Classify a document(s)");
+    define("_SET_DOC_TO_POSITION", "Classify a mail(s)");
 }
 if (!defined("_DOC_ADDED_TO_POSITION")) {
-    define("_DOC_ADDED_TO_POSITION", "Documents added to position");
+    define("_DOC_ADDED_TO_POSITION", "Mails added to position");
 }
 if (!defined("_REMOVED_DOC_FROM_POSITION")) {
-    define("_REMOVED_DOC_FROM_POSITION", " Remove the document from the position");
+    define("_REMOVED_DOC_FROM_POSITION", " Remove the mail from the position");
 }
 if (!defined("_REALLY_REMOVE_DOC_FROM_POSITION")) {
-    define("_REALLY_REMOVE_DOC_FROM_POSITION", "Are you sure to want to remove the document from the position?");
+    define("_REALLY_REMOVE_DOC_FROM_POSITION", "Are you sure to want to remove the mail from the position?");
 }
 if (!defined("_DOC_REMOVED_FROM_POSITION")) {
-    define("_DOC_REMOVED_FROM_POSITION", "Removed document from the position");
+    define("_DOC_REMOVED_FROM_POSITION", "Removed mail from the position");
 }
     //ERROR
 if (!defined("_ERROR_DURING_POSITION_ID_GENERATION")) {
