@@ -211,6 +211,14 @@ class StoreController
             }
         }
 
+        unset($aArgs['external_id']);
+        if (!empty($aArgs['externalId'])) {
+            if (is_array($aArgs['externalId'])) {
+                $aArgs['external_id'] = json_encode($aArgs['externalId']);
+            }
+            unset($aArgs['externalId']);
+        }
+
         $aArgs['creation_date'] = 'CURRENT_TIMESTAMP';
 
         return $aArgs;

@@ -227,10 +227,10 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .=" and  ";
             }
             // REFERENCE COURRIER EXTERNE
-            elseif ($tab_id_fields[$j] == 'external_id' && !empty($_REQUEST['external_id'])) {
-                $json_txt .= "'external_id' : ['".addslashes(trim($_REQUEST['external_id']))."'],";
-                $where_request .=" (lower(external_id) LIKE lower(:external_id) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":external_id" => "%".$_REQUEST['external_id']."%"));
+            elseif ($tab_id_fields[$j] == 'external_reference' && !empty($_REQUEST['external_reference'])) {
+                $json_txt .= "'external_reference' : ['".addslashes(trim($_REQUEST['external_reference']))."'],";
+                $where_request .=" (lower(external_reference) LIKE lower(:external_reference) ) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":external_reference" => "%".$_REQUEST['external_reference']."%"));
             }
             // DESCRIPTION
             elseif ($tab_id_fields[$j] == 'description' && !empty($_REQUEST['description'])) {

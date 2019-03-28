@@ -69,7 +69,6 @@
         </sendInObject>
         <return>
             <key>id</key>
-            <value>custom_t1</value>
         </return>
     </call>
     <call>

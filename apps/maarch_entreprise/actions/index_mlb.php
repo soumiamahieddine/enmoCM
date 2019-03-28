@@ -514,12 +514,12 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '</tr>';
 
     /*** Reference courrier externe ***/
-    $frmStr .= '<tr id="external_id_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td><label for="external_id" class="form_title" >' . _REFERENCE_MAIL
+    $frmStr .= '<tr id="external_reference_tr" style="display:' . $displayValue . ';">';
+    $frmStr .= '<td><label for="external_reference" class="form_title" >' . _REFERENCE_MAIL
             . '</label></td>';
     $frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><input name="external_id" type="text" '
-            . 'id="external_id"/></td>';
+    $frmStr .= '<td class="indexing_field"><input name="external_reference" type="text" '
+            . 'id="external_reference"/></td>';
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '</tr>';
 
@@ -2083,6 +2083,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     }
 
                     $select[] = 'address_id';
+                    $select[] = 'external_id';
                     $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
                     if (!empty($document[0])) {
                         if ($object['name'] == 'citoyen') {
@@ -2119,7 +2120,10 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
             $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
 
-            \Resource\models\ResModel::update(['set' => [$config['return']['value'] => $response[$config['return']['key']]], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+            $externalId = json_decode($document[0]['external_id'], true);
+            $externalId['localeoId'] = $response[$config['return']['key']];
+
+            \Resource\models\ResModel::update(['set' => ['external_id' => $externalId], 'where' => ['res_id = ?'], 'data' => [$resId]]);
         }
     }
 

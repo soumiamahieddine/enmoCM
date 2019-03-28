@@ -284,6 +284,14 @@ DO $$ BEGIN
 	  ALTER TABLE res_version_attachments RENAME COLUMN external_id_tmp TO external_id;
   END IF;
 END$$;
+DO $$ BEGIN
+  IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'external_id' and data_type != 'jsonb') THEN
+	  ALTER TABLE res_letterbox RENAME COLUMN external_id TO external_reference;
+    ALTER TABLE res_letterbox ADD COLUMN external_id jsonb DEFAULT '{}';
+    UPDATE res_letterbox SET external_id = json_build_object('publikId', external_reference) WHERE external_link is not NULL;
+    UPDATE res_letterbox SET external_reference = NULL WHERE external_link is not NULL;
+  END IF;
+END$$;
 
 
 /* RE-CREATE VIEW*/
@@ -323,6 +331,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.source,
     r.author,
     r.reference_number,
+    r.external_reference,
     r.external_id,
     r.external_link,
     r.departure_date,

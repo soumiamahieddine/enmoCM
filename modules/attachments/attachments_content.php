@@ -446,9 +446,10 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendAttachmentToExternalApplication']);
                                         $configResource = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
 
-                                        $resource = \Resource\models\ResModel::getOnView(['select' => ['doc_' . $configResource['return']['value'], 'address_id'], 'where' => ['res_id = ?'], 'data' => [$_SESSION['doc_id']]]);
+                                        $resource = \Resource\models\ResModel::getOnView(['select' => ['external_id', 'address_id'], 'where' => ['res_id = ?'], 'data' => [$_SESSION['doc_id']]]);
+                                        $externalId = json_decode($resource[0]['external_id'], true);
 
-                                        if (!empty($resource[0]['doc_' . $configResource['return']['value']]) && !empty($resource[0]['address_id'])) {
+                                        if (!empty($externalId['localeoId']) && !empty($resource[0]['address_id'])) {
                                             if (!empty($config['inObject'])) {
                                                 $multipleObject = true;
 
@@ -457,7 +458,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                                                     $tmpBodyData = [];
                                                     if ($object['name'] != 'citoyen') {
                                                         foreach ($object['rawData'] as $value) {
-                                                            if ($value != $configResource['return']['value']) {
+                                                            if ($value != 'localeoId') {
                                                                 $select[] = $value;
                                                             }
                                                         }
@@ -480,8 +481,8 @@ if (isset($_POST['add']) && $_POST['add']) {
                                                                 $tmpBodyData[$key] = $contact[0][$value];
                                                             }
                                                         } else {
-                                                            if ($value == $configResource['return']['value']) {
-                                                                $tmpBodyData[$key] = $resource[0]['doc_' . $value];
+                                                            if ($value == 'localeoId') {
+                                                                $tmpBodyData[$key] = $externalId['localeoId'];
                                                             } else {
                                                                 $tmpBodyData[$key] = $document[0][$value];
                                                             }

@@ -312,7 +312,7 @@ if ($core_tools->is_module_loaded('folder')) {
 
 // Reference courrier externe
 $arr_tmp2 = array('label' => _REFERENCE_MAIL, 'type' => 'input_text', 'param' => array('field_label' => _REFERENCE_MAIL, 'other' => $size));
-$param['external_id'] = $arr_tmp2;
+$param['external_reference'] = $arr_tmp2;
 
 // description
 $arr_tmp2 = array('label' => _OTHERS_INFORMATIONS, 'type' => 'input_text', 'param' => array('field_label' => _OTHERS_INFORMATIONS, 'other' => $size));
