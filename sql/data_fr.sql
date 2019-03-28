@@ -168,6 +168,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_thesaurus_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'my_contacts');
