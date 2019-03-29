@@ -378,8 +378,10 @@ $arr_tmp2 = array('label' => _CONFIDENTIALITY, 'type' => 'select_simple', 'param
 $param['confidentiality'] = $arr_tmp2;
 
 //doc_type
-$stmt = $conn->query('SELECT type_id, description  FROM  '
-    .$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' and coll_id = ? order by description asc", array($coll_id)
+$stmt = $conn->query(
+    'SELECT type_id, description  FROM  '
+    .$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' and coll_id = ? order by description asc",
+    array($coll_id)
 );
 $arr_tmp = array();
 while ($res = $stmt->fetchObject()) {
@@ -536,41 +538,48 @@ if (isset($_REQUEST['nodetails'])) {
     <td>
 <?php
 if ($core_tools->is_module_loaded('basket') == true) {
-?>
-    <div class="block">
-        <h2><?php echo _SEARCH_SCOPE; ?></h2>
-        
-        <div class="adv_search_field_content">
-            <div class="adv_search_field">
-                <label for="baskets_clause" class="bold" ><?php echo _SPREAD_SEARCH_TO_BASKETS; ?> : </label>
-            </div>
-            <div class="adv_search_field">
-                <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
-                <select name="baskets_clause" id="baskets_clause">
-                    <option id="true" value="true"><?php echo _ALL_BASKETS; ?></option>
-                    <?php
-                        if ($_REQUEST['mode'] != 'popup') {
-                            for ($i = 0; $i < count($_SESSION['user']['baskets']); ++$i) {
-                                if ($_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id
+        ?>
+                            <div class="block">
+                                <h2><?php echo _SEARCH_SCOPE; ?>
+                                </h2>
+
+                                <div class="adv_search_field_content">
+                                    <div class="adv_search_field">
+                                        <label for="baskets_clause" class="bold"><?php echo _SPREAD_SEARCH_TO_BASKETS; ?> : </label>
+                                    </div>
+                                    <div class="adv_search_field">
+                                        <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
+                                        <select name="baskets_clause" id="baskets_clause">
+                                            <option id="true" value="true"><?php echo _ALL_BASKETS; ?>
+                                            </option>
+                                            <?php
+                        $aSearchBasket = [];
+        if ($_REQUEST['mode'] != 'popup') {
+            for ($i = 0; $i < count($_SESSION['user']['baskets']); ++$i) {
+                if ($_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id
                                     && $_SESSION['user']['baskets'][$i]['id'] != 'IndexingBasket'
                                     && $_SESSION['user']['baskets'][$i]['id'] != 'EmailsToQualify'
                                     && $_SESSION['user']['baskets'][$i]['id'] != 'InitBasket'
                                     && $_SESSION['user']['baskets'][$i]['id'] != 'RetourCourrier'
-                                    && $_SESSION['user']['baskets'][$i]['id'] != 'QualificationBasket') { ?>
-                                        <option id="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['group_serial_id']) . functions::xecho('_') . functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>" value="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['group_serial_id']) . functions::xecho('_') . functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>" >[<?php echo _BASKET; ?>] <?php echo functions::xecho($_SESSION['user']['baskets'][$i]['group_desc']); ?> - <?php echo functions::xecho($_SESSION['user']['baskets'][$i]['name']); ?></option>';
-                                <?php }
-                            }
-                        }
+                                    && $_SESSION['user']['baskets'][$i]['id'] != 'QualificationBasket'
+                                    && empty($aSearchBasket[$_SESSION['user']['baskets'][$i]['id']])) {
                     ?>
-                </select>
-            </div>
-            <div class="adv_search_field">
-                <em><?php echo _SEARCH_SCOPE_HELP; ?></em>
-            </div>
-        </div>
-    </div>
-<?php
-}
+                                            <option id="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>" value="<?php echo functions::xecho($_SESSION['user']['baskets'][$i]['id']); ?>">[<?php echo _BASKET; ?>] <?php echo functions::xecho($_SESSION['user']['baskets'][$i]['name']); ?>
+                                            </option>';
+                                            <?php
+                                    $aSearchBasket[$_SESSION['user']['baskets'][$i]['id']] = true;
+                }
+            }
+        } ?>
+                                        </select>
+                                    </div>
+                                    <div class="adv_search_field">
+                                        <em><?php echo _SEARCH_SCOPE_HELP; ?></em>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+    }
 ?>
 </td>
 </tr>

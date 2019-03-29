@@ -822,11 +822,11 @@ if (count($_REQUEST['meta']) > 0) {
                 
                 default:
                     $json_txt .= " 'baskets_clause' : ['".addslashes(trim($_REQUEST['baskets_clause']))."'],";
-                    $basketInfo = explode('_', trim($_REQUEST['baskets_clause']), 2);
                     for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if ($_SESSION['user']['baskets'][$ind_bask]['group_serial_id'] == $basketInfo[0] && $_SESSION['user']['baskets'][$ind_bask]['id'] == $basketInfo[1]) {
+                        if ($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
                             if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
                                 $where_request .= ' (' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ') and ' ;
+                                break;
                             }
                         }
                     }
