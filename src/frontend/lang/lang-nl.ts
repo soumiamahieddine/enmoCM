@@ -918,9 +918,6 @@ export const LANG_NL = {
     "shipping_economic"                            : "Economic (J+4)", //_TO_TRANSLATE
     "shipping_registered_mail"                            : "Registered mail", //_TO_TRANSLATE
     "shipping_registered_mail_ar"                            : "Registered mail AR", //_TO_TRANSLATE
-    "shipping_small_simple"                            : "Small format (DL) - Simple window", //_TO_TRANSLATE
-    "shipping_small_double"                            : "Small format (DL) - Double window", //_TO_TRANSLATE
-    "shipping_big_a4"                            : "Big format A4 (C4)", //_TO_TRANSLATE
     "shipping_firstPagePrice"                            : "1st page", //_TO_TRANSLATE
     "shipping_nextPagePrice"                            : "Next page(s)", //_TO_TRANSLATE
     "shipping_postagePrice"                            : "Postage up to 20g", //_TO_TRANSLATE
