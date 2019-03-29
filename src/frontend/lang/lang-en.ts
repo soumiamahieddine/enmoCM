@@ -916,7 +916,7 @@ export const LANG_EN = {
     "destinationChangingInfoMass"               : "These mails following external entity of",
     "destinationChangingInfoMass2"              : "will be redirected to entity",
     "selected"                                  : "selected",
-    "noDiffusionList"                           : "NO DIFFUSION LIST",
+    "noDiffusionList"                           : "No diffusion list",
     "chooseAnotherEntityUser"                   : "Choose another person from the entity",
     "totalPrice"                                : "Total price",
     "noNote"                                    : "No note",

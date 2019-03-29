@@ -944,7 +944,7 @@ export const LANG_NL = {
     "destinationChangingInfoMass"                            : "These mails following external entity of", //_TO_TRANSLATE
     "destinationChangingInfoMass2"                            : "will be redirected to entity", //_TO_TRANSLATE
     "selected"                            : "selected", //_TO_TRANSLATE
-    "noDiffusionList"                           : "NO DIFFUSION LIST", //_TO_TRANSLATE
+    "noDiffusionList"                           : "No diffusion list", //_TO_TRANSLATE
     "chooseAnotherEntityUser"                   : "Choose another person from the entity", //_TO_TRANSLATE
     "totalPrice"                                : "Total price", //_TO_TRANSLATE
     "noNote"                                    : "Geen notities", //_TO_TRANSLATE

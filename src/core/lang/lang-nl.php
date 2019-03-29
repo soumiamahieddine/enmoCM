@@ -158,7 +158,7 @@ define('_ENTITIES', 'Eenheden');
 define('_MANAGE_ENTITIES_DESC', 'De structuur van uw organisatie beheren (polen, diensten en kantoren). Evenals de verdelingsmodellen en de goedkeuringscircuits die aan de eenheden gekoppeld zijn.');
 define('_LISTMODELS_WORKFLOW', 'Circuitmodellen');
 define('_MANAGE_LISTMODELS_WORKFLOW_DESC', 'De modellen van de berichten- en goedkeuringscircuits beheren die in een brief gebruikt kunnen worden.');
-define('_DOCTYPES', 'Soorten documentaires');
+define('_DOCTYPES', 'Soorten brieven');
 define('_ADMIN_DOCTYPES_DESC', 'De interne structuur van een map bepalen (map / submap / documenttype). Voor elk document de in te voeren indexlijst en hun verplicht teken voor de volledigheid van de map bepalen.');
 define('_FILEPLANS', 'Organisatorische klasseringsplannen');
 define('_ADMIN_FILEPLANS_DESC', 'Beheer van het organisatorisch klasseringsplan (om plannen te beheren die specifiek zijn voor een eenheid).');

@@ -262,7 +262,7 @@ if (_ID_TO_DISPLAY == 'res_id') {
     $idToDisplay = $res->alt_identifier;
     $titleToDisplay = strtolower(_NUM).$s_id;
 }
-echo "<i style='font-style:normal;' title='{$titleToDisplay}'>"._DETAILS.' : '._DOC." {$idToDisplay}</i>";
+echo "<i style='font-style:normal;' title='{$titleToDisplay}'>"._DETAILS.' : '._MAIL." {$idToDisplay}</i>";
 echo '</h1>';
 ?>
 <div id="inner_content" class="clearfix">

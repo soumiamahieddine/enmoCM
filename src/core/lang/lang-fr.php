@@ -159,7 +159,7 @@ define('_ENTITIES', 'Entités');
 define('_MANAGE_ENTITIES_DESC', 'Gérer la structure de votre organisation (pôles, services et bureaux). Ainsi que les modèles de diffusion et circuits de visa associés aux entités.');
 define('_LISTMODELS_WORKFLOW', 'Modèles de circuit');
 define('_MANAGE_LISTMODELS_WORKFLOW_DESC', "Gérer les modèles de circuits d'avis et de visa pouvant être utilisés dans un courrier.");
-define('_DOCTYPES', 'Typologies documentaires');
+define('_DOCTYPES', 'Typologies de courriers');
 define('_ADMIN_DOCTYPES_DESC', "Définir la structure interne d'un dossier (chemise / sous-chemise / type de document). Définir pour chaque pièce la liste des index à saisir, et leur caractère obligatoire pour la complétude du dossier.");
 define('_FILEPLANS', 'Plans de classement organisationnel');
 define('_ADMIN_FILEPLANS_DESC', 'Gestions du plan de classement organisationnel (Permet de gérer des plans spécifiques à une entité).');
@@ -202,7 +202,7 @@ define('_EMAILSERVER_PARAM_DESC', 'Connecter votre serveur e-mail à Maarch Cour
 define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
 define('_ADMIN', 'Administration');
 define('_ADV_SEARCH_MLB', 'Rechercher');
-define('_INDEXING_MLB', 'Enregistrer un courrier/doc');
+define('_INDEXING_MLB', 'Enregistrer un courrier');
 define('_SEARCH_CONTACTS', 'Rechercher un contact');
 define('_PARAM_MLB_DOCTYPES', 'Paramétrage des types de document ');
 define('_PARAM_MLB_DOCTYPES_DESC', 'Paramétrage des types de document ');
@@ -370,7 +370,7 @@ define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', "Modifier l'attributaire dans la liste
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la fiche détaillée');
 define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par service');
 define('_EXPORT_SEDA_VIEW', 'Voir le bordereau');
-define('_PUT_DOC_IN_FILEPLAN', 'Classer des courrier');
+define('_PUT_DOC_IN_FILEPLAN', 'Classer des courriers');
 define('_PUT_DOC_IN_FILEPLAN_COMMENT', 'Classer des courriers dans le plan de classement organisationnel');
 define('_PERSONNAL_FILEPLAN', 'Plan de classement personnel');
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');

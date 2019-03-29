@@ -76,7 +76,7 @@ if (!defined('_ADMIN_GROUPS_DESC')) {
     define('_ADMIN_GROUPS_DESC', "Ajouter, suspendre, ou modifier des groupes d'utilisateurs. Attribuer des privilèges ou des autorisations d'accès aux ressources.");
 }
 if (!defined('_ADMIN_ARCHITECTURE')) {
-    define('_ADMIN_ARCHITECTURE', 'Typologies documentaires');
+    define('_ADMIN_ARCHITECTURE', 'Typologies de courriers');
 }
 if (!defined('_ADMIN_ARCHITECTURE_DESC')) {
     define('_ADMIN_ARCHITECTURE_DESC', "Définir la structure interne d'un dossier (chemise / sous-chemise / type de document). Définir pour chaque pièce la liste des index à saisir, et leur caractère obligatoire pour la complétude du dossier.");
@@ -1828,7 +1828,7 @@ if (!defined('_VERY_LOW')) {
 }
 
 if (!defined('_INDEXING_MLB')) {
-    define('_INDEXING_MLB', 'Enregistrer un courrier/doc');
+    define('_INDEXING_MLB', 'Enregistrer un courrier');
 }
 if (!defined('_ADV_SEARCH_MLB')) {
     define('_ADV_SEARCH_MLB', 'Rechercher');
