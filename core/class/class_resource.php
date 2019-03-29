@@ -143,7 +143,15 @@
         $docserverControler = new docservers_controler();
         $docserverTypeControler = new docserver_types_controler();
         $docserver = $docserverControler->get($docserver_id);
+        $arrayTmp = (array)$docserver;
+        foreach ($arrayTmp as $key => $value) {
+            $docserver = (object)$value;
+        }
         $docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
+        $arrayTmp = (array)$docserver;
+        foreach ($arrayTmp as $key => $value) {
+            $docserverTypeObject = (object)$value;
+        }
         $fingerprint = Ds_doFingerprint($filetmp, $docserverTypeObject->fingerprint_mode);
         $filesize = filesize($filetmp);
         array_push($data, array('column' => "fingerprint", 'value' => $fingerprint, 'type' => "string"));
@@ -242,7 +250,7 @@
                 }
             } elseif ($value['column'] == 'filename') {
                 $find_filename = true;
-                if (!preg_match("/^[\w-.]+.([a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9]?|maarch)$/", $value['value'])) {
+                if (!preg_match("/^[\w\-.]+.([a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9]?|maarch)$/", $value['value'])) {
                     $error .= _FILENAME_ERROR . ' ' . $value['value'] . '<br/>';
                 }
             } elseif ($value['column'] == 'fingerprint') {

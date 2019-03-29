@@ -15,6 +15,7 @@
 namespace Attachment\controllers;
 
 use Attachment\models\AttachmentModel;
+use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
@@ -29,6 +30,7 @@ use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\AutoCompleteController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
@@ -68,7 +70,7 @@ class AttachmentController
         return $response->withJson(['resId' => $resId]);
     }
 
-    public function getAttachmentsListById(Request $request, Response $response, array $aArgs)
+    public function getByResId(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
@@ -79,10 +81,34 @@ class AttachmentController
             $excludeAttachmentTypes[] = 'document_with_notes';
         }
 
-        $attachments = AttachmentModel::getListByResIdMaster(['id' => $aArgs['resId'], 'excludeAttachmentTypes' => $excludeAttachmentTypes]);
+        $attachments = AttachmentModel::getListByResIdMaster([
+            'resId'                     => $aArgs['resId'],
+            'excludeAttachmentTypes'    => $excludeAttachmentTypes,
+            'orderBy'                   => ['res_id DESC']
+        ]);
+        foreach ($attachments as $key => $attachment) {
+            if (!empty($attachment['res_id_version'])) {
+                $attachments[$key]['res_id'] = $attachment['res_id_version'];
+            }
+            $attachments[$key]['contact'] = '';
+            if (!empty($attachment['dest_address_id'])) {
+                $contact = ContactModel::getOnView([
+                    'select' => [
+                        'is_corporate_person', 'lastname', 'firstname',
+                        'ca_id', 'society', 'contact_firstname', 'contact_lastname'
+                    ],
+                    'where' => ['ca_id = ?'],
+                    'data'  => [$attachment['dest_address_id']]
+                ]);
+                if (!empty($contact[0])) {
+                    $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
+                    $attachments[$key]['contact'] = $contact['contact']['contact'];
+                }
+            }
+        }
         $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
 
-        return $response->withJson(['attachments'  => $attachments, 'attachment_types'  => $attachmentTypes]);
+        return $response->withJson(['attachments' => $attachments, 'attachmentTypes'  => $attachmentTypes]);
     }
 
     public function setInSignatureBook(Request $request, Response $response, array $aArgs)
