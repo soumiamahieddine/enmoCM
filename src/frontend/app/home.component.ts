@@ -16,7 +16,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "home.component.html",
-    styleUrls: ['profile.component.css'],
+    styleUrls: ['home.component.scss'],
     providers: [NotificationService]
 })
 export class HomeComponent extends AutoCompletePlugin implements OnInit {
@@ -90,6 +90,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
             this.sidenavRight.close();
         } else {
             this.docUrl = this.coreUrl+'rest/res/'+row.res_id+'/content';
+
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
                 "<iframe style='height:100%;width:100%;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
                 "</iframe>");  

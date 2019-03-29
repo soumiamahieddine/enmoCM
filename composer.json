@@ -34,6 +34,7 @@
             "VersionUpdate\\"           : "src/app/versionUpdate/",
             "MessageExchange\\"         : "src/app/external/messageExchange/",
             "ExportSeda\\"              : "src/app/external/exportSeda/",
+            "ExternalSignatoryBook\\"   : "src/app/external/externalSignatoryBook/",
             "Sendmail\\"                : "modules/sendmail/"
     	}
     },

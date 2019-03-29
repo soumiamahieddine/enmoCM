@@ -31,7 +31,7 @@
 
 require_once('core/class/class_request.php');
 require_once('core/class/class_security.php');
-require_once('apps/' . $_SESSION['config']['app_id'] 
+require_once('apps/' . $_SESSION['config']['app_id']
     . '/class/class_indexing_searching_app.php'
 );
 require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php');
@@ -115,7 +115,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= " 'services_chosen' : [";
 
                 for ($get_i = 0; $get_i <count($_REQUEST['services_chosen']); $get_i++) {
-
                     $json_txt .= "'".$_REQUEST['services_chosen'][$get_i]."',";
                 }
                 $json_txt = substr($json_txt, 0, -1);
@@ -123,8 +122,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .=" and  ";
                 $arrayPDO = array_merge($arrayPDO, array(":serviceChosen" => $_REQUEST['services_chosen']));
                 $json_txt .= '],';
-            }
-            elseif ($tab_id_fields[$j] == 'initiatorServices_chosen' && isset($_REQUEST['initiatorServices_chosen'])) {
+            } elseif ($tab_id_fields[$j] == 'initiatorServices_chosen' && isset($_REQUEST['initiatorServices_chosen'])) {
                 $json_txt .= " 'initiatorServices_chosen' : [";
 
                 for ($get_i = 0; $get_i <count($_REQUEST['initiatorServices_chosen']); $get_i++) {
@@ -135,8 +133,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .=" and  ";
                 $arrayPDO = array_merge($arrayPDO, array(":initiatorServiceChosen" => $_REQUEST['initiatorServices_chosen']));
                 $json_txt .= '],';
-            }
-            elseif ($tab_id_fields[$j] == 'multifield' && !empty($_REQUEST['multifield'])) {
+            } elseif ($tab_id_fields[$j] == 'multifield' && !empty($_REQUEST['multifield'])) {
                 // MULTIFIELD : subject, title, doc_custom_t1, process notes
                 $multifield = trim($_REQUEST['multifield']);
                 $json_txt .= "'multifield' : ['".addslashes(trim($multifield))."'],";
@@ -147,15 +144,14 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or lower(doc_custom_t1) LIKE lower(:multifield) "
                     ."or lower(description) LIKE lower(:multifield) "
                     ."or lower(barcode) LIKE lower(:multifield) "
-                    ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield)) "                    
-                    ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifield) OR lower(identifier) like lower(:multifield) AND status NOT IN ('DEL','OBS','TMP')))) ";       
-                if (ctype_digit($_REQUEST['multifield']))
-                {
+                    ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield)) "
+                    ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifield) OR lower(identifier) like lower(:multifield) AND status NOT IN ('DEL','OBS','TMP')))) ";
+                if (ctype_digit($_REQUEST['multifield'])) {
                     $where_request .= "or res_id = :multifield2 ";
-                    $arrayPDO = array_merge($arrayPDO, array(":multifield2" => $multifield)); 
+                    $arrayPDO = array_merge($arrayPDO, array(":multifield2" => $multifield));
                 }
 
-		$multifield = \SrcCore\models\TextFormatModel::normalize(['string' => $multifield]);
+                $multifield = \SrcCore\models\TextFormatModel::normalize(['string' => $multifield]);
                 $multifield = preg_replace('/\s+/', ' ', $multifield);
                 $arrayPDO = array_merge($arrayPDO, array(":multifield" => "%".$multifield."%"));
                 
@@ -171,45 +167,43 @@ if (count($_REQUEST['meta']) > 0) {
                 if (!is_numeric($_REQUEST['numcase'])) {
                     $_SESSION['error_search'] = _CASE_NUMBER_ERROR;
                 }
-
             } elseif ($tab_id_fields[$j] == 'labelcase' && !empty($_REQUEST['labelcase'])) {
                 // CASE_LABEL
                 $json_txt .= "'labelcase' : ['".addslashes(trim($_REQUEST['labelcase']))."'],";
                 //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
                 $where_request .= " lower(translate(".$_SESSION['collections'][0]['view'].".case_label,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:labelCase) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":labelCase" => "%".$func->wash($_REQUEST['labelcase'], "no", _CASE_LABEL,"no")."%"));
+                $arrayPDO = array_merge($arrayPDO, array(":labelCase" => "%".$func->wash($_REQUEST['labelcase'], "no", _CASE_LABEL, "no")."%"));
                 $case_view=true;
             } elseif ($tab_id_fields[$j] == 'descriptioncase' && !empty($_REQUEST['descriptioncase'])) {
                 // CASE_DESCRIPTION
                 $json_txt .= "'descriptioncase' : ['".addslashes(trim($_REQUEST['descriptioncase']))."'],";
                 //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
                 $where_request .= " lower(translate(".$_SESSION['collections'][0]['view'].".case_description,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:descriptionCase) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":descriptionCase" => "%".$func->wash($_REQUEST['descriptioncase'], "no", _CASE_DESCRIPTION,"no")."%"));
+                $arrayPDO = array_merge($arrayPDO, array(":descriptionCase" => "%".$func->wash($_REQUEST['descriptioncase'], "no", _CASE_DESCRIPTION, "no")."%"));
                 $case_view=true;
             } elseif ($tab_id_fields[$j] == 'chrono' && !empty($_REQUEST['chrono'])) {
                 $json_txt .= " 'chrono' : ['".addslashes(trim($_REQUEST['chrono']))."'],";
-                $chrono = $func->wash($_REQUEST['chrono'],"no",_CHRONO_NUMBER,"no");
+                $chrono = $func->wash($_REQUEST['chrono'], "no", _CHRONO_NUMBER, "no");
                 $where_request .= " (lower(alt_identifier) like lower(:chrono) or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(identifier) like lower(:chrono)  AND status NOT IN ('DEL','OBS','TMP'))))";
                 $arrayPDO = array_merge($arrayPDO, array(":chrono" => "%".$chrono."%"));
                 $where_request .=" and  ";
-            } 
+            }
 
             // CODE A BARRES
             elseif ($tab_id_fields[$j] == 'barcode' && !empty($_REQUEST['barcode'])) {
                 $json_txt .= " 'barcode' : ['".addslashes(trim($_REQUEST['barcode']))."'],";
-                $barcode = $func->wash($_REQUEST['barcode'],"no",_BARCODE,"no");
+                $barcode = $func->wash($_REQUEST['barcode'], "no", _BARCODE, "no");
                 $where_request .= " lower(barcode) like lower(:barcode) ";
-		$arrayPDO = array_merge($arrayPDO, array(":barcode" => "%".$barcode."%"));
+                $arrayPDO = array_merge($arrayPDO, array(":barcode" => "%".$barcode."%"));
                 $where_request .=" and  ";
             }
             // PRIORITY
-            elseif ($tab_id_fields[$j] == 'priority_chosen' && isset($_REQUEST['priority_chosen']))
-            {
+            elseif ($tab_id_fields[$j] == 'priority_chosen' && isset($_REQUEST['priority_chosen'])) {
                 $json_txt .= " 'priority_chosen' : [";
 
                 for ($get_i = 0; $get_i <count($_REQUEST['priority_chosen']); $get_i++) {
                     $json_txt .= "'".$_REQUEST['priority_chosen'][$get_i]."',";
-                }                
+                }
                 $json_txt = substr($json_txt, 0, -1);
                 $where_request .= " priority IN  (:priorityChosen) ";
                 $where_request .=" and  ";
@@ -217,8 +211,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= '],';
             }
             // SIGNATORY GROUP
-            elseif ($tab_id_fields[$j] == 'signatory_group' && !empty($_REQUEST['signatory_group']))
-            {
+            elseif ($tab_id_fields[$j] == 'signatory_group' && !empty($_REQUEST['signatory_group'])) {
                 $json_txt .= " 'signatory_group' : ['".addslashes(trim($_REQUEST['signatory_group']))."'],";
                 $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from usergroup_content where group_id = :signatoryGroup) "
                         ."and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) ";
@@ -227,18 +220,17 @@ if (count($_REQUEST['meta']) > 0) {
             }
 
             // TYPE D'ATTACHEMENT
-            elseif ($tab_id_fields[$j] == 'attachment_types' && !empty($_REQUEST['attachment_types']))
-            {
+            elseif ($tab_id_fields[$j] == 'attachment_types' && !empty($_REQUEST['attachment_types'])) {
                 $json_txt .= " 'attachment_types' : ['".addslashes(trim($_REQUEST['attachment_types']))."'],";
                 $where_request .= " (res_id in (SELECT res_id_master FROM res_view_attachments WHERE attachment_type = :attachmentTypes AND status NOT IN ('DEL','OBS','TMP')) )";
                 $arrayPDO = array_merge($arrayPDO, array(":attachmentTypes" => $_REQUEST['attachment_types']));
                 $where_request .=" and  ";
             }
             // REFERENCE COURRIER EXTERNE
-            elseif ($tab_id_fields[$j] == 'external_id' && !empty($_REQUEST['external_id'])) {
-                $json_txt .= "'external_id' : ['".addslashes(trim($_REQUEST['external_id']))."'],";
-                $where_request .=" (lower(external_id) LIKE lower(:external_id) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":external_id" => "%".$_REQUEST['external_id']."%"));
+            elseif ($tab_id_fields[$j] == 'external_reference' && !empty($_REQUEST['external_reference'])) {
+                $json_txt .= "'external_reference' : ['".addslashes(trim($_REQUEST['external_reference']))."'],";
+                $where_request .=" (lower(external_reference) LIKE lower(:external_reference) ) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":external_reference" => "%".$_REQUEST['external_reference']."%"));
             }
             // DESCRIPTION
             elseif ($tab_id_fields[$j] == 'description' && !empty($_REQUEST['description'])) {
@@ -251,14 +243,12 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= "'reference_number' : ['".addslashes(trim($_REQUEST['reference_number']))."'],";
                 $where_request .=" (lower(reference_number) LIKE lower(:referenceNumber) ) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$_REQUEST['reference_number']."%"));
-            }            
+            }
             // DEPARTMENT NUMBER
             elseif ($tab_id_fields[$j] == 'department_number_chosen' && !empty($_REQUEST['department_number_chosen'])) {
-
                 $json_txt .= " 'department_number_chosen' : [";
 
-                for ($get_i = 0; $get_i <count($_REQUEST['department_number_chosen']); $get_i++)
-                {
+                for ($get_i = 0; $get_i <count($_REQUEST['department_number_chosen']); $get_i++) {
                     $json_txt .= "'".$_REQUEST['department_number_chosen'][$get_i]."',";
                 }
 
@@ -269,49 +259,41 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":department_number" => $_REQUEST['department_number_chosen']));
             }
             // NOTES
-            elseif ($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes']))
-            {
+            elseif ($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes'])) {
                 $json_txt .= " 'doc_notes' : ['".addslashes(trim($_REQUEST['doc_notes']))."'],";
-                $s_doc_notes = $func->wash($_REQUEST['doc_notes'], "no", _NOTES,"no");
+                $s_doc_notes = $func->wash($_REQUEST['doc_notes'], "no", _NOTES, "no");
                 $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']." where lower(note_text) LIKE lower(:referenceNumber)) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$s_doc_notes."%"));
             }
             // CONTACT TYPE
-            elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type']))
-            {
+            elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type'])) {
                 $json_txt .= " 'contact_type' : ['".addslashes(trim($_REQUEST['contact_type']))."'],";
                 $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
                 $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
             }
             // FOLDER : MARKET
-            elseif ($tab_id_fields[$j] == 'market' && !empty($_REQUEST['market']))
-            {
+            elseif ($tab_id_fields[$j] == 'market' && !empty($_REQUEST['market'])) {
                 $json_txt .= " 'market' : ['".addslashes(trim($_REQUEST['market']))."'],";
-                $market = $func->wash($_REQUEST['market'], "no", _MARKET,"no");
+                $market = $func->wash($_REQUEST['market'], "no", _MARKET, "no");
                 $where_request .= " (lower(folder_name) like lower(:referenceNumber) or folder_id like :referenceNumber ) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$market."%"));
             }
             // FOLDER : PROJECT
-            elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project']))
-            {
+            elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project'])) {
                 $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
-                $project = $func->wash($_REQUEST['project'], "no", _MARKET,"no");
+                $project = $func->wash($_REQUEST['project'], "no", _MARKET, "no");
                 $where_request .= " (lower(folder_name) like lower(:project) or folder_id like :project "
                     ."or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower(:project) or folder_id like :project)) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":project" => "%".$project."%"));
-            }
-
-            elseif ($tab_id_fields[$j] == 'folder_name' && !empty($_REQUEST['folder_name']))
-            {
+            } elseif ($tab_id_fields[$j] == 'folder_name' && !empty($_REQUEST['folder_name'])) {
                 $json_txt .= " 'folder_name' : ['".addslashes(trim($_REQUEST['folder_name']))."'],";
-                $folder_name = $func->wash($_REQUEST['folder_name'], "no", _FOLDER_NAME,"no");
-                 $where_request .= " (lower(folder_name) like lower(:folderName) and ";
+                $folder_name = $func->wash($_REQUEST['folder_name'], "no", _FOLDER_NAME, "no");
+                $where_request .= " (lower(folder_name) like lower(:folderName) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":folderName" => "%".$folder_name."%"));
             }
             // GED NUM
-            elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged']))
-            {
+            elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged'])) {
                 $json_txt .= " 'numged' : ['".addslashes(trim($_REQUEST['numged']))."'],";
                 require_once('core/class/class_security.php');
                 $sec = new security();
@@ -327,12 +309,10 @@ if (count($_REQUEST['meta']) > 0) {
                 }
             }
             // DEST_USER
-            elseif ($tab_id_fields[$j] == 'destinataire_chosen' && !empty($_REQUEST['destinataire_chosen']))
-            {
+            elseif ($tab_id_fields[$j] == 'destinataire_chosen' && !empty($_REQUEST['destinataire_chosen'])) {
                 $json_txt .= " 'destinataire_chosen' : [";
 
-                for ($get_i = 0; $get_i <count($_REQUEST['destinataire_chosen']); $get_i++)
-                {
+                for ($get_i = 0; $get_i <count($_REQUEST['destinataire_chosen']); $get_i++) {
                     $json_txt .= "'".$_REQUEST['destinataire_chosen'][$get_i]."',";
                 }
 
@@ -344,10 +324,9 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= '],';
             }
             // SUBJECT
-            elseif ($tab_id_fields[$j] == 'subject' && !empty($_REQUEST['subject']))
-            {
+            elseif ($tab_id_fields[$j] == 'subject' && !empty($_REQUEST['subject'])) {
                 $subject = trim($_REQUEST['subject']);
-                $subject = preg_replace('/\s+/', ' ',$func->normalize($subject));
+                $subject = preg_replace('/\s+/', ' ', $func->normalize($subject));
                 $json_txt .= " 'subject' : ['".addslashes(trim($subject))."'],";
 
                 $where_request .= " (REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:subject) "
@@ -355,29 +334,29 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":subject" => "%".$subject."%"));
             } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
-
                 $query_fulltext = explode(" ", trim($_REQUEST['fulltext']));
                 $error_fulltext = false;
 
                 foreach ($query_fulltext as $value) {
-                    if (strpos($value, "*") !== false && 
-                        (strlen(substr($value, 0, strpos($value, "*"))) < 3 || preg_match("([,':!+])", $value) === 1 )
+                    if (strpos($value, "*") !== false &&
+                        (strlen(substr($value, 0, strpos($value, "*"))) < 3 || preg_match("([,':!+])", $value) === 1)
                         ) {
                         $error_fulltext = true;
                         break;
                     }
                 }
 
-                if ($error_fulltext == true ) {
+                if ($error_fulltext == true) {
                     $_SESSION['error_search'] = _FULLTEXT_ERROR;
                 } else {
                     // FULLTEXT
                     $fulltext_request = $func->normalize($_REQUEST['fulltext']);
-                    $json_txt .= " 'fulltext' : ['" 
+                    $json_txt .= " 'fulltext' : ['"
                         . addslashes(trim($_REQUEST['fulltext'])) . "'],";
-                    set_include_path('apps' . DIRECTORY_SEPARATOR 
-                        . $_SESSION['config']['app_id'] 
-                        . DIRECTORY_SEPARATOR . 'tools' 
+                    set_include_path(
+                        'apps' . DIRECTORY_SEPARATOR
+                        . $_SESSION['config']['app_id']
+                        . DIRECTORY_SEPARATOR . 'tools'
                         . DIRECTORY_SEPARATOR . PATH_SEPARATOR . get_include_path()
                     );
                     require_once('Zend/Search/Lucene.php');
@@ -392,8 +371,7 @@ if (count($_REQUEST['meta']) > 0) {
                     foreach ($_SESSION['collections'] as $key => $tmpCollection) {
                         $path_to_lucene_index = $tmpCollection['path_to_lucene_index'];
 
-                        if (is_dir($path_to_lucene_index))
-                        {
+                        if (is_dir($path_to_lucene_index)) {
                             if (!$func->isDirEmpty($path_to_lucene_index)) {
                                 $index = Zend_Search_Lucene::open($path_to_lucene_index);
                                 $hits = $index->find(urldecode($fulltext_request));
@@ -415,8 +393,9 @@ if (count($_REQUEST['meta']) > 0) {
                                     $db = new Database();
                                     $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('print_folder')");
                                     $idMasterDatas = [];
-                                    while ($tmp = $stmt->fetchObject())
+                                    while ($tmp = $stmt->fetchObject()) {
                                         $idMasterDatas[] = $tmp;
+                                    }
 
                                     $Liste_Ids = '0';
                                     foreach ($idMasterDatas as $tmpIdMaster) {
@@ -430,8 +409,9 @@ if (count($_REQUEST['meta']) > 0) {
                                     $db = new Database();
                                     $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_version_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('print_folder')");
                                     $idMasterDatas = [];
-                                    while ($tmp = $stmt->fetchObject())
+                                    while ($tmp = $stmt->fetchObject()) {
                                         $idMasterDatas[] = $tmp;
+                                    }
 
                                     $Liste_Ids = '0';
                                     foreach ($idMasterDatas as $tmpIdMaster) {
@@ -440,59 +420,61 @@ if (count($_REQUEST['meta']) > 0) {
                                     }
                                 }
 
-                                if ($key == 0)
+                                if ($key == 0) {
                                     $where_request .= ' (';
+                                }
 
                                 $where_request .= " res_id IN ($Liste_Ids) ";
 
-                                if (empty($_SESSION['collections'][$key + 1]))
+                                if (empty($_SESSION['collections'][$key + 1])) {
                                     $where_request .= ') and ';
-                                else
+                                } else {
                                     $where_request .= ' or ';
+                                }
                             } else {
-                                if ($key == 0)
+                                if ($key == 0) {
                                     $where_request .= ' (';
+                                }
 
                                 $where_request .= " 1=-1 ";
 
-                                if (empty($_SESSION['collections'][$key + 1]))
+                                if (empty($_SESSION['collections'][$key + 1])) {
                                     $where_request .= ') and ';
-                                else
+                                } else {
                                     $where_request .= ' or ';
+                                }
                             }
                         } else {
-                            if ($key == 0)
+                            if ($key == 0) {
                                 $where_request .= ' (';
+                            }
 
                             $where_request .= " 1=-1 ";
 
-                            if (empty($_SESSION['collections'][$key + 1]))
+                            if (empty($_SESSION['collections'][$key + 1])) {
                                 $where_request .= ') and ';
-                            else
+                            } else {
                                 $where_request .= ' or ';
+                            }
                         }
                     }
                 }
             }
             // TAGS
-            elseif ($tab_id_fields[$j] == 'tags_chosen' && !empty($_REQUEST['tags_chosen']))
-            {
+            elseif ($tab_id_fields[$j] == 'tags_chosen' && !empty($_REQUEST['tags_chosen'])) {
                 include_once("modules".DIRECTORY_SEPARATOR."tags".
-                   DIRECTORY_SEPARATOR."tags_search.php");              
+                   DIRECTORY_SEPARATOR."tags_search.php");
             }
             // THESAURUS
-            elseif ($tab_id_fields[$j] == 'thesaurus_chosen' && !empty($_REQUEST['thesaurus_chosen']))
-            {
+            elseif ($tab_id_fields[$j] == 'thesaurus_chosen' && !empty($_REQUEST['thesaurus_chosen'])) {
                 include_once("modules".DIRECTORY_SEPARATOR."thesaurus".
-                   DIRECTORY_SEPARATOR."thesaurus_search.php");              
+                   DIRECTORY_SEPARATOR."thesaurus_search.php");
             }
             //WELCOME PAGE
-            elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
-            {
+            elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome']))) {
                 $welcome = trim($_REQUEST['welcome']);
                 $json_txt .= "'multifield' : ['".addslashes($welcome)."'],";
-                if (ctype_digit($_REQUEST['welcome']))
-                {
+                if (ctype_digit($_REQUEST['welcome'])) {
                     $where_request_welcome .= "(res_id = :resIdWelcome) or ";
                     $arrayPDO = array_merge($arrayPDO, array(":resIdWelcome" => $welcome));
                 }
@@ -506,30 +488,28 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) AND status NOT IN ('DEL','OBS','TMP')) "
                     ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome )))";
 
-		$multifieldWelcome = \SrcCore\models\TextFormatModel::normalize(['string' => $welcome]);
+                $multifieldWelcome = \SrcCore\models\TextFormatModel::normalize(['string' => $welcome]);
                 $multifieldWelcome = preg_replace('/\s+/', ' ', $multifieldWelcome);
                 $arrayPDO = array_merge($arrayPDO, array(":multifieldWelcome" => "%".$multifieldWelcome."%"));
-                set_include_path('apps' . DIRECTORY_SEPARATOR 
-                    . $_SESSION['config']['app_id'] 
-                    . DIRECTORY_SEPARATOR . 'tools' 
+                set_include_path(
+                    'apps' . DIRECTORY_SEPARATOR
+                    . $_SESSION['config']['app_id']
+                    . DIRECTORY_SEPARATOR . 'tools'
                     . DIRECTORY_SEPARATOR . PATH_SEPARATOR . get_include_path()
                 );
             }
 
             // CONFIDENTIALITY
-            elseif ($tab_id_fields[$j] == 'confidentiality' && ($_REQUEST['confidentiality'] <> ""))
-            {
+            elseif ($tab_id_fields[$j] == 'confidentiality' && ($_REQUEST['confidentiality'] <> "")) {
                 $json_txt .= " 'confidentiality' : ['".addslashes(trim($_REQUEST['confidentiality']))."'],";
                 $where_request .= " confidentiality  = :confidentiality and ";
                 $arrayPDO = array_merge($arrayPDO, array(":confidentiality" => $_REQUEST['confidentiality']));
             }
             // DOCTYPES
-            elseif ($tab_id_fields[$j] == 'doctypes_chosen' && !empty($_REQUEST['doctypes_chosen']))
-            {
+            elseif ($tab_id_fields[$j] == 'doctypes_chosen' && !empty($_REQUEST['doctypes_chosen'])) {
                 $json_txt .= " 'doctypes_chosen' : [";
 
-                for ($get_i = 0; $get_i <count($_REQUEST['doctypes_chosen']); $get_i++)
-                {
+                for ($get_i = 0; $get_i <count($_REQUEST['doctypes_chosen']); $get_i++) {
                     $json_txt .= "'".$_REQUEST['doctypes_chosen'][$get_i]."',";
                 }
 
@@ -542,159 +522,116 @@ if (count($_REQUEST['meta']) > 0) {
             }
 
             // MAIL NATURE
-            elseif ($tab_id_fields[$j] == 'mail_nature' && !empty($_REQUEST['mail_nature']))
-            {
+            elseif ($tab_id_fields[$j] == 'mail_nature' && !empty($_REQUEST['mail_nature'])) {
                 $json_txt .= "'mail_nature' : ['".addslashes(trim($_REQUEST['mail_nature']))."'],";
                 $where_request .= " nature_id = :mailNature and ";
                 $arrayPDO = array_merge($arrayPDO, array(":mailNature" => $_REQUEST['mail_nature']));
             }
             // CREATION DATE PJ : FROM
-            elseif ($tab_id_fields[$j] == 'creation_date_pj_from' && !empty($_REQUEST['creation_date_pj_from']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['creation_date_pj_from'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'creation_date_pj_from' && !empty($_REQUEST['creation_date_pj_from'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['creation_date_pj_from'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['creation_date_pj_from'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " res_id in (SELECT res_id_master FROM res_view_attachments WHERE (".$req->extract_date("creation_date")." >= :creationDatePjFrom) AND status NOT IN ('DEL','OBS','TMP') ) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":creationDatePjFrom" => $func->format_date_db($_REQUEST['creation_date_pj_from'])));
                     $json_txt .= " 'creation_date_pj_from' : ['".trim($_REQUEST['creation_date_pj_from'])."'],";
                 }
             }
             // CREATION DATE PJ : TO
-            elseif ($tab_id_fields[$j] == 'creation_date_pj_to' && !empty($_REQUEST['creation_date_pj_to']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['creation_date_pj_to'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'creation_date_pj_to' && !empty($_REQUEST['creation_date_pj_to'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['creation_date_pj_to'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['creation_date_pj_to'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " res_id in (SELECT res_id_master FROM res_view_attachments WHERE (".$req->extract_date("creation_date")." <= :creationDatePjTo) AND status NOT IN ('DEL','OBS','TMP') ) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":creationDatePjTo" => $func->format_date_db($_REQUEST['creation_date_pj_to'])));
                     $json_txt .= " 'creation_date_pj_to' : ['".trim($_REQUEST['creation_date_pj_to'])."'],";
                 }
             }
             // CREATION DATE : FROM
-            elseif ($tab_id_fields[$j] == 'creation_date_from' && !empty($_REQUEST['creation_date_from']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['creation_date_from'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'creation_date_from' && !empty($_REQUEST['creation_date_from'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['creation_date_from'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['creation_date_from'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("creation_date")." >= :creationDateFrom) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":creationDateFrom" => $func->format_date_db($_REQUEST['creation_date_from'])));
                     $json_txt .= " 'creation_date_from' : ['".trim($_REQUEST['creation_date_from'])."'],";
                 }
             }
             // CREATION DATE : TO
-            elseif ($tab_id_fields[$j] == 'creation_date_to' && !empty($_REQUEST['creation_date_to']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['creation_date_to'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'creation_date_to' && !empty($_REQUEST['creation_date_to'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['creation_date_to'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['creation_date_to'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("creation_date")." <= :creationDateTo) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":creationDateTo" => $func->format_date_db($_REQUEST['creation_date_to'])));
                     $json_txt .= " 'creation_date_to' : ['".trim($_REQUEST['creation_date_to'])."'],";
                 }
             }
             // EXP DATE : FROM
-            elseif ($tab_id_fields[$j] == 'exp_date_from' && !empty($_REQUEST['exp_date_from']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['exp_date_from'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'exp_date_from' && !empty($_REQUEST['exp_date_from'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['exp_date_from'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['exp_date_from'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("departure_date")." >= :expDateFrom) and ";
-		    $arrayPDO = array_merge($arrayPDO, array(":expDateFrom" => $func->format_date_db($_REQUEST['exp_date_from'])));
+                    $arrayPDO = array_merge($arrayPDO, array(":expDateFrom" => $func->format_date_db($_REQUEST['exp_date_from'])));
                     $json_txt .= " 'exp_date_from' : ['".trim($_REQUEST['exp_date_from'])."'],";
                 }
             }
             // EXP DATE : TO
-            elseif ($tab_id_fields[$j] == 'exp_date_to' && !empty($_REQUEST['exp_date_to']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['exp_date_to'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'exp_date_to' && !empty($_REQUEST['exp_date_to'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['exp_date_to'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['exp_date_to'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("departure_date")." <= :expDateTo) and ";
-		    $arrayPDO = array_merge($arrayPDO, array(":expDateTo" => $func->format_date_db($_REQUEST['exp_date_to'])));
-		    $json_txt .= " 'exp_date_to' : ['".trim($_REQUEST['exp_date_to'])."'],";
+                    $arrayPDO = array_merge($arrayPDO, array(":expDateTo" => $func->format_date_db($_REQUEST['exp_date_to'])));
+                    $json_txt .= " 'exp_date_to' : ['".trim($_REQUEST['exp_date_to'])."'],";
                 }
             }
             // PROCESS DATE : FROM (closing_date)
-            elseif ($tab_id_fields[$j] == 'closing_date_from' && !empty($_REQUEST['closing_date_from']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['closing_date_from'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'closing_date_from' && !empty($_REQUEST['closing_date_from'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['closing_date_from'])==false) {
                     $_SESSION['error'] .=  _WRONG_DATE_FORMAT.' : '.$_REQUEST['closing_date_from'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("closing_date")." >= :closingDateFrom) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":closingDateFrom" => $func->format_date_db($_REQUEST['closing_date_from'])));
                     $json_txt .= "'closing_date_from' : ['".trim($_REQUEST['closing_date_from'])."'],";
                 }
             }
             // CLOSING DATE : TO
-            elseif ($tab_id_fields[$j] == 'closing_date_to' && !empty($_REQUEST['closing_date_to']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['closing_date_to'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'closing_date_to' && !empty($_REQUEST['closing_date_to'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['closing_date_to'])==false) {
                     $_SESSION['error'] = _WRONG_DATE_FORMAT.' : '.$_REQUEST['closing_date_to'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("closing_date")." <= :closingDateTo) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":closingDateTo" => $func->format_date_db($_REQUEST['closing_date_to'])));
                     $json_txt .= "'closing_date_to' : ['".trim($_REQUEST['closing_date_to'])."'],";
                 }
             }
             // PROCESS LIMIT DATE : FROM
-            elseif ($tab_id_fields[$j] == 'process_limit_date_from' && !empty($_REQUEST['process_limit_date_from']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['process_limit_date_from'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'process_limit_date_from' && !empty($_REQUEST['process_limit_date_from'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['process_limit_date_from'])==false) {
                     $_SESSION['error'] = _WRONG_DATE_FORMAT.' : '.$_REQUEST['process_limit_date_from'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("process_limit_date")." >= :processLimitDateFrom) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":processLimitDateFrom" => $func->format_date_db($_REQUEST['process_limit_date_from'])));
                     $json_txt .= "'process_limit_date_from' : ['".trim($_REQUEST['process_limit_date_from'])."'],";
                 }
             }
             // PROCESS LIMIT DATE : TO
-            elseif ($tab_id_fields[$j] == 'process_limit_date_to' && !empty($_REQUEST['process_limit_date_to']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['process_limit_date_to'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'process_limit_date_to' && !empty($_REQUEST['process_limit_date_to'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['process_limit_date_to'])==false) {
                     $_SESSION['error'] = _WRONG_DATE_FORMAT.' : '.$_REQUEST['process_limit_date_to'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("process_limit_date")." <= :processLimitDateTo) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":processLimitDateTo" => $func->format_date_db($_REQUEST['process_limit_date_to'])));
                     $json_txt .= "'process_limit_date_to' : ['".trim($_REQUEST['process_limit_date_to'])."'],";
                 }
             }
             // STATUS
-            elseif ($tab_id_fields[$j] == 'status_chosen' && isset($_REQUEST['status_chosen']))
-            {
+            elseif ($tab_id_fields[$j] == 'status_chosen' && isset($_REQUEST['status_chosen'])) {
                 $json_txt .= " 'status_chosen' : [";
                 $where_request .="( ";
-                for ($get_i = 0; $get_i <count($_REQUEST['status_chosen']); $get_i++)
-                {
+                for ($get_i = 0; $get_i <count($_REQUEST['status_chosen']); $get_i++) {
                     $json_txt .= "'".$_REQUEST['status_chosen'][$get_i]."',";
                     $where_request .= " ( status = :statusChosen_".$get_i.") or ";
                     $arrayPDO = array_merge($arrayPDO, array(":statusChosen_".$get_i => $_REQUEST['status_chosen'][$get_i]));
@@ -705,63 +642,46 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= '],';
             }
             // MAIL CATEGORY
-            elseif ($tab_id_fields[$j] == 'category' && !empty($_REQUEST['category']))
-            {
+            elseif ($tab_id_fields[$j] == 'category' && !empty($_REQUEST['category'])) {
                 $where_request .= " category_id = :category AND ";
                 $arrayPDO = array_merge($arrayPDO, array(":category" => $_REQUEST['category']));
                 $json_txt .= "'category' : ['".addslashes($_REQUEST['category'])."'],";
-            } 
+            }
             // ADMISSION DATE : FROM
-            elseif ($tab_id_fields[$j] == 'admission_date_from' && !empty($_REQUEST['admission_date_from']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['admission_date_from'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'admission_date_from' && !empty($_REQUEST['admission_date_from'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['admission_date_from'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['admission_date_from'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("admission_date")." >= :admissionDateFrom) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":admissionDateFrom" => $func->format_date_db($_REQUEST['admission_date_from'])));
                     $json_txt .= " 'admission_date_from' : ['".trim($_REQUEST['admission_date_from'])."'],";
                 }
             }
             // ADMISSION DATE : TO
-            elseif ($tab_id_fields[$j] == 'admission_date_to' && !empty($_REQUEST['admission_date_to']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['admission_date_to'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'admission_date_to' && !empty($_REQUEST['admission_date_to'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['admission_date_to'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['admission_date_to'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("admission_date")." <= :admissionDateTo) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":admissionDateTo" => $func->format_date_db($_REQUEST['admission_date_to'])));
                     $json_txt .= " 'admission_date_to' : ['".trim($_REQUEST['admission_date_to'])."'],";
                 }
             }
             // DOC DATE : FROM
-            elseif ($tab_id_fields[$j] == 'doc_date_from' && !empty($_REQUEST['doc_date_from']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['doc_date_from'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'doc_date_from' && !empty($_REQUEST['doc_date_from'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['doc_date_from'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['doc_date_from'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("doc_date")." >= :docDateFrom) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":docDateFrom" => $func->format_date_db($_REQUEST['doc_date_from'])));
                     $json_txt .= " 'doc_date_from' : ['".trim($_REQUEST['doc_date_from'])."'],";
                 }
             }
             // DOC DATE : TO
-            elseif ($tab_id_fields[$j] == 'doc_date_to' && !empty($_REQUEST['doc_date_to']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['doc_date_to'])==false )
-                {
+            elseif ($tab_id_fields[$j] == 'doc_date_to' && !empty($_REQUEST['doc_date_to'])) {
+                if (preg_match($_ENV['date_pattern'], $_REQUEST['doc_date_to'])==false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['doc_date_to'];
-                }
-                else
-                {
+                } else {
                     $where_request .= " (".$req->extract_date("doc_date")." <= :docDateTo) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":docDateTo" => $func->format_date_db($_REQUEST['doc_date_to'])));
                     $json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
@@ -851,54 +771,49 @@ if (count($_REQUEST['meta']) > 0) {
                     $arrayPDO = array_merge($arrayPDO, array(":contactIdInternal" => "%".$contactid_internal."%"));
             }*/
             //VISA USER
-            elseif ($tab_id_fields[$j] == 'visa_user' && !empty($_REQUEST['ac_visa_user']))
-            {
+            elseif ($tab_id_fields[$j] == 'visa_user' && !empty($_REQUEST['ac_visa_user'])) {
                 $json_txt .= " 'visa_user' : ['".addslashes(trim($_REQUEST['visa_user']))."'], 'user_visa' : ['".addslashes(trim($_REQUEST['ac_visa_user']))."']";
-                    $userVisa = $_REQUEST['ac_visa_user'];
-                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and signatory = false and item_id in (select user_id from users where user_id = :user_visa))) and  ";
-                    $arrayPDO = array_merge($arrayPDO, array(":user_visa" => $userVisa));
-            }
-            elseif ($tab_id_fields[$j] == 'visa_user' && empty($_REQUEST['ac_visa_user']) && !empty($_REQUEST['visa_user']))
-            {
+                $userVisa = $_REQUEST['ac_visa_user'];
+                $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and signatory = false and item_id in (select user_id from users where user_id = :user_visa))) and  ";
+                $arrayPDO = array_merge($arrayPDO, array(":user_visa" => $userVisa));
+            } elseif ($tab_id_fields[$j] == 'visa_user' && empty($_REQUEST['ac_visa_user']) && !empty($_REQUEST['visa_user'])) {
                 $json_txt .= " 'visa_user' : ['".addslashes(trim($_REQUEST['visa_user']))."'], 'user_visa' : ['".addslashes(trim($_REQUEST['visa_user']))."']";
-                    $visaUser = pg_escape_string($_REQUEST['visa_user']);
-                    //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
-                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and signatory = false and item_id in (select user_id from users where firstname ilike :visa_user or lastname ilike :visa_user))) and ";
-                    $arrayPDO = array_merge($arrayPDO, array(":visa_user" => "%".$visaUser."%"));
+                $visaUser = pg_escape_string($_REQUEST['visa_user']);
+                //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
+                $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and signatory = false and item_id in (select user_id from users where firstname ilike :visa_user or lastname ilike :visa_user))) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":visa_user" => "%".$visaUser."%"));
             }
             // Nom du signataire
-            elseif ($tab_id_fields[$j] == 'signatory_name' && !empty($_REQUEST['ac_signatory_name']))
-            {
+            elseif ($tab_id_fields[$j] == 'signatory_name' && !empty($_REQUEST['ac_signatory_name'])) {
                 $json_txt .= " 'signatory_name' : ['".addslashes(trim($_REQUEST['signatory_name']))."'], 'signatory_name_id' : ['".addslashes(trim($_REQUEST['ac_signatory_name']))."']";
-                    $signatory_name = $_REQUEST['ac_signatory_name'];
-                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and (signatory = true or (process_date is null and requested_signature = true)) and item_id = :signatory_name_id)) and  ";
-                    $arrayPDO = array_merge($arrayPDO, array(":signatory_name_id" => $signatory_name));
+                $signatory_name = $_REQUEST['ac_signatory_name'];
+                $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and (signatory = true or (process_date is null and requested_signature = true)) and item_id = :signatory_name_id)) and  ";
+                $arrayPDO = array_merge($arrayPDO, array(":signatory_name_id" => $signatory_name));
             }
             //recherche sur les signataires en fonction de ce que la personne a saisi
-            elseif ($tab_id_fields[$j] == 'signatory_name' && empty($_REQUEST['signatory_name_id']) && !empty($_REQUEST['signatory_name']))
-            {
+            elseif ($tab_id_fields[$j] == 'signatory_name' && empty($_REQUEST['signatory_name_id']) && !empty($_REQUEST['signatory_name'])) {
                 $json_txt .= " 'signatory_name' : ['".addslashes(trim($_REQUEST['signatory_name']))."']";
-                    $signatory_name = pg_escape_string($_REQUEST['signatory_name']);
-                    //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
-                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and (signatory = true or (process_date is null and requested_signature = true)) and item_id in (select user_id from users where firstname ilike :signatoryName or lastname ilike :signatoryName))) and ";
-                    $arrayPDO = array_merge($arrayPDO, array(":signatoryName" => "%".$signatory_name."%"));
+                $signatory_name = pg_escape_string($_REQUEST['signatory_name']);
+                //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
+                $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and (signatory = true or (process_date is null and requested_signature = true)) and item_id in (select user_id from users where firstname ilike :signatoryName or lastname ilike :signatoryName))) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":signatoryName" => "%".$signatory_name."%"));
             }
             // SEARCH IN BASKETS
-            else if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
+            elseif ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
                 //$func->show_array($_REQUEST);exit;
-                switch($_REQUEST['baskets_clause']) {
+                switch ($_REQUEST['baskets_clause']) {
                 case 'false':
                     $baskets_clause = "false";
                     $json_txt .= "'baskets_clause' : ['false'],";
                     break;
                     
                 case 'true':
-                    for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                       if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id) {
-                            if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                    for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+                        if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id) {
+                            if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
                                 $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
                             }
-                         }
+                        }
                     }
                     $_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
                     $baskets_clause = ($_REQUEST['baskets_clause']);
@@ -907,18 +822,17 @@ if (count($_REQUEST['meta']) > 0) {
                 
                 default:
                     $json_txt .= " 'baskets_clause' : ['".addslashes(trim($_REQUEST['baskets_clause']))."'],";
-                    for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if ($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
-                            if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-                                $where_request .= ' ' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ' and ' ;
-                            } 
+                    $basketInfo = explode('_', trim($_REQUEST['baskets_clause']), 2);
+                    for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+                        if ($_SESSION['user']['baskets'][$ind_bask]['group_serial_id'] == $basketInfo[0] && $_SESSION['user']['baskets'][$ind_bask]['id'] == $basketInfo[1]) {
+                            if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                                $where_request .= ' (' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ') and ' ;
+                            }
                         }
                     }
                 }
-            }
-            else  // opt indexes check
-            {
-                $tmp = $type->search_checks($indexes, $tab_id_fields[$j], $_REQUEST[$tab_id_fields[$j]] );
+            } else {  // opt indexes check
+                $tmp = $type->search_checks($indexes, $tab_id_fields[$j], $_REQUEST[$tab_id_fields[$j]]);
                 //$func->show_array($tmp);
                 $json_txt .= $tmp['json_txt'];
                 $where_request .= $tmp['where'];
@@ -940,12 +854,16 @@ if (!empty($_SESSION['error_search'])) {
 
     if ($mode == 'normal') {
         ?>
-        <script  type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
-        <?php
+<script type="text/javascript">
+    window.top.location.href = '<?php echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching'; ?>';
+</script>
+<?php
     } else {
         ?>
-        <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode;?>';</script>
-        <?php
+<script type="text/javascript">
+    window.top.location.href = '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode; ?>';
+</script>
+<?php
     }
     exit();
 } else {
@@ -960,16 +878,11 @@ if (!empty($_SESSION['error_search'])) {
 if (isset($_REQUEST['specific_case'])
     && $_REQUEST['specific_case'] == "attach_to_case"
 ) {
-    $page = 'list_results_mlb_frame';
-    ?>
-    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&load&searched_item='. $_REQUEST['searched_item'] .'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
-    <?php
-    exit();
-}
-if(!empty($_REQUEST['baskets_clause']) && $_REQUEST['baskets_clause'] != 'false' && $_REQUEST['baskets_clause'] != 'true') {
-    ?>
-    <script  type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=". $_REQUEST['baskets_clause']."&origin=searching";?>';</script>
-    <?php
+    $page = 'list_results_mlb_frame'; ?>
+<script type="text/javascript">
+    window.top.location.href = '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&load&searched_item='. $_REQUEST['searched_item'] .'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template']; ?>';
+</script>
+<?php
     exit();
 }
 if (empty($_SESSION['error_search'])) {
@@ -979,10 +892,18 @@ if (empty($_SESSION['error_search'])) {
         $extend_link_case = "&template=group_case";
     }
     //##################
-    $page = 'list_results_mlb';
-    ?>
-    <script type="text/javascript">window.top.location.href='<?php if ($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching&load'.$extend_link_case;} elseif ($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&modulename='.$_REQUEST['modulename'];} if (isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
-    <?php
+    $page = 'list_results_mlb'; ?>
+<script type="text/javascript">
+    window.top.location.href = '<?php if ($mode == 'normal') {
+        echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching&load'.$extend_link_case;
+    } elseif ($mode=='frame' || $mode == 'popup') {
+        echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&modulename='.$_REQUEST['modulename'];
+    }
+    if (isset($_REQUEST['nodetails'])) {
+        echo '&nodetails';
+    } ?>';
+</script>
+<?php
     exit();
 }
 $_SESSION['error_search'] = '';

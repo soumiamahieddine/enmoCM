@@ -1,13 +1,55 @@
-<div *ngIf="loading" style="display:flex;height:100%;">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<div style="text-align:center;font-weight:bold;opacity:0.3;">{{data.chrono}} - {{lang.attachments}}</div>
-<mat-nav-list *ngIf="!loading" style="min-width:650px;">
+<ng-container *ngIf="!loading">
+    <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
+        {{lang.noAttachement}}
+    </div>
+    <mat-card *ngFor="let attachment of attachments" [style.background-image]="'url('+attachment.thumbnailUrl+')'"
+        style="padding:0;margin: 30px;min-height: 250px;background-size: cover;">
+        <a mat-mini-fab color="primary" class="downloadButton" title="Télécharger le fichier original" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resIds[0]}}&id={{attachment.res_id}}" target="_blank">
+            <mat-icon fontSet="fas" fontIcon="fa-download fa-2x"></mat-icon>
+        </a>
+        <div class="infosPj">
+            <div class="line subInfos">
+                <div title="{{attachment.identifier}} (n°{{attachment.res_id}})">{{attachment.identifier}}</div>
+                <div title="{{attachmentTypes[attachment.attachment_type].label}}" style="text-align:center;">
+                    {{attachmentTypes[attachment.attachment_type].label}}
+                </div>
+                <div *ngIf="attachment.update_date == null" title='{{attachment.creation_date | date : "le dd/MM/y à HH:mm"}} par {{attachment.firstname_typist}}
+                    {{attachment.lastname_typist}}' style="text-align:right;">
+                    {{attachment.creation_date | timeAgo}}
+                </div>
+                <div *ngIf="attachment.update_date != null" style="text-align:right;"
+                    title='{{attachment.update_date | date : "le dd/MM/y à HH:mm"}} par {{attachment.firstname_updated}} {{attachment.lastname_updated}}'>
+                    {{attachment.update_date | timeAgo}}
+                </div>
+            </div>
+            <div class="line">
+                <div style="text-align:center;padding: 5px;">
+                    {{attachment.title | shorten: 50: '...'}}
+                </div>
+            </div>
+            <div class="line subInfosBottom">
+                <div>{{attachment.status}}</div>
+                <div *ngIf="attachment.return_date != null && attachment.effective == null"
+                    title='{{attachment.return_date | date : "le dd/MM/y à HH:mm"}}' style="text-align:right;">
+                    <i class="fa fa-stopwatch" title="Date de retour attendue"></i>&nbsp;<span
+                        [innerHTML]="attachment.return_date | timeLimit"></span>
+                </div>
+                <div *ngIf="attachment.effective != null" style="text-align:right;">
+                    <i class="fa fa-lock" title="Date de retour"></i>&nbsp;<span
+                        title='{{attachment.effective_date | date : "le dd/MM/y à HH:mm"}}'
+                        [innerHTML]="attachment.effective_date | timeAgo"></span>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+</ng-container>
+
+<!--<mat-nav-list *ngIf="!loading">
     <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
         AUCUN ATTACHEMENT
     </div>
     <ng-container *ngFor="let attachment of attachments">
-        <a target="_blank" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{data.resId}}&id={{attachment.res_id}}" mat-list-item (click)="openLink($event)" style="height:auto;">
+        <a target="_blank" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resIds[0]}}&id={{attachment.res_id}}" mat-list-item (click)="openLink($event)" style="height:auto;">
             <span mat-line>
                 <div style="display:flex;color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
                     <span style="flex:1;text-align: center;">
@@ -45,11 +87,8 @@
                         </div>
                     </div>
                 </div>
-
-
             </span>
         </a>
         <mat-divider style="margin:10px;"></mat-divider>
     </ng-container>
-
-</mat-nav-list>
+</mat-nav-list>-->

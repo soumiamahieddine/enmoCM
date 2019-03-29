@@ -294,7 +294,7 @@ CREATE TABLE res_attachments
   fulltext_attempts integer DEFAULT NULL::integer,
   tnl_result character varying(10) DEFAULT NULL::character varying,
   tnl_attempts integer DEFAULT NULL::integer,
-  external_id character varying(255) DEFAULT NULL::character varying,
+  external_id jsonb DEFAULT '{}',
   CONSTRAINT res_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1122,7 +1122,7 @@ CREATE TABLE contact_addresses
   entity_id character varying(32) NOT NULL,
   is_private character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
-  external_id json DEFAULT '{}',
+  external_id jsonb DEFAULT '{}',
   ban_id character varying(128),
   CONSTRAINT contact_addresses_pkey PRIMARY KEY  (id)
 ) WITH (OIDS=FALSE);
@@ -1343,7 +1343,8 @@ CREATE TABLE res_letterbox
   fulltext_attempts integer DEFAULT NULL::integer,
   tnl_result character varying(10) DEFAULT NULL::character varying,
   tnl_attempts integer DEFAULT NULL::integer,
-  external_id character varying(255) DEFAULT NULL::character varying,
+  external_reference character varying(255) DEFAULT NULL::character varying,
+  external_id jsonb DEFAULT '{}',
   external_link character varying(255) DEFAULT NULL::character varying,
   departure_date timestamp without time zone,
   opinion_limit_date timestamp without time zone default NULL,
@@ -1581,6 +1582,21 @@ CONSTRAINT shipping_templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
+CREATE TABLE shippings
+(
+id serial NOT NULL,
+user_id INTEGER NOT NULL,
+attachment_id INTEGER NOT NULL,
+is_version boolean NOT NULL,
+options json DEFAULT '{}',
+fee FLOAT NOT NULL,
+recipient_entity_id INTEGER NOT NULL,
+account_id character varying(64) NOT NULL,
+creation_date timestamp without time zone NOT NULL,
+CONSTRAINT shippings_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
 --VIEWS
 -- view for letterbox
 DROP VIEW IF EXISTS res_view_letterbox;
@@ -1620,6 +1636,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.source,
     r.author,
     r.reference_number,
+    r.external_reference,
     r.external_id,
     r.external_link,
     r.departure_date,
@@ -1899,7 +1916,7 @@ CREATE TABLE res_version_attachments
   fulltext_attempts integer DEFAULT NULL::integer,
   tnl_result character varying(10) DEFAULT NULL::character varying,
   tnl_attempts integer DEFAULT NULL::integer,
-  external_id character varying(255) DEFAULT NULL::character varying,
+  external_id jsonb DEFAULT '{}',
   CONSTRAINT res_version_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (

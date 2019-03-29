@@ -75,7 +75,7 @@ if (!defined('_DEFAULT_BODY')) {
     define('_DEFAULT_BODY', 'Uw boodschap is klaar voor verzending met de volgende bijgevoegde bestanden:');
 }
 if (!defined('_NOTES_FILE')) {
-    define('_NOTES_FILE', 'Aantekeningen van het document');
+    define('_NOTES_FILE', 'Aantekeningen van het brief');
 }
 if (!defined('_EMAIL_WRONG_FORMAT')) {
     define('_EMAIL_WRONG_FORMAT', 'Het e-mailadres heeft het verkeerde formaat');

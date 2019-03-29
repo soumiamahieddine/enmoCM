@@ -230,8 +230,8 @@ if (file_exists($GLOBALS['errorLckFile'])) {
 Bt_getWorkBatch();
 
 $GLOBALS['logger']->write('Retrieve attachments sent to remote signatory book', 'INFO');
-$query = "SELECT res_id, res_id_version, external_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user, typist 
-        FROM res_view_attachments WHERE status = 'FRZ' AND external_id IS NOT NULL AND external_id <> ''";
+$query = "SELECT res_id, res_id_version, external_id->>'signatureBookId' as external_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user, typist, attachment_id_master, relation 
+        FROM res_view_attachments WHERE status = 'FRZ' AND external_id->>'signatureBookId' IS NOT NULL AND external_id->>'signatureBookId' <> ''";
 $stmt = $GLOBALS['db']->query($query, []);
     
 $idsToRetrieve = ['noVersion' => [], 'isVersion' => [], 'resLetterbox' => []];
@@ -274,26 +274,31 @@ if (!empty($retrievedMails['error'])) {
 foreach ($retrievedMails['isVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update res_version_attachments : ' . $resId . '. ExternalId : ' . $value->external_id, 'INFO');
 
-    if (!empty($value->encodedFile)) {
-        $GLOBALS['logger']->write('Create Attachment', 'INFO');
-        Bt_createAttachment([
-            'res_id_master'   => $value->res_id_master,
-            'title'           => $value->title,
-            'identifier'      => $value->identifier,
-            'type_id'         => $value->type_id,
-            'dest_contact_id' => $value->dest_contact_id,
-            'dest_address_id' => $value->dest_address_id,
-            'dest_user'       => $value->dest_user,
-            'typist'          => $value->typist,
-            'format'          => $value->format,
-            'encodedFile'     => $value->encodedFile,
-            'noteContent'     => $value->noteContent
-        ]);
-    }
-
     if ($value->status == 'validated') {
+        if (!empty($value->encodedFile)) {
+            $GLOBALS['logger']->write('Create validated version Attachment', 'INFO');
+            Bt_createAttachment([
+                'res_id_master'   => $value->res_id_master,
+                'title'           => $value->title,
+                'identifier'      => $value->identifier,
+                'type_id'         => $value->type_id,
+                'dest_contact_id' => $value->dest_contact_id,
+                'dest_address_id' => $value->dest_address_id,
+                'dest_user'       => $value->dest_user,
+                'typist'          => $value->typist,
+                'format'          => $value->format,
+                'attachment_type' => $value->attachment_type,
+                'relation'        => $value->relation + 1,
+                'attachment_id_master' => $value->attachment_id_master,
+                'status'          => 'TRA',
+                'encodedFile'     => $value->encodedFile,
+                'table'           => 'res_version_attachments',
+                'noteContent'     => $value->noteContent
+            ]);
+        }
+    
         $GLOBALS['logger']->write('Document validated', 'INFO');
-        $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'TRA' WHERE res_id = ?", [$resId]);
+        $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_version_attachments) a été validée dans le parapheur externe';
@@ -312,6 +317,26 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
             'event_id'   => '1'
         ]);
     } elseif ($value->status == 'refused') {
+        if (!empty($value->encodedFile)) {
+            $GLOBALS['logger']->write('Create refused version Attachment', 'INFO');
+            Bt_createAttachment([
+                'res_id_master'   => $value->res_id_master,
+                'title'           => '[REFUSE] ' . $value->title,
+                'identifier'      => $value->identifier,
+                'type_id'         => $value->type_id,
+                'dest_contact_id' => $value->dest_contact_id,
+                'dest_address_id' => $value->dest_address_id,
+                'dest_user'       => $value->dest_user,
+                'typist'          => $value->typist,
+                'format'          => $value->format,
+                'attachment_type' => $value->attachment_type,
+                'status'          => 'A_TRA',
+                'encodedFile'     => $value->encodedFile,
+                'in_signature_book' => 'false',
+                'table'           => 'res_attachments',
+                'noteContent'     => $value->noteContent
+            ]);
+        }
         $GLOBALS['logger']->write('Document refused', 'INFO');
         Bt_refusedSignedMail([
             'tableAttachment' => 'res_version_attachments',
@@ -326,26 +351,31 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
 foreach ($retrievedMails['noVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update res_attachments : ' . $resId . '. ExternalId : ' . $value->external_id, 'INFO');
 
-    if (!empty($value->encodedFile)) {
-        $GLOBALS['logger']->write('Create Attachment', 'INFO');
-        Bt_createAttachment([
-            'res_id_master'   => $value->res_id_master,
-            'title'           => $value->title,
-            'identifier'      => $value->identifier,
-            'type_id'         => $value->type_id,
-            'dest_contact_id' => $value->dest_contact_id,
-            'dest_address_id' => $value->dest_address_id,
-            'dest_user'       => $value->dest_user,
-            'typist'          => $value->typist,
-            'format'          => $value->format,
-            'encodedFile'     => $value->encodedFile,
-            'noteContent'     => $value->noteContent
-        ]);
-    }
-
     if ($value->status == 'validated') {
+        if (!empty($value->encodedFile)) {
+            $GLOBALS['logger']->write('Create validated Attachment', 'INFO');
+            Bt_createAttachment([
+                'res_id_master'   => $value->res_id_master,
+                'title'           => $value->title,
+                'identifier'      => $value->identifier,
+                'type_id'         => $value->type_id,
+                'dest_contact_id' => $value->dest_contact_id,
+                'dest_address_id' => $value->dest_address_id,
+                'dest_user'       => $value->dest_user,
+                'typist'          => $value->typist,
+                'format'          => $value->format,
+                'attachment_type' => $value->attachment_type,
+                'relation'        => $value->relation + 1,
+                'attachment_id_master' => $value->attachment_id_master,
+                'status'          => 'TRA',
+                'encodedFile'     => $value->encodedFile,
+                'table'           => 'res_version_attachments',
+                'noteContent'     => $value->noteContent
+            ]);
+        }
+
         $GLOBALS['logger']->write('Document validated', 'INFO');
-        $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA' WHERE res_id = ?", [$resId]);
+        $GLOBALS['db']->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", [$resId]);
         Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
 
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_attachments) a été validée dans le parapheur externe';
@@ -364,6 +394,26 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             'event_id'   => '1'
         ]);
     } elseif ($value->status == 'refused') {
+        if (!empty($value->encodedFile)) {
+            $GLOBALS['logger']->write('Create refused version Attachment', 'INFO');
+            Bt_createAttachment([
+                'res_id_master'   => $value->res_id_master,
+                'title'           => '[REFUSE] ' . $value->title,
+                'identifier'      => $value->identifier,
+                'type_id'         => $value->type_id,
+                'dest_contact_id' => $value->dest_contact_id,
+                'dest_address_id' => $value->dest_address_id,
+                'dest_user'       => $value->dest_user,
+                'typist'          => $value->typist,
+                'format'          => $value->format,
+                'attachment_type' => $value->attachment_type,
+                'status'          => 'A_TRA',
+                'encodedFile'     => $value->encodedFile,
+                'in_signature_book' => 'false',
+                'table'           => 'res_attachments',
+                'noteContent'     => $value->noteContent
+            ]);
+        }
         $GLOBALS['logger']->write('Document refused', 'INFO');
         Bt_refusedSignedMail([
             'tableAttachment' => 'res_attachments',
@@ -388,7 +438,7 @@ foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
             'encodedFile'       => $value->encodedFile,
             'noteContent'       => $value->noteContent,
             'in_signature_book' => 'false',
-            'attachent_type'    => 'document_with_notes'
+            'attachment_type'    => 'document_with_notes'
         ]);
     }
 

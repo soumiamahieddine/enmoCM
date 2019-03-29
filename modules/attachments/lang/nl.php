@@ -38,12 +38,6 @@ if (!defined('_INDEX_ATTACHMENT')) {
 if (!defined('_INDEX_ATTACHMENT_DESC')) {
     define('_INDEX_ATTACHMENT_DESC', 'Een bijlage indexeren');
 }
-if (!defined('_ATTACH_TO_DOC')) {
-    define('_ATTACH_TO_DOC', 'Als antwoord op een bestaande brief bijvoegen');
-}
-if (!defined('_ATTACH_TO_DOC_NUM')) {
-    define('_ATTACH_TO_DOC_NUM', 'Bijgevoegd bij document nr.');
-}
 if (!defined('_VIEW_ATTACHMENTS')) {
     define('_VIEW_ATTACHMENTS', 'De bijlagen bekijken');
 }
@@ -246,7 +240,7 @@ if (!defined('_GENERATE_CHRONO_NUMBER')) {
     define('_GENERATE_CHRONO_NUMBER', 'Een chrononummer aanmaken');
 }
 if (!defined('_CLOSE_INCOMING')) {
-    define('_CLOSE_INCOMING', 'Het (de) doeldocument(en) afsluiten');
+    define('_CLOSE_INCOMING', 'Doelpost(en) sluiten');
 }
 if (!defined('_PLEASE_GENERATE_CHRONO_NUMBER')) {
     define('_PLEASE_GENERATE_CHRONO_NUMBER', 'Maak een chrononummer aan');

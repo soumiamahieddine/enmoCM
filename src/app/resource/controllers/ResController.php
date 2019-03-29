@@ -458,6 +458,7 @@ class ResController
 
     public function updateExternalInfos(Request $request, Response $response)
     {
+        //TODO Revoir cette fonction
         $data = $request->getParams();
 
         if (empty($data['externalInfos'])) {
@@ -480,14 +481,16 @@ class ResController
         }
 
         foreach ($data['externalInfos'] as $mail) {
-            $document = ResModel::getById(['resId' => $mail['res_id'], 'select' => ['res_id']]);
+            $document = ResModel::getById(['resId' => $mail['res_id'], 'select' => ['res_id', 'external_id']]);
             if (empty($document)) {
                 return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
             }
             if (!ResController::hasRightByResId(['resId' => [$document['res_id']], 'userId' => $GLOBALS['userId']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
-            ResModel::update(['set' => ['external_id' => $mail['external_id'] , 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
+            $externalId = json_decode($document['external_id'], true);
+            $externalId['publikId'] = $mail['external_id'];
+            ResModel::update(['set' => ['external_id' => json_encode($externalId), 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
         }
 
         return $response->withJson(['success' => 'success']);

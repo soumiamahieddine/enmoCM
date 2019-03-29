@@ -12,10 +12,13 @@
 
 namespace Shipping\controllers;
 
+use Convert\controllers\ConvertPdfController;
+use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -280,5 +283,30 @@ class ShippingTemplateController
         return $response->withJson([
             'entities' => $allEntities,
         ]);
+    }
+
+    public static function calculShippingFee(array $aArgs)
+    {
+        $fee = 0;
+        foreach ($aArgs['resources'] as $value) {
+            if (!empty($value['res_id'])) {
+                $isVersion = false;
+                $attachmentId = $value['res_id'];
+            } else {
+                $isVersion = true;
+                $attachmentId = $value['res_id_version'];
+            }
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachmentId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $docserver           = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment['docserver_id'], 'select' => ['path_template']]);
+            $pathToDocument      = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment['path']) . $convertedAttachment['filename'];
+
+            $pdf = new Fpdi();
+            $pageCount = $pdf->setSourceFile($pathToDocument);
+
+            $attachmentFee = ($pageCount > 1) ? ($pageCount - 1) * $aArgs['fee']['nextPagePrice'] : 0 ;
+            $fee = $fee + $attachmentFee + $aArgs['fee']['firstPagePrice'] + $aArgs['fee']['postagePrice'];
+        }
+
+        return $fee;
     }
 }

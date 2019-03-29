@@ -514,12 +514,12 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '</tr>';
 
     /*** Reference courrier externe ***/
-    $frmStr .= '<tr id="external_id_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td><label for="external_id" class="form_title" >' . _REFERENCE_MAIL
+    $frmStr .= '<tr id="external_reference_tr" style="display:' . $displayValue . ';">';
+    $frmStr .= '<td><label for="external_reference" class="form_title" >' . _REFERENCE_MAIL
             . '</label></td>';
     $frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><input name="external_id" type="text" '
-            . 'id="external_id"/></td>';
+    $frmStr .= '<td class="indexing_field"><input name="external_reference" type="text" '
+            . 'id="external_reference"/></td>';
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '</tr>';
 
@@ -2070,32 +2070,33 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             $bodyData = [];
             $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
 
-            $columnsInContact = ['external_contact_id'];
             if (!empty($config['inObject'])) {
                 $multipleObject = true;
 
                 foreach ($config['objects'] as $object) {
                     $select = [];
                     $tmpBodyData = [];
-                    $getContact = false;
-                    foreach ($object['rawData'] as $value) {
-                        if (in_array($value, $columnsInContact)) {
-                            $getContact = true;
-                        } else {
+                    if ($object['name'] != 'citoyen') {
+                        foreach ($object['rawData'] as $value) {
                             $select[] = $value;
                         }
                     }
 
                     $select[] = 'address_id';
+                    $select[] = 'external_id';
                     $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
                     if (!empty($document[0])) {
-                        if ($getContact && !empty($document[0]['address_id'])) {
-                            $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$document[0]['address_id']]]);
+                        if ($object['name'] == 'citoyen') {
+                            $contact = \Contact\models\ContactModel::getOnView(['select' => ['external_id', 'ca_id'], 'where' => ['ca_id = ?'], 'data' => [$document[0]['address_id']]]);
+                            $externalId = json_decode($contact[0]['external_id'], true);
                         }
                         foreach ($object['rawData'] as $key => $value) {
-                            if (in_array($value, $columnsInContact)) {
-                                $tmpBodyData[$key] = '';
-                                if (!empty($contact[0][$value])) {
+                            if ($object['name'] == 'citoyen') {
+                                if ($value == 'external_id') {
+                                    $tmpBodyData[$key] = $externalId['localeoId'];
+                                } elseif ($value == 'address_id') {
+                                    $tmpBodyData[$key] = $contact[0]['ca_id'];
+                                } else {
                                     $tmpBodyData[$key] = $contact[0][$value];
                                 }
                             } else {
@@ -2115,43 +2116,14 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
                     $bodyData[$config['file']] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']]);
                 }
-            } else {
-                $multipleObject = false;
-                $getContact = false;
-
-                $select = [];
-                foreach ($config['rawData'] as $value) {
-                    if (in_array($value, $columnsInContact)) {
-                        $getContact = true;
-                    } else {
-                        $select[] = $value;
-                    }
-                }
-
-                $select[] = 'address_id';
-                $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$resId]]);
-                if (!empty($document[0])) {
-                    if ($getContact) {
-                        $contact = \Contact\models\ContactModel::getOnView(['select' => $columnsInContact, 'where' => ['ca_id = ?'], 'data' => [$document[0]['address_id']]]);
-                    }
-                    foreach ($config['rawData'] as $key => $value) {
-                        if (in_array($value, $columnsInContact)) {
-                            $bodyData[$key] = $contact[0][$value];
-                        } else {
-                            $bodyData[$key] = $document[0][$value];
-                        }
-                    }
-
-                }
-
-                if (!empty($config['data'])) {
-                    $bodyData = array_merge($bodyData, $config['data']);
-                }
             }
 
             $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendResourceToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
 
-            \Resource\models\ResModel::update(['set' => [$config['return']['value'] => $response[$config['return']['key']]], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+            $externalId = json_decode($document[0]['external_id'], true);
+            $externalId['localeoId'] = $response[$config['return']['key']];
+
+            \Resource\models\ResModel::update(['set' => ['external_id' => $externalId], 'where' => ['res_id = ?'], 'data' => [$resId]]);
         }
     }
 

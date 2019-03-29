@@ -4,7 +4,6 @@ import { MatSidenav, MatDialog, MatDialogRef }           from '@angular/material
 import { HttpClient }           from '@angular/common/http';
 import { Router }               from '@angular/router';
 import { IndexingGroupModalComponent }  from './menu-shortcut.component';
-import { ShortcutMenuService }  from '../../service/shortcut-menu.service';
 import { HeaderService }        from '../../service/header.service';
 
 
@@ -31,7 +30,7 @@ export class MainHeaderComponent implements OnInit {
     snav2           : MatSidenav;
 
 
-    constructor(public http: HttpClient, private zone: NgZone, private _router: Router, private shortcut: ShortcutMenuService, public headerService: HeaderService, public dialog: MatDialog) {
+    constructor(public http: HttpClient, private zone: NgZone, private _router: Router, public headerService: HeaderService, public dialog: MatDialog) {
         this.router = _router;
         this.mobileMode = angularGlobals.mobileMode;
         window['MainHeaderComponent'] = {
@@ -41,28 +40,7 @@ export class MainHeaderComponent implements OnInit {
         };
     }
 
-    ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
-        this.http.get(this.coreUrl + 'rest/header')
-            .subscribe((data: any) => {
-                this.user = data.user;
-                this.user.menu = data.menu;
-
-                this.shortcut.shortcutsData.user = data.user;
-                data.menu.unshift({
-                    "name" : this.lang.home,
-                    "comment" : this.lang.home,
-                    "servicepage" : "/home",
-                    "shortcut" : "true",
-                    "style" : "fa fa-home",
-                    "angular" : "true"
-                });
-                this.shortcut.shortcutsData.menu = data.menu;
-
-            }, (err) => {
-                console.log(err.error.errors);
-            });
-    }
+    ngOnInit(): void { }
 
     setTitle(title: string) {
         this.zone.run(() => this.titleHeader = title);
@@ -82,8 +60,8 @@ export class MainHeaderComponent implements OnInit {
     }
 
     gotToMenu(shortcut:any) {
-        if (shortcut.id == 'index_mlb' && this.shortcut.shortcutsData.user.indexingGroups.length > 1) {
-            this.config = { data: { indexingGroups:this.shortcut.shortcutsData.user.indexingGroups, link:shortcut.servicepage } };
+        if (shortcut.id == 'index_mlb' && this.headerService.user.indexingGroups.length > 1) {
+            this.config = { data: { indexingGroups:this.headerService.user.indexingGroups, link:shortcut.servicepage } };
             this.dialogRef = this.dialog.open(IndexingGroupModalComponent, this.config);
         } else if (shortcut.angular == 'true') {
             this.router.navigate([shortcut.servicepage]);

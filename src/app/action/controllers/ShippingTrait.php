@@ -17,11 +17,16 @@ use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
+use Entity\models\EntityModel;
+use Resource\models\ResModel;
+use Shipping\controllers\ShippingTemplateController;
+use Shipping\models\ShippingModel;
 use Shipping\models\ShippingTemplateModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
 use SrcCore\models\PasswordModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 
 trait ShippingTrait
@@ -31,6 +36,10 @@ trait ShippingTrait
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
         ValidatorModel::arrayType($args, ['data']);
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $resource = ResModel::getById(['select' => ['destination'], 'resId' => $args['resId']]);
+        $recipientEntity = EntityModel::getByEntityId(['select' => ['id'], 'entityId' => $resource['destination']]);
 
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
@@ -42,9 +51,10 @@ trait ShippingTrait
         }
         $shippingTemplate['options'] = json_decode($shippingTemplate['options'], true);
         $shippingTemplate['account'] = json_decode($shippingTemplate['account'], true);
+        $shippingTemplate['fee'] = json_decode($shippingTemplate['fee'], true);
 
         $attachments = AttachmentModel::getOnView([
-            'select'    => ['res_id', 'res_id_version', 'title', 'dest_address_id'],
+            'select'    => ['res_id', 'res_id_version', 'title', 'dest_address_id', 'external_id'],
             'where'     => ['res_id_master = ?', 'in_send_attach = ?'],
             'data'      => [$args['resId'], true]
         ]);
@@ -61,7 +71,7 @@ trait ShippingTrait
             if (empty($contact[0])) {
                 return ['errors' => ['Contact does not exist for attachment']];
             }
-            if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
+            if (!empty($contact[0]['address_country']) && strtoupper(trim($contact[0]['address_country'])) != 'FRANCE') {
                 return ['errors' => ['Contact country is not France']];
             }
             $afnorAddress = ContactController::getContactAfnor($contact[0]);
@@ -103,26 +113,17 @@ trait ShippingTrait
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'POST',
-                'body'          => ['name' => $sendingName]
+                'body'          => json_encode(['name' => $sendingName])
             ]);
             if ($createSending['code'] != 201) {
                 $errors[] = "Maileva sending creation failed for attachment {$attachmentId}";
                 continue;
             }
-
-            $sendings = CurlModel::execSimple([
-                'url'           => $mailevaConfig['uri'] . '/mail/v1/sendings',
-                'bearerAuth'    => ['token' => $token],
-                'method'        => 'GET'
-            ]);
-            if ($sendings['code'] != 200) {
-                $errors[] = "Maileva get sendings failed for attachment {$attachmentId}";
-                continue;
-            }
-
-            foreach ($sendings['response']['sendings'] as $sending) {
-                if ($sending['name'] == $sendingName) {
-                    $sendingId = $sending['id'];
+            foreach ($createSending['headers'] as $header) {
+                if (strpos($header, 'Location:') !== false) {
+                    $sendingId = strrchr($header, '/');
+                    $sendingId = substr($sendingId, 1);
+                    break;
                 }
             }
             if (empty($sendingId)) {
@@ -158,7 +159,7 @@ trait ShippingTrait
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'POST',
-                'body'          => [
+                'body'          => json_encode([
                     "address_line_1"    => $contacts[$key][1],
                     "address_line_2"    => $contacts[$key][2],
                     "address_line_3"    => $contacts[$key][3],
@@ -166,7 +167,7 @@ trait ShippingTrait
                     "address_line_5"    => $contacts[$key][5],
                     "address_line_6"    => $contacts[$key][6],
                     "country_code"      => 'FR'
-                ],
+                ]),
             ]);
             if ($createRecipient['code'] != 201) {
                 $errors[] = "Maileva recipient creation failed for attachment {$attachmentId}";
@@ -178,12 +179,12 @@ trait ShippingTrait
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'PATCH',
-                'body'          => [
+                'body'          => json_encode([
                     'postage_type'              => strtoupper($shippingTemplate['options']['sendMode']),
                     'color_printing'            => in_array('color', $shippingTemplate['options']['shapingOptions']),
                     'duplex_printing'           => in_array('duplexPrinting', $shippingTemplate['options']['shapingOptions']),
                     'optional_address_sheet'    => in_array('addressPage', $shippingTemplate['options']['shapingOptions'])
-                ],
+                ]),
             ]);
             if ($setOptions['code'] != 200) {
                 $errors[] = "Maileva options modification failed for attachment {$attachmentId}";
@@ -200,6 +201,25 @@ trait ShippingTrait
                 $errors[] = "Maileva submit failed for attachment {$attachmentId}";
                 continue;
             }
+
+            $externalId = json_decode($attachment['external_id'], true);
+            $externalId['mailevaSendingId'] = $sendingId;
+            AttachmentModel::update(['isVersion' => $isVersion, 'set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$attachmentId]]);
+
+            $fee = ShippingTemplateController::calculShippingFee([
+                'fee'       => $shippingTemplate['fee'],
+                'resources' => [$attachment]
+            ]);
+
+            ShippingModel::create([
+                'userId'            => $currentUser['id'],
+                'attachmentId'      => $attachmentId,
+                'isVersion'         => $isVersion,
+                'options'           => json_encode($shippingTemplate['options']),
+                'fee'               => $fee,
+                'recipientEntityId' => $recipientEntity['id'],
+                'accountId'         => $shippingTemplate['account']['id']
+            ]);
         }
 
         if (!empty($errors)) {

@@ -4,7 +4,6 @@ import { SharedModule }                         from './app-common.module';
 
 import { CustomSnackbarComponent }              from './notification.service';
 import { ConfirmModalComponent }                from './confirmModal.component';
-import { ShortcutMenuService }                  from '../service/shortcut-menu.service';
 import { HeaderService }                        from '../service/header.service';
 import { FiltersListService }                   from '../service/filtersList.service';
 
@@ -33,6 +32,7 @@ import { UpdateAcknowledgementSendDateActionComponent }             from './acti
 import { CreateAcknowledgementReceiptActionComponent }             from './actions/create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
 import { CloseAndIndexActionComponent }             from './actions/close-and-index-action/close-and-index-action.component';
 import { UpdateDepartureDateActionComponent }   from './actions/update-departure-date-action/update-departure-date-action.component';
+import { sendExternalSignatoryBookActionComponent }   from './actions/send-external-signatory-book-action/send-external-signatory-book-action.component';
 import { ProcessActionComponent }               from './actions/process-action/process-action.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
@@ -95,6 +95,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
+        sendExternalSignatoryBookActionComponent,
         ProcessActionComponent,
         ViewDocActionComponent,
         RedirectActionComponent,
@@ -117,12 +118,13 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
+        sendExternalSignatoryBookActionComponent,
         ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
         ViewDocActionComponent
     ],
-    providers: [ ShortcutMenuService, HeaderService, FiltersListService ],
+    providers: [ HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

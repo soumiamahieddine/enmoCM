@@ -60,7 +60,7 @@ if (!defined('_NO_TAG')) {
     define('_NO_TAG', 'Geen '._TAG_DEFAULT);
 }
 if (!defined('_TAG_VIEW')) {
-    define('_TAG_VIEW', 'De '.strtolower(_TAGS_DEFAULT).' van de documenten bekijken');
+    define('_TAG_VIEW', 'De '.strtolower(_TAGS_DEFAULT).' van de brieven bekijken');
 }
 if (!defined('_TAG_VIEW_DESC')) {
     define('_TAG_VIEW_DESC', 'Om het veld '.strtolower(_TAGS_DEFAULT).' weer te geven vanuit de actiepagina’s en de gedetailleerde fiche.');
@@ -69,7 +69,7 @@ if (!defined('_ADD_TAG')) {
     define('_ADD_TAG', 'Toevoegen van een '.strtolower(_TAG_DEFAULT));
 }
 if (!defined('_ADD_TAG_TO_RES')) {
-    define('_ADD_TAG_TO_RES', 'Beschikbare '.strtolower(_TAGS_DEFAULT).' voor een document toevoegen');
+    define('_ADD_TAG_TO_RES', 'Beschikbare '.strtolower(_TAGS_DEFAULT).' voor een brief toevoegen');
 }
 if (!defined('_CREATE_TAG')) {
     define('_CREATE_TAG', strtolower(_TAGS_DEFAULT).' aanmaken vanuit de actiepagina’s');
@@ -78,7 +78,7 @@ if (!defined('_CREATE_TAG_DESC')) {
     define('_CREATE_TAG_DESC', 'Om snel '.strtolower(_TAGS_DEFAULT).' op te slaan die niet in de database staan');
 }
 if (!defined('_ADD_TAG_TO_RES_DESC')) {
-    define('_ADD_TAG_TO_RES_DESC', 'Om '.strtolower(_TAGS_DEFAULT).' te koppelen aan een document via het veld '.strtolower(_TAGS_DEFAULT).' vanuit de actiepagina’s en de gedetailleerde fiche');
+    define('_ADD_TAG_TO_RES_DESC', 'Om '.strtolower(_TAGS_DEFAULT).' te koppelen aan een brief via het veld '.strtolower(_TAGS_DEFAULT).' vanuit de actiepagina’s en de gedetailleerde fiche');
 }
 if (!defined('_DELETE_TAG_TO_RES')) {
     define('_DELETE_TAG_TO_RES', strtolower(_TAGS_DEFAULT).' verwijderen bij een ressource');
@@ -102,7 +102,7 @@ if (!defined('_TAG_SEPARATOR_HELP')) {
     define('_TAG_SEPARATOR_HELP', 'Scheid de '.strtolower(_TAGS_DEFAULT).' door op Enter te drukken of met komma’s');
 }
 if (!defined('_NB_DOCS_FOR_THIS_TAG')) {
-    define('_NB_DOCS_FOR_THIS_TAG', 'gekoppeld(e) document(en)');
+    define('_NB_DOCS_FOR_THIS_TAG', 'gekoppeld(e) post(en)');
 }
 if (!defined('_TAGOTHER_OPTIONS')) {
     define('_TAGOTHER_OPTIONS', 'Andere opties');

@@ -179,20 +179,21 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             } elseif ($config['id'] == 'maarchParapheur') {
                 include_once 'modules/visa/class/MaarchParapheurController.php';
 
-                $processingUser = get_value_fields($values_form, 'processingUser');
-                $objectSentNote = get_value_fields($values_form, 'objectSentNote');
-                $objectSentSign = get_value_fields($values_form, 'objectSentSign');
+                $processingUser  = get_value_fields($values_form, 'processingUser');
+                $objectSentNote  = get_value_fields($values_form, 'objectSentNote');
+                $objectSentSign  = get_value_fields($values_form, 'objectSentSign');
+
                 if (!empty($objectSentNote)) {
                     $objectSent = $objectSentNote;
                 } else {
                     $objectSent = $objectSentSign;
                 }
                 $attachmentToFreeze = MaarchParapheurController::sendDatas([
-                    'config'         => $config,
-                    'resIdMaster'    => $res_id,
-                    'processingUser' => $processingUser,
-                    'objectSent'     => $objectSent,
-                    'userId'         => $_SESSION['user']['UserId']
+                    'config'             => $config,
+                    'resIdMaster'        => $res_id,
+                    'processingUser'     => $processingUser,
+                    'objectSent'         => $objectSent,
+                    'userId'             => $_SESSION['user']['UserId']
                 ]);
 
                 $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $processingUser]);

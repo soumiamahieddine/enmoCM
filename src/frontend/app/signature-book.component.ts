@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, Component, OnInit, NgZone } from '@angular/core';
+import { Pipe, PipeTransform, Component, OnInit, NgZone, ViewChild, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -71,7 +71,6 @@ export class SignatureBookComponent implements OnInit {
     histViewerLink              : string    = "";
     linksViewerLink             : string    = "";
     attachmentsViewerLink       : string    = "";
-
 
     constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService) {
         
@@ -227,11 +226,13 @@ export class SignatureBookComponent implements OnInit {
             this.rightViewerLink = "";
         }
         this.rightSelectedThumbnail = index;
+        //this.reloadViewerRight();
     }
 
     changeLeftViewer(index: number) {
         this.leftViewerLink = this.signatureBook.documents[index].viewerLink;
         this.leftSelectedThumbnail = index;
+        //this.reloadViewerLeft();
     }
 
     displayPanel(panel: string) {
@@ -478,14 +479,19 @@ export class SignatureBookComponent implements OnInit {
     }
 
     backToBasket() {
-        unlockDocument(this.resId);
-        window.location.href = 'index.php?page=view_baskets&module=basket&basketId='+this.basketId+'&userId='+this.userId+'&groupIdSer='+this.groupId+'&backToBasket=true';
+        this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/unlock', { resources: [this.resId] })
+            .subscribe((data: any) => {
+                window.location.href = 'index.php?page=view_baskets&module=basket&basketId='+this.basketId+'&userId='+this.userId+'&groupIdSer='+this.groupId+'&backToBasket=true';
+            }, (err: any) => { });
     }
 
     backToDetails() {
-        unlockDocument(this.resId);
-        location.hash = "";
-        location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
+        this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/unlock', { resources: [this.resId] })
+            .subscribe((data: any) => {
+                location.hash = "";
+                location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
+            }, (err: any) => { });
+        
     }
 
     changeLocation(resId: number, origin: string) {

@@ -270,29 +270,23 @@ if (!defined('_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE')) {
 if (!defined('_DIFFUSION_LIST')) {
     define('_DIFFUSION_LIST', 'Verdelingslijst');
 }
-if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE')) {
-    define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE', 'Verzending naar de hoofdbestemmeling van het document');
-}
-if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS')) {
-    define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS', 'Verzending naar de hoofdbestemmeling van het document met de status(sen):');
-}
 if (!defined('_DEST_USER')) {
     define('_DEST_USER', 'Hoofdbestemmeling');
 }
 if (!defined('_NOTE_DEST_USER')) {
-    define('_NOTE_DEST_USER', 'Hoofdbestemmeling van het document met voetnoten');
+    define('_NOTE_DEST_USER', 'Hoofdbestemmeling van het brief met voetnoten');
 }
 if (!defined('_NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS')) {
-    define('_NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS', 'Verzending naar de hoofdeenheid van het document met de status(sen):');
+    define('_NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS', 'Verzending naar de hoofdeenheid van het brief met de status(sen):');
 }
 if (!defined('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE')) {
-    define('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE', 'Verzending naar de gebruikers in kopie van het document');
+    define('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE', 'Verzending naar de gebruikers in kopie van het brief');
 }
 if (!defined('_COPYLIST')) {
     define('_COPYLIST', 'Gebruikers in kopie');
 }
 if (!defined('_NOTE_COPY_LIST')) {
-    define('_NOTE_COPY_LIST', 'Bestemmelingen in kopie van het document met voetnoten');
+    define('_NOTE_COPY_LIST', 'Bestemmelingen in kopie van het brief met voetnoten');
 }
 if (!defined('_NOTIFICATIONS_GROUP_DIFF_TYPE')) {
     define('_NOTIFICATIONS_GROUP_DIFF_TYPE', 'Verzending naar de gebruikers van de gespecificeerde groep(en)');

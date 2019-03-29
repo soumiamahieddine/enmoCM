@@ -219,7 +219,7 @@ if (!defined("_PDI_COMMENT_HISTORY")) {
 
 /*************OTHER*************************************/
 if (!defined("_DOCS")) {
-    define("_DOCS", "Documents");
+    define("_DOCS", "Brieven");
 }
 if (!defined("_LINK_EXISTS")) {
     define("_LINK_EXISTS", "Un lien avec un autre objet existe");

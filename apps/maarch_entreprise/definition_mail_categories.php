@@ -107,7 +107,7 @@ $_ENV['categories']['incoming']['doc_date'] = array(
     'modify' => true,
     'form_show' => 'date',
 );
-$_ENV['categories']['incoming']['external_id'] = array (
+$_ENV['categories']['incoming']['external_reference'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => false,

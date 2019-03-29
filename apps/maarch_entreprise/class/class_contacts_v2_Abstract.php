@@ -423,6 +423,59 @@ abstract class contacts_v2_Abstract extends Database
                     }
                 }
 
+                $contactToUpdate = \Contact\models\ContactModel::getOnView(['select' => ['external_id'], 'where' => ['contact_id = ?'], 'data' => [$_SESSION['m_admin']['contact']['ID']]]);
+                $externalId = [];
+                if (count($contactToUpdate) == 1) {
+                    $externalId = json_decode($contactToUpdate[0]['external_id'], true);
+                }
+
+                if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'updateContactToExternalApplication']) && !empty($externalId['localeoId'])) {
+                    $bodyData = [];
+                    $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'updateContactToExternalApplication']);
+
+                    if (!empty($config['inObject'])) {
+                        foreach ($config['objects'] as $object) {
+                            $select = [];
+                            $tmpBodyData = [];
+                            foreach ($object['rawData'] as $value) {
+                                $select[] = $value;
+                            }
+
+                            $select[] = 'ca_id';
+                            $select[] = 'firstname';
+                            $select[] = 'lastname';
+                            $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['m_admin']['contact']['ID']]]);
+                            if (!empty($document[0])) {
+                                foreach ($object['rawData'] as $key => $value) {
+                                    if ($value == 'external_id') {
+                                        $tmpBodyData[$key] = $externalId['localeoId'];
+                                    } else {
+                                        if ($value == 'contact_firstname' && empty($document[0][$value])) {
+                                            $value = 'firstname';
+                                        } elseif ($value == 'contact_lastname' && empty($document[0][$value])) {
+                                            $value = 'lastname';
+                                        }
+                                        $tmpBodyData[$key] = $document[0][$value];
+                                    }
+                                }
+                            }
+
+                            if (!empty($object['data'])) {
+                                $tmpBodyData = array_merge($tmpBodyData, $object['data']);
+                            }
+
+                            $bodyData[$object['name']] = json_encode($tmpBodyData);
+                        }
+                    }
+
+                    $response = \SrcCore\models\CurlModel::execSimple([
+                        'url'           => $config['url'],
+                        'headers'       => $config['header'],
+                        'method'        => $config['method'],
+                        'body'          => $bodyData,
+                    ]);
+                }
+
                 $this->clearcontactinfos();
                 $_SESSION['info'] = _CONTACT_MODIFIED;
                 if (isset($_SESSION['fromContactTree']) && $_SESSION['fromContactTree'] == 'yes') {
@@ -2286,6 +2339,7 @@ abstract class contacts_v2_Abstract extends Database
                             $select[] = 'ca_id';
                             $select[] = 'firstname';
                             $select[] = 'lastname';
+                            $select[] = 'external_id';
                             $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
                             if (!empty($document[0])) {
                                 foreach ($object['rawData'] as $key => $value) {
@@ -2328,7 +2382,10 @@ abstract class contacts_v2_Abstract extends Database
                     $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendContactToExternalApplication', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
 
                     if (!empty($response[$config['return']['key']])) {
-                        \Contact\models\ContactModel::updateAddress(['set' => [$config['return']['value'] => $response[$config['return']['key']]], 'where' => ['id = ?'], 'data' => [$document[0]['ca_id']]]);
+                        $externalId = json_decode($document[0]['external_id'], true);
+                        $externalId['localeoId'] = $response[$config['return']['key']];
+
+                        \Contact\models\ContactModel::updateAddress(['set' => ['external_id' => json_encode($externalId)], 'where' => ['id = ?'], 'data' => [$document[0]['ca_id']]]);
                     }
                 }
 
@@ -2342,9 +2399,8 @@ abstract class contacts_v2_Abstract extends Database
                 exit;
             } elseif ($mode == 'up') {
                 $contactToUpdate = \Contact\models\ContactModel::getByAddressId(['addressId' => $_SESSION['m_admin']['address']['ID'], 'select' => ['external_id']]);
-                $externalId = (array)json_decode($contactToUpdate['external_id']);
+                $externalId = json_decode($contactToUpdate['external_id'], true);
                 $externalId['m2m'] = empty($_SESSION['m_admin']['address']['M2M_ID']) ? null : $_SESSION['m_admin']['address']['M2M_ID'];
-                $externalId = json_encode($externalId);
 
                 $query = 'UPDATE '.$_SESSION['tablename']['contact_addresses'].' 
                       SET contact_purpose_id = ?
@@ -2377,7 +2433,7 @@ abstract class contacts_v2_Abstract extends Database
                     $_SESSION['m_admin']['address']['LASTNAME'], $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['FUNCTION'], $_SESSION['m_admin']['address']['PHONE'],
                     $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['OCCUPANCY'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_COMP'],
                     $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'], $_SESSION['m_admin']['address']['WEBSITE'],
-                    $_SESSION['m_admin']['address']['OTHER_DATA'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'], $externalId, $_SESSION['m_admin']['address']['BAN_ID'],
+                    $_SESSION['m_admin']['address']['OTHER_DATA'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'], json_encode($externalId), $_SESSION['m_admin']['address']['BAN_ID'],
                     $_SESSION['m_admin']['address']['ID'], );
 
                 $db->query($query, $arrayPDO);
@@ -2387,6 +2443,54 @@ abstract class contacts_v2_Abstract extends Database
                     $hist = new history();
                     $hist->add($_SESSION['tablename']['contacts_v2'], $_SESSION['m_admin']['address']['ID'], 'UP', 'contacts_v2_up', $msg, $_SESSION['config']['databasetype']);
                 }
+
+                if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'updateContactToExternalApplication']) && !empty($externalId['localeoId'])) {
+                    $bodyData = [];
+                    $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'updateContactToExternalApplication']);
+
+                    if (!empty($config['inObject'])) {
+                        foreach ($config['objects'] as $object) {
+                            $select = [];
+                            $tmpBodyData = [];
+                            foreach ($object['rawData'] as $value) {
+                                $select[] = $value;
+                            }
+
+                            $select[] = 'ca_id';
+                            $select[] = 'firstname';
+                            $select[] = 'lastname';
+                            $document = \Contact\models\ContactModel::getOnView(['select' => $select, 'where' => ['contact_id = ?'], 'data' => [$_SESSION['contact']['current_contact_id']]]);
+                            if (!empty($document[0])) {
+                                foreach ($object['rawData'] as $key => $value) {
+                                    if ($value == 'external_id') {
+                                        $tmpBodyData[$key] = $externalId['localeoId'];
+                                    } else {
+                                        if ($value == 'contact_firstname' && empty($document[0][$value])) {
+                                            $value = 'firstname';
+                                        } elseif ($value == 'contact_lastname' && empty($document[0][$value])) {
+                                            $value = 'lastname';
+                                        }
+                                        $tmpBodyData[$key] = $document[0][$value];
+                                    }
+                                }
+                            }
+
+                            if (!empty($object['data'])) {
+                                $tmpBodyData = array_merge($tmpBodyData, $object['data']);
+                            }
+
+                            $bodyData[$object['name']] = json_encode($tmpBodyData);
+                        }
+                    }
+
+                    $response = \SrcCore\models\CurlModel::execSimple([
+                        'url'           => $config['url'],
+                        'headers'       => $config['header'],
+                        'method'        => $config['method'],
+                        'body'          => $bodyData,
+                    ]);
+                }
+
                 $this->clearcontactinfos();
                 $_SESSION['info'] = _ADDRESS_EDITED;
                 header('location: '.$path_contacts);

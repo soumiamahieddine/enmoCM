@@ -30,6 +30,7 @@ class ActionMethodController
 {
     use AcknowledgementReceiptTrait;
     use ShippingTrait;
+    use ExternalSignatoryBookTrait;
 
     const COMPONENTS_ACTIONS = [
         'confirmAction'                         => null,
@@ -40,6 +41,7 @@ class ActionMethodController
         'enabledBasketPersistenceAction'        => 'enabledBasketPersistenceAction',
         'disabledBasketPersistenceAction'       => 'disabledBasketPersistenceAction',
         'resMarkAsReadAction'                   => 'resMarkAsReadAction',
+        'sendExternalSignatoryBookAction'       => 'sendExternalSignatoryBookAction',
         'createAcknowledgementReceiptsAction'   => 'createAcknowledgementReceipts',
         'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction',
         'sendShippingAction'                    => 'createMailevaShippings'
@@ -243,11 +245,8 @@ class ActionMethodController
 
         $listInstances = [];
         if (!empty($args['data']['onlyRedirectDest'])) {
-            $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?', 'difflist_type = ?', 'item_mode != ?'], 'data' => [$args['resId'], 'entity_id', 'dest']]);
-            foreach ($args['data']['listInstances'] as $key => $listInstance) {
-                if ($listInstance['item_mode'] != 'dest') {
-                    unset($args['data']['listInstances'][$key]);
-                }
+            if (count($args['data']['listInstances']) == 1) {
+                $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?', 'difflist_type = ?', 'item_mode != ?'], 'data' => [$args['resId'], 'entity_id', 'dest']]);
             }
         }
 

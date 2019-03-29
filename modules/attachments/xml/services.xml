@@ -87,4 +87,15 @@
         <page>frame_list_attachments.php</page>
     </WHEREAMIUSED>
  </SERVICE>
+  <SERVICE>
+    <id>view_documents_with_notes</id>
+    <name>_VIEW_DOCUMENTS_WITH_NOTES</name>
+    <comment>_VIEW_DOCUMENTS_WITH_NOTES_DESC</comment>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+   <WHEREAMIUSED>
+        <page>frame_list_attachments.php</page>
+    </WHEREAMIUSED>
+  </SERVICE>
 </root>

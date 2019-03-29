@@ -1,23 +1,33 @@
 <?php
+
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   show_attachments_details_tab
+* @author  dev <dev@maarch.org>
+* @ingroup attachments
+*/
+
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_security.php';
 
-
-$res_id = $_REQUEST["resId"];
-$coll_id = $_REQUEST["collId"];
+$res_id      = $_REQUEST["resId"];
+$coll_id     = $_REQUEST["collId"];
 $from_detail = $_REQUEST["fromDetail"];
-$extraParam ='';
+$extraParam  ='';
 
 $security = new security();
 $right = $security->test_right_doc($coll_id, $res_id);
 
-if(!$right){
+if (!$right) {
     exit(_NO_RIGHT_TXT);
 }
 
-if(isset($_REQUEST['attach_type_exclude'])){
+if (isset($_REQUEST['attach_type_exclude'])) {
     $extraParam = '&attach_type_exclude='.$_REQUEST['attach_type_exclude'];
-}else if(isset($_REQUEST['attach_type'])){
+} elseif (isset($_REQUEST['attach_type'])) {
     $extraParam = '&attach_type='.$_REQUEST['attach_type'];
 }
 
@@ -31,7 +41,6 @@ $core_tools->load_js();
 $frm_str .= '<div class="ref-unit">';
 $frm_str .= '<center>';
 if ($core_tools->is_module_loaded('templates') && ($core_tools->test_service('edit_attachments_from_detail', 'attachments', false))) {
-
     $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'. _CREATE_PJ.'"
         onclick="showAttachmentsForm(\''. $_SESSION['config']['businessappurl']
         . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create\',\'98%\',\'auto\')" />';

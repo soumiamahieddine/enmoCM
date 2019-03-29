@@ -37,7 +37,7 @@ if (!defined("_DETAILS_CASES"))
 if (!defined("_INDEX_CASES"))
     define("_INDEX_CASES", "Case index");
 if (!defined("_DOCUMENTS_LIST_IN_THIS_CASE"))
-    define("_DOCUMENTS_LIST_IN_THIS_CASE", "Case documents list");
+    define("_DOCUMENTS_LIST_IN_THIS_CASE", "Case mails list");
 if (!defined("_NOTES_FOR_THIS_CASES"))
     define("_NOTES_FOR_THIS_CASES", "Case notes");
 if (!defined("_HISTORY_CASES"))
@@ -75,19 +75,19 @@ if (!defined("_UPDATE_CASE"))
 if (!defined("_NEW_CASE"))
     define("_NEW_CASE","New case");
 if (!defined("_RES_ATTACH_ON_CASE"))
-    define("_RES_ATTACH_ON_CASE","Document attached to the case");
+    define("_RES_ATTACH_ON_CASE","Mail attached to the case");
 if (!defined("_RES_DETTACH_ON_CASE"))
-    define("_RES_DETTACH_ON_CASE","Detached document from the case");
+    define("_RES_DETTACH_ON_CASE","Detached mail from the case");
 if (!defined("_JOIN_CASE"))
     define("_JOIN_CASE","Attach to a case");
 if (!defined("_MODIFY_CASE"))
     define("_MODIFY_CASE","Attach to an other case");
 if (!defined("_JOIN_RES_ON_THIS_CASE"))
-    define("_JOIN_RES_ON_THIS_CASE","Attach a document to the case");
+    define("_JOIN_RES_ON_THIS_CASE","Attach a mail to the case");
 if (!defined("_RESSOURCES_LINKED"))
-    define("_RESSOURCES_LINKED","Attached document");
+    define("_RESSOURCES_LINKED","Attached mail");
 if (!defined("_RESSOURCES_NOT_LINKED"))
-    define("_RESSOURCES_NOT_LINKED","This document is already attached");
+    define("_RESSOURCES_NOT_LINKED","This mail is already attached");
 if (!defined("_CASE"))
     define("_CASE","Case");
 if (!defined("_SEARCH_A_CASE"))
@@ -95,7 +95,7 @@ if (!defined("_SEARCH_A_CASE"))
 if (!defined("_CLOSED_CASE"))
     define("_CLOSED_CASE","Enclosed");
 if (!defined("_SEARCH_A_RES"))
-    define("_SEARCH_A_RES","Search a document");
+    define("_SEARCH_A_RES","Search a mail");
 if (!defined("_CREATE_NEW_CASE"))
     define("_CREATE_NEW_CASE","Create a new case");
 if (!defined("_ADD_CASES"))
@@ -129,4 +129,4 @@ if (!defined("_CLICK_HERE_TO_ACCESS_CASE"))
 if (!defined("_LABEL_MANDATORY"))
     define("_LABEL_MANDATORY","Case wording is mandatory");
 if (!defined("_UNLINK_CASE"))
-    define("_UNLINK_CASE","Separate the document from the case");
+    define("_UNLINK_CASE","Separate the mail from the case");

@@ -123,11 +123,7 @@ class SignatureBookController
         if (!Validator::stringType()->notEmpty()->validate($data['table'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-
-        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
+        //TODO Check les droits de modif
         AttachmentModel::unsignAttachment(['table' => $data['table'], 'resId' => $aArgs['resId']]);
 
         $isVersion = ($data['table'] == 'res_attachments' ? 'false' : 'true');
@@ -212,7 +208,7 @@ class SignatureBookController
                 $isVersion = false;
             }
 
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $value['res_id'], 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $realId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
 
             if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
@@ -221,12 +217,12 @@ class SignatureBookController
             }
 
             $documents[] = [
-                'res_id'        => $value['res_id'],
+                'res_id'        => $realId,
                 'title'         => $value['title'],
                 'format'        => $value['format'],
                 'isConverted'   => $isConverted,
-                'viewerLink'    => "../../rest/res/{$resId}/attachments/{$value['res_id']}/content",
-                'thumbnailLink' => "rest/res/{$resId}/attachments/{$value['res_id']}/thumbnail"
+                'viewerLink'    => "../../rest/res/{$resId}/attachments/{$realId}/content",
+                'thumbnailLink' => "rest/res/{$resId}/attachments/{$realId}/thumbnail"
             ];
         }
 
@@ -273,14 +269,23 @@ class SignatureBookController
             $realId = 0;
             if ($value['res_id'] == 0) {
                 $realId = $value['res_id_version'];
+                $isVersion = true;
             } elseif ($value['res_id_version'] == 0) {
                 $realId = $value['res_id'];
+                $isVersion = false;
             }
 
-            $viewerId = $realId;
+            $viewerId       = $realId;
             $viewerNoSignId = $realId;
-            $pathToFind = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
-            $isConverted = false;
+            $pathToFind     = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
+            $isConverted    = false;
+
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => [1], 'resId' => $realId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+
+            if (empty($convertedAttachment['errors'])) {
+                $isConverted = true;
+            }
+
             foreach ($attachments as $tmpKey => $tmpValue) {
                 if (strpos($value['format'], 'xl') !== 0 && $value['format'] != 'pptx' && $tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
                     if ($value['status'] != 'SIGN') {

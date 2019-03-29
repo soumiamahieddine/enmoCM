@@ -1,0 +1,13 @@
+<div class="panelHeader">
+    <div class="panelHeader-logo">
+        <a href="#" title="{{lang.home}}" *ngIf="!mobileMode" style="margin-right: 30px;">
+            <mat-icon class="maarchLogo" svgIcon="maarchLogoFull"></mat-icon>
+        </a>
+    </div>
+    <div class="panelHeader-button">
+        <button mat-icon-button (click)="snavLeft.close()">
+            <mat-icon fontSet="fas" fontIcon="fa-stream" style="transform: rotate(180deg);"></mat-icon>
+        </button>
+    </div>
+</div>
+<mat-divider></mat-divider>

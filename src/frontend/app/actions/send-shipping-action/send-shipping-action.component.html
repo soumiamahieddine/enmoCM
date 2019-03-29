@@ -4,7 +4,7 @@
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
     <div *ngIf="shippings.length == 0" class="alert-message alert-message-danger mailList" role="alert">
-        Aucun modèle d'envoi disponibles pour ces entités :<br />
+        {{lang.noShippingTemplate}} :<br />
         <div class="mailList">
             <ul>
                 <li *ngFor="let entity of entitiesList">
@@ -12,7 +12,7 @@
                 </li>
             </ul>
         </div>
-        Veuiillez paramétrer un modèle dans <b>Administration</b> > <b>Modèles d'envois postaux</b>
+        <span [innerHTML]="lang.doShippingParameter"></span>
     </div>
     <mat-sidenav-container *ngIf="shippings.length > 0" autosize style="height:100%;">
         <mat-sidenav-content style="background: white;">
@@ -25,7 +25,7 @@
                 </div>
                 <div class="col-md-12" style="padding-top: 10px;">
                     <mat-form-field>
-                        <mat-label>Canal d'envoi</mat-label>
+                        <mat-label>{{lang.shippings}}</mat-label>
                         <mat-select name="currentShipping" [(ngModel)]="currentShipping" required>
                             <mat-option *ngFor="let shipping of shippings" [value]="shipping">
                                 {{shipping.label}}
@@ -36,7 +36,7 @@
                 <div class="col-md-12" *ngIf="attachList.length > 0">
                     <div>
                         <div class="alert-message alert-message-info mailList" role="alert">
-                            <b>{{attachList.length}}</b> document(s) prêt à l'envoi
+                            <b>{{attachList.length}}</b> {{lang.shippingReadyToSend}}
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                     <div>
                         <div class="alert-message alert-message-danger mailList" role="alert">
                             <p>
-                                <b>{{mailsNotSend.length}}</b> Courrier(s) non eligible(s) :
+                                <b>{{mailsNotSend.length}}</b> {{lang.shippingNotEligible}} :
                             </p>
                             <ul>
                                 <li *ngFor="let mail of mailsNotSend">
@@ -57,15 +57,34 @@
                 <div *ngIf="currentShipping != null" class="col-md-12">
                     <div class="formType" style="flex-direction: column;">
                         <div class="formType-title">
-                            {{lang.pricesInformations}} *
+                            {{lang.pricesInformations}}
                         </div>
                         <div class="priceContent">
                             <div class="priceInfo">
-                                * Selon les paramètres définis dans le modèle
+                                <div class="col-md-6">
+                                    <p>
+                                        {{lang.sendMode}} :
+                                    </p>
+                                    <ul>
+                                        <li>
+                                            {{lang['shipping_'+currentShipping.options.sendMode]}}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>
+                                        {{lang.shapingOptions}} :
+                                    </p>
+                                    <ul>
+                                        <li *ngFor="let option of currentShipping.options.shapingOptions">
+                                            {{lang['shipping_'+option]}}
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <mat-form-field appearance="outline">
                                 <input matInput [(ngModel)]="currentShipping.fee" required name="totalPrice"
-                                    id="totalPrice" title="Prix total" type="number" disabled>
+                                    id="totalPrice" title="lang.totalPrice" type="number" disabled>
                                 <span matSuffix>&nbsp;€</span>
                             </mat-form-field>
                         </div>
@@ -86,7 +105,8 @@
     </mat-sidenav-container>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button mat-button color="primary" [disabled]="loading || currentShipping == null || attachList.length == 0"
+    <button mat-raised-button mat-button color="primary"
+        [disabled]="loading || currentShipping == null || attachList.length == 0"
         (click)="onSubmit()">{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>

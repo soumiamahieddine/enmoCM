@@ -22,8 +22,8 @@
     </signatoryBook>
     <signatoryBook>
         <id>iParapheur</id>
-        <userId>ws-courrier@maarch.org</userId>
-        <password>ws-courrier1</password>
+        <userId></userId>
+        <password></password>
         <url>https://secure-iparapheur-partenaires.libriciel.fr/ws-iparapheur</url>
         <certPath>/var/www/html/maarchdev/modules/visa/xml/serveur_iparapheur.demonstrations.adullact.org.pem</certPath>
         <certType>pem</certType>
@@ -37,12 +37,23 @@
     </signatoryBook>
     <signatoryBook>
         <id>fastParapheur</id>
-        <subscriberId>100100193</subscriberId>
+        <subscriberId></subscriberId>
         <url>https://demo-parapheur.dfast.fr/parapheur-soap/soap/v1/Documents?wsdl</url>
         <certPath>/var/www/html/maarchdev/modules/visa/xml/92091.p12</certPath>
-        <certPass>fastpwd</certPass>
+        <certPass></certPass>
         <certType>P12</certType>
         <validatedState>Signé</validatedState>
         <refusedState>Refusé</refusedState>
+    </signatoryBook>
+    <signatoryBook>
+        <id>xParaph</id>
+        <url>https://preprodssl.ssl.spl-xdemat.fr/Xparaph/wsdl/wsdl.php</url>
+        <login></login>
+        <password></password>
+        <siret></siret>
+        <docutype></docutype>
+        <docustype></docustype>
+        <validatedState></validatedState>
+        <refusedState></refusedState>
     </signatoryBook>
 </root>

@@ -613,16 +613,16 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '</tr>';
      
     /*** Reference courrier ***/
-    $frm_str .= '<tr id="external_id_tr" style="display:' . $display_value . ';">';
-    $frm_str .= '<td><label for="external_id" class="form_title" >' . _REFERENCE_MAIL
+    $frm_str .= '<tr id="external_reference_tr" style="display:' . $display_value . ';">';
+    $frm_str .= '<td><label for="external_reference" class="form_title" >' . _REFERENCE_MAIL
             . '</label></td>';
     $frm_str .= '<td>&nbsp;</td>';
-    $frm_str .= '<td class="indexing_field"><input name="external_id" type="text" value="';
-        if( isset($data['external_id']) && !empty($data['external_id']))
+    $frm_str .= '<td class="indexing_field"><input name="external_reference" type="text" value="';
+        if( isset($data['external_reference']) && !empty($data['external_reference']))
         {
-            $frm_str .= $data['external_id'];
+            $frm_str .= $data['external_reference'];
         }                    
-        $frm_str .= '" id="external_id"/></td>';
+        $frm_str .= '" id="external_reference"/></td>';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '</tr>';
 

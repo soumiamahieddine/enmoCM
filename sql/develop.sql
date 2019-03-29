@@ -95,6 +95,21 @@ account json DEFAULT '{}',
 CONSTRAINT shipping_templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+DROP TABLE IF EXISTS shippings;
+CREATE TABLE shippings
+(
+id serial NOT NULL,
+user_id INTEGER NOT NULL,
+attachment_id INTEGER NOT NULL,
+is_version boolean NOT NULL,
+options json DEFAULT '{}',
+fee FLOAT NOT NULL,
+recipient_entity_id INTEGER NOT NULL,
+account_id character varying(64) NOT NULL,
+creation_date timestamp without time zone NOT NULL,
+CONSTRAINT shippings_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 
 /* SERVICES */
 DO $$ BEGIN
@@ -166,7 +181,7 @@ END $$;
 /* ACTIONS */
 ALTER TABLE actions DROP COLUMN IF EXISTS component;
 ALTER TABLE actions ADD COLUMN component CHARACTER VARYING (128);
-UPDATE actions SET component = 'v1Action' WHERE action_page IN ('put_in_copy', 'process', 'index_mlb', 'validate_mail', 'sendFileWS', 'sendDataWS', 'sendToExternalSignatureBook', 'close_mail_and_index', 'close_mail_with_attachment', 'send_attachments_to_contact', 'send_to_contact_with_mandatory_attachment', 'visa_workflow', 'interrupt_visa', 'rejection_visa_redactor', 'rejection_visa_previous', 'redirect_visa_entity', 'send_to_visa', 'send_signed_docs', 'send_docs_to_recommendation', 'validate_recommendation', 'send_to_avis', 'avis_workflow', 'avis_workflow_simple', 'export_seda', 'check_acknowledgement', 'check_reply', 'purge_letter', 'reset_letter');
+UPDATE actions SET component = 'v1Action' WHERE action_page IN ('put_in_copy', 'process', 'index_mlb', 'validate_mail', 'sendFileWS', 'sendDataWS', 'close_mail_and_index', 'close_mail_with_attachment', 'send_attachments_to_contact', 'send_to_contact_with_mandatory_attachment', 'visa_workflow', 'interrupt_visa', 'rejection_visa_redactor', 'rejection_visa_previous', 'redirect_visa_entity', 'send_to_visa', 'send_signed_docs', 'send_docs_to_recommendation', 'validate_recommendation', 'send_to_avis', 'avis_workflow', 'avis_workflow_simple', 'export_seda', 'check_acknowledgement', 'check_reply', 'purge_letter', 'reset_letter');
 UPDATE actions SET component = 'confirmAction' WHERE action_page = 'confirm_status' OR action_page is null OR action_page = '';
 UPDATE actions SET component = 'updateDepartureDateAction' WHERE action_page = 'confirm_status_with_update_date';
 UPDATE actions SET component = 'viewDoc' WHERE action_page = 'view';
@@ -176,6 +191,7 @@ UPDATE actions SET component = 'disabledBasketPersistenceAction' WHERE action_pa
 UPDATE actions SET component = 'resMarkAsReadAction' WHERE action_page = 'mark_as_read';
 UPDATE actions SET component = 'signatureBookAction' WHERE action_page = 'visa_mail';
 UPDATE actions SET component = 'redirectAction' WHERE action_page = 'redirect';
+UPDATE actions SET component = 'sendExternalSignatoryBookAction' WHERE action_page = 'sendToExternalSignatureBook';
 
 /*SHIPPING*/
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS in_send_attach;
@@ -246,11 +262,38 @@ END$$;
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'contact_addresses') AND attname = 'external_contact_id') THEN
     ALTER TABLE contact_addresses DROP COLUMN IF EXISTS external_id;
-    ALTER TABLE contact_addresses ADD COLUMN external_id json DEFAULT '{}';
+    ALTER TABLE contact_addresses ADD COLUMN external_id jsonb DEFAULT '{}';
     UPDATE contact_addresses SET external_id = json_build_object('m2m', external_contact_id);
     ALTER TABLE contact_addresses DROP COLUMN IF EXISTS external_contact_id;
   END IF;
 END$$;
+DO $$ BEGIN
+  IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_attachments' and column_name = 'external_id' and data_type != 'jsonb') THEN
+    ALTER TABLE res_attachments DROP COLUMN IF EXISTS external_id_tmp;
+    ALTER TABLE res_attachments ADD COLUMN external_id_tmp jsonb DEFAULT '{}';
+    UPDATE res_attachments SET external_id_tmp = json_build_object('signatureBookId', external_id);
+    ALTER TABLE res_attachments DROP COLUMN IF EXISTS external_id;
+	  ALTER TABLE res_attachments RENAME COLUMN external_id_tmp TO external_id;
+  END IF;
+END$$;
+DO $$ BEGIN
+  IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_version_attachments' and column_name = 'external_id' and data_type != 'jsonb') THEN
+    ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS external_id_tmp;
+    ALTER TABLE res_version_attachments ADD COLUMN external_id_tmp jsonb DEFAULT '{}';
+    UPDATE res_version_attachments SET external_id_tmp = json_build_object('signatureBookId', external_id);
+    ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS external_id;
+	  ALTER TABLE res_version_attachments RENAME COLUMN external_id_tmp TO external_id;
+  END IF;
+END$$;
+DO $$ BEGIN
+  IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'external_id' and data_type != 'jsonb') THEN
+	  ALTER TABLE res_letterbox RENAME COLUMN external_id TO external_reference;
+    ALTER TABLE res_letterbox ADD COLUMN external_id jsonb DEFAULT '{}';
+    UPDATE res_letterbox SET external_id = json_build_object('publikId', external_reference) WHERE external_link is not NULL;
+    UPDATE res_letterbox SET external_reference = NULL WHERE external_link is not NULL;
+  END IF;
+END$$;
+
 
 /* RE-CREATE VIEW*/
 CREATE OR REPLACE VIEW res_view_letterbox AS
@@ -289,6 +332,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.source,
     r.author,
     r.reference_number,
+    r.external_reference,
     r.external_id,
     r.external_link,
     r.departure_date,

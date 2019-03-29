@@ -436,7 +436,7 @@
       <parameter name="department_number_available" type="string" />
       <parameter name="welcome" type="string" />
       <parameter name="Submit" type="identifier" />
-      <parameter name="external_id" type="string" />
+      <parameter name="external_reference" type="string" />
     </validationRule>
 
     <validationRule name="view_resource" extends="index">  

@@ -184,9 +184,9 @@ function display_list()
 
     init_session();
 
-    $select[TAGS] = array();
+    $select['tags'] = [];
     array_push(
-        $select[TAGS], 'tag_id', 'tag_label'
+        $select['tags'], 'tag_id', 'tag_label'
     );
     if ($_SESSION['user']['UserId'] == 'superadmin') {
         $where = '';

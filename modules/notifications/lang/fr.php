@@ -213,22 +213,18 @@ if (!defined("_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE"))
     define("_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE", "Les courriels de notifications seront diffusés à tous les utilisateurs de la liste de diffusion (destinataire principal et copies)");
 if (!defined("_DIFFUSION_LIST"))
     define("_DIFFUSION_LIST", "Liste de diffusion");
-if (!defined("_NOTIFICATIONS_DEST_USER_DIFF_TYPE"))
-    define("_NOTIFICATIONS_DEST_USER_DIFF_TYPE", "Envoi au destinataire principal du document");
-if (!defined("_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS"))
-    define("_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS", "Envoi au destinataire principal du document avec le(s) statut(s):");
 if (!defined("_DEST_USER"))
     define("_DEST_USER", "Destinataire principal");
 if (!defined("_NOTE_DEST_USER"))
-    define("_NOTE_DEST_USER", "Destinataire principal du document annoté");
+    define("_NOTE_DEST_USER", "Destinataire principal du courrier annoté");
 if (!defined("_NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS"))
-    define("_NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS", "Envoi à l'entité principale du document avec le(s) statut(s):");
+    define("_NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS", "Envoi à l'entité principale du courrier avec le(s) statut(s):");
 if (!defined("_NOTIFICATIONS_COPY_LIST_DIFF_TYPE"))
-    define("_NOTIFICATIONS_COPY_LIST_DIFF_TYPE", "Envoi aux utilisateurs en copie du document");
+    define("_NOTIFICATIONS_COPY_LIST_DIFF_TYPE", "Envoi aux utilisateurs en copie du courrier");
 if (!defined("_COPYLIST"))
     define("_COPYLIST", "Utilisateurs en copie");
 if (!defined("_NOTE_COPY_LIST"))
-    define("_NOTE_COPY_LIST", "Destinataires en copie du document annoté");
+    define("_NOTE_COPY_LIST", "Destinataires en copie du courrier annoté");
 if (!defined("_NOTIFICATIONS_GROUP_DIFF_TYPE"))
     define("_NOTIFICATIONS_GROUP_DIFF_TYPE", "Envoi aux utilisateurs du(des) groupe(s) spécifié(s)");
 if (!defined("_NOTIFICATIONS_ENTITY_DIFF_TYPE"))

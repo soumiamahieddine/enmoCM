@@ -1,25 +1,13 @@
 <?php
 
-/*
-*
-*    Copyright 2008,2015 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*
-*   @author <dev@maarch.org>
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   loadRepList
+* @author  dev <dev@maarch.org>
+* @ingroup apps
 */
 
 require_once 'core/class/class_core_tools.php';
@@ -66,25 +54,33 @@ if (isset($_REQUEST['res_id_master'])) {
 
     $db = new Database();
 
+    $excludeAttachmentTypes = ['converted_pdf', 'printed_folder'];
+    if (!$Core_Tools->test_service('view_documents_with_notes', 'attachments', false)) {
+        $excludeAttachmentTypes[] = 'document_with_notes';
+    }
+
     $query = "SELECT * FROM res_view_attachments 
                             WHERE res_id_master = ? 
-                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN ('converted_pdf', 'print_folder') AND coll_id = ?  AND (status <> 'TMP' or (typist = ? and status = 'TMP')) 
+                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN (?) AND coll_id = ?  AND (status <> 'TMP' or (typist = ? and status = 'TMP')) 
                             ORDER BY creation_date desc";
-    $arrayPDO = array($_REQUEST['res_id_master'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
+    $arrayPDO = array($_REQUEST['res_id_master'], $excludeAttachmentTypes, $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
     $stmt = $db->query($query, $arrayPDO);
 
     while ($return_db = $stmt->fetchObject()) {
         if (!empty($_REQUEST['option']) && $_REQUEST['option'] == 'FT') {
             if ($return_db->format != 'pdf') {
-                $stmtFullText = $db->query('SELECT res_id FROM res_view_attachments WHERE filename = ? and attachment_type = ? and path = ? ORDER BY relation desc',
-                                [str_replace('.'.$return_db->format, '.pdf', $return_db->filename), 'converted_pdf', $return_db->path]);
+                $stmtFullText = $db->query(
+                    'SELECT res_id FROM res_view_attachments WHERE filename = ? and attachment_type = ? and path = ? ORDER BY relation desc',
+                                [str_replace('.'.$return_db->format, '.pdf', $return_db->filename), 'converted_pdf', $return_db->path]
+                );
                 $lineFullText = $stmtFullText->fetchObject();
                 if ($lineFullText && $lineFullText->res_id != 0) {
                     $resIdConverted = $lineFullText->res_id;
                 }
             }
             $stmt2 = $db->query(
-                        "SELECT count(*) as total FROM res_view_attachments WHERE res_id = ? and status not in ('DEL','OBS','TMP') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)", array($return_db->res_id, $_SESSION['searching']['where_request_parameters'][':subject'])
+                        "SELECT count(*) as total FROM res_view_attachments WHERE res_id = ? and status not in ('DEL','OBS','TMP') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)",
+                array($return_db->res_id, $_SESSION['searching']['where_request_parameters'][':subject'])
                         );
             $res_attach = $stmt2->fetchObject();
 
@@ -127,20 +123,20 @@ if (isset($_REQUEST['res_id_master'])) {
         $return .= '&nbsp;&nbsp;';
         sscanf(substr($return_db->creation_date, 0, 10), '%4s-%2s-%2s', $date_Y, $date_m, $date_d);
         switch ($date_m) {
-                                case '01': $date_m_txt = _JANUARY; break;
-                                case '02': $date_m_txt = _FEBRUARY; break;
-                                case '03': $date_m_txt = _MARCH; break;
-                                case '04': $date_m_txt = _APRIL; break;
-                                case '05': $date_m_txt = _MAY; break;
-                                case '06': $date_m_txt = _JUNE; break;
-                                case '07': $date_m_txt = _JULY; break;
-                                case '08': $date_m_txt = _AUGUST; break;
-                                case '09': $date_m_txt = _SEPTEMBER; break;
-                                case '10': $date_m_txt = _OCTOBER; break;
-                                case '11': $date_m_txt = _NOVEMBER; break;
-                                case '12': $date_m_txt = _DECEMBER; break;
-                                default: $date_m_txt = $date_m;
-                            }
+            case '01': $date_m_txt = _JANUARY; break;
+            case '02': $date_m_txt = _FEBRUARY; break;
+            case '03': $date_m_txt = _MARCH; break;
+            case '04': $date_m_txt = _APRIL; break;
+            case '05': $date_m_txt = _MAY; break;
+            case '06': $date_m_txt = _JUNE; break;
+            case '07': $date_m_txt = _JULY; break;
+            case '08': $date_m_txt = _AUGUST; break;
+            case '09': $date_m_txt = _SEPTEMBER; break;
+            case '10': $date_m_txt = _OCTOBER; break;
+            case '11': $date_m_txt = _NOVEMBER; break;
+            case '12': $date_m_txt = _DECEMBER; break;
+            default: $date_m_txt = $date_m;
+        }
         $return .= functions::xssafe($date_d.' '.$date_m_txt.' '.$date_Y);
         $return .= '</td>';
         $return .= '<td>';
@@ -148,20 +144,20 @@ if (isset($_REQUEST['res_id_master'])) {
         if ($return_db->validation_date) {
             sscanf(substr($return_db->validation_date, 0, 10), '%4s-%2s-%2s', $date_Y, $date_m, $date_d);
             switch ($date_m) {
-                                    case '01': $date_m_txt = _JANUARY; break;
-                                    case '02': $date_m_txt = _FEBRUARY; break;
-                                    case '03': $date_m_txt = _MARCH; break;
-                                    case '04': $date_m_txt = _APRIL; break;
-                                    case '05': $date_m_txt = _MAY; break;
-                                    case '06': $date_m_txt = _JUNE; break;
-                                    case '07': $date_m_txt = _JULY; break;
-                                    case '08': $date_m_txt = _AUGUST; break;
-                                    case '09': $date_m_txt = _SEPTEMBER; break;
-                                    case '10': $date_m_txt = _OCTOBER; break;
-                                    case '11': $date_m_txt = _NOVEMBER; break;
-                                    case '12': $date_m_txt = _DECEMBER; break;
-                                    default: $date_m_txt = $date_m;
-                                }
+                case '01': $date_m_txt = _JANUARY; break;
+                case '02': $date_m_txt = _FEBRUARY; break;
+                case '03': $date_m_txt = _MARCH; break;
+                case '04': $date_m_txt = _APRIL; break;
+                case '05': $date_m_txt = _MAY; break;
+                case '06': $date_m_txt = _JUNE; break;
+                case '07': $date_m_txt = _JULY; break;
+                case '08': $date_m_txt = _AUGUST; break;
+                case '09': $date_m_txt = _SEPTEMBER; break;
+                case '10': $date_m_txt = _OCTOBER; break;
+                case '11': $date_m_txt = _NOVEMBER; break;
+                case '12': $date_m_txt = _DECEMBER; break;
+                default: $date_m_txt = $date_m;
+            }
             $return .= functions::xssafe($date_d.' '.$date_m_txt.' '.$date_Y);
         } else {
             $return .= '-';
@@ -209,8 +205,6 @@ if (isset($_REQUEST['res_id_master'])) {
     $return .= '</p>';
     $return .= '</td>';
 }
-
-//usleep(900000);
 
 echo '{status : '.$status.", toShow : '".addslashes($return)."'}";
 exit();

@@ -395,36 +395,10 @@ if (!defined('_TYPE')) {
 if (!defined('_URL')) {
     define('_URL', 'URL');
 }
-if (!defined('_WARNING_MESSAGE_DEL_TYPE')) {
-    define('_WARNING_MESSAGE_DEL_TYPE', 'Warning :<br> The deletion of a document type leads to documents reallocation to a new type.');
-}
-if (!defined('_WARNING_MESSAGE_DEL_GROUP')) {
-    define('_WARNING_MESSAGE_DEL_GROUP', 'Warning :<br>There are users associated to this group. Choose a replacement group:');
-}
-if (!defined('_WARNING_MESSAGE_DEL_USER')) {
-    define('_WARNING_MESSAGE_DEL_USER', 'Warning :<br> There are diffusion lists associated to this user. Choose a replacement user:');
-}
-if (!defined('_INFO_MESSAGE_UPDATE_USER')) {
-    define('_INFO_MESSAGE_UPDATE_USER', "In order to keep confidentiality of documents in progress of current user's entity, you can replace him with another user");
-}
-if (!defined('_WARNING_MESSAGE_UPDATE_USER')) {
-    define('_WARNING_MESSAGE_UPDATE_USER', "If you choose \"NO REPLACEMENT\" and current user is in dest, he can't be removed !");
-}
-if (!defined('_MESSAGE_REAFFECT_USER_LISTMODEL')) {
-    define('_MESSAGE_REAFFECT_USER_LISTMODEL', 'Include user reassignment in list models');
-}
-if (!defined('_USERS_IN_GROUPS')) {
-    define('_USERS_IN_GROUPS', 'Users in the group');
-}
-if (!defined('_LISTE_DIFFUSION_IN_USER')) {
-    define('_LISTE_DIFFUSION_IN_USER', 'Diffusion list(s) for the user');
-}
 if (!defined('_NO_REPLACEMENT')) {
     define('_NO_REPLACEMENT', 'NO REPLACEMENT');
 }
-if (!defined('_DOCS_IN_DOCTYPES')) {
-    define('_DOCS_IN_DOCTYPES', 'Document(s) from this type');
-}
+
 if (!defined('_CHOOSE_REPLACEMENT_DOCTYPES')) {
     define('_CHOOSE_REPLACEMENT_DOCTYPES', 'Choose a replacement document type');
 }
@@ -741,26 +715,6 @@ if (!defined('_VIEW_TREE_DOCTYPES_DESC')) {
 
 /************************* Administration ***********************************/
 
-/**************Summary**************/
-if (!defined('_MANAGE_GROUPS_APP')) {
-    define('_MANAGE_GROUPS_APP', 'Manage application groups');
-}
-if (!defined('_MANAGE_USERS_APP')) {
-    define('_MANAGE_USERS_APP', 'Manage application users');
-}
-if (!defined('_MANAGE_DOCTYPES_APP')) {
-    define('_MANAGE_DOCTYPES_APP', 'Manage application document types');
-}
-if (!defined('_MANAGE_ARCHI_APP')) {
-    define('_MANAGE_ARCHI_APP', 'Manage application doc types structure');
-}
-if (!defined('_HISTORY_EXPLANATION')) {
-    define('_HISTORY_EXPLANATION', 'Watch on modifications, deletions and additions in the application');
-}
-if (!defined('_ARCHI_EXP')) {
-    define('_ARCHI_EXP', 'Folders, sub-folders, document types');
-}
-
 /************** Groups : List + Forms **************/
 if (!defined('_GROUPS_LIST')) {
     define('_GROUPS_LIST', 'Groups list');
@@ -969,83 +923,17 @@ if (!defined('_REACTIVATE')) {
 if (!defined('_DOCTYPES_LIST')) {
     define('_DOCTYPES_LIST', 'Document types list');
 }
-if (!defined('_ADD_DOCTYPE')) {
-    define('_ADD_DOCTYPE', 'Add a type');
-}
-if (!defined('_ALL_DOCTYPES')) {
-    define('_ALL_DOCTYPES', 'All the types');
-}
 if (!defined('_TYPES')) {
     define('_TYPES', 'Types');
-}
-
-if (!defined('_DOCTYPE_MODIFICATION')) {
-    define('_DOCTYPE_MODIFICATION', 'Document type modification');
-}
-if (!defined('_DOCTYPE_CREATION')) {
-    define('_DOCTYPE_CREATION', 'Document type creation');
-}
-
-if (!defined('_MODIFY_DOCTYPE')) {
-    define('_MODIFY_DOCTYPE', 'Validate the changes');
-}
-if (!defined('_ATTACH_SUBFOLDER')) {
-    define('_ATTACH_SUBFOLDER', 'Attached to the sub-folder');
-}
-if (!defined('_CHOOSE_SUBFOLDER')) {
-    define('_CHOOSE_SUBFOLDER', 'Choose a sub-folder');
-}
-if (!defined('_MANDATORY_FOR_COMPLETE')) {
-    define('_MANDATORY_FOR_COMPLETE', 'Mandatory to the hiring folder completeness');
 }
 if (!defined('_MORE_THAN_ONE')) {
     define('_MORE_THAN_ONE', 'Repetitive piece');
 }
-if (!defined('_MANDATORY_FIELDS_IN_INDEX')) {
-    define('_MANDATORY_FIELDS_IN_INDEX', 'Mandatory fields for indexation');
-}
-if (!defined('_DATE_END_DETACH_TIME')) {
-    define('_DATE_END_DETACH_TIME', 'End date of the secondment period');
-}
 if (!defined('_START_DATE')) {
     define('_START_DATE', 'Start Date');
 }
-if (!defined('_START_DATE_PROBATION')) {
-    define('_START_DATE_PROBATION', 'Start date of the probationary period');
-}
 if (!defined('_END_DATE')) {
     define('_END_DATE', 'End date');
-}
-if (!defined('_END_DATE_PROBATION')) {
-    define('_END_DATE_PROBATION', 'End date of the probationary period');
-}
-if (!defined('_START_DATE_TRIAL')) {
-    define('_START_DATE_TRIAL', 'Start date of the trial period');
-}
-if (!defined('_START_DATE_MISSION')) {
-    define('_START_DATE_MISSION', 'Mission start date');
-}
-if (!defined('_END_DATE_TRIAL')) {
-    define('_END_DATE_TRIAL', 'End date of the trial period');
-}
-if (!defined('_END_DATE_MISSION')) {
-    define('_END_DATE_MISSION', 'Mission end date');
-}
-if (!defined('_EVENT_DATE')) {
-    define('_EVENT_DATE', 'Event date');
-}
-if (!defined('_VISIT_DATE')) {
-    define('_VISIT_DATE', 'Visit date ');
-}
-if (!defined('_CHANGE_DATE')) {
-    define('_CHANGE_DATE', 'Change date');
-}
-if (!defined('_DOCTYPES_LIST2')) {
-    define('_DOCTYPES_LIST2', 'Document types list');
-}
-
-if (!defined('_INDEX_FOR_DOCTYPES')) {
-    define('_INDEX_FOR_DOCTYPES', 'Possible index for the document types');
 }
 if (!defined('_FIELD')) {
     define('_FIELD', 'Field');
@@ -1070,10 +958,6 @@ if (!defined('_DB_COLUMN')) {
 }
 if (!defined('_FIELD_VALUES')) {
     define('_FIELD_VALUES', 'Values');
-}
-
-if (!defined('_MASTER_TYPE')) {
-    define('_MASTER_TYPE', 'Master type');
 }
 
 /************** structures : List + Form**************/
@@ -1284,31 +1168,6 @@ if (!defined('_ADMIN_STATUS')) {
 
 if (!defined('_ACTION_LIST')) {
     define('_ACTION_LIST', 'Actions list');
-}
-if (!defined('_ADD_ACTION')) {
-    define('_ADD_ACTION', 'Add a new action');
-}
-if (!defined('_ALL_ACTIONS')) {
-    define('_ALL_ACTIONS', 'All the actions');
-}
-if (!defined('_ACTION_HISTORY')) {
-    define('_ACTION_HISTORY', 'Track the action');
-}
-
-if (!defined('_DEL_ACTION')) {
-    define('_DEL_ACTION', 'Deleted action');
-}
-if (!defined('_MODIFY_ACTION')) {
-    define('_MODIFY_ACTION', 'Action modification');
-}
-if (!defined('_ACTION_MODIFIED')) {
-    define('_ACTION_MODIFIED', 'Action modification');
-}
-if (!defined('_NEW_ACTION')) {
-    define('_NEW_ACTION', 'New action');
-}
-if (!defined('_THE_ACTION')) {
-    define('_THE_ACTION', 'The action ');
 }
 if (!defined('_ADMIN_ACTIONS')) {
     define('_ADMIN_ACTIONS', 'Actions');
@@ -1602,9 +1461,7 @@ if (!defined('_UNDEFINED')) {
 if (!defined('_UNDEFINED_DATA')) {
     define('_UNDEFINED_DATA', 'Undefined');
 }
-if (!defined('_CONSULT_EXTRACTION')) {
-    define('_CONSULT_EXTRACTION', 'You can consult here the extracted files');
-}
+
 if (!defined('_SERVICE')) {
     define('_SERVICE', 'Service');
 }
@@ -1742,15 +1599,6 @@ if (!defined('_EDIT_WITH_ASSISTANT')) {
 if (!defined('_VALID_THE_WHERE_CLAUSE')) {
     define('_VALID_THE_WHERE_CLAUSE', 'Click here to VALIDATE the where clause');
 }
-if (!defined('_DELETE_SHORT')) {
-    define('_DELETE_SHORT', 'deletion');
-}
-if (!defined('_CHOOSE_ANOTHER_SUBFOLDER')) {
-    define('_CHOOSE_ANOTHER_SUBFOLDER', 'Choose an other sub-folder');
-}
-if (!defined('_DOCUMENTS_EXISTS_FOR_COLLECTION')) {
-    define('_DOCUMENTS_EXISTS_FOR_COLLECTION', 'Documents exist for the collection');
-}
 if (!defined('_MUST_CHOOSE_COLLECTION_FIRST')) {
     define('_MUST_CHOOSE_COLLECTION_FIRST', 'You have to choose a collection');
 }
@@ -1758,7 +1606,7 @@ if (!defined('_CANTCHANGECOLL')) {
     define('_CANTCHANGECOLL', 'You can not change the collection');
 }
 if (!defined('_DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION')) {
-    define('_DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION', 'documents exist for the folder type / collection pair');
+    define('_DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION', 'mails exist for the folder type / collection pair');
 }
 
 if (!defined('_NO_RIGHT')) {
@@ -1975,7 +1823,7 @@ if (!defined('_ADV_SEARCH_INVOICES')) {
 }
 
 if (!defined('_ADV_SEARCH_TITLE')) {
-    define('_ADV_SEARCH_TITLE', 'Advanced search of document');
+    define('_ADV_SEARCH_TITLE', 'Advanced search of mail');
 }
 if (!defined('_MAIL_OBJECT')) {
     define('_MAIL_OBJECT', 'Mail object');
@@ -2174,7 +2022,7 @@ if (!defined('_ADMISSION_DATE')) {
     define('_ADMISSION_DATE', 'Arrival date');
 }
 if (!defined('_FOUND_DOC')) {
-    define('_FOUND_DOC', 'Found document(s)');
+    define('_FOUND_DOC', 'Found mail(s)');
 }
 if (!defined('_FOUND_LOGS')) {
     define('_FOUND_LOGS', 'Found logs file(s)');
@@ -2214,10 +2062,6 @@ if (!defined('_MUST_CHECK_ONE_BOX')) {
 }
 if (!defined('_ANSWER_TYPE')) {
     define('_ANSWER_TYPE', 'Response type(s)');
-}
-
-if (!defined('_INDEXATION_TITLE')) {
-    define('_INDEXATION_TITLE', 'Indexation of a document');
 }
 if (!defined('_CHOOSE_FILE')) {
     define('_CHOOSE_FILE', 'Choose the file');
@@ -2490,7 +2334,7 @@ if (!defined('_CHOOSE_DEST')) {
     define('_CHOOSE_DEST', 'Choose a recipient');
 }
 if (!defined('_DOC_DATE')) {
-    define('_DOC_DATE', 'Document date');
+    define('_DOC_DATE', 'Mail date');
 }
 if (!defined('_CONTACT_CARD')) {
     define('_CONTACT_CARD', 'Contact card');
@@ -2825,10 +2669,10 @@ if (!defined('_ADDRESS_DEL')) {
     define('_ADDRESS_DEL', 'deletion of an address');
 }
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT_ADDRESS')) {
-    define('_WARNING_MESSAGE_DEL_CONTACT_ADDRESS', 'Warning : the address deletion leads to the documents reallocation to a new address.');
+    define('_WARNING_MESSAGE_DEL_CONTACT_ADDRESS', 'Warning : the address deletion leads to the mails reallocation to a new address.');
 }
 if (!defined('_CONTACT_ADDRESS_REAFFECT')) {
-    define('_CONTACT_ADDRESS_REAFFECT', 'Documents reallocation');
+    define('_CONTACT_ADDRESS_REAFFECT', 'Mails reallocation');
 }
 if (!defined('_NEW_ADDRESS')) {
     define('_NEW_ADDRESS', 'New address');
@@ -2836,6 +2680,13 @@ if (!defined('_NEW_ADDRESS')) {
 if (!defined('_CHOOSE_CONTACT_ADDRESS')) {
     define('_CHOOSE_CONTACT_ADDRESS', 'Choose an address');
 }
+if (!defined('_THE_CONTACT_ADDRESS')) {
+    define('_THE_CONTACT_ADDRESS', 'The contact address');
+}
+if (!defined('_CONTACT_ADDRESS')) {
+    define('_CONTACT_ADDRESS', 'Contact address');
+}
+
 if (!defined('_USE')) {
     define('_USE', 'Use');
 }
@@ -2915,7 +2766,7 @@ if (!defined('_NO_RESULTS')) {
     define('_NO_RESULTS', 'No results');
 }
 if (!defined('_FOUND_DOCS')) {
-    define('_FOUND_DOCS', 'Found document(s)');
+    define('_FOUND_DOCS', 'Found mail(s)');
 }
 if (!defined('_MY_CONTACTS')) {
     define('_MY_CONTACTS', 'Create contacts from indexation/title');
@@ -2936,10 +2787,10 @@ if (!defined('_PROPERTIES')) {
     define('_PROPERTIES', 'Details');
 }
 if (!defined('_VIEW_DOC_NUM')) {
-    define('_VIEW_DOC_NUM', 'View on the document number');
+    define('_VIEW_DOC_NUM', 'View on the mail number');
 }
 if (!defined('_VIEW_DETAILS_NUM')) {
-    define('_VIEW_DETAILS_NUM', 'View of the detailed card of the document number');
+    define('_VIEW_DETAILS_NUM', 'View of the detailed card of the mail number');
 }
 if (!defined('_TO')) {
     define('_TO', 'To');
@@ -2948,10 +2799,10 @@ if (!defined('_FILE_PROPERTIES')) {
     define('_FILE_PROPERTIES', 'File properties');
 }
 if (!defined('_FILE_DATA')) {
-    define('_FILE_DATA', 'Information on the document');
+    define('_FILE_DATA', 'Information on the mail');
 }
 if (!defined('_VIEW_DOC')) {
-    define('_VIEW_DOC', 'See the document');
+    define('_VIEW_DOC', 'See the mail');
 }
 if (!defined('_VISUALIZE')) {
     define('_VISUALIZE', 'Visualize');
@@ -3272,6 +3123,10 @@ if (!defined('_CLOSE_MAIL')) {
     define('_CLOSE_MAIL', 'Close a mail');
 }
 
+if (!defined('_CLOSE_MAIL_DESC')) {
+    define('_CLOSE_MAIL_DESC', "Allows you to update the closing date of a document (\'closing_date\' of the mlb_coll_ext table). ESSENTIAL in order to complete your document workflow.'");
+}
+
 /******************** Keywords Helper ************/
 if (!defined('_HELP_KEYWORD0')) {
     define('_HELP_KEYWORD0', "Connected user's ID");
@@ -3288,10 +3143,10 @@ if (!defined('_TITLE_STATS_USER_LOG')) {
 }
 
 if (!defined('_DELETE_DOC')) {
-    define('_DELETE_DOC', 'Delete this document');
+    define('_DELETE_DOC', 'Delete this mail');
 }
 if (!defined('_THIS_DOC')) {
-    define('_THIS_DOC', 'This document');
+    define('_THIS_DOC', 'This mail');
 }
 if (!defined('_MODIFY_DOC')) {
     define('_MODIFY_DOC', 'Modify informations');
@@ -3304,62 +3159,20 @@ if (!defined('_CLOSE_MAIL')) {
 }
 
 /************** Réouverture courrier **************/
-if (!defined('_MAIL_SENTENCE2')) {
-    define('_MAIL_SENTENCE2', 'Entering the chronopost number or the EDM number of the document, you will modify the mail status.');
-}
-if (!defined('_MAIL_SENTENCE3')) {
-    define('_MAIL_SENTENCE3', 'This function has to purpose to change the status of the mail.');
-}
-if (!defined('_MAIL_SENTENCE4')) {
-    define('_MAIL_SENTENCE4', "The mail will be available in the users' basket to whom he was affected according to the status that you have defined.");
-}
-if (!defined('_MAIL_SENTENCE5')) {
-    define('_MAIL_SENTENCE5', 'of home/ welcome after the mail re-opening.');
-}
-if (!defined('_ENTER_DOC_ID')) {
-    define('_ENTER_DOC_ID', ' or the EDM number of the document');
-}
-if (!defined('_ENTER_REF_ID')) {
-    define('_ENTER_REF_ID', 'Enter a chronopost number');
-}
-if (!defined('_ENTER_REF_ID_OR_GED_ID')) {
-    define('_ENTER_REF_ID_OR_GED_ID', 'Please enter the chrono number or the EDM number of the document');
-}
+
 if (!defined('_REF_ID')) {
     define('_REF_ID', 'n° chrono');
 }
-if (!defined('_GED_ID')) {
-    define('_GED_ID', 'EDM number');
-}
-if (!defined('_TO_KNOW_ID')) {
-    define('_TO_KNOW_ID', 'To know the document ID, do a search or ask to the operator');
-}
 
-if (!defined('_REOPEN_MAIL')) {
-    define('_REOPEN_MAIL', 'Change of status mail');
-}
-if (!defined('_REOPEN_THIS_MAIL')) {
-    define('_REOPEN_THIS_MAIL', 'Mail re opening');
-}
-if (!defined('_MODIFICATION_FROM_THIS_MAIL')) {
-    define('_MODIFICATION_FROM_THIS_MAIL', 'Mail modification');
-}
-if (!defined('_MODIFICATION_OF_THE_STATUS_FROM_THIS_MAIL')) {
-    define('_MODIFICATION_OF_THE_STATUS_FROM_THIS_MAIL', 'Modification of the mail status by the administration. Passage to the status ');
-}
+
 if (!defined('_OWNER')) {
     define('_OWNER', 'Owner');
-}
-if (!defined('_CONTACT_OWNER_COMMENT')) {
-    define('_CONTACT_OWNER_COMMENT', 'Leave space to make this contact public.');
 }
 
 if (!defined('_OPT_INDEXES')) {
     define('_OPT_INDEXES', 'further information');
 }
-if (!defined('_COMPLEMENTARY_OPT')) {
-    define('_COMPLEMENTARY_OPT', 'Further options');
-}
+
 if (!defined('_NUM_BETWEEN')) {
     define('_NUM_BETWEEN', 'Between');
 }
@@ -3434,6 +3247,9 @@ if (!defined('_NO_PAGE')) {
 }
 if (!defined('_VALIDATE_QUALIF')) {
     define('_VALIDATE_QUALIF', 'Validation / certification');
+}
+if (!defined('_VALIDATE_QUALIF_DESC')) {
+    define('_VALIDATE_QUALIF_DESC', "Opens the edit page of a previously saved document (metadata can be edited from this page).");
 }
 if (!defined('_DB_CONNEXION_ERROR')) {
     define('_DB_CONNEXION_ERROR', 'Connection error to the database');
@@ -3514,7 +3330,7 @@ if (!defined('_GO_MANAGE_DOCSERVER')) {
     define('_GO_MANAGE_DOCSERVER', 'Modify');
 }
 if (!defined('_TASKS')) {
-    define('_TASKS', 'Available actions on the documents');
+    define('_TASKS', 'Available actions on the mails');
 }
 if (!defined('_PERIOD')) {
     define('_PERIOD', 'Period');
@@ -3861,9 +3677,7 @@ if (!defined('_PARAM_MLB_DOCTYPES_DESC')) {
 if (!defined('_WELCOME_TEXT_LOAD')) {
     define('_WELCOME_TEXT_LOAD', 'Text loading of the home page');
 }
-if (!defined('_REOPEN_MAIL_DESC')) {
-    define('_REOPEN_MAIL_DESC', 'Mail re-opening');
-}
+
 if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) {
     define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS', 'Wrong call or wrong configuration');
 }
@@ -3943,31 +3757,31 @@ if (!defined('_PUT_IN_COPY')) {
     define('_PUT_IN_COPY', 'Add on copy');
 }
 if (!defined('_LINK_TO_DOC')) {
-    define('_LINK_TO_DOC', 'link to a document');
+    define('_LINK_TO_DOC', 'link to a mail');
 }
 if (!defined('_LINK_REFERENCE')) {
-    define('_LINK_REFERENCE', 'To link, you have to choose an existing document');
+    define('_LINK_REFERENCE', 'To link, you have to choose an existing mail');
 }
 if (!defined('_LINKED_TO')) {
-    define('_LINKED_TO', 'Linked to a document ');
+    define('_LINKED_TO', 'Linked to a mail ');
 }
 if (!defined('_NOW_LINK_WITH_THIS_ONE')) {
-    define('_NOW_LINK_WITH_THIS_ONE', ' is now linked to this document');
+    define('_NOW_LINK_WITH_THIS_ONE', ' is now linked to this mail');
 }
 if (!defined('_ARE_NOW_LINK_WITH_THIS_ONE')) {
-    define('_ARE_NOW_LINK_WITH_THIS_ONE', ' are now linked to this document');
+    define('_ARE_NOW_LINK_WITH_THIS_ONE', ' are now linked to this mail');
 }
 if (!defined('_ARE_NOW_LINK_WITH_MANY_DOCUMENTS')) {
-    define('_ARE_NOW_LINK_WITH_MANY_DOCUMENTS', ' are link to many documents');
+    define('_ARE_NOW_LINK_WITH_MANY_DOCUMENTS', ' are link to many mails');
 }
 if (!defined('_LINK_TAB')) {
     define('_LINK_TAB', 'Connections');
 }
 if (!defined('_LINK_DESC_FOR')) {
-    define('_LINK_DESC_FOR', 'Document(s) linked to this documents');
+    define('_LINK_DESC_FOR', 'Document(s) linked to this mails');
 }
 if (!defined('_LINK_ASC_FOR')) {
-    define('_LINK_ASC_FOR', 'Document(s) which are linked to this document');
+    define('_LINK_ASC_FOR', 'Document(s) which are linked to this mail');
 }
 if (!defined('_ADD_A_LINK')) {
     define('_ADD_A_LINK', 'Add a connection');
@@ -3979,13 +3793,13 @@ if (!defined('_LINK_ALREADY_EXISTS')) {
     define('_LINK_ALREADY_EXISTS', 'This connection already exists');
 }
 if (!defined('_THE_DOCUMENT_LINK')) {
-    define('_THE_DOCUMENT_LINK', 'The document ');
+    define('_THE_DOCUMENT_LINK', 'The mail ');
 }
 if (!defined('_THE_DOCUMENTS_LINK')) {
-    define('_THE_DOCUMENTS_LINK', 'The documents ');
+    define('_THE_DOCUMENTS_LINK', 'The mails ');
 }
 if (!defined('_LINK_TO_THE_DOCUMENT')) {
-    define('_LINK_TO_THE_DOCUMENT', 'The document link ');
+    define('_LINK_TO_THE_DOCUMENT', 'The mail link ');
 }
 if (!defined('_NO_LINK_WITH_THIS_ONE')) {
     define('_NO_LINK_WITH_THIS_ONE', 'is no more linked to this one');
@@ -4028,7 +3842,7 @@ if (!defined('_DOCUMENTS_LIST_BY_MODIFICATION')) {
     define('_DOCUMENTS_LIST_BY_MODIFICATION', 'Filtered list by modification date');
 }
 if (!defined('_QUALIFY_FIRST')) {
-    define('_QUALIFY_FIRST', 'the detailed card is empty because the document has to be certified');
+    define('_QUALIFY_FIRST', 'the detailed card is empty because the mail has to be certified');
 }
 
 /******************** persistent mode ************/
@@ -4307,6 +4121,9 @@ if (!defined('_PRINT_DETAILS')) {
 if (!defined('_PRINT_DOC_DETAILS_FROM_SEARCH')) {
     define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Print the liaison sheets from the search');
 }
+if (!defined('_PRINT_DOC_FROM_LIST')) {
+    define('_PRINT_DOC_FROM_LIST', 'Print the mail liaison sheets');
+}
 if (!defined('_PRINT_LIST')) {
     define('_PRINT_LIST', 'Print the list');
 }
@@ -4314,7 +4131,7 @@ if (!defined('_PRINT_CATEGORY')) {
     define('_PRINT_CATEGORY', 'Category');
 }
 if (!defined('_PRINT_DOC_DATE')) {
-    define('_PRINT_DOC_DATE', 'Document date');
+    define('_PRINT_DOC_DATE', 'Mail date');
 }
 if (!defined('_PRINT_PROCESS_LIMIT_DATE')) {
     define('_PRINT_PROCESS_LIMIT_DATE', 'Processing deadline');
@@ -4350,7 +4167,7 @@ if (!defined('_CREATED_ON')) {
     define('_CREATED_ON', 'Created on');
 }
 if (!defined('_INFORMATIONS_OF_THE_DOCUMENT')) {
-    define('_INFORMATIONS_OF_THE_DOCUMENT', 'Datas on the document');
+    define('_INFORMATIONS_OF_THE_DOCUMENT', 'Datas on the mail');
 }
 if (!defined('_PRINT_ADMISSION_DATE')) {
     define('_PRINT_ADMISSION_DATE', 'Arrival date');
@@ -4396,7 +4213,7 @@ if (!defined('_CONTACT_INTERNAL')) {
 
 //DocLocker
 if (!defined('_DOC_LOCKER_RES_ID')) {
-    define('_DOC_LOCKER_RES_ID', 'you cannot open the document number');
+    define('_DOC_LOCKER_RES_ID', 'you cannot open the mail number');
 }
 if (!defined('_DOC_LOCKER_USER')) {
     define('_DOC_LOCKER_USER', ', is already handling by :');
@@ -4433,10 +4250,10 @@ if (!defined('_CHOOSE_CATEGORY_ASSOCIATION_HELP')) {
 
 //SERVICE VIEW DOC HISTORY
 if (!defined('_VIEW_DOC_HISTORY')) {
-    define('_VIEW_DOC_HISTORY', 'See global document history');
+    define('_VIEW_DOC_HISTORY', 'See global mail history');
 }
 if (!defined('_VIEW_FULL_HISTORY')) {
-    define('_VIEW_FULL_HISTORY', 'See Full document history');
+    define('_VIEW_FULL_HISTORY', 'See Full mail history');
 }
 
 //ONLY ALPHANUM
@@ -4450,6 +4267,11 @@ if (!defined('_ONLY_ALPHABETIC')) {
 if (!defined('_CLOSE_MAIL_AND_INDEX')) {
     define('_CLOSE_MAIL_AND_INDEX', 'Close a mail and launch the indexation');
 }
+
+if (!defined('_CLOSE_MAIL_AND_INDEX_DESC')) {
+    define('_CLOSE_MAIL_AND_INDEX_DESC', "Allows you to update the closing date of a mail ('closing_date' in the mlb_coll_ext table) AND opens the index page to save a new mail.");
+}
+
 if (!defined('_DOC_NOT_CLOSED')) {
     define('_DOC_NOT_CLOSED', 'This mail is not closed');
 }

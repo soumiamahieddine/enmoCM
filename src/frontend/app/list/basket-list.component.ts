@@ -11,15 +11,10 @@ import { startWith, switchMap, map, catchError } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
-import { NotesListComponent } from '../notes/notes.component';
-import { AttachmentsListComponent } from '../attachments/attachments-list.component';
-import { DiffusionsListComponent } from '../diffusions/diffusions-list.component';
 import { FiltersToolComponent } from './filters/filters-tool.component';
 
 import { ActionsListComponent } from '../actions/actions-list.component';
 import { Overlay } from '@angular/cdk/overlay';
-import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
-import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 import { BasketHomeComponent } from '../basket/basket-home.component';
 import { PanelListComponent } from './panel/panel-list.component';
 
@@ -176,7 +171,7 @@ export class BasketListComponent implements OnInit {
                     this.allResInBasket = data.allResources;
                     this.currentBasketInfo.basket_id = data.basket_id;
                     this.defaultAction = data.defaultAction;
-                    this.headerService.setHeader(data.basketLabel, this.resultsLength + ' ' + this.lang.entries);
+                    this.headerService.setHeader(data.basketLabel);
                     return data.resources;
                 }),
                 catchError((err: any) => {
@@ -225,12 +220,10 @@ export class BasketListComponent implements OnInit {
 
     refreshBadgeNotes(nb: number) {
         this.currentResource.countNotes = nb;
-    }
+    }                                     
 
-    openAttachSheet(row: any): void {
-        this.bottomSheet.open(AttachmentsListComponent, {
-            data: { resId: row.res_id, chrono: row.alt_identifier },
-        });
+    refreshBadgeAttachments(nb: number) {
+        this.currentResource.countAttachments = nb;
     }
 
     refreshDao() {

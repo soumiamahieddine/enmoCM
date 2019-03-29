@@ -11,7 +11,6 @@
     title="{{this.currentResource.subject}}">
     {{this.currentResource.subject | shorten: 50: '...'}}
 </div>
-
 <mat-tab-group *ngIf="this.mode == 'diffusion'" [(selectedIndex)]="selectedDiffusionTab" class="diffusionTab">
     <mat-tab label="{{lang.diffusionList}}">
         <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
@@ -23,5 +22,5 @@
         <app-avis-workflow #appAvisWorkflow [injectDatas]="injectDatasParam"></app-avis-workflow>
     </mat-tab>
 </mat-tab-group>
-
 <app-notes-list #appNotesList *ngIf="this.mode == 'note'" [injectDatas]="injectDatasParam" (reloadBadgeNotes)="reloadBadgeNotes($event)"></app-notes-list>
+<app-attachments-list #appAttachmentsList *ngIf="this.mode == 'attachment'" [injectDatas]="injectDatasParam" (reloadBadgeAttachments)="reloadBadgeAttachments($event)"></app-attachments-list>

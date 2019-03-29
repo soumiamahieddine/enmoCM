@@ -52,12 +52,6 @@ if (!defined("_INDEX_ATTACHMENT")) {
 if (!defined("_INDEX_ATTACHMENT_DESC")) {
     define("_INDEX_ATTACHMENT_DESC", "Indexer une pièce jointe");
 }
-if (!defined("_ATTACH_TO_DOC")) {
-    define("_ATTACH_TO_DOC", "Attacher en réponse à un courrier existant");
-}
-if (!defined("_ATTACH_TO_DOC_NUM")) {
-    define("_ATTACH_TO_DOC_NUM", "attaché au document n°");
-}
 if (!defined("_VIEW_ATTACHMENTS")) {
     define("_VIEW_ATTACHMENTS", "Voir les pièces jointes");
 }
@@ -283,7 +277,7 @@ if (!defined('_GENERATE_CHRONO_NUMBER')) {
     define('_GENERATE_CHRONO_NUMBER', 'Génerer un numéro de chrono');
 }
 if (!defined('_CLOSE_INCOMING')) {
-    define('_CLOSE_INCOMING', 'Cloturer le(s) document cible');
+    define('_CLOSE_INCOMING', 'Cloturer le(s) courrier(s) cible(s)');
 }
 if (!defined('_PLEASE_GENERATE_CHRONO_NUMBER')) {
     define('_PLEASE_GENERATE_CHRONO_NUMBER', 'Merci de générer un numéro de chrono');

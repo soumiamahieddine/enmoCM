@@ -1,9 +1,8 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-
     <mat-sidenav-container class="example-container">
         <mat-sidenav #snavLeft mode="side" opened class="panel-left" #snav [mode]="mobileMode ? 'over' : 'side'"
-            [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true" autoFocus="false"
-            style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '400px'}">
+            [fixedInViewport]="mobileMode" [opened]="mobileMode ? false : true" autoFocus="false"
+            style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '350px'}">
+            <header-panel [snavLeft]="snav"></header-panel>
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <basket-home *ngIf="homeData" #basketHome [homeData]="homeData" [snavL]="snav"
@@ -12,37 +11,23 @@
         </mat-sidenav>
         <mat-sidenav-content>
             <div class="bg-head">
-                <div class="bg-head-title">
+                <div class="bg-head-title" [class.customContainerRight]="mobileMode">
                     <div class="bg-head-title-label">
-                        <!--<button *ngIf="!snavLeft.opened" mat-icon-button (click)="snavLeft.open()" style="position: absolute;margin-left: -35px;">
-                        <mat-icon class="fa fa-bars"></mat-icon>
-                    </button>
-                    <b>Utilisateur</b>&nbsp;| Couriers à traiter-->
+                        <header-left [snavLeft]="snav"></header-left>
                     </div>
                     <div class="bg-head-title-tool">
-                        <!--<button mat-icon-button>
-                        <mat-icon class="fa fa-search"></mat-icon>
-                    </button>
-                    <button mat-icon-button [matMenuTriggerFor]="menu">
-                        <mat-icon class="fa fa-th"></mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item>Item 1</button>
-                        <button mat-menu-item>Item 2</button>
-                    </mat-menu>
-                    <mat-icon class="fa fa-user"></mat-icon>&nbsp;
-                    <span> Alex ORLUC</span>-->
+                       <header-right></header-right>
                     </div>
                 </div>
-                <div class="bg-head-content">
-                    <app-filters-tool style="flex:1;" #filtersTool [currentBasketInfo]="currentBasketInfo"
+                <div class="bg-head-content" [class.fullContainer]="mobileMode">
+                    <app-filters-tool style="flex:1;overflow-x: auto;overflow-y: hidden;" #filtersTool [currentBasketInfo]="currentBasketInfo"
                         [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
                         [selectedRes]="selectedRes" (toggleAllRes)="toggleAllRes($event)"
                         (refreshEventAfterAction)="refreshDaoAfterAction()" (refreshEvent)="refreshDao()">
                     </app-filters-tool>
                 </div>
             </div>
-            <div class="container">
+            <div class="container" [class.fullContainer]="mobileMode">
                 <div class="container-content">
                     <div class="example-loading-shade" *ngIf="isLoadingResults">
                         <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
@@ -80,9 +65,9 @@
 
                             <ng-container matColumnDef="res_id">
                                 <td mat-cell *matCellDef="let row"
-                                    style="padding:0;border-top: solid 1px rgba(0, 0, 0, 0.12);"
-                                    [class.selected-data]="row.checked">
-                                    <div *ngIf="!snav2.opened" class="sub-info">
+                                    style="padding:0;border-top: solid 1px rgba(0, 0, 0, 0.12);cursor:pointer;"
+                                    [class.selected-data]="row.checked" (click)="launch(defaultAction,row);">
+                                    <div *ngIf="!snav2.opened && !mobileMode && row.display.length > 0" class="sub-info">
                                         <span class="sub-info-data" [class]="data.cssClasses.join(' ')"
                                             *ngFor="let data of row.display" style="flex:1;white-space: pre;
                                     overflow: hidden;
@@ -112,7 +97,7 @@
                                             </ng-container>
                                             <ng-container *ngIf="data.value == 'getCategory'">
                                                 <span *ngIf="!lang[data.displayValue]" style="opacity: 0.5"
-                                                    title="id: {{data.displayValue}}">_UNDEFINED</span>
+                                                    title="id: {{data.displayValue}}">{{lang.undefined}}</span>
                                                 <span *ngIf="lang[data.displayValue]"
                                                     title="{{lang[data.displayValue]}}">{{lang[data.displayValue]}}</span>
                                             </ng-container>
@@ -131,12 +116,12 @@
                                                 (change)="toggleRes($event,row)" (click)="$event.stopPropagation();">
                                             </mat-checkbox>
                                         </span>
-                                        <span class="main-info-status">
+                                        <span *ngIf="!mobileMode" class="main-info-status">
                                             <mat-icon [ngStyle]="{'color': row.priorityColor}" color="primary"
                                                 class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
                                             </mat-icon>
                                         </span>
-                                        <span class="main-info-data" style="width:200px;text-align:center;">
+                                        <span *ngIf="!mobileMode" class="main-info-data" style="width:200px;text-align:center;">
                                             <ng-container
                                                 *ngIf="row.alt_identifier == lang.undefined && row.barcode != lang.undefined">
                                                 <span style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
@@ -159,7 +144,7 @@
                                                 </mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.attachments}}"
-                                                (click)="$event.stopPropagation();openAttachSheet(row)"
+                                                (click)="$event.stopPropagation();togglePanel('attachment',row)"
                                                 [class.noData]="row.countAttachments == 0">
                                                 <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas"
                                                     matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x">
@@ -187,8 +172,8 @@
                 </div>
             </div>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 mode="side" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" position='end'
-            [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;"
+        <mat-sidenav #snav2 [fixedInViewport]="mobileQuery.matches" position='end'
+            [opened]="mobileQuery.matches ? false : false" [mode]="mobileMode ? 'over' : 'side'" class="panel-right" style="overflow-x:hidden;"
             [class.docView]="!filtersListService.filterMode" [ngStyle]="{'width': mobileMode ? '80%' : '30%'}"
             autoFocus="false">
             <div *ngIf="innerHtml && !filtersListService.filterMode" [matTooltip]="currentChrono"
@@ -203,7 +188,6 @@
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>
-</div>
-<app-actions-list (triggerEvent)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true"
-    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo">
-</app-actions-list>
+    <app-actions-list (triggerEvent)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true"
+        [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo">
+    </app-actions-list>

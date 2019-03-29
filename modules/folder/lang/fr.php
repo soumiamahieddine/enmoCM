@@ -24,10 +24,10 @@ if (!defined("_ADMIN_FOLDERTYPES")) {
     define("_ADMIN_FOLDERTYPES", "Types de dossier");
 }
 if (!defined("_ATTACH_DOC_TO_FOLDER")) {
-    define("_ATTACH_DOC_TO_FOLDER", "Rattacher un document à un dossier");
+    define("_ATTACH_DOC_TO_FOLDER", "Rattacher un courrier à un dossier");
 }
 if (!defined("_ADMIN_FOLDERTYPES_DESC")) {
-    define("_ADMIN_FOLDERTYPES_DESC", "Administrer les types de dossier. Définir pour chaque type les qualificateurs liés et les types de documents obligatoires pour la complétude du dossier.");
+    define("_ADMIN_FOLDERTYPES_DESC", "Administrer les types de dossier. Définir pour chaque type les qualificateurs liés et les types de document obligatoires pour la complétude du dossier.");
 }
 
 /*********************** Menu ***********************************/
@@ -376,7 +376,7 @@ if (!defined("_FOLDER_UPDATED")) {
     define("_FOLDER_UPDATED", "Mise à jour du dossier effectuée");
 }
 if (!defined("_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED")) {
-    define("_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED", "tous les documents de ce dossier, ainsi que tous les sous-dossiers seront également supprimés !");
+    define("_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED", "tous les courriers de ce dossier, ainsi que tous les sous-dossiers seront également supprimés !");
 }
 if (!defined("_NOT_THE_OWNER_OF_THIS_FOLDER")) {
     define("_NOT_THE_OWNER_OF_THIS_FOLDER", "Vous devez être le propriétaire du dossier. Pour supprimer, veuillez consulter l administrateur ou demander à l utilisateur ");
@@ -466,10 +466,10 @@ if (!defined("_SEARCH_FOLDER_TREE")) {
     define("_SEARCH_FOLDER_TREE", "Recherche Dossiers");
 }
 if (!defined("_NB_DOCS_IN_FOLDER")) {
-    define("_NB_DOCS_IN_FOLDER", "Nombre de documents");
+    define("_NB_DOCS_IN_FOLDER", "Nombre de courriers");
 }
 if (!defined("_REDIRECT_ALL_DOCUMENTS_IN_FOLDER")) {
-    define("_REDIRECT_ALL_DOCUMENTS_IN_FOLDER", "Rediriger tous les documents du dossier");
+    define("_REDIRECT_ALL_DOCUMENTS_IN_FOLDER", "Rediriger tous les courriers du dossier");
 }
 if (!defined("_CHOOSE_ONE_FOLDER")) {
     define("_CHOOSE_ONE_FOLDER", "Choisissez au moins un dossier");

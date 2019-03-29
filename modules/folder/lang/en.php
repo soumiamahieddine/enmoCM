@@ -24,7 +24,7 @@ if (!defined("_ADMIN_FOLDERTYPES")) {
     define("_ADMIN_FOLDERTYPES", "Types of folders");
 }
 if (!defined("_ATTACH_DOC_TO_FOLDER")) {
-    define("_ATTACH_DOC_TO_FOLDER", "Attach a document to a folder");
+    define("_ATTACH_DOC_TO_FOLDER", "Attach a mail to a folder");
 }
 if (!defined("_ADMIN_FOLDERTYPES_DESC")) {
     define("_ADMIN_FOLDERTYPES_DESC", "Administrate folder's types. For each type, define the linked qualifiers and the mandatory folder's types for the folder completeness.");
@@ -375,7 +375,7 @@ if (!defined("_FOLDER_UPDATED")) {
     define("_FOLDER_UPDATED", "Folder's update done");
 }
 if (!defined("_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED")) {
-    define("_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED", "All the documents from this folder and all the sub folders will also be erased !");
+    define("_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED", "All the mails from this folder and all the sub folders will also be erased !");
 }
 if (!defined("_STRING")) {
     define("_STRING", "Characters chain");
@@ -465,7 +465,7 @@ if (!defined("_NB_DOCS_IN_FOLDER")) {
     define("_NB_DOCS_IN_FOLDER", "Files number");
 }
 if (!defined("_REDIRECT_ALL_DOCUMENTS_IN_FOLDER")) {
-    define("_REDIRECT_ALL_DOCUMENTS_IN_FOLDER", "Redirect all folder's documents");
+    define("_REDIRECT_ALL_DOCUMENTS_IN_FOLDER", "Redirect all folder's mails");
 }
 if (!defined("_CHOOSE_ONE_FOLDER")) {
     define("_CHOOSE_ONE_FOLDER", "Choose one folder at least");

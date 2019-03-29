@@ -60,9 +60,9 @@ export class FiltersListService {
                 'statuses': [],
             };
             this.listsProperties.push(listProperties);
+            this.listsPropertiesIndex = this.listsProperties.length -1;
             this.saveListsProperties();
         }
-
         return listProperties;
     }
 

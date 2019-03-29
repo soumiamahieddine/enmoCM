@@ -24,6 +24,7 @@
         <url></url>
         <method>POST</method>
         <header></header>
+        <file>filename</file>
         <sendInObject>
             <objectName>requete</objectName>
             <rawData>
@@ -59,7 +60,7 @@
             <objectName>citoyen</objectName>
             <rawData>
                 <key>id</key>
-                <value>external_contact_id</value>
+                <value>external_id</value>
             </rawData>
             <rawData>
                 <key>externalId</key>
@@ -68,7 +69,6 @@
         </sendInObject>
         <return>
             <key>id</key>
-            <value>custom_t1</value>
         </return>
     </call>
     <call>
@@ -105,6 +105,10 @@
         <sendInObject>
             <objectName>citoyen</objectName>
             <rawData>
+                <key>num</key>
+                <value>address_num</value>
+            </rawData>
+            <rawData>
                 <key>street</key>
                 <value>address_street</value>
             </rawData>
@@ -117,8 +121,24 @@
                 <value>address_town</value>
             </rawData>
             <rawData>
+                <key>additionalAddress</key>
+                <value>address_complement</value>
+            </rawData>
+            <rawData>
+                <key>country</key>
+                <value>address_country</value>
+            </rawData>
+            <rawData>
                 <key>email</key>
                 <value>email</value>
+            </rawData>
+            <rawData>
+                <key>phone</key>
+                <value>phone</value>
+            </rawData>
+            <rawData>
+                <key>familyName</key>
+                <value>contact_lastname</value>
             </rawData>
             <rawData>
                 <key>usualName</key>
@@ -128,6 +148,18 @@
                 <key>firstname</key>
                 <value>contact_firstname</value>
             </rawData>
+            <rawData>
+                <key>company</key>
+                <value>society</value>
+            </rawData>
+            <rawData>
+                <key>externalId</key>
+                <value>contact_id</value>
+            </rawData>
+            <rawData>
+                <key>externalId2</key>
+                <value>ca_id</value>
+            </rawData>
             <data>
                 <key>cityId</key>
                 <value>73</value>
@@ -135,8 +167,81 @@
         </sendInObject>
         <return>
             <key>id</key>
-            <value>external_contact_id</value>
         </return>
+    </call>
+    <call>
+        <id>updateContactToExternalApplication</id>
+        <enabled>false</enabled>
+        <url></url>
+        <method>POST-LOCALEO</method>
+        <header></header>
+        <sendInObject>
+            <objectName>citoyen</objectName>
+            <rawData>
+                <key>id</key>
+                <value>external_id</value>
+            </rawData>
+            <rawData>
+                <key>num</key>
+                <value>address_num</value>
+            </rawData>
+            <rawData>
+                <key>street</key>
+                <value>address_street</value>
+            </rawData>
+            <rawData>
+                <key>ZC</key>
+                <value>address_postal_code</value>
+            </rawData>
+            <rawData>
+                <key>city</key>
+                <value>address_town</value>
+            </rawData>
+            <rawData>
+                <key>additionalAddress</key>
+                <value>address_complement</value>
+            </rawData>
+            <rawData>
+                <key>country</key>
+                <value>address_country</value>
+            </rawData>
+            <rawData>
+                <key>email</key>
+                <value>email</value>
+            </rawData>
+            <rawData>
+                <key>phone</key>
+                <value>phone</value>
+            </rawData>
+            <rawData>
+                <key>familyName</key>
+                <value>contact_lastname</value>
+            </rawData>
+            <rawData>
+                <key>usualName</key>
+                <value>contact_lastname</value>
+            </rawData>
+            <rawData>
+                <key>firstname</key>
+                <value>contact_firstname</value>
+            </rawData>
+            <rawData>
+                <key>company</key>
+                <value>society</value>
+            </rawData>
+            <rawData>
+                <key>externalId</key>
+                <value>contact_id</value>
+            </rawData>
+            <rawData>
+                <key>externalId2</key>
+                <value>ca_id</value>
+            </rawData>
+            <data>
+                <key>cityId</key>
+                <value>73</value>
+            </data>
+        </sendInObject>
     </call>
     <call>
         <id>closeResource</id>

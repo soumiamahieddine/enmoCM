@@ -213,10 +213,6 @@ if (!defined("_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE"))
     define("_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE", "Notification mails will be sent to all users from the diffusion list (main recipient and copies)");
 if (!defined("_DIFFUSION_LIST"))
     define("_DIFFUSION_LIST", "Diffusion list");
-if (!defined("_NOTIFICATIONS_DEST_USER_DIFF_TYPE"))
-    define("_NOTIFICATIONS_DEST_USER_DIFF_TYPE", "Mailing to the document main recipient");
-if (!defined("_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS"))
-    define("_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS", "Mailing to main recipient of the file with status");
 if (!defined("_DEST_USER"))
     define("_DEST_USER", "Main recipient");
 if (!defined("_NOTE_DEST_USER"))

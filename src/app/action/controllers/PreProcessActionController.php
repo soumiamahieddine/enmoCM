@@ -18,7 +18,6 @@ use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
-use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
 use Entity\models\EntityModel;
@@ -29,10 +28,12 @@ use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
+use Shipping\controllers\ShippingTemplateController;
 use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use Template\models\TemplateModel;
 use User\models\UserEntityModel;
@@ -342,15 +343,20 @@ class PreProcessActionController
         //     return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         // }
 
+        $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
+        if (empty($mailevaConfig)) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => _MAILEVA_CONFIG_DOES_NOT_EXIST]);
+        }
+
         $data = $request->getParsedBody();
 
         if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+            return $response->withStatus(400)->withJson(['errors' => _DATA_RESOURCES_FORMAT]);
         }
 
         $data['resources'] = array_slice($data['resources'], 0, 500);
         if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Almost one resource is out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => _DOCUMENT_OUT_PERIMETER]);
         }
 
         $aDestination = ResModel::get([
@@ -371,13 +377,13 @@ class PreProcessActionController
         }
 
         if (!empty($entities)) {
-            $aEntities = EntityModel::get(['select' => ['id'], 'where' => ['entity_id in (?)'], 'data' => $entities]);
+            $aEntities = EntityModel::get(['select' => ['id', 'entity_label'], 'where' => ['entity_id in (?)'], 'data' => $entities]);
 
             $entitiesId = [];
+            $entitiesInfos = [];
             foreach ($aEntities as $value) {
-                if (!empty($value['id'])) {
-                    $entitiesId[] = (string)$value['id'];
-                }
+                $entitiesId[] = (string)$value['id'];
+                $entitiesInfos[] = $value['entity_label'];
             }
 
             $aTemplates = ShippingTemplateModel::getByEntities([
@@ -397,49 +403,48 @@ class PreProcessActionController
                 $resIdFound = false;
                 foreach ($aAttachments as $key => $attachment) {
                     if ($attachment['res_id_master'] == $valueResId) {
+                        $resIdFound = true;
                         if (empty($attachment['dest_address_id'])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'No contact attached'];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _NO_CONTACT_ATTACHED_FOR . ' : ' . $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$attachment['dest_address_id']]]);
                         if (empty($contact[0])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'No contact attached'];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _NO_CONTACT_ATTACHED_FOR . ' : ' . $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Only France available'];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _ONLY_FRANCE_AVAILABLE_FOR . ' : ' . $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $afnorAddress = ContactController::getContactAfnor($contact[0]);
                         if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Incomplete address'];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _INCOMPETE_ADDRESS_FOR . ' : ' . $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
 
                         $resources[] = $attachment;
-                        $resIdFound = true;
                         unset($aAttachments[$key]);
-                        break;
                     }
                 }
 
                 if (!$resIdFound) {
                     $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                    $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'Not attachment to send'];
+                    $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _NO_ATTACHMENT_TO_SEND];
                 }
             }
     
             foreach ($aTemplates as $key => $value) {
                 if (!empty($resources)) {
-                    $templateFee = PreProcessActionController::calculFee([
+                    $templateFee = ShippingTemplateController::calculShippingFee([
                         'fee'       => $value['fee'],
                         'resources' => $resources
                     ]);
@@ -452,7 +457,7 @@ class PreProcessActionController
 
         return $response->withJson([
             'shippingTemplates' => $aTemplates,
-            'entities'          => $entities,
+            'entities'          => $entitiesInfos,
             'resources'         => $resources,
             'canNotSend'        => $canNotSend
         ]);
@@ -479,31 +484,5 @@ class PreProcessActionController
         }
 
         return $response->withJson(['isDestinationChanging' => $changeDestination]);
-    }
-
-    public static function calculFee(array $aArgs)
-    {
-        $fee = 0;
-        foreach ($aArgs['resources'] as $value) {
-            $realId = 0;
-            if ($value['res_id'] == 0) {
-                $realId = $value['res_id_version'];
-                $isVersion = true;
-            } elseif ($value['res_id_version'] == 0) {
-                $realId = $value['res_id'];
-                $isVersion = false;
-            }
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $value['res_id'], 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
-            $docserver           = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment['docserver_id'], 'select' => ['path_template']]);
-            $pathToDocument      = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment['path']) . $convertedAttachment['filename'];
-
-            $pdf = new Fpdi();
-            $pageCount = $pdf->setSourceFile($pathToDocument);
-
-            $attachmentFee = ($pageCount > 1) ? ($pageCount - 1) * $aArgs['fee']['nextPagePrice'] : 0 ;
-            $fee = $fee + $attachmentFee + $aArgs['fee']['firstPagePrice'] + $aArgs['fee']['postagePrice'];
-        }
-
-        return $fee;
     }
 }

@@ -4,6 +4,7 @@ import { DiffusionsListComponent } from '../../diffusions/diffusions-list.compon
 import { VisaWorkflowComponent } from '../../visa/visa-workflow.component';
 import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
 import { NotesListComponent } from '../../notes/notes.component';
+import { AttachmentsListComponent } from '../../attachments/attachments-list.component';
 
 declare function $j(selector: any): any;
 
@@ -29,11 +30,13 @@ export class PanelListComponent implements OnInit {
     currentResource: any = {};
 
     @Output('refreshBadgeNotes') refreshBadgeNotes = new EventEmitter<string>();
+    @Output('refreshBadgeAttachments') refreshBadgeAttachments = new EventEmitter<string>();
 
     @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
     @ViewChild('appVisaWorkflow') appVisaWorkflow: VisaWorkflowComponent;
     @ViewChild('appAvisWorkflow') appAvisWorkflow: AvisWorkflowComponent;
     @ViewChild('appNotesList') appNotesList: NotesListComponent;
+    @ViewChild('appAttachmentsList') appAttachmentsList: AttachmentsListComponent;
 
     constructor() { }
 
@@ -65,10 +68,19 @@ export class PanelListComponent implements OnInit {
             setTimeout(() => {
                 $j('textarea').focus();
             }, 200);
+        } else if (mode == 'attachment') {
+            setTimeout(() => {
+                this.icon = 'fa-paperclip';
+                this.appAttachmentsList.loadAttachments(this.currentResource.res_id);
+            }, 0);
         }
     }
 
     reloadBadgeNotes(nb:any) {
         this.refreshBadgeNotes.emit(nb);
+    }
+
+    reloadBadgeAttachments(nb:any) {
+        this.refreshBadgeAttachments.emit(nb);
     }
 }

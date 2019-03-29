@@ -10,7 +10,7 @@ if (!defined('_ADMIN_FOLDERTYPES')) {
     define('_ADMIN_FOLDERTYPES', 'Maptypes');
 }
 if (!defined('_ATTACH_DOC_TO_FOLDER')) {
-    define('_ATTACH_DOC_TO_FOLDER', 'Een document aan een map koppelen');
+    define('_ATTACH_DOC_TO_FOLDER', 'Een brief aan een map koppelen');
 }
 if (!defined('_ADMIN_FOLDERTYPES_DESC')) {
     define('_ADMIN_FOLDERTYPES_DESC', 'De maptypes beheren. Voor elk type de gekoppelde kwalificatoren en de verplichte documenttypes bepalen voor de volledigheid van de map.');
@@ -337,7 +337,7 @@ if (!defined('_FOLDER_UPDATED')) {
     define('_FOLDER_UPDATED', 'Update van map uitgevoerd');
 }
 if (!defined('_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED')) {
-    define('_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED', 'alle documenten van deze map en alle submappen zullen eveneens verwijderd worden!');
+    define('_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED', 'alle brieven van deze map en alle submappen zullen eveneens verwijderd worden!');
 }
 if (!defined('_NOT_THE_OWNER_OF_THIS_FOLDER')) {
     define('_NOT_THE_OWNER_OF_THIS_FOLDER', 'U moet de eigenaar van de map zijn. Om te verwijderen, gelieve de administrator te raadplegen of aan de gebruiker te vragen');
@@ -427,7 +427,7 @@ if (!defined('_SEARCH_FOLDER_TREE')) {
     define('_SEARCH_FOLDER_TREE', 'Mappen zoeken');
 }
 if (!defined('_NB_DOCS_IN_FOLDER')) {
-    define('_NB_DOCS_IN_FOLDER', 'Aantal documenten');
+    define('_NB_DOCS_IN_FOLDER', 'Aantal brieven');
 }
 if (!defined('_IS_FOLDER_BASKET')) {
     define('_IS_FOLDER_BASKET', 'Mapbakje');
@@ -442,7 +442,7 @@ if (!defined('_IS_FOLDER_ACTION_DESC')) {
     define('_IS_FOLDER_ACTION_DESC', 'Om deze actie in een mapbakje te gebruiken');
 }
 if (!defined('_REDIRECT_ALL_DOCUMENTS_IN_FOLDER')) {
-    define('_REDIRECT_ALL_DOCUMENTS_IN_FOLDER', 'Alle documenten van de map omleiden');
+    define('_REDIRECT_ALL_DOCUMENTS_IN_FOLDER', 'Alle brieven van de map omleiden');
 }
 if (!defined('_CHOOSE_ONE_FOLDER')) {
     define('_CHOOSE_ONE_FOLDER', 'Kies minstens een map');
