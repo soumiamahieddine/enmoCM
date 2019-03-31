@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, HostListener, Directive } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -14,8 +14,10 @@ export class AttachmentsListComponent implements OnInit {
     lang: any = LANG;
     attachments: any;
     attachmentTypes: any;
+    attachmentTypesList: any[] = [];
     loading: boolean = true;
     resIds: number[] = [];
+    pos = 0;
     @Input('injectDatas') injectDatas: any;
     @Output('reloadBadgeAttachments') reloadBadgeNotes = new EventEmitter<string>();
 
@@ -30,9 +32,16 @@ export class AttachmentsListComponent implements OnInit {
             .subscribe((data: any) => {
                 this.attachments = data.attachments;
                 this.attachments.forEach((element: any) => {
+                    element.typeLabel = data.attachmentTypes[element.attachment_type].label;
                     element.thumbnailUrl = '../../rest/res/' + this.resIds[0] + '/attachments/' + element.res_id + '/thumbnail';
                 });
                 this.attachmentTypes = data.attachmentTypes;
+                Object.keys(this.attachmentTypes).forEach((element: any) => {
+                    this.attachmentTypesList.push({
+                        id: element,
+                        label: this.attachmentTypes[element].label
+                    });
+                });
                 this.reloadBadgeNotes.emit(`${this.attachments.length}`);
                 this.loading = false;
             });

@@ -2,13 +2,101 @@
     <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
         {{lang.noAttachement}}
     </div>
-    <mat-card *ngFor="let attachment of attachments" [style.background-image]="'url('+attachment.thumbnailUrl+')'"
-        style="padding:0;margin: 30px;min-height: 250px;background-size: cover;">
-        <a mat-mini-fab color="primary" class="downloadButton" title="Télécharger le fichier original" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resIds[0]}}&id={{attachment.res_id}}" target="_blank">
-            <mat-icon fontSet="fas" fontIcon="fa-download fa-2x"></mat-icon>
+    <mat-form-field floatLabel="never" style="padding-left:20px;padding-right:20px;">
+            <input matInput placeholder="Rechercher par type de pièce jointe" #listFilter>
+        </mat-form-field>
+    <mat-card *ngFor="let attachment of attachments | filterList:listFilter.value:'typeLabel'" [style.background-image]="'url('+attachment.thumbnailUrl+')'"
+        style="padding:0;margin: 30px;min-height: 300px;background-size: cover;">
+        <a mat-mini-fab color="primary" class="downloadButton" title="Télécharger le fichier original"
+            href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resIds[0]}}&id={{attachment.res_id}}"
+            target="_blank">
+            .{{attachment.format}}
         </a>
+        <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-raised-button
+            [matMenuTriggerFor]="menu">Version {{attachment.relation}}</button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>Version 1</button>
+            <button mat-menu-item>Version 2</button>
+        </mat-menu>
+        <button color="primary" class="actionsButton" mat-mini-fab [matMenuTriggerFor]="menuPjAction">
+            <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v"></mat-icon>
+        </button>
+        <mat-menu #menuPjAction="matMenu">
+            <button mat-menu-item disabled>Intégrer au parapheur</button>
+            <button mat-menu-item disabled>Intégrer aux envois</button>
+        </mat-menu>
+
         <div class="infosPj">
-            <div class="line subInfos">
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="subInfos">
+                            <div class="col-md-6" title="{{attachment.identifier}} (n°{{attachment.res_id}})">
+                                {{attachment.identifier}}
+                            </div>
+                            <div class="col-md-6" title="{{attachmentTypes[attachment.attachment_type].label}}"
+                                style="text-align:center;flex: 1;">
+                                {{attachmentTypes[attachment.attachment_type].label}}
+                            </div>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput title='{{attachment.creation_date | date : "le dd/MM/y à HH:mm"}}'
+                                [value]="attachment.creation_date | timeAgo" placeholder="Créé le" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput [value]="attachment.firstname_typist+' '+attachment.lastname_typist"
+                                placeholder="Par" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput [value]="attachment.status" placeholder="Statut" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput [value]="attachment.title" placeholder="Objet" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6" *ngIf="attachment.return_date != null">
+                        <mat-form-field>
+                            <input matInput title='{{attachment.return_date | date : "le dd/MM/y à HH:mm"}}'
+                                [value]="attachment.return_date | timeAgo" placeholder="Date de retour attendue"
+                                disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6" *ngIf="attachment.return_date != null">
+                        <mat-form-field>
+                            <input matInput title='{{attachment.effective_date | date : "le dd/MM/y à HH:mm"}}'
+                                [value]="attachment.effective_date | timeAgo" placeholder="Date de retour" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-12">
+                        <mat-form-field>
+                            <input matInput [value]="attachment.contact" placeholder="Pour" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="attachment.update_date != null" class="col-md-6">
+                        <mat-form-field>
+                            <input matInput title='{{attachment.update_date | date : "le dd/MM/y à HH:mm"}}'
+                                [value]="attachment.update_date | timeAgo" placeholder="Modifié le" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="attachment.update_date != null" class="col-md-6">
+                        <mat-form-field>
+                            <input matInput [value]="attachment.firstname_updated+' '+attachment.lastname_updated"
+                                placeholder="Par" disabled>
+                        </mat-form-field>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+            <!-- div class="line subInfos">
                 <div title="{{attachment.identifier}} (n°{{attachment.res_id}})">{{attachment.identifier}}</div>
                 <div title="{{attachmentTypes[attachment.attachment_type].label}}" style="text-align:center;">
                     {{attachmentTypes[attachment.attachment_type].label}}
@@ -39,7 +127,7 @@
                         title='{{attachment.effective_date | date : "le dd/MM/y à HH:mm"}}'
                         [innerHTML]="attachment.effective_date | timeAgo"></span>
                 </div>
-            </div>
+            </div> -->
         </div>
     </mat-card>
 </ng-container>
