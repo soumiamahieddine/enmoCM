@@ -14,6 +14,7 @@ import { DragDropModule }                         from '@angular/cdk/drag-drop';
 import { PdfViewerModule }                      from 'ng2-pdf-viewer';
 //import { SimplePdfViewerModule }                from 'simple-pdf-viewer';
 import { NgStringPipesModule }                  from 'ngx-pipes';
+import { LatinisePipe }                         from 'ngx-pipes';
 import { CookieService }                        from 'ngx-cookie-service';
 import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
 import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe';
@@ -107,6 +108,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         DragDropModule
     ],
     providers: [
+        LatinisePipe,
         CookieService,
         {
             provide: HAMMER_GESTURE_CONFIG,
