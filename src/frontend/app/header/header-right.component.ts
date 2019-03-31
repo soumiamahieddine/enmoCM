@@ -21,6 +21,8 @@ export class HeaderRightComponent implements OnInit {
     dialogRef   : MatDialogRef<any>;
     config      : any       = {};
 
+    hideSearch : boolean = true;
+
     constructor(public http: HttpClient, private router: Router, public headerService: HeaderService, public dialog: MatDialog) {
         this.mobileMode = angularGlobals.mobileMode;
      }

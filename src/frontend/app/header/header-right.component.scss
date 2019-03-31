@@ -1,0 +1,11 @@
+.bg-head-title-tool {
+    display: flex;
+
+    ::ng-deep.mat-form-field-label-wrapper {
+        font-style: italic;
+    }
+
+    ::ng-deep .mat-form-field-label {
+        color: white;
+    }
+}
