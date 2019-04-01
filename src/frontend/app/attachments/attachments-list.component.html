@@ -1,30 +1,31 @@
 <ng-container *ngIf="!loading">
     <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
-        {{lang.noAttachement}}
+        {{lang.noAttachment}}
     </div>
-    <mat-form-field floatLabel="never" style="padding-left:20px;padding-right:20px;">
-            <input matInput placeholder="{{lang.searchByAttachmentType}}" #listFilter>
-        </mat-form-field>
+    <mat-form-field [style.visibility]="attachments.length > 0 ? 'visible' : 'hidden'" floatLabel="never" style="padding-left:20px;padding-right:20px;">
+        <input matInput placeholder="{{lang.searchByAttachmentType}}" #listFilter>
+    </mat-form-field>
     <mat-card *ngFor="let attachment of attachments | filterList:listFilter.value:'typeLabel'" [style.background-image]="'url('+attachment.thumbnailUrl+')'"
         style="padding:0;margin: 30px;min-height: 300px;background-size: cover;">
-        <a mat-mini-fab color="primary" class="downloadButton" title="{{lang.downloadOriginalFile}}"
-            href="../../rest/resources/{{resIds[0]}}/attachments/{{attachment.res_id}}/originalContent"
-            target="_blank">
-            .{{attachment.format}}
-        </a>
-        <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-raised-button
-            [matMenuTriggerFor]="menu">{{lang.version}} {{attachment.relation}}</button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item>{{lang.version}} 1</button>
-            <button mat-menu-item>{{lang.version}} 2</button>
-        </mat-menu>
-        <button color="primary" class="actionsButton" mat-mini-fab [matMenuTriggerFor]="menuPjAction">
-            <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v"></mat-icon>
-        </button>
-        <mat-menu #menuPjAction="matMenu">
-            <button mat-menu-item disabled>{{lang.putInSignatureBook}}</button>
-            <button mat-menu-item disabled>{{lang.putInSendAttach}}</button>
-        </mat-menu>
+        <div class="pjToolsContent">
+            <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
+                [matMenuTriggerFor]="menu" matBadge="{{attachment.relation}}">{{lang.version}}</button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item>{{lang.version}} 1</button>
+                <button mat-menu-item>{{lang.version}} 2</button>
+            </mat-menu>
+            <a mat-icon-button color="primary" class="downloadButton" title="{{lang.downloadOriginalFile}}" href="../../rest/resources/{{resIds[0]}}/attachments/{{attachment.res_id}}/originalContent"
+                target="_blank">
+                .{{attachment.format}}
+            </a>
+            <button color="primary" class="actionsButton" mat-icon-button [matMenuTriggerFor]="menuPjAction">
+                <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v"></mat-icon>
+            </button>
+            <mat-menu #menuPjAction="matMenu">
+                <button mat-menu-item disabled>{{lang.putInSignatureBook}}</button>
+                <button mat-menu-item disabled>{{lang.putInSendAttach}}</button>
+            </mat-menu>
+        </div>
 
         <div class="infosPj">
             <mat-accordion>
@@ -34,8 +35,7 @@
                             <div class="col-md-6" title="{{attachment.identifier}} (n°{{attachment.res_id}})">
                                 {{attachment.identifier}}
                             </div>
-                            <div class="col-md-6" title="{{attachmentTypes[attachment.attachment_type].label}}"
-                                style="text-align:center;flex: 1;">
+                            <div class="col-md-6" title="{{attachmentTypes[attachment.attachment_type].label}}" style="text-align:center;flex: 1;">
                                 {{attachmentTypes[attachment.attachment_type].label}}
                             </div>
                         </mat-panel-title>
@@ -49,18 +49,21 @@
                     </div>
                     <div class="col-md-6">
                         <mat-form-field>
-                            <input matInput [value]="attachment.firstname_typist+' '+attachment.lastname_typist"
-                                placeholder="{{lang.by}}" disabled>
+                            <input matInput title="{{attachment.firstname_typist}} {{attachment.lastname_typist}}"
+                                [value]="attachment.firstname_typist+' '+attachment.lastname_typist" placeholder="{{lang.by}}"
+                                disabled>
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
                         <mat-form-field>
-                            <input matInput [value]="attachment.status" placeholder="{{lang.status}}" disabled>
+                            <input matInput [value]="attachment.status" title="{{attachment.status}}" placeholder="{{lang.status}}"
+                                disabled>
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
                         <mat-form-field>
-                            <input matInput [value]="attachment.title" placeholder="{{lang.subject}}" disabled>
+                            <input matInput [value]="attachment.title" title="{{attachment.title}}" placeholder="{{lang.subject}}"
+                                disabled>
                         </mat-form-field>
                     </div>
                     <div class="col-md-6" *ngIf="attachment.return_date != null">
@@ -73,12 +76,14 @@
                     <div class="col-md-6" *ngIf="attachment.return_date != null">
                         <mat-form-field>
                             <input matInput title='{{attachment.effective_date | date : lang.onRange + " dd/MM/y " + lang.atRange +" HH:mm"}}'
-                                [value]="attachment.effective_date | timeAgo" placeholder="{{lang.returnDate}}" disabled>
+                                [value]="attachment.effective_date | timeAgo" placeholder="{{lang.returnDate}}"
+                                disabled>
                         </mat-form-field>
                     </div>
                     <div class="col-md-12">
                         <mat-form-field>
-                            <input matInput [value]="attachment.contact" placeholder="{{lang.forCapital}}" disabled>
+                            <input matInput [value]="attachment.contact" title="{{attachment.contact}}" placeholder="{{lang.forCapital}}"
+                                disabled>
                         </mat-form-field>
                     </div>
                     <div *ngIf="attachment.update_date != null" class="col-md-6">
@@ -90,7 +95,8 @@
                     <div *ngIf="attachment.update_date != null" class="col-md-6">
                         <mat-form-field>
                             <input matInput [value]="attachment.firstname_updated+' '+attachment.lastname_updated"
-                                placeholder="{{lang.by}}" disabled>
+                                placeholder="{{lang.by}}" title="{{attachment.firstname_updated}} {{attachment.lastname_updated}}"
+                                disabled>
                         </mat-form-field>
                     </div>
                 </mat-expansion-panel>
