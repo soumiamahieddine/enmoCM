@@ -16,7 +16,9 @@ export class ViewDocActionComponent implements OnInit {
     docUrl: string = '';
     innerHtml: SafeHtml;
 
-    constructor(private notify: NotificationService, public dialogRef: MatDialogRef<ViewDocActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, public sanitizer: DomSanitizer) { }
+    constructor(private notify: NotificationService, public dialogRef: MatDialogRef<ViewDocActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, public sanitizer: DomSanitizer) {
+        (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
+    }
 
     ngOnInit(): void {
         this.docUrl = '../../rest/res/' + this.data.selectedRes[0] + '/content';

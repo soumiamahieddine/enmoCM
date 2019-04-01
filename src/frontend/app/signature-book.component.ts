@@ -90,6 +90,7 @@ export class SignatureBookComponent implements OnInit {
             componentAfterNotes: () => this.processAfterNotes(),
             componentAfterLinks: () => this.processAfterLinks()
         };
+        (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
 
     prepareSignatureBook() {
@@ -151,7 +152,7 @@ export class SignatureBookComponent implements OnInit {
                     }
 
                     this.signatureBook.resListIndex = this.signatureBook.resList.map((e:any) => { return e.res_id; }).indexOf(this.resId);
-                    
+
                     this.displayPanel("RESLEFT");
                     this.loading = false;
 
