@@ -150,6 +150,8 @@ export class SignatureBookComponent implements OnInit {
                         this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
                     }
 
+                    this.signatureBook.resListIndex = this.signatureBook.resList.map((e:any) => { return e.res_id; }).indexOf(this.resId);
+                    
                     this.displayPanel("RESLEFT");
                     this.loading = false;
 
