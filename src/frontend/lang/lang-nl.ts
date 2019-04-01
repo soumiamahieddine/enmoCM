@@ -945,4 +945,17 @@ export const LANG_NL = {
     "chooseAnotherEntityUser"                   : "Choose another person from the entity", //_TO_TRANSLATE
     "totalPrice"                                : "Total price", //_TO_TRANSLATE
     "noNote"                                    : "Geen notities", //_TO_TRANSLATE
+    "searchByAttachmentType"                    : "Search by attachment type", //_TO_TRANSLATE
+    "downloadOriginalFile"                      : "Download the original file", //_TO_TRANSLATE
+    "version"                                   : "Version", //_TO_TRANSLATE
+    "putInSignatureBook"                        : "Put in signature book", //_TO_TRANSLATE
+    "putInSendAttach"                           : "Put in send attachement", //_TO_TRANSLATE
+    "by"                                        : "By", //_TO_TRANSLATE
+    "expectedReturnDate"                        : "Expected return date", //_TO_TRANSLATE
+    "returnDate"                                : "Datum van terugkeer", //_TO_TRANSLATE
+    "forCapital"                                : "Voor",
+    "modifiedOn"                                : "Modified on",  //_TO_TRANSLATE
+    "onRange"                                   : "op",  //_TO_TRANSLATE
+    "atRange"                                   : "om",  //_TO_TRANSLATE
+    "addPerson"                                 : "Add a person", //_TO_TRANSLATE
 };
