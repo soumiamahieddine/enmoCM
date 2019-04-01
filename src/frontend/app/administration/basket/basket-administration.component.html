@@ -137,14 +137,14 @@
                                     </mat-chip-list>
                                 </div>
                                 <div class="col-md-6">
-                                    <mat-accordion>
+                                    <mat-accordion class="basketActionsList">
                                         <mat-expansion-panel (opened)="initAction(i)">
                                             <mat-expansion-panel-header>
                                                 <mat-panel-title>
                                                     {{lang.actionAvailable}}
                                                 </mat-panel-title>
                                             </mat-expansion-panel-header>
-                                            <div class="example-container">
+                                            <div>
                                                 <mat-form-field>
                                                     <input matInput (keyup)="applyFilter($event.target.value)"
                                                         placeholder="{{lang.filterBy}}">
