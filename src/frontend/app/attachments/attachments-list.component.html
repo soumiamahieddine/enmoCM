@@ -8,7 +8,7 @@
     <mat-card *ngFor="let attachment of attachments | filterList:listFilter.value:'typeLabel'" [style.background-image]="'url('+attachment.thumbnailUrl+')'"
         style="padding:0;margin: 30px;min-height: 300px;background-size: cover;">
         <a mat-mini-fab color="primary" class="downloadButton" title="Télécharger le fichier original"
-            href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resIds[0]}}&id={{attachment.res_id}}"
+            href="../../rest/resources/{{resIds[0]}}/attachments/{{attachment.res_id}}/originalContent"
             target="_blank">
             .{{attachment.format}}
         </a>

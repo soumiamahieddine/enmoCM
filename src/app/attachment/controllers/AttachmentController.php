@@ -409,7 +409,7 @@ class AttachmentController
         $pathInfo = pathinfo($pathToDocument);
 
         $response->write($fileContent);
-        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
+        $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$pathInfo['extension']}");
 
         HistoryController::add([
             'tableName' => 'res_attachments',
