@@ -477,12 +477,5 @@ define("_SHIPPINGS_ADMIN_DESC", "Configurer les modèles d'envois postaux, par e
 
 define("_SEND_SHIPPING", "Envoyer un pli postal");
 
-define("_MAILEVA_CONFIG_DOES_NOT_EXIST", "La configuration Maileva n'existe pas");
-define("_DATA_RESOURCES_FORMAT", "Resources est vide ou n'est pas un tableau");
-define("_NO_CONTACT_ATTACHED_FOR", "Aucun contact attaché pour cette pièce jointe");
-define("_ONLY_FRANCE_AVAILABLE_FOR", "L'adresse n'est pas en France pour cette pièce jointe");
-define("_INCOMPETE_ADDRESS_FOR", "Adresse incomplète pour cette pièce jointe");
-define("_NO_ATTACHMENT_TO_SEND", "Aucune pièce jointe à envoyer");
-
 define("_VIEW_DOCUMENTS_WITH_NOTES", "Voir les courriers annotés");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "Voir les pièces jointes de type 'Document annoté'");
