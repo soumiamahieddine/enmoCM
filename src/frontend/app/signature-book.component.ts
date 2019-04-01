@@ -416,7 +416,7 @@ export class SignatureBookComponent implements OnInit {
             this.http.get(path, signature)
                 .subscribe((data : any) => {
                     if (data.status == 0) {
-                        this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + data.new_id + "&isVersion=false";
+                        this.rightViewerLink = "../../rest/res/" + this.resId + "/attachments/" + data.new_id + "/content";
                         this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                         this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
                         this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
