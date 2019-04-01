@@ -356,6 +356,73 @@ class AttachmentController
         return $response->withHeader('Content-Type', $mimeType);
     }
 
+    public function getOriginalFileContent(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $attachment = AttachmentModel::getOnView([
+            'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
+            'where'     => ['res_id = ? or res_id_version = ?', 'res_id_master = ?', 'status not in (?)'],
+            'data'      => [$args['id'], $args['id'], $args['resId'], ['DEL', 'OBS']],
+            'limit'     => 1
+        ]);
+        if (empty($attachment[0])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Attachment not found']);
+        }
+
+        $attachmentTodisplay = $attachment[0];
+        $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
+
+        $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
+        $document['path'] = $attachmentTodisplay['path'];
+        $document['filename'] = $attachmentTodisplay['filename'];
+        $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Attachment not found on docserver']);
+        }
+
+        $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+            return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
+        }
+
+        if (empty($fileContent)) {
+            $fileContent = file_get_contents($pathToDocument);
+        }
+        if ($fileContent === false) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+        $pathInfo = pathinfo($pathToDocument);
+
+        $response->write($fileContent);
+        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
+
+        HistoryController::add([
+            'tableName' => 'res_attachments',
+            'recordId'  => $args['resId'],
+            'eventType' => 'VIEW',
+            'info'      => _ATTACH_DISPLAYING . " : {$id}",
+            'moduleId'  => 'attachments',
+            'eventId'   => 'resview',
+        ]);
+
+        return $response->withHeader('Content-Type', $mimeType);
+    }
+
     public static function getEncodedDocument(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
