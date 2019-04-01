@@ -1358,7 +1358,7 @@ if (isset($_REQUEST['id'])) {
 //INITIALIZE
 unset($_SESSION['adresses']);
 unset($_SESSION['cm_applet'][$_SESSION['user']['UserId']]);
-$objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
+$objectTable = 'res_letterbox';
 
 //BEDING HEADER
 $content .= '<h2>&nbsp;'.$title;
