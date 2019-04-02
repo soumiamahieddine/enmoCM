@@ -364,7 +364,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     removeEntity() {
-        if (this.currentEntity.documents > 0 || this.currentEntity.redirects > 0 || this.currentEntity.instances > 0 || this.currentEntity.users.length > 0) {
+        if (this.currentEntity.documents > 0 || this.currentEntity.redirects > 0 || this.currentEntity.instances > 0 || this.currentEntity.users.length > 0 || this.currentEntity.templates.length > 0) {
             this.config = { data: { entity: this.currentEntity } };
             this.dialogRef = this.dialog.open(EntitiesAdministrationRedirectModalComponent, this.config);
             this.dialogRef.afterClosed().subscribe((result: any) => {
