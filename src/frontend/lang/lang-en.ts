@@ -935,4 +935,5 @@ export const LANG_EN = {
     "onRange"                                   : "on",
     "atRange"                                   : "at",
     "addPerson"                                 : "Add a person",
+    "actionDone"                                : "Action done",
 };

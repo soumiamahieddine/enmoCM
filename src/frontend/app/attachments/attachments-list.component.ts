@@ -21,7 +21,7 @@ export class AttachmentsListComponent implements OnInit {
     @Input('injectDatas') injectDatas: any;
     @Output('reloadBadgeAttachments') reloadBadgeNotes = new EventEmitter<string>();
 
-    constructor(public http: HttpClient) { }
+    constructor(public http: HttpClient, private notify: NotificationService) { }
 
     ngOnInit(): void { }
 
@@ -44,6 +44,30 @@ export class AttachmentsListComponent implements OnInit {
                 });
                 this.reloadBadgeNotes.emit(`${this.attachments.length}`);
                 this.loading = false;
+            }, (err: any) => {
+                this.notify.error(err.error.errors);
+            });
+    }
+
+    setInSignatureBook(attachment: any) {
+        const is_version = attachment.res_id_version > 0 ? true : false;
+        this.http.put("../../rest/attachments/" + attachment.res_id + "/inSignatureBook", { is_version: is_version })
+            .subscribe((data: any) => {
+                attachment.in_signature_book = !attachment.in_signature_book;
+                this.notify.success(this.lang.actionDone);
+            }, (err: any) => {
+                this.notify.error(err.error.errors);
+            });
+    }
+
+    setInSendAttachment(attachment: any) {
+        const is_version = attachment.res_id_version > 0 ? true : false;
+        this.http.put("../../rest/attachments/" + attachment.res_id + "/inSendAttachment", { is_version: is_version })
+            .subscribe((data: any) => {
+                attachment.in_send_attach = !attachment.in_send_attach;
+                this.notify.success(this.lang.actionDone);
+            }, (err: any) => {
+                this.notify.error(err.error.errors);
             });
     }
 }

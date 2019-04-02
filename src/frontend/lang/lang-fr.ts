@@ -962,4 +962,5 @@ export const LANG_FR = {
     "onRange"                                           : "le",
     "atRange"                                           : "à",
     "addPerson"                                         : "Ajouter une personne",
+    "actionDone"                                         : "Action effectuée",
 };

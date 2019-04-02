@@ -963,4 +963,5 @@ export const LANG_NL = {
     "onRange"                                   : "op",  //_TO_TRANSLATE
     "atRange"                                   : "om",  //_TO_TRANSLATE
     "addPerson"                                 : "Add a person", //_TO_TRANSLATE
+    "actionDone"                                : "Action effectuée", //_TO_TRANSLATE
 };
