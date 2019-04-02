@@ -74,14 +74,16 @@ export class ActionsListComponent implements OnInit {
         this.arrRes = [];
         this.currentAction = action;
 
-        if (action.component == 'v1Action' && this.selectedRes.length > 0) {
+        if (this.contextMode && this.selectedRes.length == 0) {
+            this.arrRes = [this.contextResId];
+        } else {
+            this.arrRes = this.selectedRes;
+        }
+
+        if (action.component == 'v1Action' && this.arrRes.length > 1) {
             alert(this.lang.actionMassForbidden);
         } else {
-            if (this.contextMode && this.selectedRes.length == 0) {
-                this.arrRes = [this.contextResId];
-            } else {
-                this.arrRes = this.selectedRes;
-            }
+            
             this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
                 .subscribe((data: any) => {
                     try {
