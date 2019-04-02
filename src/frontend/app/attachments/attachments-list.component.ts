@@ -30,6 +30,7 @@ export class AttachmentsListComponent implements OnInit {
         this.loading = true;
         this.http.get("../../rest/resources/" + this.resIds[0] + "/attachments")
             .subscribe((data: any) => {
+                console.log(data);
                 this.attachments = data.attachments;
                 this.attachments.forEach((element: any) => {
                     element.typeLabel = data.attachmentTypes[element.attachment_type].label;

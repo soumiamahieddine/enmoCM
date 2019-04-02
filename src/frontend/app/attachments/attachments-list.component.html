@@ -11,11 +11,12 @@
         style="padding:0;margin: 30px;min-height: 300px;background-size: cover;">
         <div class="pjToolsContent">
             <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
+                matBadge="{{attachment.relation}}" disabled>{{lang.version}}</button>
+            <!--<button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
                 [matMenuTriggerFor]="menu" matBadge="{{attachment.relation}}">{{lang.version}}</button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item>{{lang.version}} 1</button>
-                <button mat-menu-item>{{lang.version}} 2</button>
-            </mat-menu>
+                <button mat-menu-item *ngFor="let item of items">{{lang.version}} 1</button>
+            </mat-menu>-->
             <a mat-button color="primary" class="downloadButton" title="{{lang.downloadOriginalFile}}"
                 href="../../rest/resources/{{resIds[0]}}/attachments/{{attachment.res_id}}/originalContent"
                 target="_blank">
