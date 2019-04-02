@@ -62,7 +62,7 @@
                     <div class="col-md-6">
                         <mat-form-field>
                             <input matInput title="{{attachment.firstname_typist}} {{attachment.lastname_typist}}"
-                                [value]="attachment.firstname_typist+' '+attachment.lastname_typist"
+                                [value]="attachment.lastname_typist != null ? attachment.firstname_typist+' '+attachment.lastname_typist : lang.undefined"
                                 placeholder="{{lang.by}}" disabled>
                         </mat-form-field>
                     </div>

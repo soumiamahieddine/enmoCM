@@ -13,10 +13,9 @@
         <input #searchHome type="submit" name="submit" value="" style="display:none">
     </form>
 
-    <button (click)="showSearchInput()" mat-icon-button *ngIf="!mobileMode && hideSearch" style="opacity:0.5;">
+    <button title="{{lang.quickSearchInfo + ' : '+ lang.quickSearchTarget}}" (click)="showSearchInput()" mat-icon-button *ngIf="!mobileMode && hideSearch" style="opacity:0.5;">
         <mat-icon class="fa fa-search" style="font-size:22px;"></mat-icon>
     </button>
-
 
     <button mat-icon-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" matTooltip="{{lang.menu}}">
         <mat-icon class="fa fa-th" style="font-size:22px;"></mat-icon>

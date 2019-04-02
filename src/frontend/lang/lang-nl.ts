@@ -965,4 +965,6 @@ export const LANG_NL = {
     "addPerson"                                 : "Add a person", //_TO_TRANSLATE
     "actionDone"                                : "Action effectuée", //_TO_TRANSLATE
     "actionMassForbidden"                       : "This action is forbidden in mass", //_TO_TRANSLATE
+    "quickSearchInfo"                           : "Target search ", //_TO_TRANSLATE
+    "quickSearchTarget"                         : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
 };
