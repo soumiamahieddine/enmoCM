@@ -205,7 +205,6 @@ export class SignatureBookComponent implements OnInit {
         }
 
         if (c > 0) { // This (if)line is added because of manage action behaviour (processAfterAction is called twice)
-            unlockDocument(this.resId);
             if (idToGo >= 0) {
                 $j("#send").removeAttr("disabled");
                 $j("#send").css("opacity", "1");
@@ -485,7 +484,9 @@ export class SignatureBookComponent implements OnInit {
         this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/unlock', { resources: [this.resId] })
             .subscribe((data: any) => {
                 window.location.href = 'index.php?page=view_baskets&module=basket&basketId='+this.basketId+'&userId='+this.userId+'&groupIdSer='+this.groupId+'&backToBasket=true';
-            }, (err: any) => { });
+            }, (err: any) => {
+                window.location.href = 'index.php?page=view_baskets&module=basket&basketId='+this.basketId+'&userId='+this.userId+'&groupIdSer='+this.groupId+'&backToBasket=true';
+            });
     }
 
     backToDetails() {

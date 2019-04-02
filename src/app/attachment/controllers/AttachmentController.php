@@ -477,7 +477,7 @@ class AttachmentController
         return ['encodedDocument' => $encodedDocument, 'fileName' => $fileName];
     }
 
-    public function generateAttachForMailing(array $aArgs)
+    public static function generateAttachForMailing(array $aArgs)
     {
         $attachments = AttachmentModel::getOnView([
             'select'    => ['*'],

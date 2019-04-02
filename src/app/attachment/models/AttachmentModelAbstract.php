@@ -95,7 +95,7 @@ abstract class AttachmentModelAbstract
                 'doc_date as update_date', 'validation_date as return_date', 'effective_date as real_return_date',
                 'u.firstname as firstname_updated', 'u.lastname as lastname_updated', 'relation', 'docserver_id', 'path',
                 'filename', 'fingerprint', 'filesize', 'label_status as status', 'attachment_type', 'dest_contact_id',
-                'dest_address_id', 'ut.firstname as firstname_typist', 'ut.lastname as lastname_typist'
+                'dest_address_id', 'ut.firstname as firstname_typist', 'ut.lastname as lastname_typist', 'in_signature_book', 'in_send_attach'
             ],
             'table'     => ['res_view_attachments', 'users ut', 'status', 'users u'],
             'left_join' => ['res_view_attachments.typist = ut.user_id', 'res_view_attachments.status = status.id', 'res_view_attachments.updated_by = u.user_id'],
