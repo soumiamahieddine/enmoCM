@@ -372,7 +372,7 @@ class PreProcessActionController
 
         $entitiesInfos = [];
         if (!empty($entities)) {
-            $aEntities = EntityModel::get(['select' => ['id', 'entity_label'], 'where' => ['entity_id in (?)'], 'data' => $entities]);
+            $aEntities = EntityModel::get(['select' => ['id', 'entity_label'], 'where' => ['entity_id in (?)'], 'data' => [$entities]]);
 
             $entitiesId = [];
             foreach ($aEntities as $value) {
