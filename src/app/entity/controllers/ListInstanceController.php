@@ -172,7 +172,8 @@ class ListInstanceController
                     'added_by_entity'   => $primaryEntity['entity_id'],
                     'difflist_type'     => $instance['difflist_type'],
                     'process_date'      => $instance['process_date'],
-                    'process_comment'   => $instance['process_comment']
+                    'process_comment'   => $instance['process_comment'],
+                    'viewed'            => empty($instance['viewed']) ? 0 : $instance['viewed']
                 ]);
 
                 if ($instance['item_mode'] == 'dest') {

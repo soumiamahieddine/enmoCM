@@ -376,8 +376,8 @@ class ResController
 
         ListInstanceModel::update([
             'postSet'   => ['viewed' => 'viewed + 1'],
-            'where'     => ['item_id = ?', 'item_mode = ?', 'res_id = ?'],
-            'data'      => [$GLOBALS['userId'], 'cc', $aArgs['resId']]
+            'where'     => ['item_id = ?', 'res_id = ?'],
+            'data'      => [$GLOBALS['userId'], $aArgs['resId']]
         ]);
         HistoryController::add([
             'tableName' => 'res_letterbox',
@@ -450,8 +450,8 @@ class ResController
 
         ListInstanceModel::update([
             'postSet'   => ['viewed' => 'viewed + 1'],
-            'where'     => ['item_id = ?', 'item_mode = ?', 'res_id = ?'],
-            'data'      => [$GLOBALS['userId'], 'cc', $aArgs['resId']]
+            'where'     => ['item_id = ?', 'res_id = ?'],
+            'data'      => [$GLOBALS['userId'], $aArgs['resId']]
         ]);
         HistoryController::add([
             'tableName' => 'res_letterbox',
