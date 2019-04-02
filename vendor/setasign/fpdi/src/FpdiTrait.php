@@ -244,7 +244,6 @@ trait FpdiTrait
 
         // for backwards compatibility with FPDI 1
         $box = \ltrim($box, '/');
-        $t = PageBoundaries::isValidName($box);
         if (!PageBoundaries::isValidName($box)) {
             throw new \InvalidArgumentException(
                 \sprintf('Box name is invalid: "%s"', $box)

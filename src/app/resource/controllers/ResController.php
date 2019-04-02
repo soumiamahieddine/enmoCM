@@ -343,7 +343,7 @@ class ResController
                     $nbPages = $pdf->setSourceFile($pathToDocument);
                     $pdf->setPrintHeader(false);
                     for ($i = 1; $i <= $nbPages; $i++) {
-                        $page = $pdf->importPage($i);
+                        $page = $pdf->importPage($i, 'CropBox');
                         $size = $pdf->getTemplateSize($page);
                         $pdf->AddPage($size['orientation'], $size);
                         $pdf->useImportedPage($page);
