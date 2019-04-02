@@ -28,7 +28,6 @@ export class AttachmentsListComponent implements OnInit {
         this.loading = true;
         this.http.get("../../rest/resources/" + this.resIds[0] + "/attachments")
             .subscribe((data: any) => {
-                console.log(data);
                 this.attachments = data.attachments;
                 this.attachments.forEach((element: any) => {
                     element.thumbnailUrl = '../../rest/res/' + this.resIds[0] + '/attachments/' + element.res_id + '/thumbnail';
