@@ -89,7 +89,7 @@ class MaarchParapheurController
         $senderPrimaryEntity = \User\models\UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         if ($aArgs['objectSent'] == 'attachment') {
-            $excludeAttachmentTypes = ['converted_pdf', 'printed_folder', 'incoming_mail_attachment', 'signed_response'];
+            $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'incoming_mail_attachment', 'signed_response'];
 
             $attachments = \Attachment\models\AttachmentModel::getOnView([
                 'select'    => [

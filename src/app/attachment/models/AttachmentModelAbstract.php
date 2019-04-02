@@ -75,7 +75,7 @@ abstract class AttachmentModelAbstract
             'select'    => empty($aArgs['select']) ? ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'res_id_version', 'identifier', 'dest_address_id'] : $aArgs['select'],
             'table'     => ['res_view_attachments'],
             'where'     => ['res_id_master in (?)', 'status not in (?, ?)', 'attachment_type not in (?, ?)', 'in_send_attach = TRUE'],
-            'data'      => [$aArgs['ids'], 'OBS', 'DEL', 'converted_pdf', 'printed_folder'],
+            'data'      => [$aArgs['ids'], 'OBS', 'DEL', 'converted_pdf', 'print_folder'],
             'groupBy'   => ['res_id_master', 'title', 'res_id', 'res_id_version', 'identifier', 'dest_address_id'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
         ]);
