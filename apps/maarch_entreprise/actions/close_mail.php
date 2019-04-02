@@ -138,21 +138,18 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'closeResource'])) {
             $bodyData = [];
             $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'closeResource']);
-            $configResource = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
 
-            $resource = \Resource\models\ResModel::getOnView(['select' => ['doc_' . $configResource['return']['value']], 'where' => ['res_id = ?'], 'data' => [$res_id]]);
+            $resource = \Resource\models\ResModel::getOnView(['select' => ['external_id'], 'where' => ['res_id = ?'], 'data' => [$res_id]]);
+            $externalId = json_decode($resource[0]['external_id'], true);
 
-            if (!empty($resource[0]['doc_' . $configResource['return']['value']])) {
+            if (!empty($externalId['localeoId'])) {
                 if (!empty($config['inObject'])) {
-                    $multipleObject = true;
 
                     foreach ($config['objects'] as $object) {
                         $select = [];
                         $tmpBodyData = [];
                         foreach ($object['rawData'] as $value) {
-                            if ($value == $configResource['return']['value']) {
-                                $select[] = 'doc_' . $configResource['return']['value'];
-                            } elseif ($value != 'note') {
+                            if ($value != 'note' && $value != 'localeoId') {
                                 $select[] = $value;
                             }
                         }
@@ -162,8 +159,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                             foreach ($object['rawData'] as $key => $value) {
                                 if ($value == 'note') {
                                     $tmpBodyData[$key] = $formValues['note_content_to_users'];
-                                } elseif ($value == $configResource['return']['value']) {
-                                    $tmpBodyData[$key] = $document[0]['doc_' . $value];
+                                } elseif ($value == 'localeoId') {
+                                    $tmpBodyData[$key] = $externalId['localeoId'];
                                 } else {
                                     $tmpBodyData[$key] = $document[0][$value];
                                 }
@@ -176,37 +173,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
                         $bodyData[$object['name']] = $tmpBodyData;
                     }
-                } else {
-                    $multipleObject = false;
-
-                    $select = [];
-                    foreach ($config['rawData'] as $value) {
-                        if ($value != 'note') {
-                            $select[] = $value;
-                        }
-                    }
-
-                    $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$res_id]]);
-                    if (!empty($document[0])) {
-                        foreach ($config['rawData'] as $key => $value) {
-                            if ($value == 'note') {
-                                $bodyData[$key] = $formValues['note_content_to_users'];
-                            } else {
-                                $bodyData[$key] = $document[0][$value];
-                            }
-                        }
-
-                    }
-
-                    if (!empty($config['data'])) {
-                        $bodyData = array_merge($bodyData, $config['data']);
-                    }
                 }
 
-                \SrcCore\models\CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData, 'multipleObject' => $multipleObject, 'noAuth' => true]);
+                \SrcCore\models\CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData, 'multipleObject' => true, 'noAuth' => true]);
             }
         }
     }
 
-    return array('result' => $result, 'history_msg' => '');
+    return ['result' => $result, 'history_msg' => ''];
 }
