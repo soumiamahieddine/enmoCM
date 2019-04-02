@@ -313,7 +313,6 @@ class EntityController
             }
         }
 
-        $listTemplates = ListTemplateModel::get(['select' => [1], 'where' => ['object_id = ?'], 'data' => [$aArgs['id']]]);
         $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $users = EntityModel::getUsersById(['select' => [1], 'id' => $aArgs['id']]);
@@ -321,12 +320,14 @@ class EntityController
         $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
         $redirects = GroupBasketRedirectModel::get(['select' => [1], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
 
-        $allowedCount = count($listTemplates) + count($children) + count($documents) + count($users) + count($templates) + count($instances) + count($redirects);
+        $allowedCount = count($children) + count($documents) + count($users) + count($templates) + count($instances) + count($redirects);
         if ($allowedCount > 0) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity is still used']);
         }
 
+        ListTemplateModel::delete(['where' => ['object_id = ?'], 'data' => [$aArgs['id']]]);
         EntityModel::delete(['where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
+
         HistoryController::add([
             'tableName' => 'entities',
             'recordId'  => $aArgs['id'],

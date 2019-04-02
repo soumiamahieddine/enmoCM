@@ -40,31 +40,51 @@ class AttachmentController
 {
     public function create(Request $request, Response $response)
     {
-        $data = $request->getParams();
+        $body = $request->getParsedBody();
 
-        $check = Validator::notEmpty()->validate($data['encodedFile']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['fileFormat']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['status']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['collId']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['table']);
-        $check = $check && Validator::arrayType()->notEmpty()->validate($data['data']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        if (empty($body)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body is not set or empty']);
+        } elseif (!Validator::notEmpty()->validate($body['encodedFile'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body encodedFile is empty']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['format'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body format is empty or not a string']);
         }
 
-        $resId = StoreController::storeResourceRes($data);
+        $mandatoryColumns = ['res_id_master', 'attachment_type'];
+        foreach ($body['data'] as $value) {
+            foreach ($mandatoryColumns as $columnKey => $column) {
+                if ($column == $value['column'] && !empty($value['value'])) {
+                    if ($column == 'res_id_master' && !ResController::hasRightByResId(['resId' => [$value['value']], 'userId' => $GLOBALS['userId']])) {
+                        return $response->withStatus(403)->withJson(['errors' => 'ResId master out of perimeter']);
+                    }
+                    unset($mandatoryColumns[$columnKey]);
+                }
+            }
+        }
+        if (!empty($mandatoryColumns)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body data array needs column(s) [' . implode(', ', $mandatoryColumns) . ']']);
+        }
+
+        $body['table'] = empty($body['version']) ? 'res_attachments' : 'res_version_attachments';
+        $body['status'] = 'A_TRA';
+        $body['collId'] = 'letterbox_coll';
+        $body['data'][] = ['column' => 'coll_id', 'value' => 'letterbox_coll'];
+        $body['data'][] = ['column' => 'type_id', 'value' => '0'];
+        $body['data'][] = ['column' => 'relation', 'value' => '1'];
+        $body['fileFormat'] = $body['format'];
+        $resId = StoreController::storeResourceRes($body);
 
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[AttachmentController create] ' . $resId['errors']]);
         }
 
         HistoryController::add([
-            'tableName' => 'res_attachments',
+            'tableName' => $body['table'],
             'recordId'  => $resId,
             'eventType' => 'ADD',
             'info'      => _DOC_ADDED,
             'moduleId'  => 'attachment',
-            'eventId'   => 'attachmentadd',
+            'eventId'   => 'attachmentAdd',
         ]);
 
         return $response->withJson(['resId' => $resId]);
@@ -86,6 +106,7 @@ class AttachmentController
             'excludeAttachmentTypes'    => $excludeAttachmentTypes,
             'orderBy'                   => ['res_id DESC']
         ]);
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachments as $key => $attachment) {
             if (!empty($attachment['res_id_version'])) {
                 $attachments[$key]['res_id'] = $attachment['res_id_version'];
@@ -105,10 +126,12 @@ class AttachmentController
                     $attachments[$key]['contact'] = $contact['contact']['contact'];
                 }
             }
+            if (!empty($attachmentsTypes[$attachment['attachment_type']]['label'])) {
+                $attachments[$key]['typeLabel'] = $attachmentsTypes[$attachment['attachment_type']]['label'];
+            }
         }
-        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
 
-        return $response->withJson(['attachments' => $attachments, 'attachmentTypes'  => $attachmentTypes]);
+        return $response->withJson(['attachments' => $attachments]);
     }
 
     public function setInSignatureBook(Request $request, Response $response, array $aArgs)
@@ -421,6 +444,13 @@ class AttachmentController
         ]);
 
         return $response->withHeader('Content-Type', $mimeType);
+    }
+
+    public function getAttachmentsTypes(Request $request, Response $response)
+    {
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+
+        return $response->withJson(['attachmentsTypes' => $attachmentsTypes]);
     }
 
     public static function getEncodedDocument(array $aArgs)
