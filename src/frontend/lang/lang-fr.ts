@@ -962,5 +962,6 @@ export const LANG_FR = {
     "onRange"                                           : "le",
     "atRange"                                           : "à",
     "addPerson"                                         : "Ajouter une personne",
-    "actionDone"                                         : "Action effectuée",
+    "actionDone"                                        : "Action effectuée",
+    "actionMassForbidden"                               : "Cette action n\'est pas utilisable en masse",
 };

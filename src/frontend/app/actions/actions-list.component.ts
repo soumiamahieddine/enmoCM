@@ -74,38 +74,43 @@ export class ActionsListComponent implements OnInit {
         this.arrRes = [];
         this.currentAction = action;
 
-        if (this.contextMode && this.selectedRes.length == 0) {
-            this.arrRes = [this.contextResId];
+        if (action.component == 'v1Action' && this.selectedRes.length > 0) {
+            alert(this.lang.actionMassForbidden);
         } else {
-            this.arrRes = this.selectedRes;
+            if (this.contextMode && this.selectedRes.length == 0) {
+                this.arrRes = [this.contextResId];
+            } else {
+                this.arrRes = this.selectedRes;
+            }
+            this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
+                .subscribe((data: any) => {
+                    try {
+                        let msgWarn = this.lang.warnLockRes;
+
+                        if (data.lockedResources != this.arrRes.length) {
+                            msgWarn += this.lang.warnLockRes2 + '.';
+                        }
+
+                        if (data.lockedResources > 0) {
+                            alert(data.lockedResources + ' ' + msgWarn);
+                        }
+
+                        if (data.lockedResources != this.arrRes.length) {
+                            this.lock();
+                            this[action.component]();
+                        }
+                    }
+                    catch (error) {
+                        console.log(error);
+                        console.log(action.component);
+                        alert(this.lang.actionNotExist);
+                    }
+                    this.loading = false;
+                }, (err: any) => {
+                    this.notify.handleErrors(err);
+                });
         }
-        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
-            .subscribe((data: any) => {
-                try {
-                    let msgWarn  = this.lang.warnLockRes;
 
-                    if (data.lockedResources != this.arrRes.length) {
-                        msgWarn += this.lang.warnLockRes2 + '.';
-                    }
-
-                    if (data.lockedResources > 0) {
-                        alert(data.lockedResources + ' ' + msgWarn);
-                    }
-
-                    if (data.lockedResources != this.arrRes.length) {
-                        this.lock();
-                        this[action.component]();
-                    }
-                }
-                catch (error) {
-                    console.log(error);
-                    console.log(action.component);
-                    alert(this.lang.actionNotExist);  
-                }
-                this.loading = false;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
     }
 
     /* OPEN SPECIFIC ACTION */
@@ -122,7 +127,7 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-            
+
             if (result == 'success') {
                 this.endAction();
             } else {
@@ -144,7 +149,7 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-            
+
             if (result == 'success') {
                 this.endAction();
             } else {
@@ -166,7 +171,7 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-            
+
             if (result == 'success') {
                 this.endAction();
             } else {
@@ -188,7 +193,7 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-            
+
             if (result == 'success') {
                 this.endAction();
             } else {
@@ -210,7 +215,7 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-            
+
             if (result == 'success') {
                 this.endAction();
             } else {
@@ -232,7 +237,7 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-            
+
             if (result == 'success') {
                 this.endAction();
             } else {
@@ -254,7 +259,7 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-            
+
             if (result == 'success') {
                 this.endAction();
             } else {
@@ -276,7 +281,7 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-            
+
             if (result == 'success') {
                 this.endAction();
             } else {
@@ -333,7 +338,7 @@ export class ActionsListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             this.unlock();
-            
+
             if (result == 'success') {
                 this.endAction();
             } else {
@@ -387,7 +392,7 @@ export class ActionsListComponent implements OnInit {
     // CALL GENERIC ACTION V1
     v1Action() {
         location.hash = "";
-        window.location.href = 'index.php?page=view_baskets&module=basket&baskets='+this.currentBasketInfo.basket_id+'&basketId='+this.currentBasketInfo.basketId+'&resId='+this.arrRes[0]+'&userId='+this.currentBasketInfo.ownerId+'&groupIdSer='+this.currentBasketInfo.groupId+'&defaultAction='+this.currentAction.id;
+        window.location.href = 'index.php?page=view_baskets&module=basket&baskets=' + this.currentBasketInfo.basket_id + '&basketId=' + this.currentBasketInfo.basketId + '&resId=' + this.arrRes[0] + '&userId=' + this.currentBasketInfo.ownerId + '&groupIdSer=' + this.currentBasketInfo.groupId + '&defaultAction=' + this.currentAction.id;
         // WHEN V2
         /*this.dialog.open(ProcessActionComponent, {
             width: '500px',
@@ -404,7 +409,7 @@ export class ActionsListComponent implements OnInit {
     // CALL SIGNATUREBOOK WITH V1 METHOD
     signatureBookAction() {
         location.hash = "";
-        window.location.href = 'index.php?page=view_baskets&module=basket&baskets='+this.currentBasketInfo.basket_id+'&basketId='+this.currentBasketInfo.basketId+'&resId='+this.arrRes[0]+'&userId='+this.currentBasketInfo.ownerId+'&groupIdSer='+this.currentBasketInfo.groupId+'&defaultAction='+this.currentAction.id+'&signatureBookMode=true';
+        window.location.href = 'index.php?page=view_baskets&module=basket&baskets=' + this.currentBasketInfo.basket_id + '&basketId=' + this.currentBasketInfo.basketId + '&resId=' + this.arrRes[0] + '&userId=' + this.currentBasketInfo.ownerId + '&groupIdSer=' + this.currentBasketInfo.groupId + '&defaultAction=' + this.currentAction.id + '&signatureBookMode=true';
 
     }
     ////

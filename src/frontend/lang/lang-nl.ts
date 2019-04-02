@@ -964,4 +964,5 @@ export const LANG_NL = {
     "atRange"                                   : "om",  //_TO_TRANSLATE
     "addPerson"                                 : "Add a person", //_TO_TRANSLATE
     "actionDone"                                : "Action effectuée", //_TO_TRANSLATE
+    "actionMassForbidden"                       : "This action is forbidden in mass", //_TO_TRANSLATE
 };

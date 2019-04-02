@@ -936,4 +936,5 @@ export const LANG_EN = {
     "atRange"                                   : "at",
     "addPerson"                                 : "Add a person",
     "actionDone"                                : "Action done",
+    "actionMassForbidden"                       : "This action is forbidden in mass",
 };
