@@ -167,7 +167,7 @@ class MaarchParapheurController
                 'reference'          => $mainResource[0]['alt_identifier'],
                 'mode'               => $aArgs['config']['data']['annotation'],
                 'encodedDocument'    => $encodedMainZipFile,
-                'processingUser'     => 'jjane@maarch.com',
+                'processingUser'     => $processingUser,
                 'sender'             => trim($sender['firstname'] . ' ' .$sender['lastname']),
                 'deadline'           => $processLimitDate,
                 'metadata'           => json_encode($metadata)
