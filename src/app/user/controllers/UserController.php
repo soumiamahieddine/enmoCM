@@ -161,6 +161,10 @@ class UserController
             $data['loginmode'] = 'standard';
         }
 
+        if ($data['loginmode'] == 'restMode') {
+            $data['changePassword']= 'N';
+        }
+
         UserModel::create(['user' => $data]);
 
         $newUser = UserModel::getByLogin(['login' => $data['userId']]);
@@ -214,6 +218,10 @@ class UserController
         ];
         if (!empty($data['enabled']) && $data['enabled'] == 'Y') {
             $set['enabled'] = 'Y';
+        }
+
+        if ($set['loginmode'] == 'restMode') {
+            $set['change_password']= 'N';
         }
 
         UserModel::update([

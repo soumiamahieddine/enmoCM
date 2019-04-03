@@ -1,11 +1,12 @@
-import { Component, OnInit }    from '@angular/core';
+import { Component, OnInit, ViewChild }    from '@angular/core';
 import { HttpClient }           from '@angular/common/http';
 import { LANG }                 from '../translate.component';
 import { HeaderService }        from '../../service/header.service';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MatInput } from '@angular/material';
 import { IndexingGroupModalComponent } from '../menu/menu-shortcut.component';
 import { Router } from '@angular/router';
 
+declare function $j(selector: any): any;
 declare var angularGlobals: any;
 
 @Component({
@@ -20,6 +21,10 @@ export class HeaderRightComponent implements OnInit {
 
     dialogRef   : MatDialogRef<any>;
     config      : any       = {};
+
+    hideSearch : boolean = true;
+
+    @ViewChild('searchInput') searchInput: MatInput;
 
     constructor(public http: HttpClient, private router: Router, public headerService: HeaderService, public dialog: MatDialog) {
         this.mobileMode = angularGlobals.mobileMode;
@@ -36,5 +41,12 @@ export class HeaderRightComponent implements OnInit {
         } else {
             location.href = shortcut.servicepage;
         }
+    }
+
+    showSearchInput() {
+        this.hideSearch = !this.hideSearch;
+        setTimeout(() => {
+            this.searchInput.focus(); 
+        }, 200);
     }
 }

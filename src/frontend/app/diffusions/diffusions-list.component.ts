@@ -2,9 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
-import { ConstantPool } from '@angular/compiler';
 
 declare function $j(selector: any): any;
 
@@ -27,39 +26,14 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
 
     diffList: any = {};
 
+
     @Input('injectDatas') injectDatas: any;
 
     constructor(public http: HttpClient, private notify: NotificationService) {
         super(http, ['usersAndEntities']);
     }
 
-    ngOnInit(): void {
-        this.http.get("../../rest/listTemplates/types/entity_id/roles")
-            .subscribe((data: any) => {
-                data['roles'].forEach((element: any) => {
-                    if (element.id == 'cc') {
-                        element.id = 'copy';
-                    }
-                    if (element.available) {
-                        this.availableRoles.push(element);
-                        this.diffList[element.id] = {
-                            'label': element.label,
-                            'items': []
-                        };
-                    }
-                    if (element.keepInListInstance) {
-                        this.keepRoles.push(element.id);
-                    }
-                });
-                /*if (this.injectDatas.entityId) {
-                    this.loadListModel(this.injectDatas.entityId);
-                } else if (this.injectDatas.resId > 0) {
-                    this.loadListinstance(this.injectDatas.resId);
-                }*/
-            }, (err: any) => {
-                this.notify.error(err.error.errors);
-            });
-    }
+    ngOnInit(): void { }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
@@ -84,10 +58,38 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
         this.loading = true;
         this.currentEntityId = entityId;
         this.userDestList = [];
-        this.availableRoles.forEach(element => {
-            this.diffList[element.id].items = [];
-        });
+        if (this.availableRoles.length === 0) {
+            this.http.get("../../rest/listTemplates/types/entity_id/roles")
+                .subscribe((data: any) => {
+                    data['roles'].forEach((element: any) => {
+                        if (element.id == 'cc') {
+                            element.id = 'copy';
+                        }
+                        if (element.available) {
+                            this.availableRoles.push(element);
+                            this.diffList[element.id] = {
+                                'label': element.label,
+                                'items': []
+                            };
+                        }
+                        if (element.keepInListInstance) {
+                            this.keepRoles.push(element.id);
+                        }
+                    });
+                    this.getListmodel(entityId);
+                }, (err: any) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else {
+            this.availableRoles.forEach(element => {
+                this.diffList[element.id].items = [];
+            });
+            this.getListmodel(entityId);
+        }
 
+    }
+
+    getListmodel(entityId: any) {
         this.http.get("../../rest/listTemplates/entities/" + entityId)
             .subscribe((data: any) => {
                 data.listTemplate.forEach((element: any) => {
@@ -107,9 +109,37 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
 
     loadListinstance(resId: number) {
         this.loading = true;
-        this.availableRoles.forEach(element => {
-            this.diffList[element.id].items = [];
-        });
+        if (this.availableRoles.length === 0) {
+            this.http.get("../../rest/listTemplates/types/entity_id/roles")
+                .subscribe((data: any) => {
+                    data['roles'].forEach((element: any) => {
+                        if (element.id == 'cc') {
+                            element.id = 'copy';
+                        }
+                        if (element.available) {
+                            this.availableRoles.push(element);
+                            this.diffList[element.id] = {
+                                'label': element.label,
+                                'items': []
+                            };
+                        }
+                        if (element.keepInListInstance) {
+                            this.keepRoles.push(element.id);
+                        }
+                    });
+                    this.getResListinstance(resId);
+                }, (err: any) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else {
+            this.availableRoles.forEach(element => {
+                this.diffList[element.id].items = [];
+            });
+            this.getResListinstance(resId);
+        }
+    }
+
+    getResListinstance(resId: number) {
         this.http.get("../../rest/resources/" + resId + "/listInstance").subscribe((data: any) => {
             data.listInstance.forEach((element: any) => {
                 if (element.item_mode == 'cc') {
@@ -147,19 +177,19 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
         this.diffList[roleId].items.splice(index, 1);
     }
 
-    getListinstance() {
+    getCurrentListinstance() {
         let listInstanceFormatted: any = [];
 
         Object.keys(this.diffList).forEach(role => {
             if (this.diffList[role].items.length > 0) {
-                this.diffList[role].items.forEach((element:any) => {
+                this.diffList[role].items.forEach((element: any) => {
                     listInstanceFormatted.push({
-                        difflist_type : element.difflist_type !== undefined ? element.difflist_type : element.object_type,
-                        item_id : element.item_id,
-                        item_mode : role == 'copy' ? 'cc' : role,
-                        item_type : element.item_type,
-                        process_date : element.process_date !== undefined ? element.process_date : null,
-                        process_comment : element.process_comment,    
+                        difflist_type: element.difflist_type !== undefined ? element.difflist_type : element.object_type,
+                        item_id: element.item_id,
+                        item_mode: role == 'copy' ? 'cc' : role,
+                        item_type: element.item_type,
+                        process_date: element.process_date !== undefined ? element.process_date : null,
+                        process_comment: element.process_comment,
                     });
                 });
             }
@@ -171,12 +201,12 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
     loadDestUserList() {
         if (this.currentEntityId > 0 && this.userDestList.length == 0) {
             this.http.get("../../rest/entities/" + this.currentEntityId + "/users")
-            .subscribe((data: any) => {
-                this.userDestList = data.users;
-                this.loading = false;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
+                .subscribe((data: any) => {
+                    this.userDestList = data.users;
+                    this.loading = false;
+                }, (err: any) => {
+                    this.notify.handleErrors(err);
+                });
         }
     }
 
@@ -208,7 +238,7 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
             } else {
                 itemType = 'entity_id';
             }
-    
+
             const newElemListModel = {
                 difflist_type: "entity_id",
                 item_type: itemType,
@@ -219,9 +249,9 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
             };
             this.diffList['copy'].items.unshift(newElemListModel);
         }
-        
+
         $j('.userDiffList').val('');
         $j('.userDiffList').blur();
-        
+
     }
 }

@@ -237,7 +237,7 @@ export class RedirectActionComponent implements OnInit {
                     this.loading = false;
                 });
         } else {
-            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: { listInstances: this.appDiffusionsList.getListinstance() }, note: this.noteEditor.getNoteContent() })
+            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: { listInstances: this.appDiffusionsList.getCurrentListinstance() }, note: this.noteEditor.getNoteContent() })
                 .subscribe((data: any) => {
                     if (data && data.errors != null) {
                         this.notify.error(data.errors);

@@ -94,7 +94,7 @@ INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, finge
 VALUES (27, 13, 'TNL', 'TNL_MLB', 'tests#', 'arret_maladie.png', '0');
 INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
 VALUES (28, 14, 'TNL', 'TNL_MLB', 'tests#', 'inscription_ecole.png', '0');
-Select setval('adr_letterbox_id_seq', (select max(res_id)+1 from adr_letterbox), false);
+Select setval('adr_letterbox_id_seq', (select max(id)+1 from adr_letterbox), false);
 
 TRUNCATE TABLE res_attachments;
 ALTER SEQUENCE res_attachment_res_id_seq restart WITH 1;

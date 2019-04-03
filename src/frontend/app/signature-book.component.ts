@@ -90,6 +90,7 @@ export class SignatureBookComponent implements OnInit {
             componentAfterNotes: () => this.processAfterNotes(),
             componentAfterLinks: () => this.processAfterLinks()
         };
+        (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
 
     prepareSignatureBook() {
@@ -150,6 +151,8 @@ export class SignatureBookComponent implements OnInit {
                         this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
                     }
 
+                    this.signatureBook.resListIndex = this.signatureBook.resList.map((e:any) => { return e.res_id; }).indexOf(this.resId);
+
                     this.displayPanel("RESLEFT");
                     this.loading = false;
 
@@ -202,7 +205,6 @@ export class SignatureBookComponent implements OnInit {
         }
 
         if (c > 0) { // This (if)line is added because of manage action behaviour (processAfterAction is called twice)
-            unlockDocument(this.resId);
             if (idToGo >= 0) {
                 $j("#send").removeAttr("disabled");
                 $j("#send").css("opacity", "1");
@@ -413,7 +415,7 @@ export class SignatureBookComponent implements OnInit {
             this.http.get(path, signature)
                 .subscribe((data : any) => {
                     if (data.status == 0) {
-                        this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + data.new_id + "&isVersion=false";
+                        this.rightViewerLink = "../../rest/res/" + this.resId + "/attachments/" + data.new_id + "/content";
                         this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                         this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
                         this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
@@ -482,7 +484,9 @@ export class SignatureBookComponent implements OnInit {
         this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/unlock', { resources: [this.resId] })
             .subscribe((data: any) => {
                 window.location.href = 'index.php?page=view_baskets&module=basket&basketId='+this.basketId+'&userId='+this.userId+'&groupIdSer='+this.groupId+'&backToBasket=true';
-            }, (err: any) => { });
+            }, (err: any) => {
+                window.location.href = 'index.php?page=view_baskets&module=basket&basketId='+this.basketId+'&userId='+this.userId+'&groupIdSer='+this.groupId+'&backToBasket=true';
+            });
     }
 
     backToDetails() {

@@ -61,7 +61,7 @@ abstract class ListInstanceModelAbstract
     public static function create(array $args)
     {
         ValidatorModel::notEmpty($args, ['res_id', 'item_id', 'item_type', 'item_mode', 'added_by_user', 'added_by_entity', 'difflist_type']);
-        ValidatorModel::intVal($args, ['res_id', 'sequence']);
+        ValidatorModel::intVal($args, ['res_id', 'sequence', 'viewed']);
         ValidatorModel::stringType($args, ['item_type', 'item_id', 'item_mode', 'added_by_user', 'added_by_entity', 'difflist_type', 'process_date', 'process_comment']);
 
         DatabaseModel::insert([
@@ -77,7 +77,7 @@ abstract class ListInstanceModelAbstract
                 'added_by_user'             => $args['added_by_user'],
                 'added_by_entity'           => $args['added_by_entity'],
                 'visible'                   => 'Y',
-                'viewed'                    => 0,
+                'viewed'                    => $args['viewed'],
                 'difflist_type'             => $args['difflist_type'],
                 'process_date'              => $args['process_date'],
                 'process_comment'           => $args['process_comment']

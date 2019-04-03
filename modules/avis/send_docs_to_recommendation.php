@@ -362,7 +362,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $new_difflist['difflist_type'],
         $coll_id, 
         $res_id, 
-        $_SESSION['user']['UserId']
+        $_SESSION['user']['UserId'],
+        $_SESSION['user']['primaryentity']['id']
     );           
     
     //Pb with action chain : main action page is saved after this. 

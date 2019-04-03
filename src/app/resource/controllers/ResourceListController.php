@@ -93,7 +93,7 @@ class ResourceListController
 
         $formattedResources = [];
         if (!empty($resIds)) {
-            $excludeAttachmentTypes = ['converted_pdf', 'printed_folder'];
+            $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
             if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
                 $excludeAttachmentTypes[] = 'document_with_notes';
             }
@@ -111,7 +111,7 @@ class ResourceListController
             $select = [
                 'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'mlb_coll_ext.alt_identifier',
                 'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"',
-                'mlb_coll_ext.closing_date'
+                'mlb_coll_ext.closing_date', 'res_letterbox.locker_user_id', 'res_letterbox.locker_time'
             ];
             $tableFunction = ['status', 'mlb_coll_ext', 'priorities'];
             $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id', 'res_letterbox.priority = priorities.id'];
@@ -167,6 +167,15 @@ class ResourceListController
                     }
                 }
                 $formattedResources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $GLOBALS['userId']]);
+                $isLocked = true;
+                if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                    $isLocked = false;
+                } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+                    $isLocked = false;
+                } elseif (strtotime($resource['locker_time']) < time()) {
+                    $isLocked = false;
+                }
+                $formattedResources[$key]['isLocked'] = $isLocked;
 
                 $display = [];
                 foreach ($listDisplay as $value) {

@@ -16,6 +16,7 @@ use Attachment\models\AttachmentModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
+use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
@@ -64,6 +65,24 @@ trait ShippingTrait
 
         $contacts = [];
         foreach ($attachments as $attachment) {
+            if (!empty($attachment['res_id'])) {
+                $isVersion = false;
+                $attachmentId = $attachment['res_id'];
+            } else {
+                $isVersion = true;
+                $attachmentId = $attachment['res_id_version'];
+            }
+
+            $convertedDocument = AdrModel::getConvertedDocumentById([
+                'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
+                'resId'     => $attachmentId,
+                'collId'    => 'attachments_coll',
+                'type'      => 'PDF',
+                'isVersion' => $isVersion
+            ]);
+            if (empty($convertedDocument)) {
+                return ['errors' => ['No conversion for attachment']];
+            }
             if (empty($attachment['dest_address_id'])) {
                 return ['errors' => ['Contact is empty for attachment']];
             }

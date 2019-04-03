@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core";
+import { LatinisePipe } from "ngx-pipes";
 
 
 
@@ -7,10 +8,13 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class FilterListPipe implements PipeTransform {
 
+	constructor(private latinisePipe: LatinisePipe) {}
+
 	transform(value: any, args: string, id: string): any {
 		if (id !== undefined) {
 			let filter = args.toLocaleLowerCase();
-			return filter ? value.filter((elem:any) => elem[id].toLocaleLowerCase().indexOf(filter) != -1) : value;
+			return filter ? value.filter((elem:any) => this.latinisePipe.transform(elem[id].toLocaleLowerCase()).indexOf(this.latinisePipe.transform(filter)) != -1) : value;
+
 		} else {
 			console.log('Init filter failed for values : ');
 			console.log(value);

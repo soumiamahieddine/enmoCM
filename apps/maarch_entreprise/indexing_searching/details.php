@@ -262,7 +262,7 @@ if (_ID_TO_DISPLAY == 'res_id') {
     $idToDisplay = $res->alt_identifier;
     $titleToDisplay = strtolower(_NUM).$s_id;
 }
-echo "<i style='font-style:normal;' title='{$titleToDisplay}'>"._DETAILS.' : '._DOC." {$idToDisplay}</i>";
+echo "<i style='font-style:normal;' title='{$titleToDisplay}'>"._DETAILS.' : '._MAIL." {$idToDisplay}</i>";
 echo '</h1>';
 ?>
 <div id="inner_content" class="clearfix">
@@ -391,7 +391,10 @@ if ($stmt->rowCount() == 0) {
                 ?>
                 <a href="../../rest/res/<?php functions::xecho($s_id); ?>/content" target="_blank">
                     <?php echo _VIEW_DOC;?>
-                    <i class="tooltip visaPjUp tooltipstered fa fa-download fa-2x" style="height: 16px; width: 16px;font-size: 19px;padding-bottom: 11px;padding-left: 9px;margin-right:6px;padding-top:7px;margin-top: -9px;" title="<?php echo _VIEW_DOC; ?>"></i>
+                    <i class="tooltip visaPjUp tooltipstered fa fa-eye fa-2x" style="height: auto; width: auto;font-size: 14px;margin-right:6px;margin-top: -9px;" title="<?php echo _VIEW_DOC; ?>"></i>
+                </a>
+                <a href="../../rest/resources/<?php functions::xecho($s_id); ?>/originalContent" target="_blank">
+                    <i class="tooltip visaPjUp tooltipstered fa fa-download fa-2x" style="height: auto; width: auto;font-size: 14px;margin-right:6px;margin-top: -9px;" title="<?php echo _DOWNLOAD_MAIN_DOCUMENT; ?>"></i>
                 </a>
             <?php
             } ?>

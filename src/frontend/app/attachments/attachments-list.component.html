@@ -1,94 +1,121 @@
 <ng-container *ngIf="!loading">
     <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
-        {{lang.noAttachement}}
+        {{lang.noAttachment}}
     </div>
-    <mat-card *ngFor="let attachment of attachments" [style.background-image]="'url('+attachment.thumbnailUrl+')'"
-        style="padding:0;margin: 30px;min-height: 250px;background-size: cover;">
-        <a mat-mini-fab color="primary" class="downloadButton" title="Télécharger le fichier original" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resIds[0]}}&id={{attachment.res_id}}" target="_blank">
-            <mat-icon fontSet="fas" fontIcon="fa-download fa-2x"></mat-icon>
-        </a>
+    <mat-form-field [style.visibility]="attachments.length > 0 ? 'visible' : 'hidden'" floatLabel="never"
+        style="padding-left:20px;padding-right:20px;">
+        <input matInput placeholder="{{lang.searchByAttachmentType}}" #listFilter>
+    </mat-form-field>
+    <mat-card *ngFor="let attachment of attachments | filterList:listFilter.value:'typeLabel'"
+        [style.background-image]="'url('+attachment.thumbnailUrl+')'"
+        style="padding:0;margin: 30px;min-height: 300px;background-size: cover;">
+        <div class="pjToolsContent">
+            <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
+                matBadge="{{attachment.relation}}" disabled>{{lang.version}}</button>
+            <!--<button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
+                [matMenuTriggerFor]="menu" matBadge="{{attachment.relation}}">{{lang.version}}</button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item *ngFor="let item of items">{{lang.version}} 1</button>
+            </mat-menu>-->
+            <a mat-button color="primary" class="downloadButton" title="{{lang.downloadOriginalFile}}"
+                href="../../rest/resources/{{resIds[0]}}/attachments/{{attachment.res_id}}/originalContent"
+                target="_blank">
+                {{attachment.format}}
+            </a>
+            <button color="primary" class="actionsButton" mat-icon-button [matMenuTriggerFor]="menuPjAction">
+                <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v"></mat-icon>
+            </button>
+            <mat-menu #menuPjAction="matMenu">
+                <button mat-menu-item (click)="setInSignatureBook(attachment)">
+                    <mat-checkbox color="primary" [(ngModel)]="attachment.in_signature_book"></mat-checkbox>
+                    {{lang.putInSignatureBook}}
+                </button>
+                <button mat-menu-item (click)="setInSendAttachment(attachment)">
+                    <mat-checkbox color="primary" [(ngModel)]="attachment.in_send_attach"></mat-checkbox>
+                    {{lang.putInSendAttach}}
+                </button>
+            </mat-menu>
+        </div>
+
         <div class="infosPj">
-            <div class="line subInfos">
-                <div title="{{attachment.identifier}} (n°{{attachment.res_id}})">{{attachment.identifier}}</div>
-                <div title="{{attachmentTypes[attachment.attachment_type].label}}" style="text-align:center;">
-                    {{attachmentTypes[attachment.attachment_type].label}}
-                </div>
-                <div *ngIf="attachment.update_date == null" title='{{attachment.creation_date | date : "le dd/MM/y à HH:mm"}} par {{attachment.firstname_typist}}
-                    {{attachment.lastname_typist}}' style="text-align:right;">
-                    {{attachment.creation_date | timeAgo}}
-                </div>
-                <div *ngIf="attachment.update_date != null" style="text-align:right;"
-                    title='{{attachment.update_date | date : "le dd/MM/y à HH:mm"}} par {{attachment.firstname_updated}} {{attachment.lastname_updated}}'>
-                    {{attachment.update_date | timeAgo}}
-                </div>
-            </div>
-            <div class="line">
-                <div style="text-align:center;padding: 5px;">
-                    {{attachment.title | shorten: 50: '...'}}
-                </div>
-            </div>
-            <div class="line subInfosBottom">
-                <div>{{attachment.status}}</div>
-                <div *ngIf="attachment.return_date != null && attachment.effective == null"
-                    title='{{attachment.return_date | date : "le dd/MM/y à HH:mm"}}' style="text-align:right;">
-                    <i class="fa fa-stopwatch" title="Date de retour attendue"></i>&nbsp;<span
-                        [innerHTML]="attachment.return_date | timeLimit"></span>
-                </div>
-                <div *ngIf="attachment.effective != null" style="text-align:right;">
-                    <i class="fa fa-lock" title="Date de retour"></i>&nbsp;<span
-                        title='{{attachment.effective_date | date : "le dd/MM/y à HH:mm"}}'
-                        [innerHTML]="attachment.effective_date | timeAgo"></span>
-                </div>
-            </div>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="subInfos">
+                            <div class="col-md-6" title="{{attachment.identifier}} (n°{{attachment.res_id}})">
+                                {{attachment.identifier}}
+                            </div>
+                            <div class="col-md-6" title="{{attachment.attachmentTypeLabel}}"
+                                style="text-align:center;flex: 1;">
+                                {{attachment.typeLabel}}
+                            </div>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput
+                                title='{{attachment.creation_date | date : lang.onRange + " dd/MM/y " + lang.atRange +" HH:mm"}}'
+                                [value]="attachment.creation_date | timeAgo" placeholder="{{lang.createdOn}}" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput title="{{attachment.firstname_typist}} {{attachment.lastname_typist}}"
+                                [value]="attachment.lastname_typist != null ? attachment.firstname_typist+' '+attachment.lastname_typist : lang.undefined"
+                                placeholder="{{lang.by}}" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput [value]="attachment.status" title="{{attachment.status}}"
+                                placeholder="{{lang.status}}" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput [value]="attachment.title" title="{{attachment.title}}"
+                                placeholder="{{lang.subject}}" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6" *ngIf="attachment.return_date != null">
+                        <mat-form-field>
+                            <input matInput
+                                title='{{attachment.return_date | date : lang.onRange + " dd/MM/y " + lang.atRange +" HH:mm"}}'
+                                [value]="attachment.return_date | timeAgo" placeholder=" {{lang.expectedReturnDate}}"
+                                disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6" *ngIf="attachment.return_date != null">
+                        <mat-form-field>
+                            <input matInput
+                                title='{{attachment.effective_date | date : lang.onRange + " dd/MM/y " + lang.atRange +" HH:mm"}}'
+                                [value]="attachment.effective_date | timeAgo" placeholder="{{lang.returnDate}}"
+                                disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-12" *ngIf="attachment.contact != null && attachment.contact != ''">
+                        <mat-form-field>
+                            <input matInput [value]="attachment.contact" title="{{attachment.contact}}"
+                                placeholder="{{lang.forCapital}}" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="attachment.update_date != null" class="col-md-6">
+                        <mat-form-field>
+                            <input matInput
+                                title='{{attachment.update_date | date : lang.onRange + " dd/MM/y " + lang.atRange +" HH:mm"}}'
+                                [value]="attachment.update_date | timeAgo" placeholder="{{lang.modifiedOn}}" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="attachment.update_date != null" class="col-md-6">
+                        <mat-form-field>
+                            <input matInput [value]="attachment.firstname_updated+' '+attachment.lastname_updated"
+                                placeholder="{{lang.by}}"
+                                title="{{attachment.firstname_updated}} {{attachment.lastname_updated}}" disabled>
+                        </mat-form-field>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
     </mat-card>
 </ng-container>
-
-<!--<mat-nav-list *ngIf="!loading">
-    <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
-        AUCUN ATTACHEMENT
-    </div>
-    <ng-container *ngFor="let attachment of attachments">
-        <a target="_blank" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resIds[0]}}&id={{attachment.res_id}}" mat-list-item (click)="openLink($event)" style="height:auto;">
-            <span mat-line>
-                <div style="display:flex;color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
-                    <span style="flex:1;text-align: center;">
-                        <small color="primary" *ngIf="attachment.update_date != null" title='{{attachment.update_date | date : "le dd/MM/y à HH:mm"}}'>Modifié
-                            par {{attachment.firstname_updated}} {{attachment.lastname_updated}} ({{attachment.update_date | timeAgo}})</small>
-                    </span>
-                </div>
-                <div style="display:flex;">
-                    <div style="text-align: center;align-items: center;padding-right: 15px;width:180px;">
-                        <div style="color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;" title="{{attachmentTypes[attachment.attachment_type].label}}">{{attachmentTypes[attachment.attachment_type].label}}</div>
-                        <div class="fa fa-paperclip fa-2x" title="{{attachment.status}}" color="primary"></div>
-                        <div style="color: rgba(0,0,0,0.4);font-size: 90%;padding:5px;" title="{{attachment.identifier}} (n°{{attachment.res_id}})">{{attachment.identifier}}</div>
-                    </div>
-                    <div style="flex:5;">
-                        <div style="display:flex;color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
-                            <span style="flex:1" title='{{attachment.creation_date | date : "le dd/MM/y à HH:mm"}}'>
-                                <i class="fa fa-calendar" title="Date d'enregistrement"></i> {{attachment.creation_date | timeAgo}}
-                            </span>
-                            <span style="flex:1;text-align: right;">
-                                <span *ngIf="attachment.return_date != null && attachment.effective == null" title='{{attachment.return_date | date : "le dd/MM/y à HH:mm"}}'>
-                                    <i class="fa fa-stopwatch" title="Date de retour attendue"></i>&nbsp;<span [innerHTML]="attachment.return_date | timeLimit"></span>
-                                </span>
-                                <span *ngIf="attachment.effective != null">
-                                    <i class="fa fa-lock" title="Date de retour"></i>&nbsp;<span title='{{attachment.effective_date | date : "le dd/MM/y à HH:mm"}}' [innerHTML]="attachment.effective_date | timeAgo"></span>
-                                </span>
-                            </span>
-                        </div>
-                        <div style="padding-top:10px;padding-bottom:10px;">
-                            {{attachment.title}}
-                        </div>
-                        <div style="display:flex;color: rgba(0,0,0,0.4);font-size: 90%;overflow: hidden;text-overflow: ellipsis;">
-                            <span style="flex:1"><i class="fa fa-user" title="Auteur"></i> {{attachment.firstname_typist}}
-                                {{attachment.lastname_typist}}</span>
-                            <span style="flex:1;text-align: right;">{{attachment.status}}</span>
-                        </div>
-                    </div>
-                </div>
-            </span>
-        </a>
-        <mat-divider style="margin:10px;"></mat-divider>
-    </ng-container>
-</mat-nav-list>-->

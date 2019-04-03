@@ -69,8 +69,10 @@ $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getA
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
-$app->get('/res/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getAttachmentsListById');
+$app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
+$app->get('/resources/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getByResId');
 $app->get('/res/{resIdMaster}/attachments/{resId}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
+$app->get('/resources/{resId}/attachments/{id}/originalContent', \Attachment\controllers\AttachmentController::class . ':getOriginalFileContent');
 $app->get('/res/{resIdMaster}/attachments/{resId}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 
 //AutoComplete
@@ -255,6 +257,7 @@ $app->post('/resources', \Resource\controllers\ResController::class . ':create')
 $app->post('/res', \Resource\controllers\ResController::class . ':createRes');
 $app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
 $app->get('/res/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
+$app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
 $app->get('/res/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');

@@ -15,7 +15,7 @@
     <mat-tab label="{{lang.diffusionList}}">
         <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
     </mat-tab>
-    <mat-tab label="{{lang.visa}}" [disabled]="appVisaWorkflow.getVisaCount() == 0">
+    <mat-tab label="{{lang.visaWorkflow}}" [disabled]="appVisaWorkflow.getVisaCount() == 0">
         <app-visa-workflow #appVisaWorkflow [injectDatas]="injectDatasParam"></app-visa-workflow>
     </mat-tab>
     <mat-tab label="{{lang.avis}}" [disabled]="appAvisWorkflow.getAvisCount() == 0">

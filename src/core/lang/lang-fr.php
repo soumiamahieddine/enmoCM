@@ -131,8 +131,8 @@ define('_NOTIFICATION_ALREADY_EXIST', 'Notification déjà existante');
 define('_WRONG_PSW', 'Le mot de passe actuel n\'est pas correct');
 define('_ALREADY_USED_PSW', 'Le mot de passe a déjà été utilisé');
 define('_BAD_LOGIN_OR_PSW', 'Mauvais nom d\'utilisateur ou mauvais mot de passe');
-define('_ACCOUNT_LOCKED_FOR', 'Nombre de tentatives de connexion dépassée. Votre compte est vérouillé pendant');
-define('_ACCOUNT_LOCKED_UNTIL', 'Nombre de tentatives de connexion dépassée. Compte vérouillé jusqu\'au');
+define('_ACCOUNT_LOCKED_FOR', 'Nombre de tentatives de connexion dépassée. Votre compte est verrouillé pendant');
+define('_ACCOUNT_LOCKED_UNTIL', 'Nombre de tentatives de connexion dépassée. Compte verrouillé jusqu\'au');
 define('_MAX_SIZE_UPLOAD_REACHED', 'Taille maximum de fichier dépassée');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin de la zone de stockage inaccessible');
 define('_BACK_FROM_VACATION', 'de retour de son absence');
@@ -159,7 +159,7 @@ define('_ENTITIES', 'Entités');
 define('_MANAGE_ENTITIES_DESC', 'Gérer la structure de votre organisation (pôles, services et bureaux). Ainsi que les modèles de diffusion et circuits de visa associés aux entités.');
 define('_LISTMODELS_WORKFLOW', 'Modèles de circuit');
 define('_MANAGE_LISTMODELS_WORKFLOW_DESC', "Gérer les modèles de circuits d'avis et de visa pouvant être utilisés dans un courrier.");
-define('_DOCTYPES', 'Typologies documentaires');
+define('_DOCTYPES', 'Typologies de courriers');
 define('_ADMIN_DOCTYPES_DESC', "Définir la structure interne d'un dossier (chemise / sous-chemise / type de document). Définir pour chaque pièce la liste des index à saisir, et leur caractère obligatoire pour la complétude du dossier.");
 define('_FILEPLANS', 'Plans de classement organisationnel');
 define('_ADMIN_FILEPLANS_DESC', 'Gestions du plan de classement organisationnel (Permet de gérer des plans spécifiques à une entité).');
@@ -202,7 +202,7 @@ define('_EMAILSERVER_PARAM_DESC', 'Connecter votre serveur e-mail à Maarch Cour
 define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
 define('_ADMIN', 'Administration');
 define('_ADV_SEARCH_MLB', 'Rechercher');
-define('_INDEXING_MLB', 'Enregistrer un courrier/doc');
+define('_INDEXING_MLB', 'Enregistrer un courrier');
 define('_SEARCH_CONTACTS', 'Rechercher un contact');
 define('_PARAM_MLB_DOCTYPES', 'Paramétrage des types de document ');
 define('_PARAM_MLB_DOCTYPES_DESC', 'Paramétrage des types de document ');
@@ -370,7 +370,7 @@ define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', "Modifier l'attributaire dans la liste
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la fiche détaillée');
 define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par service');
 define('_EXPORT_SEDA_VIEW', 'Voir le bordereau');
-define('_PUT_DOC_IN_FILEPLAN', 'Classer des courrier');
+define('_PUT_DOC_IN_FILEPLAN', 'Classer des courriers');
 define('_PUT_DOC_IN_FILEPLAN_COMMENT', 'Classer des courriers dans le plan de classement organisationnel');
 define('_PERSONNAL_FILEPLAN', 'Plan de classement personnel');
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');
@@ -476,13 +476,6 @@ define("_SHIPPINGS_ADMIN", "Modèles d'envois postaux");
 define("_SHIPPINGS_ADMIN_DESC", "Configurer les modèles d'envois postaux, par exemple pour Maileva");
 
 define("_SEND_SHIPPING", "Envoyer un pli postal");
-
-define("_MAILEVA_CONFIG_DOES_NOT_EXIST", "La configuration Maileva n'existe pas");
-define("_DATA_RESOURCES_FORMAT", "Resources est vide ou n'est pas un tableau");
-define("_NO_CONTACT_ATTACHED_FOR", "Aucun contact attaché pour cette pièce jointe");
-define("_ONLY_FRANCE_AVAILABLE_FOR", "L'adresse n'est pas en France pour cette pièce jointe");
-define("_INCOMPETE_ADDRESS_FOR", "Adresse incomplète pour cette pièce jointe");
-define("_NO_ATTACHMENT_TO_SEND", "Aucune pièce jointe à envoyer");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "Voir les courriers annotés");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "Voir les pièces jointes de type 'Document annoté'");

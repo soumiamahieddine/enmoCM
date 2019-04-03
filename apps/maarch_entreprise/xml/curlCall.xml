@@ -173,7 +173,7 @@
         <id>updateContactToExternalApplication</id>
         <enabled>false</enabled>
         <url></url>
-        <method>POST-LOCALEO</method>
+        <method>POST</method>
         <header></header>
         <sendInObject>
             <objectName>citoyen</objectName>

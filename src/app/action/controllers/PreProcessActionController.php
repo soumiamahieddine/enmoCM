@@ -18,6 +18,7 @@ use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
+use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
 use Entity\models\EntityModel;
@@ -334,29 +335,22 @@ class PreProcessActionController
         return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
     }
 
-    public function checkShippings(Request $request, Response $response, array $aArgs)
+    public function checkShippings(Request $request, Response $response)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-
-        // $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
-        // if (!empty($errors['errors'])) {
-        //     return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
-        // }
-
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
-            return $response->withStatus($errors['code'])->withJson(['errors' => _MAILEVA_CONFIG_DOES_NOT_EXIST]);
+            return $response->withStatus(400)->withJson(['errors' => 'Maileva configuration does not exist', 'errorLang' => 'missingMailevaConfig']);
         }
 
         $data = $request->getParsedBody();
 
         if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
-            return $response->withStatus(400)->withJson(['errors' => _DATA_RESOURCES_FORMAT]);
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
         }
 
         $data['resources'] = array_slice($data['resources'], 0, 500);
         if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => _DOCUMENT_OUT_PERIMETER]);
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $aDestination = ResModel::get([
@@ -376,11 +370,11 @@ class PreProcessActionController
             }
         }
 
+        $entitiesInfos = [];
         if (!empty($entities)) {
-            $aEntities = EntityModel::get(['select' => ['id', 'entity_label'], 'where' => ['entity_id in (?)'], 'data' => $entities]);
+            $aEntities = EntityModel::get(['select' => ['id', 'entity_label'], 'where' => ['entity_id in (?)'], 'data' => [$entities]]);
 
             $entitiesId = [];
-            $entitiesInfos = [];
             foreach ($aEntities as $value) {
                 $entitiesId[] = (string)$value['id'];
                 $entitiesInfos[] = $value['entity_label'];
@@ -404,29 +398,49 @@ class PreProcessActionController
                 foreach ($aAttachments as $key => $attachment) {
                     if ($attachment['res_id_master'] == $valueResId) {
                         $resIdFound = true;
+                        if (!empty($attachment['res_id'])) {
+                            $isVersion = false;
+                            $attachmentId = $attachment['res_id'];
+                        } else {
+                            $isVersion = true;
+                            $attachmentId = $attachment['res_id_version'];
+                        }
+                        $convertedDocument = AdrModel::getConvertedDocumentById([
+                            'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
+                            'resId'     => $attachmentId,
+                            'collId'    => 'attachments_coll',
+                            'type'      => 'PDF',
+                            'isVersion' => $isVersion
+                        ]);
+                        if (empty($convertedDocument)) {
+                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentConversion', 'attachmentIdentifier' => $attachment['identifier']];
+                            unset($aAttachments[$key]);
+                            break;
+                        }
                         if (empty($attachment['dest_address_id'])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _NO_CONTACT_ATTACHED_FOR . ' : ' . $attachment['identifier']];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$attachment['dest_address_id']]]);
                         if (empty($contact[0])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _NO_CONTACT_ATTACHED_FOR . ' : ' . $attachment['identifier']];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _ONLY_FRANCE_AVAILABLE_FOR . ' : ' . $attachment['identifier']];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noFranceContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $afnorAddress = ContactController::getContactAfnor($contact[0]);
                         if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _INCOMPETE_ADDRESS_FOR . ' : ' . $attachment['identifier']];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'incompleteAddressForPostal', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
@@ -438,7 +452,7 @@ class PreProcessActionController
 
                 if (!$resIdFound) {
                     $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                    $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => _NO_ATTACHMENT_TO_SEND];
+                    $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentToSend'];
                 }
             }
     

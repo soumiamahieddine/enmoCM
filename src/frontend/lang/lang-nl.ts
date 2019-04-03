@@ -128,7 +128,8 @@ export const LANG_NL = {
     "documentTypeDeleted" : "Documenttype verwijderd",
     "documentTypeReplacement" : "Vervanging van het documenttype",
     "documentTypeUpdated" : "Documenttype bijgewerkt",
-    "doNothingRedirect" : "Niets doen (de eenheid ontkoppelen)",
+    "doNothingRedirect" : "De entiteit loskoppelen van het profiel van de gebruiker", //_TO_TRANSLATE
+    "doNothingRedirectInformations"     : "De mailinglijsten van de brieven en sjablonen van de entiteit worden niet gewijzigd", //_TO_TRANSLATE
     "doNotModifyUnlessExpert" : "Wijzig dit onderdeel niet tenzij u weet wat u doet. Een verkeerde instelling kan leiden tot een slechte werking van de toepassing!",
     "durationCurrentUse" : "Gewoonlijke nutsduur (in dagen)",
     "eachDay" : "Dagelijks",
@@ -329,7 +330,8 @@ export const LANG_NL = {
     "processMode" : "Verwerkingswijze",
     "processType" : "Verwerkingstype",
     "pswReseted" : "Wachtwoord opnieuw ingesteld",
-    "reaffectUserRedirect" : "Terug toekennen aan de gebruiker (verdelingslijst + model van de eenheid)",
+    "reaffectUserRedirect" : "Terug toekennen aan de gebruiker",
+    "reaffectUserRedirectInformations"  : "De gebruiker wordt vervangen door de geselecteerde gebruiker in de mailinglijsten van de mail en template van de entiteit", //_TO_TRANSLATE
     "reactivateUserDeleted" : "De ingevoerde gebruikersnaam is toegekend aan een verwijderde gebruiker. Wilt u deze opnieuw activeren?",
     "reassign" : "Opnieuw toewijzen",
     "record" : "element(en)",
@@ -345,7 +347,8 @@ export const LANG_NL = {
     "reinitPassword" : "Wachtwoord opnieuw instellen",
     "relatedUsers" : "Gekoppelde gebruiker(s)",
     "relatedBaskets" : "Gekoppeld(e) bakje(s)",
-    "removeUserRedirect" : "De persoon verwijderen (verdelingslijst + model van de eenheid)",
+    "removeUserRedirect" : "Verwijder de gebruiker van de mailinglijsten",
+    "removeUserRedirectInformations"    : "<em>De gebruiker wordt verwijderd uit de mailinglijsten en sjabloon van de entiteit <b>behalve in het geval dat het wordt toegekend</b></em>", //_TO_TRANSLATE
     "renewPsw" : "Wachtwoord opnieuw intypen",
     "reports" : "Statistieken",
     "resetPsw" : "Wachtwoord opnieuw instellen",
@@ -519,6 +522,11 @@ export const LANG_NL = {
     "lockDocserver" : "De opslagruimte vergrendelen (enkel lezen)",
     "mail" : "Brief",
     "mailAttachments" : "bijkomend(e) stuk(ken)",
+    "missingMailevaConfig"          : "Maileva configuration does not exist _TO_TRANSLATE",
+    "noAttachmentToSend"                : "No attachment to send _TO_TRANSLATE",
+    "noAttachmentConversion"            : "No PDF conversion for this attachment TRANSLATE",
+    "noFranceContact"                   : "Address is not in France for this contact TRANSLATE",
+    "incompleteAddressForPostal"        : "Incomplete address for postal TRANSLATE",
     "marchShort" : "Maart",
     "mayShort" : "Mei",
     "maxSize" : "Maximumgrootte",
@@ -918,9 +926,6 @@ export const LANG_NL = {
     "shipping_economic"                            : "Economic (J+4)", //_TO_TRANSLATE
     "shipping_registered_mail"                            : "Registered mail", //_TO_TRANSLATE
     "shipping_registered_mail_ar"                            : "Registered mail AR", //_TO_TRANSLATE
-    "shipping_small_simple"                            : "Small format (DL) - Simple window", //_TO_TRANSLATE
-    "shipping_small_double"                            : "Small format (DL) - Double window", //_TO_TRANSLATE
-    "shipping_big_a4"                            : "Big format A4 (C4)", //_TO_TRANSLATE
     "shipping_firstPagePrice"                            : "1st page", //_TO_TRANSLATE
     "shipping_nextPagePrice"                            : "Next page(s)", //_TO_TRANSLATE
     "shipping_postagePrice"                            : "Postage up to 20g", //_TO_TRANSLATE
@@ -944,8 +949,26 @@ export const LANG_NL = {
     "destinationChangingInfoMass"                            : "These mails following external entity of", //_TO_TRANSLATE
     "destinationChangingInfoMass2"                            : "will be redirected to entity", //_TO_TRANSLATE
     "selected"                            : "selected", //_TO_TRANSLATE
-    "noDiffusionList"                           : "NO DIFFUSION LIST", //_TO_TRANSLATE
+    "noDiffusionList"                           : "No diffusion list", //_TO_TRANSLATE
     "chooseAnotherEntityUser"                   : "Choose another person from the entity", //_TO_TRANSLATE
     "totalPrice"                                : "Total price", //_TO_TRANSLATE
     "noNote"                                    : "Geen notities", //_TO_TRANSLATE
+    "searchByAttachmentType"                    : "Search by attachment type", //_TO_TRANSLATE
+    "downloadOriginalFile"                      : "Download the original file", //_TO_TRANSLATE
+    "version"                                   : "Version", //_TO_TRANSLATE
+    "putInSignatureBook"                        : "Put in signature book", //_TO_TRANSLATE
+    "putInSendAttach"                           : "Put in send attachement", //_TO_TRANSLATE
+    "by"                                        : "By", //_TO_TRANSLATE
+    "expectedReturnDate"                        : "Expected return date", //_TO_TRANSLATE
+    "returnDate"                                : "Datum van terugkeer", //_TO_TRANSLATE
+    "forCapital"                                : "Voor",
+    "modifiedOn"                                : "Modified on",  //_TO_TRANSLATE
+    "onRange"                                   : "op",  //_TO_TRANSLATE
+    "atRange"                                   : "om",  //_TO_TRANSLATE
+    "addPerson"                                 : "Add a person", //_TO_TRANSLATE
+    "actionDone"                                : "Action effectuée", //_TO_TRANSLATE
+    "actionMassForbidden"                       : "This action is forbidden in mass", //_TO_TRANSLATE
+    "quickSearchInfo"                           : "Target search ", //_TO_TRANSLATE
+    "quickSearchTarget"                         : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
+    "warnLockResInProgress"                     : "This mail is in progress by an other user", //_TO_TRANSLATE
 };

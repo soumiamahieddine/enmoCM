@@ -31,7 +31,7 @@ if (!defined('_ADMIN_USERS_DESC')) { define('_ADMIN_USERS_DESC', 'Gebruikersprof
 if (!defined('_ADMIN_DOCSERVERS_DESC')) { define('_ADMIN_DOCSERVERS_DESC', 'Opslagruimtes toevoegen opschorten of wijzigen. De opslagruimtes per type plaatsen waartoe ze behoren en hun primaire groep bepalen.');}
 if (!defined('_ADMIN_GROUPS')) { define('_ADMIN_GROUPS', 'Gebruikersgroepen');}
 if (!defined('_ADMIN_GROUPS_DESC')) { define('_ADMIN_GROUPS_DESC', 'Gebruikersgroepen toevoegen opschorten of wijzigen. Privileges of toegangstoelatingen aan assets toekennen.');}
-if (!defined('_ADMIN_ARCHITECTURE')) { define('_ADMIN_ARCHITECTURE', 'Soorten documentaires');}
+if (!defined('_ADMIN_ARCHITECTURE')) { define('_ADMIN_ARCHITECTURE', 'Soorten brieven');}
 if (!defined('_ADMIN_ARCHITECTURE_DESC')) { define('_ADMIN_ARCHITECTURE_DESC', 'De interne structuur van een map bepalen (map / submap / documenttype). Voor elk document de in te voeren indexlijst en hun verplicht teken voor de volledigheid van de map bepalen.');}
 if (!defined('_VIEW_HISTORY')) { define('_VIEW_HISTORY', 'Geschiedenis');}
 if (!defined('_VIEW_HISTORY_BATCH')) { define('_VIEW_HISTORY_BATCH', 'Geschiedenis van de batches');}

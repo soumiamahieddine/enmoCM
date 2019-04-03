@@ -270,7 +270,7 @@ if ($mode == 'add') {
         }
         if (!empty($contact_id)) {
             $communicationTypeModel = \Contact\models\ContactModel::getContactCommunication(['contactId' => $contact_id]);
-            $contactInfo = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['contact_id = ?'], 'data' => [$contact_id]]);
+            $contactInfo = \Contact\models\ContactModel::getByAddressId(['select' => ['external_id'], 'addressId' => $address_id]);
             $externalId = (array)json_decode($contactInfo['external_id']);
             if (!empty($communicationTypeModel) && !empty($externalId['m2m'])) {
                 $adress_mail = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $address_id]);

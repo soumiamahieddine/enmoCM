@@ -1,7 +1,22 @@
 <div class="bg-head-title-tool">
-    <button mat-icon-button *ngIf="!mobileMode">
+    <form *ngIf="!hideSearch" ngNoForm style="height: 40px;" name="choose_query" id="choose_query" method="post"
+        action="index.php?display=true&amp;dir=indexing_searching&amp;page=search_adv_result">
+        <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple">
+        <input type="hidden" name="meta[]" value="welcome#welcome#welcome">
+        <input type="hidden" name="baskets_clause" value="true">
+        <mat-form-field floatLabel="never" style="width:100%;margin-top: -3px;margin-left:-13px;font-size: 12px;">
+            <input #searchInput="matInput" matInput type="text" (blur)="hideSearch = !hideSearch" name="welcome" title="{{lang.searchMails}}"  placeholder="{{lang.searchMails}}">
+            <button mat-icon-button matSuffix *ngIf="!mobileMode" style="opacity:0.5;">
+                <mat-icon class="fa fa-search" style="font-size:22px;"></mat-icon>
+            </button>
+        </mat-form-field>
+        <input #searchHome type="submit" name="submit" value="" style="display:none;">
+    </form>
+
+    <button title="{{lang.quickSearchInfo + ' : '+ lang.quickSearchTarget}}" (click)="showSearchInput()" mat-icon-button *ngIf="hideSearch" style="opacity:0.5;">
         <mat-icon class="fa fa-search" style="font-size:22px;"></mat-icon>
     </button>
+
     <button mat-icon-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" matTooltip="{{lang.menu}}">
         <mat-icon class="fa fa-th" style="font-size:22px;"></mat-icon>
     </button>
@@ -14,9 +29,9 @@
             </button>
         </ng-container>
     </mat-menu>
-    <button *ngIf="!mobileMode" mat-button  [matMenuTriggerFor]="menu">
+    <button *ngIf="!mobileMode" mat-button [matMenuTriggerFor]="menu">
         <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white; margin:0px 12px 8px 0px;"></mat-icon>
-            {{headerService.user.firstname | titlecase }} <b>{{headerService.user.lastname | uppercase}}</b>
+        {{headerService.user.firstname | titlecase }} <b>{{headerService.user.lastname | uppercase}}</b>
     </button>
     <button *ngIf="mobileMode" mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white;height: auto;"></mat-icon>

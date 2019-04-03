@@ -158,7 +158,7 @@ define('_ENTITIES', 'Eenheden');
 define('_MANAGE_ENTITIES_DESC', 'De structuur van uw organisatie beheren (polen, diensten en kantoren). Evenals de verdelingsmodellen en de goedkeuringscircuits die aan de eenheden gekoppeld zijn.');
 define('_LISTMODELS_WORKFLOW', 'Circuitmodellen');
 define('_MANAGE_LISTMODELS_WORKFLOW_DESC', 'De modellen van de berichten- en goedkeuringscircuits beheren die in een brief gebruikt kunnen worden.');
-define('_DOCTYPES', 'Soorten documentaires');
+define('_DOCTYPES', 'Soorten brieven');
 define('_ADMIN_DOCTYPES_DESC', 'De interne structuur van een map bepalen (map / submap / documenttype). Voor elk document de in te voeren indexlijst en hun verplicht teken voor de volledigheid van de map bepalen.');
 define('_FILEPLANS', 'Organisatorische klasseringsplannen');
 define('_ADMIN_FILEPLANS_DESC', 'Beheer van het organisatorisch klasseringsplan (om plannen te beheren die specifiek zijn voor een eenheid).');
@@ -478,13 +478,6 @@ define("_SHIPPINGS_ADMIN", "Shippings admin_TO_TRANSLATE");
 define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva_TO_TRANSLATE");
 
 define("_SEND_SHIPPING", "Send a mailpiece_TO_TRANSLATE");
-
-define("_MAILEVA_CONFIG_DOES_NOT_EXIST", "Maileva configuration does not exist_TO_TRANSLATE");
-define("_DATA_RESOURCES_FORMAT", "Data resources is empty or not an array_TO_TRANSLATE");
-define("_NO_CONTACT_ATTACHED_FOR", "No contact attached for this attachment_TO_TRANSLATE");
-define("_ONLY_FRANCE_AVAILABLE_FOR", "Address is not in France for this attachment_TO_TRANSLATE");
-define("_INCOMPETE_ADDRESS_FOR", "Incomplete address for this attachment_TO_TRANSLATE");
-define("_NO_ATTACHMENT_TO_SEND", "Not attachment to send_TO_TRANSLATE");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "View mail with notes_TO_TRANSLATE");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "View attachment of 'document_with_notes' type_TO_TRANSLATE");

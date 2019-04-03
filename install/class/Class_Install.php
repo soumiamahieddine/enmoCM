@@ -48,6 +48,7 @@ class Install extends functions
         array('FULLTEXT_ATTACH_VERSION', 'fulltext_attachments_version'),
         array('TEMPLATES', 'templates'),
         array('ARCHIVETRANSFER', 'archive_transfer'),
+        array('ACKNOWLEDGEMENT_RECEIPTS', 'acknowledgment_receipts'),
     );
 
     public function __construct()

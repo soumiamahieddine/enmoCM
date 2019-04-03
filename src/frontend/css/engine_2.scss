@@ -1,5 +1,10 @@
 /******* CSS ACCORDING TO FINAL CSS *********/
-.example-container {
+html,body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.maarch-container {
     position: absolute !important;
     top: 0;
     bottom: 0;

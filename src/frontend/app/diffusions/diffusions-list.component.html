@@ -37,7 +37,7 @@
                     <span style="opacity: 0.5;text-align: center;font-size: 10px;padding: 10px;">{{lang.noPerson}}</span>
                     <button mat-icon-button *ngIf="role.id == 'dest' && injectDatas.editable"
                         (click)="loadDestUserList()" [matMenuTriggerFor]="menuDestUserList"
-                        title="lang.chooseAnotherEntityUser">
+                        title="{{lang.chooseAnotherEntityUser}}">
                         <mat-icon class="fa fa-edit" color="primary"></mat-icon>
                     </button>
                 </div>
@@ -58,11 +58,11 @@
                         {{diffusion.descriptionToDisplay}} </p>
                     <button mat-icon-button *ngIf="role.id == 'dest' && injectDatas.editable"
                         (click)="loadDestUserList()" [matMenuTriggerFor]="menuDestUserList"
-                        title="lang.chooseAnotherEntityUser">
+                        title="{{lang.chooseAnotherEntityUser}}">
                         <mat-icon class="fa fa-edit" color="primary"></mat-icon>
                     </button>
                     <button mat-icon-button *ngIf="role.id != 'dest' && injectDatas.editable"
-                        (click)="deleteItem(role.id,i)">
+                        (click)="deleteItem(role.id,i)" title="{{lang.delete}}">
                         <mat-icon class="fa fa-times" color="warn"></mat-icon>
                     </button>
                     <mat-icon *ngIf="diffusion.item_type == 'entity_id'" mat-list-icon class="fa fa-sitemap fa-2x"

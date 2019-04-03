@@ -300,8 +300,9 @@ class ShippingTemplateController
             $docserver           = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment['docserver_id'], 'select' => ['path_template']]);
             $pathToDocument      = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment['path']) . $convertedAttachment['filename'];
 
-            $pdf = new Fpdi();
-            $pageCount = $pdf->setSourceFile($pathToDocument);
+            $img = new \Imagick();
+            $img->pingImage($pathToDocument);
+            $pageCount = $img->getNumberImages();
 
             $attachmentFee = ($pageCount > 1) ? ($pageCount - 1) * $aArgs['fee']['nextPagePrice'] : 0 ;
             $fee = $fee + $attachmentFee + $aArgs['fee']['firstPagePrice'] + $aArgs['fee']['postagePrice'];

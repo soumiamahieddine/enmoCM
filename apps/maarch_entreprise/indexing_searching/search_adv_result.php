@@ -479,7 +479,7 @@ if (count($_REQUEST['meta']) > 0) {
                     $arrayPDO = array_merge($arrayPDO, array(":resIdWelcome" => $welcome));
                 }
                 $where_request_welcome .= "( REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifieldWelcome) "
-                    ."or lower(external_id) LIKE lower(:multifieldWelcome) "
+                    ."or lower(external_reference) LIKE lower(:multifieldWelcomeReference) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifieldWelcome) OR lower(alt_identifier) like lower(:multifieldWelcome)) "
                     ."or lower(title) LIKE lower(:multifieldWelcome) "
                     ."or lower(description) LIKE lower(:multifieldWelcome) "
@@ -487,6 +487,8 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome)) "
                     ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) AND status NOT IN ('DEL','OBS','TMP')) "
                     ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome )))";
+
+                $arrayPDO = array_merge($arrayPDO, array(":multifieldWelcomeReference" => "%".$welcome."%"));
 
                 $multifieldWelcome = \SrcCore\models\TextFormatModel::normalize(['string' => $welcome]);
                 $multifieldWelcome = preg_replace('/\s+/', ' ', $multifieldWelcome);
@@ -822,11 +824,11 @@ if (count($_REQUEST['meta']) > 0) {
                 
                 default:
                     $json_txt .= " 'baskets_clause' : ['".addslashes(trim($_REQUEST['baskets_clause']))."'],";
-                    $basketInfo = explode('_', trim($_REQUEST['baskets_clause']), 2);
                     for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if ($_SESSION['user']['baskets'][$ind_bask]['group_serial_id'] == $basketInfo[0] && $_SESSION['user']['baskets'][$ind_bask]['id'] == $basketInfo[1]) {
+                        if ($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
                             if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
                                 $where_request .= ' (' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ') and ' ;
+                                break;
                             }
                         }
                     }

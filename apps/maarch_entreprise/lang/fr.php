@@ -76,7 +76,7 @@ if (!defined('_ADMIN_GROUPS_DESC')) {
     define('_ADMIN_GROUPS_DESC', "Ajouter, suspendre, ou modifier des groupes d'utilisateurs. Attribuer des privilèges ou des autorisations d'accès aux ressources.");
 }
 if (!defined('_ADMIN_ARCHITECTURE')) {
-    define('_ADMIN_ARCHITECTURE', 'Typologies documentaires');
+    define('_ADMIN_ARCHITECTURE', 'Typologies de courriers');
 }
 if (!defined('_ADMIN_ARCHITECTURE_DESC')) {
     define('_ADMIN_ARCHITECTURE_DESC', "Définir la structure interne d'un dossier (chemise / sous-chemise / type de document). Définir pour chaque pièce la liste des index à saisir, et leur caractère obligatoire pour la complétude du dossier.");
@@ -1308,8 +1308,8 @@ if (!defined('_SUSPENDED_ACCOUNT')) {
 if (!defined('_BAD_LOGIN_OR_PSW')) {
     define('_BAD_LOGIN_OR_PSW', "Mauvais nom d'utilisateur ou mauvais mot de passe");
 }
-define('_ACCOUNT_LOCKED_FOR', 'Nombre de tentatives de connexion dépassée. Votre compte est vérouillé pendant');
-define('_ACCOUNT_LOCKED_UNTIL', 'Nombre de tentatives de connexion dépassée. Compte vérouillé jusqu\'au');
+define('_ACCOUNT_LOCKED_FOR', 'Nombre de tentatives de connexion dépassée. Votre compte est verrouillé pendant');
+define('_ACCOUNT_LOCKED_UNTIL', 'Nombre de tentatives de connexion dépassée. Compte verrouillé jusqu\'au');
 if (!defined('_EMPTY_PSW')) {
     define('_EMPTY_PSW', 'Mot de passe actuel vide');
 }
@@ -1828,7 +1828,7 @@ if (!defined('_VERY_LOW')) {
 }
 
 if (!defined('_INDEXING_MLB')) {
-    define('_INDEXING_MLB', 'Enregistrer un courrier/doc');
+    define('_INDEXING_MLB', 'Enregistrer un courrier');
 }
 if (!defined('_ADV_SEARCH_MLB')) {
     define('_ADV_SEARCH_MLB', 'Rechercher');

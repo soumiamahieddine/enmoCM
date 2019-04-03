@@ -75,7 +75,7 @@ abstract class AttachmentModelAbstract
             'select'    => empty($aArgs['select']) ? ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'res_id_version', 'identifier', 'dest_address_id'] : $aArgs['select'],
             'table'     => ['res_view_attachments'],
             'where'     => ['res_id_master in (?)', 'status not in (?, ?)', 'attachment_type not in (?, ?)', 'in_send_attach = TRUE'],
-            'data'      => [$aArgs['ids'], 'OBS', 'DEL', 'converted_pdf', 'printed_folder'],
+            'data'      => [$aArgs['ids'], 'OBS', 'DEL', 'converted_pdf', 'print_folder'],
             'groupBy'   => ['res_id_master', 'title', 'res_id', 'res_id_version', 'identifier', 'dest_address_id'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
         ]);
@@ -85,17 +85,23 @@ abstract class AttachmentModelAbstract
 
     public static function getListByResIdMaster(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
         ValidatorModel::arrayType($aArgs, ['excludeAttachmentTypes']);
 
         $aAttachments = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['res_id', 'res_attachments.identifier', 'title', 'format', 'creation_date', 'doc_date as update_date', 'validation_date as return_date', 'effective_date as real_return_date', 'u.firstname as firstname_updated', 'u.lastname as lastname_updated', 'relation', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'label_status as status', 'attachment_type', 'dest_contact_id', 'dest_address_id', 'ut.firstname as firstname_typist', 'ut.lastname as lastname_typist'] : $aArgs['select'],
-            'table'     => ['res_attachments','users ut', 'status', 'users u'],
-            'left_join' => ['res_attachments.typist = ut.user_id', 'res_attachments.status = status.id', 'res_attachments.updated_by = u.user_id'],
-            'where'     => ['res_id_master = ?', 'res_attachments.status not in (?,?)', 'attachment_type not in (?)'],
-            'data'      => [$aArgs['id'], 'OBS', 'DEL', $aArgs['excludeAttachmentTypes']],
-            'order_by'  => empty($aArgs['orderBy']) ? ['res_id DESC'] : $aArgs['orderBy'],
+            'select'    => [
+                'res_id', 'res_id_version', 'res_view_attachments.identifier', 'title', 'format', 'creation_date',
+                'doc_date as update_date', 'validation_date as return_date', 'effective_date as real_return_date',
+                'u.firstname as firstname_updated', 'u.lastname as lastname_updated', 'relation', 'docserver_id', 'path',
+                'filename', 'fingerprint', 'filesize', 'label_status as status', 'attachment_type', 'dest_contact_id',
+                'dest_address_id', 'ut.firstname as firstname_typist', 'ut.lastname as lastname_typist', 'in_signature_book', 'in_send_attach'
+            ],
+            'table'     => ['res_view_attachments', 'users ut', 'status', 'users u'],
+            'left_join' => ['res_view_attachments.typist = ut.user_id', 'res_view_attachments.status = status.id', 'res_view_attachments.updated_by = u.user_id'],
+            'where'     => ['res_id_master = ?', 'res_view_attachments.status not in (?)', 'attachment_type not in (?)'],
+            'data'      => [$aArgs['resId'], ['OBS', 'DEL'], $aArgs['excludeAttachmentTypes']],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
         ]);
 
         return $aAttachments;
