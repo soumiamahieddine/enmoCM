@@ -93,7 +93,6 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
     getListmodel(entityId: any) {
         this.http.get("../../rest/listTemplates/entities/" + entityId)
             .subscribe((data: any) => {
-                //console.log(this.diffList);
                 data.listTemplate.forEach((element: any) => {
                     if (element.item_mode == 'cc') {
                         this.diffList['copy'].items.push(element);
