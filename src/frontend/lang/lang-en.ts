@@ -911,7 +911,7 @@ export const LANG_EN = {
     "shippingUpdated"                           : "Shipping updated",
     "shippingDeleted"                           : "Shipping deleted",
     "shippings"                                 : "Shippings templates",
-    "noShippingTemplate"                        : "No shipping templates available for these entities",
+    "noShippingTemplate"                        : "No common shipping templates available for these entities",
     "doShippingParameter"                       : "Please set up a template in <b>Administration</b> > <b>Shippings templates</b>",
     "shippingReadyToSend"                       : "document(s) ready to be sent",
     "shippingNotEligible"                       : "Ineligible mail(s) ",

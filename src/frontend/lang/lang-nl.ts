@@ -939,7 +939,7 @@ export const LANG_NL = {
     "shippingUpdated"                            : "Shipping updated", //_TO_TRANSLATE
     "shippingDeleted"                            : "Shipping deleted", //_TO_TRANSLATE
     "shippings"                            : "Shippings templates", //_TO_TRANSLATE
-    "noShippingTemplate"                        : "No shipping templates available for these entities", //_TO_TRANSLATE
+    "noShippingTemplate"                        : "No common shipping templates available for these entities", //_TO_TRANSLATE
     "doShippingParameter"                       : "Please set up a template in <b>Administration</b> > <b>Shippings templates</b>", //_TO_TRANSLATE
     "shippingReadyToSend"                       : "document(s) ready to be sent", //_TO_TRANSLATE
     "shippingNotEligible"                       : "Ineligible mail(s) ", //_TO_TRANSLATE

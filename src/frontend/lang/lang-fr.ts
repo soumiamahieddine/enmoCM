@@ -938,7 +938,7 @@ export const LANG_FR = {
     "shippingUpdated"                                   : "Modèle d'envoi modifié",
     "shippingDeleted"                                   : "Modèle d'envoi supprimé",
     "shippings"                                         : "Modèle(s) d'envoi",
-    "noShippingTemplate"                                : "Aucun modèle d'envoi disponible pour ces entités",
+    "noShippingTemplate"                                : "Aucun modèle d'envoi commun disponible pour ces entités",
     "doShippingParameter"                               : "Veuillez paramétrer un modèle dans <b>Administration</b> > <b>Modèles d'envois postaux</b>",
     "shippingReadyToSend"                               : "document(s) prêt(s) à l'envoi",
     "shippingNotEligible"                               : "Courrier(s) non éligible(s)",
