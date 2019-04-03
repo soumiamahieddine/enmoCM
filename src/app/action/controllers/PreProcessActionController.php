@@ -22,13 +22,13 @@ use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
 use Entity\models\EntityModel;
+use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\models\GroupModel;
 use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
-use setasign\Fpdi\Tcpdf\Fpdi;
 use Shipping\controllers\ShippingTemplateController;
 use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
@@ -333,6 +333,75 @@ class PreProcessActionController
         }
 
         return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+    }
+
+    public function checkExternalSignatoryBook(Request $request, Response $response, array $aArgs)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $data = $request->getParsedBody();
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        $errors = [];
+        $signatureBookEnabled = '';
+        if (!empty($loadedXml)) {
+            $config['id'] = (string)$loadedXml->signatoryBookEnabled;
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == $config['id']) {
+                    $config['data'] = (array)$value;
+                    break;
+                }
+            }
+
+            $signatureBookEnabled = $config['id'];
+            if ($signatureBookEnabled == 'ixbus') {
+                // TODO
+            } elseif ($signatureBookEnabled == 'iParapheur') {
+                // TODO
+            } elseif ($signatureBookEnabled == 'fastParapheur') {
+                // TODO
+            } elseif ($signatureBookEnabled == 'maarchParapheur') {
+                $additionalsInfos = [
+                    'resources' => [],
+                    'noAttachment' => []
+                ];
+                $userList = MaarchParapheurController::getInitializeDatas(['config' => $config]);
+                if (!empty($userList['users'])) {
+                    $additionalsInfos['users'] = $userList['users'];
+                } else {
+                    $additionalsInfos['users'] = [];
+                }
+                if (!empty($userList['errors'])) {
+                    $errors[] = $userList['errors'];
+                }
+
+                foreach ($data['resources'] as $resId) {
+                    $attachments = AttachmentModel::getOnView([
+                        'select'    => [
+                            'count(1) as nb'
+                        ],
+                        'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+                        'data'      => [$resId, ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+                    ]);
+                    if ($attachments[0]['nb'] == 0) {
+                        $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
+                        $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId];
+                    } else {
+                        $additionalsInfos['resources'][] = ['res_id' => $resId];
+                    }
+                }
+            } elseif ($signatureBookEnabled == 'xParaph') {
+                // TODO
+            }
+        }
+
+        return $response->withJson(['signatureBookEnabled' => $signatureBookEnabled, 'additionalsInfos' => $additionalsInfos, 'errors' => $errors]);
     }
 
     public function checkShippings(Request $request, Response $response)

@@ -52,7 +52,7 @@ class ActionMethodController
         ValidatorModel::notEmpty($aArgs, ['id', 'resources', 'basketName']);
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::arrayType($aArgs, ['resources']);
-        ValidatorModel::stringType($aArgs, ['basketName', 'note']);
+        ValidatorModel::stringType($aArgs, ['basketName', 'note', 'history']);
 
         $set = ['locker_user_id' => null, 'locker_time' => null, 'modification_date' => 'CURRENT_TIMESTAMP'];
 
@@ -82,7 +82,7 @@ class ActionMethodController
                     'recordId'  => $resource,
                     'eventType' => 'ACTION#' . $resource,
                     'eventId'   => $aArgs['id'],
-                    'info'      => "{$aArgs['basketName']} : {$action['label_action']}"
+                    'info'      => "{$aArgs['basketName']} : {$action['label_action']}{$aArgs['history']}"
                 ]);
 
                 MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $aArgs['id'], 'userId' => $GLOBALS['userId']]);

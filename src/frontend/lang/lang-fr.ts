@@ -970,4 +970,10 @@ export const LANG_FR = {
     "quickSearchInfo"                                   : "Cible de la recherche",
     "quickSearchTarget"                                 : "sujet (courrier / pièce jointe), numéro chrono (courrier / pièce jointe), référence courrier expéditeur, contenu d\'annotations, code à barre, contact pièce jointe (société / nom / prénom)",
     "warnLockResInProgress"                             : "Ce courrier est cours de traitement par un autre utilisateur",
+    "mailNote"                                          : "Annotation du document principal",
+    "attachmentSignature"                               : "Signature des documents intégrés au parapheur",
+    "userMaarchParapheur"                               : "Attributaire Maarch Parapheur",
+    "noAttachmentInSignatoryBook"                       : "Aucun pièce jointe intégrée au parapheur",
+    "canNotMakeAction"                                  : "Impossible de faire l'action sur les courriers suivants",
+    "noUserDefinedInMaarchParapheur"                     : "Aucun utilisateur créé dans Maarch Parapheur"
 };

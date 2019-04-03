@@ -12,35 +12,22 @@
  * @author dev@maarch.org
  */
 
+namespace ExternalSignatoryBook\controllers;
+
+use Attachment\models\AttachmentModel;
+use Convert\controllers\ConvertPdfController;
+use Docserver\models\DocserverModel;
+use Priority\models\PriorityModel;
+use Resource\models\ResModel;
+use SrcCore\models\CoreConfigModel;
+use SrcCore\models\CurlModel;
+use User\models\UserModel;
 
 class MaarchParapheurController
 {
-    public static function getModal($config)
+    public static function getInitializeDatas(array $aArgs)
     {
-        $initializeDatas = MaarchParapheurController::getInitializeDatas($config);
-        if (!empty($initializeDatas['error'])) {
-            return ['error' => $initializeDatas['error']];
-        }
-        $html .= '<label for="processingUser">' . _USER_MAARCH_PARAPHEUR . '</label><select name="processingUser" id="processingUser">';
-        if (!empty($initializeDatas['users'])) {
-            foreach ($initializeDatas['users'] as $value) {
-                $html .= '<option value="';
-                $html .= $value['id'];
-                $html .= '">';
-                $html .= $value['firstname'] . ' ' . $value['lastname'];
-                $html .= '</option>';
-            }
-        }
-        $html .= '</select><br /><br /><br /><br />';
-        $html .= '<input type="radio" name="objectSent" id="objectSentNote" value="mail" checked="checked" /><label for="objectSentNote" style="float: none;display: unset;">' . _MAIL_NOTE . '</label><br/>';
-        $html .= '<input type="radio" name="objectSent" id="objectSentSign" value="attachment" /><label for="objectSentSign" style="float: none;display: unset;">' . _ATTACHMENT_SIGNATURE .'</label><br /><br />';
-
-        return $html;
-    }
-
-    public static function getInitializeDatas($config)
-    {
-        $rawResponse['users'] = MaarchParapheurController::getUsers(['config' => $config]);
+        $rawResponse['users'] = MaarchParapheurController::getUsers(['config' => $aArgs['config']]);
         if (!empty($rawResponse['users']['error'])) {
             return ['error' => $rawResponse['users']['error']];
         }
@@ -49,7 +36,7 @@ class MaarchParapheurController
 
     public static function getUsers($aArgs)
     {
-        $response = \SrcCore\models\CurlModel::exec([
+        $response = CurlModel::exec([
             'url'      => $aArgs['config']['data']['url'] . '/rest/users',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
@@ -67,12 +54,12 @@ class MaarchParapheurController
     {
         $attachmentToFreeze = [];
 
-        $adrMainInfo              = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
-        $docserverMainInfo        = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
+        $adrMainInfo              = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
+        $docserverMainInfo        = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
         $arrivedMailMainfilePath  = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
         $encodedMainZipFile       = MaarchParapheurController::createZip(['filepath' => $arrivedMailMainfilePath, 'filename' => 'courrier_arrivee.pdf']);
 
-        $mainResource = \Resource\models\ResModel::getOnView([
+        $mainResource = ResModel::getOnView([
             'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'contact_firstname', 'contact_lastname', 'contact_society', 'category_id'],
             'where'  => ['res_id = ?'],
             'data'   => [$aArgs['resIdMaster']]
@@ -84,14 +71,14 @@ class MaarchParapheurController
         }
 
         $processingUser      = $aArgs['processingUser'];
-        $priority            = \Priority\models\PriorityModel::getById(['select' => ['label'], 'id' => $mainResource[0]['priority']]);
-        $sender              = \User\models\UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $aArgs['userId']]);
-        $senderPrimaryEntity = \User\models\UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
+        $priority            = PriorityModel::getById(['select' => ['label'], 'id' => $mainResource[0]['priority']]);
+        $sender              = UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $aArgs['userId']]);
+        $senderPrimaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         if ($aArgs['objectSent'] == 'attachment') {
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'incoming_mail_attachment', 'signed_response'];
 
-            $attachments = \Attachment\models\AttachmentModel::getOnView([
+            $attachments = AttachmentModel::getOnView([
                 'select'    => [
                     'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
                     'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
@@ -112,8 +99,8 @@ class MaarchParapheurController
                     $is_version = true;
                 }
                 
-                $adrInfo       = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
-                $docserverInfo = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
+                $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
                 $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
     
                 $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
@@ -121,7 +108,7 @@ class MaarchParapheurController
                 if ($mainResource[0]['category_id'] != 'outgoing') {
                     $attachmentsData = [[
                         'encodedZipDocument' => $encodedMainZipFile,
-                        'subject'            => $mainResource[0]['subject'],
+                        'title'            => $mainResource[0]['subject'],
                         'reference'          => $mainResource[0]['alt_identifier']
                     ]];
                 } else {
@@ -152,7 +139,7 @@ class MaarchParapheurController
                     'metadata'        => json_encode($metadata)
                 ];
     
-                $response = \SrcCore\models\CurlModel::exec([
+                $response = CurlModel::exec([
                     'url'      => $aArgs['config']['data']['url'] . '/rest/documents',
                     'user'     => $aArgs['config']['data']['userId'],
                     'password' => $aArgs['config']['data']['password'],
@@ -186,7 +173,7 @@ class MaarchParapheurController
                 'metadata'           => json_encode($metadata)
             ];
 
-            $response = \SrcCore\models\CurlModel::exec([
+            $response = CurlModel::exec([
                 'url'      => $aArgs['config']['data']['url'] . '/rest/documents',
                 'user'     => $aArgs['config']['data']['userId'],
                 'password' => $aArgs['config']['data']['password'],
@@ -202,13 +189,13 @@ class MaarchParapheurController
 
     public static function createZip($aArgs)
     {
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
 
         $pathInfo    = pathinfo($aArgs['filepath'], PATHINFO_FILENAME);
-        $tmpPath     = \SrcCore\models\CoreConfigModel::getTmpPath();
+        $tmpPath     = CoreConfigModel::getTmpPath();
         $zipFilename = $tmpPath . $pathInfo."_".rand().".zip";
 
-        if ($zip->open($zipFilename, ZipArchive::CREATE) === true) {
+        if ($zip->open($zipFilename, \ZipArchive::CREATE) === true) {
             $zip->addFile($aArgs['filepath'], $aArgs['filename']);
 
             $zip->close();
@@ -221,53 +208,9 @@ class MaarchParapheurController
         }
     }
 
-    public static function retrieveSignedMails($aArgs)
-    {
-        $validated = $aArgs['config']['data']['externalValidated'];
-        $refused   = $aArgs['config']['data']['externalRefused'];
-
-        foreach (['noVersion', 'isVersion', 'resLetterbox'] as $version) {
-            foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                $documentStatus = MaarchParapheurController::getDocumentStatus(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
-                
-                if (in_array($documentStatus['reference'], [$validated, $refused])) {
-                    $signedDocument = MaarchParapheurController::getHandwrittenDocument(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
-                    $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
-                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $signedDocument;
-                    if ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'SIGN') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'SIGN') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                    } elseif ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'NOTE') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validatedNote';
-                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'NOTE') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refusedNote';
-                    }
-                } else {
-                    unset($aArgs['idsToRetrieve'][$version][$resId]);
-                }
-            }
-        }
-
-        // retourner seulement les mails récupérés (validés ou signés)
-        return $aArgs['idsToRetrieve'];
-    }
-
-    public static function getDocumentStatus($aArgs)
-    {
-        $response = \SrcCore\models\CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/status',
-            'user'     => $aArgs['config']['data']['userId'],
-            'password' => $aArgs['config']['data']['password'],
-            'method'   => 'GET'
-        ]);
-
-        return $response['status'];
-    }
-
     public static function getUserById($aArgs)
     {
-        $response = \SrcCore\models\CurlModel::exec([
+        $response = CurlModel::exec([
             'url'      => $aArgs['config']['data']['url'] . '/rest/users/'.$aArgs['id'],
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
@@ -275,17 +218,5 @@ class MaarchParapheurController
         ]);
 
         return $response['user'];
-    }
-
-    public static function getHandwrittenDocument($aArgs)
-    {
-        $response = \SrcCore\models\CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/handwrittenDocument',
-            'user'     => $aArgs['config']['data']['userId'],
-            'password' => $aArgs['config']['data']['password'],
-            'method'   => 'GET'
-        ]);
-
-        return $response['encodedDocument'];
     }
 }

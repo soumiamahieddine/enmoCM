@@ -50,25 +50,25 @@ class XParaphController
             $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
             $fileContent = file_get_contents($filePath);
 
+            $aInfos = [];
+            $aInfos['typeDepot']   = $aArgs['config']['data']['docutype'] . '-' . $aArgs['config']['data']['docustype'];
+            $aInfos['fileName']    = $value['title'];
+            $aInfos['fileContent'] = base64_encode($fileContent);
+            $aInfos['objet']       = $value['title'];
+            $aInfos['ref']         = $value['identifier'];
+
             $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
-            <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:parafwsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+            <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:parafwsdl">
                 <soapenv:Header/>
                 <soapenv:Body>
-                <urn:XPRF_Deposer soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-                    <params xsi:type="urn:XPRF_Deposer_Param">
-                        <reponse xsi:type="xsd:string">SOAP</reponse>
+                <urn:XPRF_preDepot soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+                    <params xsi:type="urn:XPRF_preDepot_Param">
                         <siret xsi:type="xsd:string">'.$aArgs['config']['data']['siret'].'</siret>
                         <login xsi:type="xsd:string">'.$aArgs['config']['data']['login'].'</login>
                         <password xsi:type="xsd:string">'.$aArgs['config']['data']['password'].'</password>
-                        <docutype xsi:type="xsd:string">'.$aArgs['config']['data']['docutype'].'</docutype>
-                        <docustype xsi:type="xsd:string">'.$aArgs['config']['data']['docustype'].'</docustype>
-                        <objet xsi:type="xsd:string">'.$value['title'].'</objet>
-                        <contenu xsi:type="xsd:base64Binary">'.base64_encode($fileContent).'</contenu>
-                        <nom xsi:type="xsd:string">'.$value['title'].'</nom>
-                        <taille xsi:type="xsd:int">'.$value['filesize'].'</taille>
-                        <pml xsi:type="xsd:string">0</pml>
+                        <infos xsi:type="xsd:string">'.json_encode($aInfos).'</infos>
                     </params>
-                </urn:XPRF_Deposer>
+                </urn:XPRF_preDepot>
                 </soapenv:Body>
             </soapenv:Envelope>';
 
@@ -84,6 +84,8 @@ class XParaphController
                 $error = $response['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->detail;
                 return $error;
             } else {
+                $url = $response['response']->children('SOAP-ENV', true)->Body->children('ns1', true)->XPRF_preDepotResponse->children()->return;
+                $test = $url;
                 // $response = $response['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://sei.ws.fast.cdc.com/')->downloadResponse->children()->return;
                 // $returnedDocumentId = (string) $response->documentId;
                 // if ($aArgs['documentId'] !== $returnedDocumentId) {

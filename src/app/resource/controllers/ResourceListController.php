@@ -674,7 +674,7 @@ class ResourceListController
                 }
             }
         }
-        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note']]);
+        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $methodResponse['history']]);
 
         if (!empty($methodResponses)) {
             return $response->withJson($methodResponses);

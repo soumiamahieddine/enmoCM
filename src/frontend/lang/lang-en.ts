@@ -943,4 +943,10 @@ export const LANG_EN = {
     "quickSearchInfo"                           : "Target search ",
     "quickSearchTarget"                         : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)",
     "warnLockResInProgress"                     : "This mail is in progress by an other user",
+    "mailNote"                                  : "Annotation of the main document",
+    "attachmentSignature"                       : "Signature of attachment in signature book",
+    "userMaarchParapheur"                       : "Maarch Parapheur user",
+    "noAttachmentInSignatoryBook"               : "No attachment in signature book",
+    "canNotMakeAction"                          : "Can make action on this mail",
+    "noUserDefinedInMaarchParapheur"                             : "No user created in Maarch Parapheur"
 };

@@ -971,4 +971,10 @@ export const LANG_NL = {
     "quickSearchInfo"                           : "Target search ", //_TO_TRANSLATE
     "quickSearchTarget"                         : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
     "warnLockResInProgress"                     : "This mail is in progress by an other user", //_TO_TRANSLATE
+    "mailNote"                                  : "Annotation of the main document", //_TO_TRANSLATE
+    "attachmentSignature"                       : "Signature of attachment in signature book", //_TO_TRANSLATE
+    "userMaarchParapheur"                       : "Maarch Parapheur user", //_TO_TRANSLATE
+    "noAttachmentInSignatoryBook"               : "No attachment in signature book", //_TO_TRANSLATE
+    "canNotMakeAction"                          : "Can make action on this mail", //_TO_TRANSLATE
+    "noUserDefinedInMaarchParapheur"                             : "No user created in Maarch Parapheur", //_TO_TRANSLATE
 };
