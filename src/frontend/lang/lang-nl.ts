@@ -128,7 +128,8 @@ export const LANG_NL = {
     "documentTypeDeleted" : "Documenttype verwijderd",
     "documentTypeReplacement" : "Vervanging van het documenttype",
     "documentTypeUpdated" : "Documenttype bijgewerkt",
-    "doNothingRedirect" : "Niets doen (de eenheid ontkoppelen)",
+    "doNothingRedirect" : "De entiteit loskoppelen van het profiel van de gebruiker", //_TO_TRANSLATE
+    "doNothingRedirectInformations"     : "De mailinglijsten van de brieven en sjablonen van de entiteit worden niet gewijzigd", //_TO_TRANSLATE
     "doNotModifyUnlessExpert" : "Wijzig dit onderdeel niet tenzij u weet wat u doet. Een verkeerde instelling kan leiden tot een slechte werking van de toepassing!",
     "durationCurrentUse" : "Gewoonlijke nutsduur (in dagen)",
     "eachDay" : "Dagelijks",
@@ -329,7 +330,8 @@ export const LANG_NL = {
     "processMode" : "Verwerkingswijze",
     "processType" : "Verwerkingstype",
     "pswReseted" : "Wachtwoord opnieuw ingesteld",
-    "reaffectUserRedirect" : "Terug toekennen aan de gebruiker (verdelingslijst + model van de eenheid)",
+    "reaffectUserRedirect" : "Terug toekennen aan de gebruiker",
+    "reaffectUserRedirectInformations"  : "De gebruiker wordt vervangen door de geselecteerde gebruiker in de mailinglijsten van de mail en template van de entiteit", //_TO_TRANSLATE
     "reactivateUserDeleted" : "De ingevoerde gebruikersnaam is toegekend aan een verwijderde gebruiker. Wilt u deze opnieuw activeren?",
     "reassign" : "Opnieuw toewijzen",
     "record" : "element(en)",
@@ -345,7 +347,8 @@ export const LANG_NL = {
     "reinitPassword" : "Wachtwoord opnieuw instellen",
     "relatedUsers" : "Gekoppelde gebruiker(s)",
     "relatedBaskets" : "Gekoppeld(e) bakje(s)",
-    "removeUserRedirect" : "De persoon verwijderen (verdelingslijst + model van de eenheid)",
+    "removeUserRedirect" : "Verwijder de gebruiker van de mailinglijsten",
+    "removeUserRedirectInformations"    : "<em>De gebruiker wordt verwijderd uit de mailinglijsten en sjabloon van de entiteit <b>behalve in het geval dat het wordt toegekend</b></em>", //_TO_TRANSLATE
     "renewPsw" : "Wachtwoord opnieuw intypen",
     "reports" : "Statistieken",
     "resetPsw" : "Wachtwoord opnieuw instellen",

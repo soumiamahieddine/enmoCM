@@ -16,7 +16,7 @@
                         {{lang.removeUserRedirect}}
                     </mat-radio-button>
                     <mat-radio-button value="reaffect" color="primary">
-                        {{lang.reaffectUserRedirect}} :
+                        {{lang.reaffectUserRedirect}}
                     </mat-radio-button>
                 </mat-radio-group>
                 <mat-form-field *ngIf="this.processMode == 'reaffect'">
@@ -41,6 +41,14 @@
                         </ng-container>
                     </mat-autocomplete>
                 </mat-form-field>
+
+                <div color="primary">
+                    <br>
+                    <mat-icon class="fa fa-info-circle" title="{{lang.informations}}"></mat-icon>
+                    <span *ngIf="this.processMode == ''"><em>{{lang.doNothingRedirectInformations}}</em></span>
+                    <span *ngIf="this.processMode == 'delete'" [innerHTML]="lang.removeUserRedirectInformations"></span>
+                    <span *ngIf="this.processMode == 'reaffect'"><em>{{lang.reaffectUserRedirectInformations}}</em></span>
+                </div>
             </div>
 
         </div>
