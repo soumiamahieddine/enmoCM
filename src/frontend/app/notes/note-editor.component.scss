@@ -1,5 +1,14 @@
-.mat-icon-button:disabled {
-    opacity: 0.5;
+.noteEditorContent {
+    .mat-icon-button:disabled {
+        opacity: 0.5;
+    }
+}
+
+::ng-deep.templateNoteListMenu {
+    .mat-menu-content {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 }
 
 ::ng-deep.mat-tooltip {

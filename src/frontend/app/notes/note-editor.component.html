@@ -1,16 +1,20 @@
-<mat-form-field appearance="outline">
+<mat-form-field appearance="outline" class="noteEditorContent">
     <textarea matInput placeholder="{{lang.addNote}}" [(ngModel)]="content"></textarea>
-    <button *ngIf="addMode" matSuffix mat-icon-button title="{{lang.send}}" (click)="addNote()" [disabled]="content.trim() == ''">
+    <button *ngIf="addMode" matSuffix mat-icon-button title="{{lang.send}}" (click)="addNote()"
+        [disabled]="content.trim() == ''">
         <mat-icon fontSet="far" fontIcon="fa-paper-plane fa-2x" style="color: #666;"></mat-icon>
     </button>
-    <button matSuffix color="primary" mat-icon-button title="{{lang.noteTemplates}}" [matMenuTriggerFor]="menu" (click)="getTemplatesNote()">
+    <button matSuffix color="primary" mat-icon-button title="{{lang.noteTemplates}}" [matMenuTriggerFor]="menu"
+        (click)="getTemplatesNote()">
         <mat-icon fontSet="fas" fontIcon="fa-file-alt fa-2x"></mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
-        <div style="text-align: center;font-size: 10px;opacity: 0.5;margin-top:-15px;">
+    <mat-menu #menu="matMenu" [class]="'templateNoteListMenu'">
+        <div
+            style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
             {{lang.noteTemplates}}
         </div>
-        <button mat-menu-item *ngFor="let template of templatesNote" matTooltip="{{template.template_content}}" matTooltipPosition="left" (click)="selectTemplate(template)">
+        <button mat-menu-item *ngFor="let template of templatesNote" matTooltip="{{template.template_content}}"
+            matTooltipPosition="left" (click)="selectTemplate(template)">
             <span>{{template.template_label}}</span>
         </button>
     </mat-menu>
