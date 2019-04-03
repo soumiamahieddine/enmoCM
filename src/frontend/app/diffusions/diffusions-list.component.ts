@@ -2,9 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
-import { ConstantPool } from '@angular/compiler';
 
 declare function $j(selector: any): any;
 
