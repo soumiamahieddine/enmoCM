@@ -939,4 +939,5 @@ export const LANG_EN = {
     "actionMassForbidden"                       : "This action is forbidden in mass",
     "quickSearchInfo"                           : "Target search ",
     "quickSearchTarget"                         : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)",
+    "warnLockResInProgress"                     : "This mail is in progress by an other user",
 };

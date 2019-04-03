@@ -967,4 +967,5 @@ export const LANG_NL = {
     "actionMassForbidden"                       : "This action is forbidden in mass", //_TO_TRANSLATE
     "quickSearchInfo"                           : "Target search ", //_TO_TRANSLATE
     "quickSearchTarget"                         : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
+    "warnLockResInProgress"                     : "This mail is in progress by an other user", //_TO_TRANSLATE
 };

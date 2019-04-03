@@ -117,8 +117,10 @@
                                             </mat-checkbox>
                                         </span>
                                         <span *ngIf="!mobileMode" style="cursor:pointer;" class="main-info-status" (click)="launch(defaultAction,row);">
-                                            <mat-icon title="{{row.statusLabel}}" [ngStyle]="{'color': row.priorityColor}" color="primary"
+                                            <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}" [ngStyle]="{'color': row.priorityColor}" color="primary"
                                                 class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
+                                            </mat-icon>
+                                            <mat-icon *ngIf="row.isLocked === true" title="{{lang.warnLockResInProgress}}" style="color: red;" class="fa fa-lock fa-2x">
                                             </mat-icon>
                                         </span>
                                         <span *ngIf="!mobileMode" class="main-info-data" style="width:200px;text-align:center;cursor:pointer;" (click)="launch(defaultAction,row);">
@@ -164,7 +166,7 @@
                                 </td>
                             </ng-container>
                             <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"
-                                (contextmenu)="open($event,row);"></tr>
+                                (contextmenu)="open($event,row);" [class.locked]="row.isLocked == true"></tr>
                         </table>
                     </div>
                     <div class="table-head">
