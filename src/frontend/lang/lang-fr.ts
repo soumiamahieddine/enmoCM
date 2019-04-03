@@ -969,5 +969,5 @@ export const LANG_FR = {
     "actionMassForbidden"                               : "Cette action n\'est pas utilisable en masse",
     "quickSearchInfo"                                   : "Cible de la recherche",
     "quickSearchTarget"                                 : "sujet (courrier / pièce jointe), numéro chrono (courrier / pièce jointe), référence courrier expéditeur, contenu d\'annotations, code à barre, contact pièce jointe (société / nom / prénom)",
-    "warnLockResInProgress"                             : "Ce courrier est cours de traitement par un autre utilisateur",
+    "warnLockResInProgress"                             : "Ce courrier est en cours de traitement par un autre utilisateur",
 };
