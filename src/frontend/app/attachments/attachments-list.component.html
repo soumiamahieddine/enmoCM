@@ -94,7 +94,7 @@
                                 disabled>
                         </mat-form-field>
                     </div>
-                    <div class="col-md-12" *ngIf="attachment.contact != null || attachment.contact != ''">
+                    <div class="col-md-12" *ngIf="attachment.contact != null && attachment.contact != ''">
                         <mat-form-field>
                             <input matInput [value]="attachment.contact" title="{{attachment.contact}}"
                                 placeholder="{{lang.forCapital}}" disabled>
