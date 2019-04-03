@@ -142,19 +142,19 @@
                                                 (click)="$event.stopPropagation();togglePanel('note',row)"
                                                 [class.noData]="row.countNotes == 0">
                                                 <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas"
-                                                    matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x">
+                                                    matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x" [color]="snav2.opened && row.checked && currentMode == 'note' ? 'primary' : ''">
                                                 </mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.attachments}}"
                                                 (click)="$event.stopPropagation();togglePanel('attachment',row)"
                                                 [class.noData]="row.countAttachments == 0">
                                                 <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas"
-                                                    matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x">
+                                                    matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x" [color]="snav2.opened && row.checked && currentMode == 'attachment' ? 'primary' : ''">
                                                 </mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.diffusionList}}"
                                                 (click)="$event.stopPropagation();togglePanel('diffusion',row)">
-                                                <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"></mat-icon>
+                                                <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x" [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''"></mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.linkDetails}}"
                                                 (click)="$event.stopPropagation();goToDetail(row);"
