@@ -916,7 +916,7 @@ export const LANG_FR = {
     "redirectTo"                                        : "Rediriger vers",
     "newAssignee"                                       : "Nouvel attributaire",
     "noPerson"                                          : "Aucune personne",
-    "willBeAutomaticallyInCopy"                         : "sera automatiquement mise <b>en copie</b>",
+    "willBeAutomaticallyInCopy"                         : "sera automatiquement mis <b>en copie</b>",
     "confirm"                                           : "Confirmer",
     "shipping_color"                                    : "Couleur",
     "shipping_duplexPrinting"                           : "Recto verso",
