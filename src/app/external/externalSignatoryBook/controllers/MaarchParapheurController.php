@@ -34,7 +34,7 @@ class MaarchParapheurController
         return $rawResponse;
     }
 
-    public static function getUsers($aArgs)
+    public static function getUsers(array $aArgs)
     {
         $response = CurlModel::exec([
             'url'      => $aArgs['config']['data']['url'] . '/rest/users',
@@ -50,7 +50,7 @@ class MaarchParapheurController
         return $response['users'];
     }
 
-    public static function sendDatas($aArgs)
+    public static function sendDatas(array $aArgs)
     {
         $attachmentToFreeze = [];
 
@@ -187,7 +187,7 @@ class MaarchParapheurController
         return $attachmentToFreeze;
     }
 
-    public static function createZip($aArgs)
+    public static function createZip(array $aArgs)
     {
         $zip = new \ZipArchive();
 
@@ -208,7 +208,7 @@ class MaarchParapheurController
         }
     }
 
-    public static function getUserById($aArgs)
+    public static function getUserById(array $aArgs)
     {
         $response = CurlModel::exec([
             'url'      => $aArgs['config']['data']['url'] . '/rest/users/'.$aArgs['id'],
@@ -218,5 +218,61 @@ class MaarchParapheurController
         ]);
 
         return $response['user'];
+    }
+
+    public static function retrieveSignedMails(array $aArgs)
+    {
+        $validated = $aArgs['config']['data']['externalValidated'];
+        $refused   = $aArgs['config']['data']['externalRefused'];
+
+        foreach (['noVersion', 'isVersion', 'resLetterbox'] as $version) {
+            foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
+                $documentStatus = MaarchParapheurController::getDocumentStatus(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
+                
+                if (in_array($documentStatus['reference'], [$validated, $refused])) {
+                    $signedDocument = MaarchParapheurController::getProcessedDocument(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
+                    $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
+                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $signedDocument;
+                    if ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'SIGN') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
+                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'SIGN') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
+                    } elseif ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'NOTE') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validatedNote';
+                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'NOTE') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refusedNote';
+                    }
+                } else {
+                    unset($aArgs['idsToRetrieve'][$version][$resId]);
+                }
+            }
+        }
+
+        // retourner seulement les mails récupérés (validés ou signés)
+        return $aArgs['idsToRetrieve'];
+    }
+
+    public static function getDocumentStatus(array $aArgs)
+    {
+        $response = CurlModel::exec([
+            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/status',
+            'user'     => $aArgs['config']['data']['userId'],
+            'password' => $aArgs['config']['data']['password'],
+            'method'   => 'GET'
+        ]);
+
+        return $response['status'];
+    }
+
+    public static function getProcessedDocument(array $aArgs)
+    {
+        $response = CurlModel::exec([
+            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/processedDocument',
+            'user'     => $aArgs['config']['data']['userId'],
+            'password' => $aArgs['config']['data']['password'],
+            'method'   => 'GET'
+        ]);
+
+        return $response['encodedDocument'];
     }
 }

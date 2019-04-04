@@ -221,50 +221,6 @@ class MaarchParapheurController
         }
     }
 
-    public static function retrieveSignedMails($aArgs)
-    {
-        $validated = $aArgs['config']['data']['externalValidated'];
-        $refused   = $aArgs['config']['data']['externalRefused'];
-
-        foreach (['noVersion', 'isVersion', 'resLetterbox'] as $version) {
-            foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                $documentStatus = MaarchParapheurController::getDocumentStatus(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
-                
-                if (in_array($documentStatus['reference'], [$validated, $refused])) {
-                    $signedDocument = MaarchParapheurController::getHandwrittenDocument(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
-                    $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
-                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $signedDocument;
-                    if ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'SIGN') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'SIGN') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                    } elseif ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'NOTE') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validatedNote';
-                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'NOTE') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refusedNote';
-                    }
-                } else {
-                    unset($aArgs['idsToRetrieve'][$version][$resId]);
-                }
-            }
-        }
-
-        // retourner seulement les mails récupérés (validés ou signés)
-        return $aArgs['idsToRetrieve'];
-    }
-
-    public static function getDocumentStatus($aArgs)
-    {
-        $response = \SrcCore\models\CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/status',
-            'user'     => $aArgs['config']['data']['userId'],
-            'password' => $aArgs['config']['data']['password'],
-            'method'   => 'GET'
-        ]);
-
-        return $response['status'];
-    }
-
     public static function getUserById($aArgs)
     {
         $response = \SrcCore\models\CurlModel::exec([
@@ -275,17 +231,5 @@ class MaarchParapheurController
         ]);
 
         return $response['user'];
-    }
-
-    public static function getHandwrittenDocument($aArgs)
-    {
-        $response = \SrcCore\models\CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/handwrittenDocument',
-            'user'     => $aArgs['config']['data']['userId'],
-            'password' => $aArgs['config']['data']['password'],
-            'method'   => 'GET'
-        ]);
-
-        return $response['encodedDocument'];
     }
 }
