@@ -177,7 +177,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 include_once 'modules/visa/class/FastParapheurController.php';
                 $attachmentToFreeze = FastParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);
             } elseif ($config['id'] == 'maarchParapheur') {
-                include_once 'modules/visa/class/MaarchParapheurController.php';
 
                 $processingUser  = get_value_fields($values_form, 'processingUser');
                 $objectSentNote  = get_value_fields($values_form, 'objectSentNote');
@@ -188,8 +187,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 } else {
                     $objectSent = $objectSentSign;
                 }
-                $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $processingUser]);
-                $attachmentToFreeze = MaarchParapheurController::sendDatas([
+                $processingUserInfo = \ExternalSignatoryBook\controllers\MaarchParapheurController::getUserById(['config' => $config, 'id' => $processingUser]);
+                $attachmentToFreeze = \ExternalSignatoryBook\controllers\MaarchParapheurController::sendDatas([
                     'config'             => $config,
                     'resIdMaster'        => $res_id,
                     'processingUser'     => $processingUserInfo['login'],
