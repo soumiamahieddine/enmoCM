@@ -419,7 +419,7 @@ export const LANG_FR = {
     "processType"                       : "Type de traitement",
     "pswReseted"                        : "Mot de passe réinitialisé",
     "reaffectUserRedirect"              : "Réaffecter à l'utilisateur",
-    "reaffectUserRedirectInformations"  : "L'utilisateur sera remplacé par l'utilisateur sélectionné, dans les listes de diffusion des courriers et du modèle de l'entité",
+    "reaffectUserRedirectInformations"  : "L'utilisateur sera remplacé par l'utilisateur sélectionné dans les listes de diffusion des courriers et du modèle de l'entité",
     "reactivateUserDeleted"             : "L'identifiant renseigné est attribué à un utilisateur supprimé. Voulez-vous le réactiver ?",
     "reassign"                          : "Réassigner",
     "record"                            : "élément(s)",

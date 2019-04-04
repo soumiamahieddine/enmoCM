@@ -42,15 +42,12 @@
                     </mat-autocomplete>
                 </mat-form-field>
 
-                <div color="primary">
-                    <br>
-                    <mat-icon class="fa fa-info-circle" title="{{lang.informations}}"></mat-icon>
+                <div class="alert-message alert-message-info" role="alert" style="max-width: inherit;">
                     <span *ngIf="this.processMode == ''"><em>{{lang.doNothingRedirectInformations}}</em></span>
                     <span *ngIf="this.processMode == 'delete'" [innerHTML]="lang.removeUserRedirectInformations"></span>
                     <span *ngIf="this.processMode == 'reaffect'"><em>{{lang.reaffectUserRedirectInformations}}</em></span>
                 </div>
             </div>
-
         </div>
         <mat-dialog-actions>
             <button mat-raised-button color="primary" type="submit" [disabled]="!this.redirectUser && this.processMode == 'reaffect'"
