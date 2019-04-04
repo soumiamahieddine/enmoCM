@@ -117,14 +117,14 @@ class MaarchParapheurController
 
                 $metadata = [];
                 if (!empty($priority['label'])) {
-                    $metadata[] = [_PRIORITY => $priority['label']];
+                    $metadata[_PRIORITY] = $priority['label'];
                 }
                 if (!empty($senderPrimaryEntity['entity_label'])) {
-                    $metadata[] = [_INITIATOR_ENTITY => $senderPrimaryEntity['entity_label']];
+                    $metadata[_INITIATOR_ENTITY] = $senderPrimaryEntity['entity_label'];
                 }
                 $contact = trim($mainResource[0]['contact_firstname'] . ' ' . $mainResource[0]['contact_lastname'] . ' ' . $mainResource[0]['contact_society']);
                 if (!empty($contact)) {
-                    $metadata[] = [_RECIPIENTS => $contact];
+                    $metadata[_RECIPIENTS] = $contact;
                 }
     
                 $bodyData = [
@@ -136,7 +136,7 @@ class MaarchParapheurController
                     'sender'          => trim($sender['firstname'] . ' ' .$sender['lastname']),
                     'deadline'        => $processLimitDate,
                     'attachments'     => $attachmentsData,
-                    'metadata'        => json_encode($metadata)
+                    'metadata'        => $metadata
                 ];
     
                 $response = CurlModel::exec([
@@ -152,14 +152,14 @@ class MaarchParapheurController
         } elseif ($aArgs['objectSent'] == 'mail') {
             $metadata = [];
             if (!empty($priority['label'])) {
-                $metadata[] = [_PRIORITY => $priority['label']];
+                $metadata[_PRIORITY] = $priority['label'];
             }
             if (!empty($senderPrimaryEntity['entity_label'])) {
-                $metadata[] = [_INITIATOR_ENTITY => $senderPrimaryEntity['entity_label']];
+                $metadata[_INITIATOR_ENTITY] = $senderPrimaryEntity['entity_label'];
             }
             $contact = trim($mainResource[0]['contact_firstname'] . ' ' . $mainResource[0]['contact_lastname'] . ' ' . $mainResource[0]['contact_society']);
             if (!empty($contact)) {
-                $metadata[] = [_RECIPIENTS => $contact];
+                $metadata[_RECIPIENTS] = $contact;
             }
 
             $bodyData = [
@@ -170,7 +170,7 @@ class MaarchParapheurController
                 'processingUser'     => $processingUser,
                 'sender'             => trim($sender['firstname'] . ' ' .$sender['lastname']),
                 'deadline'           => $processLimitDate,
-                'metadata'           => json_encode($metadata)
+                'metadata'           => $metadata
             ];
 
             $response = CurlModel::exec([
