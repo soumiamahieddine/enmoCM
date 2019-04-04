@@ -154,16 +154,18 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                             }
                         }
 
-                        $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$res_id]]);
-                        if (!empty($document[0])) {
-                            foreach ($object['rawData'] as $key => $value) {
-                                if ($value == 'note') {
-                                    $tmpBodyData[$key] = $formValues['note_content_to_users'];
-                                } elseif ($value == 'localeoId') {
-                                    $tmpBodyData[$key] = $externalId['localeoId'];
-                                } else {
-                                    $tmpBodyData[$key] = $document[0][$value];
-                                }
+                        if (!empty($select)) {
+                            $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$res_id]]);
+                        }
+                        foreach ($object['rawData'] as $key => $value) {
+                            if ($value == 'note') {
+                                $tmpBodyData[$key] = $formValues['note_content_to_users'];
+                            } elseif ($value == 'localeoId') {
+                                $tmpBodyData[$key] = $externalId['localeoId'];
+                            } elseif (!empty($document[0][$value])) {
+                                $tmpBodyData[$key] = $document[0][$value];
+                            } else {
+                                $tmpBodyData[$key] = '';
                             }
                         }
 
