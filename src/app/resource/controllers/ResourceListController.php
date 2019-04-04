@@ -658,7 +658,7 @@ class ResourceListController
         $methodResponses = [];
         foreach ($resourcesForAction as $resId) {
             if (!empty($method)) {
-                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data']]);
+                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note']]);
 
                 if (!empty($methodResponse['errors'])) {
                     if (empty($methodResponses['errors'])) {
@@ -674,7 +674,8 @@ class ResourceListController
                 }
             }
         }
-        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $methodResponse['history']]);
+        $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
+        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $historic]);
 
         if (!empty($methodResponses)) {
             return $response->withJson($methodResponses);

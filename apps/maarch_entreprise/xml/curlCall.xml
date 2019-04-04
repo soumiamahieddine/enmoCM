@@ -76,25 +76,53 @@
         <enabled>false</enabled>
         <url></url>
         <method>POST</method>
-        <file>
-            <key>encodedFile</key>
-        </file>
-        <rawData>
-            <key>parentId</key>
-            <value>res_id_master</value>
-        </rawData>
-        <rawData>
-            <key>status</key>
-            <value>status</value>
-        </rawData>
-        <data>
-            <key>column</key>
-            <value>aString</value>
-        </data>
-        <data>
-            <key>column2</key>
-            <value>aString2</value>
-        </data>
+        <file>filename</file>
+        <sendInObject>
+            <objectName>requete</objectName>
+            <rawData>
+                <key>parentQueryId</key>
+                <value>external_id</value>
+            </rawData>
+            <rawData>
+                <key>externalId</key>
+                <value>res_id</value>
+            </rawData>
+            <rawData>
+                <key>subject</key>
+                <value>title</value>
+            </rawData>
+            <data>
+                <key>cityId</key>
+                <value>73</value>
+            </data>
+            <data>
+                <key>servId</key>
+                <value>4129</value>
+            </data>
+            <data>
+                <key>sqrtId</key>
+                <value>12178</value>
+            </data>
+            <data>
+                <key>qrtId</key>
+                <value>125</value>
+            </data>
+            <data>
+                <key>geo</key>
+                <value>false</value>
+            </data>
+        </sendInObject>
+        <sendInObject>
+            <objectName>citoyen</objectName>
+            <rawData>
+                <key>id</key>
+                <value>external_id</value>
+            </rawData>
+            <rawData>
+                <key>externalId</key>
+                <value>address_id</value>
+            </rawData>
+        </sendInObject>
     </call>
     <call>
         <id>sendContactToExternalApplication</id>
