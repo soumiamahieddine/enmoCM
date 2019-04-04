@@ -57,7 +57,7 @@ export class sendExternalSignatoryBookActionComponent implements OnInit {
 
         this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: realResSelected, note: this.noteEditor.getNoteContent(), data: this.externalSignatoryBookDatas })
             .subscribe((data: any) => {
-                if (data && data.data != null) {
+                if (!data) {
                     this.dialogRef.close('success');
                 }
                 if (data && data.errors != null) {

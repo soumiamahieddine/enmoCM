@@ -1317,12 +1317,13 @@ class UserController
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
 
         if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
-            $userInfo = UserModel::getById(['select' => ['firstname', 'lastname', 'mail', 'external_id'], 'id' => $aArgs['id']]);
+            $userInfo = UserModel::getById(['select' => ['firstname', 'lastname', 'mail', 'external_id', 'user_id'], 'id' => $aArgs['id']]);
 
             $bodyData = [
                 "lastname"  => $userInfo['lastname'],
                 "firstname" => $userInfo['firstname'],
-                "email"     => $userInfo['mail'],
+                "login"     => $userInfo['user_id'],
+                "email"     => $userInfo['mail']
             ];
 
             foreach ($loadedXml->signatoryBook as $value) {
@@ -1350,7 +1351,7 @@ class UserController
         }
 
         $externalId = json_decode($userInfo['external_id'], true);
-        $externalId['maarchParapheur'] = $responseExec['user']['id'];
+        $externalId['maarchParapheur'] = $responseExec['id'];
 
         UserModel::updateExternalId(['id' => $aArgs['id'], 'externalId' => json_encode($externalId)]);
 
@@ -1362,7 +1363,7 @@ class UserController
             'info'         => _USER_CREATED_IN_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
         ]);
 
-        return $response->withJson(['externalId' => $responseExec['user']['id']]);
+        return $response->withJson(['externalId' => $responseExec['id']]);
     }
 
     private function hasUsersRights(array $aArgs)

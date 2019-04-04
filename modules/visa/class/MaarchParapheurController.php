@@ -120,7 +120,7 @@ class MaarchParapheurController
     
                 if ($mainResource[0]['category_id'] != 'outgoing') {
                     $attachmentsData = [[
-                        'encodedZipDocument' => $encodedMainZipFile,
+                        'encodedDocument' => $encodedMainZipFile,
                         'subject'            => $mainResource[0]['subject'],
                         'reference'          => $mainResource[0]['alt_identifier']
                     ]];

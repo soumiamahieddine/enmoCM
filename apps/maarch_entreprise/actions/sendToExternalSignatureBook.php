@@ -188,15 +188,15 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 } else {
                     $objectSent = $objectSentSign;
                 }
+                $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $processingUser]);
                 $attachmentToFreeze = MaarchParapheurController::sendDatas([
                     'config'             => $config,
                     'resIdMaster'        => $res_id,
-                    'processingUser'     => $processingUser,
+                    'processingUser'     => $processingUserInfo['login'],
                     'objectSent'         => $objectSent,
                     'userId'             => $_SESSION['user']['UserId']
                 ]);
 
-                $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $processingUser]);
                 $message = ' (à ' . $processingUserInfo['firstname'] . ' ' . $processingUserInfo['lastname'] . ')';
             }
         }

@@ -54,18 +54,18 @@ trait ExternalSignatoryBookTrait
                 ]);
                 if ($attachments[0]['nb'] == 0 && $args['data']['objectSent'] == 'attachment') {
                     $noAttachmentsResource = ResModel::getExtById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
-                    return ['error' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
+                    return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }
 
+                $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $args['data']['processingUser']]);
                 $attachmentToFreeze = MaarchParapheurController::sendDatas([
                     'config'             => $config,
                     'resIdMaster'        => $args['resId'],
-                    'processingUser'     => $args['data']['processingUser'],
+                    'processingUser'     => $processingUserInfo['login'],
                     'objectSent'         => $args['data']['objectSent'],
                     'userId'             => $GLOBALS['userId']
                 ]);
 
-                $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $args['data']['processingUser']]);
                 $historyInfo = ' (à ' . $processingUserInfo['firstname'] . ' ' . $processingUserInfo['lastname'] . ')';
             } elseif ($config['id'] == 'xParaph') {
                 $attachmentToFreeze = XParaphController::sendDatas([
@@ -106,9 +106,9 @@ trait ExternalSignatoryBookTrait
             $document = ResModel::getById(['resId' => $args['resId'], 'select' => ['status']]);
             
             if ($document['status'] == 'EVIS' || $document['status'] == 'ESIG') {
-            //     $sequence    = $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
+                //     $sequence    = $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
                 $stepDetails = array();
-            //     $stepDetails = $circuit_visa->getStepDetails($res_id, $coll_id, 'VISA_CIRCUIT', $sequence);
+                //     $stepDetails = $circuit_visa->getStepDetails($res_id, $coll_id, 'VISA_CIRCUIT', $sequence);
 
             //     $message = $circuit_visa->processVisaWorkflow(['stepDetails' => $stepDetails, 'res_id' => $res_id]);
             }
