@@ -25,6 +25,7 @@ use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Resource\controllers\StoreController;
+use Resource\models\ChronoModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
@@ -50,19 +51,41 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Body format is empty or not a string']);
         }
 
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        $generateChrono = false;
         $mandatoryColumns = ['res_id_master', 'attachment_type'];
-        foreach ($body['data'] as $value) {
+        foreach ($body['data'] as $key => $value) {
             foreach ($mandatoryColumns as $columnKey => $column) {
                 if ($column == $value['column'] && !empty($value['value'])) {
-                    if ($column == 'res_id_master' && !ResController::hasRightByResId(['resId' => [$value['value']], 'userId' => $GLOBALS['userId']])) {
-                        return $response->withStatus(403)->withJson(['errors' => 'ResId master out of perimeter']);
+                    if ($column == 'res_id_master') {
+                        if (!ResController::hasRightByResId(['resId' => [$value['value']], 'userId' => $GLOBALS['userId']])) {
+                            return $response->withStatus(403)->withJson(['errors' => 'ResId master out of perimeter']);
+                        }
+                        $resId = $value['value'];
+                    } elseif ($column == 'attachment_type') {
+                        if (empty($attachmentsTypes[$value['value']])) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Attachment Type does not exist']);
+                        } elseif ($attachmentsTypes[$value['value']]['chrono']) {
+                            $generateChrono = true;
+                        }
                     }
                     unset($mandatoryColumns[$columnKey]);
                 }
             }
+            if (in_array($value['column'], ['identifier'])) {
+                unset($body['data'][$key]);
+            }
         }
         if (!empty($mandatoryColumns)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body data array needs column(s) [' . implode(', ', $mandatoryColumns) . ']']);
+        } elseif (empty($resId)) {
+            return $response->withStatus(400)->withJson(['errors' => 'ResId master is missing']);
+        }
+
+        if ($generateChrono) {
+            $resource = ResModel::getById(['select' => ['destination', 'type_id'], 'resId' => $resId]);
+            $chrono = ChronoModel::getChrono(['id' => 'outgoing', 'entityId' => $resource['destination'], 'typeId' => $resource['type_id'], 'resId' => $resId]);
+            $body['data'][] = ['column' => 'identifier', 'value' => $chrono];
         }
 
         $body['table'] = empty($body['version']) ? 'res_attachments' : 'res_version_attachments';
