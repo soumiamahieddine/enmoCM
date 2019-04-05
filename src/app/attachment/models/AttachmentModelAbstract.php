@@ -85,8 +85,9 @@ abstract class AttachmentModelAbstract
 
     public static function getListByResIdMaster(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'login']);
         ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['login']);
         ValidatorModel::arrayType($aArgs, ['excludeAttachmentTypes']);
 
         $aAttachments = DatabaseModel::select([
@@ -99,8 +100,8 @@ abstract class AttachmentModelAbstract
             ],
             'table'     => ['res_view_attachments', 'users ut', 'status', 'users u'],
             'left_join' => ['res_view_attachments.typist = ut.user_id', 'res_view_attachments.status = status.id', 'res_view_attachments.updated_by = u.user_id'],
-            'where'     => ['res_id_master = ?', 'res_view_attachments.status not in (?)', 'attachment_type not in (?)'],
-            'data'      => [$aArgs['resId'], ['OBS', 'DEL'], $aArgs['excludeAttachmentTypes']],
+            'where'     => ['res_id_master = ?', 'res_view_attachments.status not in (?)', 'attachment_type not in (?)', '((res_view_attachments.status = ? AND typist = ?) OR res_view_attachments.status != ?)'],
+            'data'      => [$aArgs['resId'], ['OBS', 'DEL'], $aArgs['excludeAttachmentTypes'], 'TMP', $aArgs['login'], 'TMP'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
         ]);
 

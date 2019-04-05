@@ -126,6 +126,7 @@ class AttachmentController
 
         $attachments = AttachmentModel::getListByResIdMaster([
             'resId'                     => $aArgs['resId'],
+            'login'                     => $GLOBALS['userId'],
             'excludeAttachmentTypes'    => $excludeAttachmentTypes,
             'orderBy'                   => ['res_id DESC']
         ]);
