@@ -547,7 +547,7 @@ class AttachmentController
         ]);
 
         if (!empty($attachments[0])) {
-            foreach ($attachments as $keyAttach => $attachment) {
+            foreach ($attachments as $attachment) {
                 if ($attachment['res_id_version'] <> 0) {
                     $resId = $attachment['res_id_version'];
                     $table = 'res_version_attachments';
@@ -626,13 +626,13 @@ class AttachmentController
                     ]);
 
                     $params = [
-                        'userId' => $aArgs['userId'],
-                        'res_id' => $aArgs['resIdMaster'],
-                        'coll_id' => 'letterbox_coll',
-                        'res_view' => 'res_view_attachments',
-                        'res_table' => 'res_attachments',
-                        'res_contact_id' => $contactForMailing['contact_id'],
-                        'res_address_id' => $contactForMailing['address_id'],
+                        'userId'           => $aArgs['userId'],
+                        'res_id'           => $aArgs['resIdMaster'],
+                        'coll_id'          => 'letterbox_coll',
+                        'res_view'         => 'res_view_attachments',
+                        'res_table'        => 'res_attachments',
+                        'res_contact_id'   => $contactForMailing['contact_id'],
+                        'res_address_id'   => $contactForMailing['address_id'],
                         'pathToAttachment' => $pathToAttachmentToCopy,
                         'chronoAttachment' => $chronoPubli,
                     ];
