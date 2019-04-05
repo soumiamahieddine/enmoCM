@@ -109,14 +109,18 @@ class UserController
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['history']            = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
-        $user['canModifyPassword']  = true;
+        $user['canModifyPassword'] = false;
+        $user['canResetPassword'] = true;
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
         $user['externalSignatoryBook'] = (string)$loadedXml->signatoryBookEnabled;
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
-        if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {
-            $user['canModifyPassword'] = false;
+        if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS) && $user['loginmode'] != 'restMode') {
+            $user['canResetPassword'] = false;
+        }
+        if ($user['loginmode'] == 'restMode') {
+            $user['canModifyPassword'] = true;
         }
 
         return $response->withJson($user);
@@ -492,31 +496,39 @@ class UserController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function updateCurrentUserPassword(Request $request, Response $response)
+    public function updatePassword(Request $request, Response $response, array $aArgs)
     {
-        $data = $request->getParams();
+        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
 
-        $check = Validator::stringType()->notEmpty()->validate($data['currentPassword']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['newPassword']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['reNewPassword']);
+        $body = $request->getParsedBody();
+
+        $check = Validator::stringType()->notEmpty()->validate($body['currentPassword']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($body['newPassword']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($body['reNewPassword']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'loginmode']]);
+        if ($user['loginmode'] != 'restMode' && $user['user_id'] != $GLOBALS['userId']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Not allowed']);
+        }
 
-        if ($data['newPassword'] != $data['reNewPassword']) {
+        if ($body['newPassword'] != $body['reNewPassword']) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        } elseif (!AuthenticationModel::authentication(['userId' => $GLOBALS['userId'], 'password' => $data['currentPassword']])) {
+        } elseif (!AuthenticationModel::authentication(['userId' => $user['user_id'], 'password' => $body['currentPassword']])) {
             return $response->withStatus(401)->withJson(['errors' => _WRONG_PSW]);
-        } elseif (!PasswordController::isPasswordValid(['password' => $data['newPassword']])) {
+        } elseif (!PasswordController::isPasswordValid(['password' => $body['newPassword']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Password does not match security criteria']);
-        } elseif (!PasswordModel::isPasswordHistoryValid(['password' => $data['newPassword'], 'userSerialId' => $user['id']])) {
+        } elseif (!PasswordModel::isPasswordHistoryValid(['password' => $body['newPassword'], 'userSerialId' => $aArgs['id']])) {
             return $response->withStatus(400)->withJson(['errors' => _ALREADY_USED_PSW]);
         }
 
-        UserModel::updatePassword(['id' => $user['id'], 'password' => $data['newPassword']]);
-        PasswordModel::setHistoryPassword(['userSerialId' => $user['id'], 'password' => $data['newPassword']]);
+        UserModel::updatePassword(['id' => $aArgs['id'], 'password' => $body['newPassword']]);
+        PasswordModel::setHistoryPassword(['userSerialId' => $aArgs['id'], 'password' => $body['newPassword']]);
 
         return $response->withJson(['success' => 'success']);
     }

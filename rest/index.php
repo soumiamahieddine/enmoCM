@@ -329,7 +329,8 @@ $app->delete('/users/{id}', \User\controllers\UserController::class . ':delete')
 $app->put('/users/{id}/suspend', \User\controllers\UserController::class . ':suspend');
 $app->get('/users/{id}/isDeletable', \User\controllers\UserController::class . ':isDeletable');
 $app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
-$app->put('/users/{id}/password', \User\controllers\UserController::class . ':resetPassword');
+$app->post('/users/{id}/password', \User\controllers\UserController::class . ':resetPassword');
+$app->put('/users/{id}/password', \User\controllers\UserController::class . ':updatePassword');
 $app->get('/users/{userId}/status', \User\controllers\UserController::class . ':getStatusByUserId');
 $app->put('/users/{id}/status', \User\controllers\UserController::class . ':updateStatus');
 $app->put('/users/{id}/maarchParapheur', \User\controllers\UserController::class . ':sendToMaarchParapheur');
@@ -355,7 +356,6 @@ $app->get('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController:
 //CurrentUser
 $app->get('/currentUser/profile', \User\controllers\UserController::class . ':getProfile');
 $app->put('/currentUser/profile', \User\controllers\UserController::class . ':updateProfile');
-$app->put('/currentUser/password', \User\controllers\UserController::class . ':updateCurrentUserPassword');
 $app->post('/currentUser/emailSignature', \User\controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');

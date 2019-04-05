@@ -131,7 +131,7 @@ export class PasswordModificationComponent implements OnInit {
                         }
                     } else if (rule.label == 'historyLastUse') {
                         this.passwordRules.historyLastUse.enabled = rule.enabled;
-                        this.passwordRules.historyLastUse.value = rule.value
+                        this.passwordRules.historyLastUse.value = rule.value;
                         if (rule.enabled) {
                             otherRuleTextArr.push(this.lang['passwordhistoryLastUseDesc'] + ' <b>' + rule.value + '</b> ' + this.lang['passwordhistoryLastUseDesc2']+'.');
                         }
@@ -207,7 +207,7 @@ export class PasswordModificationComponent implements OnInit {
         this.passwordModel.currentPassword = this.firstFormGroup.controls['currentPasswordCtrl'].value;
         this.passwordModel.newPassword = this.firstFormGroup.controls['newPasswordCtrl'].value;
         this.passwordModel.reNewPassword = this.firstFormGroup.controls['retypePasswordCtrl'].value;
-        this.http.put(this.coreUrl + "rest/currentUser/password", this.passwordModel)
+        this.http.put(this.coreUrl + 'rest/users/' + angularGlobals.user.id + '/password', this.passwordModel)
             .subscribe(() => {
                 this.config = {data:{state:'END'},disableClose: true};
                 this.dialogRef = this.dialog.open(InfoChangePasswordModalComponent, this.config);
