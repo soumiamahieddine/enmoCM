@@ -149,7 +149,7 @@ function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
 function cleanFileContent($fileContent)
 {
     $func = new functions();
-    
+
     $fileContent = $func->normalize($fileContent);
 
     $fileContent = preg_replace('/[[:cntrl:]]/', ' ', $fileContent);
@@ -333,10 +333,7 @@ $conf = $argv[1];
 $xmlconfig = @simplexml_load_file($conf);
 
 if ($xmlconfig == false) {
-    errorHandler('Error on loading config file : ' . $conf);
-
     echo "\nError on loading config file: " . $conf . "\n\n";
-    rename($_ENV['logFile'] . ".log", $_ENV['logFile'] . "_ERR.log");
     exit(103);
 }
 
