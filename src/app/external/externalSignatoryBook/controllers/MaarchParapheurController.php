@@ -54,8 +54,14 @@ class MaarchParapheurController
     {
         $attachmentToFreeze = [];
 
-        $adrMainInfo              = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
-        $docserverMainInfo        = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
+        $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
+        if (empty($adrMainInfo)) {
+            return ['error' => 'Document ' . $resId . ' is not converted in pdf'];
+        }
+        $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
+        if (empty($docserverMainInfo)) {
+            return ['error' => 'Docserver does not exist ' . $adrMainInfo['docserver_id']];
+        }
         $arrivedMailMainfilePath  = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
         $encodedMainZipFile       = MaarchParapheurController::createZip(['filepath' => $arrivedMailMainfilePath, 'filename' => 'courrier_arrivee.pdf']);
 
@@ -68,6 +74,9 @@ class MaarchParapheurController
             $processLimitDate = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s"). ' + 14 days'));
         } else {
             $processLimitDate = $mainResource[0]['process_limit_date'];
+        }
+        if (empty($mainResource) && $aArgs['objectSent'] == 'mail') {
+            return ['error' => 'Mail does not exist'];
         }
 
         $processingUser      = $aArgs['processingUser'];
@@ -88,66 +97,76 @@ class MaarchParapheurController
                 'data'      => [$aArgs['resIdMaster'], $excludeAttachmentTypes]
             ]);
 
-            foreach ($attachments as $value) {
-                if (!empty($value['res_id'])) {
-                    $resId  = $value['res_id'];
-                    $collId = 'attachments_coll';
-                    $is_version = false;
-                } else {
-                    $resId  = $value['res_id_version'];
-                    $collId = 'attachments_version_coll';
-                    $is_version = true;
-                }
-                
-                $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
-                $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
-                $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+            if (empty($attachments)) {
+                return ['error' => 'No attachment to send'];
+            } else {
+                foreach ($attachments as $value) {
+                    if (!empty($value['res_id'])) {
+                        $resId  = $value['res_id'];
+                        $collId = 'attachments_coll';
+                        $is_version = false;
+                    } else {
+                        $resId  = $value['res_id_version'];
+                        $collId = 'attachments_version_coll';
+                        $is_version = true;
+                    }
+                    
+                    $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
+                    if (empty($adrInfo)) {
+                        return ['error' => 'Attachment ' . $resId . ' is not converted in pdf'];
+                    }
+                    $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                    if (empty($docserverInfo)) {
+                        return ['error' => 'Docserver does not exist ' . $adrInfo['docserver_id']];
+                    }
+                    $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+        
+                    $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
+        
+                    if ($mainResource[0]['category_id'] != 'outgoing') {
+                        $attachmentsData = [[
+                            'encodedDocument' => $encodedMainZipFile,
+                            'title'            => $mainResource[0]['subject'],
+                            'reference'          => $mainResource[0]['alt_identifier']
+                        ]];
+                    } else {
+                        $attachmentsData = [];
+                    }
     
-                $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
-    
-                if ($mainResource[0]['category_id'] != 'outgoing') {
-                    $attachmentsData = [[
-                        'encodedDocument' => $encodedMainZipFile,
-                        'title'            => $mainResource[0]['subject'],
-                        'reference'          => $mainResource[0]['alt_identifier']
-                    ]];
-                } else {
-                    $attachmentsData = [];
+                    $metadata = [];
+                    if (!empty($priority['label'])) {
+                        $metadata[_PRIORITY] = $priority['label'];
+                    }
+                    if (!empty($senderPrimaryEntity['entity_label'])) {
+                        $metadata[_INITIATOR_ENTITY] = $senderPrimaryEntity['entity_label'];
+                    }
+                    $contact = trim($mainResource[0]['contact_firstname'] . ' ' . $mainResource[0]['contact_lastname'] . ' ' . $mainResource[0]['contact_society']);
+                    if (!empty($contact)) {
+                        $metadata[_RECIPIENTS] = $contact;
+                    }
+        
+                    $bodyData = [
+                        'title'           => $value['title'],
+                        'reference'       => $value['identifier'],
+                        'mode'            => $aArgs['config']['data']['signature'],
+                        'encodedDocument' => $encodedZipDocument,
+                        'processingUser'  => $processingUser,
+                        'sender'          => trim($sender['firstname'] . ' ' .$sender['lastname']),
+                        'deadline'        => $processLimitDate,
+                        'attachments'     => $attachmentsData,
+                        'metadata'        => $metadata
+                    ];
+        
+                    $response = CurlModel::exec([
+                        'url'      => $aArgs['config']['data']['url'] . '/rest/documents',
+                        'user'     => $aArgs['config']['data']['userId'],
+                        'password' => $aArgs['config']['data']['password'],
+                        'method'   => 'POST',
+                        'bodyData' => $bodyData
+                    ]);
+        
+                    $attachmentToFreeze[$collId][$resId] = $response['id'];
                 }
-
-                $metadata = [];
-                if (!empty($priority['label'])) {
-                    $metadata[_PRIORITY] = $priority['label'];
-                }
-                if (!empty($senderPrimaryEntity['entity_label'])) {
-                    $metadata[_INITIATOR_ENTITY] = $senderPrimaryEntity['entity_label'];
-                }
-                $contact = trim($mainResource[0]['contact_firstname'] . ' ' . $mainResource[0]['contact_lastname'] . ' ' . $mainResource[0]['contact_society']);
-                if (!empty($contact)) {
-                    $metadata[_RECIPIENTS] = $contact;
-                }
-    
-                $bodyData = [
-                    'title'           => $value['title'],
-                    'reference'       => $value['identifier'],
-                    'mode'            => $aArgs['config']['data']['signature'],
-                    'encodedDocument' => $encodedZipDocument,
-                    'processingUser'  => $processingUser,
-                    'sender'          => trim($sender['firstname'] . ' ' .$sender['lastname']),
-                    'deadline'        => $processLimitDate,
-                    'attachments'     => $attachmentsData,
-                    'metadata'        => $metadata
-                ];
-    
-                $response = CurlModel::exec([
-                    'url'      => $aArgs['config']['data']['url'] . '/rest/documents',
-                    'user'     => $aArgs['config']['data']['userId'],
-                    'password' => $aArgs['config']['data']['password'],
-                    'method'   => 'POST',
-                    'bodyData' => $bodyData
-                ]);
-    
-                $attachmentToFreeze[$collId][$resId] = $response['id'];
             }
         } elseif ($aArgs['objectSent'] == 'mail') {
             $metadata = [];
@@ -184,7 +203,7 @@ class MaarchParapheurController
             $attachmentToFreeze['letterbox_coll'][$aArgs['resIdMaster']] = $response['id'];
         }
 
-        return $attachmentToFreeze;
+        return ['sended' => $attachmentToFreeze];
     }
 
     public static function createZip(array $aArgs)

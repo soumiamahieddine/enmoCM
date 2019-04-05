@@ -974,7 +974,10 @@ export const LANG_FR = {
     "mailNote"                                          : "Annotation du document principal",
     "attachmentSignature"                               : "Signature des documents intégrés au parapheur",
     "userMaarchParapheur"                               : "Attributaire Maarch Parapheur",
-    "noAttachmentInSignatoryBook"                       : "Aucun pièce jointe intégrée au parapheur",
+    "noAttachmentInSignatoryBook"                       : "Aucune pièce jointe intégrée au parapheur",
     "canNotMakeAction"                                  : "Impossible de faire l'action sur les courriers suivants",
-    "noUserDefinedInMaarchParapheur"                     : "Aucun utilisateur créé dans Maarch Parapheur"
+    "noUserDefinedInMaarchParapheur"                    : "Aucun utilisateur créé dans Maarch Parapheur",
+    "noMailConversion"                                  : "Le courrier n'a pas de conversion PDF",
+    "docserverDoesNotExists"                            : "La zone de stockage n'existe pas",
+    "fileDoesNotExists"                                 : "Le fichier n'existe pas",
 };

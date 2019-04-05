@@ -976,5 +976,8 @@ export const LANG_NL = {
     "userMaarchParapheur"                       : "Maarch Parapheur user", //_TO_TRANSLATE
     "noAttachmentInSignatoryBook"               : "No attachment in signature book", //_TO_TRANSLATE
     "canNotMakeAction"                          : "Can make action on this mail", //_TO_TRANSLATE
-    "noUserDefinedInMaarchParapheur"                             : "No user created in Maarch Parapheur", //_TO_TRANSLATE
+    "noUserDefinedInMaarchParapheur"            : "No user created in Maarch Parapheur", //_TO_TRANSLATE
+    "noMailConversion"                          : "Mail does not have PDF conversion", //_TO_TRANSLATE
+    "docserverDoesNotExists"                    : "Docserver does not exists", //_TO_TRANSLATE
+    "fileDoesNotExists"                         : "File does not exists", //_TO_TRANSLATE
 };

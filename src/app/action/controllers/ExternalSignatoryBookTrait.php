@@ -60,13 +60,18 @@ trait ExternalSignatoryBookTrait
                 }
 
                 $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $args['data']['processingUser']]);
-                $attachmentToFreeze = MaarchParapheurController::sendDatas([
-                    'config'             => $config,
-                    'resIdMaster'        => $args['resId'],
-                    'processingUser'     => $processingUserInfo['login'],
-                    'objectSent'         => $args['data']['objectSent'],
-                    'userId'             => $GLOBALS['userId']
+                $sendedInfo = MaarchParapheurController::sendDatas([
+                    'config'           => $config,
+                    'resIdMaster'      => $args['resId'],
+                    'processingUser'   => $processingUserInfo['login'],
+                    'objectSent'       => $args['data']['objectSent'],
+                    'userId'           => $GLOBALS['userId']
                 ]);
+                if (!empty($sendedInfo['error'])) {
+                    return ['errors' => [$sendedInfo['error']]];
+                } else {
+                    $attachmentToFreeze = $sendedInfo['sended'];
+                }
 
                 $historyInfo = ' (à ' . $processingUserInfo['firstname'] . ' ' . $processingUserInfo['lastname'] . ')';
             } elseif ($config['id'] == 'xParaph') {

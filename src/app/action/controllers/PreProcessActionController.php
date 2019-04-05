@@ -18,6 +18,7 @@ use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
+use Convert\controllers\ConvertPdfController;
 use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
@@ -368,8 +369,10 @@ class PreProcessActionController
                 // TODO
             } elseif ($signatureBookEnabled == 'maarchParapheur') {
                 $additionalsInfos = [
-                    'resources' => [],
-                    'noAttachment' => []
+                    'attachments'    => [],
+                    'noAttachment'   => [],
+                    'mails'          => [],
+                    'noMail'         => []
                 ];
                 $userList = MaarchParapheurController::getInitializeDatas(['config' => $config]);
                 if (!empty($userList['users'])) {
@@ -382,18 +385,71 @@ class PreProcessActionController
                 }
 
                 foreach ($data['resources'] as $resId) {
+                    // Check Mail
+                    $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
+                    if (empty($noAttachmentsResource['alt_identifier'])) {
+                        $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
+                    }
+
+                    $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
+                    if (empty($adrMainInfo)) {
+                        $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];
+                        continue;
+                    }
+                    $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
+                    if (empty($docserverMainInfo)) {
+                        $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'docserverDoesNotExists'];
+                        continue;
+                    }
+                    $filePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
+                    if (!is_file($filePath)) {
+                        $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
+                        continue;
+                    }
+                    $additionalsInfos['mails'][] = ['res_id' => $resId];
+
+                    // Check attachments
                     $attachments = AttachmentModel::getOnView([
                         'select'    => [
-                            'count(1) as nb'
+                            'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                            'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
+                            'validation_date', 'relation', 'attachment_id_master'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
                         'data'      => [$resId, ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
                     ]);
-                    if ($attachments[0]['nb'] == 0) {
-                        $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
-                        $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId];
+                    
+                    if (empty($attachments)) {
+                        $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
                     } else {
-                        $additionalsInfos['resources'][] = ['res_id' => $resId];
+                        foreach ($attachments as $value) {
+                            if (!empty($value['res_id'])) {
+                                $resIdAttachment  = $value['res_id'];
+                                $collId = 'attachments_coll';
+                                $is_version = false;
+                            } else {
+                                $resIdAttachment  = $value['res_id_version'];
+                                $collId = 'attachments_version_coll';
+                                $is_version = true;
+                            }
+                            
+                            $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resIdAttachment, 'collId' => $collId, 'isVersion' => $is_version]);
+                            if (empty($adrInfo)) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'noAttachmentConversion'];
+                                break;
+                            }
+                            $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                            if (empty($docserverInfo)) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'docserverDoesNotExists'];
+                                break;
+                            }
+                            $filePath = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+                            if (!is_file($filePath)) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'fileDoesNotExists'];
+                                break;
+                            }
+                        }
+                        $additionalsInfos['attachments'][] = ['res_id' => $resId];
                     }
                 }
             } elseif ($signatureBookEnabled == 'xParaph') {

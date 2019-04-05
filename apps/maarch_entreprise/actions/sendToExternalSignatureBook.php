@@ -123,7 +123,14 @@ function check_form($form_id, $values)
         }
         if ($config['id'] == 'maarchParapheur') {
             $objectSentSign = get_value_fields($values, 'objectSentSign');
+            $objectSentNote  = get_value_fields($values, 'objectSentNote');
             $hasAttachmentError = hasAttachmentError();
+            if (!empty($_SESSION['stockCheckbox'])) {
+                $aResources = $_SESSION['stockCheckbox'];
+            } else {
+                $aResources = [$_SESSION['doc_id']];
+            }
+
             if ($objectSentSign == 'attachment' && $hasAttachmentError['error']) {
                 if (!empty($_SESSION['stockCheckbox'])) {
                     $_SESSION['action_error'] = _MAIL_HAS_NO_RESPONSE_PROJECT . ' : ' . implode(",", $hasAttachmentError['resList']);
@@ -131,6 +138,48 @@ function check_form($form_id, $values)
                     $_SESSION['action_error'] = _NO_RESPONSE_PROJECT_VISA;
                 }
                 return false;
+            } elseif ($objectSentSign == 'attachment') {
+                foreach ($aResources as $resId) {
+                    $attachments = \Attachment\models\AttachmentModel::getOnView([
+                        'select'    => [
+                            'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                            'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
+                            'validation_date', 'relation', 'attachment_id_master'
+                        ],
+                        'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+                        'data'      => [$resId, ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+                    ]);
+
+                    foreach ($attachments as $value) {
+                        if (!empty($value['res_id'])) {
+                            $resIdAttachment  = $value['res_id'];
+                            $collId = 'attachments_coll';
+                            $is_version = false;
+                        } else {
+                            $resIdAttachment  = $value['res_id_version'];
+                            $collId = 'attachments_version_coll';
+                            $is_version = true;
+                        }
+                    
+                        $adrInfo       = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resIdAttachment, 'collId' => $collId, 'isVersion' => $is_version]);
+                        $docserverInfo = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                        $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+                        if (!is_file($filePath)) {
+                            $_SESSION['action_error'] = _FILE_MISSING . ' : ' . $filePath;
+                            return false;
+                        }
+                    }
+                }
+            } elseif ($objectSentNote == 'mail') {
+                foreach ($aResources as $resId) {
+                    $adrMainInfo = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
+                    $docserverMainInfo = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
+                    $filePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
+                    if (!is_file($filePath)) {
+                        $_SESSION['action_error'] = _FILE_MISSING . ' : ' . $filePath;
+                        return false;
+                    }
+                }
             }
         }
     }
@@ -188,13 +237,19 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     $objectSent = $objectSentSign;
                 }
                 $processingUserInfo = \ExternalSignatoryBook\controllers\MaarchParapheurController::getUserById(['config' => $config, 'id' => $processingUser]);
-                $attachmentToFreeze = \ExternalSignatoryBook\controllers\MaarchParapheurController::sendDatas([
+                $sendedInfo = \ExternalSignatoryBook\controllers\MaarchParapheurController::sendDatas([
                     'config'             => $config,
                     'resIdMaster'        => $res_id,
                     'processingUser'     => $processingUserInfo['login'],
                     'objectSent'         => $objectSent,
                     'userId'             => $_SESSION['user']['UserId']
                 ]);
+                if (!empty($sendedInfo['error'])) {
+                    var_dump($sendedInfo['error']);
+                    exit;
+                } else {
+                    $attachmentToFreeze = $sendedInfo['sended'];
+                }
 
                 $message = ' (à ' . $processingUserInfo['firstname'] . ' ' . $processingUserInfo['lastname'] . ')';
             }

@@ -40,7 +40,21 @@
                                 </p>
                                 <ul>
                                     <li *ngFor="let attachment of additionalsInfos.noAttachment">
-                                        <b>{{attachment.alt_identifier}}</b> : {{lang.noAttachmentInSignatoryBook}}
+                                        <b>{{attachment.alt_identifier}}</b> : {{lang[attachment.reason]}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" *ngIf="additionalsInfos.noMail.length != 0 && externalSignatoryBookDatas.objectSent == 'mail'">
+                        <div>
+                            <div class="alert-message alert-message-danger mailList" role="alert">
+                                <p>
+                                    {{lang.canNotMakeAction}} :
+                                </p>
+                                <ul>
+                                    <li *ngFor="let mail of additionalsInfos.noMail">
+                                        <b>{{mail.alt_identifier}}</b> : {{lang[mail.reason]}}
                                     </li>
                                 </ul>
                             </div>
@@ -56,7 +70,7 @@
 </div>
 <div mat-dialog-actions class="actions">
     <button mat-raised-button mat-button color="primary" 
-        [disabled]="loading || (signatoryBookEnabled == 'maarchParapheur' && additionalsInfos.users.length == 0) || (signatoryBookEnabled == 'maarchParapheur' && externalSignatoryBookDatas.objectSent == 'attachment' && additionalsInfos.resources.length == 0)"
+        [disabled]="loading || !externalSignatoryBookDatas.processingUser || (signatoryBookEnabled == 'maarchParapheur' && (additionalsInfos.users.length == 0 || (externalSignatoryBookDatas.objectSent == 'attachment' && additionalsInfos.attachments.length == 0) || (externalSignatoryBookDatas.objectSent == 'mail' && additionalsInfos.mails.length == 0)))"
         (click)="onSubmit()">{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>

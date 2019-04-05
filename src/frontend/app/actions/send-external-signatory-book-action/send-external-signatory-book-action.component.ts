@@ -16,8 +16,10 @@ export class sendExternalSignatoryBookActionComponent implements OnInit {
     loading: boolean = false;
     additionalsInfos: any = {
         users: [],
-        resources: [],
-        noAttachment: []
+        attachments: [],
+        noAttachment: [],
+        mails: [],
+        noMail: []
     };
     signatoryBookEnabled: any;
     externalSignatoryBookDatas: any = {
@@ -49,10 +51,10 @@ export class sendExternalSignatoryBookActionComponent implements OnInit {
         this.loading = true;
 
         let realResSelected: string[];
-        if(this.additionalsInfos.objectSent == 'attachment'){
-            realResSelected = this.additionalsInfos.resources.map((e: any) => { return e.res_id; });
-        } else {
-            realResSelected = this.data.selectedRes;
+        if(this.signatoryBookEnabled == 'maarchParapheur' && this.externalSignatoryBookDatas.objectSent == 'attachment'){
+            realResSelected = this.additionalsInfos.attachments.map((e: any) => { return e.res_id; });
+        } else if (this.signatoryBookEnabled == 'maarchParapheur' && this.externalSignatoryBookDatas.objectSent == 'mail') {
+            realResSelected = this.additionalsInfos.mails.map((e: any) => { return e.res_id; });
         }
 
         this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: realResSelected, note: this.noteEditor.getNoteContent(), data: this.externalSignatoryBookDatas })
