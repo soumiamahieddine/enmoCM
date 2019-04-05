@@ -81,9 +81,19 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_ALREADY_EXISTS]);
         }
 
+        if ($GLOBALS['userId'] = 'superadmin') {
+            $entityOwner = 'superadmin';
+        } else {
+            $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']]);
+            if (empty($primaryEntity)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User has no entities']);
+            }
+            $entityOwner = $primaryEntity['entity_id'];
+        }
+
         $data['public'] = $data['public'] ? 'true' : 'false';
         $data['owner'] = $user['id'];
-        $data['entity_owner'] = ($GLOBALS['userId'] == 'superadmin' ? 'superadmin' : UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']])['entity_id']);
+        $data['entity_owner'] = $entityOwner;
 
         $id = ContactGroupModel::create($data);
 
