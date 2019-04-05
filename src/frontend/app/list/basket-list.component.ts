@@ -394,9 +394,11 @@ export class BasketListComponent implements OnInit {
         
         let thisSelect = { checked : true };
         let thisDeselect = { checked : false };
-        row.checked = true;
-        this.toggleAllRes(thisDeselect);
-        this.toggleRes(thisSelect, row);
+        if ( row.checked === false) {
+            row.checked = true;
+            this.toggleAllRes(thisDeselect);
+            this.toggleRes(thisSelect, row);
+        }
         this.actionsList.open(x, y, row)
 
         // prevents default
