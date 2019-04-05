@@ -301,6 +301,9 @@ function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) // $Ind
                 errorHandler($e->getMessage());
             }
         }
+    } else {
+        $result = 2;
+        $_ENV['logger']->write('Content has too few characters (<20)');
     }
     return $result;
 }
