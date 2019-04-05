@@ -55,11 +55,11 @@ class MaarchParapheurController
         $attachmentToFreeze = [];
 
         $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
-        if (empty($adrMainInfo)) {
+        if (empty($adrMainInfo['docserver_id'])) {
             return ['error' => 'Document ' . $resId . ' is not converted in pdf'];
         }
         $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
-        if (empty($docserverMainInfo)) {
+        if (empty($docserverMainInfo['path_template'])) {
             return ['error' => 'Docserver does not exist ' . $adrMainInfo['docserver_id']];
         }
         $arrivedMailMainfilePath  = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
@@ -111,12 +111,12 @@ class MaarchParapheurController
                         $is_version = true;
                     }
                     
-                    $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
-                    if (empty($adrInfo)) {
+                    $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
+                    if (empty($adrInfo['docserver_id'])) {
                         return ['error' => 'Attachment ' . $resId . ' is not converted in pdf'];
                     }
                     $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
-                    if (empty($docserverInfo)) {
+                    if (empty($docserverInfo['path_template'])) {
                         return ['error' => 'Docserver does not exist ' . $adrInfo['docserver_id']];
                     }
                     $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];

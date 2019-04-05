@@ -392,12 +392,12 @@ class PreProcessActionController
                     }
 
                     $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
-                    if (empty($adrMainInfo)) {
+                    if (empty($adrMainInfo['docserver_id'])) {
                         $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];
                         continue;
                     }
                     $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
-                    if (empty($docserverMainInfo)) {
+                    if (empty($docserverMainInfo['path_template'])) {
                         $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'docserverDoesNotExists'];
                         continue;
                     }
@@ -434,12 +434,12 @@ class PreProcessActionController
                             }
                             
                             $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resIdAttachment, 'collId' => $collId, 'isVersion' => $is_version]);
-                            if (empty($adrInfo)) {
+                            if (empty($adrInfo['docserver_id'])) {
                                 $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'noAttachmentConversion'];
                                 break;
                             }
                             $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
-                            if (empty($docserverInfo)) {
+                            if (empty($docserverInfo['path_template'])) {
                                 $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'docserverDoesNotExists'];
                                 break;
                             }
