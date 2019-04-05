@@ -419,7 +419,7 @@ if ($_ENV['tablename'] == 'res_attachments' || $_ENV['tablename'] == 'res_versio
 
     $queryIndexFullText = "SELECT res_id, docserver_id, path, filename, format FROM "
         . $_ENV['tablename'] . " WHERE ".$fulltextTarget
-        . " AND format = 'pdf' AND attachment_type <> 'print_folder' AND status NOT IN ('DEL','OBS','TMP')"
+        . " AND lower(format) = 'pdf' AND attachment_type <> 'print_folder' AND status NOT IN ('DEL','OBS','TMP')"
         . " GROUP BY res_id ORDER BY res_id ASC" . $limit;
 } else {
     $_ENV['logger']->write("docServers " . $_ENV['tablename'] . " found !", 'DEBUG');
