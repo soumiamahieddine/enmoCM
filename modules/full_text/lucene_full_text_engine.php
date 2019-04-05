@@ -148,6 +148,8 @@ function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
  */
 function cleanFileContent($fileContent)
 {
+    $func = new functions();
+    
     $fileContent = $func->normalize($fileContent);
 
     $fileContent = preg_replace('/[[:cntrl:]]/', ' ', $fileContent);
@@ -243,8 +245,6 @@ function prepareIndexFullTextTxt($pathToFile, $indexFileDirectory, $Id)
  */
 function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) // $IndexFileDirectory is replace by tempIndexFileDirectory
 {
-    $func = new functions();
-
     $indexFileDirectory = (string)$tempIndexFileDirectory; // with version 1.12, we need a string, not an XML element
     $result = -1;
     $luceneErr = false;
