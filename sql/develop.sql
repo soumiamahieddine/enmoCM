@@ -249,6 +249,12 @@ DO $$ BEGIN
   END IF;
 END$$;
 ALTER TABLE res_mark_as_read DROP COLUMN IF EXISTS coll_id;
+
+UPDATE listinstance SET added_by_entity = 'superadmin' WHERE added_by_user = 'superadmin';
+UPDATE listinstance SET added_by_entity =
+    (SELECT entity_id FROM users_entities WHERE users_entities.user_id = listinstance.added_by_user AND primary_entity = 'Y')
+WHERE added_by_entity IS NULL OR added_by_entity = '';
+
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'listinstance_history') AND attname = 'updated_by_user') THEN
     ALTER TABLE listinstance_history DROP COLUMN IF EXISTS user_id;
