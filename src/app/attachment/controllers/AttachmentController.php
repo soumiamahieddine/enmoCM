@@ -160,38 +160,40 @@ class AttachmentController
 
     public function setInSignatureBook(Request $request, Response $response, array $aArgs)
     {
-        //TODO Controle de droit de modification de cet attachment
+        $body = $request->getParsedBody();
 
-        $data = $request->getParams();
+        $body['isVersion'] = filter_var($body['isVersion'], FILTER_VALIDATE_BOOLEAN);
 
-        $data['isVersion'] = filter_var($data['isVersion'], FILTER_VALIDATE_BOOLEAN);
-
-        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $data['isVersion']]);
-
+        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'select' => ['in_signature_book', 'res_id_master']]);
         if (empty($attachment)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
         }
 
-        AttachmentModel::setInSignatureBook(['id' => $aArgs['id'], 'isVersion' => $data['isVersion'], 'inSignatureBook' => !$attachment['in_signature_book']]);
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        AttachmentModel::setInSignatureBook(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'inSignatureBook' => !$attachment['in_signature_book']]);
 
         return $response->withJson(['success' => 'success']);
     }
 
     public function setInSendAttachment(Request $request, Response $response, array $aArgs)
     {
-        //TODO Controle de droit de modification de cet attachment
+        $body = $request->getParsedBody();
 
-        $data = $request->getParams();
+        $body['isVersion'] = filter_var($body['isVersion'], FILTER_VALIDATE_BOOLEAN);
 
-        $data['isVersion'] = filter_var($data['isVersion'], FILTER_VALIDATE_BOOLEAN);
-
-        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $data['isVersion']]);
-
+        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'select' => ['in_signature_book', 'res_id_master']]);
         if (empty($attachment)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
         }
 
-        AttachmentModel::setInSendAttachment(['id' => $aArgs['id'], 'isVersion' => $data['isVersion'], 'inSendAttachment' => !$attachment['in_send_attach']]);
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        AttachmentModel::setInSendAttachment(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'inSendAttachment' => !$attachment['in_send_attach']]);
 
         return $response->withJson(['success' => 'success']);
     }
