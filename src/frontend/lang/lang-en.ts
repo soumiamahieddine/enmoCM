@@ -454,7 +454,7 @@ export const LANG_EN = {
     "validateAction"                    : "Validate action(s)",
     "value"                             : "value",
     "view"                              : "View",
-    "visaWorkflow"                      : "Visa circuit",
+    "visaWorkflow"                      : "Visa workflow",
     "whereClauseAction"                 : "Where clause condition of action display",
     "workingDays"                       : "Working days",
     "yes"                               : "Yes",
