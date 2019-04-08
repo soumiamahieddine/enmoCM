@@ -30,13 +30,13 @@
                         {{lang.changePassword}}
                     </p>
                 </a>
-                <a mat-list-item *ngIf="user.externalSignatoryBook=='maarchParapheur' && !user.external_id.maarchParapheur" (click)="sendToMaarchParapheur()" title="{{lang.createUserInMaarchParapheur}}">
+                <a mat-list-item *ngIf="user.canCreateMaarchParapheurUser" (click)="sendToMaarchParapheur()" title="{{lang.createUserInMaarchParapheur}}">
                     <mat-icon color="primary" mat-list-icon class="fa fa-user"></mat-icon>
                     <p mat-line>
                         {{lang.createUserInMaarchParapheur}}
                     </p>
                 </a>
-                <a style="opacity:0.7" mat-list-item *ngIf="user.externalSignatoryBook=='maarchParapheur' && user.external_id.maarchParapheur" disabled title="{{lang.userCreatedInMaarchParapheur}}">
+                <a style="opacity:0.7" mat-list-item *ngIf="user.external_id.maarchParapheur" disabled title="{{lang.userCreatedInMaarchParapheur}}">
                     <mat-icon color="primary" mat-list-icon class="fa fa-user"></mat-icon>
                     <p mat-line>
                         {{lang.userCreatedInMaarchParapheur}}

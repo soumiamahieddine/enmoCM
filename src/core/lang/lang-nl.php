@@ -78,6 +78,7 @@ define('_USER_CREATED', 'Toegevoegde gebruiker');
 define('_USER_UPDATED', 'Gewijzigde gebruiker');
 define('_USER_SUSPENDED', 'Utilisateur suspendu TO TRANSLATE');
 define('_USER_DELETED', 'Verwijderde gebruiker');
+define('_USER_PASSWORD_UPDATED', 'User password updated'); // TO TRANSLATE
 define('_USER_GROUP_CREATION', 'Toegevoegde groep voor gebruiker');
 define('_USER_GROUP_MODIFICATION', 'Gewijzigde groep voor gebruiker');
 define('_USER_GROUP_SUPPRESSION', 'Verwijderde groep voor gebruiker');

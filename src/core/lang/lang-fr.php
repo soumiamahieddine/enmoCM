@@ -95,6 +95,7 @@ define('_USER_CREATED', 'Utilisateur ajouté');
 define('_USER_UPDATED', 'Utilisateur modifié');
 define('_USER_SUSPENDED', 'Utilisateur suspendu');
 define('_USER_DELETED', 'Utilisateur supprimé');
+define('_USER_PASSWORD_UPDATED', 'Mot de passe utilisateur modifié');
 define('_USER_GROUP_CREATION', 'Groupe ajouté pour utilisateur');
 define('_USER_GROUP_MODIFICATION', 'Groupe modifié pour utilisateur');
 define('_USER_GROUP_SUPPRESSION', 'Groupe supprimé pour utilisateur');
