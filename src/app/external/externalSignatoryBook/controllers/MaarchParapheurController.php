@@ -37,7 +37,7 @@ class MaarchParapheurController
     public static function getUsers(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/users',
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/users',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
@@ -126,8 +126,8 @@ class MaarchParapheurController
                     if ($mainResource[0]['category_id'] != 'outgoing') {
                         $attachmentsData = [[
                             'encodedDocument' => $encodedMainZipFile,
-                            'title'            => $mainResource[0]['subject'],
-                            'reference'          => $mainResource[0]['alt_identifier']
+                            'title'           => $mainResource[0]['subject'],
+                            'reference'       => $mainResource[0]['alt_identifier']
                         ]];
                     } else {
                         $attachmentsData = [];
@@ -158,7 +158,7 @@ class MaarchParapheurController
                     ];
         
                     $response = CurlModel::exec([
-                        'url'      => $aArgs['config']['data']['url'] . '/rest/documents',
+                        'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
                         'user'     => $aArgs['config']['data']['userId'],
                         'password' => $aArgs['config']['data']['password'],
                         'method'   => 'POST',
@@ -193,7 +193,7 @@ class MaarchParapheurController
             ];
 
             $response = CurlModel::exec([
-                'url'      => $aArgs['config']['data']['url'] . '/rest/documents',
+                'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
                 'user'     => $aArgs['config']['data']['userId'],
                 'password' => $aArgs['config']['data']['password'],
                 'method'   => 'POST',
@@ -230,7 +230,7 @@ class MaarchParapheurController
     public static function getUserById(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/users/'.$aArgs['id'],
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/users/'.$aArgs['id'],
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
@@ -274,7 +274,7 @@ class MaarchParapheurController
     public static function getDocumentStatus(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/status',
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/status',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
@@ -286,7 +286,7 @@ class MaarchParapheurController
     public static function getProcessedDocument(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/processedDocument',
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/processedDocument',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'

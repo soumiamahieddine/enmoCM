@@ -121,7 +121,7 @@ class UserController
             $user['canModifyPassword'] = true;
         }
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
-        if ((string)$loadedXml->signatoryBookEnabled == 'maarchParapheur' && $user['loginmode'] != 'restMode' && empty($user['external_id']['maarchParapheur'])) {
+        if ((string)$loadedXml->signatoryBookEnabled == 'maarchParapheur' && $user['loginmode'] != 'restMode' && empty($user['external_id']->maarchParapheur)) {
             $user['canCreateMaarchParapheurUser'] = true;
         }
 
@@ -1360,7 +1360,7 @@ class UserController
             }
 
             $responseExec = CurlModel::exec([
-                'url'      => $url . '/rest/users',
+                'url'      => rtrim($url, '/') . '/rest/users',
                 'user'     => $userId,
                 'password' => $password,
                 'method'   => 'POST',
@@ -1369,6 +1369,9 @@ class UserController
 
             if (!empty($responseExec['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
+            }
+            if (!empty($responseExec['message'])) {
+                return $response->withStatus(400)->withJson(['errors' => $responseExec['message']]);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
