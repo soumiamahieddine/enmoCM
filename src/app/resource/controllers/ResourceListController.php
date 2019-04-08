@@ -100,8 +100,8 @@ class ResourceListController
 
             $attachments = AttachmentModel::getOnView([
                 'select'    => ['COUNT(res_id)', 'res_id_master'],
-                'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)'],
-                'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes],
+                'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
+                'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['userId'], 'TMP'],
                 'groupBy'   => ['res_id_master']
             ]);
 
@@ -658,7 +658,7 @@ class ResourceListController
         $methodResponses = [];
         foreach ($resourcesForAction as $resId) {
             if (!empty($method)) {
-                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data']]);
+                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note']]);
 
                 if (!empty($methodResponse['errors'])) {
                     if (empty($methodResponses['errors'])) {
@@ -674,7 +674,8 @@ class ResourceListController
                 }
             }
         }
-        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note']]);
+        $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
+        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $historic]);
 
         if (!empty($methodResponses)) {
             return $response->withJson($methodResponses);

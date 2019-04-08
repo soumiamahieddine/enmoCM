@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { MatSidenav } from '@angular/material';
@@ -25,6 +25,7 @@ export class BasketHomeComponent implements OnInit {
         basketId: ''
     };
     @Input() snavL: MatSidenav;
+    @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
 
     constructor(public http: HttpClient) {
         this.mobileMode = angularGlobals.mobileMode;
@@ -46,6 +47,11 @@ export class BasketHomeComponent implements OnInit {
         if(this.mobileMode) {
             this.snavL.close();
         }
+    }
+
+    refreshDatas() {
+        this.refreshBasketHome()
+        this.refreshEvent.emit();
     }
 
     refreshBasketHome(){

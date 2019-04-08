@@ -48,11 +48,11 @@ class AuthenticationController
         if ($aArgs['currentRoute'] != '/initialize') {
             $user = UserModel::getByLogin(['select' => ['status', 'change_password'], 'login' => $aArgs['userId']]);
 
-            if ($user['status'] == 'ABS' && !in_array($aArgs['currentRoute'], ['/users/{id}/status', '/currentUser/profile', '/header', '/passwordRules', '/currentUser/password'])) {
+            if ($user['status'] == 'ABS' && !in_array($aArgs['currentRoute'], ['/users/{id}/status', '/currentUser/profile', '/header', '/passwordRules', '/users/{id}/password'])) {
                 return ['isRouteAvailable' => false, 'errors' => 'User is ABS and must be activated'];
             }
 
-            if (!in_array($aArgs['currentRoute'], ['/passwordRules', '/currentUser/password'])) {
+            if (!in_array($aArgs['currentRoute'], ['/passwordRules', '/users/{id}/password'])) {
                 $loggingMethod = CoreConfigModel::getLoggingMethod();
 
                 if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {

@@ -635,7 +635,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.passwordModel.currentPassword = this.firstFormGroup.controls['currentPasswordCtrl'].value;
         this.passwordModel.newPassword = this.firstFormGroup.controls['newPasswordCtrl'].value;
         this.passwordModel.reNewPassword = this.firstFormGroup.controls['retypePasswordCtrl'].value;
-        this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
+        this.http.put(this.coreUrl + 'rest/users/' + this.user.id + '/password', this.passwordModel)
             .subscribe((data: any) => {
                 this.showPassword = false;
                 this.passwordModel = {

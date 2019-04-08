@@ -18,17 +18,18 @@ use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
+use Convert\controllers\ConvertPdfController;
 use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
 use Entity\models\EntityModel;
+use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\models\GroupModel;
 use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
-use setasign\Fpdi\Tcpdf\Fpdi;
 use Shipping\controllers\ShippingTemplateController;
 use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
@@ -333,6 +334,130 @@ class PreProcessActionController
         }
 
         return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+    }
+
+    public function checkExternalSignatoryBook(Request $request, Response $response, array $aArgs)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $data = $request->getParsedBody();
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        $errors = [];
+        $signatureBookEnabled = '';
+        if (!empty($loadedXml)) {
+            $config['id'] = (string)$loadedXml->signatoryBookEnabled;
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == $config['id']) {
+                    $config['data'] = (array)$value;
+                    break;
+                }
+            }
+
+            $signatureBookEnabled = $config['id'];
+            if ($signatureBookEnabled == 'ixbus') {
+                // TODO
+            } elseif ($signatureBookEnabled == 'iParapheur') {
+                // TODO
+            } elseif ($signatureBookEnabled == 'fastParapheur') {
+                // TODO
+            } elseif ($signatureBookEnabled == 'maarchParapheur') {
+                $additionalsInfos = [
+                    'attachments'    => [],
+                    'noAttachment'   => [],
+                    'mails'          => [],
+                    'noMail'         => []
+                ];
+                $userList = MaarchParapheurController::getInitializeDatas(['config' => $config]);
+                if (!empty($userList['users'])) {
+                    $additionalsInfos['users'] = $userList['users'];
+                } else {
+                    $additionalsInfos['users'] = [];
+                }
+                if (!empty($userList['errors'])) {
+                    $errors[] = $userList['errors'];
+                }
+
+                foreach ($data['resources'] as $resId) {
+                    // Check Mail
+                    $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
+                    if (empty($noAttachmentsResource['alt_identifier'])) {
+                        $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
+                    }
+
+                    $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
+                    if (empty($adrMainInfo['docserver_id'])) {
+                        $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];
+                        continue;
+                    }
+                    $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
+                    if (empty($docserverMainInfo['path_template'])) {
+                        $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'docserverDoesNotExists'];
+                        continue;
+                    }
+                    $filePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
+                    if (!is_file($filePath)) {
+                        $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
+                        continue;
+                    }
+                    $additionalsInfos['mails'][] = ['res_id' => $resId];
+
+                    // Check attachments
+                    $attachments = AttachmentModel::getOnView([
+                        'select'    => [
+                            'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                            'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
+                            'validation_date', 'relation', 'attachment_id_master'
+                        ],
+                        'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+                        'data'      => [$resId, ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+                    ]);
+                    
+                    if (empty($attachments)) {
+                        $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
+                    } else {
+                        foreach ($attachments as $value) {
+                            if (!empty($value['res_id'])) {
+                                $resIdAttachment  = $value['res_id'];
+                                $collId = 'attachments_coll';
+                                $is_version = false;
+                            } else {
+                                $resIdAttachment  = $value['res_id_version'];
+                                $collId = 'attachments_version_coll';
+                                $is_version = true;
+                            }
+                            
+                            $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resIdAttachment, 'collId' => $collId, 'isVersion' => $is_version]);
+                            if (empty($adrInfo['docserver_id'])) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'noAttachmentConversion'];
+                                break;
+                            }
+                            $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                            if (empty($docserverInfo['path_template'])) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'docserverDoesNotExists'];
+                                break;
+                            }
+                            $filePath = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+                            if (!is_file($filePath)) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'fileDoesNotExists'];
+                                break;
+                            }
+                        }
+                        $additionalsInfos['attachments'][] = ['res_id' => $resId];
+                    }
+                }
+            } elseif ($signatureBookEnabled == 'xParaph') {
+                // TODO
+            }
+        }
+
+        return $response->withJson(['signatureBookEnabled' => $signatureBookEnabled, 'additionalsInfos' => $additionalsInfos, 'errors' => $errors]);
     }
 
     public function checkShippings(Request $request, Response $response)

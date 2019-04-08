@@ -5,8 +5,8 @@
     </div>
     <ng-container *ngIf="!loading">
         {{lang.makeActionOn}}
-        <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
-        <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b>
+         <b *ngIf="data.selectedRes.length == 1 && data.contextChrono != ''" color="primary" class="highlight">{{data.contextChrono}}</b>
+        <b *ngIf="data.contextChrono == ''" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b>
         ?<br />
     </ng-container>
     <div class="chooseMode" *ngIf="redirectMode == '' && !loading">

@@ -56,7 +56,7 @@ class ChronoModel
                         $value['value'] = date('dmY');
                     }
                 } elseif ($value['type'] == 'maarch_var') {
-                    if ($value['value'] == "entity_id") {
+                    if ($value['value'] == 'entity_id') {
                         $value['value'] = $aArgs['entityId'];
                     } elseif ($value['value'] == 'type_id') {
                         $value['value'] = $aArgs['typeId'];

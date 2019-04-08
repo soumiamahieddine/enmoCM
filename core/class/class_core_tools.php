@@ -1810,7 +1810,7 @@ class core_tools extends functions
      */
     public function load_footer()
     {
-        echo 'Powered by Maarch&trade; 2018';
+        echo 'Powered by Maarch&trade; 2019';
     }
 
     /**

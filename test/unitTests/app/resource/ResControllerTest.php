@@ -315,7 +315,7 @@ class ResControllerTest extends TestCase
 
         $responseBody = json_decode((string) $response->getBody());
 
-        $this->assertSame('Bad Request', $responseBody->errors);
+        $this->assertSame('Bad Request : status is empty', $responseBody->errors);
 
         //MISSING EXTERNAL INFOS
         $aArgs = [
@@ -329,7 +329,7 @@ class ResControllerTest extends TestCase
 
         $responseBody = json_decode((string) $response->getBody());
 
-        $this->assertSame('Bad Request', $responseBody->errors);
+        $this->assertSame('Bad Request : externalInfos is empty', $responseBody->errors);
     }
 
     public function testGetList()

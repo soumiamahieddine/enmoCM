@@ -1662,3 +1662,9 @@ if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
 if (!defined('_PUT_IN_SEND_ATTACH')) {
     define('_PUT_IN_SEND_ATTACH', 'Put in send attachement');
 }
+if (!defined('_INITIATOR_ENTITY')) {
+    define('_INITIATOR_ENTITY', 'Initiator entity');
+}
+if (!defined('_RECIPIENTS')) {
+    define('_RECIPIENTS', 'Recipient(s)');
+}

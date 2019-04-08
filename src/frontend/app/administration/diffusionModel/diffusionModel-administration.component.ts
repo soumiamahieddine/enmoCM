@@ -66,7 +66,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
                 
                 this.creationMode = true;
                 this.loading = false;
-                this.itemTypeList =[{"id":"VISA_CIRCUIT", "label": this.lang.visa},{"id":"AVIS_CIRCUIT", "label": this.lang.avis}]
+                this.itemTypeList =[{"id":"VISA_CIRCUIT", "label": this.lang.visaWorkflow},{"id":"AVIS_CIRCUIT", "label": this.lang.avis}]
                 this.diffusionModel.object_type = 'VISA_CIRCUIT';
                 this.diffusionModel.diffusionList = [];
             } else {

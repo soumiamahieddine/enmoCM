@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-12">
             <p *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">{{lang.makeActionOn}}
-                <b *ngIf="data.contextMode" color="primary" class="highlight">{{data.contextChrono}}</b>
+                 <b *ngIf="data.selectedRes.length == 1 && data.contextChrono != ''" color="primary" class="highlight">{{data.contextChrono}}</b>
                 <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}}
                     {{lang.elements}}</b>&nbsp;?</p>
             <div *ngIf="acknowledgement.alreadySend.number">

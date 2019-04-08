@@ -2123,7 +2123,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             $externalId = json_decode($document[0]['external_id'], true);
             $externalId['localeoId'] = $response[$config['return']['key']];
 
-            \Resource\models\ResModel::update(['set' => ['external_id' => $externalId], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+            \Resource\models\ResModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$resId]]);
         }
     }
 

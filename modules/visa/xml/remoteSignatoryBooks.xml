@@ -51,9 +51,9 @@
         <login></login>
         <password></password>
         <siret></siret>
-        <docutype></docutype>
-        <docustype></docustype>
-        <validatedState></validatedState>
-        <refusedState></refusedState>
+        <docutype>101</docutype>
+        <docustype>9</docustype>
+        <validatedState>VAL</validatedState>
+        <refusedState>REF</refusedState>
     </signatoryBook>
 </root>

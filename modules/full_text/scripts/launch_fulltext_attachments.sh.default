@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# You can use "--debugMode" in command to display more process informations (/!\ log might be heavy !)
+# You can use "--noLimit" in command to process all documents in one batch (be carefull !)
+# You can use "--limit {n}" in command to process {n} documents in one batch
+# You can use "--failed" in command to re analyse documents with -1 result
+
+file='/var/www/html/MaarchCourrier/modules/full_text/lucene_full_text_engine.php'
+
+cd /var/www/html/MaarchCourrier/modules/full_text/
+
+php $file /var/www/html/MaarchCourrier/modules/full_text/xml/config_batch_attachments.xml

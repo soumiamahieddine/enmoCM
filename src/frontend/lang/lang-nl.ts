@@ -939,7 +939,7 @@ export const LANG_NL = {
     "shippingUpdated"                            : "Shipping updated", //_TO_TRANSLATE
     "shippingDeleted"                            : "Shipping deleted", //_TO_TRANSLATE
     "shippings"                            : "Shippings templates", //_TO_TRANSLATE
-    "noShippingTemplate"                        : "No shipping templates available for these entities", //_TO_TRANSLATE
+    "noShippingTemplate"                        : "No common shipping templates available for these entities", //_TO_TRANSLATE
     "doShippingParameter"                       : "Please set up a template in <b>Administration</b> > <b>Shippings templates</b>", //_TO_TRANSLATE
     "shippingReadyToSend"                       : "document(s) ready to be sent", //_TO_TRANSLATE
     "shippingNotEligible"                       : "Ineligible mail(s) ", //_TO_TRANSLATE
@@ -971,4 +971,13 @@ export const LANG_NL = {
     "quickSearchInfo"                           : "Target search ", //_TO_TRANSLATE
     "quickSearchTarget"                         : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
     "warnLockResInProgress"                     : "This mail is in progress by an other user", //_TO_TRANSLATE
+    "mailNote"                                  : "Annotation of the main document", //_TO_TRANSLATE
+    "attachmentSignature"                       : "Signature of attachment in signature book", //_TO_TRANSLATE
+    "userMaarchParapheur"                       : "Maarch Parapheur user", //_TO_TRANSLATE
+    "noAttachmentInSignatoryBook"               : "No attachment in signature book", //_TO_TRANSLATE
+    "canNotMakeAction"                          : "Can make action on this mail", //_TO_TRANSLATE
+    "noUserDefinedInMaarchParapheur"            : "No user created in Maarch Parapheur", //_TO_TRANSLATE
+    "noMailConversion"                          : "Mail does not have PDF conversion", //_TO_TRANSLATE
+    "docserverDoesNotExists"                    : "Docserver does not exists", //_TO_TRANSLATE
+    "fileDoesNotExists"                         : "File does not exists", //_TO_TRANSLATE
 };

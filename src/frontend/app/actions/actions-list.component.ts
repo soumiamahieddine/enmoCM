@@ -74,10 +74,12 @@ export class ActionsListComponent implements OnInit {
         this.arrRes = [];
         this.currentAction = action;
 
-        if (this.contextMode && this.selectedRes.length == 0) {
-            this.arrRes = [this.contextResId];
-        } else {
-            this.arrRes = this.selectedRes;
+        this.arrRes = this.selectedRes;
+
+
+        if (this.contextMode && this.selectedRes.length > 1) {
+            this.contextMenuTitle = '';
+            this.contextResId = 0;
         }
 
         if (action.component == 'v1Action' && this.arrRes.length > 1) {

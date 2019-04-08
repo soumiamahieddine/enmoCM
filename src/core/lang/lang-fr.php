@@ -479,3 +479,5 @@ define("_SEND_SHIPPING", "Envoyer un pli postal");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "Voir les courriers annotés");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "Voir les pièces jointes de type 'Document annoté'");
+define('_VISA_BY', 'Visa par');
+define('_INSTEAD_OF', 'à la place de');

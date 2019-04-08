@@ -583,6 +583,8 @@ class UserControllerTest extends TestCase
     {
         $userController = new \User\controllers\UserController();
 
+        $user = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
         //  UPDATE PASSWORD
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
@@ -593,7 +595,7 @@ class UserControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $userController->updateCurrentUserPassword($fullRequest, new \Slim\Http\Response());
+        $response     = $userController->updatePassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('success', $responseBody->success);
@@ -608,7 +610,6 @@ class UserControllerTest extends TestCase
         $aArgs = [];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $user = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $response     = $userController->resetPassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
@@ -628,7 +629,7 @@ class UserControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $userController->updateCurrentUserPassword($fullRequest, new \Slim\Http\Response());
+        $response     = $userController->updatePassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('success', $responseBody->success);

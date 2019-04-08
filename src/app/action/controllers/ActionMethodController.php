@@ -52,7 +52,7 @@ class ActionMethodController
         ValidatorModel::notEmpty($aArgs, ['id', 'resources', 'basketName']);
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::arrayType($aArgs, ['resources']);
-        ValidatorModel::stringType($aArgs, ['basketName', 'note']);
+        ValidatorModel::stringType($aArgs, ['basketName', 'note', 'history']);
 
         $set = ['locker_user_id' => null, 'locker_time' => null, 'modification_date' => 'CURRENT_TIMESTAMP'];
 
@@ -82,7 +82,7 @@ class ActionMethodController
                     'recordId'  => $resource,
                     'eventType' => 'ACTION#' . $resource,
                     'eventId'   => $aArgs['id'],
-                    'info'      => "{$aArgs['basketName']} : {$action['label_action']}"
+                    'info'      => "{$aArgs['basketName']} : {$action['label_action']}{$aArgs['history']}"
                 ]);
 
                 MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $aArgs['id'], 'userId' => $GLOBALS['userId']]);
@@ -103,33 +103,34 @@ class ActionMethodController
         if (CurlModel::isEnabled(['curlCallId' => 'closeResource'])) {
             $bodyData = [];
             $config = CurlModel::getConfigByCallId(['curlCallId' => 'closeResource']);
-            $configResource = CurlModel::getConfigByCallId(['curlCallId' => 'sendResourceToExternalApplication']);
 
-            $resource = ResModel::getOnView(['select' => ['doc_' . $configResource['return']['value']], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+            $resource = ResModel::getById(['select' => ['external_id'], 'resId' => $aArgs['resId']]);
+            $externalId = json_decode($resource['external_id'], true);
 
-            if (!empty($resource[0]['doc_' . $configResource['return']['value']])) {
+            if (!empty($externalId['localeoId'])) {
                 if (!empty($config['inObject'])) {
+
                     foreach ($config['objects'] as $object) {
                         $select = [];
                         $tmpBodyData = [];
                         foreach ($object['rawData'] as $value) {
-                            if ($value == $configResource['return']['value']) {
-                                $select[] = 'doc_' . $configResource['return']['value'];
-                            } elseif ($value != 'note') {
+                            if ($value != 'note' && $value != 'localeoId') {
                                 $select[] = $value;
                             }
                         }
 
-                        $document = ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
-                        if (!empty($document[0])) {
-                            foreach ($object['rawData'] as $key => $value) {
-                                if ($value == 'note') {
-                                    $tmpBodyData[$key] = empty($aArgs['note']) ? '' : $aArgs['note'];
-                                } elseif ($value == $configResource['return']['value']) {
-                                    $tmpBodyData[$key] = $document[0]['doc_' . $value];
-                                } else {
-                                    $tmpBodyData[$key] = $document[0][$value];
-                                }
+                        if (!empty($select)) {
+                            $document = ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+                        }
+                        foreach ($object['rawData'] as $key => $value) {
+                            if ($value == 'note') {
+                                $tmpBodyData[$key] = empty($aArgs['note']) ? '' : $aArgs['note'];
+                            } elseif ($value == 'localeoId') {
+                                $tmpBodyData[$key] = $externalId['localeoId'];
+                            } elseif (!empty($document[0][$value])) {
+                                $tmpBodyData[$key] = $document[0][$value];
+                            } else {
+                                $tmpBodyData[$key] = '';
                             }
                         }
 
@@ -137,11 +138,16 @@ class ActionMethodController
                             $tmpBodyData = array_merge($tmpBodyData, $object['data']);
                         }
 
-                        $bodyData[$object['name']] = $tmpBodyData;
+                        $bodyData[$object['name']] = json_encode($tmpBodyData);
                     }
                 }
 
-                CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData, 'multipleObject' => true, 'noAuth' => true]);
+                CurlModel::execSimple([
+                    'url'           => $config['url'],
+                    'headers'       => $config['header'],
+                    'method'        => $config['method'],
+                    'body'          => $bodyData,
+                ]);
             }
         }
 

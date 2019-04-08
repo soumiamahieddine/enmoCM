@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
     <CONFIG>
-        <CONFIG_NAME>attachments</CONFIG_NAME> <!-- usefull for multi customs -->
+        <CONFIG_NAME>MaarchCourrier</CONFIG_NAME> <!-- usefull for multi customs -->
         <MAARCH_DIRECTORY>/var/www/html/MaarchCourrier/</MAARCH_DIRECTORY> <!-- Path to full text module -->
         <INDEX_FILE_DIRECTORY>/opt/maarch/docservers/indexes/attachments_coll/</INDEX_FILE_DIRECTORY> <!-- Path to the indexes dir of the collection -->
         <TABLE_NAME>res_attachments</TABLE_NAME>
-        <FULLTEXT_COLUMN_NAME>fulltext_result</FULLTEXT_COLUMN_NAME> <!-- Null or 0 = to do, 1 = OK, else KO -->
-        <MAARCH_TOOLS_PATH>/var/www/html/MaarchCourrier/apps/maarch_entreprise/tools/</MAARCH_TOOLS_PATH>
         <MAX_BATCH_SIZE>500</MAX_BATCH_SIZE>
     </CONFIG>
     <CONFIG_BASE>

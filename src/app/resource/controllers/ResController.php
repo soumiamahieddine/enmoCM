@@ -536,10 +536,10 @@ class ResController
         $data = $request->getParams();
 
         if (empty($data['externalInfos'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request : externalInfos is empty']);
         }
         if (empty($data['status'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request : status is empty']);
         }
 
         foreach ($data['externalInfos'] as $mail) {
