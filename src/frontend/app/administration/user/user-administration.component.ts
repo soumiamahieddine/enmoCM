@@ -771,13 +771,18 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     sendToMaarchParapheur(){
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + '/maarchParapheur', '')
-            .subscribe((data: any) => {
-                this.notify.success(this.lang.userCreatedInMaarchParapheur);
-                this.user.external_id['maarchParapheur'] = data.externalId;
-            }, (err: any) => {
-                this.notify.error(err.error.errors);
-            });
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.createUserInMaarchParapheur);
+
+        if (r) {
+            this.http.put(this.coreUrl + "rest/users/" + this.serialId + '/maarchParapheur', '')
+                .subscribe((data: any) => {
+                    this.notify.success(this.lang.userCreatedInMaarchParapheur);
+                    this.user.external_id['maarchParapheur'] = data.externalId;
+                    this.user.canCreateMaarchParapheurUser = false;
+                }, (err: any) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
     }
 
     setLowerUserId() {
