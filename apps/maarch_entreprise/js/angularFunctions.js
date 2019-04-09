@@ -2,6 +2,7 @@ var $j = jQuery.noConflict();
 var angularGlobals = {};
 var alreadyLoaded = false;
 var cookieExpiration;
+var lockInterval;
 
 function triggerAngular(locationToGo) {
     var myApp = $j('<my-app style="height: 100%;display:none;"></my-app>');
@@ -78,6 +79,10 @@ function lockDocument(resId) {
     });
 }
 
+function intervalLockDocument(resId){
+    lockInterval = setInterval(lockDocument, 50000);
+}
+
 function unlockDocument(resId) {
     $j.ajax({
         url: 'index.php?display=true&dir=actions&page=docLocker',
@@ -89,6 +94,11 @@ function unlockDocument(resId) {
         },
         success: function (result) {}
     });
+}
+
+function intervalUnlockDocument(resId){
+    clearInterval(lockInterval);
+    unlockDocument(resId);
 }
 
 function islockForSignatureBook(resId, basketId, groupId) {
