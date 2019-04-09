@@ -78,6 +78,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
 
     displayedColumns    = ['event_date', 'event_type', 'info', 'remote_ip'];
     dataSource          = new MatTableDataSource(this.data);
+    selectedTabIndex : number = 0;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -706,6 +707,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.firstFormGroup.controls['newPasswordCtrl'].setErrors(null);
         this.firstFormGroup.controls['retypePasswordCtrl'].setErrors(null);
         this.showPassword = true;
+        this.selectedTabIndex = 0;
     }
 
     updatePassword() {

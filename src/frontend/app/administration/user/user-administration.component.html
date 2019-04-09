@@ -4,7 +4,7 @@
             [opened]="mobileQuery.matches ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <mat-nav-list style="width:250px;" *ngIf="!creationMode && !loading">
+            <mat-nav-list *ngIf="!creationMode && !loading">
                 <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item *ngIf="user.status != 'ABS'" (click)="activateAbsence()">
                     <mat-icon color="warn" mat-list-icon class="fa fa-plane"></mat-icon>
