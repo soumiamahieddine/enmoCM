@@ -83,12 +83,12 @@ class MaarchParapheurController
 
             $units = [];
             $units[] = ['unit' => 'primaryInformations'];
-            $units[] = ['unit' => 'secondaryInformations'];
-            $units[] = ['unit' => 'senderRecipientInformations'];
-            $units[] = ['unit' => 'diffusionList'];
-            $units[] = ['unit' => 'visaWorkflow'];
-            $units[] = ['unit' => 'opinionWorkflow'];
-            $units[] = ['unit' => 'notes'];
+            $units[] = ['unit' => 'secondaryInformations', 'label' => _SECONDARY_INFORMATION];
+            $units[] = ['unit' => 'senderRecipientInformations', 'label' => _DEST_INFORMATION];
+            $units[] = ['unit' => 'diffusionList', 'label' => _DIFFUSION_LIST];
+            $units[] = ['unit' => 'visaWorkflow', 'label' => _VISA_WORKFLOW];
+            $units[] = ['unit' => 'opinionWorkflow', 'label' => _AVIS_WORKFLOW];
+            $units[] = ['unit' => 'notes', 'label' => _NOTES_COMMENT];
 
             // Data for resources
             $tmpIds = [$aArgs['resIdMaster']];

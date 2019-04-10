@@ -482,3 +482,9 @@ define("_VIEW_DOCUMENTS_WITH_NOTES", "Voir les courriers annotés");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "Voir les pièces jointes de type 'Document annoté'");
 define('_VISA_BY', 'Visa par');
 define('_INSTEAD_OF', 'à la place de');
+
+define("_AVIS_WORKFLOW", "Circuit d'avis");
+define("_VISA_WORKFLOW", "Circuit de visa");
+define("_DIFFUSION_LIST", "Liste de diffusion");
+define("_SECONDARY_INFORMATION", "Informations secondaires");
+define("_DEST_INFORMATION", "Informations de destination");

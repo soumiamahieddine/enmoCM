@@ -1668,3 +1668,9 @@ if (!defined('_INITIATOR_ENTITY')) {
 if (!defined('_RECIPIENTS')) {
     define('_RECIPIENTS', 'Recipient(s)');
 }
+if (!defined('_SECONDARY_INFORMATION')) {
+    define("_SECONDARY_INFORMATION", "Secondary Informations_TO_TRANSLATE");
+}
+if (!defined('_DEST_INFORMATION')) {
+    define("_DEST_INFORMATION", "Destination informations_TO_TRANSLATE");
+}

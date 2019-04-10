@@ -5047,3 +5047,9 @@ if (!defined('_INITIATOR_ENTITY')) {
 if (!defined('_RECIPIENTS')) {
     define('_RECIPIENTS', 'Destinataire(s)');
 }
+if (!defined('_SECONDARY_INFORMATION')) {
+    define("_SECONDARY_INFORMATION", "Informations secondaires");
+}
+if (!defined('_DEST_INFORMATION')) {
+    define("_DEST_INFORMATION", "Informations de destination");
+}
