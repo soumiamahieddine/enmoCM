@@ -76,7 +76,6 @@ class MaarchParapheurController
         ]);
 
         if ($aArgs['objectSent'] == 'mail') {
-
             if (empty($mainResource)) {
                 return ['error' => 'Mail does not exist'];
             }

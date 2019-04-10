@@ -293,7 +293,7 @@ if (!empty($tab)) {
                 }
                 if ($tab[$i][$j][$value]=="email") {
                     $tab[$i][$j]["email"]       = $request->show_string($tab[$i][$j]['value']);
-                    $tab[$i][$j]["label"]       =_MAIL;
+                    $tab[$i][$j]["label"]       =_EMAIL;
                     $tab[$i][$j]["size"]        ="15";
                     $tab[$i][$j]["label_align"] ="center";
                     $tab[$i][$j]["align"]       ="center";
