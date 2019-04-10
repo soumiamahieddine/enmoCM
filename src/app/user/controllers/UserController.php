@@ -98,7 +98,7 @@ class UserController
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint', 'loginmode', 'external_id']]);
-        $user['external_id']        = json_decode($user['external_id']);
+        $user['external_id']        = json_decode($user['external_id'], true);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
         $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups']             = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
@@ -121,7 +121,7 @@ class UserController
             $user['canModifyPassword'] = true;
         }
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
-        if ((string)$loadedXml->signatoryBookEnabled == 'maarchParapheur' && $user['loginmode'] != 'restMode' && empty($user['external_id']->maarchParapheur)) {
+        if ((string)$loadedXml->signatoryBookEnabled == 'maarchParapheur' && $user['loginmode'] != 'restMode' && empty($user['external_id']['maarchParapheur'])) {
             $user['canCreateMaarchParapheurUser'] = true;
         }
 

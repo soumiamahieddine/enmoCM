@@ -718,6 +718,7 @@ class ResourceListController
 
         $locked = 0;
         $resourcesToLock = [];
+        $lockersId = [];
         foreach ($resources as $resource) {
             $lock = true;
             if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
@@ -731,6 +732,7 @@ class ResourceListController
             if (!$lock) {
                 $resourcesToLock[] = $resource['res_id'];
             } else {
+                $lockersId[] = $resource['locker_user_id'];
                 ++$locked;
             }
         }
@@ -743,7 +745,15 @@ class ResourceListController
             ]);
         }
 
-        return $response->withJson(['lockedResources' => $locked]);
+        $lockers = [];
+        if (!empty($lockersId)) {
+            $lockersId = array_unique($lockersId);
+            foreach ($lockersId as $lockerId) {
+                $lockers[] = UserModel::getLabelledUserById(['id' => $lockerId]);
+            }
+        }
+
+        return $response->withJson(['lockedResources' => $locked, 'lockers' => $lockers]);
     }
 
     public function unlock(Request $request, Response $response, array $aArgs)

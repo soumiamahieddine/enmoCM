@@ -293,7 +293,7 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
         <script>
             var main_error = $j('#main_error_popup');
             if (main_error != null) {
-                main_error.css({"display":"table-cell"})
+                main_error.css({"display":"table-cell"});
                 Element.hide.delay(10, 'main_error_popup');
             }
         </script>
