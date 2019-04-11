@@ -175,6 +175,9 @@ class ResourceListController
                 } elseif (strtotime($resource['locker_time']) < time()) {
                     $isLocked = false;
                 }
+                if ($isLocked) {
+                    $formattedResources[$key]['locker'] = UserModel::getLabelledUserById(['id' => $resource['locker_user_id']]);
+                }
                 $formattedResources[$key]['isLocked'] = $isLocked;
 
                 $display = [];
