@@ -243,6 +243,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'delete_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_email_server');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_shippings');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'update_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'join_res_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'join_res_case_in_process');
@@ -1257,7 +1258,8 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, a
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (525, '', 'Désactiver la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_off', 'N', 'apps', 'N', NULL, 'disabledBasketPersistenceAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (526, '', 'Libérer les courriers', 'VAL', 'Y', 'Y', 'confirm_status', 'N', 'apps', 'N', NULL, 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (527, '', 'Envoyer vers Maarch Parapheur', 'VALDGS', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'apps', 'N', NULL, 'sendExternalSignatoryBookAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (528, '', 'Créer les accusés de réception', '', 'N', 'Y', 'create_acknowledgement_receipt', 'Y', 'apps', 'N', NULL, 'createAcknowledgementReceiptsAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (528, '', 'Créer les accusés de réception', '_NOSTATUS_', 'N', 'Y', 'create_acknowledgement_receipt', 'Y', 'apps', 'N', NULL, 'createAcknowledgementReceiptsAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (529, '', 'Envoyer un pli postal', '_NOSTATUS_', 'N', 'Y', 'send_shipping', 'Y', 'apps', 'N', NULL, 'sendShippingAction');
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 ------------
 -- BANNETTES SECONDAIRES
@@ -1325,6 +1327,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (400, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (527, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (528, '', 'RESPONSABLE', 'MyBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (529, '', 'RESPONSABLE', 'MyBasket', 'Y', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'RESPONSABLE', 'CopyMailBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (113, '', 'RESPONSABLE', 'CopyMailBasket', 'Y', 'N', 'N');
@@ -1889,4 +1892,8 @@ INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_th
 /* Configurations */
 TRUNCATE TABLE configurations;
 INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type":"smtp","host":"smtp.gmail.com","port":465,"user":"notifications.maarch@gmail.com","password":"NUraUORbrlN2X1oL::a941cfa4de03b52cd5388459d66b5fef","auth":true,"secure":"ssl","from":"notifications.maarch@gmail.com","charset":"utf-8"}');
+
+/* Modèle d’envois postaux */
+TRUNCATE TABLE shipping_templates;
+INSERT INTO shipping_templates (id, label, description, options, fee, entities, account) VALUES (1, 'Modèle d''exemple d''envoi postal', 'Modèle d''exemple d''envoi postal', '{"shapingOptions":[],"sendMode":"fast"}', '{"firstPagePrice":0.4,"nextPagePrice":0.5,"postagePrice":0.9}', '["241", "242", "243", "244", "245", "246", "247", "248", "249", "250", "251", "252", "253", "254", "255", "257", "258", "256", "259", "260"]', '{"id":"test","password":"fLYTr9Dp::4969d4ee236068ba57f09f16b0366840"}');
 
