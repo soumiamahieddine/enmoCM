@@ -1888,6 +1888,5 @@ INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_th
 
 /* Configurations */
 TRUNCATE TABLE configurations;
-INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type" : "smtp", "host" : "smtp.gmail.com", "port" : 465, "user" : "notifications.maarch@gmail.com", "password" : "$Maarch1234*", "auth" : true, "secure" : "ssl", "from" : "notifications.maarch@gmail.com", "charset" : "utf-8"}');
-
+INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type":"smtp","host":"smtp.gmail.com","port":465,"user":"notifications.maarch@gmail.com","password":"NUraUORbrlN2X1oL::a941cfa4de03b52cd5388459d66b5fef","auth":true,"secure":"ssl","from":"notifications.maarch@gmail.com","charset":"utf-8"}');
 
