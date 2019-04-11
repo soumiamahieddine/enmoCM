@@ -893,7 +893,7 @@ export const LANG_NL = {
     "elements"                      : "element(s)", //_TO_TRANSLATE
     "done"                      : "done", //_TO_TRANSLATE
     "noAction"                      : "No action", //_TO_TRANSLATE
-    "warnLockRes"                      : "mail(s) are locked by an other user.", //_TO_TRANSLATE 
+    "warnLockRes"                      : "mail(s) are locked by", //_TO_TRANSLATE 
     "warnLockRes2"                      : "\n\nThis action will process ONLY mails which are NOT locked", //_TO_TRANSLATE 
     "acknowledgementReceiptType"        : "Type of acknowledgement of receipt", //_TO_TRANSLATE
     "paperTemplate"                        : "Paper template", //_TO_TRANSLATE
@@ -970,7 +970,7 @@ export const LANG_NL = {
     "actionMassForbidden"                       : "This action is forbidden in mass", //_TO_TRANSLATE
     "quickSearchInfo"                           : "Target search ", //_TO_TRANSLATE
     "quickSearchTarget"                         : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
-    "warnLockResInProgress"                     : "This mail is in progress by an other user", //_TO_TRANSLATE
+    "warnLockResInProgress"                     : "This mail is in progress by", //_TO_TRANSLATE
     "mailNote"                                  : "Annotation of the main document", //_TO_TRANSLATE
     "attachmentSignature"                       : "Signature of attachment in signature book", //_TO_TRANSLATE
     "userMaarchParapheur"                       : "Maarch Parapheur user", //_TO_TRANSLATE
