@@ -980,4 +980,5 @@ export const LANG_NL = {
     "noMailConversion"                          : "Mail does not have PDF conversion", //_TO_TRANSLATE
     "docserverDoesNotExists"                    : "Docserver does not exists", //_TO_TRANSLATE
     "fileDoesNotExists"                         : "File does not exists", //_TO_TRANSLATE
+    "noTemplate"                                : "No template", //_TO_TRANSLATE
 };

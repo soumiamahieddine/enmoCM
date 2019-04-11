@@ -953,4 +953,5 @@ export const LANG_EN = {
     "noMailConversion"                          : "Mail does not have PDF conversion",
     "docserverDoesNotExists"                    : "Docserver does not exists",
     "fileDoesNotExists"                         : "File does not exists",
+    "noTemplate"                                : "No template",
 };

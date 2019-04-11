@@ -980,4 +980,6 @@ export const LANG_FR = {
     "noMailConversion"                                  : "Le courrier n'a pas de conversion PDF",
     "docserverDoesNotExists"                            : "La zone de stockage n'existe pas",
     "fileDoesNotExists"                                 : "Le fichier n'existe pas",
+    "noTemplate"                                        : "Aucun modèle",
+    
 };

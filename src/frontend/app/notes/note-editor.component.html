@@ -17,5 +17,8 @@
             matTooltipPosition="left" (click)="selectTemplate(template)">
             <span>{{template.template_label}}</span>
         </button>
+        <button mat-menu-item *ngIf="templatesNote.length == 0" disabled>
+            <span>{{lang.noTemplate}}</span>
+        </button>
     </mat-menu>
 </mat-form-field>
