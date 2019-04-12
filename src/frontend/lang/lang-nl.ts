@@ -13,6 +13,7 @@ export const LANG_NL = {
     "actionName" : "Actienaam",
     "actionPage" : "Resultaatpagina van de actie",
     "actionParameters" : "Instelling van de actie",
+    "actionSystem"   : "Systeemwerking",
     "actions" : "Actie(s)",
     "actionsGroupBasketUpdated" : "Instelling van de acties gewijzigd",
     "actionUpdated" : "Actie gewijzigd",

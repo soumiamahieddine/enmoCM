@@ -456,8 +456,8 @@ define('_ACTION_DATE', 'Date d\'action');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'Utilisateur créé dans Maarch Parapheur');
 
-define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Créer les accusés de réception');
-define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Mettre à jour la date d\'envoi des accusés de réception');
+define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Génèrer et envoyer les accusés de réception');
+define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Renseigner la date d\'envoi des accusés de réception pdf');
 
 define("_M2M_ACTION_DONE", "actionné par");
 define("_M2M_ENTITY_DESTINATION", "Le courrier est dans l'entité");
@@ -476,7 +476,7 @@ define("_SHIPPING_DELETED", "Envoi postal supprimé");
 define("_SHIPPINGS_ADMIN", "Modèles d'envois postaux");
 define("_SHIPPINGS_ADMIN_DESC", "Configurer les modèles d'envois postaux, par exemple pour Maileva");
 
-define("_SEND_SHIPPING", "Envoyer un pli postal");
+define("_SEND_SHIPPING", "Envoyer vers Maileva");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "Voir les courriers annotés");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "Voir les pièces jointes de type 'Document annoté'");

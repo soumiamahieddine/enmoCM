@@ -456,8 +456,8 @@ define('_ACTION_DATE', 'Action date_TO_TRANSLATE');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'User created in Maarch Parapheur_TO_TRANSLATE');
 
-define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Create acknowledgement receipt_TO_TRANSLATE');
-define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'update acknowledgement send date_TO_TRANSLATE');
+define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Generate and send acknowledgement receipt_TO_TRANSLATE');
+define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Complete acknowledgement send date_TO_TRANSLATE');
 
 define('_AR_DISPLAYING', 'Displaying acknowledgement receipt_TO_TRANSLATE');
 
@@ -478,7 +478,7 @@ define("_SHIPPING_DELETED", "Shipping deleted_TO_TRANSLATE");
 define("_SHIPPINGS_ADMIN", "Shippings admin_TO_TRANSLATE");
 define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva_TO_TRANSLATE");
 
-define("_SEND_SHIPPING", "Send a mailpiece_TO_TRANSLATE");
+define("_SEND_SHIPPING", "Send to Maileva_TO_TRANSLATE");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "View mail with notes_TO_TRANSLATE");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "View attachment of 'document_with_notes' type_TO_TRANSLATE");

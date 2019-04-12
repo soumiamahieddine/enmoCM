@@ -456,8 +456,8 @@ define('_ACTION_DATE', 'Action date');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'User created in Maarch Parapheur');
 
-define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Create acknowledgement receipt');
-define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'update acknowledgement send date');
+define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Generate and send acknowledgement receipt');
+define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Complete acknowledgement send date');
 
 define("_M2M_ACTION_DONE", "done by");
 define("_M2M_ENTITY_DESTINATION", "Mail is in the department");
@@ -476,7 +476,7 @@ define("_SHIPPING_DELETED", "Shipping deleted");
 define("_SHIPPINGS_ADMIN", "Shippings admin");
 define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva");
 
-define("_SEND_SHIPPING", "Send a mailpiece");
+define("_SEND_SHIPPING", "Send to Maileva");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "View mail with notes");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "View attachment of 'document_with_notes' type");

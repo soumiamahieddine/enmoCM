@@ -14,6 +14,7 @@ export const LANG_FR = {
     "actionName"                        : "Nom de l'action",
     "actionPage"                        : "Page de résultat de l'action",
     "actionParameters"                  : "Paramétrage d'action",
+    "actionSystem"                      : "Action programmée",
     "actions"                           : "Action(s)",
     "actionsGroupBasketUpdated"         : "Paramètrage des actions modifié",
     "actionUpdated"                     : "Action modifiée",
