@@ -80,7 +80,7 @@ function lockDocument(resId) {
 }
 
 function intervalLockDocument(resId){
-    lockInterval = setInterval(lockDocument, 50000);
+    lockInterval = setInterval(function() {lockDocument(resId);}, 50000);
 }
 
 function unlockDocument(resId) {
