@@ -32,7 +32,7 @@ class ShippingTemplateController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['shippings' => ShippingTemplateModel::get(['id', 'label', 'description', 'options', 'fee', 'entities'])]);
+        return $response->withJson(['shippings' => ShippingTemplateModel::get(['select' => ['id', 'label', 'description', 'options', 'fee', 'entities', "account->>'id' as accountid"]])]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
