@@ -8,7 +8,7 @@
             {{lang.noPerson}}
         </div>
         <mat-list-item *ngFor="let diffusion of visaWorkflow.items;let i=index" cdkDrag class="columns"
-            [cdkDragDisabled]="!injectDatas.editable" [class.notDraggable]="injectDatas.editable" [class.notEditable]="!injectDatas.editable" [ngStyle]="{'opacity': diffusion.process_date == null ? '0.5' : '1','background': diffusion.process_date != null ? 'rgba(0, 128, 0, 0.11)' : ''}">
+            [cdkDragDisabled]="!injectDatas.editable" [class.notDraggable]="injectDatas.editable" [class.notEditable]="!injectDatas.editable" [ngStyle]="{'background': diffusion.process_date != null ? 'rgba(0, 128, 0, 0.11)' : ''}">
             <mat-icon mat-list-icon class="fa fa-user fa-2x" color="primary"></mat-icon>
                 <mat-icon mat-list-icon class="fa fa-hourglass fa-2x" *ngIf="diffusion.process_date == null" style="opacity:0.5;"></mat-icon>
                 <mat-icon mat-list-icon class="fa fa-check fa-2x" *ngIf="diffusion.process_date != null" style="opacity:0.5;"

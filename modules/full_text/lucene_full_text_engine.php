@@ -179,24 +179,32 @@ function prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
         $tmpFile = $_ENV["base_directory"] . "tmp"
             . DIRECTORY_SEPARATOR . basename($pathToFile) . ".ftx";
 
-        $resultExtraction = exec("pdftotext " . escapeshellarg($pathToFile)
-            . " " . escapeshellarg($tmpFile));
         $_ENV['logger']->write("pdftotext " . escapeshellarg($pathToFile) . " " . escapeshellarg($tmpFile), 'DEBUG');
+        $resultExtraction = exec("pdftotext " . escapeshellarg($pathToFile)
+            . " " . escapeshellarg($tmpFile).' 2>&1', $output, $return);
 
-        $fileContent = readFileF($tmpFile);
-        $fileContent = cleanFileContent($fileContent);
-
-
-        $_ENV['logger']->write("content file : " . $fileContent, 'DEBUG');
-        if (is_file($tmpFile)) {
-            unlink($tmpFile);
-        }
-
-        if (empty($fileContent)) {
-            $_ENV['logger']->write("it is not an OCR pdf");
+        if (in_array("Syntax Error: Couldn't read xref table", $output)) {
+            errorHandler("{$pathToFile} is corrupted !");
+            $result = 2;
+        } else if (!empty($output)) {
+            errorHandler("Extract text of document failed : " . implode(' ', $output));
             $result = 2;
         } else {
-            $result = launchIndexFullText($fileContent, $indexFileDirectory, $Id);
+            $fileContent = readFileF($tmpFile);
+            $fileContent = cleanFileContent($fileContent);
+    
+    
+            $_ENV['logger']->write("content file : " . $fileContent, 'DEBUG');
+            if (is_file($tmpFile)) {
+                unlink($tmpFile);
+            }
+    
+            if (empty($fileContent)) {
+                $_ENV['logger']->write("it is not an OCR pdf");
+                $result = 2;
+            } else {
+                $result = launchIndexFullText($fileContent, $indexFileDirectory, $Id);
+            }
         }
     } else {
         errorHandler("{$pathToFile} not found !");
@@ -452,12 +460,20 @@ foreach ($queryResult as $docNum => $data) {
     $pathToFile = $pathToDocServer[$data["docserver_id"]]
         . str_replace("#", DIRECTORY_SEPARATOR, $data["path"])
         . DIRECTORY_SEPARATOR . $data["filename"];
-    $_ENV['logger']->write("processing of document " . ($docNum + 1) . "/" . $nbResToFulltext . " (RES_ID => " . $data["res_id"] . ", FORMAT => " . $data["format"] . ", FILE => " . $pathToFile . ")");
+
+    if (!empty(pathinfo($pathToFile, PATHINFO_EXTENSION))) {
+        $extension = pathinfo($pathToFile, PATHINFO_EXTENSION);
+    } else {
+        $extension = $data["format"];
+    }
+    
+
+    $_ENV['logger']->write("processing of document " . ($docNum + 1) . "/" . $nbResToFulltext . " (RES_ID => " . $data["res_id"] . ", FORMAT => " . $extension . ", FILE => " . $pathToFile . ")");
 
     $result = indexFullText(
         $pathToFile,
         $indexFileDirectory,
-        $data["format"],
+        $extension,
         $data["res_id"]
     );
 

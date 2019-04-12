@@ -369,7 +369,7 @@ elseif (empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
                 if (isset($res_action['history_msg'][$i]) && !empty($res_action['history_msg'][$i])) {
                     $what .= $res_action['history_msg'][$i];
                 }
-                $_SESSION['info'] = $what . ' ';
+//                $_SESSION['info'] = $what . ' ';
                 if ($_POST['module'] == 'null') {
                     $_POST['module'] = '';
                 }

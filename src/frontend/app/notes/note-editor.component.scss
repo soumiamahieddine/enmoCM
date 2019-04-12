@@ -2,6 +2,10 @@
     .mat-icon-button:disabled {
         opacity: 0.5;
     }
+
+    ::ng-deep.mat-form-field-flex {
+        align-items: flex-start;
+    }
 }
 
 ::ng-deep.templateNoteListMenu {

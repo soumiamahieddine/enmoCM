@@ -1963,7 +1963,7 @@ abstract class contacts_v2_Abstract extends Database
             <tr>
                 <td>
                     <label for="mail" style="width:auto;">
-                        <?php echo _MAIL; ?>&nbsp;: </label>
+                        <?php echo _EMAIL; ?>&nbsp;: </label>
                 </td>
                 <td align="right">
                     <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="mail"
@@ -3481,7 +3481,7 @@ abstract class contacts_v2_Abstract extends Database
             <tr>
                 <td>
                     <label for="mail" style="width:auto;">
-                        <?php echo _MAIL; ?>&nbsp;: </label>
+                        <?php echo _EMAIL; ?>&nbsp;: </label>
                 </td>
                 <td class="indexing_field" align="right">
                     <input class="contact_field_margin readonly" disabled name="mail" type="text" id="mail" value="<?php if (isset($_SESSION['m_admin']['address']['MAIL'])) {

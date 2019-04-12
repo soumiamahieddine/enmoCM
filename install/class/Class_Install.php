@@ -898,7 +898,7 @@ class Install extends functions
 ####################################################################################
 #                                                                                  #
 #                                                                                  #
-#                                       '.$_SESSION['config']['databasename'].'                                      #
+#                                       '.$_SESSION['config']['databasename'].'    #
 #                                                                                  #
 #                                                                                  #
 ####################################################################################
@@ -906,14 +906,15 @@ class Install extends functions
 
 ######################notification#################################################
 
-15 10 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
-15 15 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
-15 12 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
+0 10 * * *      '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/BASKETS.sh
+0 12 * * *      '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/BASKETS.sh
+0 15 * * *      '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/BASKETS.sh
 
+15 10 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/nct-ncc-and-anc.sh
 
 30 10 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh
-30 15 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh
 30 12 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh
+30 15 * * *     '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh
 
 10 12 * * 0        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_event_stack/*.log
 11 12 * * 0        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_email_stack/*.log

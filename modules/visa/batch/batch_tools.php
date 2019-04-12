@@ -178,13 +178,19 @@ function Bt_createAttachment($aArgs = [])
     if (!empty($aArgs['table'])) {
         $table = $aArgs['table'];
     } else {
-        $table = 'res_letterbox';
+        $table = 'res_attachments';
     }
 
     if (!empty($aArgs['relation'])) {
         $relation = $aArgs['relation'];
     } else {
         $relation = 1;
+    }
+
+    if (!empty($aArgs['status'])) {
+        $status = $aArgs['status'];
+    } else {
+        $status = 'TRA';
     }
 
     $dataValue = [];
@@ -201,13 +207,17 @@ function Bt_createAttachment($aArgs = [])
     array_push($dataValue, ['column' => 'relation',         'value' => $relation,                 'type' => 'integer']);
     array_push($dataValue, ['column' => 'in_signature_book','value' => $inSignatureBook,          'type' => 'bool']);
 
+    if (!empty($aArgs['attachment_id_master'])) {
+        array_push($dataValue, ['column' => 'attachment_id_master','value' => $aArgs['attachment_id_master'], 'type' => 'integer']);
+    }
+
     $allDatas = [
         "encodedFile" => $aArgs['encodedFile'],
         "data"        => $dataValue,
         "collId"      => "letterbox_coll",
         "table"       => $table,
         "fileFormat"  => $aArgs['format'],
-        "status"      => 'TRA'
+        "status"      => $status
     ];
 
     $opts = [

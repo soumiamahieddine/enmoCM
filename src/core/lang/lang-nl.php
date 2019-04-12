@@ -78,6 +78,7 @@ define('_USER_CREATED', 'Toegevoegde gebruiker');
 define('_USER_UPDATED', 'Gewijzigde gebruiker');
 define('_USER_SUSPENDED', 'Utilisateur suspendu TO TRANSLATE');
 define('_USER_DELETED', 'Verwijderde gebruiker');
+define('_USER_PASSWORD_UPDATED', 'User password updated'); // TO TRANSLATE
 define('_USER_GROUP_CREATION', 'Toegevoegde groep voor gebruiker');
 define('_USER_GROUP_MODIFICATION', 'Gewijzigde groep voor gebruiker');
 define('_USER_GROUP_SUPPRESSION', 'Verwijderde groep voor gebruiker');
@@ -483,3 +484,9 @@ define("_VIEW_DOCUMENTS_WITH_NOTES", "View mail with notes_TO_TRANSLATE");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "View attachment of 'document_with_notes' type_TO_TRANSLATE");
 define('_VISA_BY', 'Goedkeuring door');
 define('_INSTEAD_OF', 'in plaats van');
+
+define("_AVIS_WORKFLOW", "Avis workflow_TO_TRANSLATE");
+define("_VISA_WORKFLOW", "Visa workflow_TO_TRANSLATE");
+define("_DIFFUSION_LIST", "Diffusion list_TO_TRANSLATE");
+define("_SECONDARY_INFORMATION", "Secondary informations_TO_TRANSLATE");
+define("_DEST_INFORMATION", "Destination informations_TO_TRANSLATE");

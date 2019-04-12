@@ -95,6 +95,7 @@ define('_USER_CREATED', 'Utilisateur ajouté');
 define('_USER_UPDATED', 'Utilisateur modifié');
 define('_USER_SUSPENDED', 'Utilisateur suspendu');
 define('_USER_DELETED', 'Utilisateur supprimé');
+define('_USER_PASSWORD_UPDATED', 'Mot de passe utilisateur modifié');
 define('_USER_GROUP_CREATION', 'Groupe ajouté pour utilisateur');
 define('_USER_GROUP_MODIFICATION', 'Groupe modifié pour utilisateur');
 define('_USER_GROUP_SUPPRESSION', 'Groupe supprimé pour utilisateur');
@@ -481,3 +482,9 @@ define("_VIEW_DOCUMENTS_WITH_NOTES", "Voir les courriers annotés");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "Voir les pièces jointes de type 'Document annoté'");
 define('_VISA_BY', 'Visa par');
 define('_INSTEAD_OF', 'à la place de');
+
+define("_AVIS_WORKFLOW", "Circuit d'avis");
+define("_VISA_WORKFLOW", "Circuit de visa");
+define("_DIFFUSION_LIST", "Liste de diffusion");
+define("_SECONDARY_INFORMATION", "Informations secondaires");
+define("_DEST_INFORMATION", "Informations de destination");

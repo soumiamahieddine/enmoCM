@@ -244,7 +244,7 @@ if (!defined('_ADD_CC')) {
     define('_ADD_CC', 'Ajouter en copie');
 }
 if (!defined('_TO_DEST')) {
-    define('_TO_DEST', 'Destinataire');
+    define('_TO_DEST', 'Attributaire');
 }
 if (!defined('_NO_DIFF_LIST_ASSOCIATED')) {
     define('_NO_DIFF_LIST_ASSOCIATED', 'Aucune liste de diffusion');
@@ -661,7 +661,7 @@ if (!defined('_GO_TO_CC')) {
     define('_GO_TO_CC', "Passer l'utilisateur en copie");
 }
 if (!defined('_GO_TO_DEST')) {
-    define('_GO_TO_DEST', "Passer l'utilisateur en destinataire");
+    define('_GO_TO_DEST', "Passer l'utilisateur en attributaire");
 }
 if (!defined('_UP_USER_ONE_ROW')) {
     define('_UP_USER_ONE_ROW', "Monter l'utilisateur d'un rang");

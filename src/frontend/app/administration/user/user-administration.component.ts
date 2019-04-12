@@ -78,6 +78,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
 
     displayedColumns    = ['event_date', 'event_type', 'info', 'remote_ip'];
     dataSource          = new MatTableDataSource(this.data);
+    selectedTabIndex : number = 0;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -706,6 +707,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.firstFormGroup.controls['newPasswordCtrl'].setErrors(null);
         this.firstFormGroup.controls['retypePasswordCtrl'].setErrors(null);
         this.showPassword = true;
+        this.selectedTabIndex = 0;
     }
 
     updatePassword() {
@@ -771,13 +773,18 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     sendToMaarchParapheur(){
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + '/maarchParapheur', '')
-            .subscribe((data: any) => {
-                this.notify.success(this.lang.userCreatedInMaarchParapheur);
-                this.user.external_id['maarchParapheur'] = data.externalId;
-            }, (err: any) => {
-                this.notify.error(err.error.errors);
-            });
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.createUserInMaarchParapheur);
+
+        if (r) {
+            this.http.put(this.coreUrl + "rest/users/" + this.serialId + '/maarchParapheur', '')
+                .subscribe((data: any) => {
+                    this.notify.success(this.lang.userCreatedInMaarchParapheur);
+                    this.user.external_id['maarchParapheur'] = data.externalId;
+                    this.user.canCreateMaarchParapheurUser = false;
+                }, (err: any) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
     }
 
     setLowerUserId() {

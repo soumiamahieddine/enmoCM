@@ -17,8 +17,13 @@ namespace ExternalSignatoryBook\controllers;
 use Attachment\models\AttachmentModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
+use Entity\models\EntityModel;
+use Entity\models\ListInstanceModel;
+use Note\models\NoteModel;
 use Priority\models\PriorityModel;
+use Resource\controllers\SummarySheetController;
 use Resource\models\ResModel;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
 use User\models\UserModel;
@@ -37,7 +42,7 @@ class MaarchParapheurController
     public static function getUsers(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/users',
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/users',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
@@ -62,21 +67,106 @@ class MaarchParapheurController
         if (empty($docserverMainInfo['path_template'])) {
             return ['error' => 'Docserver does not exist ' . $adrMainInfo['docserver_id']];
         }
-        $arrivedMailMainfilePath  = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
-        $encodedMainZipFile       = MaarchParapheurController::createZip(['filepath' => $arrivedMailMainfilePath, 'filename' => 'courrier_arrivee.pdf']);
+        $arrivedMailMainfilePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
 
         $mainResource = ResModel::getOnView([
-            'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'contact_firstname', 'contact_lastname', 'contact_society', 'category_id'],
+            'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'contact_firstname', 'contact_lastname', 'contact_society', 'res_id', 'nature_id', 'admission_date', 'creation_date', 'doc_date', 'initiator', 'typist', 'type_label', 'destination'],
             'where'  => ['res_id = ?'],
             'data'   => [$aArgs['resIdMaster']]
         ]);
+
+        if ($aArgs['objectSent'] == 'mail') {
+            if (empty($mainResource)) {
+                return ['error' => 'Mail does not exist'];
+            }
+
+            $units = [];
+            $units[] = ['unit' => 'primaryInformations'];
+            $units[] = ['unit' => 'secondaryInformations', 'label' => _SECONDARY_INFORMATION];
+            $units[] = ['unit' => 'senderRecipientInformations', 'label' => _DEST_INFORMATION];
+            $units[] = ['unit' => 'diffusionList', 'label' => _DIFFUSION_LIST];
+            $units[] = ['unit' => 'visaWorkflow', 'label' => _VISA_WORKFLOW];
+            $units[] = ['unit' => 'opinionWorkflow', 'label' => _AVIS_WORKFLOW];
+            $units[] = ['unit' => 'notes', 'label' => _NOTES_COMMENT];
+
+            // Data for resources
+            $tmpIds = [$aArgs['resIdMaster']];
+            $data   = [];
+            foreach ($units as $unit) {
+                if ($unit['unit'] == 'notes') {
+                    $data['notes'] = NoteModel::get([
+                        'select'   => ['id', 'note_text', 'user_id', 'creation_date', 'identifier'],
+                        'where'    => ['identifier in (?)'],
+                        'data'     => [$tmpIds],
+                        'order_by' => ['identifier']]);
+
+                    $userEntities = EntityModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['entity_id']]);
+                    $data['userEntities'] = [];
+                    foreach ($userEntities as $userEntity) {
+                        $data['userEntities'][] = $userEntity['entity_id'];
+                    }
+                } elseif ($unit['unit'] == 'opinionWorkflow') {
+                    $data['listInstancesOpinion'] = ListInstanceModel::get([
+                        'select'    => ['item_id', 'process_date', 'res_id'],
+                        'where'     => ['difflist_type = ?', 'res_id in (?)'],
+                        'data'      => ['AVIS_CIRCUIT', $tmpIds],
+                        'orderBy'   => ['listinstance_id']
+                    ]);
+                } elseif ($unit['unit'] == 'visaWorkflow') {
+                    $data['listInstancesVisa'] = ListInstanceModel::get([
+                        'select'    => ['item_id', 'requested_signature', 'process_date', 'res_id'],
+                        'where'     => ['difflist_type = ?', 'res_id in (?)'],
+                        'data'      => ['VISA_CIRCUIT', $tmpIds],
+                        'orderBy'   => ['listinstance_id']
+                    ]);
+                } elseif ($unit['unit'] == 'diffusionList') {
+                    $data['listInstances'] = ListInstanceModel::get([
+                        'select'  => ['item_id', 'item_type', 'item_mode', 'res_id'],
+                        'where'   => ['difflist_type = ?', 'res_id in (?)'],
+                        'data'    => ['entity_id', $tmpIds],
+                        'orderBy' => ['listinstance_id']
+                    ]);
+                } elseif ($unit['unit'] == 'senderRecipientInformations') {
+                    $data['mlbCollExt'] = ResModel::getExt([
+                        'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
+                        'where'  => ['res_id in (?)'],
+                        'data'   => [$tmpIds]
+                    ]);
+                }
+            }
+
+            $pdf = new Fpdi('P', 'pt');
+            $pdf->setPrintHeader(false);
+            SummarySheetController::createSummarySheet($pdf, ['resource' => $mainResource[0], 'units' => $units, 'login' => $aArgs['userId'], 'data' => $data]);
+
+            $tmpPath = CoreConfigModel::getTmpPath();
+            $filename = $tmpPath . "summarySheet_".$aArgs['resIdMaster'] . "_" . $aArgs['userId'] ."_".rand().".pdf";
+            $pdf->Output($filename, 'F');
+
+            $concatPdf = new Fpdi('P', 'pt');
+            $concatPdf->setPrintHeader(false);
+            foreach ([$filename, $arrivedMailMainfilePath] as $file) {
+                $pageCount = $concatPdf->setSourceFile($file);
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                    $pageId = $concatPdf->ImportPage($pageNo);
+                    $s = $concatPdf->getTemplatesize($pageId);
+                    $concatPdf->AddPage($s['orientation'], $s);
+                    $concatPdf->useImportedPage($pageId);
+                }
+            }
+
+            unlink($filename);
+            $concatFilename = $tmpPath . "concatPdf_".$aArgs['resIdMaster'] . "_" . $aArgs['userId'] ."_".rand().".pdf";
+            $concatPdf->Output($concatFilename, 'F');
+            $arrivedMailMainfilePath = $concatFilename;
+        }
+
+        $encodedMainZipFile = MaarchParapheurController::createZip(['filepath' => $arrivedMailMainfilePath, 'filename' => 'courrier_arrivee.pdf']);
+
         if (empty($mainResource[0]['process_limit_date'])) {
             $processLimitDate = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s"). ' + 14 days'));
         } else {
             $processLimitDate = $mainResource[0]['process_limit_date'];
-        }
-        if (empty($mainResource) && $aArgs['objectSent'] == 'mail') {
-            return ['error' => 'Mail does not exist'];
         }
 
         $processingUser      = $aArgs['processingUser'];
@@ -126,8 +216,8 @@ class MaarchParapheurController
                     if ($mainResource[0]['category_id'] != 'outgoing') {
                         $attachmentsData = [[
                             'encodedDocument' => $encodedMainZipFile,
-                            'title'            => $mainResource[0]['subject'],
-                            'reference'          => $mainResource[0]['alt_identifier']
+                            'title'           => $mainResource[0]['subject'],
+                            'reference'       => $mainResource[0]['alt_identifier']
                         ]];
                     } else {
                         $attachmentsData = [];
@@ -158,7 +248,7 @@ class MaarchParapheurController
                     ];
         
                     $response = CurlModel::exec([
-                        'url'      => $aArgs['config']['data']['url'] . '/rest/documents',
+                        'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
                         'user'     => $aArgs['config']['data']['userId'],
                         'password' => $aArgs['config']['data']['password'],
                         'method'   => 'POST',
@@ -193,7 +283,7 @@ class MaarchParapheurController
             ];
 
             $response = CurlModel::exec([
-                'url'      => $aArgs['config']['data']['url'] . '/rest/documents',
+                'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
                 'user'     => $aArgs['config']['data']['userId'],
                 'password' => $aArgs['config']['data']['password'],
                 'method'   => 'POST',
@@ -221,6 +311,7 @@ class MaarchParapheurController
 
             $fileContent = file_get_contents($zipFilename);
             $base64 =  base64_encode($fileContent);
+            unlink($zipFilename);
             return $base64;
         } else {
             echo 'Impossible de créer l\'archive;';
@@ -230,7 +321,7 @@ class MaarchParapheurController
     public static function getUserById(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/users/'.$aArgs['id'],
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/users/'.$aArgs['id'],
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
@@ -274,7 +365,7 @@ class MaarchParapheurController
     public static function getDocumentStatus(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/status',
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/status',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
@@ -286,7 +377,7 @@ class MaarchParapheurController
     public static function getProcessedDocument(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => $aArgs['config']['data']['url'] . '/rest/documents/'.$aArgs['documentId'].'/processedDocument',
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/processedDocument',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'

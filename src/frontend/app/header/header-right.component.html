@@ -29,7 +29,7 @@
             </button>
         </ng-container>
     </mat-menu>
-    <button *ngIf="!mobileMode" mat-button [matMenuTriggerFor]="menu">
+    <button *ngIf="!mobileMode" mat-button [matMenuTriggerFor]="menu" class="userProfilButtom">
         <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white; margin:0px 12px 8px 0px;"></mat-icon>
         {{headerService.user.firstname | titlecase }} <b>{{headerService.user.lastname | uppercase}}</b>
     </button>

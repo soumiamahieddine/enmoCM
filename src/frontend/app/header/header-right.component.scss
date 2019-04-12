@@ -11,3 +11,9 @@
         opacity: 0.5;
     }
 }
+
+.userProfilButtom {
+    ::ng-deep.mat-button-wrapper {
+        vertical-align: middle;
+    }
+}

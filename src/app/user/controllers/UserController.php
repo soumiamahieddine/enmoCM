@@ -98,7 +98,7 @@ class UserController
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint', 'loginmode', 'external_id']]);
-        $user['external_id']        = json_decode($user['external_id']);
+        $user['external_id']        = json_decode($user['external_id'], true);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
         $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups']             = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
@@ -109,11 +109,9 @@ class UserController
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['history']            = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
-        $user['canModifyPassword'] = false;
-        $user['canResetPassword'] = true;
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
-        $user['externalSignatoryBook'] = (string)$loadedXml->signatoryBookEnabled;
+        $user['canModifyPassword']  = false;
+        $user['canResetPassword']   = true;
+        $user['canCreateMaarchParapheurUser'] = false;
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS) && $user['loginmode'] != 'restMode') {
@@ -121,6 +119,10 @@ class UserController
         }
         if ($user['loginmode'] == 'restMode') {
             $user['canModifyPassword'] = true;
+        }
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+        if ((string)$loadedXml->signatoryBookEnabled == 'maarchParapheur' && $user['loginmode'] != 'restMode' && empty($user['external_id']['maarchParapheur'])) {
+            $user['canCreateMaarchParapheurUser'] = true;
         }
 
         return $response->withJson($user);
@@ -529,6 +531,14 @@ class UserController
 
         UserModel::updatePassword(['id' => $aArgs['id'], 'password' => $body['newPassword']]);
         PasswordModel::setHistoryPassword(['userSerialId' => $aArgs['id'], 'password' => $body['newPassword']]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $user['user_id'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _USER_PASSWORD_UPDATED
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -1350,7 +1360,7 @@ class UserController
             }
 
             $responseExec = CurlModel::exec([
-                'url'      => $url . '/rest/users',
+                'url'      => rtrim($url, '/') . '/rest/users',
                 'user'     => $userId,
                 'password' => $password,
                 'method'   => 'POST',
@@ -1359,6 +1369,9 @@ class UserController
 
             if (!empty($responseExec['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
+            }
+            if (!empty($responseExec['message'])) {
+                return $response->withStatus(400)->withJson(['errors' => $responseExec['message']]);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);

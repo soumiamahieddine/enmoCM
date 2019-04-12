@@ -51,7 +51,7 @@ trait ExternalSignatoryBookTrait
                     'select'    => [
                         'count(1) as nb'
                     ],
-                    'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+                    'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
                     'data'      => [$args['resId'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
                 ]);
                 if ($attachments[0]['nb'] == 0 && $args['data']['objectSent'] == 'attachment') {

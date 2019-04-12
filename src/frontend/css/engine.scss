@@ -155,6 +155,7 @@ table tr:not(.filters) .mat-form-field {
 
 .card-app-content {
     min-height: 100%;
+    overflow: auto;
 }
 
 .headerMaarch .mat-menu-content {

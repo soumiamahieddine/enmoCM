@@ -18,7 +18,7 @@
                             <mat-label>{{lang.userMaarchParapheur}}</mat-label>
                             <mat-select name="processingUser" [(ngModel)]="externalSignatoryBookDatas.processingUser" required>
                                 <mat-option *ngFor="let user of additionalsInfos.users" [value]="user.id">
-                                    {{user.firstname}} {{user.lastname}}
+                                    {{user.firstname}} {{user.lastname}} ({{user.email}})
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

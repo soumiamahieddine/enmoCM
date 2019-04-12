@@ -169,7 +169,7 @@ class SummarySheetController
         return $response->withHeader('Content-Type', $mimeType);
     }
 
-    private static function createSummarySheet(Fpdi $pdf, array $args)
+    public static function createSummarySheet(Fpdi $pdf, array $args)
     {
         ValidatorModel::notEmpty($args, ['resource', 'login']);
         ValidatorModel::arrayType($args, ['resource', 'units', 'data']);

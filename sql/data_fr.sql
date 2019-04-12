@@ -66,9 +66,10 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'clos
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'modify_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'folder_freeze');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_recipient_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'entities_print_sep_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'reports');
@@ -107,11 +108,12 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_cas
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'associate_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_recipient_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_attachments_from_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'modify_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'delete_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_new_version');
@@ -168,7 +170,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_thesaurus_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'my_contacts');
@@ -195,6 +196,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'r
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'edit_attachments_from_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'modify_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'delete_attachments');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_new_version');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_version_letterbox');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'config_visa_workflow');
@@ -240,6 +242,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'print_doc_details_from_list');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'delete_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_email_server');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_shippings');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'update_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'join_res_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'join_res_case_in_process');
@@ -294,7 +298,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_thesaurus');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'add_thesaurus_to_res');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_email_server');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'view_full_history');
@@ -704,6 +707,7 @@ TRUNCATE TABLE listmodels;
 DELETE FROM entities WHERE entity_id = 'VILLE';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('VILLE', 'Ville de Maarch-les-bains', 'Ville de Maarch-les-bains', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'VILLE' AND object_type = 'entity_id';
+INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('VILLE', 'entity_id', 0, '', 'user_id', 'dest', 'Ville de Maarch-les-bains','Ville de Maarch-les-bains', '', 'Y');
 DELETE FROM entities WHERE entity_id = 'CAB';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CAB', 'Cabinet du Maire', 'Cabinet du Maire', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', 'VILLE', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'CAB' AND object_type = 'entity_id';
@@ -797,160 +801,164 @@ INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, 
 DELETE FROM entities WHERE entity_id = 'ELUS';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ELUS', 'Ensemble des élus', 'ELUS:Ensemble des élus', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', 'VILLE', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'ELUS' AND object_type = 'entity_id';
+INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('ELUS', 'entity_id', 0, '', 'user_id', 'dest', 'ELUS:Ensemble des élus','ELUS:Ensemble des élus', '', 'Y');
 DELETE FROM entities WHERE entity_id = 'CCAS';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CCAS', 'Centre Communal d''Action Sociale', 'Centre Communal d''Action Sociale', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'CCAS' AND object_type = 'entity_id';
+INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('CCAS', 'entity_id', 0, '', 'user_id', 'dest', 'Centre Communal d''Action Sociale','Centre Communal d''Action Sociale', '', 'Y');
 
 -- Create BASKETS
 TRUNCATE TABLE baskets;
-ALTER SEQUENCE baskets_id_seq RESTART WITH 11;
+ALTER SEQUENCE baskets_id_seq RESTART WITH 1;
 DELETE FROM baskets WHERE basket_id = 'QualificationBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'QualificationBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'QualificationBasket';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (1, 'QualificationBasket', 'Courriers à qualifier', 'Bannette de qualification', 'status=''INIT''', 'letterbox_coll', 'Y', 'Y',10);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('QualificationBasket', 'Courriers à qualifier', 'Bannette de qualification', 'status=''INIT''', 'letterbox_coll', 'Y', 'N', 'Y',10);
 DELETE FROM baskets WHERE basket_id = 'IndexingBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'IndexingBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'IndexingBasket';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (2, 'IndexingBasket', 'Courriers à indexer', 'Bannette d''indexation', ' ', 'letterbox_coll', 'Y', 'Y',20);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('IndexingBasket', 'Courriers à indexer', 'Bannette d''indexation', ' ', 'letterbox_coll', 'Y', 'N', 'Y',20);
 DELETE FROM baskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'CopyMailBasket';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (3, 'CopyMailBasket', 'Courriers en copie', 'Courriers en copie non clos ou sans suite', '(res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status not in ( ''DEL'', ''END'', ''SSUITE'') and res_id not in (select res_id from res_mark_as_read WHERE user_id = @user)', 'letterbox_coll', 'Y', 'Y',30);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('CopyMailBasket', 'Courriers en copie', 'Courriers en copie non clos ou sans suite', '(res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status not in ( ''DEL'', ''END'', ''SSUITE'') and res_id not in (select res_id from res_mark_as_read WHERE user_id = @user)', 'letterbox_coll', 'Y', 'N', 'Y',30);
 DELETE FROM baskets WHERE basket_id = 'RetourCourrier';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'RetourCourrier';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'RetourCourrier';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (4, 'RetourCourrier', 'Retours Courrier', 'Courriers retournés au service Courrier', 'STATUS=''RET''', 'letterbox_coll', 'Y', 'Y',40);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('RetourCourrier', 'Retours Courrier', 'Courriers retournés au service Courrier', 'STATUS=''RET''', 'letterbox_coll', 'Y', 'N', 'Y',40);
 DELETE FROM baskets WHERE basket_id = 'DdeAvisBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'DdeAvisBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'DdeAvisBasket';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (5, 'DdeAvisBasket', 'Avis : Avis à émettre', 'Courriers nécessitant un avis', 'status = ''EAVIS'' AND res_id IN (SELECT res_id FROM listinstance WHERE coll_id = ''letterbox_coll'' AND item_type = ''user_id'' AND item_id = @user AND item_mode = ''avis'' and process_date is NULL)', 'letterbox_coll', 'Y', 'Y',50);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('DdeAvisBasket', 'Avis : Avis à émettre', 'Courriers nécessitant un avis', 'status = ''EAVIS'' AND res_id IN (SELECT res_id FROM listinstance WHERE coll_id = ''letterbox_coll'' AND item_type = ''user_id'' AND item_id = @user AND item_mode = ''avis'' and process_date is NULL)', 'letterbox_coll', 'Y', 'N', 'Y',50);
 DELETE FROM baskets WHERE basket_id = 'SupAvisBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'SupAvisBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'SupAvisBasket';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (6, 'SupAvisBasket', 'Avis : En attente de réponse', 'Courriers en attente d''avis', 'status=''EAVIS'' and ((DEST_USER = @user) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id IN( @my_entities)) or DESTINATION in (@subentities[@my_entities]))) and res_id NOT IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id) AND res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'Y',60);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SupAvisBasket', 'Avis : En attente de réponse', 'Courriers en attente d''avis', 'status=''EAVIS'' and ((DEST_USER = @user) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id IN( @my_entities)) or DESTINATION in (@subentities[@my_entities]))) and res_id NOT IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id) AND res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'N', 'Y',60);
 DELETE FROM baskets WHERE basket_id = 'RetAvisBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'RetAvisBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'RetAvisBasket';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (7, 'RetAvisBasket', 'Avis : Retours partiels', 'Courriers avec avis reçus', 'status=''EAVIS'' and ((DEST_USER = @user) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id IN( @my_entities)) or DESTINATION in (@subentities[@my_entities]))) and res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'Y',70);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('RetAvisBasket', 'Avis : Retours partiels', 'Courriers avec avis reçus', 'status=''EAVIS'' and ((DEST_USER = @user) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id IN( @my_entities)) or DESTINATION in (@subentities[@my_entities]))) and res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'N', 'Y',70);
 DELETE FROM baskets WHERE basket_id = 'ValidationBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ValidationBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ValidationBasket';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (8, 'ValidationBasket', 'Attributions à vérifier', 'Courriers signalés en attente d''instruction pour les services', 'status=''VAL''', 'letterbox_coll', 'Y', 'Y',80);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('ValidationBasket', 'Attributions à vérifier', 'Courriers signalés en attente d''instruction pour les services', 'status=''VAL''', 'letterbox_coll', 'Y', 'N', 'Y',80);
 DELETE FROM baskets WHERE basket_id = 'InValidationBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'InValidationBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'InValidationBasket';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (9, 'InValidationBasket', 'Courriers signalés en attente d''instruction', 'Courriers signalés en attente d''instruction par le responsable', 'destination in (@my_entities, @subentities[@my_entities]) and status=''VAL''', 'letterbox_coll', 'Y', 'Y',90);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('InValidationBasket', 'Courriers signalés en attente d''instruction', 'Courriers signalés en attente d''instruction par le responsable', 'destination in (@my_entities, @subentities[@my_entities]) and status=''VAL''', 'letterbox_coll', 'Y', 'N', 'Y',90);
 DELETE FROM baskets WHERE basket_id = 'MyBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'MyBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'MyBasket';
-INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES (10, 'MyBasket', 'Courriers à traiter', 'Bannette de traitement', 'status in (''NEW'', ''COU'', ''STDBY'', ''ENVDONE'') and dest_user = @user', 'letterbox_coll', 'Y', 'Y',100);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('MyBasket', 'Courriers à traiter', 'Bannette de traitement', 'status in (''NEW'', ''COU'', ''STDBY'', ''ENVDONE'') and dest_user = @user', 'letterbox_coll', 'Y', 'Y', 'Y',100);
 DELETE FROM baskets WHERE basket_id = 'LateMailBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'LateMailBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'LateMailBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('LateMailBasket', 'Courriers en retard', 'Courriers en retard', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'') and (now() > process_limit_date)', 'letterbox_coll', 'Y', 'Y',110);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('LateMailBasket', 'Courriers en retard', 'Courriers en retard', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'') and (now() > process_limit_date)', 'letterbox_coll', 'Y', 'N', 'Y',110);
 DELETE FROM baskets WHERE basket_id = 'DepartmentBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'DepartmentBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'DepartmentBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('DepartmentBasket', 'Courriers de ma direction', 'Bannette de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'' and status <> ''VAL'')', 'letterbox_coll', 'Y', 'Y',120);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('DepartmentBasket', 'Courriers de ma direction', 'Bannette de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'' and status <> ''VAL'')', 'letterbox_coll', 'Y', 'N', 'Y',120);
 DELETE FROM baskets WHERE basket_id = 'ParafBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ParafBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ParafBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('ParafBasket', 'Parapheur électronique', 'Courriers à viser ou signer dans mon parapheur', 'status in (''ESIG'', ''EVIS'') AND ((res_id, @user) IN (SELECT res_id, item_id FROM listinstance WHERE difflist_type = ''VISA_CIRCUIT'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1))', 'letterbox_coll', 'Y', 'Y',130);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('ParafBasket', 'Parapheur électronique', 'Courriers à viser ou signer dans mon parapheur', 'status in (''ESIG'', ''EVIS'') AND ((res_id, @user) IN (SELECT res_id, item_id FROM listinstance WHERE difflist_type = ''VISA_CIRCUIT'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1))', 'letterbox_coll', 'Y', 'N', 'Y',130);
 DELETE FROM baskets WHERE basket_id = 'SuiviParafBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'SuiviParafBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'SuiviParafBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('SuiviParafBasket', 'Courriers en circuit de visa/signature', 'Courriers en circulation dans les parapheurs électroniques', 'status in (''ESIG'', ''EVIS'') AND dest_user = @user', 'letterbox_coll', 'Y', 'Y',140);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SuiviParafBasket', 'Courriers en circuit de visa/signature', 'Courriers en circulation dans les parapheurs électroniques', 'status in (''ESIG'', ''EVIS'') AND dest_user = @user', 'letterbox_coll', 'Y', 'N', 'Y',140);
 DELETE FROM baskets WHERE basket_id = 'EsigARBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'EsigARBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'EsigARBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('EsigARBasket', 'AR à e-signer', 'AR à e-signer', 'status=''ESIGAR'' and (res_id,@user) IN (SELECT res_id, item_id FROM listinstance WHERE item_mode = ''sign'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1)', 'letterbox_coll', 'Y', 'Y',150);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('EsigARBasket', 'AR à e-signer', 'AR à e-signer', 'status=''ESIGAR'' and (res_id,@user) IN (SELECT res_id, item_id FROM listinstance WHERE item_mode = ''sign'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1)', 'letterbox_coll', 'Y', 'N', 'Y',150);
 DELETE FROM baskets WHERE basket_id = 'EenvBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'EenvBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'EenvBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('EenvBasket', 'Courriers à envoyer', 'Courriers visés/signés prêts à être envoyés', 'status=''EENV'' and dest_user = @user', 'letterbox_coll', 'Y', 'Y',160);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('EenvBasket', 'Courriers à envoyer', 'Courriers visés/signés prêts à être envoyés', 'status=''EENV'' and dest_user = @user', 'letterbox_coll', 'Y', 'N', 'Y',160);
 DELETE FROM baskets WHERE basket_id = 'EenvARBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'EenvARBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'EenvARBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('EenvARBasket', 'AR à e-envoyer', 'AR à e-envoyer', 'status=''EENVAR'' and dest_user = @user', 'letterbox_coll', 'Y', 'Y',170);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('EenvARBasket', 'AR à e-envoyer', 'AR à e-envoyer', 'status=''EENVAR'' and dest_user = @user', 'letterbox_coll', 'Y', 'N', 'Y',170);
 DELETE FROM baskets WHERE basket_id = 'ToArcBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ToArcBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ToArcBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('ToArcBasket', 'Courriers à archiver', 'Courriers arrivés en fin de DUC à envoyer en archive intermédiaire', 'status = ''EXP_SEDA'' OR status = ''END'' OR status = ''SEND_SEDA''', 'letterbox_coll', 'Y', 'Y',180);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('ToArcBasket', 'Courriers à archiver', 'Courriers arrivés en fin de DUC à envoyer en archive intermédiaire', 'status = ''EXP_SEDA'' OR status = ''END'' OR status = ''SEND_SEDA''', 'letterbox_coll', 'Y', 'N', 'Y',180);
 DELETE FROM baskets WHERE basket_id = 'SentArcBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'SentArcBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'SentArcBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('SentArcBasket', 'Courriers en cours d''archivage', 'Courriers envoyés au SAE, en attente de réponse de transfert', 'status=''ACK_SEDA''', 'letterbox_coll', 'Y', 'Y',190);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SentArcBasket', 'Courriers en cours d''archivage', 'Courriers envoyés au SAE, en attente de réponse de transfert', 'status=''ACK_SEDA''', 'letterbox_coll', 'Y', 'N', 'Y',190);
 DELETE FROM baskets WHERE basket_id = 'AckArcBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'AckArcBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'AckArcBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('AckArcBasket', 'Courriers archivés', 'Courriers archivés et acceptés dans le SAE', 'status=''REPLY_SEDA''', 'letterbox_coll', 'Y', 'Y',200);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('AckArcBasket', 'Courriers archivés', 'Courriers archivés et acceptés dans le SAE', 'status=''REPLY_SEDA''', 'letterbox_coll', 'Y', 'N', 'Y',200);
 DELETE FROM baskets WHERE basket_id = 'ReconcilBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ReconcilBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ReconcilBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('ReconcilBasket', 'Réponses à réconcilier', 'Réponses à réconcilier', 'status=''PJQUAL''', 'letterbox_coll', 'Y', 'Y',210);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('ReconcilBasket', 'Réponses à réconcilier', 'Réponses à réconcilier', 'status=''PJQUAL''', 'letterbox_coll', 'Y', 'N', 'Y',210);
 DELETE FROM baskets WHERE basket_id = 'NumericBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'NumericBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'NumericBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('NumericBasket', 'Plis numériques à qualifier', 'Plis numériques à qualifier', 'status = ''NUMQUAL''', 'letterbox_coll', 'Y', 'Y',220);
-DELETE FROM groupbasket_redirect WHERE basket_id = 'SendToSignatoryBook';
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('NumericBasket', 'Plis numériques à qualifier', 'Plis numériques à qualifier', 'status = ''NUMQUAL''', 'letterbox_coll', 'Y', 'N', 'Y',220);
 DELETE FROM baskets WHERE basket_id = 'SendToSignatoryBook';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, enabled, basket_order) VALUES ('SendToSignatoryBook', 'Envoyé au parapheur Maarch', 'Envoyé au parapheur Maarch', 'status = ''VALDGS''', 'letterbox_coll', 'Y', 'Y',220);
+DELETE FROM actions_groupbaskets WHERE basket_id = 'SendToSignatoryBook';
+DELETE FROM groupbasket_redirect WHERE basket_id = 'SendToSignatoryBook';
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SendToSignatoryBook', 'Envoyé au parapheur Maarch', 'Envoyé au parapheur Maarch', 'status = ''VALDGS''', 'letterbox_coll', 'Y', 'Y', 'Y',230);
 
 -- Create GROUPBASKET
 TRUNCATE TABLE groupbasket;
 DELETE FROM groupbasket WHERE basket_id = 'QualificationBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('COURRIER', 'QualificationBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('COURRIER', 'QualificationBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'IndexingBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('COURRIER', 'IndexingBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'IndexingBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'IndexingBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('COURRIER', 'IndexingBasket', '[]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'IndexingBasket', '[]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'IndexingBasket', '[]');
 DELETE FROM groupbasket WHERE basket_id = 'CopyMailBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'CopyMailBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'CopyMailBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'CopyMailBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'CopyMailBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'RetourCourrier';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('COURRIER', 'RetourCourrier');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('COURRIER', 'RetourCourrier', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'DdeAvisBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'DdeAvisBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'DdeAvisBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('ELU', 'DdeAvisBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'DdeAvisBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'DdeAvisBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('ELU', 'DdeAvisBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]');
 DELETE FROM groupbasket WHERE basket_id = 'SupAvisBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'SupAvisBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'SupAvisBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'SupAvisBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'SupAvisBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]');
 DELETE FROM groupbasket WHERE basket_id = 'RetAvisBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'RetAvisBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'RetAvisBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'RetAvisBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'RetAvisBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getParallelOpinionsNumber","cssClasses":["align_rightData"],"icon":"fa-comment-alt"},{"value":"getOpinionLimitDate","cssClasses":["align_rightData"],"icon":"fa-stopwatch"}]');
 DELETE FROM groupbasket WHERE basket_id = 'ValidationBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESP_COURRIER', 'ValidationBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESP_COURRIER', 'ValidationBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'InValidationBasket';
 DELETE FROM groupbasket WHERE basket_id = 'MyBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'MyBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'MyBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('ELU', 'MyBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'MyBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'MyBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('ELU', 'MyBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'LateMailBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'LateMailBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'LateMailBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'DepartmentBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'DepartmentBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'DepartmentBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'ParafBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'ParafBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'ParafBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'SuiviParafBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'SuiviParafBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'SuiviParafBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'SuiviParafBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'SuiviParafBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'EsigARBasket';
 DELETE FROM groupbasket WHERE basket_id = 'EenvBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'EenvBasket');
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('RESPONSABLE', 'EenvBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'EenvBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'EenvBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'EenvARBasket';
 DELETE FROM groupbasket WHERE basket_id = 'ToArcBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('ARCHIVISTE', 'ToArcBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('ARCHIVISTE', 'ToArcBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'SentArcBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('ARCHIVISTE', 'SentArcBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('ARCHIVISTE', 'SentArcBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'AckArcBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('ARCHIVISTE', 'AckArcBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('ARCHIVISTE', 'AckArcBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'ReconcilBasket';
 DELETE FROM groupbasket WHERE basket_id = 'NumericBasket';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('COURRIER', 'NumericBasket');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('COURRIER', 'NumericBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 DELETE FROM groupbasket WHERE basket_id = 'SendToSignatoryBook';
-INSERT INTO groupbasket (group_id, basket_id) VALUES ('AGENT', 'SendToSignatoryBook');
+INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'SendToSignatoryBook', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
+
 
 -- Create Security
 TRUNCATE TABLE security;
@@ -1032,6 +1040,7 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 VALUES ('ARCHIVETRANSFER', 'ARCHIVETRANSFER', 'Dépôt des archives numériques', 'N', 50000000000, 1, '/opt/maarch/docservers/archive_transfer/', '2017-01-13 14:47:49.197164', 'archive_transfer_coll');
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
 VALUES ('ACKNOWLEDGEMENT_RECEIPTS', 'ACKNOWLEDGEMENT_RECEIPTS', 'Dépôt des AR', 'N', 50000000000, 0, '/opt/maarch/docservers/acknowledgment_receipts/', '2019-04-19 22:22:22.201904', 'letterbox_coll');
+
 ------------
 --SUPERADMIN USER
 ------------
@@ -1042,6 +1051,7 @@ DELETE FROM users WHERE user_id = 'cchaplin';
 INSERT INTO users (user_id, password, firstname, lastname, mail, enabled, change_password, status, loginmode) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Charlie', 'CHAPLIN', 'info@maarch.org', 'Y', 'N', 'OK', 'restMode');
 DELETE FROM usergroup_content WHERE user_id = 'cchaplin';
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('cchaplin', 'MAARCHTOGEC', 'Y','');
+
 ------------
 -- CONTACTS
 ------------
@@ -1071,7 +1081,6 @@ INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society,
 INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (6, 106, 'N', '', '', 'Pierre', 'BRUNEL', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
 INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (7, 106, 'N', '', '', 'Eric', 'MACKIN', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
 INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (8, 106, 'N', '', '', 'Martin Donald', 'PELLE', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
-
 Select setval('contact_v2_id_seq', (select max(contact_id)+1 from contacts_v2), false);
 -- Default adresses
 TRUNCATE TABLE contact_addresses;
@@ -1080,7 +1089,7 @@ INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, 
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (3, 1, 1, '', 'Laurent', 'GIOVANNONI', 'title1', 'Directeur Général Adjoint', NULL, '11', 'Boulevard du Sud-Est', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'laurent.giovannoni@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled, external_id) VALUES (4, 2, 1, '', 'Nicolas', 'MARTIN', 'title1', '', NULL, '13', 'RUE LA PREFECTURE', '', 'MAARCH LES BAINS', '', '', '', '', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y', '{"m2m":"org_987654321_DGS_SF"}');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (5, 3, 1, '', 'Brigitte', 'BERGER', 'title1', 'Directrice Générale', NULL, '25', 'PLACE DES MIMOSAS', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'info@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (6, 4, 3, '', '', '', '', '', NULL, '25', 'route de Pampelone', '', 'MAARCH-LES-BAINS', '99000', '', '06 08 09 07 55', 'info@maarch.org', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (6, 4, 3, '', '', '', '', '', NULL, '25', 'route de Pampelone', '', 'MAARCH-LES-BAINS', '99000', '', '06 08 09 07 55', 'bernard.pascontent@gmail.com', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (7, 5, 3, '', '', '', '', '', NULL, '1', 'rue du Peuplier', '', 'NANTERRE', '92000', '', '', 'info@maarch.org', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (8, 6, 3, '', '', '', '', '', NULL, '5', 'allée des Pommiers', '', 'MAARCH-LES-BAINS', '99000', '', '06 08 09 07 55', 'info@maarch.org', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (9, 7, 3, '', '', '', '', '', NULL, '13', 'rue du Square Carré', '', 'MAARCH-LES-BAINS', '99000', '', '06 11 12 13 14', 'info@maarch.org', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
@@ -1090,6 +1099,7 @@ Select setval('contact_addresses_id_seq', (select max(id)+1 from contact_address
 -- Default contact_communication
 TRUNCATE TABLE contact_communication;
 INSERT INTO contact_communication (contact_id, type, value) VALUES (2, 'url', 'https://cchaplin:maarch@demo.maarchcourrier.com');
+
 ------------
 --STATUS-
 ------------
@@ -1132,6 +1142,8 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SIGN', 'PJ signée', 'Y', 'fa-check', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('STDBY', 'Clôturé avec suivi', 'Y', 'fm-letter-status-wait', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ENVDONE', 'Courrier envoyé', 'Y', 'fm-letter-status-aenv', 'apps', 'Y', 'Y');
+--INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('AR_OK', 'Accusé de réception créé', 'Y', 'fa-mail-bulk', 'apps', 'Y', 'Y');
+
 ------------
 --STATUS IMAGES-
 ------------
@@ -1182,6 +1194,7 @@ INSERT INTO parameters (id, description, param_value_string, param_value_int, pa
 INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', 'Bienvenue dans votre <b>G</b>estion <b>E</b>lectronique du <b>C</b>ourrier.');
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Taille des imagettes', '750x900');
 INSERT INTO parameters (id, description, param_value_int) VALUES ('keepDestForRedirection', 'Si activé (1), met le destinataire en copie de la liste de diffusion lors d''une action de redirection', 0);
+
 ------------
 --DIFFLIST_TYPES
 ------------
@@ -1191,6 +1204,7 @@ INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type
 INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('foldertype_id', 'Diffusion selon le type de dossiers', 'dest copy', 'Y', 'Y');
 INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('VISA_CIRCUIT', 'Circuit de visa', 'visa sign ', 'N', 'Y');
 INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('AVIS_CIRCUIT', 'Circuit d''avis', 'avis ', 'N', 'Y');
+
 ------------
 --ACTIONS
 ------------
@@ -1244,6 +1258,8 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, a
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (525, '', 'Désactiver la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_off', 'N', 'apps', 'N', NULL, 'disabledBasketPersistenceAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (526, '', 'Libérer les courriers', 'VAL', 'Y', 'Y', 'confirm_status', 'N', 'apps', 'N', NULL, 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (527, '', 'Envoyer vers Maarch Parapheur', 'VALDGS', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'apps', 'N', NULL, 'sendExternalSignatoryBookAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (528, '', 'Créer les accusés de réception', '_NOSTATUS_', 'N', 'Y', 'create_acknowledgement_receipt', 'Y', 'apps', 'N', NULL, 'createAcknowledgementReceiptsAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (529, '', 'Envoyer un pli postal', '_NOSTATUS_', 'N', 'Y', 'send_shipping', 'Y', 'apps', 'N', NULL, 'sendShippingAction');
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 ------------
 -- BANNETTES SECONDAIRES
@@ -1252,6 +1268,7 @@ INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_i
 SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
 WHERE groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
 ORDER BY users.id;
+
 ------------
 --ACTIONS_GROUPBASKETS
 ------------
@@ -1297,6 +1314,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (507, '', 'AGENT', 'EenvBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'AGENT', 'SuiviParafBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (527, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (528, '', 'AGENT', 'MyBasket', 'Y', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'MyBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
@@ -1308,6 +1326,8 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (506, 'closing_date IS NOT NULL', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (400, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (527, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (528, '', 'RESPONSABLE', 'MyBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (529, '', 'RESPONSABLE', 'MyBasket', 'Y', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'RESPONSABLE', 'CopyMailBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (113, '', 'RESPONSABLE', 'CopyMailBasket', 'Y', 'N', 'N');
@@ -1350,6 +1370,9 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (525, '', 'CABINET', 'SuiviBasket', 'Y', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'SERVICE', 'ValidationBasket', 'Y', 'Y', 'Y');
+
+------------
+--GROUPBASKET_REDIRECT
 ------------
 TRUNCATE TABLE groupbasket_redirect;
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'IndexingBasket', 112, '', 'MY_ENTITIES', 'ENTITY');
@@ -1375,6 +1398,7 @@ INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, key
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('ELU', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('ELU', 'IndexingBasket', 112, '', 'ALL_ENTITIES', 'ENTITY');
 Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 from groupbasket_redirect), false);
+
 ------------
 --GROUPBASKET_STATUS
 ------------
@@ -1391,6 +1415,7 @@ INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "orde
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'END',1);
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'NEW',2);
 Select setval('groupbasket_status_system_id_seq', (select max(system_id)+1 from groupbasket_status), false);
+
 ------------
 --FOLDERTYPES
 ------------
@@ -1398,18 +1423,21 @@ TRUNCATE TABLE foldertypes;
 INSERT INTO foldertypes (foldertype_id, foldertype_label, maarch_comment, retention_time, custom_d1, custom_f1, custom_n1, custom_t1, custom_d2, custom_f2, custom_n2, custom_t2, custom_d3, custom_f3, custom_n3, custom_t3, custom_d4, custom_f4, custom_n4, custom_t4, custom_d5, custom_f5, custom_n5, custom_t5, custom_d6, custom_t6, custom_d7, custom_t7, custom_d8, custom_t8, custom_d9, custom_t9, custom_d10, custom_t10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, coll_id)
 VALUES (1, 'Les courriers', '', NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'letterbox_coll');
 Select setval('foldertype_id_id_seq', (select max(foldertype_id)+1 from foldertypes), false);
+
 ------------
 --TEMPLATES_DOCTYPE_EXT--
 ------------
 TRUNCATE TABLE templates_doctype_ext;
 INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3, 1201, 'Y');
 INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (9, 1202, 'Y');
+
 ------------
 --FOLDERS
 ------------
 TRUNCATE TABLE folders;
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (23, 'COURRIERS', 1, 0, 'Courriers', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 1, '2012-03-02 18:31:27.487', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:31:27.487');
 Select setval('folders_system_id_seq', (select max(folders_system_id)+1 from folders), false);
+
 ------------
 --KEYWORDS / TAGS
 ------------
@@ -1695,7 +1723,6 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (27, 'Réponse avec transmission LO', 'Réponse avec transmission LO', '', 'OFFICE', '0000#', 'rep_transmission.odt', 'ODT: rep_transmission', 'letterbox_attachment', 'attachments', 'response_project');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (28, 'Transmission LO', 'Transmission LO', '', 'OFFICE', '0000#', 'transmission.odt', 'ODT: transmission', 'letterbox_attachment', 'attachments', 'transmission');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (29, 'Courrier invitation PME LO', 'Courrier invitation PME LO', '', 'OFFICE', '0000#', 'invitation.odt', 'ODT: invitation', 'letterbox_attachment', 'attachments', 'outgoing_mail');
-
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (30, 'AR dérogation LO sans carré', 'AR derogation carte scolaire sans carré', '', 'OFFICE', '0000#', 'ar_derogation_sans_carre.odt', 'ODT: ARderogation', 'letterbox_attachment', 'attachments', 'response_project');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (31, 'Réponse crèche LO sans carré', 'Réponse à une demande de place en crèche sans carré', '', 'OFFICE', '0000#', 'rep_creche_sans_carre.odt', 'ODT: Repddeplacecreche', 'letterbox_attachment', 'attachments', 'response_project');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (32, 'Réponse générique LO sans carré', 'Modèle de réponse générique sans carré', '', 'OFFICE', '0000#', 'rep_standard_sans_carre.odt', 'ODT: standard_sign', 'letterbox_attachment', 'attachments', 'response_project');
@@ -1766,8 +1793,29 @@ INSERT INTO templates  (template_id, template_label, template_comment, template_
 <p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute; du dossier par t&eacute;l&eacute;phone [users.phone] ou par messagerie [users.mail].</p>', 'HTML', NULL, NULL, 'TXT: document_texte', 'letterbox_attachment', 'sendmail', 'all');
 
 INSERT INTO templates (template_label, template_comment, template_content, template_type, template_style, template_target, template_attachment_type) VALUES ('Quota d''utilisateur', 'Modèle de notification pour le quota utilisateur', '<p>Quota utilisateur atteint</p>', 'HTML', 'ODT: rep_standard', 'notifications', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type)  
+VALUES  (
+1032, 
+'AccuseReceptionElectronique', 
+'Modèle d''accusé de réception électronique', 
+'<h2>Ville de Maarch-les-Bains</h2>
+<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+<p>(Veuillez renseigner le numero de telephone de votre service)</p>
+<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui rel&egrave;ve de sa comp&eacute;tence.</p>
+<p>Votre demande concerne [res_letterbox.subject].</p>
+<p>Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''''&eacute;tude des pi&egrave;ces fournies.</p>
+<p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute; du dossier par t&eacute;l&eacute;phone [users.phone] ou par messagerie [users.mail].</p>
+<p>Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.</p>
+<p>Le cas &eacute;ch&eacute;ant, le d&eacute;lai de d&eacute;cision implicite d''acceptation ne d&eacute;butera qu''''apr&egrave;s la production des pi&egrave;ces demand&eacute;es.</p>
+<p>&nbsp;</p>', 
+'OFFICE_HTML', NULL, NULL, NULL, 
+'letterbox_attachment', 
+'acknowledgementReceipt', 
+'simple');
+--INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1033, 'AccuseReceptionPapier', 'Modèle d''accusé de réception papier', '', 'OFFICE_HTML', '0000#', 'ar_derogation.odt', 'ODT: ar_derogation', 'letterbox_attachment', 'acknowledgementReceipt', 'simple');
 ------------
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
+
 ------------
 --PRIORITES
 ------------
@@ -1775,6 +1823,7 @@ TRUNCATE TABLE priorities;
 INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', TRUE, null, TRUE, 1);
 INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1379nbvc', 'Urgent', '#ffa500', TRUE, 8, FALSE, 2);
 INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1391nbvc', 'Très urgent', '#ff0000', TRUE, 4, FALSE, 3);
+
 ------------
 --NOTIFICATIONS
 ------------
@@ -1806,7 +1855,7 @@ INSERT INTO templates_association
 (template_id, value_field)
 SELECT template_id, entity_id
 FROM templates, entities
-WHERE template_type in ('OFFICE','TXT');
+WHERE template_type in ('OFFICE','TXT') or template_target = 'acknowledgementReceipt';
 Select setval('templates_association_id_seq', (select max(id)+1 from templates_association), false);
 -----
 -- Archive identifiers
@@ -1842,15 +1891,9 @@ INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_th
 
 /* Configurations */
 TRUNCATE TABLE configurations;
-INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type" : "smtp", "host" : "smtp.gmail.com", "port" : 465, "user" : "", "password" : "", "auth" : true, "secure" : "ssl", "from" : "notifications@maarch.org", "charset" : "utf-8"}');
+INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type":"smtp","host":"smtp.gmail.com","port":465,"user":"notifications.maarch@gmail.com","password":"NUraUORbrlN2X1oL::a941cfa4de03b52cd5388459d66b5fef","auth":true,"secure":"ssl","from":"notifications.maarch@gmail.com","charset":"utf-8"}');
 
---Inscrire ici les clauses de conversion spécifiques en cas de reprise
---Update res_letterbox set status='VAL' where res_id=108;
---Update res_letterbox set status='INIT', subject='', destination='COU', type_id=001;
---delete from mlb_coll_ext;
---delete from res_attachments;
---delete from listinstance;
---delete from listinstance_history;
---delete from listinstance_history_details;
---delete from notes;
--- END
+/* Modèle d’envois postaux */
+TRUNCATE TABLE shipping_templates;
+INSERT INTO shipping_templates (id, label, description, options, fee, entities, account) VALUES (1, 'Modèle d''exemple d''envoi postal', 'Modèle d''exemple d''envoi postal', '{"shapingOptions":[],"sendMode":"fast"}', '{"firstPagePrice":0.4,"nextPagePrice":0.5,"postagePrice":0.9}', '["241", "242", "243", "244", "245", "246", "247", "248", "249", "250", "251", "252", "253", "254", "255", "257", "258", "256", "259", "260"]', '{"id":"test","password":"fLYTr9Dp::4969d4ee236068ba57f09f16b0366840"}');
+

@@ -89,7 +89,7 @@ export class ActionsListComponent implements OnInit {
             this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
                 .subscribe((data: any) => {
                     try {
-                        let msgWarn = this.lang.warnLockRes;
+                        let msgWarn = this.lang.warnLockRes + ' : ' + data.lockers.join(', ');
 
                         if (data.lockedResources != this.arrRes.length) {
                             msgWarn += this.lang.warnLockRes2 + '.';

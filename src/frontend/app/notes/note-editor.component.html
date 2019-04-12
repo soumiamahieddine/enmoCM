@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline" class="noteEditorContent">
     <textarea matInput placeholder="{{lang.addNote}}" [(ngModel)]="content"></textarea>
     <button *ngIf="addMode" matSuffix mat-icon-button title="{{lang.send}}" (click)="addNote()"
-        [disabled]="content.trim() == ''">
+        [disabled]="content.trim() == '' || loading">
         <mat-icon fontSet="far" fontIcon="fa-paper-plane fa-2x" style="color: #666;"></mat-icon>
     </button>
     <button matSuffix color="primary" mat-icon-button title="{{lang.noteTemplates}}" [matMenuTriggerFor]="menu"
@@ -16,6 +16,9 @@
         <button mat-menu-item *ngFor="let template of templatesNote" matTooltip="{{template.template_content}}"
             matTooltipPosition="left" (click)="selectTemplate(template)">
             <span>{{template.template_label}}</span>
+        </button>
+        <button mat-menu-item *ngIf="templatesNote.length == 0" disabled>
+            <span>{{lang.noTemplate}}</span>
         </button>
     </mat-menu>
 </mat-form-field>

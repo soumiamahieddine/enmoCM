@@ -95,6 +95,7 @@ define('_USER_CREATED', 'User added');
 define('_USER_UPDATED', 'User updated');
 define('_USER_SUSPENDED', 'User suspended');
 define('_USER_DELETED', 'User deleted');
+define('_USER_PASSWORD_UPDATED', 'User password updated');
 define('_USER_GROUP_CREATION', 'Group added for user');
 define('_USER_GROUP_MODIFICATION', 'Group updated for user');
 define('_USER_GROUP_SUPPRESSION', 'Group deleted for user');
@@ -481,3 +482,9 @@ define("_VIEW_DOCUMENTS_WITH_NOTES", "View mail with notes");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "View attachment of 'document_with_notes' type");
 define('_VISA_BY', 'Visa by');
 define('_INSTEAD_OF', 'Instead of');
+
+define("_AVIS_WORKFLOW", "Avis workflow");
+define("_VISA_WORKFLOW", "Visa workflow");
+define("_DIFFUSION_LIST", "Diffusion list");
+define("_SECONDARY_INFORMATION", "Secondary informations");
+define("_DEST_INFORMATION", "Destination informations");

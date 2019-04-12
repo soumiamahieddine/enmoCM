@@ -56,7 +56,7 @@
     "html-minifier": "^3.5.21",
     "ng2-dnd": "^5.0.2",
     "node-sass": "^4.9.4",
-    "nodemon": "^1.18.5",
+    "nodemon": "^1.18.11",
     "rxjs": "^6.3.3",
     "tslib": "^1.9.0",
     "typescript": "3.2.4",
