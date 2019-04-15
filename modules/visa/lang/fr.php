@@ -76,20 +76,12 @@ if (!defined('_CONFIG_AVIS_WORKFLOW_DESC')) {
     define('_CONFIG_AVIS_WORKFLOW_DESC', "Permet de configurer le circuit d'avis du courrier");
 }
 
-if (!defined('_THUMBPRINT')) {
-    define('_THUMBPRINT', 'Empreinte numérique');
-}
-
 if (!defined('_DISSMARTCARD_SIGNER_APPLET')) {
     define('_DISSMARTCARD_SIGNER_APPLET', 'Signature électronique en cours...');
 }
 
 if (!defined('_IMG_SIGN_MISSING')) {
     define('_IMG_SIGN_MISSING', 'Image de signature manquante');
-}
-
-if (!defined('_THUMBPRINT_MISSING')) {
-    define('_THUMBPRINT_MISSING', 'Empreinte numérique manquante');
 }
 
 if (!defined('_SEND_TO_SIGNATURE')) {

@@ -69,7 +69,6 @@ class UserControllerTest extends TestCase
         $this->assertSame(null, $responseBody->phone);
         $this->assertSame(null, $responseBody->mail);
         $this->assertSame(null, $responseBody->initials);
-        $this->assertSame(null, $responseBody->thumbprint);
     }
 
     public function testUpdate()
@@ -106,7 +105,6 @@ class UserControllerTest extends TestCase
         $this->assertSame('0122334455', $responseBody->phone);
         $this->assertSame('ck@dailyP.com', $responseBody->mail);
         $this->assertSame('CK', $responseBody->initials);
-        $this->assertSame(null, $responseBody->thumbprint);
     }
 
     public function testAddGroup()
@@ -569,7 +567,6 @@ class UserControllerTest extends TestCase
         $this->assertSame('0122334455', $responseBody->phone);
         $this->assertSame('ck@dailyP.com', $responseBody->mail);
         $this->assertSame('CK', $responseBody->initials);
-        $this->assertSame(null, $responseBody->thumbprint);
 
         //  REAL DELETE
         \SrcCore\models\DatabaseModel::delete([

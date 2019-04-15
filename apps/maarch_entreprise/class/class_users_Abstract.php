@@ -55,7 +55,7 @@ abstract class class_users_Abstract extends Database
         if (!empty($user_id)) {
             $db = new Database();
             $stmt = $db->query(
-                "SELECT user_id, firstname, lastname, mail, phone, status, thumbprint/*, signature_path, signature_file_name*/ FROM " 
+                "SELECT user_id, firstname, lastname, mail, phone, status/*, signature_path, signature_file_name*/ FROM "
                 . USERS_TABLE . " WHERE user_id = ?",
                 array($user_id)
             );
@@ -89,7 +89,6 @@ abstract class class_users_Abstract extends Database
                     'mail' => $line->mail,
                     'phone' => $line->phone,
                     'status' => $line->status,
-                    'thumbprint' => $line->thumbprint,
                     'signature_path' => $line->signature_path,
                     'signature_file_name' => $line->signature_file_name,
                     'pathToSignature' => $pathToSignature,

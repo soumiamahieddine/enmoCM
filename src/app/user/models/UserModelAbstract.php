@@ -62,7 +62,7 @@ abstract class UserModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['user']);
         ValidatorModel::notEmpty($aArgs['user'], ['userId', 'firstname', 'lastname']);
-        ValidatorModel::stringType($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'changePassword', 'loginmode']);
+        ValidatorModel::stringType($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'phone', 'changePassword', 'loginmode']);
 
         DatabaseModel::insert([
             'table'         => 'users',
@@ -73,7 +73,6 @@ abstract class UserModelAbstract
                 'mail'                          => $aArgs['user']['mail'],
                 'phone'                         => $aArgs['user']['phone'],
                 'initials'                      => $aArgs['user']['initials'],
-                'thumbprint'                    => $aArgs['user']['thumbprint'],
                 'enabled'                       => 'Y',
                 'status'                        => 'OK',
                 'change_password'               => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],

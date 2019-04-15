@@ -75,10 +75,6 @@ if (!defined('_CONFIG_AVIS_WORKFLOW_DESC')) {
     define('_CONFIG_AVIS_WORKFLOW_DESC', 'Allow to set the mail recommendation flow up');
 }
 
-if (!defined('_THUMBPRINT')) {
-    define('_THUMBPRINT', 'Digital print');
-}
-
 if (!defined('_DISSMARTCARD_SIGNER_APPLET')) {
     define('_DISSMARTCARD_SIGNER_APPLET', 'Electronic signature in progress...');
 }
@@ -86,11 +82,6 @@ if (!defined('_DISSMARTCARD_SIGNER_APPLET')) {
 if (!defined('_IMG_SIGN_MISSING')) {
     define('_IMG_SIGN_MISSING', 'Missing signature picture');
 }
-
-if (!defined('_THUMBPRINT_MISSING')) {
-    define('_THUMBPRINT_MISSING', 'Missing digital print');
-}
-
 if (!defined('_SEND_TO_SIGNATURE')) {
     define('_SEND_TO_SIGNATURE', 'Submit');
 }

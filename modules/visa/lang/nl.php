@@ -73,17 +73,11 @@ if (!defined('_CONFIG_AVIS_WORKFLOW')) {
 if (!defined('_CONFIG_AVIS_WORKFLOW_DESC')) {
     define('_CONFIG_AVIS_WORKFLOW_DESC', 'Om het berichtencircuit van de brief in te stellen');
 }
-if (!defined('_THUMBPRINT')) {
-    define('_THUMBPRINT', 'Digitale afdruk');
-}
 if (!defined('_DISSMARTCARD_SIGNER_APPLET')) {
     define('_DISSMARTCARD_SIGNER_APPLET', 'Elektronische handtekening bezig...');
 }
 if (!defined('_IMG_SIGN_MISSING')) {
     define('_IMG_SIGN_MISSING', 'Beeld van handtekening ontbreekt');
-}
-if (!defined('_THUMBPRINT_MISSING')) {
-    define('_THUMBPRINT_MISSING', 'Digitale afdruk ontbreekt');
 }
 if (!defined('_SEND_TO_SIGNATURE')) {
     define('_SEND_TO_SIGNATURE', 'Voorleggen');
