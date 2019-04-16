@@ -556,7 +556,7 @@ class PreProcessActionController
                             unset($aAttachments[$key]);
                             break;
                         }
-                        if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
+                        if (!empty($contact[0]['address_country']) && strtoupper(trim($contact[0]['address_country'])) != 'FRANCE') {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noFranceContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
