@@ -183,6 +183,29 @@ class PreProcessActionController
         ];
 
         $data['resources'] = array_slice($data['resources'], 0, 500);
+
+        $resources = ResModel::get([
+            'select' => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$data['resources']]
+        ]);
+
+        $resourcesForProcess = [];
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+            if (!$lock) {
+                $resourcesForProcess[] = $resource['res_id'];
+            }
+        }
+        $data['resources'] = $resourcesForProcess;
+
         foreach ($data['resources'] as $resId) {
             $ext = ResModel::getExtById(['select' => ['res_id', 'category_id', 'address_id', 'is_multicontacts', 'alt_identifier'], 'resId' => $resId]);
 
@@ -477,6 +500,29 @@ class PreProcessActionController
         if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
+
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $resources = ResModel::get([
+            'select' => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$data['resources']]
+        ]);
+
+        $resourcesForProcess = [];
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+            if (!$lock) {
+                $resourcesForProcess[] = $resource['res_id'];
+            }
+        }
+        $data['resources'] = $resourcesForProcess;
 
         $aDestination = ResModel::get([
             'select' => ['distinct(destination)'],
