@@ -455,6 +455,7 @@ define('_CLOSING_DATE', 'Closing date_TO_TRANSLATE');
 define('_ACTION_DATE', 'Action date_TO_TRANSLATE');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'User created in Maarch Parapheur_TO_TRANSLATE');
+define('_SIGNATURES_SEND_TO_MAARCHPARAPHEUR', 'Signatures send to Maarch Parapheur_TO_TRANSLATE');
 
 define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Generate and send acknowledgement receipt_TO_TRANSLATE');
 define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Complete acknowledgement send date_TO_TRANSLATE');
