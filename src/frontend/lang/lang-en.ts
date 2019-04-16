@@ -955,4 +955,6 @@ export const LANG_EN = {
     "docserverDoesNotExists"                    : "Docserver does not exists",
     "fileDoesNotExists"                         : "File does not exists",
     "noTemplate"                                : "No template",
+    "syncSignsToMaarchParapheur"                : "Synchronize signatures to Maarch Parapheur",
+    "signsSynchronized"                         : "Signatures have been updated in Maarch Parapheur",
 };

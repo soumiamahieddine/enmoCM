@@ -52,6 +52,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     userList                        : any[]     = [];
     selectedSignature               : number    = -1;
     selectedSignatureLabel          : string    = "";
+    loadingSign                     : boolean   = false;
     data                            : any[]     = [];
     CurrentYear                     : number    = new Date().getFullYear();
     currentMonth                    : number    = new Date().getMonth() + 1;
@@ -141,6 +142,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/details")
                     .subscribe((data: any) => {
                         this.user = data;
+                        
                         this.data = data.history;
                         this.userId = data.user_id;
                         this.minDate = new Date(this.CurrentYear + '-' + this.currentMonth + '-01');
@@ -789,6 +791,19 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
 
     setLowerUserId() {
         this.user.userId = this.user.userId.toLowerCase();
+    }
+
+    syncMP() {
+        this.loadingSign = true;
+
+        this.http.put('../../rest/users/' + this.user.id + '/externalSignatures', {})
+            .subscribe((data: any) => {
+                this.loadingSign = false;
+                this.notify.success(this.lang.signsSynchronized);
+            }, (err) => {
+                this.loadingSign = false;
+                this.notify.error(err.error.errors);
+            });
     }
 }
 

@@ -1464,8 +1464,8 @@ class UserController
             if (!empty($responseExec['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
             }
-            if (!empty($responseExec['message'])) {
-                return $response->withStatus(400)->withJson(['errors' => $responseExec['message']]);
+            if (!empty($responseExec['exception'])) {
+                return $response->withStatus(400)->withJson(['errors' => $responseExec['exception'][0]['message']]);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);

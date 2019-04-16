@@ -982,5 +982,7 @@ export const LANG_FR = {
     "docserverDoesNotExists"                            : "La zone de stockage n'existe pas",
     "fileDoesNotExists"                                 : "Le fichier n'existe pas",
     "noTemplate"                                        : "Aucun modèle",
+    "syncSignsToMaarchParapheur"                        : "Synchroniser les signatures vers Maarch Parapheur",
+    "signsSynchronized"                                 : "Les signatures ont été mise à jour dans Maarch Parapheur",
     
 };
