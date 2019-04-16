@@ -88,7 +88,7 @@ if (!defined("_WAITING_FOR_AVIS")) {
 }
 
 if (!defined("_PROCEED_WORKFLOW_AVIS")) {
-    define("_PROCEED_WORKFLOW_AVIS", "Émettre un avis (séquentiel)");
+    define("_PROCEED_WORKFLOW_AVIS", "Emettre un avis (séquentiel)");
 }
 
 if (!defined("_PROCEED_WORKFLOW_AVIS_DESC")) {
@@ -96,7 +96,7 @@ if (!defined("_PROCEED_WORKFLOW_AVIS_DESC")) {
 }
 
 if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE")) {
-    define("_PROCEED_WORKFLOW_AVIS_SIMPLE", "Émettre un avis (parallèle)");
+    define("_PROCEED_WORKFLOW_AVIS_SIMPLE", "Emettre un avis (parallèle)");
 }
 
 if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC")) {
