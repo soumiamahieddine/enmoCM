@@ -162,20 +162,27 @@ class XParaphController
         } else {
             $details = $curlResponse['response']->children('SOAP-ENV', true)->Body->children('ns1', true)->XPRF_Initialisation_DeposerResponse->children()->return->children()->Retour_XML;
             $xmlData = simplexml_load_string($details);
-    
-            $visa = [];
-            $sign = [];
-    
+
+            $userWorkflow = [];
             foreach ($xmlData->SCENARIO->AUTORISATIONS->VISEURS->VISEUR as $value) {
-                $visa[(string)$value->ACTEUR_LOGIN] = (string)$value->ACTEUR_NOM;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["userId"]      = (string)$value->ACTEUR_LOGIN;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["displayName"] = (string)$value->ACTEUR_NOM;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["roles"][]     = "visa";
             }
             foreach ($xmlData->SCENARIO->AUTORISATIONS->SIGNATAIRES->SIGNATAIRE as $value) {
-                $sign[(string)$value->ACTEUR_LOGIN] = (string)$value->ACTEUR_NOM;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["userId"]      = (string)$value->ACTEUR_LOGIN;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["displayName"] = (string)$value->ACTEUR_NOM;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["roles"][]     = "sign";
+            }
+            $workflow = [];
+            foreach ($userWorkflow as $value) {
+                $workflow[] = $value;
             }
     
-            return $response->withJson(['visa' => $visa, 'sign' => $sign]);
+            return $response->withJson(['workflow' => $workflow]);
         }
     }
+
     public static function retrieveSignedMails($aArgs)
     {
         $validatedSignature   = $aArgs['config']['data']['validatedStateSignature'];
@@ -187,9 +194,27 @@ class XParaphController
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
                 $depotids[$value->external_id] = $resId;
             }
+            // TODO RM TEST
+            $depotids = ["20190416_145636_1" => 1993];
+
             if (!empty($depotids)) {
-                $avancement = XParaphController::getAvancement(['config' => $aArgs['config'], 'depotsIds' => $depotids]);
+                $avancements = XParaphController::getAvancement(['config' => $aArgs['config'], 'depotsIds' => $depotids]);
+            } else {
+                unset($aArgs['idsToRetrieve'][$version]);
+                continue;
             }
+
+            foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
+                $avancement = $avancements[$value->external_id];
+                if ($refused) {
+                    $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
+                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $note;
+                } elseif ($validatedSignature) {
+                    $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
+                }
+            }
+            
+
 
             //     $etatDossier = IxbusController::getEtatDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
     
@@ -220,7 +245,7 @@ class XParaphController
     public static function getAvancement($aArgs)
     {
         $depotIds = '';
-        $aArgs['depotsIds'] = ["20190416_145636_1" => 1993];
+
         foreach ($aArgs['depotsIds'] as $key => $step) {
             $depotIds .= '<listDepotIds>'.$key.'</listDepotIds>';
         }
@@ -266,10 +291,10 @@ class XParaphController
             <soapenv:Body>
                 <urn:XPRF_getFiles soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
                     <params xsi:type="urn:XPRF_getFiles_Param">
-                        <siret xsi:type="xsd:string">?</siret>
-                        <login xsi:type="xsd:string">?</login>
-                        <password xsi:type="xsd:string">?</password>
-                        <depotid xsi:type="xsd:string">1</depotid>
+                        <siret xsi:type="xsd:string">'.$aArgs['config']['data']['siret'].'</siret>
+                        <login xsi:type="xsd:string">'.$aArgs['config']['data']['login'].'</login>
+                        <password xsi:type="xsd:string">'.$aArgs['config']['data']['password'].'</password>
+                        <depotid xsi:type="xsd:string">'.$aArgs['depotId'].'</depotid>
                     </params>
                 </urn:XPRF_getFiles>
             </soapenv:Body>
