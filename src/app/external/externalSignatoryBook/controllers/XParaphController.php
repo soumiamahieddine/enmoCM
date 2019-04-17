@@ -142,6 +142,7 @@ class XParaphController
                         <password xsi:type="xsd:string">'.$data['password'].'</password>
                         <action xsi:type="xsd:string">DETAIL</action>
                         <scenario xsi:type="xsd:string">' . $config['data']['docutype'] . '-' . $config['data']['docustype'].'</scenario>
+                        <version xsi:type="xsd:string">2</version>
                     </params>
                 </urn:XPRF_Initialisation_Deposer>
             </soapenv:Body>
@@ -166,10 +167,10 @@ class XParaphController
             $sign = [];
     
             foreach ($xmlData->SCENARIO->AUTORISATIONS->VISEURS->VISEUR as $value) {
-                $visa[] = (string)$value;
+                $visa[(string)$value->ACTEUR_LOGIN] = (string)$value->ACTEUR_NOM;
             }
             foreach ($xmlData->SCENARIO->AUTORISATIONS->SIGNATAIRES->SIGNATAIRE as $value) {
-                $sign[] = (string)$value;
+                $sign[(string)$value->ACTEUR_LOGIN] = (string)$value->ACTEUR_NOM;
             }
     
             return $response->withJson(['visa' => $visa, 'sign' => $sign]);
