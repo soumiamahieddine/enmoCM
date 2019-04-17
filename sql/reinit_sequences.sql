@@ -25,3 +25,4 @@ select setval('notes_entities_id_seq', (select max(id)+1 from note_entities), fa
 select setval('listinstance_id_seq', (select max(listinstance_id)+1 from listinstance), false);
 select setval('listinstance_history_id_seq', (select max(listinstance_history_id)+1 from listinstance_history), false);
 select setval('listinstance_history_details_id_seq', (select max(listinstance_history_details_id)+1 from listinstance_history_details), false);
+select setval('entities_id_seq', (select max(id)+1 from entities), false);
