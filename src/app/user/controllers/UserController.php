@@ -1360,26 +1360,23 @@ class UserController
                 }
             }
 
-            $responseExec = CurlModel::exec([
-                'url'      => rtrim($url, '/') . '/rest/users',
-                'user'     => $userId,
-                'password' => $password,
-                'method'   => 'POST',
-                'bodyData' => $bodyData
+            $curlResponse = CurlModel::execSimple([
+                'url'           => rtrim($url, '/') . '/rest/users',
+                'basicAuth'     => ['user' => $userId, 'password' => $password],
+                'headers'       => ['content-type:application/json'],
+                'method'        => 'POST',
+                'body'          => json_encode($bodyData)
             ]);
 
-            if (!empty($responseExec['errors'])) {
-                return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
-            }
-            if (!empty($responseExec['message'])) {
-                return $response->withStatus(400)->withJson(['errors' => $responseExec['message']]);
+            if ($curlResponse['code'] != '200') {
+                return $response->withStatus(400)->withJson(['errors' => $curlResponse['response']['errors']]);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
         }
 
         $externalId = json_decode($userInfo['external_id'], true);
-        $externalId['maarchParapheur'] = $responseExec['id'];
+        $externalId['maarchParapheur'] = $curlResponse['response']['id'];
 
         UserModel::updateExternalId(['id' => $aArgs['id'], 'externalId' => json_encode($externalId)]);
 
@@ -1391,12 +1388,12 @@ class UserController
             'info'         => _USER_CREATED_IN_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
         ]);
 
-        return $response->withJson(['externalId' => $responseExec['id']]);
+        return $response->withJson(['externalId' => $curlResponse['response']['id']]);
     }
 
     public function sendSignaturesToMaarchParapheur(Request $request, Response $response, array $aArgs)
     {
-        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
+        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
@@ -1450,22 +1447,19 @@ class UserController
                     }
                 }
 
-                $responseExec = CurlModel::exec([
-                    'url'      => rtrim($url, '/') . '/rest/users/' . $externalId['maarchParapheur'] . '/externalSignatures',
-                    'user'     => $userId,
-                    'password' => $password,
-                    'method'   => 'PUT',
-                    'bodyData' => $bodyData
+                $curlResponse = CurlModel::execSimple([
+                    'url'           => rtrim($url, '/') . '/rest/users/' . $externalId['maarchParapheur'] . '/externalSignatures',
+                    'basicAuth'     => ['user' => $userId, 'password' => $password],
+                    'headers'       => ['content-type:application/json'],
+                    'method'        => 'PUT',
+                    'body'          => json_encode($bodyData)
                 ]);
             } else {
                 return $response->withStatus(403)->withJson(['errors' => 'user does not exists in maarch Parapheur']);
             }
 
-            if (!empty($responseExec['errors'])) {
-                return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
-            }
-            if (!empty($responseExec['exception'])) {
-                return $response->withStatus(400)->withJson(['errors' => $responseExec['exception'][0]['message']]);
+            if ($curlResponse['code'] != '204') {
+                return $response->withStatus(400)->withJson(['errors' => $curlResponse['response']['errors']]);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
