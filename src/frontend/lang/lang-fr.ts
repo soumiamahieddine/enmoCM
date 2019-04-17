@@ -14,6 +14,7 @@ export const LANG_FR = {
     "actionName"                        : "Nom de l'action",
     "actionPage"                        : "Page de résultat de l'action",
     "actionParameters"                  : "Paramétrage d'action",
+    "actionSystem"                      : "Action programmée",
     "actions"                           : "Action(s)",
     "actionsGroupBasketUpdated"         : "Paramètrage des actions modifié",
     "actionUpdated"                     : "Action modifiée",
@@ -981,5 +982,7 @@ export const LANG_FR = {
     "docserverDoesNotExists"                            : "La zone de stockage n'existe pas",
     "fileDoesNotExists"                                 : "Le fichier n'existe pas",
     "noTemplate"                                        : "Aucun modèle",
+    "syncSignsToMaarchParapheur"                        : "Synchroniser les signatures vers Maarch Parapheur",
+    "signsSynchronized"                                 : "Les signatures ont été mise à jour dans Maarch Parapheur",
     
 };

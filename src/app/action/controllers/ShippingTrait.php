@@ -94,7 +94,7 @@ trait ShippingTrait
                 return ['errors' => ['Contact country is not France']];
             }
             $afnorAddress = ContactController::getContactAfnor($contact[0]);
-            if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6])) {
+            if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6]) || !preg_match("/^\d{5}\s/", $afnorAddress[6])) {
                 return ['errors' => ['Contact is not fill enough for attachment']];
             }
             $contacts[] = $afnorAddress;

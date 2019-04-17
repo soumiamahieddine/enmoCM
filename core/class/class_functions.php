@@ -582,7 +582,6 @@ class functions
                 "Phone" => "",
                 "Mail" => "",
                 "department" => "",
-                "thumbprint" => "",
                 "pathToSignature" => []
             );
         }
@@ -614,7 +613,6 @@ class functions
                 "Phone" => $line->phone,
                 "Mail" => $line->mail ,
                 "department" => $line->department,
-                "thumbprint" => $line->thumbprint,
                 "pathToSignature" => $_SESSION['user']['pathToSignature']
             );
         }

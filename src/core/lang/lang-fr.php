@@ -380,9 +380,9 @@ define('_VALIDATE_RECOMMENDATION', 'Valider la demande d\'avis (parallèle)');
 define('_VALIDATE_RECOMMENDATION_DESC', 'Permet d\'ajouter dans l\'annotation de demande avis la personne qui a contrôlé la demande.');
 define('_SEND_TO_AVIS_WF', 'Envoyer une demande d\'avis (séquentiel)');
 define('_SEND_TO_AVIS_WF_DESC', 'Ouvre une modal permettant de configurer un circuit d\'avis pour le courrier.');
-define('_PROCEED_WORKFLOW_AVIS', 'Émettre un avis (séquentiel)');
+define('_PROCEED_WORKFLOW_AVIS', 'Emettre un avis (séquentiel)');
 define('_PROCEED_WORKFLOW_AVIS_DESC', 'Met à jour la date d\'émission d\'avis du conseiller actuel du circuit d\'avis ("process_date" de la table listinstance).');
-define('_PROCEED_WORKFLOW_AVIS_SIMPLE', 'Émettre un avis (parallèle)');
+define('_PROCEED_WORKFLOW_AVIS_SIMPLE', 'Emettre un avis (parallèle)');
 define('_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC', 'Met à jour la date d\'émission d\'avis de l\'utilisateur présent en avis dans la liste de diffusion du courrier ("process_date" de la table listinstance).');
 define('_EXPORT_SEDA', 'Transférer vos courriers');
 define('_CHECK_ACKNOWLEDGEMENT', 'Vérification de l\'accusé de reception');
@@ -455,9 +455,10 @@ define('_CLOSING_DATE', 'Date de clôture');
 define('_ACTION_DATE', 'Date d\'action');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'Utilisateur créé dans Maarch Parapheur');
+define('_SIGNATURES_SEND_TO_MAARCHPARAPHEUR', 'Signature(s) envoyée(s) à Maarch Parapheur');
 
-define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Créer les accusés de réception');
-define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Mettre à jour la date d\'envoi des accusés de réception');
+define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Génèrer et envoyer les accusés de réception');
+define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Renseigner la date d\'envoi des accusés de réception pdf');
 
 define("_M2M_ACTION_DONE", "actionné par");
 define("_M2M_ENTITY_DESTINATION", "Le courrier est dans l'entité");
@@ -476,7 +477,7 @@ define("_SHIPPING_DELETED", "Envoi postal supprimé");
 define("_SHIPPINGS_ADMIN", "Modèles d'envois postaux");
 define("_SHIPPINGS_ADMIN_DESC", "Configurer les modèles d'envois postaux, par exemple pour Maileva");
 
-define("_SEND_SHIPPING", "Envoyer un pli postal");
+define("_SEND_SHIPPING", "Envoyer vers Maileva");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "Voir les courriers annotés");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "Voir les pièces jointes de type 'Document annoté'");

@@ -169,8 +169,11 @@ class MaarchParapheurController
             $processLimitDate = $mainResource[0]['process_limit_date'];
         }
 
-        $processingUser      = $aArgs['processingUser'];
-        $priority            = PriorityModel::getById(['select' => ['label'], 'id' => $mainResource[0]['priority']]);
+        $processingUser = $aArgs['processingUser'];
+        $priority = null;
+        if (!empty($mainResource[0]['priority'])) {
+            $priority = PriorityModel::getById(['select' => ['label'], 'id' => $mainResource[0]['priority']]);
+        }
         $sender              = UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $aArgs['userId']]);
         $senderPrimaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 

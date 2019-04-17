@@ -13,6 +13,7 @@ export const LANG_NL = {
     "actionName" : "Actienaam",
     "actionPage" : "Resultaatpagina van de actie",
     "actionParameters" : "Instelling van de actie",
+    "actionSystem"   : "Systeemwerking",
     "actions" : "Actie(s)",
     "actionsGroupBasketUpdated" : "Instelling van de acties gewijzigd",
     "actionUpdated" : "Actie gewijzigd",
@@ -981,4 +982,6 @@ export const LANG_NL = {
     "docserverDoesNotExists"                    : "Docserver does not exists", //_TO_TRANSLATE
     "fileDoesNotExists"                         : "File does not exists", //_TO_TRANSLATE
     "noTemplate"                                : "No template", //_TO_TRANSLATE
+    "syncSignsToMaarchParapheur"                : "Synchronize signatures to Maarch Parapheur", //_TO_TRANSLATE
+    "signsSynchronized"                         : "Signatures have been updated in Maarch Parapheur", //_TO_TRANSLATE
 };

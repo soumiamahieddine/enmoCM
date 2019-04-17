@@ -13,41 +13,6 @@
       <parameter name="dir" type="identifier" />
     </validationRule>
 
-    <validationRule name="admin_users_update" extends="standardForm" mode="error">
-      <parameter name="user_id" type="login" />
-      <parameter name="LastName" type="personname" />
-      <parameter name="FirstName" type="string" />
-      <parameter name="Initials" type="string" />
-      <parameter name="Phone" type="phone" />
-      <parameter name="Mail" type="email" />
-      <parameter name="thumbprint" type="string" />
-      <parameter name="LoginMode" type="string" />
-      <parameter name="user_submit" type="identifier" />
-      <parameter name="reactivate" type="boolean" />
-      <parameter name="Submit" type="string" />
-    </validationRule>
-
-    <validationRule name="user_update" extends="standardForm" mode="error">
-      <parameter name="UserId" type="login" />
-      <parameter name="id" type="login" />
-      <parameter name="pass1" type="string" />
-      <parameter name="pass2" type="string" />
-      <parameter name="currentPassword" type="string" />
-      <parameter name="LastName" type="personname" />
-      <parameter name="FirstName" type="string" />
-      <parameter name="Initials" type="string" />
-      <parameter name="Phone" type="phone" />
-      <parameter name="Mail" type="email" />
-      <parameter name="thumbprint" type="string" >
-        <pattern value="/^[A-Fa-f0-9\s]+$/" />
-      </parameter>
-      <parameter name="Submit" type="string" />
-      <parameter name="signature" type="string" />
-      <parameter name="emailSignature" type="string" />
-      <parameter name="signatureTitle" type="string" />
-      <parameter name="selectSignatures" type="string" />
-    </validationRule>
-
     <validationRule name="ajax_form_values" extends="standardForm" mode="error">
       <parameter name="form_values" type="string" />
     </validationRule>

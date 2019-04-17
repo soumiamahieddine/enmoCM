@@ -922,7 +922,7 @@ class Install extends functions
 ######################fulltext###################################################
 
 */5 5-21 * * 1-5       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext.sh
-20 12 * * 0        rm -Rf '.realpath('.').'/modules/full_text/log/*.log
+20 12 * * 0        rm -Rf '.realpath('.').'/modules/full_text/log/*/*.log
 ';
         fwrite($file, $cron);
         fclose($file);

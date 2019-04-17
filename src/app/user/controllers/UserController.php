@@ -97,7 +97,7 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint', 'loginmode', 'external_id']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'loginmode', 'external_id']]);
         $user['external_id']        = json_decode($user['external_id'], true);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
         $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
@@ -437,7 +437,8 @@ class UserController
 
     public function getProfile(Request $request, Response $response)
     {
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'external_id']]);
+        $user['external_id']        = json_decode($user['external_id'], true);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
         $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups']             = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
@@ -1352,8 +1353,8 @@ class UserController
 
             foreach ($loadedXml->signatoryBook as $value) {
                 if ($value->id == "maarchParapheur") {
-                    $url = $value->url;
-                    $userId = $value->userId;
+                    $url      = $value->url;
+                    $userId   = $value->userId;
                     $password = $value->password;
                     break;
                 }
@@ -1391,6 +1392,94 @@ class UserController
         ]);
 
         return $response->withJson(['externalId' => $responseExec['id']]);
+    }
+
+    public function sendSignaturesToMaarchParapheur(Request $request, Response $response, array $aArgs)
+    {
+        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            $userInfo   = UserModel::getById(['select' => ['external_id', 'user_id'], 'id' => $aArgs['id']]);
+            $externalId = json_decode($userInfo['external_id'], true);
+
+            if (!empty($externalId['maarchParapheur'])) {
+                $userSignatures = UserSignatureModel::get([
+                    'select'    => ['signature_path', 'signature_file_name', 'id'],
+                    'where'     => ['user_serial_id = ?'],
+                    'data'      => [$aArgs['id']]
+                ]);
+                if (empty($userSignatures)) {
+                    return $response->withStatus(400)->withJson(['errors' => 'User has no signature']);
+                }
+        
+                $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+                if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Path for signature docserver does not exists']);
+                }
+
+                $signatures = [];
+                $signaturesId = [];
+                foreach ($userSignatures as $value) {
+                    $pathToSignature = $docserver['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
+                    if (is_file($pathToSignature)) {
+                        $base64          = base64_encode(file_get_contents($pathToSignature));
+                        $format          = pathinfo($pathToSignature, PATHINFO_EXTENSION);
+                        $signatures[]    = ['encodedSignature' => $base64, 'format' => $format];
+                        $signaturesId[]   = $value['id'];
+                    } else {
+                        return $response->withStatus(403)->withJson(['errors' => 'File does not exists : ' . $pathToSignature]);
+                    }
+                }
+
+                $bodyData = [
+                    "signatures"          => $signatures,
+                    "externalApplication" => 'maarchCourrier'
+                ];
+    
+                foreach ($loadedXml->signatoryBook as $value) {
+                    if ($value->id == "maarchParapheur") {
+                        $url      = $value->url;
+                        $userId   = $value->userId;
+                        $password = $value->password;
+                        break;
+                    }
+                }
+
+                $responseExec = CurlModel::exec([
+                    'url'      => rtrim($url, '/') . '/rest/users/' . $externalId['maarchParapheur'] . '/externalSignatures',
+                    'user'     => $userId,
+                    'password' => $password,
+                    'method'   => 'PUT',
+                    'bodyData' => $bodyData
+                ]);
+            } else {
+                return $response->withStatus(403)->withJson(['errors' => 'user does not exists in maarch Parapheur']);
+            }
+
+            if (!empty($responseExec['errors'])) {
+                return $response->withStatus(400)->withJson(['errors' => $responseExec['errors']]);
+            }
+            if (!empty($responseExec['exception'])) {
+                return $response->withStatus(400)->withJson(['errors' => $responseExec['exception'][0]['message']]);
+            }
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $userInfo['user_id'],
+            'eventType'    => 'UP',
+            'eventId'      => 'signatureSync',
+            'info'         => _SIGNATURES_SEND_TO_MAARCHPARAPHEUR . " : " . implode(", ", $signaturesId)
+        ]);
+
+        return $response->withJson(['success' => 'success']);
     }
 
     private function hasUsersRights(array $aArgs)

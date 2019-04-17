@@ -382,7 +382,7 @@ export class BasketListComponent implements OnInit {
             this.data.forEach((element: any) => {
                 element['checked'] = true;
             });
-            this.selectedRes = this.allResInBasket;
+            this.selectedRes = JSON.parse(JSON.stringify(this.allResInBasket));
         } else {
             this.data.forEach((element: any) => {
                 element['checked'] = false;

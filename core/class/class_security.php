@@ -167,7 +167,6 @@ class security extends Database
                     'Phone' => $user->__get('phone'),
                     'Mail' => $user->__get('mail'),
                     'department' => $user->__get('department'),
-                    'thumbprint' => $user->__get('thumbprint'),
                     'pathToSignature' => $_SESSION['user']['pathToSignature'],
                     'Status' => $user->__get('status'),
                     'cookie_date' => $user->__get('cookie_date')
@@ -221,7 +220,6 @@ class security extends Database
                     }
                     $_SESSION['user']['UserId'] = $s_login;
                     $_SESSION['user']['department'] = $array['department'];
-                    $_SESSION['user']['thumbprint'] = $array['thumbprint'];
                     $_SESSION['user']['primarygroup'] = $array['primarygroup'];
                     $hist->add(
                         $_SESSION['tablename']['users'],

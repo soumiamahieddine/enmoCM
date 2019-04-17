@@ -334,6 +334,7 @@ $app->put('/users/{id}/password', \User\controllers\UserController::class . ':up
 $app->get('/users/{userId}/status', \User\controllers\UserController::class . ':getStatusByUserId');
 $app->put('/users/{id}/status', \User\controllers\UserController::class . ':updateStatus');
 $app->put('/users/{id}/maarchParapheur', \User\controllers\UserController::class . ':sendToMaarchParapheur');
+$app->put('/users/{id}/externalSignatures', \User\controllers\UserController::class . ':sendSignaturesToMaarchParapheur');
 $app->post('/users/{id}/groups', \User\controllers\UserController::class . ':addGroup');
 $app->put('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':updateGroup');
 $app->delete('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':deleteGroup');
@@ -375,5 +376,7 @@ $app->post('/scriptNotification', \Notification\controllers\NotificationSchedule
 $app->post('/saveNumericPackage', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchange');
 $app->post('/saveMessageExchangeReturn', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');
 $app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
+
+$app->get('/xParaphWorkflow', \ExternalSignatoryBook\controllers\XParaphController::class . ':getWorkflow');
 
 $app->run();

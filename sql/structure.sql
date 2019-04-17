@@ -226,7 +226,6 @@ CREATE TABLE users
   cookie_date timestamp without time zone,
   failed_authentication INTEGER DEFAULT 0,
   locked_until TIMESTAMP without time zone,
-  thumbprint text DEFAULT NULL::character varying,
   external_id json DEFAULT '{}',
   CONSTRAINT users_pkey PRIMARY KEY (user_id),
   CONSTRAINT users_id_key UNIQUE (id)

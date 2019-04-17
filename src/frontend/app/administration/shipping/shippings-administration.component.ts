@@ -25,7 +25,7 @@ export class ShippingsAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
-    displayedColumns = ['label', 'description', 'actions'];
+    displayedColumns = ['label', 'description', 'accountid', 'actions'];
     dataSource: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

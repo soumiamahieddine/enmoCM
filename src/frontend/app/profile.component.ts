@@ -76,6 +76,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     loading: boolean = false;
     selectedIndex: number = 0;
     selectedIndexContactsGrp: number = 0;
+    loadingSign : boolean = false;
 
     @ViewChild('snav2') sidenavRight: MatSidenav;
     @ViewChild('snav') sidenavLeft: MatSidenav;
@@ -407,8 +408,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.http.get('../../rest/currentUser/profile')
             .subscribe((data: any) => {
                 this.user = data;
-
-
+                
                 this.user.baskets.forEach((value: any, index: number) => {
                     this.user.baskets[index]['disabled'] = false;
                     this.user.redirectedBaskets.forEach((value2: any) => {
@@ -920,5 +920,18 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         if (event == 0) {
             this.initGroupsContact();
         }
+    }
+
+    syncMP() {
+        this.loadingSign = true;
+
+        this.http.put('../../rest/users/' + this.user.id + '/externalSignatures', {})
+            .subscribe((data: any) => {
+                this.loadingSign = false;
+                this.notify.success(this.lang.signsSynchronized);
+            }, (err) => {
+                this.loadingSign = false;
+                this.notify.error(err.error.errors);
+            });
     }
 }

@@ -85,11 +85,6 @@ if (!isset($_SESSION['user']['pathToSignature']) ||$_SESSION['user']['pathToSign
 	echo $_SESSION['error'];exit;
 }
 
-if ($modeSign == '0' && (!isset($_SESSION['user']['thumbprint']) ||$_SESSION['user']['thumbprint'] == '')) {
-    $_SESSION['error'] = _THUMBPRINT_MISSING;
-	echo $_SESSION['error'];exit;
-}
-
 if (!isset($_SESSION['sign']['encodedPinCode'])){
 	$pinCode = '0000';
 	$index = '-1';
@@ -143,7 +138,7 @@ $_SESSION['error'] = '';
         <!--param name="psExecMode" value="<!--?php functions::xecho($cMFeatures['CONFIG']['psExecMode']);?>">
         <param name="mayscript" value="mayscript" /-->
 		
-		<!--nouveaux paramètres pour la signature -->
+		<!--nouveaux paramï¿½tres pour la signature -->
 		<param name="thumbPrint" value="<?php functions::xecho($_SESSION['sign']['encoded_thumbprint']);?>">
         <param name="thumprintkeyIdx" value="<?php functions::xecho($_SESSION['sign']['indexKey_thumbprint']);?>">
         <param name="pinCode" value="<?php functions::xecho($pinCode);?>">

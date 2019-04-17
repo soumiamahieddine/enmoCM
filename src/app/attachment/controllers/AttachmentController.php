@@ -184,7 +184,7 @@ class AttachmentController
 
         $body['isVersion'] = filter_var($body['isVersion'], FILTER_VALIDATE_BOOLEAN);
 
-        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'select' => ['in_signature_book', 'res_id_master']]);
+        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'select' => ['in_send_attach', 'res_id_master']]);
         if (empty($attachment)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
         }

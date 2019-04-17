@@ -54,7 +54,7 @@ foreach ($roles as $role_id => $role_label) {
                     $descMoved = '';
                 }
 
-                $contentDiffList .= '<tr id="'.$user['user_id'].'_'.$role_id.'" '.$color.$styleMoved.'  title="'.$descMoved.'">';
+                $contentDiffList .= '<tr id="'.str_replace('.', '_', $user['user_id']).'_'.$role_id.'" '.$color.$styleMoved.'  title="'.$descMoved.'">';
                 $contentDiffList .= '<td style="width:15%;text-align:center;">';
                 $contentDiffList .= '<i class="fa fa-user fa-2x" title="'._USER.'"></i>';
                 $contentDiffList .= '</td>';
@@ -63,7 +63,7 @@ foreach ($roles as $role_id => $role_label) {
                 $contentDiffList .= '<td class="movedest" style="width:5%;">';
 
                 if (empty($specific_role) && !empty($difflist['dest']['users'][0]) && $role_id != 'dest' && $origin != null && $core->test_service('edit_recipient_outside_process', 'entities', false)) {
-                    $contentDiffList .= '<i class="fa fa-arrow-up" style="cursor:pointer;" title="'._TO_DEST.'" onclick="moveToDest(\''.$user['user_id'].'\',\''.$role_id.'\',\''.$origin.'\');"></i>';
+                    $contentDiffList .= '<i class="fa fa-arrow-up" style="cursor:pointer;" title="'._TO_DEST.'" onclick="moveToDest(\''.str_replace('.', '_', $user['user_id']).'\',\''.$role_id.'\',\''.$origin.'\');"></i>';
                 }
                 $contentDiffList .= '</td>';
 
