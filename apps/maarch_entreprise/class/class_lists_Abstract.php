@@ -1620,6 +1620,8 @@ abstract class lists_Abstract extends Database
 
     public function tmplt_func_final_version($resultTheLine)
     {
+        static $count = 0;
+
         foreach ($resultTheLine as $value) {
             if ($value['column'] == 'in_signature_book') {
                 $inSignatureBook = $value['value'];
@@ -1637,27 +1639,29 @@ abstract class lists_Abstract extends Database
 
         $return = '<div>';
 
-        $return .= '<input type="checkbox" name="sendAttach" id="sendAttach" align="left"';
+        $return .= '<input type="checkbox" name="sendAttach'. $count .'" id="sendAttach'. $count .'" align="left"';
 
         if (!empty($inSendAttach)) {
             $return .= 'checked ';
         }
 
-        $return .= 'onclick="setSendAttachment('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label for="sendAttach">'._PUT_IN_SEND_ATTACH.'</label>';
+        $return .= 'onclick="setSendAttachment('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label for="sendAttach'. $count .'">'._PUT_IN_SEND_ATTACH.'</label>';
 
         $return .= '</div>';
 
         $return .= '<div>';
 
-        $return .= '<input type="checkbox" name="final" id="final" align="left"';
+        $return .= '<input type="checkbox" name="final'. $count .'" id="final'. $count .'" align="left"';
 
         if (!empty($inSignatureBook)) {
             $return .= 'checked ';
         }
 
-        $return .= 'onclick="setAttachmentInSignatureBook('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label for="final">'._PUT_IN_SIGNATORY_BOOK.'</label>';
+        $return .= 'onclick="setAttachmentInSignatureBook('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label for="final'. $count .'">'._PUT_IN_SIGNATORY_BOOK.'</label>';
 
         $return .= '</div>';
+
+        ++$count;
 
         return $return;
     }
