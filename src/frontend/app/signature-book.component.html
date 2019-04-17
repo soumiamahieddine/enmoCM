@@ -178,7 +178,7 @@
                             ></pdf-viewer>
                     <!-- <iframe id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '84%' : '99%'}"></iframe> -->
                     <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
-                        <div style="padding-top: 25%;">{{lang.noOverviewAvailable}}<br/><sub>{{lang.pdfVersionFile}} "{{signatureBook.attachments[rightSelectedThumbnail].title}}.{{signatureBook.attachments[rightSelectedThumbnail].format}}" {ang.isNotAvailable}}.</sub></div>
+                        <div style="padding-top: 25%;">{{lang.noOverviewAvailable}}<br/><sub>{{lang.pdfVersionFile}} "{{signatureBook.attachments[rightSelectedThumbnail].title}}.{{signatureBook.attachments[rightSelectedThumbnail].format}}" {{lang.isNotAvailable}}.</sub></div>
                         <div class="visaPjView">
                             <a title="{{lang.dlAttachment}}" href="../../rest/resources/{{resId}}/attachments/{{signatureBook.attachments[rightSelectedThumbnail].res_id}}/originalContent" target="_blank">
                                 <i class="fa fa-download fa-2x"></i>
