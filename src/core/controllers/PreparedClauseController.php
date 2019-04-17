@@ -153,7 +153,7 @@ class PreparedClauseController
             for ($i = 0; $i < $total; $i++) {
                 $tmpParentEntity = trim(str_replace("'", '', $parentEntity[1][$i]));
                 if (!empty($tmpParentEntity)) {
-                    $entity = entitymodel::getByEntityId(['entityId' => $tmpParentEntity, 'select' => ['entity_id', 'parent_entity_id']]);
+                    $entity = Entitymodel::getByEntityId(['entityId' => $tmpParentEntity, 'select' => ['entity_id', 'parent_entity_id']]);
                 }
                 if (empty($entity['parent_entity_id'])) {
                     $parentEntityClause = "''";
@@ -169,7 +169,7 @@ class PreparedClauseController
         if ($total > 0) {
             for ($i = 0; $i < $total; $i++) {
                 $tmpSisterEntity = trim(str_replace("'", '', $sistersEntities[1][$i]));
-                $sisterEntity = entitymodel::getByEntityId(['entityId' => $tmpSisterEntity, 'select' => ['parent_entity_id']]);
+                $sisterEntity = Entitymodel::getByEntityId(['entityId' => $tmpSisterEntity, 'select' => ['parent_entity_id']]);
                 $allSisterEntities = EntityModel::get(['select' => ['entity_id'], 'where' => ['parent_entity_id = ?'], 'data' => [$sisterEntity['parent_entity_id']]]);
 
                 $allSisterEntitiesClause = '';
