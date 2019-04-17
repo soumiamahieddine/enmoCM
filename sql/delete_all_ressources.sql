@@ -1,8 +1,5 @@
 /* Warning : This script erase all data in the application Maarch. It keeps in database parameters */
 
-TRUNCATE TABLE acknowledgement_receipts;
-ALTER SEQUENCE acknowledgement_receipts_id_seq restart WITH 1;
-
 TRUNCATE TABLE cases;
 ALTER SEQUENCE case_id_seq restart WITH 1;
 
@@ -85,6 +82,16 @@ ALTER SEQUENCE notif_email_stack_seq restart WITH 1;
 
 TRUNCATE TABLE user_signatures;
 ALTER SEQUENCE user_signatures_id_seq restart WITH 1;
+
+TRUNCATE TABLE acknowledgement_receipts;
+ALTER SEQUENCE acknowledgement_receipts_id_seq restart WITH 1;
+
+TRUNCATE TABLE emails;
+ALTER SEQUENCE emails_id_seq restart WITH 1;
+
+TRUNCATE TABLE shippings;
+ALTER SEQUENCE shippings_id_seq restart WITH 1;
+
 
 /* reset chrono */
 UPDATE parameters SET param_value_int = '1' WHERE id = 'chrono_outgoing_' || extract(YEAR FROM current_date);
