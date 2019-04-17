@@ -307,6 +307,11 @@ class PreProcessActionController
             } else {
                 $contactsToProcess[] = $ext['address_id'];
             }
+            if (empty($contactsToProcess)) {
+                $noSendAR['number'] += 1;
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_CONTACT ];
+                continue;
+            }
 
             //Verify contact informations
             $email = 0;
