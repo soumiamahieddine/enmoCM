@@ -13,7 +13,7 @@ export const LANG_EN = {
     "actionName"                        : "Action name",
     "actionPage"                        : "Result page of the action",
     "actionParameters"                  : "Action parameters",
-    "actionSystem"                      : "Action system",
+    "actionCarriedOut"                  : "Action carried out",
     "actions"                           : "Action(s)",
     "actionUpdated"                     : "Action updated",
     "activateAbsence"                   : "Activate absence",
