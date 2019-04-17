@@ -51,7 +51,7 @@ export class sendExternalSignatoryBookActionComponent implements OnInit {
         this.loading = true;
 
         let realResSelected: string[];
-        if(this.signatoryBookEnabled == 'maarchParapheur' && this.externalSignatoryBookDatas.objectSent == 'attachment'){
+        if (this.signatoryBookEnabled != 'maarchParapheur' || (this.signatoryBookEnabled == 'maarchParapheur' && this.externalSignatoryBookDatas.objectSent == 'attachment')) {
             realResSelected = this.additionalsInfos.attachments.map((e: any) => { return e.res_id; });
         } else if (this.signatoryBookEnabled == 'maarchParapheur' && this.externalSignatoryBookDatas.objectSent == 'mail') {
             realResSelected = this.additionalsInfos.mails.map((e: any) => { return e.res_id; });

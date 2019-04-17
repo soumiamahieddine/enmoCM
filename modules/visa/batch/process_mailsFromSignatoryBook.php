@@ -184,8 +184,6 @@ try {
             $signatoryBook = "/modules/visa/class/IParapheurController.php";
         } elseif ($configRemoteSignatoryBook['id'] == 'fastParapheur') {
             $signatoryBook = "/modules/visa/class/FastParapheurController.php";
-        } elseif ($configRemoteSignatoryBook['id'] == 'maarchParapheur') {
-            $signatoryBook = "/modules/visa/class/MaarchParapheurController.php";
         }
     } else {
         $GLOBALS['logger']->write('no signatory book enabled', 'ERROR', 102);
@@ -194,16 +192,18 @@ try {
     }
 
     // On inclut la classe du parapheur activé
-    if (file_exists($GLOBALS['MaarchDirectory'] . 'custom/' . $GLOBALS['CustomId'] . $signatoryBook)) {
+    if (is_file($GLOBALS['MaarchDirectory'] . 'custom/' . $GLOBALS['CustomId'] . $signatoryBook)) {
         $classToInclude = $GLOBALS['MaarchDirectory'] . 'custom/' . $GLOBALS['CustomId'] . $signatoryBook;
-    } elseif (file_exists($GLOBALS['MaarchDirectory'] . $signatoryBook)) {
+        Bt_myInclude($classToInclude);
+    } elseif (is_file($GLOBALS['MaarchDirectory'] . $signatoryBook)) {
         $classToInclude = $GLOBALS['MaarchDirectory'] . $signatoryBook;
-    } else {
+        Bt_myInclude($classToInclude);
+    } elseif (!in_array($configRemoteSignatoryBook['id'], ['maarchParapheur', 'xParaph'])) {
         $GLOBALS['logger']->write('No class detected', 'ERROR', 102);
         echo "\nNo class detected ! \nThe batch cannot be launched !\n\n";
         exit(102);
     }
-    Bt_myInclude($classToInclude);
+
 } catch (IncludeFileError $e) {
     $GLOBALS['logger']->write(
         'Problem with the php include path:' .$e .' '. get_include_path(),
@@ -263,6 +263,8 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
     $retrievedMails = FastParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 } elseif ($configRemoteSignatoryBook['id'] == 'maarchParapheur') {
     $retrievedMails = \ExternalSignatoryBook\controllers\MaarchParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
+} elseif ($configRemoteSignatoryBook['id'] == 'xParaph') {
+    $retrievedMails = \ExternalSignatoryBook\controllers\XParaphController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 }
 
 if (!empty($retrievedMails['error'])) {
