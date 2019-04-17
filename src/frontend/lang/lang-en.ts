@@ -982,5 +982,5 @@ export const LANG_EN = {
     "noVisaWorkflowNoSignature"                 : "No visa workflow set up. <br/>><sub>No signature possible. </sub>",
     "noAttachmentClickToAddOne"                 : "No attachments available<br/><sub>Click on <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> to add one.</sub>",
     "unsign"                                    : "Unsign",
-
+    "selectedAccount"                           : "Selected account",
 };

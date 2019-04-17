@@ -10,7 +10,7 @@ import { NoteEditorComponent } from '../../notes/note-editor.component';
     styleUrls: ['send-external-signatory-book-action.component.scss'],
     providers: [NotificationService],
 })
-export class sendExternalSignatoryBookActionComponent implements OnInit {
+export class SendExternalSignatoryBookActionComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
@@ -30,7 +30,7 @@ export class sendExternalSignatoryBookActionComponent implements OnInit {
 
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<sendExternalSignatoryBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalSignatoryBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void {
         this.loading = true;
@@ -71,5 +71,4 @@ export class sendExternalSignatoryBookActionComponent implements OnInit {
                 this.loading = false;
             });
     }
-
 }

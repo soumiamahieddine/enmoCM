@@ -13,6 +13,7 @@
                         {{lang.elements}}</b> ?
                 </div>
                 <div>
+                    <app-x-paraph *ngIf="signatoryBookEnabled=='xParaph'" [additionalsInfos]="additionalsInfos"></app-x-paraph>
                     <div class="col-md-12" style="padding-top: 10px;" *ngIf="signatoryBookEnabled == 'maarchParapheur' && additionalsInfos.users.length != 0">
                         <mat-form-field>
                             <mat-label>{{lang.userMaarchParapheur}}</mat-label>

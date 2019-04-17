@@ -13,7 +13,7 @@ import { UpdateAcknowledgementSendDateActionComponent } from './update-acknowled
 import { CreateAcknowledgementReceiptActionComponent } from './create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
 import { CloseAndIndexActionComponent } from './close-and-index-action/close-and-index-action.component';
 import { UpdateDepartureDateActionComponent } from './update-departure-date-action/update-departure-date-action.component';
-import { sendExternalSignatoryBookActionComponent } from './send-external-signatory-book-action/send-external-signatory-book-action.component';
+import { SendExternalSignatoryBookActionComponent } from './send-external-signatory-book-action/send-external-signatory-book-action.component';
 // import { ProcessActionComponent } from './process-action/process-action.component';
 import { Router } from '@angular/router';
 import { ViewDocActionComponent } from './view-doc-action/view-doc-action.component';
@@ -330,7 +330,7 @@ export class ActionsListComponent implements OnInit {
     }
 
     sendExternalSignatoryBookAction() {
-        const dialogRef = this.dialog.open(sendExternalSignatoryBookActionComponent, {
+        const dialogRef = this.dialog.open(SendExternalSignatoryBookActionComponent, {
             width: '500px',
             data: {
                 contextMode: this.contextMode,

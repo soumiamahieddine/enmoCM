@@ -1009,4 +1009,5 @@ export const LANG_FR = {
     "noVisaWorkflowNoSignature"                         : "Aucun circuit de visa paramétré.<br/><sub>Aucune signature possible.</sub>",
     "noAttachmentClickToAddOne"                         : "Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> pour en ajouter une.</sub>",
     "unsign"                                            : "Dé-signer",
+    "selectedAccount"                                   : "Compte utilisé",
 };

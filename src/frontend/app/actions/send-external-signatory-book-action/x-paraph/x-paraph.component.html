@@ -1,0 +1,74 @@
+<form (ngSubmit)="getUsersWorkflowList(currentAccount);" #accountForm="ngForm">
+    <div class="col-md-5" style="padding-top: 10px;">
+        <mat-form-field>
+            <mat-label>{{lang.selectedAccount}}</mat-label>
+            <mat-select name="loginAccount" (selectionChange)="selectAccount($event)" required>
+                <mat-option *ngFor="let account of additionalsInfos.accounts" [value]="account">
+                    {{account.login}} ({{account.siret}})
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div *ngIf="currentAccount != null" class="col-md-5" style="padding-top: 10px;">
+        <mat-form-field>
+            <input matInput name="passwordAccount" placeholder="{{lang.password}}" [(ngModel)]="currentAccount.password" required
+                [type]="hidePassword ? 'password' : 'text'" [disabled]="loading">
+        </mat-form-field>
+    </div>
+    <div *ngIf="currentAccount != null" class="col-md-2" style="padding-top: 10px;">
+        <button mat-icon-button color="primary" type="submit" [disabled]="!accountForm.form.valid || loading">
+            <mat-icon class="fa fa-check"></mat-icon>
+        </button>
+    </div>
+</form>
+<div *ngIf="usersWorkflowList.length > 0" class="col-md-12" style="padding-top: 10px;">
+    <div class="workflowContent">
+        <h2 style="top:-5px;">{{lang.visaWorkflow}} :</h2>
+        <div class="contentUser">
+            <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
+                <input id="availableUsers" type="text" matInput placeholder="{{lang.addPerson}}"
+                    [matAutocomplete]="auto" [formControl]="usersCtrl">
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addItem($event)" isOpen="true">
+                    <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                        {{user.displayName}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="currentWorkflow" class="cdk-list"
+                (cdkDropListDropped)="drop($event)">
+                <div *ngIf="currentWorkflow.length === 0"
+                    style="opacity: 0.5;text-align: center;font-size: 10px;padding: 10px;">
+                    {{lang.noPerson}}
+                </div>
+                <mat-list *ngFor="let diffusion of currentWorkflow;let i=index" class="columns" cdkDrag>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon class="fa fa-user fa-2x" color="primary"></mat-icon>
+                        <h4 mat-line style="display: flex;">
+                            <span
+                                style="flex: 1;text-overflow: ellipsis;overflow: hidden;">{{diffusion.displayName}}</span>
+                        </h4>
+                        <p class="otherInfo" mat-line style="display: flex;">
+                            <span style="opacity:0.5;flex: 1;">
+                                <button mat-button [matMenuTriggerFor]="menu">{{diffusion.currentRole}}</button>
+                                <mat-menu #menu="matMenu">
+                                    <button *ngFor="let role of diffusion.roles" mat-menu-item
+                                        (click)="changeRole(i, role)">{{role}}</button>
+                                </mat-menu>
+                                <button mat-button
+                                    [matMenuTriggerFor]="menuContext">{{diffusion.currentContext}}</button>
+                                <mat-menu #menuContext="matMenu">
+                                    <button *ngFor="let context of contextList" mat-menu-item
+                                        (click)="changeContext(i, context.id)">{{context.label}}</button>
+                                </mat-menu>
+                            </span>
+                        </p>
+                        <button mat-icon-button (click)="deleteItem(i)">
+                            <mat-icon class="fa fa-times" color="warn"></mat-icon>
+                        </button>
+                    </mat-list-item>
+                </mat-list>
+
+            </div>
+        </div>
+    </div>
+</div>

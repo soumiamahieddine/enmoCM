@@ -1009,5 +1009,6 @@ export const LANG_NL = {
     "noVisaWorkflowNoSignature"                 : "No visa workflow set up. <br/>><sub>No signature possible. </sub>", //_TO_TRANSLATE
     "noAttachmentClickToAddOne"                 : "No attachments available<br/><sub>Click on <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> to add one.</sub>", //_TO_TRANSLATE
     "unsign"                                    : "Unsign", //_TO_TRANSLATE
+    "selectedAccount"                           : "Selected account", //_TO_TRANSLATE
 
 };
