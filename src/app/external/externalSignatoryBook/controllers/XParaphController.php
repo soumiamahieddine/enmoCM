@@ -194,8 +194,6 @@ class XParaphController
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
                 $depotids[$value->external_id] = $resId;
             }
-            // TODO RM TEST
-            $depotids = ["20190416_145636_1" => 1993];
 
             if (!empty($depotids)) {
                 $avancements = XParaphController::getAvancement(['config' => $aArgs['config'], 'depotsIds' => $depotids]);
@@ -206,40 +204,76 @@ class XParaphController
 
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
                 $avancement = $avancements[$value->external_id];
-                if ($refused) {
+
+                $state = XParaphController::getState(['avancement' => $avancement]);
+
+                if ($state['id'] == 'refused') {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $note;
-                } elseif ($validatedSignature) {
+                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+                } elseif ($state['id'] == 'validateSignature' || $state['id'] == 'validateNoSignature') {
                     $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
+                    if (!empty($processedFile['errors'])) {
+                        unset($aArgs['idsToRetrieve'][$version][$resId]);
+                        continue;
+                    }
+                    $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
+                    $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf';
+
+                    $file      = base64_decode($processedFile['zip']);
+                    $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
+                    $tmpName   = $unzipName . '.zip';
+            
+                    $tmpPath = CoreConfigModel::getTmpPath();
+                    file_put_contents($tmpPath . $tmpName, $file);
+
+                    $zip = new \ZipArchive();
+                    $zip->open($tmpPath . $tmpName);
+                    $zip->extractTo($tmpPath . $unzipName);
+
+                    foreach (glob($tmpPath . $unzipName . '/*.pdf') as $filename) {
+                        $encodedFile = base64_encode(file_get_contents($filename));
+                    }
+                    unlink($tmpPath . $tmpName);
+
+                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $encodedFile;
+                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+                } else {
+                    unset($aArgs['idsToRetrieve'][$version][$resId]);
                 }
             }
-            
-
-
-            //     $etatDossier = IxbusController::getEtatDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
-    
-            //     // Refused
-            //     if ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatRefused']) {
-            //         $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-            //         $notes = IxbusController::getDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
-            //         $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->MotifRefus;
-            //     // Validated
-            //     } elseif ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatValidated']) {
-            //         $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-            //         $signedDocument = IxbusController::getAnnexes(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
-            //         $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
-            //         $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = (string)$signedDocument->Fichier;
-
-            //         $notes = IxbusController::getAnnotations(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
-            //         $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->Annotation->Texte;
-            //     } else {
-            //         unset($aArgs['idsToRetrieve'][$version][$resId]);
-            //     }
-            // }
         }
 
         // retourner seulement les mails récupérés (validés ou signés)
         return $aArgs['idsToRetrieve'];
+    }
+
+    public static function getState($aArgs)
+    {
+        // remove first step. Always deposit
+        unset($aArgs['avancement'][0]);
+        $state['id'] = 'validateNoSignature';
+        $signature   = false;
+
+        foreach ($aArgs['avancement'] as $step) {
+            if ($step['etat'] == 'ACTIVE') {
+                $state['id'] = 'ACTIVE';
+                break;
+            } elseif ($step['etat'] == 'KO') {
+                $state['id']   = 'refused';
+                $state['note'] = $step['note'];
+                break;
+            }
+            if ($step['typeEtape'] == 'SIGN') {
+                $signature = true;
+            }
+        }
+
+        if ($signature) {
+            $state['id']   = 'validateSignature';
+        }
+        $state['note'] = $step['note'];
+
+        return $state;
     }
 
     public static function getAvancement($aArgs)
@@ -291,22 +325,29 @@ class XParaphController
             <soapenv:Body>
                 <urn:XPRF_getFiles soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
                     <params xsi:type="urn:XPRF_getFiles_Param">
-                        <siret xsi:type="xsd:string">'.$aArgs['config']['data']['siret'].'</siret>
-                        <login xsi:type="xsd:string">'.$aArgs['config']['data']['login'].'</login>
-                        <password xsi:type="xsd:string">'.$aArgs['config']['data']['password'].'</password>
+                        <siret xsi:type="xsd:string">?</siret>
+                        <login xsi:type="xsd:string">?</login>
+                        <password xsi:type="xsd:string">?</password>
                         <depotid xsi:type="xsd:string">'.$aArgs['depotId'].'</depotid>
                     </params>
                 </urn:XPRF_getFiles>
             </soapenv:Body>
         </soapenv:Envelope>';
 
-        $response = CurlModel::execSOAP([
+        $curlResponse = CurlModel::execSOAP([
             'soapAction'    => 'urn:parafwsdl#paraf',
             'url'           => $aArgs['config']['data']['url'],
             'xmlPostString' => $xmlPostString,
             'options'       => [CURLOPT_SSL_VERIFYPEER => false]
         ]);
 
-        return $response;
+        $isError = $curlResponse['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
+        if (!empty($isError->Fault[0])) {
+            $error = $curlResponse['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->detail;
+            return ['errors' => $error];
+        } else {
+            $details = $curlResponse['response']->children('SOAP-ENV', true)->Body->children('ns1', true)->XPRF_getFilesResponse->children()->return;
+            return json_decode($details, true);
+        }
     }
 }
