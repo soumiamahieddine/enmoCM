@@ -257,26 +257,19 @@ abstract class foldertype_Abstract
                      <?php
                  } else {
                  	?>
-                    <p style="width: 400px;margin: auto;">
-                    	<label for="collection"><?php echo _COLLECTION;?> : </label>
-                        <select name="collection" id="collection">
-                        	<option value="" ><?php echo _CHOOSE_COLLECTION;?></option>
-                            <?php  
-                    for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
-                    	?>
-                        <option value="<?php  
-                        functions::xecho($_SESSION['collections'][$i]['id']);
-                        ?>" <?php  
-                        if ($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']) { 
-                        	echo 'selected="selected"';
+                    <p style="width: 400px;margin: auto;">                        
+                        <label for="collection"><?php echo _COLLECTION;?> : </label>                          
+                        <?php  
+                        for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
+                            if ($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']) { 
+                            ?>
+                                <input name="collection" id="collection" value="<?php functions::xecho($_SESSION['collections'][$i]['id']); ?>" hidden/>
+                                <input value="<?php functions::xecho($_SESSION['collections'][$i]['label']); ?>" disabled/>
+                            <?php
+                            break;
+                            }
                         }
-                        ?> ><?php  
-                        functions::xecho($_SESSION['collections'][$i]['label']);
-                        ?></option>
-                        <?php
-                    }
-                    ?>
-                    	</select>
+                        ?>               
                     </p>
                     <?php
                 }
@@ -284,34 +277,18 @@ abstract class foldertype_Abstract
             	?>
                 <p style="width: 400px;margin: auto;">
                 	<label for="collection"><?php echo _COLLECTION;?> : </label>
-                    <select name="collection" id="collection" >
-                    	<option value="" ><?php echo _CHOOSE_COLLECTION;?></option>
-                        <?php  
-                for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
-                	?>
-                    <option value="<?php  
-                    functions::xecho($_SESSION['collections'][$i]['id']);
-                    ?>" <?php  
-                    if ($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']) { 
-                    	echo 'selected="selected"';
-                    }
-                    ?> ><?php  
-                    functions::xecho($_SESSION['collections'][$i]['label']);
-                    ?></option>
-                    <?php
-                }
-                ?>
-                	</select>
+                    <input name="collection" id="collection" value="letterbox_coll" hidden/>
+            	    <input value="<?php echo _LETTERBOX;?>" disabled/>
                 </p>
                 <?php
             }
             ?>
             <p style="width: 400px;margin: auto;">
-            	<label><?php echo _DESC;?> : </label>
+            	<label for="desc"><?php echo _DESC;?> : </label>
                 <input name="desc"  type="text" id="desc" value="<?php functions::xecho($_SESSION['m_admin']['foldertype']['desc']);?>" />
             </p>
             <p style="width: 400px;margin: auto;">
-            	<label><?php echo _COMMENTS;?> : </label>
+            	<label for="comment"><?php echo _COMMENTS;?> : </label>
                 <textarea  cols="30" rows="4"  name="comment"  id="comment" ><?php functions::xecho($_SESSION['m_admin']['foldertype']['comment']); ?></textarea>
             </p>
             <div id="opt_index"></div>
