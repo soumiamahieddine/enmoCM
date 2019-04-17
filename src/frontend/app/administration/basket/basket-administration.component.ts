@@ -181,7 +181,7 @@ export class BasketAdministrationComponent implements OnInit {
                     this.basketIdAvailable = false;
                 }, (err) => {
                     this.basketIdAvailable = false;
-                    if (err.error.errors == "Basket not found") {
+                    if (err.error.errors == this.lang.basketNotFound) {
                         this.basketIdAvailable = true;
                     }
                 });
@@ -368,56 +368,56 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: 'Toutes les entités'
+                    text: this.lang.allEntities
                 }, {
                     id: 'ENTITIES_JUST_BELOW',
                     keyword: 'ENTITIES_JUST_BELOW',
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: "Immédiatement inférieur à mon entité primaire"
+                    text: this.lang.immediatelyBelowMyPrimaryEntity
                 }, {
                     id: 'ENTITIES_BELOW',
                     keyword: 'ENTITIES_BELOW',
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: "Inférieur à toutes mes entités"
+                    text: this.lang.belowAllMyEntities
                 }, {
                     id: 'ALL_ENTITIES_BELOW',
                     keyword: 'ALL_ENTITIES_BELOW',
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: "Inférieur à mon entité primaire"
+                    text: this.lang.belowMyPrimaryEntity
                 }, {
                     id: 'MY_ENTITIES',
                     keyword: 'MY_ENTITIES',
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: "Mes entités"
+                    text: this.lang.myEntities
                 }, {
                     id: 'MY_PRIMARY_ENTITY',
                     keyword: 'MY_PRIMARY_ENTITY',
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: "Mon entité primaire"
+                    text: this.lang.myPrimaryEntity
                 }, {
                     id: 'SAME_LEVEL_ENTITIES',
                     keyword: 'SAME_LEVEL_ENTITIES',
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: "Même niveau de mon entité primaire"
+                    text: this.lang.sameLevelMyPrimaryEntity
                 }, {
                     id: 'ENTITIES_JUST_UP',
                     keyword: 'ENTITIES_JUST_UP',
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: "Immédiatement supérieur à mon entité primaire"
+                    text: this.lang.immediatelySuperiorMyPrimaryEntity
                 }];
 
                 keywordEntities.forEach((keyword: any) => {

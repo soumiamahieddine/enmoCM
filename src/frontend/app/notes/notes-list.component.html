@@ -19,7 +19,7 @@
                 {{note.note_text}}
             </p>
             <span *ngFor="let entity of note.entities_restriction" class="label label-default noteRestriction"
-                title="Entité restreinte"><i class="fa fa-sitemap"></i> {{entity.short_label}}</span>
+                title="{{lang.restrictedEntity}}"><i class="fa fa-sitemap"></i> {{entity.short_label}}</span>
         </mat-card-content>
     </mat-card>
 </ng-container>

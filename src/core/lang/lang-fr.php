@@ -457,7 +457,7 @@ define('_ACTION_DATE', 'Date d\'action');
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'Utilisateur créé dans Maarch Parapheur');
 define('_SIGNATURES_SEND_TO_MAARCHPARAPHEUR', 'Signature(s) envoyée(s) à Maarch Parapheur');
 
-define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Génèrer et envoyer les accusés de réception');
+define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Générer et envoyer les accusés de réception');
 define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Renseigner la date d\'envoi des accusés de réception pdf');
 
 define("_M2M_ACTION_DONE", "actionné par");

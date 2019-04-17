@@ -91,7 +91,7 @@
                             ></pdf-viewer>
                 <!-- <iframe *ngIf="leftViewerLink != '' && (leftSelectedThumbnail == 0 || signatureBook.documents[leftSelectedThumbnail].format == 'pdf' || signatureBook.documents[leftSelectedThumbnail].isConverted)" id="leftPanelShowDocumentIframe" [src]="leftViewerLink | safeUrl" [ngStyle]="{'height': showTopLeftPanel ? '84%' : '99%'}"></iframe> -->
                 <div *ngIf="leftSelectedThumbnail > 0 && signatureBook.documents[leftSelectedThumbnail].format != 'pdf' && !signatureBook.documents[leftSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopLeftPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
-                    <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF du fichier "{{signatureBook.documents[leftSelectedThumbnail].title}}.{{signatureBook.documents[leftSelectedThumbnail].format}}" n'est pas disponible.</sub></div>
+                    <div style="padding-top: 25%;">{{lang.noOverviewAvailable}}<br/><sub>{{lang.pdfVersionFile}} "{{signatureBook.documents[leftSelectedThumbnail].title}}.{{signatureBook.documents[leftSelectedThumbnail].format}}" {{lang.isNotAvailable}}.</sub></div>
                     <div class="visaPjView">
                         <a title="{{lang.dlAttachment}}" href="../../rest/resources/{{resId}}/attachments/{{signatureBook.documents[leftSelectedThumbnail].res_id}}/originalContent" target="_blank">
                             <i class="fa fa-download fa-2x"></i>
@@ -141,7 +141,7 @@
                                 <label>{{lang.createdBy}} : </label>
                                 <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
                             </div>
-                            <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].updated_by" title="Modifié par : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}} le {{signatureBook.attachments[rightSelectedThumbnail].doc_date | date:'dd/MM/y'}}" class="infoPj">
+                            <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].updated_by" title="{{lang.modifiedBy}} : {{signatureBook.attachments[rightSelectedThumbnail].updated_by}} le {{signatureBook.attachments[rightSelectedThumbnail].doc_date | date:'dd/MM/y'}}" class="infoPj">
                                 <label><i>*</i> {{lang.createdBy}} : </label>
                                 <span>{{signatureBook.attachments[rightSelectedThumbnail].typist}}</span>
                             </div>
@@ -178,7 +178,7 @@
                             ></pdf-viewer>
                     <!-- <iframe id="rightPanelShowDocumentIframe" [src]="rightViewerLink | safeUrl" [ngStyle]="{'height': showTopRightPanel ? '84%' : '99%'}"></iframe> -->
                     <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].format != 'pdf' && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
-                        <div style="padding-top: 25%;">Aucun aperçu disponible<br/><sub>La version PDF du fichier "{{signatureBook.attachments[rightSelectedThumbnail].title}}.{{signatureBook.attachments[rightSelectedThumbnail].format}}" n'est pas disponible.</sub></div>
+                        <div style="padding-top: 25%;">{{lang.noOverviewAvailable}}<br/><sub>{{lang.pdfVersionFile}} "{{signatureBook.attachments[rightSelectedThumbnail].title}}.{{signatureBook.attachments[rightSelectedThumbnail].format}}" {ang.isNotAvailable}}.</sub></div>
                         <div class="visaPjView">
                             <a title="{{lang.dlAttachment}}" href="../../rest/resources/{{resId}}/attachments/{{signatureBook.attachments[rightSelectedThumbnail].res_id}}/originalContent" target="_blank">
                                 <i class="fa fa-download fa-2x"></i>
@@ -186,9 +186,9 @@
                         </div>
                     </div>
                     <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
-                        <div style="padding-top: 25%;">L'édition de la pièce jointe a été interrompue.<br/><sub>Veuillez la ré-éditer.</sub></div>
+                        <div style="padding-top: 25%;" [innerHTML]="lang.editingAttachmentInterrupted"></div>
                         <div>
-                            <a title="Editer la pièce jointe" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                            <a title="{{lang.editAttachment}}" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
                                 <i class="fa fa-edit fa-2x" style="cursor:pointer;"></i>
                             </a>
                         </div>
@@ -202,17 +202,17 @@
                             <i *ngIf="loadingSign" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
                         </span>
                         <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" (click)="unsignFile(signatureBook.attachments[rightSelectedThumbnail])" style="cursor: pointer;color: green;">
-                            <i title="Dé-signer" class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            <i title="{{lang.unsign}}" class="fa fa-check fa-2x" aria-hidden="true"></i>
                         </span>
                     </div>
                 </div>
                 <iframe *ngIf="showAttachmentPanel" [src]="attachmentsViewerLink | safeUrl"></iframe>
             </div>
             <div *ngIf="!signatureBook.hasWorkflow" class="visaNoWorkflowWarning">
-                <div style="margin-top:200px;">Aucun circuit de visa paramétré.<br/><sub>Aucune signature possible.</sub></div>
+                <div style="margin-top:200px;" [innerHTML]="noVisaWorkflowNoSignature"></div>
             </div>
             <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="visaNoPjWarning">
-                <div style="margin-top:200px;">Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class="fa fa-paperclip fa-lg" ></i><i class="fa fa-plus"></i> pour en ajouter une</sub></div>
+                <div style="margin-top:200px;" [innerHTML]="noAttachmentClickToAddOne"></div>
             </div>
         </div>
         <div *ngIf="signatureBook.hasWorkflow" class="panelRight">
@@ -253,7 +253,7 @@
     <span id="obsVersionTooltip">
         <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.attachments[rightSelectedThumbnail].relation > 1">
             <div *ngFor="let version of signatureBook.attachments[rightSelectedThumbnail].obsAttachments">
-                <span>Version : </span>
+                <span>{{lang.version}} : </span>
                 <span>{{version.relation}}</span>&nbsp;
                 <span>{{lang.object}} : </span>
                 <span>{{version.title}}</span>&nbsp;

@@ -128,8 +128,7 @@
                                                 <small *ngIf="action.default_action_list == true">({{lang.default}})</small>
                                                 <span style="flex: 1 1 auto;"></span>
                                                 <button mat-raised-button [disabled]="action.default_action_list"
-                                                    (click)="$event.stopPropagation();setDefaultAction(group,action)">définir
-                                                    par défaut</button>
+                                                    (click)="$event.stopPropagation();setDefaultAction(group,action)">{{lang.setByDefault}}</button>
                                                 <mat-icon matTooltip="{{lang.delete}}" matChipRemove color="warn" *ngIf="action.default_action_list != true"
                                                     class="fa fa-times" (click)="$event.stopPropagation();"></mat-icon>
                                             </mat-chip>

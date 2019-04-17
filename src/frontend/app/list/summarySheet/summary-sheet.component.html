@@ -37,7 +37,7 @@
                                 </svg>
                             </div>
                             <mat-form-field floatLabel="never" style="margin-top: -10px;">
-                                <input matInput placeholder="Libellé" [(ngModel)]="item.label" (click)="$event.stopPropagation();">
+                                <input matInput placeholder="{{lang.label}}" [(ngModel)]="item.label" (click)="$event.stopPropagation();">
                             </mat-form-field>
                         </div>
                         <div class="row" class="unitData" (click)="item.enabled = !item.enabled">
