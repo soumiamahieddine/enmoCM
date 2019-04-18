@@ -108,7 +108,7 @@ class XParaphController
             }
         }
 
-        return $attachmentToFreeze;
+        return ['sended' => $attachmentToFreeze];
     }
 
     public static function getWorkflow(Request $request, Response $response, array $aArgs)
