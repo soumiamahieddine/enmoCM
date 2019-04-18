@@ -169,8 +169,13 @@ class PreparedClauseController
         if ($total > 0) {
             for ($i = 0; $i < $total; $i++) {
                 $tmpSisterEntity = trim(str_replace("'", '', $sistersEntities[1][$i]));
-                $sisterEntity = Entitymodel::getByEntityId(['entityId' => $tmpSisterEntity, 'select' => ['parent_entity_id']]);
-                $allSisterEntities = EntityModel::get(['select' => ['entity_id'], 'where' => ['parent_entity_id = ?'], 'data' => [$sisterEntity['parent_entity_id']]]);
+                if (!empty($tmpSisterEntity)) {
+                    $sisterEntity = Entitymodel::getByEntityId(['entityId' => $tmpSisterEntity, 'select' => ['parent_entity_id']]);
+                }
+                $allSisterEntities = [];
+                if (!empty($sisterEntity)) {
+                    $allSisterEntities = EntityModel::get(['select' => ['entity_id'], 'where' => ['parent_entity_id = ?'], 'data' => [$sisterEntity['parent_entity_id']]]);
+                }
 
                 $allSisterEntitiesClause = '';
                 foreach ($allSisterEntities as $key => $allSisterEntity) {
