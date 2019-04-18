@@ -1369,7 +1369,12 @@ class UserController
             ]);
 
             if ($curlResponse['code'] != '200') {
-                return $response->withStatus(400)->withJson(['errors' => $curlResponse['response']['errors']]);
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
@@ -1459,7 +1464,12 @@ class UserController
             }
 
             if ($curlResponse['code'] != '204') {
-                return $response->withStatus(400)->withJson(['errors' => $curlResponse['response']['errors']]);
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
