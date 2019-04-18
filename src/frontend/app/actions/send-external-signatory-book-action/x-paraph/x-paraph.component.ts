@@ -38,10 +38,6 @@ export class XParaphComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    init_xParaph() {
-
-    }
-
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
