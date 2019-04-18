@@ -20,8 +20,7 @@
                 <div class="col-md-12">
                     {{lang.makeActionOn}}
                      <b *ngIf="data.selectedRes.length == 1 && data.contextChrono != ''" color="primary" class="highlight">{{data.contextChrono}}</b>
-                    <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}}
-                        {{lang.elements}}</b> ?
+                    <b *ngIf="data.contextChrono == ''" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b> ?
                 </div>
                 <div class="col-md-12" style="padding-top: 10px;">
                     <mat-form-field>
