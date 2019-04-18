@@ -17,10 +17,12 @@ namespace ExternalSignatoryBook\controllers;
 use Attachment\models\AttachmentModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
+use History\controllers\HistoryController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
+use User\models\UserModel;
 
 class XParaphController
 {
@@ -351,4 +353,76 @@ class XParaphController
             return json_decode($details, true);
         }
     }
+
+    public function deleteXparaphAccount(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+        foreach (['login', 'siret'] as $value) {
+            if (empty($data[$value])) {
+                return $response->withStatus(400)->withJson(['errors' => $value . ' is empty']);
+            }
+        }
+
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['external_id', 'id', 'firstname', 'lastname']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+        }
+
+        $externalId = json_decode($user['external_id'], true);
+        
+        $accountFound = false;
+        foreach ($externalId['xParaph'] as $key => $value) {
+            if ($value['login'] == $data['login'] && $value['siret'] == $data['siret']) {
+                unset($externalId['xParaph'][$key]);
+                UserModel::updateExternalId(['id' => $user['id'], 'externalId' => json_encode($externalId)]);
+                $accountFound = true;
+                HistoryController::add([
+                    'tableName'    => 'users',
+                    'recordId'     => $GLOBALS['userId'],
+                    'eventType'    => 'UP',
+                    'eventId'      => 'userModification',
+                    'info'         => _USER_UPDATED . " {$user['firstname']} {$user['lastname']}. " . _XPARAPH_ACCOUNT_CREATED
+                ]);
+
+                break;
+            }
+        }
+
+        if ($accountFound) {
+            return $response->withStatus(204);
+        } else {
+            return $response->withStatus(400)->withJson(['errors' => 'Xparaph account not found']);
+        }
+    }
+
+    public function createXparaphAccount(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+        foreach (['login', 'siret'] as $value) {
+            if (empty($body[$value])) {
+                return $response->withStatus(400)->withJson(['errors' => $value . ' is empty']);
+            }
+        }
+
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['external_id', 'id', 'firstname', 'lastname']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+        }
+
+        $externalId = json_decode($user['external_id'], true);
+        $externalId['xParaph'][] = ["login" => $body['login'], "siret" => $body['siret']];
+        
+        UserModel::updateExternalId(['id' => $user['id'], 'externalId' => json_encode($externalId)]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _USER_UPDATED . " {$user['firstname']} {$user['lastname']}. " . _XPARAPH_ACCOUNT_DELETED
+        ]);
+
+        return $response->withStatus(204);
+    }
+
 }
