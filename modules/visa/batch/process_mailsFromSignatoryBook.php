@@ -130,6 +130,7 @@ $GLOBALS['userWS']                 = (string)$config->userWS;
 $GLOBALS['passwordWS']             = (string)$config->passwordWS;
 $GLOBALS['batchDirectory']         = $GLOBALS['MaarchDirectory'] . 'modules' . DIRECTORY_SEPARATOR . 'visa' . DIRECTORY_SEPARATOR . 'batch';
 $validatedStatus                   = (string)$config->validatedStatus;
+$validatedStatusOnlyVisa           = (string)$config->validatedStatusOnlyVisa;
 $refusedStatus                     = (string)$config->refusedStatus;
 $validatedStatusAnnot              = (string)$config->validatedStatusAnnot;
 $refusedStatusAnnot                = (string)$config->refusedStatusAnnot;
@@ -203,7 +204,6 @@ try {
         echo "\nNo class detected ! \nThe batch cannot be launched !\n\n";
         exit(102);
     }
-
 } catch (IncludeFileError $e) {
     $GLOBALS['logger']->write(
         'Problem with the php include path:' .$e .' '. get_include_path(),
@@ -301,7 +301,12 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
     
         $GLOBALS['logger']->write('Document validated', 'INFO');
         $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ?", [$resId]);
-        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
+        if (!empty($value->onlyVisa) && $value->onlyVisa) {
+            $status = $validatedStatusOnlyVisa;
+        } else {
+            $status = $validatedStatus;
+        }
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $status]);
 
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_version_attachments) a été validée dans le parapheur externe';
         Bt_history([
@@ -378,7 +383,12 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
 
         $GLOBALS['logger']->write('Document validated', 'INFO');
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", [$resId]);
-        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
+        if (!empty($value->onlyVisa) && $value->onlyVisa) {
+            $status = $validatedStatusOnlyVisa;
+        } else {
+            $status = $validatedStatus;
+        }
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $status]);
 
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_attachments) a été validée dans le parapheur externe';
         Bt_history([

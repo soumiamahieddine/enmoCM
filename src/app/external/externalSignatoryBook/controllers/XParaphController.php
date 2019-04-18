@@ -101,7 +101,7 @@ class XParaphController
             $isError = $response['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
             if (!empty($isError->Fault[0])) {
                 $error = $response['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->detail;
-                return ['error' => $error];
+                return ['error' => (string)$error];
             } else {
                 $depotId = $response['response']->children('SOAP-ENV', true)->Body->children('ns1', true)->XPRF_DeposerResponse->children()->return->children()->depotid;
                 $attachmentToFreeze[$collId][$resId] = (string)$depotId;
@@ -213,7 +213,7 @@ class XParaphController
                 if ($state['id'] == 'refused') {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
                     $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
-                } elseif ($state['id'] == 'validateSignature' || $state['id'] == 'validateNoSignature') {
+                } elseif ($state['id'] == 'validateSignature' || $state['id'] == 'validateOnlyVisa') {
                     $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
                     if (!empty($processedFile['errors'])) {
                         unset($aArgs['idsToRetrieve'][$version][$resId]);
@@ -240,6 +240,9 @@ class XParaphController
 
                     $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $encodedFile;
                     $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+                    if ($state['id'] == 'validateOnlyVisa') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->onlyVisa = true;
+                    }
                 } else {
                     unset($aArgs['idsToRetrieve'][$version][$resId]);
                 }
@@ -254,21 +257,25 @@ class XParaphController
     {
         // remove first step. Always deposit
         unset($aArgs['avancement'][0]);
-        $state['id'] = 'validateNoSignature';
+        $state['id'] = 'validateOnlyVisa';
         $signature   = false;
 
-        foreach ($aArgs['avancement'] as $step) {
-            if ($step['etat'] == 'ACTIVE') {
-                $state['id'] = 'ACTIVE';
-                break;
-            } elseif ($step['etat'] == 'KO') {
-                $state['id']   = 'refused';
-                $state['note'] = $step['note'];
-                break;
+        if (!empty($aArgs['avancement'])) {
+            foreach ($aArgs['avancement'] as $step) {
+                if ($step['etat'] == 'ACTIVE') {
+                    $state['id'] = 'ACTIVE';
+                    break;
+                } elseif ($step['etat'] == 'KO') {
+                    $state['id']   = 'refused';
+                    $state['note'] = $step['note'];
+                    break;
+                }
+                if ($step['typeEtape'] == 'SIGN') {
+                    $signature = true;
+                }
             }
-            if ($step['typeEtape'] == 'SIGN') {
-                $signature = true;
-            }
+        } else {
+            $state['id'] = 'ACTIVE';
         }
 
         if ($signature) {
@@ -424,5 +431,4 @@ class XParaphController
 
         return $response->withStatus(204);
     }
-
 }

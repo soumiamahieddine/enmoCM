@@ -87,12 +87,17 @@ trait ExternalSignatoryBookTrait
                     return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }
 
-                $attachmentToFreeze = XParaphController::sendDatas([
+                $sendedInfo = XParaphController::sendDatas([
                     'config'      => $config,
                     'resIdMaster' => $args['resId'],
                     'info'        => $args['data']['info'],
                     'steps'       => $args['data']['steps'],
                 ]);
+                if (!empty($sendedInfo['error'])) {
+                    return ['errors' => [$sendedInfo['error']]];
+                } else {
+                    $attachmentToFreeze = $sendedInfo['sended'];
+                }
             }
         }
 
