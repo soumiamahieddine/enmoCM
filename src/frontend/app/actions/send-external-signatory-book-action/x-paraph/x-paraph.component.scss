@@ -81,3 +81,26 @@
         flex: 1;
     }
 }
+
+::ng-deep.listMenu {
+    .mat-menu-content {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.currentContextButton{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    width: 150px;
+    text-align: left;
+}
+
+.currentRoleButton{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    width: 120px;
+    text-align: left;
+}

@@ -1,17 +1,17 @@
-<form *ngIf="!addAccountMode" (ngSubmit)="getUsersWorkflowList(currentAccount);" #accountForm="ngForm">
+<form *ngIf="!addAccountMode && additionalsInfos.attachments.length > 0" (ngSubmit)="getUsersWorkflowList(currentAccount);" #accountForm="ngForm">
     <div class="col-md-5" style="padding-top: 10px;">
         <mat-form-field>
             <mat-label>{{lang.selectedAccount}}</mat-label>
             <mat-select name="loginAccount" (selectionChange)="selectAccount($event)" required>
                 <mat-option class="accountList" *ngFor="let account of additionalsInfos.accounts;let i=index"
                     [value]="account">
-                    <span class="accountName">{{account.login}} ({{account.siret}})</span> <button mat-icon-button
+                    <span class="accountName">{{account.login}} ({{account.siret}})</span> <button title="{{lang.delete}}" mat-icon-button
                         color="warn" (click)="removeAccount(i);">
                         <mat-icon class="fa fa-trash"></mat-icon>
                     </button>
                 </mat-option>
             </mat-select>
-            <mat-hint><a (click)="initNewAccount()" style="cursor: pointer;">Ajouter un nouveau compte</a>
+            <mat-hint><a (click)="initNewAccount()" style="cursor: pointer;">{{lang.addNewAccount}}</a>
             </mat-hint>
         </mat-form-field>
     </div>
@@ -27,7 +27,7 @@
         </button>
     </div>
 </form>
-<form *ngIf="addAccountMode" (ngSubmit)="addNewAccount();" #newAccountForm="ngForm">
+<form *ngIf="addAccountMode && additionalsInfos.attachments.length > 0" (ngSubmit)="addNewAccount();" #newAccountForm="ngForm">
     <div class="col-md-6" style="padding-top: 10px;">
         <mat-form-field>
             <input id="newAccountLogin" matInput name="newAccountLogin" placeholder="{{lang.newAccount}}" [(ngModel)]="newAccount.login" required>
@@ -47,7 +47,7 @@
         </button>
     </div>
 </form>
-<div *ngIf="usersWorkflowList.length > 0" class="col-md-12" style="padding-top: 10px;">
+<div *ngIf="usersWorkflowList.length > 0" class="col-md-12" style="padding-top: 20px;">
     <div class="workflowContent">
         <h2 style="top:-5px;">{{lang.visaWorkflow}} :</h2>
         <div class="contentUser">
@@ -75,16 +75,22 @@
                         </h4>
                         <p class="otherInfo" mat-line style="display: flex;">
                             <span style="opacity:0.5;flex: 1;">
-                                <button mat-button [matMenuTriggerFor]="menu">{{diffusion.currentRole}}</button>
-                                <mat-menu #menu="matMenu">
+                                <button class="currentRoleButton" mat-button [matMenuTriggerFor]="menu" title="{{lang[diffusion.currentRole+'User']}}">{{lang[diffusion.currentRole+'User']}}</button>
+                                <mat-menu [class]="'listMenu'" #menu="matMenu">
+                                    <div style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
+                                        {{lang.roles}}
+                                    </div>
                                     <button *ngFor="let role of diffusion.roles" mat-menu-item
-                                        (click)="changeRole(i, role)">{{role}}</button>
+                                        (click)="changeRole(i, role)">{{lang[role+'User']}}</button>
                                 </mat-menu>
-                                <button mat-button
-                                    [matMenuTriggerFor]="menuContext">{{diffusion.currentContext}}</button>
-                                <mat-menu #menuContext="matMenu">
+                                <button class="currentContextButton" mat-button
+                                    [matMenuTriggerFor]="menuContext" title="{{lang[diffusion.currentContext]}}">{{lang[diffusion.currentContext]}}</button>
+                                <mat-menu [class]="'listMenu'" #menuContext="matMenu">
+                                    <div style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
+                                        {{lang.contextParaph}}
+                                    </div>
                                     <button *ngFor="let context of contextList" mat-menu-item
-                                        (click)="changeContext(i, context.id)">{{context.label}}</button>
+                                        (click)="changeContext(i, context)">{{lang[context]}}</button>
                                 </mat-menu>
                             </span>
                         </p>
@@ -93,7 +99,6 @@
                         </button>
                     </mat-list-item>
                 </mat-list>
-
             </div>
         </div>
     </div>

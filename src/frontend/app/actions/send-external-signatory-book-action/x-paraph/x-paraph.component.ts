@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { load } from '@angular/core/src/render3';
 
 declare function $j(selector: any): any;
 
@@ -25,32 +24,7 @@ export class XParaphComponent implements OnInit {
     currentAccount: any = null;
     usersWorkflowList: any[] = [];
     currentWorkflow: any[] = [];
-    contextList = [
-        {
-            'id': 'FON',
-            'label': 'agent'
-        },
-        {
-            'id': 'PER',
-            'label': 'personne physique (personnel)'
-        },
-        {
-            'id': 'SPH',
-            'label': 'supérieur hiérarchique'
-        },
-        {
-            'id': 'DIR',
-            'label': 'directeur'
-        },
-        {
-            'id': 'DLP',
-            'label': 'délégation permanente'
-        },
-        {
-            'id': 'EXE',
-            'label': 'représentant de la collectivité'
-        }
-    ];
+    contextList = ['FON','PER','SPH','DIR','DLP','EXE'];
     hidePassword: boolean = true;
     addAccountMode: boolean = false;
 
@@ -94,7 +68,7 @@ export class XParaphComponent implements OnInit {
                 this.usersWorkflowList = data.workflow;
                 this.usersWorkflowList.forEach(element => {
                     element.currentRole = element.roles[0];
-                    element.currentContext = this.contextList[0].id;
+                    element.currentContext = this.contextList[0];
                 });
                 setTimeout(() => {
                     $j('#availableUsers').focus();
@@ -200,6 +174,7 @@ export class XParaphComponent implements OnInit {
     }
 
     initNewAccount() {
+        this.loading = false;
         this.usersWorkflowList = [];
         this.currentWorkflow = [];
         this.currentAccount = null;

@@ -1015,4 +1015,7 @@ export const LANG_NL = {
     "confirmDeleteAccount"                      : "Do you want to delete this account ?", //_TO_TRANSLATE
     "accountAdded"                              : "Account added", //_TO_TRANSLATE
     "accountDeleted"                            : "Account deleted", //_TO_TRANSLATE
+    "roles"                                     : "Roles", //_TO_TRANSLATE
+    "contextParaph"                             : "Context", //_TO_TRANSLATE
+    "addNewAccount"                             : "Add new account", //_TO_TRANSLATE
 };

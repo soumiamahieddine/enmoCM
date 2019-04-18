@@ -988,4 +988,7 @@ export const LANG_EN = {
     "confirmDeleteAccount"                      : "Do you want to delete this account ?",
     "accountAdded"                              : "Account added",
     "accountDeleted"                            : "Account deleted",
+    "roles"                                     : "Roles",
+    "contextParaph"                             : "Context",
+    "addNewAccount"                             : "Add new account",
 };
