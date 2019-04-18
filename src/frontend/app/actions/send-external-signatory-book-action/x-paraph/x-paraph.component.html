@@ -1,23 +1,49 @@
-<form (ngSubmit)="getUsersWorkflowList(currentAccount);" #accountForm="ngForm">
+<form *ngIf="!addAccountMode" (ngSubmit)="getUsersWorkflowList(currentAccount);" #accountForm="ngForm">
     <div class="col-md-5" style="padding-top: 10px;">
         <mat-form-field>
             <mat-label>{{lang.selectedAccount}}</mat-label>
             <mat-select name="loginAccount" (selectionChange)="selectAccount($event)" required>
-                <mat-option *ngFor="let account of additionalsInfos.accounts" [value]="account">
-                    {{account.login}} ({{account.siret}})
+                <mat-option class="accountList" *ngFor="let account of additionalsInfos.accounts;let i=index"
+                    [value]="account">
+                    <span class="accountName">{{account.login}} ({{account.siret}})</span> <button mat-icon-button
+                        color="warn" (click)="removeAccount(i);">
+                        <mat-icon class="fa fa-trash"></mat-icon>
+                    </button>
                 </mat-option>
             </mat-select>
+            <mat-hint><a (click)="initNewAccount()" style="cursor: pointer;">Ajouter un nouveau compte</a>
+            </mat-hint>
         </mat-form-field>
     </div>
     <div *ngIf="currentAccount != null" class="col-md-5" style="padding-top: 10px;">
         <mat-form-field>
-            <input matInput name="passwordAccount" placeholder="{{lang.password}}" [(ngModel)]="currentAccount.password" required
-                [type]="hidePassword ? 'password' : 'text'" [disabled]="loading">
+            <input matInput name="passwordAccount" placeholder="{{lang.password}}" [(ngModel)]="currentAccount.password"
+                required [type]="hidePassword ? 'password' : 'text'" [disabled]="loading">
         </mat-form-field>
     </div>
     <div *ngIf="currentAccount != null" class="col-md-2" style="padding-top: 10px;">
         <button mat-icon-button color="primary" type="submit" [disabled]="!accountForm.form.valid || loading">
             <mat-icon class="fa fa-check"></mat-icon>
+        </button>
+    </div>
+</form>
+<form *ngIf="addAccountMode" (ngSubmit)="addNewAccount();" #newAccountForm="ngForm">
+    <div class="col-md-6" style="padding-top: 10px;">
+        <mat-form-field>
+            <input id="newAccountLogin" matInput name="newAccountLogin" placeholder="{{lang.newAccount}}" [(ngModel)]="newAccount.login" required>
+        </mat-form-field>
+    </div>
+    <div class="col-md-6" style="padding-top: 10px;">
+        <mat-form-field>
+            <input id="newAccountSiret" matInput name="newAccountSiret" placeholder="{{lang.siret}}" [(ngModel)]="newAccount.siret" required>
+        </mat-form-field>
+    </div>
+    <div class="col-md-12 text-center" style="padding-top: 10px;">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!newAccountForm.form.valid || loading">
+            {{lang.add}}
+        </button>
+        <button mat-raised-button (click)="addAccountMode = false">
+            {{lang.cancel}}
         </button>
     </div>
 </form>

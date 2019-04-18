@@ -1010,4 +1010,9 @@ export const LANG_FR = {
     "noAttachmentClickToAddOne"                         : "Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> pour en ajouter une.</sub>",
     "unsign"                                            : "Dé-signer",
     "selectedAccount"                                   : "Compte utilisé",
+    "newAccount"                                        : "Nouveau compte",
+    "siret"                                             : "Numéro SIRET",
+    "confirmDeleteAccount"                              : "Voulez-vous supprimer ce compte ?",
+    "accountAdded"                                      : "Compte créé",
+    "accountDeleted"                                      : "Compte supprimé",
 };

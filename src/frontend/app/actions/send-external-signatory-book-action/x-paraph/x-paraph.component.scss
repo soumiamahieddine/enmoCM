@@ -71,3 +71,13 @@
         color: #135f7f;
     }
 }
+
+.accountList {
+    ::ng-deep.mat-option-text {
+        display: flex;
+    }
+
+    .accountName {
+        flex: 1;
+    }
+}

@@ -983,4 +983,9 @@ export const LANG_EN = {
     "noAttachmentClickToAddOne"                 : "No attachments available<br/><sub>Click on <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> to add one.</sub>",
     "unsign"                                    : "Unsign",
     "selectedAccount"                           : "Selected account",
+    "newAccount"                                : "New account",
+    "siret"                                     : "SIRET number",
+    "confirmDeleteAccount"                      : "Do you want to delete this account ?",
+    "accountAdded"                              : "Account added",
+    "accountDeleted"                            : "Account deleted",
 };

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { load } from '@angular/core/src/render3';
 
 declare function $j(selector: any): any;
 
@@ -20,6 +21,7 @@ export class XParaphComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
+    newAccount: any = {};
     currentAccount: any = null;
     usersWorkflowList: any[] = [];
     currentWorkflow: any[] = [];
@@ -50,6 +52,7 @@ export class XParaphComponent implements OnInit {
         }
     ];
     hidePassword: boolean = true;
+    addAccountMode: boolean = false;
 
     usersCtrl = new FormControl();
     filteredUsers: Observable<any[]>;
@@ -159,5 +162,51 @@ export class XParaphComponent implements OnInit {
             })
         });
         return this.externalSignatoryBookDatas;
+    }
+
+    addNewAccount() {
+        this.loading = true;
+
+        this.http.post('../../rest/xParaphAccount', {login: this.newAccount.login,siret:this.newAccount.siret})
+            .subscribe((data: any) => {
+                this.additionalsInfos.accounts.push({
+                    "login": this.newAccount.login,
+                    "siret": this.newAccount.siret,
+                });
+                this.newAccount = {};
+                this.loading = false;
+                this.addAccountMode = false;
+
+                this.notify.success(this.lang.accountAdded);
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+                this.loading = false;
+            });
+    }
+
+    removeAccount(index: number) {
+        let r = confirm(this.lang.confirmDeleteAccount);
+
+        if (r) {
+            this.http.delete('../../rest/xParaphAccount?siret='+this.additionalsInfos.accounts[index].siret+'&login='+this.additionalsInfos.accounts[index].login)
+            .subscribe((data: any) => {
+                this.additionalsInfos.accounts.splice(index, 1);
+                this.notify.success(this.lang.accountDeleted);
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+                this.loading = false;
+            });   
+        }
+    }
+
+    initNewAccount() {
+        this.usersWorkflowList = [];
+        this.currentWorkflow = [];
+        this.currentAccount = null;
+        this.addAccountMode = true;
+        setTimeout(() => {
+            $j('#newAccountLogin').focus();
+        }, 0);
+
     }
 }
