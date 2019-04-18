@@ -34,7 +34,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
     
     @ViewChild('xParaph') xParaph: XParaphComponent;
-    @ViewChild('maarchParaph') maarchParaph: MaarchParaphComponent;
+    @ViewChild('maarchParapheur') maarchParapheur: MaarchParaphComponent;
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalSignatoryBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
@@ -78,7 +78,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     }
 
     checkValidAction() {
-        if (this[this.signatoryBookEnabled] !== undefined) {
+        if (this[this.signatoryBookEnabled] !== undefined) {   
             return this[this.signatoryBookEnabled].checkValidParaph();
         } else {
             return true;
