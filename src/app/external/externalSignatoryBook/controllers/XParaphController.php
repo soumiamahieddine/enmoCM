@@ -188,9 +188,6 @@ class XParaphController
 
     public static function retrieveSignedMails($aArgs)
     {
-        $validatedSignature   = $aArgs['config']['data']['validatedStateSignature'];
-        $validatedNoSignature = $aArgs['config']['data']['validatedStateNoSignature'];
-        $refused              = $aArgs['config']['data']['refusedState'];
 
         foreach (['noVersion', 'isVersion'] as $version) {
             $depotids = [];
