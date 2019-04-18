@@ -471,7 +471,7 @@ class PreProcessActionController
                             'validation_date', 'relation', 'attachment_id_master'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-                        'data'      => [$resId, ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+                        'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
                     ]);
                     
                     if (empty($attachments)) {
@@ -526,7 +526,7 @@ class PreProcessActionController
                             'validation_date', 'relation', 'attachment_id_master'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-                        'data'      => [$resId, ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+                        'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
                     ]);
                     
                     if (empty($attachments)) {
