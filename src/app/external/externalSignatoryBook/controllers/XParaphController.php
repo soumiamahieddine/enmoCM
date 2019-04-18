@@ -189,6 +189,7 @@ class XParaphController
     public static function retrieveSignedMails($aArgs)
     {
 
+        $tmpPath = CoreConfigModel::getTmpPath();
         foreach (['noVersion', 'isVersion'] as $version) {
             $depotids = [];
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
@@ -210,6 +211,28 @@ class XParaphController
                 if ($state['id'] == 'refused') {
                     $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
                     $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+
+                    $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
+                    if (!empty($processedFile['errors'])) {
+                        unset($aArgs['idsToRetrieve'][$version][$resId]);
+                        continue;
+                    }
+                    $file      = base64_decode($processedFile['zip']);
+                    $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
+                    $tmpName   = $unzipName . '.zip';
+            
+                    file_put_contents($tmpPath . $tmpName, $file);
+
+                    $zip = new \ZipArchive();
+                    $zip->open($tmpPath . $tmpName);
+                    $zip->extractTo($tmpPath . $unzipName);
+
+                    foreach (glob($tmpPath . $unzipName . '/*.xml') as $filename) {
+                        $log = base64_encode(file_get_contents($filename));
+                    }
+                    unlink($tmpPath . $tmpName);
+
+                    $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
                 } elseif ($state['id'] == 'validateSignature' || $state['id'] == 'validateOnlyVisa') {
                     $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
                     if (!empty($processedFile['errors'])) {
@@ -223,7 +246,6 @@ class XParaphController
                     $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
                     $tmpName   = $unzipName . '.zip';
             
-                    $tmpPath = CoreConfigModel::getTmpPath();
                     file_put_contents($tmpPath . $tmpName, $file);
 
                     $zip = new \ZipArchive();
@@ -233,6 +255,9 @@ class XParaphController
                     foreach (glob($tmpPath . $unzipName . '/*.pdf') as $filename) {
                         $encodedFile = base64_encode(file_get_contents($filename));
                     }
+                    foreach (glob($tmpPath . $unzipName . '/*.xml') as $filename) {
+                        $log = base64_encode(file_get_contents($filename));
+                    }
                     unlink($tmpPath . $tmpName);
 
                     $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $encodedFile;
@@ -240,6 +265,7 @@ class XParaphController
                     if ($state['id'] == 'validateOnlyVisa') {
                         $aArgs['idsToRetrieve'][$version][$resId]->onlyVisa = true;
                     }
+                    $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
                 } else {
                     unset($aArgs['idsToRetrieve'][$version][$resId]);
                 }

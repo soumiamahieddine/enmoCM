@@ -276,6 +276,27 @@ if (!empty($retrievedMails['error'])) {
 foreach ($retrievedMails['isVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update res_version_attachments : ' . $resId . '. ExternalId : ' . $value->external_id, 'INFO');
 
+    if (!empty($value->log)) {
+        $GLOBALS['logger']->write('Create log Attachment', 'INFO');
+        Bt_createAttachment([
+            'res_id_master'     => $value->res_id_master,
+            'title'             => '[xParaph Log] ' . $value->title,
+            'identifier'        => $value->identifier,
+            'type_id'           => $value->type_id,
+            'dest_contact_id'   => $value->dest_contact_id,
+            'dest_address_id'   => $value->dest_address_id,
+            'dest_user'         => $value->dest_user,
+            'typist'            => $value->typist,
+            'format'            => 'xml',
+            'attachment_type'   => $value->attachment_type,
+            'relation'          => 1,
+            'status'            => 'TRA',
+            'encodedFile'       => $value->log,
+            'in_signature_book' => 'false',
+            'table'             => 'res_attachments'
+        ]);
+    }
+
     if ($value->status == 'validated') {
         if (!empty($value->encodedFile)) {
             $GLOBALS['logger']->write('Create validated version Attachment', 'INFO');
@@ -357,6 +378,27 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
 
 foreach ($retrievedMails['noVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update res_attachments : ' . $resId . '. ExternalId : ' . $value->external_id, 'INFO');
+
+    if (!empty($value->log)) {
+        $GLOBALS['logger']->write('Create log Attachment', 'INFO');
+        Bt_createAttachment([
+            'res_id_master'     => $value->res_id_master,
+            'title'             => '[xParaph Log] ' . $value->title,
+            'identifier'        => $value->identifier,
+            'type_id'           => $value->type_id,
+            'dest_contact_id'   => $value->dest_contact_id,
+            'dest_address_id'   => $value->dest_address_id,
+            'dest_user'         => $value->dest_user,
+            'typist'            => $value->typist,
+            'format'            => 'xml',
+            'attachment_type'   => $value->attachment_type,
+            'relation'          => 1,
+            'status'            => 'TRA',
+            'encodedFile'       => $value->log,
+            'in_signature_book' => 'false',
+            'table'             => 'res_attachments'
+        ]);
+    }
 
     if ($value->status == 'validated') {
         if (!empty($value->encodedFile)) {
