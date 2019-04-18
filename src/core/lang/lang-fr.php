@@ -489,3 +489,5 @@ define("_VISA_WORKFLOW", "Circuit de visa");
 define("_DIFFUSION_LIST", "Liste de diffusion");
 define("_SECONDARY_INFORMATION", "Informations secondaires");
 define("_DEST_INFORMATION", "Informations de destination");
+define("_XPARAPH_ACCOUNT_DELETED", "Compte xParaph supprimé");
+define("_XPARAPH_ACCOUNT_CREATED", "Compte xParaph créé");
