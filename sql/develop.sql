@@ -232,6 +232,9 @@ DO $$ BEGIN
   END IF;
 END$$;
 
+/* Foldertypes */
+UPDATE foldertypes SET coll_id = 'letterbox_coll' WHERE coll_id <> 'letterbox_coll';
+
 /* REFACTORING */
 ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_notif;
 UPDATE res_letterbox SET locker_user_id = NULL;
