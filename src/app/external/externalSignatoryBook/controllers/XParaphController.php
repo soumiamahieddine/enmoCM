@@ -54,13 +54,14 @@ class XParaphController
             
             $xmlStep = '';
             foreach ($aArgs['steps'] as $key => $step) {
+                $order = $key + 1;
                 $xmlStep .= '<EtapeDepot>
                                 <user_siret xsi:type="xsd:string">'.$aArgs['info']['siret'].'</user_siret>
                                 <user_login xsi:type="xsd:string">'.$step['login'].'</user_login>
                                 <action xsi:type="xsd:string">'.$step['action'].'</action>
                                 <contexte xsi:type="xsd:string">'.$step['contexte'].'</contexte>
                                 <norejet xsi:type="xsd:string">0</norejet>
-                                <ordre xsi:type="xsd:int">'.$key.'</ordre>
+                                <ordre xsi:type="xsd:int">'.$order.'</ordre>
                             </EtapeDepot>';
             }
 

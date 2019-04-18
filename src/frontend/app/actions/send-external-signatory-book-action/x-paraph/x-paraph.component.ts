@@ -26,27 +26,27 @@ export class XParaphComponent implements OnInit {
     contextList = [
         {
             'id': 'FON',
-            'label': 'fon'
+            'label': 'agent'
         },
         {
             'id': 'PER',
-            'label': 'per'
+            'label': 'personne physique (personnel)'
         },
         {
             'id': 'SPH',
-            'label': 'sph'
+            'label': 'supérieur hiérarchique'
         },
         {
             'id': 'DIR',
-            'label': 'dir'
+            'label': 'directeur'
         },
         {
             'id': 'DLP',
-            'label': 'dlp'
+            'label': 'délégation permanente'
         },
         {
             'id': 'EXE',
-            'label': 'exe'
+            'label': 'représentant de la collectivité'
         }
     ];
     hidePassword: boolean = true;
@@ -55,6 +55,7 @@ export class XParaphComponent implements OnInit {
     filteredUsers: Observable<any[]>;
 
     @Input('additionalsInfos') additionalsInfos: any;
+    @Input('externalSignatoryBookDatas') externalSignatoryBookDatas: any;
 
     constructor(public http: HttpClient, private notify: NotificationService) { }
 
@@ -129,10 +130,34 @@ export class XParaphComponent implements OnInit {
     }
 
     checkValidParaph() {
-        if (this.currentWorkflow.length > 0 && this.currentAccount.login != '' && this.currentAccount.password != '' && this.currentAccount.siret != '') {
+        if (this.additionalsInfos.attachments.length > 0 && this.currentWorkflow.length > 0 && this.currentAccount.login != '' && this.currentAccount.password != '' && this.currentAccount.siret != '') {
             return false;
         } else {
             return true;
         }
+    }
+
+    getRessources() {
+        return this.additionalsInfos.attachments.map((e: any) => { return e.res_id; });
+    }
+
+    getDatas() {
+        this.externalSignatoryBookDatas =
+            {
+                "info": {
+                    "siret": this.currentAccount.siret,
+                    "login": this.currentAccount.login,
+                    "password": this.currentAccount.password
+                },
+                "steps": []
+            };
+        this.currentWorkflow.forEach(element => {
+            this.externalSignatoryBookDatas.steps.push({
+                "login": element.userId,
+                "action": element.currentRole == 'visa' ? '2' : '1',
+                "contexte": element.currentContext
+            })
+        });
+        return this.externalSignatoryBookDatas;
     }
 }
