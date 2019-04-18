@@ -1,4 +1,4 @@
-<div class="col-md-12" style="padding-top: 10px;" *ngIf="signatoryBookEnabled == 'maarchParapheur' && additionalsInfos.users.length != 0">
+<div class="col-md-12" style="padding-top: 10px;" *ngIf="additionalsInfos.users.length != 0">
     <mat-form-field>
         <mat-label>{{lang.userMaarchParapheur}}</mat-label>
         <mat-select name="processingUser" [(ngModel)]="externalSignatoryBookDatas.processingUser" required>
