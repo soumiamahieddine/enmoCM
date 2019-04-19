@@ -976,7 +976,7 @@ export const LANG_FR = {
     "mailNote"                                          : "Annotation du document principal",
     "attachmentSignature"                               : "Signature des documents intégrés au parapheur",
     "userMaarchParapheur"                               : "Attributaire Maarch Parapheur",
-    "noAttachmentInSignatoryBook"                       : "Aucune pièce jointe intégrée au parapheur ou elles sont toutes gelées",
+    "noAttachmentInSignatoryBook"                       : "Aucune pièce jointe éligible : non intégrée au parapheur, ou gelée",
     "canNotMakeAction"                                  : "Impossible de faire l'action sur les courriers suivants",
     "noUserDefinedInMaarchParapheur"                    : "Aucun utilisateur créé dans Maarch Parapheur",
     "noMailConversion"                                  : "Le courrier n'a pas de conversion PDF",
