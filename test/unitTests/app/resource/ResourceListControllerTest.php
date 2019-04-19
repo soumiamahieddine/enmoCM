@@ -14,6 +14,7 @@ class ResourceListControllerTest extends TestCase
     public function testGet()
     {
         $GLOBALS['userId'] = 'bbain';
+        $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
 
         $resListController = new \Resource\controllers\ResourceListController();
 
@@ -25,7 +26,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('int', $responseBody->count);
@@ -42,7 +43,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(2, count($responseBody->resources));
@@ -61,7 +62,7 @@ class ResourceListControllerTest extends TestCase
             ];
         $fullRequest = $request->withQueryParams($aArgs);
     
-        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
     
         $this->assertGreaterThanOrEqual(1, count($responseBody->resources));
@@ -85,13 +86,13 @@ class ResourceListControllerTest extends TestCase
             ];
         $fullRequest = $request->withQueryParams($aArgs);
     
-        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
     
         $this->assertGreaterThanOrEqual(1, count($responseBody->resources));
 
         //  ERRORS
-        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 777, 'basketId' => 10]);
+        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 777, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Group or basket does not exist', $responseBody->errors);
 
@@ -99,7 +100,7 @@ class ResourceListControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Group or basket does not exist', $responseBody->errors);
 
-        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 777, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $resListController->get($request, new \Slim\Http\Response(), ['userId' => 777, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Basket out of perimeter', $responseBody->errors);
 
@@ -109,6 +110,8 @@ class ResourceListControllerTest extends TestCase
     public function testGetFilters()
     {
         $GLOBALS['userId'] = 'bbain';
+        $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
+
         $resListController = new \Resource\controllers\ResourceListController();
 
         //  GET
@@ -119,7 +122,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody->entities);
@@ -138,7 +141,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertGreaterThanOrEqual(2, count($responseBody->priorities));
@@ -163,7 +166,7 @@ class ResourceListControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody->entities);
@@ -178,6 +181,7 @@ class ResourceListControllerTest extends TestCase
     public function testGetActions()
     {
         $GLOBALS['userId'] = 'bbain';
+        $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
 
         $resListController = new \Resource\controllers\ResourceListController();
 
@@ -185,7 +189,7 @@ class ResourceListControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $resListController->getActions($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $resListController->getActions($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody->actions);

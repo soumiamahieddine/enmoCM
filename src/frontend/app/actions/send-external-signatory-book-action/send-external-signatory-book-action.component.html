@@ -1,38 +1,26 @@
 <h1 mat-dialog-title>{{data.action.label_action}}</h1>
-<div mat-dialog-content >
+<div mat-dialog-content>
     <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
-    <mat-sidenav-container autosize style="height:100%;" *ngIf="!loading">
+    <mat-sidenav-container autosize style="height:100%;">
         <mat-sidenav-content style="background: white;">
             <div class="row" style="margin: 0;">
                 <div class="col-md-12">
                     {{lang.makeActionOn}}
-                     <b *ngIf="data.selectedRes.length == 1 && data.contextChrono != ''" color="primary" class="highlight">{{data.contextChrono}}</b>
+                    <b *ngIf="data.selectedRes.length == 1 && data.contextChrono != ''" color="primary"
+                        class="highlight">{{data.contextChrono}}</b>
                     <b *ngIf="!data.contextMode" color="primary" class="highlight">{{data.selectedRes.length}}
                         {{lang.elements}}</b> ?
                 </div>
                 <div>
-                    <div class="col-md-12" style="padding-top: 10px;" *ngIf="signatoryBookEnabled == 'maarchParapheur' && additionalsInfos.users.length != 0">
-                        <mat-form-field>
-                            <mat-label>{{lang.userMaarchParapheur}}</mat-label>
-                            <mat-select name="processingUser" [(ngModel)]="externalSignatoryBookDatas.processingUser" required>
-                                <mat-option *ngFor="let user of additionalsInfos.users" [value]="user.id">
-                                    {{user.firstname}} {{user.lastname}} ({{user.email}})
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-12" *ngIf="signatoryBookEnabled == 'maarchParapheur' && additionalsInfos.users.length == 0">
-                        {{lang.noUserDefinedInMaarchParapheur}}
-                    </div>
-                    <div class="col-sm-12" *ngIf="signatoryBookEnabled == 'maarchParapheur' && additionalsInfos.users.length != 0">
-                        <mat-radio-group required name="objectSent" [(ngModel)]="externalSignatoryBookDatas.objectSent">
-                            <mat-radio-button color="primary" name="objectSent" checked value="mail">{{lang.mailNote}}</mat-radio-button>
-                            <mat-radio-button color="primary" name="objectSent" value="attachment">{{lang.attachmentSignature}}</mat-radio-button><br><br>
-                        </mat-radio-group>
-                    </div>
-                    <div class="col-md-12" *ngIf="additionalsInfos.noAttachment.length != 0 && (signatoryBookEnabled != 'maarchParapheur' || (signatoryBookEnabled == 'maarchParapheur' && externalSignatoryBookDatas.objectSent == 'attachment'))">
+                    <app-maarch-paraph #maarchParapheur *ngIf="signatoryBookEnabled=='maarchParapheur'"
+                        [additionalsInfos]="additionalsInfos" [externalSignatoryBookDatas]="externalSignatoryBookDatas">
+                    </app-maarch-paraph>
+                    <app-x-paraph #xParaph *ngIf="signatoryBookEnabled=='xParaph'" [additionalsInfos]="additionalsInfos"
+                        [externalSignatoryBookDatas]="externalSignatoryBookDatas"></app-x-paraph>
+                    <div class="col-md-12"
+                        *ngIf="additionalsInfos.noAttachment.length != 0 && externalSignatoryBookDatas.objectSent == 'attachment'">
                         <div>
                             <div class="alert-message alert-message-danger mailList" role="alert">
                                 <p>
@@ -46,22 +34,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12" *ngIf="signatoryBookEnabled == 'maarchParapheur' && additionalsInfos.noMail.length != 0 && externalSignatoryBookDatas.objectSent == 'mail'">
-                        <div>
-                            <div class="alert-message alert-message-danger mailList" role="alert">
-                                <p>
-                                    {{lang.canNotMakeAction}} :
-                                </p>
-                                <ul>
-                                    <li *ngFor="let mail of additionalsInfos.noMail">
-                                        <b>{{mail.alt_identifier}}</b> : {{lang[mail.reason]}}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12" style="padding-top: 10px;">
                     <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
                 </div>
             </div>
@@ -69,15 +43,6 @@
     </mat-sidenav-container>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button mat-button color="primary" 
-        [disabled]="loading || (signatoryBookEnabled != 'maarchParapheur' && additionalsInfos.attachments.length == 0) ||
-        (signatoryBookEnabled == 'maarchParapheur' && (
-            !externalSignatoryBookDatas.processingUser || 
-            additionalsInfos.users.length == 0 || 
-            (externalSignatoryBookDatas.objectSent == 'attachment' && additionalsInfos.attachments.length == 0) || 
-            (externalSignatoryBookDatas.objectSent == 'mail' && additionalsInfos.mails.length == 0)
-            )
-        )"
-        (click)="onSubmit()">{{lang.validate}}</button>
+    <button mat-raised-button mat-button color="primary" [disabled]="loading || checkValidAction()" (click)="onSubmit()">{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>

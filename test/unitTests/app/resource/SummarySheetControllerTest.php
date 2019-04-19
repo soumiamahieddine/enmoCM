@@ -14,6 +14,7 @@ class SummarySheetControllerTest extends TestCase
     public function testCreateList()
     {
         $GLOBALS['userId'] = 'bbain';
+        $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
 
         $summarySheetController = new \Resource\controllers\SummarySheetController();
 
@@ -37,7 +38,7 @@ class SummarySheetControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $summarySheetController->createList($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $summarySheetController->createList($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(null, $responseBody);
@@ -49,7 +50,7 @@ class SummarySheetControllerTest extends TestCase
 
         unset($aArgs['resources']);
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response = $summarySheetController->createList($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response = $summarySheetController->createList($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Resources is not set or empty', $responseBody->errors);
 

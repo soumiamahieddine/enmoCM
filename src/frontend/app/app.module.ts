@@ -32,7 +32,9 @@ import { UpdateAcknowledgementSendDateActionComponent }             from './acti
 import { CreateAcknowledgementReceiptActionComponent }             from './actions/create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
 import { CloseAndIndexActionComponent }             from './actions/close-and-index-action/close-and-index-action.component';
 import { UpdateDepartureDateActionComponent }   from './actions/update-departure-date-action/update-departure-date-action.component';
-import { sendExternalSignatoryBookActionComponent }   from './actions/send-external-signatory-book-action/send-external-signatory-book-action.component';
+import { SendExternalSignatoryBookActionComponent }   from './actions/send-external-signatory-book-action/send-external-signatory-book-action.component';
+import { XParaphComponent }                         from './actions/send-external-signatory-book-action/x-paraph/x-paraph.component';
+import { MaarchParaphComponent }                         from './actions/send-external-signatory-book-action/maarch-paraph/maarch-paraph.component';
 import { ProcessActionComponent }               from './actions/process-action/process-action.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
@@ -95,7 +97,9 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
-        sendExternalSignatoryBookActionComponent,
+        SendExternalSignatoryBookActionComponent,
+        XParaphComponent,
+        MaarchParaphComponent,
         ProcessActionComponent,
         ViewDocActionComponent,
         RedirectActionComponent,
@@ -118,7 +122,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
-        sendExternalSignatoryBookActionComponent,
+        SendExternalSignatoryBookActionComponent,
         ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,

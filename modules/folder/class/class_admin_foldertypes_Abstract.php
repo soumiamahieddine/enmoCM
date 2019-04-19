@@ -214,6 +214,29 @@ abstract class foldertype_Abstract
         	?>" />
             <?php
             if ($mode == "up") {
+            	if (isset($totalDoc) && $totalDoc > 0) {
+                	?>
+                    <p style="width: 400px;margin: auto;">
+                        <input name="collection_show" id="collection_show" type="hidden" value="letterbox_coll"/>
+                    	<input name="collection" id="collection" type="hidden" value="letterbox_coll"/>
+                     </p>
+                     <?php
+                 } else {
+                 	?>
+                    <p style="width: 400px;margin: auto;">                                          
+                        <input name="collection" id="collection" value="letterbox_coll" hidden/>                
+                    </p>
+                    <?php
+                }
+            } else {
+            	?>
+                <p style="width: 400px;margin: auto;">
+                    <input name="collection" id="collection" value="letterbox_coll" hidden/>
+                </p>
+                <?php
+            }
+
+            if ($mode == "up") {
             	?>
                 <p style="width: 400px;margin: auto;">
                 	<label><?php echo _ID;?> : </label>
@@ -231,87 +254,14 @@ abstract class foldertype_Abstract
                 </p>
                 <?php
             }
-
-            if ($mode == "up") {
-            	if (isset($totalDoc) && $totalDoc > 0) {
-                	?>
-                    <p style="width: 400px;margin: auto;">
-                    	<label><?php echo _COLLECTION;?> : </label>
-                        <input name="collection_show" id="collection_show" type="text" value="<?php  
-                    functions::xecho(
-                    	$sec->retrieve_coll_label_from_coll_id(
-                    		$_SESSION['m_admin']['foldertype']['COLL_ID']
-                    	)
-                    ); 
-                    ?>" readonly="readonly" class="readonly" />
-                    	<input name="collection" id="collection" type="hidden" value="<?php  
-                    functions::xecho($_SESSION['m_admin']['foldertype']['COLL_ID']);
-                    ?>" />
-                     </p>
-                     <p align="center">
-                     <?php
-                     echo _CANTCHANGECOLL . " " . $totalDoc . " "
-                     	. _DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION;
-                     ?>
-                     </p>
-                     <?php
-                 } else {
-                 	?>
-                    <p style="width: 400px;margin: auto;">
-                    	<label for="collection"><?php echo _COLLECTION;?> : </label>
-                        <select name="collection" id="collection">
-                        	<option value="" ><?php echo _CHOOSE_COLLECTION;?></option>
-                            <?php  
-                    for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
-                    	?>
-                        <option value="<?php  
-                        functions::xecho($_SESSION['collections'][$i]['id']);
-                        ?>" <?php  
-                        if ($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']) { 
-                        	echo 'selected="selected"';
-                        }
-                        ?> ><?php  
-                        functions::xecho($_SESSION['collections'][$i]['label']);
-                        ?></option>
-                        <?php
-                    }
-                    ?>
-                    	</select>
-                    </p>
-                    <?php
-                }
-            } else {
-            	?>
-                <p style="width: 400px;margin: auto;">
-                	<label for="collection"><?php echo _COLLECTION;?> : </label>
-                    <select name="collection" id="collection" >
-                    	<option value="" ><?php echo _CHOOSE_COLLECTION;?></option>
-                        <?php  
-                for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
-                	?>
-                    <option value="<?php  
-                    functions::xecho($_SESSION['collections'][$i]['id']);
-                    ?>" <?php  
-                    if ($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']) { 
-                    	echo 'selected="selected"';
-                    }
-                    ?> ><?php  
-                    functions::xecho($_SESSION['collections'][$i]['label']);
-                    ?></option>
-                    <?php
-                }
-                ?>
-                	</select>
-                </p>
-                <?php
-            }
+            
             ?>
             <p style="width: 400px;margin: auto;">
-            	<label><?php echo _DESC;?> : </label>
+            	<label for="desc"><?php echo _DESC;?> : </label>
                 <input name="desc"  type="text" id="desc" value="<?php functions::xecho($_SESSION['m_admin']['foldertype']['desc']);?>" />
             </p>
             <p style="width: 400px;margin: auto;">
-            	<label><?php echo _COMMENTS;?> : </label>
+            	<label for="comment"><?php echo _COMMENTS;?> : </label>
                 <textarea  cols="30" rows="4"  name="comment"  id="comment" ><?php functions::xecho($_SESSION['m_admin']['foldertype']['comment']); ?></textarea>
             </p>
             <div id="opt_index"></div>

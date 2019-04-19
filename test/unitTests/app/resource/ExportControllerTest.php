@@ -31,6 +31,7 @@ class ExportControllerTest extends TestCase
     {
         $GLOBALS['userId'] = 'bbain';
 
+        $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
         $ExportController = new \Resource\controllers\ExportController();
 
         //  PUT
@@ -98,7 +99,7 @@ class ExportControllerTest extends TestCase
         //PDF
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(null, $responseBody);
@@ -120,7 +121,7 @@ class ExportControllerTest extends TestCase
         $aArgs['format'] = 'csv';
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response     = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(null, $responseBody);
@@ -146,25 +147,25 @@ class ExportControllerTest extends TestCase
 
         unset($aArgs['data'][2]['label']);
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('One data is not set well', $responseBody->errors);
 
         unset($aArgs['data']);
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Data data is empty or not an array', $responseBody->errors);
 
         $aArgs['delimiter'] = 't';
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Delimiter is empty or not a string between [\',\', \';\', \'TAB\']', $responseBody->errors);
 
         $aArgs['format'] = 'pd';
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => 10]);
+        $response = $ExportController->updateExport($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Data format is empty or not a string between [\'pdf\', \'csv\']', $responseBody->errors);
 

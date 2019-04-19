@@ -56,8 +56,8 @@ trait ShippingTrait
 
         $attachments = AttachmentModel::getOnView([
             'select'    => ['res_id', 'res_id_version', 'title', 'dest_address_id', 'external_id'],
-            'where'     => ['res_id_master = ?', 'in_send_attach = ?'],
-            'data'      => [$args['resId'], true]
+            'where'     => ['res_id_master = ?', 'in_send_attach = ?', 'status not in (?)'],
+            'data'      => [$args['resId'], true, ['OBS', 'DEL']]
         ]);
         if (empty($attachments)) {
             return true;
@@ -101,7 +101,7 @@ trait ShippingTrait
         }
 
         $curlAuth = CurlModel::execSimple([
-            'url'           => $mailevaConfig['uri'] . '/authentication/oauth2/token',
+            'url'           => $mailevaConfig['connectionUri'] . '/authentication/oauth2/token',
             'basicAuth'     => ['user' => $mailevaConfig['clientId'], 'password' => $mailevaConfig['clientSecret']],
             'headers'       => ['Content-Type: application/x-www-form-urlencoded'],
             'method'        => 'POST',

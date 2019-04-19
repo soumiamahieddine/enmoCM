@@ -4,6 +4,7 @@
         <MaarchDirectory>/var/www/html/MaarchCourrier/</MaarchDirectory>
 		<CustomId></CustomId>
         <validatedStatus>EENV</validatedStatus>
+        <validatedStatusOnlyVisa>EENV</validatedStatusOnlyVisa>
         <refusedStatus>NEW</refusedStatus>
         <validatedStatusAnnot>COU</validatedStatusAnnot>
         <refusedStatusAnnot>RET</refusedStatusAnnot>

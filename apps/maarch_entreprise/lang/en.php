@@ -4916,3 +4916,23 @@ if (!defined('_SECONDARY_INFORMATION')) {
 if (!defined('_DEST_INFORMATION')) {
     define("_DEST_INFORMATION", "Destination informations");
 }
+
+if (!defined('_SUMMARY_SHEET')) {
+    define('_SUMMARY_SHEET', 'Summary sheet');
+}
+
+if (!defined('_SENDERS')) {
+    define('_SENDERS', 'Sender(s)');
+}
+
+if (!defined('_DESTINATION_ENTITY')) {
+    define('_DESTINATION_ENTITY', 'Destination entity');
+}
+
+if (!defined('_CREATED')) {
+    define('_CREATED', 'Created');
+}
+
+if (!defined('_ACTION_DATE')) {
+    define('_ACTION_DATE', 'Action date');
+}

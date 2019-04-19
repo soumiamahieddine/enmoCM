@@ -193,6 +193,7 @@ class CoreConfigModel
 
         $mailevaConfig = [];
         if ($loadedXml) {
+            $mailevaConfig['connectionUri'] = (string)$loadedXml->CONNECTION_URI;
             $mailevaConfig['uri']           = (string)$loadedXml->URI;
             $mailevaConfig['clientId']      = (string)$loadedXml->CLIENT_ID;
             $mailevaConfig['clientSecret']  = (string)$loadedXml->CLIENT_SECRET;

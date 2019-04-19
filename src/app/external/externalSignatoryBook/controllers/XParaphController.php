@@ -17,10 +17,12 @@ namespace ExternalSignatoryBook\controllers;
 use Attachment\models\AttachmentModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
+use History\controllers\HistoryController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
+use User\models\UserModel;
 
 class XParaphController
 {
@@ -29,8 +31,8 @@ class XParaphController
         $attachments = AttachmentModel::getOnView([
             'select'    => [
                 'res_id', 'res_id_version', 'title'],
-            'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-            'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+            'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
+            'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'print_folder', 'signed_response']]
         ]);
 
         $attachmentToFreeze = [];
@@ -54,13 +56,14 @@ class XParaphController
             
             $xmlStep = '';
             foreach ($aArgs['steps'] as $key => $step) {
+                $order = $key + 1;
                 $xmlStep .= '<EtapeDepot>
                                 <user_siret xsi:type="xsd:string">'.$aArgs['info']['siret'].'</user_siret>
                                 <user_login xsi:type="xsd:string">'.$step['login'].'</user_login>
                                 <action xsi:type="xsd:string">'.$step['action'].'</action>
                                 <contexte xsi:type="xsd:string">'.$step['contexte'].'</contexte>
                                 <norejet xsi:type="xsd:string">0</norejet>
-                                <ordre xsi:type="xsd:int">'.$key.'</ordre>
+                                <ordre xsi:type="xsd:int">'.$order.'</ordre>
                             </EtapeDepot>';
             }
 
@@ -98,14 +101,14 @@ class XParaphController
             $isError = $response['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
             if (!empty($isError->Fault[0])) {
                 $error = $response['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->detail;
-                return ['error' => $error];
+                return ['error' => (string)$error];
             } else {
                 $depotId = $response['response']->children('SOAP-ENV', true)->Body->children('ns1', true)->XPRF_DeposerResponse->children()->return->children()->depotid;
                 $attachmentToFreeze[$collId][$resId] = (string)$depotId;
             }
         }
 
-        return $attachmentToFreeze;
+        return ['sended' => $attachmentToFreeze];
     }
 
     public static function getWorkflow(Request $request, Response $response, array $aArgs)
@@ -142,6 +145,7 @@ class XParaphController
                         <password xsi:type="xsd:string">'.$data['password'].'</password>
                         <action xsi:type="xsd:string">DETAIL</action>
                         <scenario xsi:type="xsd:string">' . $config['data']['docutype'] . '-' . $config['data']['docustype'].'</scenario>
+                        <version xsi:type="xsd:string">2</version>
                     </params>
                 </urn:XPRF_Initialisation_Deposer>
             </soapenv:Body>
@@ -161,65 +165,154 @@ class XParaphController
         } else {
             $details = $curlResponse['response']->children('SOAP-ENV', true)->Body->children('ns1', true)->XPRF_Initialisation_DeposerResponse->children()->return->children()->Retour_XML;
             $xmlData = simplexml_load_string($details);
-    
-            $visa = [];
-            $sign = [];
-    
+
+            $userWorkflow = [];
             foreach ($xmlData->SCENARIO->AUTORISATIONS->VISEURS->VISEUR as $value) {
-                $visa[] = (string)$value;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["userId"]      = (string)$value->ACTEUR_LOGIN;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["displayName"] = (string)$value->ACTEUR_NOM;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["roles"][]     = "visa";
             }
             foreach ($xmlData->SCENARIO->AUTORISATIONS->SIGNATAIRES->SIGNATAIRE as $value) {
-                $sign[] = (string)$value;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["userId"]      = (string)$value->ACTEUR_LOGIN;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["displayName"] = (string)$value->ACTEUR_NOM;
+                $userWorkflow[(string)$value->ACTEUR_LOGIN]["roles"][]     = "sign";
+            }
+            $workflow = [];
+            foreach ($userWorkflow as $value) {
+                $workflow[] = $value;
             }
     
-            return $response->withJson(['visa' => $visa, 'sign' => $sign]);
+            return $response->withJson(['workflow' => $workflow]);
         }
     }
+
     public static function retrieveSignedMails($aArgs)
     {
-        $validatedSignature   = $aArgs['config']['data']['validatedStateSignature'];
-        $validatedNoSignature = $aArgs['config']['data']['validatedStateNoSignature'];
-        $refused              = $aArgs['config']['data']['refusedState'];
 
+        $tmpPath = CoreConfigModel::getTmpPath();
         foreach (['noVersion', 'isVersion'] as $version) {
             $depotids = [];
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
                 $depotids[$value->external_id] = $resId;
             }
+
             if (!empty($depotids)) {
-                $avancement = XParaphController::getAvancement(['config' => $aArgs['config'], 'depotsIds' => $depotids]);
+                $avancements = XParaphController::getAvancement(['config' => $aArgs['config'], 'depotsIds' => $depotids]);
+            } else {
+                unset($aArgs['idsToRetrieve'][$version]);
+                continue;
             }
 
-            //     $etatDossier = IxbusController::getEtatDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
-    
-            //     // Refused
-            //     if ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatRefused']) {
-            //         $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-            //         $notes = IxbusController::getDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
-            //         $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->MotifRefus;
-            //     // Validated
-            //     } elseif ((string)$etatDossier == $aArgs['config']['data']['ixbusIdEtatValidated']) {
-            //         $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-            //         $signedDocument = IxbusController::getAnnexes(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
-            //         $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
-            //         $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = (string)$signedDocument->Fichier;
+            foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
+                $avancement = $avancements[$value->external_id];
 
-            //         $notes = IxbusController::getAnnotations(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
-            //         $aArgs['idsToRetrieve'][$version][$resId]->noteContent = (string)$notes->Annotation->Texte;
-            //     } else {
-            //         unset($aArgs['idsToRetrieve'][$version][$resId]);
-            //     }
-            // }
+                $state = XParaphController::getState(['avancement' => $avancement]);
+
+                if ($state['id'] == 'refused') {
+                    $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
+                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+
+                    $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
+                    if (!empty($processedFile['errors'])) {
+                        unset($aArgs['idsToRetrieve'][$version][$resId]);
+                        continue;
+                    }
+                    $file      = base64_decode($processedFile['zip']);
+                    $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
+                    $tmpName   = $unzipName . '.zip';
+            
+                    file_put_contents($tmpPath . $tmpName, $file);
+
+                    $zip = new \ZipArchive();
+                    $zip->open($tmpPath . $tmpName);
+                    $zip->extractTo($tmpPath . $unzipName);
+
+                    foreach (glob($tmpPath . $unzipName . '/*.xml') as $filename) {
+                        $log = base64_encode(file_get_contents($filename));
+                    }
+                    unlink($tmpPath . $tmpName);
+
+                    $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
+                } elseif ($state['id'] == 'validateSignature' || $state['id'] == 'validateOnlyVisa') {
+                    $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
+                    if (!empty($processedFile['errors'])) {
+                        unset($aArgs['idsToRetrieve'][$version][$resId]);
+                        continue;
+                    }
+                    $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
+                    $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf';
+
+                    $file      = base64_decode($processedFile['zip']);
+                    $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
+                    $tmpName   = $unzipName . '.zip';
+            
+                    file_put_contents($tmpPath . $tmpName, $file);
+
+                    $zip = new \ZipArchive();
+                    $zip->open($tmpPath . $tmpName);
+                    $zip->extractTo($tmpPath . $unzipName);
+
+                    foreach (glob($tmpPath . $unzipName . '/*.pdf') as $filename) {
+                        $encodedFile = base64_encode(file_get_contents($filename));
+                    }
+                    foreach (glob($tmpPath . $unzipName . '/*.xml') as $filename) {
+                        $log = base64_encode(file_get_contents($filename));
+                    }
+                    unlink($tmpPath . $tmpName);
+
+                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $encodedFile;
+                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+                    if ($state['id'] == 'validateOnlyVisa') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->onlyVisa = true;
+                    }
+                    $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
+                } else {
+                    unset($aArgs['idsToRetrieve'][$version][$resId]);
+                }
+            }
         }
 
         // retourner seulement les mails récupérés (validés ou signés)
         return $aArgs['idsToRetrieve'];
     }
 
+    public static function getState($aArgs)
+    {
+        // remove first step. Always deposit
+        unset($aArgs['avancement'][0]);
+        $state['id'] = 'validateOnlyVisa';
+        $signature   = false;
+
+        if (!empty($aArgs['avancement'])) {
+            foreach ($aArgs['avancement'] as $step) {
+                if ($step['etat'] == 'ACTIVE') {
+                    $state['id'] = 'ACTIVE';
+                    break;
+                } elseif ($step['etat'] == 'KO') {
+                    $state['id']   = 'refused';
+                    $state['note'] = $step['note'];
+                    break;
+                }
+                if ($step['typeEtape'] == 'SIGN') {
+                    $signature = true;
+                }
+            }
+        } else {
+            $state['id'] = 'ACTIVE';
+        }
+
+        if ($signature) {
+            $state['id']   = 'validateSignature';
+        }
+        $state['note'] = $step['note'];
+
+        return $state;
+    }
+
     public static function getAvancement($aArgs)
     {
         $depotIds = '';
-        $aArgs['depotsIds'] = ["20190416_145636_1" => 1993];
+
         foreach ($aArgs['depotsIds'] as $key => $step) {
             $depotIds .= '<listDepotIds>'.$key.'</listDepotIds>';
         }
@@ -268,19 +361,97 @@ class XParaphController
                         <siret xsi:type="xsd:string">?</siret>
                         <login xsi:type="xsd:string">?</login>
                         <password xsi:type="xsd:string">?</password>
-                        <depotid xsi:type="xsd:string">1</depotid>
+                        <depotid xsi:type="xsd:string">'.$aArgs['depotId'].'</depotid>
                     </params>
                 </urn:XPRF_getFiles>
             </soapenv:Body>
         </soapenv:Envelope>';
 
-        $response = CurlModel::execSOAP([
+        $curlResponse = CurlModel::execSOAP([
             'soapAction'    => 'urn:parafwsdl#paraf',
             'url'           => $aArgs['config']['data']['url'],
             'xmlPostString' => $xmlPostString,
             'options'       => [CURLOPT_SSL_VERIFYPEER => false]
         ]);
 
-        return $response;
+        $isError = $curlResponse['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
+        if (!empty($isError->Fault[0])) {
+            $error = $curlResponse['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->detail;
+            return ['errors' => $error];
+        } else {
+            $details = $curlResponse['response']->children('SOAP-ENV', true)->Body->children('ns1', true)->XPRF_getFilesResponse->children()->return;
+            return json_decode($details, true);
+        }
+    }
+
+    public function deleteXparaphAccount(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+        foreach (['login', 'siret'] as $value) {
+            if (empty($data[$value])) {
+                return $response->withStatus(400)->withJson(['errors' => $value . ' is empty']);
+            }
+        }
+
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['external_id', 'id', 'firstname', 'lastname']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+        }
+
+        $externalId = json_decode($user['external_id'], true);
+        
+        $accountFound = false;
+        foreach ($externalId['xParaph'] as $key => $value) {
+            if ($value['login'] == $data['login'] && $value['siret'] == $data['siret']) {
+                unset($externalId['xParaph'][$key]);
+                UserModel::updateExternalId(['id' => $user['id'], 'externalId' => json_encode($externalId)]);
+                $accountFound = true;
+                HistoryController::add([
+                    'tableName'    => 'users',
+                    'recordId'     => $GLOBALS['userId'],
+                    'eventType'    => 'UP',
+                    'eventId'      => 'userModification',
+                    'info'         => _USER_UPDATED . " {$user['firstname']} {$user['lastname']}. " . _XPARAPH_ACCOUNT_CREATED
+                ]);
+
+                break;
+            }
+        }
+
+        if ($accountFound) {
+            return $response->withStatus(204);
+        } else {
+            return $response->withStatus(400)->withJson(['errors' => 'Xparaph account not found']);
+        }
+    }
+
+    public function createXparaphAccount(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+        foreach (['login', 'siret'] as $value) {
+            if (empty($body[$value])) {
+                return $response->withStatus(400)->withJson(['errors' => $value . ' is empty']);
+            }
+        }
+
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['external_id', 'id', 'firstname', 'lastname']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+        }
+
+        $externalId = json_decode($user['external_id'], true);
+        $externalId['xParaph'][] = ["login" => $body['login'], "siret" => $body['siret']];
+        
+        UserModel::updateExternalId(['id' => $user['id'], 'externalId' => json_encode($externalId)]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _USER_UPDATED . " {$user['firstname']} {$user['lastname']}. " . _XPARAPH_ACCOUNT_DELETED
+        ]);
+
+        return $response->withStatus(204);
     }
 }

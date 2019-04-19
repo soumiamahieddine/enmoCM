@@ -1651,26 +1651,41 @@ if (!defined('_ACCESS_SMARTPHONE')) {
     define('_ACCESS_SMARTPHONE', '_TO_TRANSLATE');
 }
 if (!defined('_MAILING_CONFIRMATION')) {
-    define('_MAILING_CONFIRMATION', 'Do you want to generate all attachments ? TO TRANSLATE');
+    define('_MAILING_CONFIRMATION', 'Do you want to generate all attachments ? _TO_TRANSLATE');
 }
 if (!defined('_ELECTRONIC')) {
-    define('_ELECTRONIC', 'Electronic');
+    define('_ELECTRONIC', 'Electronic_TO_TRANSLATE');
 }
 if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
-    define('_ACKNOWLEDGEMENT_RECEIPTS', 'Acknowledgement of receipts');
+    define('_ACKNOWLEDGEMENT_RECEIPTS', 'Acknowledgement of receipts_TO_TRANSLATE');
 }
 if (!defined('_PUT_IN_SEND_ATTACH')) {
-    define('_PUT_IN_SEND_ATTACH', 'Put in send attachement');
+    define('_PUT_IN_SEND_ATTACH', 'Put in send attachement_TO_TRANSLATE');
 }
 if (!defined('_INITIATOR_ENTITY')) {
-    define('_INITIATOR_ENTITY', 'Initiator entity');
+    define('_INITIATOR_ENTITY', 'Initiator entity_TO_TRANSLATE');
 }
 if (!defined('_RECIPIENTS')) {
-    define('_RECIPIENTS', 'Recipient(s)');
+    define('_RECIPIENTS', 'Recipient(s)_TO_TRANSLATE');
 }
 if (!defined('_SECONDARY_INFORMATION')) {
     define("_SECONDARY_INFORMATION", "Secondary Informations_TO_TRANSLATE");
 }
 if (!defined('_DEST_INFORMATION')) {
     define("_DEST_INFORMATION", "Destination informations_TO_TRANSLATE");
+}
+if (!defined('_SUMMARY_SHEET')) {
+    define('_SUMMARY_SHEET', 'Summary sheet_TO_TRANSLATE');
+}
+if (!defined('_SENDERS')) {
+    define('_SENDERS', 'Sender(s)_TO_TRANSLATE');
+}
+if (!defined('_DESTINATION_ENTITY')) {
+    define('_DESTINATION_ENTITY', 'Destination entity_TO_TRANSLATE');
+}
+if (!defined('_CREATED')) {
+    define('_CREATED', 'Created_TO_TRANSLATE');
+}
+if (!defined('_ACTION_DATE')) {
+    define('_ACTION_DATE', 'Action date_TO_TRANSLATE');
 }

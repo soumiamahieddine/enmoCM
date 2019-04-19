@@ -491,3 +491,5 @@ define("_VISA_WORKFLOW", "Visa workflow_TO_TRANSLATE");
 define("_DIFFUSION_LIST", "Diffusion list_TO_TRANSLATE");
 define("_SECONDARY_INFORMATION", "Secondary informations_TO_TRANSLATE");
 define("_DEST_INFORMATION", "Destination informations_TO_TRANSLATE");
+define("_XPARAPH_ACCOUNT_DELETED", "xParaph account deleted_TO_TRANSLATE");
+define("_XPARAPH_ACCOUNT_CREATED", "xParaph account created_TO_TRANSLATE");

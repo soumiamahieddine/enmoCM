@@ -13,7 +13,7 @@ export const LANG_NL = {
     "actionName" : "Actienaam",
     "actionPage" : "Resultaatpagina van de actie",
     "actionParameters" : "Instelling van de actie",
-    "actionSystem"   : "Systeemwerking",
+    "actionCarriedOut"   : "Uitgevoerde actie",
     "actions" : "Actie(s)",
     "actionsGroupBasketUpdated" : "Instelling van de acties gewijzigd",
     "actionUpdated" : "Actie gewijzigd",
@@ -62,6 +62,7 @@ export const LANG_NL = {
     "basketNotification" : "De melding van dit bakje inschakelen / uitschakelen",
     "baskets" : "Bakjes",
     "basketsAssigned" : "Bakjes door een andere gebruiker toegewezen",
+    "basketNotFound"  : "Bakjes niet gevonden",
     "basketsOrder" : "De volgorde van de bakjes beheren",
     "basketsRedirected" : "Bakjes doorgestuurd naar een andere gebruiker",
     "basketUpdated" : "Bakje gewijzigd",
@@ -984,4 +985,37 @@ export const LANG_NL = {
     "noTemplate"                                : "No template", //_TO_TRANSLATE
     "syncSignsToMaarchParapheur"                : "Synchronize signatures to Maarch Parapheur", //_TO_TRANSLATE
     "signsSynchronized"                         : "Signatures have been updated in Maarch Parapheur", //_TO_TRANSLATE
+    "allEntities"                               : "All entities", //_TO_TRANSLATE
+    "immediatelyBelowMyPrimaryEntity"           : "Immediately below my primary entity", //_TO_TRANSLATE
+    "belowAllMyEntities"                        : "Below all my entities", //_TO_TRANSLATE
+    "belowMyPrimaryEntity"                      : "Below my primary entity", //_TO_TRANSLATE
+    "myEntities"                                : "My entities", //_TO_TRANSLATE
+    "myPrimaryEntity"                           : "My primary entity", //_TO_TRANSLATE
+    "sameLevelMyPrimaryEntity"                  : "Same level of my primary entity", //_TO_TRANSLATE
+    "immediatelySuperiorMyPrimaryEntity"        : "Immediately superior to my primary entity", //_TO_TRANSLATE
+    "setByDefault"                              : "set by default", //_TO_TRANSLATE
+    "grouping"                                  : "Grouping", //_TO_TRANSLATE
+    "deleteRedirection"                         : "Delete redirection", //_TO_TRANSLATE
+    "path"                                      : "Path", //_TO_TRANSLATE
+    "restrictedEntity"                          : "Restricted entity", //_TO_TRANSLATE
+    "modifiedBy"                                : "Modified by", //_TO_TRANSLATE
+    "editAttachment"                            : "Edit the attachment", //_TO_TRANSLATE
+    "searchNewAssignee"                         : "Search for a new assignee", //_TO_TRANSLATE
+    "configurationType"                         : "Configuration type", //_TO_TRANSLATE
+    "noOverviewAvailable"                       : "No overview available", //_TO_TRANSLATE
+    "pdfVersionFile"                            : "The PDF version of the file", //_TO_TRANSLATE
+    "isNotAvailable"                            : "is not available", //_TO_TRANSLATE
+    "editingAttachmentInterrupted"              : "Editing of the attachment has been interrupted. <br/>><sub>Please re-edit it. </sub>", //_TO_TRANSLATE
+    "noVisaWorkflowNoSignature"                 : "No visa workflow set up. <br/>><sub>No signature possible. </sub>", //_TO_TRANSLATE
+    "noAttachmentClickToAddOne"                 : "No attachments available<br/><sub>Click on <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> to add one.</sub>", //_TO_TRANSLATE
+    "unsign"                                    : "Unsign", //_TO_TRANSLATE
+    "selectedAccount"                           : "Selected account", //_TO_TRANSLATE
+    "newAccount"                                : "New account", //_TO_TRANSLATE
+    "siret"                                     : "SIRET number", //_TO_TRANSLATE
+    "confirmDeleteAccount"                      : "Do you want to delete this account ?", //_TO_TRANSLATE
+    "accountAdded"                              : "Account added", //_TO_TRANSLATE
+    "accountDeleted"                            : "Account deleted", //_TO_TRANSLATE
+    "roles"                                     : "Roles", //_TO_TRANSLATE
+    "contextParaph"                             : "Context", //_TO_TRANSLATE
+    "addNewAccount"                             : "Add new account", //_TO_TRANSLATE
 };

@@ -130,6 +130,7 @@ $GLOBALS['userWS']                 = (string)$config->userWS;
 $GLOBALS['passwordWS']             = (string)$config->passwordWS;
 $GLOBALS['batchDirectory']         = $GLOBALS['MaarchDirectory'] . 'modules' . DIRECTORY_SEPARATOR . 'visa' . DIRECTORY_SEPARATOR . 'batch';
 $validatedStatus                   = (string)$config->validatedStatus;
+$validatedStatusOnlyVisa           = (string)$config->validatedStatusOnlyVisa;
 $refusedStatus                     = (string)$config->refusedStatus;
 $validatedStatusAnnot              = (string)$config->validatedStatusAnnot;
 $refusedStatusAnnot                = (string)$config->refusedStatusAnnot;
@@ -203,7 +204,6 @@ try {
         echo "\nNo class detected ! \nThe batch cannot be launched !\n\n";
         exit(102);
     }
-
 } catch (IncludeFileError $e) {
     $GLOBALS['logger']->write(
         'Problem with the php include path:' .$e .' '. get_include_path(),
@@ -276,6 +276,27 @@ if (!empty($retrievedMails['error'])) {
 foreach ($retrievedMails['isVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update res_version_attachments : ' . $resId . '. ExternalId : ' . $value->external_id, 'INFO');
 
+    if (!empty($value->log)) {
+        $GLOBALS['logger']->write('Create log Attachment', 'INFO');
+        Bt_createAttachment([
+            'res_id_master'     => $value->res_id_master,
+            'title'             => '[xParaph Log] ' . $value->title,
+            'identifier'        => $value->identifier,
+            'type_id'           => $value->type_id,
+            'dest_contact_id'   => $value->dest_contact_id,
+            'dest_address_id'   => $value->dest_address_id,
+            'dest_user'         => $value->dest_user,
+            'typist'            => $value->typist,
+            'format'            => 'xml',
+            'attachment_type'   => $value->attachment_type,
+            'relation'          => 1,
+            'status'            => 'TRA',
+            'encodedFile'       => $value->log,
+            'in_signature_book' => 'false',
+            'table'             => 'res_attachments'
+        ]);
+    }
+
     if ($value->status == 'validated') {
         if (!empty($value->encodedFile)) {
             $GLOBALS['logger']->write('Create validated version Attachment', 'INFO');
@@ -301,7 +322,12 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
     
         $GLOBALS['logger']->write('Document validated', 'INFO');
         $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ?", [$resId]);
-        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
+        if (!empty($value->onlyVisa) && $value->onlyVisa) {
+            $status = $validatedStatusOnlyVisa;
+        } else {
+            $status = $validatedStatus;
+        }
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $status]);
 
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_version_attachments) a été validée dans le parapheur externe';
         Bt_history([
@@ -353,6 +379,27 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
 foreach ($retrievedMails['noVersion'] as $resId => $value) {
     $GLOBALS['logger']->write('Update res_attachments : ' . $resId . '. ExternalId : ' . $value->external_id, 'INFO');
 
+    if (!empty($value->log)) {
+        $GLOBALS['logger']->write('Create log Attachment', 'INFO');
+        Bt_createAttachment([
+            'res_id_master'     => $value->res_id_master,
+            'title'             => '[xParaph Log] ' . $value->title,
+            'identifier'        => $value->identifier,
+            'type_id'           => $value->type_id,
+            'dest_contact_id'   => $value->dest_contact_id,
+            'dest_address_id'   => $value->dest_address_id,
+            'dest_user'         => $value->dest_user,
+            'typist'            => $value->typist,
+            'format'            => 'xml',
+            'attachment_type'   => $value->attachment_type,
+            'relation'          => 1,
+            'status'            => 'TRA',
+            'encodedFile'       => $value->log,
+            'in_signature_book' => 'false',
+            'table'             => 'res_attachments'
+        ]);
+    }
+
     if ($value->status == 'validated') {
         if (!empty($value->encodedFile)) {
             $GLOBALS['logger']->write('Create validated Attachment', 'INFO');
@@ -378,7 +425,12 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
 
         $GLOBALS['logger']->write('Document validated', 'INFO');
         $GLOBALS['db']->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", [$resId]);
-        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $validatedStatus]);
+        if (!empty($value->onlyVisa) && $value->onlyVisa) {
+            $status = $validatedStatusOnlyVisa;
+        } else {
+            $status = $validatedStatus;
+        }
+        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $status]);
 
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_attachments) a été validée dans le parapheur externe';
         Bt_history([

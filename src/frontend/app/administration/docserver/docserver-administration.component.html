@@ -52,7 +52,7 @@
                                 <span matSuffix> Go</span>
                             </mat-form-field>
                             <mat-form-field>
-                                <input matInput required name="path" id="path" title="path" type="text" placeholder="Chemin" [(ngModel)]="docserver.path_template"
+                                <input matInput required name="path" id="path" title="{{lang.path}}" type="text" placeholder="{{lang.path}}" [(ngModel)]="docserver.path_template"
                                     [disabled]="docserver.is_readonly">
                             </mat-form-field>
                         </div>

@@ -7,7 +7,7 @@
         </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-form-field floatLabel="never" style="padding-left:20px;padding-right:20px;">
-        <input matInput placeholder="Filtrer" #listFilter>
+        <input matInput placeholder="{{lang.filterBy}}" #listFilter>
     </mat-form-field>
     <ng-container *ngFor="let regroupedBasket of homeData.regroupedBaskets">
         <mat-icon *ngIf="regroupedBasket.baskets[0]" color="primary" mat-list-icon class="fa fa-users" style="margin-left:10px;"></mat-icon> <span *ngIf="regroupedBasket.baskets[0]" color="primary" style="font-weight:bold;">{{regroupedBasket.groupDesc}}</span>

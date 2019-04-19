@@ -5053,3 +5053,24 @@ if (!defined('_SECONDARY_INFORMATION')) {
 if (!defined('_DEST_INFORMATION')) {
     define("_DEST_INFORMATION", "Informations de destination");
 }
+
+if (!defined('_SUMMARY_SHEET')) {
+    define('_SUMMARY_SHEET', 'Fiche de liaison');
+}
+
+if (!defined('_SENDERS')) {
+    define('_SENDERS', 'Expéditeur(s)');
+}
+
+if (!defined('_DESTINATION_ENTITY')) {
+    define('_DESTINATION_ENTITY', 'Entité traitante');
+}
+
+if (!defined('_CREATED')) {
+    define('_CREATED', 'Créé le');
+}
+
+if (!defined('_ACTION_DATE')) {
+    define('_ACTION_DATE', 'Date d\'action');
+}
+

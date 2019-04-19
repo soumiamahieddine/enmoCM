@@ -147,7 +147,7 @@ function check_form($form_id, $values)
                             'validation_date', 'relation', 'attachment_id_master'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-                        'data'      => [$resId, ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+                        'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
                     ]);
 
                     foreach ($attachments as $value) {
@@ -355,7 +355,7 @@ function hasAttachmentError()
                 'count(1) as nb'
             ],
             'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-            'data'      => [$resId, ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+            'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
         ]);
         if ($attachments[0]['nb'] == 0) {
             $noAttachmentsResource = \Resource\models\ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);

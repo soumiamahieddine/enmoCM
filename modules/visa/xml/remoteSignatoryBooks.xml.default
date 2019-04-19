@@ -50,8 +50,5 @@
         <url>https://preprodssl.ssl.spl-xdemat.fr/Xparaph/wsdl/wsdl.php</url>
         <docutype>101</docutype>
         <docustype>9</docustype>
-        <validatedStateSignature>VAL</validatedStateSignature>
-        <validatedStateNoSignature>VAL</validatedStateNoSignature>
-        <refusedState>REF</refusedState>
     </signatoryBook>
 </root>

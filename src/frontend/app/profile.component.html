@@ -289,7 +289,7 @@
                                                                 <button mat-button color="warn" matSuffix
                                                                     mat-icon-button aria-label="Clear"
                                                                     (click)="delBasketRedirection(basket,i)"
-                                                                    matTooltip="Supprimer la redirection">
+                                                                    matTooltip="{{lang.deleteRedirection}}">
                                                                     <mat-icon color="warn"
                                                                         class="fa fa-times text-danger"></mat-icon>
                                                                 </button>
@@ -663,7 +663,7 @@
                                         </div>
 
                                     </mat-tab>
-                                    <mat-tab label="Groupement : {{contactsGroup.label}}" *ngIf="contactsListMode">
+                                    <mat-tab label="{{lang.grouping}} : {{contactsGroup.label}}" *ngIf="contactsListMode">
                                         <mat-accordion>
                                             <mat-expansion-panel #linkContPan>
                                                 <mat-expansion-panel-header>

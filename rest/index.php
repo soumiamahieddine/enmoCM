@@ -378,5 +378,7 @@ $app->post('/saveMessageExchangeReturn', \Sendmail\Controllers\ReceiveMessageExc
 $app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
 
 $app->get('/xParaphWorkflow', \ExternalSignatoryBook\controllers\XParaphController::class . ':getWorkflow');
+$app->post('/xParaphAccount', \ExternalSignatoryBook\controllers\XParaphController::class . ':createXparaphAccount');
+$app->delete('/xParaphAccount', \ExternalSignatoryBook\controllers\XParaphController::class . ':deleteXparaphAccount');
 
 $app->run();

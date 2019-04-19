@@ -178,7 +178,7 @@ class MaarchParapheurController
         $senderPrimaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         if ($aArgs['objectSent'] == 'attachment') {
-            $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'incoming_mail_attachment', 'signed_response'];
+            $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
 
             $attachments = AttachmentModel::getOnView([
                 'select'    => [
@@ -186,7 +186,7 @@ class MaarchParapheurController
                     'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
                     'validation_date', 'relation', 'attachment_id_master'
                 ],
-                'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+                'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
                 'data'      => [$aArgs['resIdMaster'], $excludeAttachmentTypes]
             ]);
 

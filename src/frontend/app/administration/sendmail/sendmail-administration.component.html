@@ -26,7 +26,7 @@
                                 <div class="col-md-12" style="margin-bottom: 20px;">
                                     <mat-form-field>
                                         <mat-select #smtpType (selectionChange)="changeDesc(smtpType)" name="smtpType"
-                                            placeholder="Type de configuration" [(ngModel)]="sendmail.type" required>
+                                            placeholder="{{lang.configurationType}}" [(ngModel)]="sendmail.type" required>
                                             <mat-option *ngFor="let type of smtpTypeList" [value]="type.id">
                                                 {{type.label}}
                                             </mat-option>

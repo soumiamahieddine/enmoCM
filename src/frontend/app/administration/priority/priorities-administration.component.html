@@ -91,7 +91,7 @@
             <p style="font-size:15px;padding:5px"> {{lang.prioritiesHelpDesc}} </p>
             <mat-list>
                 <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="prioritiesOrder">
-                    <mat-list-item disableRipple="true" *ngFor="let priority of prioritiesOrder;let i = index" title="deplacer" dnd-sortable
+                    <mat-list-item disableRipple="true" *ngFor="let priority of prioritiesOrder;let i = index" title="{{lang.move}}" dnd-sortable
                                    [sortableIndex]="i" (onDropSuccess)="updatePrioritiesOrder()">
                         <mat-icon color="primary" mat-list-icon class="fa fa-inbox"></mat-icon>
                         <p mat-line>{{i+1}} - {{priority.label}}</p>

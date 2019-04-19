@@ -37,9 +37,7 @@ class ContactController
 
         $data = $request->getParams();
 
-        $check = Validator::notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['contactType']);
+        $check = Validator::intVal()->notEmpty()->validate($data['contactType']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['contactPurposeId']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['isCorporatePerson']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['email']);
@@ -55,6 +53,9 @@ class ContactController
         }
         if ($data['isCorporatePerson'] != 'Y') {
             $data['isCorporatePerson'] = 'N';
+            if (!Validator::stringType()->notEmpty()->validate($data['lastname'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body lastname is empty or not a string']);
+            }
         } else {
             $data['addressFirstname'] = $data['firstname'];
             $data['addressLastname'] = $data['lastname'];

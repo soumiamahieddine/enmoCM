@@ -52,7 +52,7 @@ trait ExternalSignatoryBookTrait
                         'count(1) as nb'
                     ],
                     'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-                    'data'      => [$args['resId'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+                    'data'      => [$args['resId'], ['converted_pdf', 'print_folder', 'signed_response']]
                 ]);
                 if ($attachments[0]['nb'] == 0 && $args['data']['objectSent'] == 'attachment') {
                     $noAttachmentsResource = ResModel::getExtById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
@@ -80,19 +80,24 @@ trait ExternalSignatoryBookTrait
                         'count(1) as nb'
                     ],
                     'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-                    'data'      => [$args['resId'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+                    'data'      => [$args['resId'], ['converted_pdf', 'print_folder', 'signed_response']]
                 ]);
                 if ($attachments[0]['nb'] == 0) {
                     $noAttachmentsResource = ResModel::getExtById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
                     return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }
 
-                $attachmentToFreeze = XParaphController::sendDatas([
+                $sendedInfo = XParaphController::sendDatas([
                     'config'      => $config,
                     'resIdMaster' => $args['resId'],
                     'info'        => $args['data']['info'],
                     'steps'       => $args['data']['steps'],
                 ]);
+                if (!empty($sendedInfo['error'])) {
+                    return ['errors' => [$sendedInfo['error']]];
+                } else {
+                    $attachmentToFreeze = $sendedInfo['sended'];
+                }
             }
         }
 
