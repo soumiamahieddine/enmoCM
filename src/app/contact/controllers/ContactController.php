@@ -57,6 +57,9 @@ class ContactController
                 return $response->withStatus(400)->withJson(['errors' => 'Body lastname is empty or not a string']);
             }
         } else {
+            if (!Validator::stringType()->notEmpty()->validate($data['society'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body society is empty or not a string']);
+            }
             $data['addressFirstname'] = $data['firstname'];
             $data['addressLastname'] = $data['lastname'];
             $data['addressTitle'] = $data['title'];
