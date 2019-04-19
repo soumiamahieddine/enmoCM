@@ -80,7 +80,7 @@ require_once 'apps/'.$_SESSION['config']['app_id']
 $sec = new security();
 $businessAppTools = new business_app_tools();
 
-if (count($_SESSION['config']) <= 0) {
+if (empty($_SESSION['config']['databasename'])) {
     $tmpPath = explode(
         DIRECTORY_SEPARATOR,
         str_replace(
@@ -103,6 +103,9 @@ if (count($_SESSION['config']) <= 0) {
     $businessAppTools->build_business_app_config();
     $core->load_modules_config($_SESSION['modules']);
     $core->load_menu($_SESSION['modules']);
+    $core->load_lang();
+    $core->load_app_services();
+    $core->load_modules_services($_SESSION['modules']);
 }
 
 if (empty($login) || empty($password)) {
