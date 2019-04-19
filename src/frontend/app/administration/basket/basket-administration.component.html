@@ -148,8 +148,7 @@
                                                     <input matInput (keyup)="applyFilter($event.target.value)"
                                                         placeholder="{{lang.filterBy}}">
                                                 </mat-form-field>
-                                                <mat-table #table [dataSource]="dataSource" matSort matSortActive="label_action"
-                                                    matSortDirection="asc">
+                                                <mat-table #table [dataSource]="dataSource">
                                                     <ng-container matColumnDef="label_action">
                                                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                                                         <mat-cell *matCellDef="let element" style="flex:6;" matTooltip="id : {{element.id}}">
