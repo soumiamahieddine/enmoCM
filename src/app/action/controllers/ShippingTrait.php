@@ -101,7 +101,7 @@ trait ShippingTrait
         }
 
         $curlAuth = CurlModel::execSimple([
-            'url'           => $mailevaConfig['uri'] . '/authentication/oauth2/token',
+            'url'           => $mailevaConfig['connectionUri'] . '/authentication/oauth2/token',
             'basicAuth'     => ['user' => $mailevaConfig['clientId'], 'password' => $mailevaConfig['clientSecret']],
             'headers'       => ['Content-Type: application/x-www-form-urlencoded'],
             'method'        => 'POST',
