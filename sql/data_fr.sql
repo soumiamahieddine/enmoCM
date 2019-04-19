@@ -810,7 +810,6 @@ INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, 
 
 -- Create BASKETS
 TRUNCATE TABLE baskets;
-ALTER SEQUENCE baskets_id_seq RESTART WITH 1;
 DELETE FROM baskets WHERE basket_id = 'QualificationBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'QualificationBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'QualificationBasket';
@@ -903,6 +902,7 @@ DELETE FROM baskets WHERE basket_id = 'AckArcBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'AckArcBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'AckArcBasket';
 INSERT INTO baskets (id, basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES (23, 'AckArcBasket', 'Courriers archivés', 'Courriers archivés et acceptés dans le SAE', 'status=''REPLY_SEDA''', 'letterbox_coll', 'Y', 'N', 'Y',230);
+ALTER SEQUENCE baskets_id_seq RESTART WITH 24;
 
 -- Create GROUPBASKET
 TRUNCATE TABLE groupbasket;
