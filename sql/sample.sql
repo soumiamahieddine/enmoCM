@@ -31,6 +31,22 @@ INSERT INTO res_letterbox (res_id, title, subject, description, type_id, format,
 VALUES (13, NULL, 'Arret maladie vide', '', 701, 'pdf', 'bblier', NOW(), NOW(), NULL, NULL, NULL, NULL, NULL, CURRENT_DATE, 'FASTHD_MAN', NULL, 'tests#', 'arret_maladie.pdf', '', '0', 24877, 'ESIG', 'DRH', NULL, NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'res_letterbox', 'COU', 'ppruvost', 13);
 INSERT INTO res_letterbox (res_id, title, subject, description, type_id, format, typist, creation_date, modification_date, converter_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, work_batch, origin, priority, policy_id, cycle_id, is_multi_docservers, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, reference_number, tablename, initiator, dest_user, external_signatory_book_id)
 VALUES (14, NULL, 'Inscription école', '', 307, 'pdf', 'bblier', NOW(), NOW(), NULL, NULL, NULL, NULL, NULL, CURRENT_DATE, 'FASTHD_MAN', NULL, 'tests#', 'inscription_ecole.pdf', '', '0', 24877, 'ESIG', 'PE', NULL, NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'res_letterbox', 'COU', 'ssaporta', 14);
+-- to qualify document
+INSERT INTO res_letterbox (res_id, title, subject, description, type_id, format, typist, creation_date, modification_date, converter_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, work_batch, origin, priority, policy_id, cycle_id, is_multi_docservers, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, reference_number, tablename, initiator, dest_user)
+VALUES (15, NULL, 'Demande intervention 1', '', 505, 'pdf', 'bblier', NOW(), NOW(), NULL, NULL, NULL, NULL, NULL, CURRENT_DATE, 'FASTHD_MAN', NULL, 'tests#', 'demande_intervention.pdf', '', '0', 24877, 'INIT', 'PTE', NULL, NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'res_letterbox', 'COU', 'ccharles');
+-- to validate document
+INSERT INTO res_letterbox (res_id, title, subject, description, type_id, format, typist, creation_date, modification_date, converter_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, work_batch, origin, priority, policy_id, cycle_id, is_multi_docservers, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, reference_number, tablename, initiator, dest_user)
+VALUES (16, NULL, 'Demande intervention 2', '', 505, 'pdf', 'bblier', NOW(), NOW(), NULL, NULL, NULL, NULL, NULL, CURRENT_DATE, 'FASTHD_MAN', NULL, 'tests#', 'demande_intervention.pdf', '', '0', 24877, 'VAL', 'PTE', NULL, NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'res_letterbox', 'COU', 'ccharles');
+-- to process document ccharles
+INSERT INTO res_letterbox (res_id, title, subject, description, type_id, format, typist, creation_date, modification_date, converter_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, work_batch, origin, priority, policy_id, cycle_id, is_multi_docservers, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, reference_number, tablename, initiator, dest_user)
+VALUES (17, NULL, 'Demande intervention 3', '', 505, 'pdf', 'bblier', NOW(), NOW(), NULL, NULL, NULL, NULL, NULL, CURRENT_DATE, 'FASTHD_MAN', NULL, 'tests#', 'demande_intervention.pdf', '', '0', 24877, 'NEW', 'PTE', NULL, NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'res_letterbox', 'COU', 'ccharles');
+-- to process document nnataly
+INSERT INTO res_letterbox (res_id, title, subject, description, type_id, format, typist, creation_date, modification_date, converter_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, work_batch, origin, priority, policy_id, cycle_id, is_multi_docservers, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, reference_number, tablename, initiator, dest_user)
+VALUES (18, NULL, 'Demande intervention 4', '', 505, 'pdf', 'bblier', NOW(), NOW(), NULL, NULL, NULL, NULL, NULL, CURRENT_DATE, 'FASTHD_MAN', NULL, 'tests#', 'demande_intervention.pdf', '', '0', 24877, 'NEW', 'PSO', NULL, NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'res_letterbox', 'COU', 'nnataly');
+-- to paraph document ppetit
+INSERT INTO res_letterbox (res_id, title, subject, description, type_id, format, typist, creation_date, modification_date, converter_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, work_batch, origin, priority, policy_id, cycle_id, is_multi_docservers, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, reference_number, tablename, initiator, dest_user)
+VALUES (19, NULL, 'Demande intervention 5', '', 505, 'pdf', 'bblier', NOW(), NOW(), NULL, NULL, NULL, NULL, NULL, CURRENT_DATE, 'FASTHD_MAN', NULL, 'tests#', 'demande_intervention.pdf', '', '0', 24877, 'ESIG', 'PTE', NULL, NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'res_letterbox', 'COU', 'ccharles');
+
 Select setval('res_id_mlb_seq', (select max(res_id)+1 from res_letterbox), false);
 
 TRUNCATE TABLE adr_letterbox;
@@ -94,6 +110,32 @@ INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, finge
 VALUES (27, 13, 'TNL', 'TNL_MLB', 'tests#', 'arret_maladie.png', '0');
 INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
 VALUES (28, 14, 'TNL', 'TNL_MLB', 'tests#', 'inscription_ecole.png', '0');
+-- to qualify documents
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (29, 15, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (30, 15, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+-- to validate documents
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (31, 16, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (32, 16, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+-- to process documents ccharles
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (33, 17, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (34, 17, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+-- to process documents nnataly
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (35, 18, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (36, 18, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+-- to paraph documents ppetit
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (37, 19, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (38, 19, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+
 Select setval('adr_letterbox_id_seq', (select max(id)+1 from adr_letterbox), false);
 
 TRUNCATE TABLE res_attachments;
@@ -110,6 +152,13 @@ INSERT INTO res_attachments (res_id, title, subject, description, type_id, forma
 VALUES (5, 'rep_creche', NULL, NULL, 0, 'pdf', 'ssaporta', NOW(), NULL, 'MAARCH/2019D/5', NULL, 1, NULL, 'FASTHD_MAN', NULL, 'tests#', 'rep_creche.pdf', ' ', '0', 44907, 'FRZ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 5, 'response_project', 4, 6, NULL, NULL, 'N', NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, NULL, '5');
 INSERT INTO res_attachments (res_id, title, subject, description, type_id, format, typist, creation_date, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, work_batch, origin, priority, initiator, dest_user, coll_id, res_id_master, attachment_type, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, tnl_path, tnl_filename, fulltext_result, in_signature_book, signatory_user_serial_id, convert_result, convert_attempts, fulltext_attempts, tnl_attempts, tnl_result, external_id)
 VALUES (6, 'rep_standard', NULL, NULL, 0, 'pdf', 'ssaporta', NOW(), NULL, 'MAARCH/2019D/6', NULL, 1, NULL, 'FASTHD_MAN', NULL, 'tests#', 'rep_standard.pdf', ' ', '0', 44907, 'FRZ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 6, 'response_project', 4, 6, NULL, NULL, 'N', NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, NULL, '6');
+-- to process documents nnataly
+INSERT INTO res_attachments (res_id, title, subject, description, type_id, format, typist, creation_date, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, work_batch, origin, priority, initiator, dest_user, coll_id, res_id_master, attachment_type, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, tnl_path, tnl_filename, fulltext_result, in_signature_book, signatory_user_serial_id, convert_result, convert_attempts, fulltext_attempts, tnl_attempts, tnl_result)
+VALUES (7, 'rep_standard', NULL, NULL, 0, 'pdf', 'ccharles', NOW(), NULL, 'MAARCH/2019D/7', NULL, 1, NULL, 'FASTHD_MAN', NULL, 'tests#', 'ar_svr.pdf', ' ', '0', 44907, 'A_TRA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 18, 'response_project', 4, 6, NULL, NULL, 'N', NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, NULL);
+-- to paraph documents ppetit
+INSERT INTO res_attachments (res_id, title, subject, description, type_id, format, typist, creation_date, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, work_batch, origin, priority, initiator, dest_user, coll_id, res_id_master, attachment_type, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, tnl_path, tnl_filename, fulltext_result, in_signature_book, signatory_user_serial_id, convert_result, convert_attempts, fulltext_attempts, tnl_attempts, tnl_result)
+VALUES (8, 'rep_standard', NULL, NULL, 0, 'pdf', 'ccharles', NOW(), NULL, 'MAARCH/2019D/8', NULL, 1, NULL, 'FASTHD_MAN', NULL, 'tests#', 'ar_svr.pdf', ' ', '0', 44907, 'A_TRA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 19, 'response_project', 4, 6, NULL, NULL, 'N', NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, NULL);
+
 Select setval('res_attachment_res_id_seq', (select max(res_id)+1 from res_attachments), false);
 
 TRUNCATE TABLE adr_attachments;
@@ -126,6 +175,13 @@ INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fin
 VALUES (5, 5, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_creche.pdf', '0');
 INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
 VALUES (6, 6, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard.pdf', '0');
+-- to process documents nnataly
+INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (7, 7, 'PDF', 'CONVERT_ATTACH', 'tests#', 'ar_svr.pdf', '0');
+-- to paraph documents ppetit
+INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (8, 8, 'PDF', 'CONVERT_ATTACH', 'tests#', 'ar_svr.pdf', '0');
+
 Select setval('adr_attachments_id_seq', (select max(res_id)+1 from adr_attachments), false);
 
 TRUNCATE TABLE mlb_coll_ext;
@@ -159,6 +215,22 @@ INSERT INTO mlb_coll_ext (res_id, category_id, exp_contact_id, exp_user_id, dest
 VALUES (13, 'incoming', 4, NULL, NULL, NULL, 'simple_mail', 'MAARCH/2019A/12', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', NULL, 6);
 INSERT INTO mlb_coll_ext (res_id, category_id, exp_contact_id, exp_user_id, dest_contact_id, dest_user_id, nature_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, is_multicontacts, address_id)
 VALUES (14, 'incoming', 7, NULL, NULL, NULL, 'simple_mail', 'MAARCH/2019A/13', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', NULL, 9);
+-- to qualify document
+INSERT INTO mlb_coll_ext (res_id, category_id, exp_contact_id, exp_user_id, dest_contact_id, dest_user_id, nature_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, is_multicontacts, address_id)
+VALUES (15, 'incoming', 4, NULL, NULL, NULL, 'simple_mail', 'MAARCH/2019A/14', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', NULL, 6);
+-- to validate document
+INSERT INTO mlb_coll_ext (res_id, category_id, exp_contact_id, exp_user_id, dest_contact_id, dest_user_id, nature_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, is_multicontacts, address_id)
+VALUES (16, 'incoming', 4, NULL, NULL, NULL, 'simple_mail', 'MAARCH/2019A/15', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', NULL, 6);
+-- to process document ccharles
+INSERT INTO mlb_coll_ext (res_id, category_id, exp_contact_id, exp_user_id, dest_contact_id, dest_user_id, nature_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, is_multicontacts, address_id)
+VALUES (17, 'incoming', 4, NULL, NULL, NULL, 'simple_mail', 'MAARCH/2019A/16', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', NULL, 6);
+-- to process document nnataly
+INSERT INTO mlb_coll_ext (res_id, category_id, exp_contact_id, exp_user_id, dest_contact_id, dest_user_id, nature_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, is_multicontacts, address_id)
+VALUES (18, 'incoming', 4, NULL, NULL, NULL, 'simple_mail', 'MAARCH/2019A/17', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', NULL, 6);
+-- to paraph document ppetit
+INSERT INTO mlb_coll_ext (res_id, category_id, exp_contact_id, exp_user_id, dest_contact_id, dest_user_id, nature_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, is_multicontacts, address_id)
+VALUES (19, 'incoming', 4, NULL, NULL, NULL, 'simple_mail', 'MAARCH/2019A/18', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', NULL, 6);
+
 
 TRUNCATE TABLE listinstance;
 ALTER SEQUENCE listinstance_id_seq restart WITH 1;
@@ -210,4 +282,34 @@ INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, s
 VALUES (22, 'letterbox_coll', 14, 'DOC', 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 'PE', 'Y', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (23, 'letterbox_coll', 14, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+-- to qualify document
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (24, 'letterbox_coll', 15, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (25, 'letterbox_coll', 15, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+-- to validate document
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (26, 'letterbox_coll', 16, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (27, 'letterbox_coll', 16, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+-- to process document ccharles
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (28, 'letterbox_coll', 17, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (29, 'letterbox_coll', 17, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+-- to process document nnataly
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (30, 'letterbox_coll', 18, 'DOC', 0, 'nnataly', 'user_id', 'dest', 'nnataly', 'PSO', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (31, 'letterbox_coll', 18, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'nnataly', 'PSO', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+-- to paraph document ppetit
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (32, 'letterbox_coll', 19, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (33, 'letterbox_coll', 19, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature) 
+VALUES (34, 'letterbox_coll', 19, 'DOC', 0, 'mmanfred', 'user_id', 'visa', 'ccharles', 'PTE', 'Y', 1, 'VISA_CIRCUIT', CURRENT_DATE, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature) 
+VALUES (35, 'letterbox_coll', 19, 'DOC', 0, 'ppetit', 'user_id', 'sign', 'ccharles', 'PTE', 'Y', 0, 'VISA_CIRCUIT', NULL, '', false, true);
+
 Select setval('listinstance_id_seq', (select max(listinstance_id)+1 from listinstance), false);
