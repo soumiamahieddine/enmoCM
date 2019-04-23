@@ -830,7 +830,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'AR_AlreadySend';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'AR_AlreadySend';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'AR_AlreadySend';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('AR_AlreadySend', 'AR en masse : transmis', 'AR en masse : transmis', 'dest_user = @user AND (res_id IN(SELECT distinct res_id FROM acknowledgement_receipts WHERE creation_date is not null AND send_date is not null) and status not in (''END'')) OR res_id IN (SELECT distinct res_id FROM acknowledgement_receipts WHERE creation_date is not null AND send_date is null AND format = ''pdf'' and (filename is not null or filename <> ''''))', 'letterbox_coll', 'Y', 'N', 'Y',50);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('AR_AlreadySend', 'AR en masse : transmis', 'AR en masse : transmis', 'dest_user = @user AND ((res_id IN(SELECT distinct res_id FROM acknowledgement_receipts WHERE creation_date is not null AND send_date is not null) and status not in (''END'')) OR res_id IN (SELECT distinct res_id FROM acknowledgement_receipts WHERE creation_date is not null AND send_date is null AND format = ''pdf'' and (filename is not null or filename <> '''')))', 'letterbox_coll', 'Y', 'N', 'Y',50);
 DELETE FROM baskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'CopyMailBasket';
