@@ -35,6 +35,7 @@ export class NotificationService {
         console.log(err);
         if (err.status === 401 && this.router.url !== '/home') {
             this.router.navigate(['/home']);
+            window.location.reload(true);
             this.error(this.lang.mustReconnect);
         } else if (err.status === 0 && err.statusText === 'Unknown Error') {
             this.error(this.lang.connectionFailed);
