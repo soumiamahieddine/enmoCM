@@ -89,8 +89,6 @@ VALUES (16, 2, 'TNL', 'TNL_MLB', 'tests#', 'sva_route_66.png', '0');
 INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
 VALUES (17, 3, 'TNL', 'TNL_MLB', 'tests#', 'svr_route_chien_bruyant.png', '0');
 INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (18, 4, 'TNL', 'TNL_MLB', 'tests#', 'emtpy.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
 VALUES (19, 5, 'TNL', 'TNL_MLB', 'tests#', 'demande_place_creche.png', '0');
 INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
 VALUES (20, 6, 'TNL', 'TNL_MLB', 'tests#', 'relance_place_creche.png', '0');
