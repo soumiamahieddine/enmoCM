@@ -5039,7 +5039,7 @@ if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
     define('_ACKNOWLEDGEMENT_RECEIPTS', 'Accusés de réception');
 }
 if (!defined('_PUT_IN_SEND_ATTACH')) {
-    define('_PUT_IN_SEND_ATTACH', 'Intégrer aux envois');
+    define('_PUT_IN_SEND_ATTACH', 'Intégrer aux envois Maileva');
 }
 if (!defined('_INITIATOR_ENTITY')) {
     define('_INITIATOR_ENTITY', 'Entité initiatrice');

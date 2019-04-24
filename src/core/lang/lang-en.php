@@ -470,14 +470,14 @@ define("_EMAIL_WAIT", "Waiting to be send");
 define("_EMAIL_SENT", "Sent");
 define("_EMAIL_ERROR", "Error when sending");
 
-define("_SHIPPING_ADDED", "Shipping added");
-define("_SHIPPING_UPDATED", "Shipping updated");
-define("_SHIPPING_DELETED", "Shipping deleted");
+define("_MAILEVA_ADDED", "Shipping Maileva added");
+define("_MAILEVA_UPDATED", "Shipping Maileva updated");
+define("_MAILEVA_DELETED", "Shipping Maileva deleted");
 
-define("_SHIPPINGS_ADMIN", "Shippings admin");
-define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva");
+define("_MAILEVA_ADMIN", "Shippings Maileva admin");
+define("_MAILEVA_ADMIN_DESC", "Configure mailing templates for Maileva");
 
-define("_SEND_SHIPPING", "Send to Maileva");
+define("_SEND_MAILEVA", "Send to Maileva");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "View mail with notes");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "View attachment of 'document_with_notes' type");

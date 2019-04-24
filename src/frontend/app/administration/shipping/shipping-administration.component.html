@@ -36,7 +36,7 @@
                             <mat-list role="list">
                                 <mat-list-item role="listitem" *ngFor="let option of shapingOptions">
                                     <mat-slide-toggle color="primary" name="{{option}}" [checked]="shipping.options.shapingOptions.indexOf(option) > -1"
-                                        (change)="toggleShapingOption(option)">{{lang['shipping_'+option]}}</mat-slide-toggle>
+                                        (change)="toggleShapingOption(option)">{{lang['maileva_'+option]}}</mat-slide-toggle>
                                 </mat-list-item>
                             </mat-list>
                         </div>
@@ -46,7 +46,7 @@
                             </div>
                             <mat-radio-group class="radio-group" name="sendMode" [(ngModel)]="shipping.options.sendMode">
                                 <mat-radio-button *ngFor="let mode of sendModes" name="{{mode}}" [value]="mode" color="primary">
-                                    {{lang['shipping_'+mode]}}
+                                    {{lang['maileva_'+mode]}}
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
@@ -58,33 +58,33 @@
                             </div>
                             <div class="priceContent">
                                 <label class="priceContent-label" for="firstPagePrice">
-                                    {{lang.shipping_firstPagePrice}}
+                                    {{lang.maileva_firstPagePrice}}
                                 </label>
                                 <mat-form-field appearance="outline">
                                     <input matInput [(ngModel)]="shipping.fee.firstPagePrice" required name="firstPagePrice"
-                                        id="firstPagePrice" title="{{lang.shipping_firstPagePrice}}" type="number"
+                                        id="firstPagePrice" title="{{lang.maileva_firstPagePrice}}" type="number"
                                         maxlength="255" min="0" step="0.1" pattern="^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$">
                                     <span matSuffix>&nbsp;€</span>
                                 </mat-form-field>
                             </div>
                             <div class="priceContent">
                                 <label class="priceContent-label" for="nextPagePrice">
-                                    {{lang.shipping_nextPagePrice}}
+                                    {{lang.maileva_nextPagePrice}}
                                 </label>
                                 <mat-form-field appearance="outline">
                                     <input matInput [(ngModel)]="shipping.fee.nextPagePrice" required name="nextPagePrice"
-                                        id="nextPagePrice" title="{{lang.shipping_nextPagePrice}}" type="number"
+                                        id="nextPagePrice" title="{{lang.maileva_nextPagePrice}}" type="number"
                                         maxlength="255" min="0" step="0.1" pattern="^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$">
                                     <span matSuffix>&nbsp;€</span>
                                 </mat-form-field>
                             </div>
                             <div class="priceContent">
                                 <label class="priceContent-label" for="postagePrice">
-                                    {{lang.shipping_postagePrice}}
+                                    {{lang.maileva_postagePrice}}
                                 </label>
                                 <mat-form-field appearance="outline">
                                     <input matInput [(ngModel)]="shipping.fee.postagePrice" required name="postagePrice"
-                                        id="postagePrice" title="{{lang.shipping_postagePrice}}" type="number"
+                                        id="postagePrice" title="{{lang.maileva_postagePrice}}" type="number"
                                         maxlength="255" min="0" step="0.1" pattern="^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$">
                                     <span matSuffix>&nbsp;€</span>
                                 </mat-form-field>

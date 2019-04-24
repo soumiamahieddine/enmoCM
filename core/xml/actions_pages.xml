@@ -509,7 +509,7 @@ An action page is described in a ACTIONPAGE tag :
     </ACTIONPAGE>
     <ACTIONPAGE>
         <ID>send_shipping</ID>
-        <LABEL>_SEND_SHIPPING</LABEL>
+        <LABEL>_SEND_MAILEVA</LABEL>
         <NAME>send_shipping</NAME>
         <component>sendShippingAction</component>
         <ORIGIN>apps</ORIGIN>

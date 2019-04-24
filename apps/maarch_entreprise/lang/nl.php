@@ -1660,7 +1660,7 @@ if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
     define('_ACKNOWLEDGEMENT_RECEIPTS', 'Acknowledgement of receipts_TO_TRANSLATE');
 }
 if (!defined('_PUT_IN_SEND_ATTACH')) {
-    define('_PUT_IN_SEND_ATTACH', 'Put in send attachement_TO_TRANSLATE');
+    define('_PUT_IN_SEND_ATTACH', 'Put in send attachement Maileva_TO_TRANSLATE');
 }
 if (!defined('_INITIATOR_ENTITY')) {
     define('_INITIATOR_ENTITY', 'Initiator entity_TO_TRANSLATE');
