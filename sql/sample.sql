@@ -154,10 +154,10 @@ INSERT INTO res_attachments (res_id, title, subject, description, type_id, forma
 VALUES (6, 'rep_standard', NULL, NULL, 0, 'pdf', 'ssaporta', NOW(), NULL, 'MAARCH/2019D/6', NULL, 1, NULL, 'FASTHD_MAN', NULL, 'tests#', 'rep_standard.pdf', ' ', '0', 44907, 'FRZ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 6, 'response_project', 4, 6, NULL, NULL, 'N', NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, NULL, '6');
 -- to process documents nnataly
 INSERT INTO res_attachments (res_id, title, subject, description, type_id, format, typist, creation_date, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, work_batch, origin, priority, initiator, dest_user, coll_id, res_id_master, attachment_type, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, tnl_path, tnl_filename, fulltext_result, in_signature_book, signatory_user_serial_id, convert_result, convert_attempts, fulltext_attempts, tnl_attempts, tnl_result)
-VALUES (7, 'rep_standard', NULL, NULL, 0, 'pdf', 'ccharles', NOW(), NULL, 'MAARCH/2019D/7', NULL, 1, NULL, 'FASTHD_MAN', NULL, 'tests#', 'ar_svr.pdf', ' ', '0', 44907, 'A_TRA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 18, 'response_project', 4, 6, NULL, NULL, 'N', NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (7, 'rep_standard', NULL, NULL, 0, 'pdf', 'ccharles', NOW(), NULL, 'MAARCH/2019D/7', NULL, 1, NULL, 'FASTHD_MAN', NULL, 'tests#', 'rep_standard_demande_intervention.pdf', ' ', '0', 44907, 'A_TRA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 18, 'response_project', 4, 6, NULL, NULL, 'N', NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, NULL);
 -- to paraph documents ppetit
 INSERT INTO res_attachments (res_id, title, subject, description, type_id, format, typist, creation_date, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path, filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, work_batch, origin, priority, initiator, dest_user, coll_id, res_id_master, attachment_type, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, tnl_path, tnl_filename, fulltext_result, in_signature_book, signatory_user_serial_id, convert_result, convert_attempts, fulltext_attempts, tnl_attempts, tnl_result)
-VALUES (8, 'rep_standard', NULL, NULL, 0, 'pdf', 'ccharles', NOW(), NULL, 'MAARCH/2019D/8', NULL, 1, NULL, 'FASTHD_MAN', NULL, 'tests#', 'ar_svr.pdf', ' ', '0', 44907, 'A_TRA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 19, 'response_project', 4, 6, NULL, NULL, 'N', NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, NULL);
+VALUES (8, 'rep_standard', NULL, NULL, 0, 'pdf', 'ccharles', NOW(), NULL, 'MAARCH/2019D/8', NULL, 1, NULL, 'FASTHD_MAN', NULL, 'tests#', 'rep_standard_demande_intervention.pdf', ' ', '0', 44907, 'A_TRA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 19, 'response_project', 4, 6, NULL, NULL, 'N', NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, NULL);
 
 Select setval('res_attachment_res_id_seq', (select max(res_id)+1 from res_attachments), false);
 
@@ -177,10 +177,10 @@ INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fin
 VALUES (6, 6, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard.pdf', '0');
 -- to process documents nnataly
 INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (7, 7, 'PDF', 'CONVERT_ATTACH', 'tests#', 'ar_svr.pdf', '0');
+VALUES (7, 7, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard_demande_intervention.pdf', '0');
 -- to paraph documents ppetit
 INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (8, 8, 'PDF', 'CONVERT_ATTACH', 'tests#', 'ar_svr.pdf', '0');
+VALUES (8, 8, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard_demande_intervention.pdf', '0');
 
 Select setval('adr_attachments_id_seq', (select max(res_id)+1 from adr_attachments), false);
 
@@ -313,3 +313,9 @@ INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, s
 VALUES (35, 'letterbox_coll', 19, 'DOC', 0, 'ppetit', 'user_id', 'sign', 'ccharles', 'PTE', 'Y', 0, 'VISA_CIRCUIT', NULL, '', false, true);
 
 Select setval('listinstance_id_seq', (select max(listinstance_id)+1 from listinstance), false);
+
+--signature of ppetit
+TRUNCATE TABLE user_signatures;
+INSERT INTO user_signatures (id, user_serial_id, signature_label, signature_path, signature_file_name, fingerprint) 
+VALUES (1, 10, 'ppetit.jpeg', '0000#', 'ppetit.jpeg', NULL);
+Select setval('user_signatures_id_seq', (select max(id)+1 from user_signatures), false);
