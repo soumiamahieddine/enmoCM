@@ -63,7 +63,8 @@ if (!empty($_GET['userId']) && is_numeric($_GET['userId']) && !empty($_REQUEST['
 $bask = new basket();
 if (!empty($basketId)) {
     $_SESSION['tmpbasket']['status'] = "all";
-    $bask->load_current_basket(trim($basketId), trim($_GET['groupIdSer']));
+    $groupId = empty(trim($_GET['groupIdSer'])) ? trim($_GET['groupId']) : trim($_GET['groupIdSer']);
+    $bask->load_current_basket(trim($basketId), $groupId);
 }
 
 if (empty($_GET['defaultAction'])) {
