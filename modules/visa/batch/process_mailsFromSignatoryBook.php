@@ -449,7 +449,7 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
         ]);
     } elseif ($value->status == 'refused') {
         if (!empty($value->encodedFile)) {
-            $GLOBALS['logger']->write('Create refused version Attachment', 'INFO');
+            $GLOBALS['logger']->write('Create refused Attachment', 'INFO');
             Bt_createAttachment([
                 'res_id_master'   => $value->res_id_master,
                 'title'           => '[REFUSE] ' . $value->title,
