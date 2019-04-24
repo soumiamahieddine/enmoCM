@@ -1387,6 +1387,9 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'SERVICE', 'ValidationBasket', 'Y', 'Y', 'Y');
 
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'AGENT', 'Maileva_Sended', 'Y', 'Y', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'RESPONSABLE', 'Maileva_Sended', 'Y', 'Y', 'Y');
+
 ------------
 --GROUPBASKET_REDIRECT
 ------------
