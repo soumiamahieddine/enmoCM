@@ -155,7 +155,13 @@ class AttachmentController
             }
         }
 
-        return $response->withJson(['attachments' => $attachments]);
+        $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
+        $mailevaEnabled = false;
+        if (!empty($mailevaConfig) && $mailevaConfig['enabled']) {
+            $mailevaEnabled = true;
+        }
+
+        return $response->withJson(['attachments' => $attachments, 'mailevaEnabled' => $mailevaEnabled]);
     }
 
     public function setInSignatureBook(Request $request, Response $response, array $aArgs)
