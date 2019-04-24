@@ -30,7 +30,7 @@
                     <mat-checkbox color="primary" [(ngModel)]="attachment.in_signature_book"></mat-checkbox>
                     {{lang.putInSignatureBook}}
                 </button>
-                <button mat-menu-item (click)="setInSendAttachment(attachment)">
+                <button mat-menu-item (click)="setInSendAttachment(attachment)" [disabled]="!mailevaEnabled">
                     <mat-checkbox color="primary" [(ngModel)]="attachment.in_send_attach"></mat-checkbox>
                     {{lang.putInSendAttach}}
                 </button>

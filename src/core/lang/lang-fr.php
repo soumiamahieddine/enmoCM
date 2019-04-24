@@ -435,7 +435,7 @@ define('_ASSIGNEE', 'Attributaire');
 define('_DOCUMENT_WITH_NOTES', 'Document annoté');
 
 define('_SUMMARY_SHEET', 'Fiche de liaison');
-define('_UNDEFINED', 'Non définie');
+define('_UNDEFINED', 'Non défini');
 define('_CATEGORY', 'Catégorie');
 define('_SENDERS', 'Expéditeur(s)');
 define('_RECIPIENTS', 'Destinataire(s)');
