@@ -206,8 +206,7 @@
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpRequirements(
                                 'imagick'
-                            ),
-                            true
+                            )
                         );?>
                     </td>
                     <td>
