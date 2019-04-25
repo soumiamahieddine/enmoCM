@@ -97,8 +97,10 @@
         </mat-sidenav-content>
         <mat-sidenav mode="side" fixedTopGap="56" position='end' [opened]="attachList.length > 0" style="width: 50%;">
             <div class="pjList">
-                <img title="{{attach.identifier}} : {{attach.title}}" *ngFor="let attach of attachList"
-                    src="../../rest/res/{{attach.res_id_master}}/attachments/{{attach.res_id}}/thumbnail" />
+                <div *ngFor="let attach of attachList">
+                    <img *ngIf="attach.res_id!=0" title="{{attach.identifier}} : {{attach.title}}" src="../../rest/res/{{attach.res_id_master}}/attachments/{{attach.res_id}}/thumbnail" />
+                    <img *ngIf="attach.res_id==0" title="{{attach.identifier}} : {{attach.title}}" src="../../rest/res/{{attach.res_id_master}}/attachments/{{attach.res_id_version}}/thumbnail" />
+                </div>
             </div>
         </mat-sidenav>
     </mat-sidenav-container>

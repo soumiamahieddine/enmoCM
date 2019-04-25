@@ -4936,3 +4936,7 @@ if (!defined('_CREATED')) {
 if (!defined('_ACTION_DATE')) {
     define('_ACTION_DATE', 'Action date');
 }
+
+if (!defined('_STATUS_NOT_EXISTS')) {
+    define('_STATUS_NOT_EXISTS', 'Status undefined');
+}

@@ -5074,3 +5074,6 @@ if (!defined('_ACTION_DATE')) {
     define('_ACTION_DATE', 'Date d\'action');
 }
 
+if (!defined('_STATUS_NOT_EXISTS')) {
+    define('_STATUS_NOT_EXISTS', 'Statut non défini');
+}
