@@ -129,10 +129,22 @@ if (isset($_SESSION['info'])) {
     echo '</div>';
 }
 
+
+//retrieve login message version
+$db = new Database();
+$query = "SELECT param_value_string FROM parameters WHERE id = 'loginpage_message'";
+$stmt = $db->query($query, []);
+$loginMessage = $stmt->fetchObject();
+
 echo '<div id="loginpage">';
 echo "<p id='logo'><img src='{$_SESSION['config']['businessappurl']}static.php?filename=logo.svg' alt='Maarch'/></p>";
 
 echo '<div align="center">';
+
+if ($loginMessage->param_value_string <> '') {
+    echo $loginMessage->param_value_string;
+}
+
 echo '<h3>';
 echo $_SESSION['config']['applicationname'];
 echo '</h3>';
