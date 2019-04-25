@@ -57,7 +57,7 @@ trait ShippingTrait
         $attachments = AttachmentModel::getOnView([
             'select'    => ['res_id', 'res_id_version', 'title', 'dest_address_id', 'external_id'],
             'where'     => ['res_id_master = ?', 'in_send_attach = ?', 'status not in (?)', 'attachment_type not in (?)'],
-            'data'      => [$args['resId'], true, ['OBS', 'DEL', 'TMP'], ['converted_pdf', 'print_folder']]
+            'data'      => [$args['resId'], true, ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder']]
         ]);
         if (empty($attachments)) {
             return true;
