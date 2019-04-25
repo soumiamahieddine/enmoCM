@@ -14,7 +14,7 @@
         <adminmail>support@maarch.fr</adminmail>
         <adminname>maarch</adminname>
         <debug>false</debug>
-        <applicationname>MAARCH COURRIER 19.04</applicationname>
+        <applicationname><![CDATA[<p>Découvrez <strong>Maarch Courrier 19.04</strong> avec <a title="notre guide de visite" href="https://docs.maarch.org/gitbook/html/MaarchCourrier/19.04/guu/home.html" target="_blank"><span style="color:#f99830;"><strong>notre guide de visite en ligne</strong></span></a>.</p>]]></applicationname>
         <defaultPage>welcome</defaultPage>
         <CookieTime>20</CookieTime> <!-- minutes -->
         <timezone>Europe/Paris</timezone>
