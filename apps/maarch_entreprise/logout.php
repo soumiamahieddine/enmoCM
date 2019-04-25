@@ -58,9 +58,13 @@ $appUrl   = $_SESSION['config']['businessappurl'];
 $appId    = $_SESSION['config']['app_id'];
 
 // Destruction du cookie. La session est entièrement détruite et revenir sur le site attribuera un nouvel identifiant
-$args = [session_name(), '', session_get_cookie_params()];
-$args[2]['lifetime'] = time() - 3600;
-call_user_func_array('setcookie', $args);
+$args = session_get_cookie_params();
+$args['lifetime'] = time() - 3600;
+if (PHP_MAJOR_VERSION >= 7 && PHP_MINOR_VERSION >= 3) {
+    setcookie(session_name(), '', $args);
+} else {
+    setcookie(session_name(), '', $args['lifetime'], $args['path'], $args['domain'], $args['secure'], $args['httponly']);
+}
 
 if (isset($_SESSION['web_sso_url'])) {
     $webSSOurl = $_SESSION['web_sso_url'];

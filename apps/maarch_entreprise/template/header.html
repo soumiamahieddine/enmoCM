@@ -38,7 +38,7 @@
                 </span>
                 <span class="maarchToolButton" style="padding-left:10px;padding-right:10px;font-size: 14px;text-align: center;display: flex;align-items: center;position: relative;cursor:pointer;" onclick="$j('#profilenav').slideToggle('fast');event.stopPropagation();" title="Mes groupes">
                     <?php                         
-                    $strUserInfos = '<i class="fa fa-user fa-2x" style="padding-right:5px;"></i> ' . $_SESSION['user']['FirstName'][0].". ".$_SESSION['user']['LastName'];
+                    $strUserInfos = '<i class="fa fa-user fa-2x" style="padding-right:5px;"></i> ' . $_SESSION['user']['FirstName']."&nbsp;<b>".$_SESSION['user']['LastName']."</b>";
                     echo $strUserInfos; ?>
                 </span>
                 <div id="profilenav" class="menunav" style="margin-top:10px;right: 5px;display:none;background: #135f7f;">

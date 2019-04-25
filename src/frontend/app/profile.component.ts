@@ -891,7 +891,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
             return this.lang.passwordcomplexitySpecial + ' !';
 
         } else {
-            this.firstFormGroup.controls['newPasswordCtrl'].setErrors(null)
+            this.firstFormGroup.controls['newPasswordCtrl'].setErrors(null);
             this.validPassword = true;
             return '';
         }
@@ -931,7 +931,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                 this.notify.success(this.lang.signsSynchronized);
             }, (err) => {
                 this.loadingSign = false;
-                this.notify.error(err.error.errors);
+                this.notify.handleErrors(err);
             });
     }
 }

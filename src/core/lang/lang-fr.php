@@ -435,7 +435,7 @@ define('_ASSIGNEE', 'Attributaire');
 define('_DOCUMENT_WITH_NOTES', 'Document annoté');
 
 define('_SUMMARY_SHEET', 'Fiche de liaison');
-define('_UNDEFINED', 'Non définie');
+define('_UNDEFINED', 'Non défini');
 define('_CATEGORY', 'Catégorie');
 define('_SENDERS', 'Expéditeur(s)');
 define('_RECIPIENTS', 'Destinataire(s)');
@@ -470,14 +470,14 @@ define("_EMAIL_WAIT", "En attente d'envoi");
 define("_EMAIL_SENT", "Envoyé");
 define("_EMAIL_ERROR", "Erreur lors de l'envoi");
 
-define("_SHIPPING_ADDED", "Envoi postal ajouté");
-define("_SHIPPING_UPDATED", "Envoi postal mis à jour");
-define("_SHIPPING_DELETED", "Envoi postal supprimé");
+define("_MAILEVA_ADDED", "Envoi postal Maileva ajouté");
+define("_MAILEVA_UPDATED", "Envoi postal Maileva mis à jour");
+define("_MAILEVA_DELETED", "Envoi postal Maileva supprimé");
 
-define("_SHIPPINGS_ADMIN", "Modèles d'envois postaux");
-define("_SHIPPINGS_ADMIN_DESC", "Configurer les modèles d'envois postaux, par exemple pour Maileva");
+define("_MAILEVA_ADMIN", "Modèles d'envois postaux Maileva");
+define("_MAILEVA_ADMIN_DESC", "Configurer les modèles d'envois postaux Maileva");
 
-define("_SEND_SHIPPING", "Envoyer vers Maileva");
+define("_SEND_MAILEVA", "Envoyer vers Maileva");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "Voir les courriers annotés");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "Voir les pièces jointes de type 'Document annoté'");

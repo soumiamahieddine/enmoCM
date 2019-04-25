@@ -4902,7 +4902,7 @@ if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
     define('_ACKNOWLEDGEMENT_RECEIPTS', 'Acknowledgement of receipts');
 }
 if (!defined('_PUT_IN_SEND_ATTACH')) {
-    define('_PUT_IN_SEND_ATTACH', 'Put in send attachement');
+    define('_PUT_IN_SEND_ATTACH', 'Put in send attachement Maileva');
 }
 if (!defined('_INITIATOR_ENTITY')) {
     define('_INITIATOR_ENTITY', 'Initiator entity');
@@ -4935,4 +4935,8 @@ if (!defined('_CREATED')) {
 
 if (!defined('_ACTION_DATE')) {
     define('_ACTION_DATE', 'Action date');
+}
+
+if (!defined('_STATUS_NOT_EXISTS')) {
+    define('_STATUS_NOT_EXISTS', 'Status undefined');
 }

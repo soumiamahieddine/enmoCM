@@ -19,7 +19,6 @@ use Basket\models\GroupBasketRedirectModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
-use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeExtModel;
 use Entity\models\EntityModel;
@@ -655,20 +654,22 @@ class PreProcessActionController
                     if ($attachment['res_id_master'] == $valueResId) {
                         $resIdFound = true;
                         if (!empty($attachment['res_id'])) {
-                            $isVersion = false;
+                            $isVersion    = false;
                             $attachmentId = $attachment['res_id'];
+                            $collId       = 'attachments_coll';
                         } else {
-                            $isVersion = true;
+                            $isVersion    = true;
                             $attachmentId = $attachment['res_id_version'];
+                            $collId       = 'attachments_version_coll';
                         }
-                        $convertedDocument = AdrModel::getConvertedDocumentById([
+                        $convertedDocument = ConvertPdfController::getConvertedPdfById([
                             'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
                             'resId'     => $attachmentId,
-                            'collId'    => 'attachments_coll',
+                            'collId'    => $collId,
                             'type'      => 'PDF',
                             'isVersion' => $isVersion
                         ]);
-                        if (empty($convertedDocument)) {
+                        if (empty($convertedDocument['docserver_id'])) {
                             $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentConversion', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);

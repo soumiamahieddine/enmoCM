@@ -1374,6 +1374,9 @@ class UserController
                 } else {
                     $errors =  $curlResponse['errors'];
                 }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
+                }
                 return $response->withStatus(400)->withJson(['errors' => $errors]);
             }
         } else {
@@ -1468,6 +1471,9 @@ class UserController
                     $errors =  $curlResponse['response']['errors'];
                 } else {
                     $errors =  $curlResponse['errors'];
+                }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
                 }
                 return $response->withStatus(400)->withJson(['errors' => $errors]);
             }

@@ -8,152 +8,152 @@
     <FORMAT>
         <name>TIFF</name>
         <mime>image/tiff</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>TIF</name>
         <mime>image/tiff</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>DOC</name>
         <mime>application/msword</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>XLS</name>
         <mime>application/msexcel</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>XLS</name>
         <mime>application/vnd.ms-excel</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>XLS</name>
         <mime>application/vnd.ms-office</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>XLSM</name>
         <mime>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPT</name>
         <mime>application/vnd.ms-powerpoint</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPS</name>
         <mime>application/vnd.ms-powerpoint</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPS</name>
         <mime>application/vnd.ms-office</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPSM</name>
         <mime>application/vnd.openxmlformats-officedocument.presentationml.presentation</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPTM</name>
         <mime>application/vnd.openxmlformats-officedocument.presentationml.presentation</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>DOCX</name>
         <mime>application/octet-stream</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>DOCX</name>
         <mime>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>DOCX</name>
         <mime>application/msword</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>DOCX</name>
         <mime>application/zip</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>XLSX</name>
         <mime>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>XLSX</name>
         <mime>application/vnd.ms-excel</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>XLSX</name>
         <mime>application/zip</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPTX</name>
         <mime>application/vnd.openxmlformats-officedocument.presentationml.presentation</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPTX</name>
         <mime>application/zip</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPTX</name>
         <mime>application/vnd.ms-powerpoint</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPSX</name>
         <mime>application/vnd.openxmlformats-officedocument.presentationml.slideshow</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>PPSX</name>
         <mime>application/vnd.openxmlformats-officedocument.presentationml.presentation</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>ODT</name>
         <mime>application/vnd.oasis.opendocument.text</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>ODT</name>
         <mime>application/octet-stream</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>ODS</name>
         <mime>application/vnd.oasis.opendocument.spreadsheet</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>ODS</name>
         <mime>application/octet-stream</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>ODP</name>
         <mime>application/vnd.oasis.opendocument.presentation</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>ODP</name>
         <mime>application/octet-stream</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>XML</name>
@@ -203,7 +203,7 @@
     <FORMAT>
         <name>MSG</name>
         <mime>application/CDFV2-corrupt</mime>
-        <index_frame_show>true</index_frame_show>
+        <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>MHT</name>
@@ -243,7 +243,7 @@
     <FORMAT>
         <name>RTF</name>
         <mime>text/rtf</mime>
-        <index_frame_show>false</index_frame_show>
+        <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>HTM</name>

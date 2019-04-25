@@ -5039,7 +5039,7 @@ if (!defined('_ACKNOWLEDGEMENT_RECEIPTS')) {
     define('_ACKNOWLEDGEMENT_RECEIPTS', 'Accusés de réception');
 }
 if (!defined('_PUT_IN_SEND_ATTACH')) {
-    define('_PUT_IN_SEND_ATTACH', 'Intégrer aux envois');
+    define('_PUT_IN_SEND_ATTACH', 'Intégrer aux envois Maileva');
 }
 if (!defined('_INITIATOR_ENTITY')) {
     define('_INITIATOR_ENTITY', 'Entité initiatrice');
@@ -5074,3 +5074,6 @@ if (!defined('_ACTION_DATE')) {
     define('_ACTION_DATE', 'Date d\'action');
 }
 
+if (!defined('_STATUS_NOT_EXISTS')) {
+    define('_STATUS_NOT_EXISTS', 'Statut non défini');
+}

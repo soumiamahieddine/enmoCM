@@ -11,11 +11,12 @@ import { NotificationService } from '../notification.service';
 })
 export class AttachmentsListComponent implements OnInit {
 
-    lang        : any       = LANG;
-    attachments : any;
-    loading     : boolean   = true;
-    resIds      : number[]  = [];
-    pos         = 0;
+    lang            : any       = LANG;
+    attachments     : any;
+    loading         : boolean   = true;
+    resIds          : number[]  = [];
+    pos             = 0;
+    mailevaEnabled  : boolean   = false;
 
     @Input('injectDatas') injectDatas: any;
     @Output('reloadBadgeAttachments') reloadBadgeNotes = new EventEmitter<string>();
@@ -29,6 +30,7 @@ export class AttachmentsListComponent implements OnInit {
         this.loading = true;
         this.http.get("../../rest/resources/" + this.resIds[0] + "/attachments")
             .subscribe((data: any) => {
+                this.mailevaEnabled = data.mailevaEnabled;
                 this.attachments = data.attachments;
                 this.attachments.forEach((element: any) => {
                     element.thumbnailUrl = '../../rest/res/' + this.resIds[0] + '/attachments/' + element.res_id + '/thumbnail';

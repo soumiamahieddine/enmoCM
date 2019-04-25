@@ -472,14 +472,14 @@ define("_EMAIL_WAIT", "Waiting to be send_TO_TRANSLATE");
 define("_EMAIL_SENT", "Sent_TO_TRANSLATE");
 define("_EMAIL_ERROR", "Error when sending_TO_TRANSLATE");
 
-define("_SHIPPING_ADDED", "Shipping added_TO_TRANSLATE");
-define("_SHIPPING_UPDATED", "Shipping updated_TO_TRANSLATE");
-define("_SHIPPING_DELETED", "Shipping deleted_TO_TRANSLATE");
+define("_MAILEVA_ADDED", "Shipping Maileva added_TO_TRANSLATE");
+define("_MAILEVA_UPDATED", "Shipping Maileva updated_TO_TRANSLATE");
+define("_MAILEVA_DELETED", "Shipping Maileva deleted_TO_TRANSLATE");
 
-define("_SHIPPINGS_ADMIN", "Shippings admin_TO_TRANSLATE");
-define("_SHIPPINGS_ADMIN_DESC", "Configure mailing templates, for example for Maileva_TO_TRANSLATE");
+define("_MAILEVA_ADMIN", "Shippings Maileva admin_TO_TRANSLATE");
+define("_MAILEVA_ADMIN_DESC", "Configure mailing templatesfor Maileva_TO_TRANSLATE");
 
-define("_SEND_SHIPPING", "Send to Maileva_TO_TRANSLATE");
+define("_SEND_MAILEVA", "Send to Maileva_TO_TRANSLATE");
 
 define("_VIEW_DOCUMENTS_WITH_NOTES", "View mail with notes_TO_TRANSLATE");
 define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "View attachment of 'document_with_notes' type_TO_TRANSLATE");

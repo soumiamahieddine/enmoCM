@@ -122,7 +122,7 @@ class ShippingTemplateController
             'recordId'  => $id,
             'eventType' => 'ADD',
             'eventId'   => 'shippingadd',
-            'info'      => _SHIPPING_ADDED . ' : ' . $body['label']
+            'info'      => _MAILEVA_ADDED . ' : ' . $body['label']
         ]);
 
         return $response->withJson(['shippingId' => $id]);
@@ -162,7 +162,7 @@ class ShippingTemplateController
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
             'eventId'   => 'shippingup',
-            'info'      => _SHIPPING_UPDATED. ' : ' . $body['label']
+            'info'      => _MAILEVA_UPDATED. ' : ' . $body['label']
         ]);
 
         return $response->withJson(['success' => 'success']);
@@ -190,7 +190,7 @@ class ShippingTemplateController
             'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
             'eventId'   => 'shippingdel',
-            'info'      => _SHIPPING_DELETED. ' : ' . $shippingInfo['label']
+            'info'      => _MAILEVA_DELETED. ' : ' . $shippingInfo['label']
         ]);
 
         $shippings = ShippingTemplateModel::get(['select' => ['id', 'label', 'description', 'options', 'fee', 'entities']]);

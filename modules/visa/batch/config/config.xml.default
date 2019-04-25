@@ -2,10 +2,10 @@
 <ROOT>
     <CONFIG>
         <MaarchDirectory>/var/www/html/MaarchCourrier/</MaarchDirectory>
-		<CustomId></CustomId>
+        <CustomId></CustomId>
         <validatedStatus>EENV</validatedStatus>
         <validatedStatusOnlyVisa>EENV</validatedStatusOnlyVisa>
-        <refusedStatus>NEW</refusedStatus>
+        <refusedStatus>REJ_SIGN</refusedStatus>
         <validatedStatusAnnot>COU</validatedStatusAnnot>
         <refusedStatusAnnot>RET</refusedStatusAnnot>
         <applicationUrl>http://localhost/MaarchCourrier/</applicationUrl>

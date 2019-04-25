@@ -861,7 +861,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             }
             
             // Current basket
-            if (count($_SESSION['current_basket']) > 0) {
+            if (!empty($_SESSION['current_basket']) && count($_SESSION['current_basket']) > 0) {
                 foreach ($_SESSION['current_basket'] as $name => $value) {
                     if (!is_array($value)) {
                         $datasources['basket'][0][$name] = $value;
@@ -870,13 +870,13 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             }
             
             // User
-            if (count($_SESSION['user']) > 0) {
+            if (!empty($_SESSION['user']) && count($_SESSION['user']) > 0) {
                 foreach ($_SESSION['user'] as $name => $value) {
                     if (!is_array($value)) {
                         $datasources['user'][0][strtolower($name)] = $value;
                     }
                 }
-                if (count($_SESSION['user']['entities']) > 0) {
+                if (!empty($_SESSION['user']['entities']) && count($_SESSION['user']['entities']) > 0) {
                     foreach ($_SESSION['user']['entities'] as $entity) {
                         if ($entity['ENTITY_ID'] === $_SESSION['user']['primaryentity']['id']) {
                             $datasources['user'][0]['entity'] = $_SESSION['user']['entities'][0]['ENTITY_LABEL'];

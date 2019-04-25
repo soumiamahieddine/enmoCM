@@ -921,36 +921,36 @@ export const LANG_NL = {
     "noPerson"                                  : "Geen persoon", //_TO_TRANSLATE
     "willBeAutomaticallyInCopy"                 : "wordt automatisch <b>gekopieerd</b>", //_TO_TRANSLATE
     "confirm"                                   : "Bevestigen", //_TO_TRANSLATE
-    "shipping_color"                            : "Color", //_TO_TRANSLATE
-    "shipping_duplexPrinting"                            : "Both sides", //_TO_TRANSLATE
-    "shipping_addressPage"                            : "Address page", //_TO_TRANSLATE
-    "shipping_fast"                            : "Fast (J+2)", //_TO_TRANSLATE
-    "shipping_economic"                            : "Economic (J+4)", //_TO_TRANSLATE
-    "shipping_registered_mail"                            : "Registered mail", //_TO_TRANSLATE
-    "shipping_registered_mail_ar"                            : "Registered mail AR", //_TO_TRANSLATE
-    "shipping_firstPagePrice"                            : "1st page", //_TO_TRANSLATE
-    "shipping_nextPagePrice"                            : "Next page(s)", //_TO_TRANSLATE
-    "shipping_postagePrice"                            : "Postage up to 20g", //_TO_TRANSLATE
+    "maileva_color"                             : "Color", //_TO_TRANSLATE
+    "maileva_duplexPrinting"                    : "Both sides", //_TO_TRANSLATE
+    "maileva_addressPage"                       : "Address page", //_TO_TRANSLATE
+    "maileva_fast"                              : "Fast (J+2)", //_TO_TRANSLATE
+    "maileva_economic"                          : "Economic (J+4)", //_TO_TRANSLATE
+    "maileva_registered_mail"                   : "Registered mail", //_TO_TRANSLATE
+    "maileva_registered_mail_ar"                : "Registered mail AR", //_TO_TRANSLATE
+    "maileva_firstPagePrice"                    : "1st page", //_TO_TRANSLATE
+    "maileva_nextPagePrice"                     : "Next page(s)", //_TO_TRANSLATE
+    "maileva_postagePrice"                      : "Postage up to 20g", //_TO_TRANSLATE
     "shapingOptions"                            : "Shapings options", //_TO_TRANSLATE
-    "sendModes"                            : "Send modes", //_TO_TRANSLATE
-    "sendMode"                            : "Send mode", //_TO_TRANSLATE
-    "pricesInformations"                            : "Prices informations", //_TO_TRANSLATE
-    "shippingModification"                            : "Shipping modification", //_TO_TRANSLATE
-    "shippingCreation"                            : "Shipping creation", //_TO_TRANSLATE
-    "shippingAdded"                            : "Shipping added", //_TO_TRANSLATE
-    "shippingUpdated"                            : "Shipping updated", //_TO_TRANSLATE
-    "shippingDeleted"                            : "Shipping deleted", //_TO_TRANSLATE
-    "shippings"                            : "Shippings templates", //_TO_TRANSLATE
-    "noShippingTemplate"                        : "No common shipping templates available for these entities", //_TO_TRANSLATE
-    "doShippingParameter"                       : "Please set up a template in <b>Administration</b> > <b>Shippings templates</b>", //_TO_TRANSLATE
+    "sendModes"                                 : "Send modes", //_TO_TRANSLATE
+    "sendMode"                                  : "Send mode", //_TO_TRANSLATE
+    "pricesInformations"                        : "Prices informations", //_TO_TRANSLATE
+    "shippingModification"                      : "Shipping Maileva modification", //_TO_TRANSLATE
+    "shippingCreation"                          : "Shipping Maileva creation", //_TO_TRANSLATE
+    "shippingAdded"                             : "Shipping Maileva added", //_TO_TRANSLATE
+    "shippingUpdated"                           : "Shipping Maileva updated", //_TO_TRANSLATE
+    "shippingDeleted"                           : "Shipping Maileva deleted", //_TO_TRANSLATE
+    "shippings"                                 : "Shippings Maileva templates", //_TO_TRANSLATE
+    "noShippingTemplate"                        : "No common shipping Maileva templates available for these entities", //_TO_TRANSLATE
+    "doShippingParameter"                       : "Please set up a template in <b>Administration</b> > <b>Shippings Maileva templates</b>", //_TO_TRANSLATE
     "shippingReadyToSend"                       : "document(s) ready to be sent", //_TO_TRANSLATE
     "shippingNotEligible"                       : "Ineligible mail(s) ", //_TO_TRANSLATE
     "accordingTemplateParameters"               : "According to the parameters defined in the model", //_TO_TRANSLATE
-    "mailevaAccount"                             : "Maileva account", //_TO_TRANSLATE
-    "destinationChangingInfo"              : "This mail will be reassigned to this entity", //_TO_TRANSLATE
-    "destinationChangingInfoMass"                            : "These mails following external entity of", //_TO_TRANSLATE
-    "destinationChangingInfoMass2"                            : "will be redirected to entity", //_TO_TRANSLATE
-    "selected"                            : "selected", //_TO_TRANSLATE
+    "mailevaAccount"                            : "Maileva account", //_TO_TRANSLATE
+    "destinationChangingInfo"                   : "This mail will be reassigned to this entity", //_TO_TRANSLATE
+    "destinationChangingInfoMass"               : "These mails following external entity of", //_TO_TRANSLATE
+    "destinationChangingInfoMass2"              : "will be redirected to entity", //_TO_TRANSLATE
+    "selected"                                  : "selected", //_TO_TRANSLATE
     "noDiffusionList"                           : "No diffusion list", //_TO_TRANSLATE
     "chooseAnotherEntityUser"                   : "Choose another person from the entity", //_TO_TRANSLATE
     "totalPrice"                                : "Total price", //_TO_TRANSLATE
@@ -959,7 +959,7 @@ export const LANG_NL = {
     "downloadOriginalFile"                      : "Download the original file", //_TO_TRANSLATE
     "version"                                   : "Version", //_TO_TRANSLATE
     "putInSignatureBook"                        : "Put in signature book", //_TO_TRANSLATE
-    "putInSendAttach"                           : "Put in send attachement", //_TO_TRANSLATE
+    "putInSendAttach"                           : "Put in send attachement Maileva", //_TO_TRANSLATE
     "by"                                        : "By", //_TO_TRANSLATE
     "expectedReturnDate"                        : "Expected return date", //_TO_TRANSLATE
     "returnDate"                                : "Datum van terugkeer", //_TO_TRANSLATE

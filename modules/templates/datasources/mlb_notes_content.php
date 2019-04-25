@@ -27,9 +27,8 @@ foreach($events as $event) {
             . "FROM " . $res_view . " mlb "
             . "JOIN notes on notes.identifier = mlb.res_id "
             . "JOIN users on users.user_id = notes.user_id "
-            . "WHERE notes.coll_id = ? "
-            . "AND notes.id = ? ";
-        $arrayPDO = array($coll_id, $event->record_id);
+            . "WHERE notes.id = ? ";
+        $arrayPDO = array($event->record_id);
         break;
     
     case "res_letterbox" :
@@ -38,14 +37,13 @@ foreach($events as $event) {
             . "notes.*, "
             . "users.* " 
             . "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
-            . "JOIN notes on li.coll_id=notes.coll_id AND notes.identifier = li.res_id "
+            . "JOIN notes on notes.identifier = li.res_id "
             . "JOIN users on users.user_id = notes.user_id "
-            . "WHERE li.coll_id = ? "
-            . "AND li.item_id = ? "
+            . "WHERE li.item_id = ? "
             . "AND li.item_mode = 'dest' "
             . "AND li.item_type = 'user_id' "
             . "AND li.res_id = ? ";
-        $arrayPDO = array($coll_id, $recipient->user_id, $event->record_id);
+        $arrayPDO = array($recipient->user_id, $event->record_id);
         break;
     }
     
