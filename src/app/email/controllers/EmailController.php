@@ -97,12 +97,6 @@ class EmailController
 
         $isSent = ['success' => 'success'];
         if ($args['data']['status'] != 'DRAFT') {
-            $customId = CoreConfigModel::getCustomId();
-            if (empty($customId)) {
-                $customId = 'null';
-            }
-            $encryptKey = CoreConfigModel::getEncryptKey();
-            $options = empty($args['options']) ? '' : serialize($args['options']);
             if ($args['data']['status'] == 'EXPRESS') {
                 $isSent = EmailController::sendEmail(['emailId' => $id, 'userId' => $args['userId']]);
                 if (!empty($isSent['success'])) {
@@ -111,6 +105,12 @@ class EmailController
                     EmailModel::update(['set' => ['status' => 'ERROR'], 'where' => ['id = ?'], 'data' => [$id]]);
                 }
             } else {
+                $customId = CoreConfigModel::getCustomId();
+                if (empty($customId)) {
+                    $customId = 'null';
+                }
+                $encryptKey = CoreConfigModel::getEncryptKey();
+                $options = empty($args['options']) ? '' : serialize($args['options']);
                 exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
             }
         }
