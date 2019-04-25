@@ -219,7 +219,7 @@ if (isset($_GET['num'])) {
         && $_SESSION['upfile']['error'] != 1
     ) {
         $tmpFilename = pathinfo($_SESSION['upfile']['local_path']);
-        if ($tmpFilename['extension'] != 'pdf') {
+        if ($tmpFilename['extension'] != 'pdf' && $showFile) {
             $return = \Convert\controllers\ConvertPdfController::tmpConvert([
                 'fullFilename'     => $_SESSION['upfile']['local_path'],
             ]);
@@ -275,12 +275,9 @@ if (isset($_GET['num'])) {
             <?php
                 $ext = strtolower($_SESSION['upfile']['format']);
             if (file_exists($_SESSION['upfile']['local_path'])) {
-                echo '<br/><br/><div class="error">'
-                    ._FILE_LOADED_BUT_NOT_VISIBLE._ONLY_FILETYPES_AUTHORISED
+                echo '<br/><br/><div class="advertissement">'
+                    ._FILE_LOADED_BUT_NOT_VISIBLE
                     .' <br/><ul>';
-                for ($i = 0; $i < count($extList); ++$i) {
-                    echo '<li>'.$extList[$i].'</li>';
-                }
                 echo '</ul></div>';
             } else {
                 echo '<br/><br/><div class="error">'

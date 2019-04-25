@@ -69,7 +69,6 @@ class ConvertPdfController
         }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
-
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return ['errors' => '[ConvertPdf] Docserver does not exist'];
         }
@@ -82,16 +81,20 @@ class ConvertPdfController
 
         $docInfo = pathinfo($pathToDocument);
 
+        $canConvert = ConvertPdfController::canConvert(['extension' => $docInfo['extension']]);
+        if (!$canConvert) {
+            return ['docserver_id' => $resource['docserver_id'], 'path' => $resource['path'], 'filename' => $resource['filename']];
+        }
+
         $tmpPath = CoreConfigModel::getTmpPath();
         $fileNameOnTmp = rand() . $docInfo["filename"];
 
         copy($pathToDocument, $tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
 
         if (strtolower($docInfo["extension"]) != 'pdf') {
-    
             $command = "unoconv -f pdf " . escapeshellarg($tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
             exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
-    
+
             if (!file_exists($tmpPath.$fileNameOnTmp.'.pdf')) {
                 return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
             }
@@ -180,5 +183,23 @@ class ConvertPdfController
         }
 
         return $convertedDocument;
+    }
+
+    private static function canConvert(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['extension']);
+        ValidatorModel::stringType($args, ['extension']);
+
+        $canConvert = false;
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->FORMAT as $value) {
+                if ((string)$value->name == $args['extension'] && (string)$value->index_frame_show == 'true') {
+                    $canConvert = true;
+                }
+            }
+        }
+
+        return $canConvert;
     }
 }
