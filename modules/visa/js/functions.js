@@ -49,7 +49,11 @@ function addVisaUser(users) {
         selected = ' selected="selected" ';
 
         if($j("#isAllAttachementSigned").val() == 'allsigned' || $j("#isAllAttachementSigned").val() == 'false'){
-            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'"><option value="false" '+selected+'>VISEUR</option><option value="true">SIGNATAIRE</option></select></sub>';
+            if (users.requested_signature == true) {
+                signRequest = '<br/><sub><select id="signRequest_'+next_visa+'"><option value="false">VISEUR</option><option value="true" '+selected+'>SIGNATAIRE</option></select></sub>';
+            } else {
+                signRequest = '<br/><sub><select id="signRequest_'+next_visa+'"><option value="false" '+selected+'>VISEUR</option><option value="true">SIGNATAIRE</option></select></sub>';
+            }
         } else {
             signRequest = '<br/><sub><select id="signRequest_'+next_visa+'" disabled="disabled"><option value="false" '+selected+'>VISEUR</option><option value="true">SIGNATAIRE</option></select></sub>';
         }
