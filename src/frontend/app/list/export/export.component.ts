@@ -4,13 +4,14 @@ import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MAT_DIALOG_DATA } from '@angular/material';
+import { SortPipe } from '../../../plugins/sorting.pipe';
 
 declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "export.component.html",
     styleUrls: ['export.component.scss'],
-    providers: [NotificationService],
+    providers: [NotificationService, SortPipe],
 })
 export class ExportComponent implements OnInit {
 
@@ -227,7 +228,7 @@ export class ExportComponent implements OnInit {
     @ViewChild('listFilter') private listFilter: any;
 
 
-    constructor(public http: HttpClient, private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(public http: HttpClient, private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any, private sortPipe: SortPipe) { }
 
     ngOnInit(): void {
         this.dataAvailableClone = JSON.parse(JSON.stringify(this.dataAvailable));
@@ -337,6 +338,7 @@ export class ExportComponent implements OnInit {
 
     removeData(i: number) {
         transferArrayItem(this.exportModel.data, this.dataAvailable, i, this.dataAvailable.length);
+        this.sortPipe.transform(this.dataAvailable, 'label');
     }
 
     removeAllData() {

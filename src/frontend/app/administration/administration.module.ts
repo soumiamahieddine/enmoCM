@@ -2,8 +2,6 @@ import { NgModule }                             from '@angular/core';
 
 import { SharedModule }                         from '../app-common.module';
 
-import { SortPipe }                             from '../../plugins/sorting.pipe';
-
 //import { MenuComponent }                        from '../menu/menu.component';
 //import { MenuNavComponent }                     from '../menu/menu-nav.component';
 //import { MenuTopComponent }                     from '../menu/menu-top.component';
@@ -93,7 +91,6 @@ import { ShippingAdministrationComponent }              from './shipping/shippin
         DoctypesAdministrationRedirectModalComponent,
         DiffusionModelsAdministrationComponent,
         DiffusionModelAdministrationComponent,
-        SortPipe,
         VersionsUpdateAdministrationComponent,
         DocserversAdministrationComponent,
         DocserverAdministrationComponent,

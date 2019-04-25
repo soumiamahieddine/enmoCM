@@ -11,6 +11,7 @@ import { RouterModule }                         from '@angular/router';
 import { DragDropModule }                         from '@angular/cdk/drag-drop';
 
 /*PLUGINS IMPORTS*/
+import { SortPipe }                             from '../plugins/sorting.pipe';
 import { PdfViewerModule }                      from 'ng2-pdf-viewer';
 //import { SimplePdfViewerModule }                from 'simple-pdf-viewer';
 import { NgStringPipesModule }                  from 'ngx-pipes';
@@ -71,6 +72,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         HeaderPanelComponent,
         SearchHomeComponent,
         BasketHomeComponent,
+        SortPipe,
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,
@@ -97,6 +99,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         HttpClientModule,
         RouterModule,
         AppMaterialModule,
+        SortPipe,
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,

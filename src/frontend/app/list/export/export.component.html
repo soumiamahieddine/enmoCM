@@ -44,7 +44,7 @@
                 <div class="col-md-6 available-data">
                     <h2><span class="title">{{lang.availableDatas}}</span> <i class="fa fa-plus-circle removeAllDatas" color="primary" title="{{lang.addAllDatas}}" (click)="addAllData()"></i></h2>
                     <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="dataAvailable" [cdkDropListConnectedTo]="[dataExportList]" class="cdk-list" (cdkDropListDropped)="drop($event)">
-                        <div class="columns" *ngFor="let item of dataAvailable | filterList:listFilter.value:'label'"
+                        <div class="columns" *ngFor="let item of dataAvailable | sortBy: 'label' | filterList:listFilter.value:'label'"
                             cdkDrag id="{{item.value}}">{{item.label}} <i class="fa fa-plus" color="primary" style="cursor:pointer;"
                                 (click)="addData(item)"></i></div>
                         <div *ngIf="dataAvailable.length == 0" class="noData">{{lang.noDataAvailable}}</div>
