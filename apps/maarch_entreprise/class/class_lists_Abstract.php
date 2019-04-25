@@ -1639,13 +1639,26 @@ abstract class lists_Abstract extends Database
 
         $return = '<div>';
 
+        $mailevaConfig = \SrcCore\models\CoreConfigModel::getMailevaConfiguration();
+        $mailevaEnabled = false;
+        if (!empty($mailevaConfig) && $mailevaConfig['enabled']) {
+            $mailevaEnabled = true;
+        }
+
         $return .= '<input type="checkbox" name="sendAttach'. $count .'" id="sendAttach'. $count .'" align="left"';
 
         if (!empty($inSendAttach)) {
             $return .= 'checked ';
         }
+        if (!$mailevaEnabled) {
+            $return .= 'disabled ';
+        }
 
-        $return .= 'onclick="setSendAttachment('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label for="sendAttach'. $count .'">'._PUT_IN_SEND_ATTACH.'</label>';
+        $return .= 'onclick="setSendAttachment('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label';
+        if (!$mailevaEnabled) {
+            $return .= ' style="opacity: 0.5; cursor: default" ';
+        }
+        $return .= ' for="sendAttach'. $count .'">'._PUT_IN_SEND_ATTACH.'</label>';
 
         $return .= '</div>';
 
