@@ -722,7 +722,7 @@ class PreProcessActionController
                 } else {
                     $templateFee = 0;
                 }
-                $aTemplates[$key]['fee'] = $templateFee;
+                $aTemplates[$key]['fee'] = number_format($templateFee, 2, '.', '');
             }
         }
 
