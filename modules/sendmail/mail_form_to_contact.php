@@ -438,7 +438,7 @@ if ($mode == 'add') {
 
     $content .= '<option value="">'._ADD_TEMPLATE_MAIL.'</option>';
 
-    $stmt = $db->query("select template_id, template_label, template_content from templates where template_target = 'sendmail'");
+    $stmt = $db->query("select template_id, template_label, template_content from templates where template_target = 'sendmail' order by template_label asc");
     while ($result = $stmt->fetchObject()) {
         $content .= "<option value='".$result->template_id."'>".$result->template_label.'</option>';
     }

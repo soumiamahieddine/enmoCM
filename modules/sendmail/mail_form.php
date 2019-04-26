@@ -125,6 +125,7 @@ $userTemplates = \SrcCore\models\DatabaseModel::select([
     'left_join' => ['t.template_id = ta.template_id'],
     'where'     => ['t.template_target = \'sendmail\'', 'value_field in (?)'],
     'data'      => [$userEntities],
+    'order_by'  => ['t.template_label asc']
 ]);
 
 //ADD
