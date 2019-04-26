@@ -36,6 +36,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
+use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
@@ -263,10 +264,14 @@ class EmailController
 
             $emailFrom = empty($configuration['from']) ? $email['sender']['email'] : $configuration['from'];
             if (empty($email['sender']['entityId'])) {
-                $phpmailer->setFrom($emailFrom, "{$user['firstname']} {$user['lastname']}");
+                // Usefull for old sendmail server which doesn't support accent encoding
+                $setFrom = TextFormatModel::normalize(['string' => "{$user['firstname']} {$user['lastname']}"]);
+                $phpmailer->setFrom($emailFrom, ucwords($setFrom));
             } else {
                 $entity = EntityModel::getById(['id' => $email['sender']['entityId'], 'select' => ['short_label']]);
-                $phpmailer->setFrom($emailFrom, $entity['short_label']);
+                // Usefull for old sendmail server which doesn't support accent encoding
+                $setFrom = TextFormatModel::normalize(['string' => $entity['short_label']]);
+                $phpmailer->setFrom($emailFrom, ucwords($setFrom));
             }
         } elseif ($configuration['type'] == 'sendmail') {
             $phpmailer->isSendmail();
