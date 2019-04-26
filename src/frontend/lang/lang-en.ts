@@ -828,7 +828,7 @@ export const LANG_EN = {
     "eraseAll"                                : "Erase all",
     "fontBold"                                : "Bold",
     "alignLeft"                                : "Left",
-    "alignCenter"                                : "Centered",
+    "alignCenter"                                : "Center",
     "alignRight"                                : "Right",
     "fontBig"                                : "Big",
     "chronoNumberShort"                      : "Chrono Num",

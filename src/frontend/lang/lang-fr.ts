@@ -854,7 +854,7 @@ export const LANG_FR = {
     "eraseAll"                                          : "Tout effacer",
     "fontBold"                                          : "Gras",
     "alignLeft"                                         : "Gauche",
-    "alignCenter"                                       : "Centré",
+    "alignCenter"                                       : "Centre",
     "alignRight"                                        : "Droite",
     "fontBig"                                           : "Grand",
     "chronoNumberShort"                                 : "N° Chrono",
