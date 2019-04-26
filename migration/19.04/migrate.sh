@@ -2,4 +2,4 @@
 php ./migrateSendmail.php
 php ./migrateExport.php
 php ./migrateFeature.php
-
+php ./migrateNewNature.php
