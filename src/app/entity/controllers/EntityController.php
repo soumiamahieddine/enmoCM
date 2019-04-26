@@ -461,7 +461,7 @@ class EntityController
 
     public function getUsersById(Request $request, Response $response, array $aArgs)
     {
-        $entity = entitymodel::getById(['id' => $aArgs['id'], 'select' => ['entity_id']]);
+        $entity = EntityModel::getById(['id' => $aArgs['id'], 'select' => ['entity_id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
