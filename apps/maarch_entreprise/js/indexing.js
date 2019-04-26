@@ -813,11 +813,19 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                         document.getElementById("diff_list_tr").style.display = 'table-row';
                         document.getElementById("subject_tr").style.display = 'table-row';
                     }
-
+                    
                     if(cat_id != 'outgoing'){
-                        $('choose_file_div').show();
+                        $j("#choose_file").on("load", function () {
+                            $j("#choose_file").off();
+                            $j('#choose_file_div').show();
+                            $j('#choose_file').contents().find('#with_file').click();
+                        });                        
                     }else{
-                        $('choose_file_div').hide();
+                        $j("#choose_file").on("load", function () {
+                            $j("#choose_file").off();
+                            $j('#choose_file').contents().find('#with_file2').click();
+                            $j('#choose_file_div').hide();
+                        });
                     }
 
                     if(origin != 'init'){
