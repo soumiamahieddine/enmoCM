@@ -1125,7 +1125,7 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VAL', 'Courrier signalé', 'Y', 'fm-letter-status-aval', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'fm-letter-status-attr', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VALSG', 'Nouveau courrier ou document en validation SG', 'Y', 'fm-letter-status-attr', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ATT_MP', 'En attente Maarch Parapheur', 'Y', 'fm-letter-status-wait', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ATT_MP', 'En attente annotation ou signature tablette (Maarch Parapheur)', 'Y', 'fm-letter-status-wait', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EAVIS', 'Avis demandé', 'N', 'fa-lightbulb', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EENV', 'A e-envoyer', 'N', 'fm-letter-status-aenv', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ESIG', 'A e-signer', 'N', 'fm-file-fingerprint', 'apps', 'Y', 'Y');
@@ -1155,7 +1155,7 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('STDBY', 'Clôturé avec suivi', 'Y', 'fm-letter-status-wait', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ENVDONE', 'Courrier envoyé', 'Y', 'fm-letter-status-aenv', 'apps', 'Y', 'Y');
 --INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('AR_OK', 'Accusé de réception créé', 'Y', 'fa-mail-bulk', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('REJ_SIGN', 'Signature parapheur refusée', 'Y', 'fm-letter-status-rejected', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('REJ_SIGN', 'Signature refusée sur la tablette (Maarch Parapheur)', 'Y', 'fm-letter-status-rejected', 'apps', 'Y', 'Y');
 
 ------------
 --STATUS IMAGES-
@@ -1271,11 +1271,11 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, a
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (524, '', 'Activer la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_on', 'N', 'apps', 'N', NULL, 'enabledBasketPersistenceAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (525, '', 'Désactiver la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_off', 'N', 'apps', 'N', NULL, 'disabledBasketPersistenceAction');
 --INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (526, '', 'Libérer les courriers', 'VAL', 'Y', 'Y', 'confirm_status', 'N', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (527, '', 'Envoyer vers Maarch Parapheur', 'ATT_MP', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'apps', 'N', NULL, 'sendExternalSignatoryBookAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (527, '', 'Envoyer sur la tablette (Maarch Parapheur)', 'ATT_MP', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'apps', 'N', NULL, 'sendExternalSignatoryBookAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (528, '', 'Générer les accusés de réception', '_NOSTATUS_', 'N', 'Y', 'create_acknowledgement_receipt', 'Y', 'apps', 'N', NULL, 'createAcknowledgementReceiptsAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (529, '', 'Envoyer un pli postal Maileva', '_NOSTATUS_', 'N', 'Y', 'send_shipping', 'Y', 'apps', 'N', NULL, 'sendShippingAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (530, '', 'Re-Générér les accusés de réception papier si pb impression', '_NOSTATUS_', 'N', 'Y', 'create_acknowledgement_receipt', 'Y', 'apps', 'N', NULL, 'createAcknowledgementReceiptsAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (531, '', 'Envoyer pour annotation (Maarch Parapheur)', 'ATT_MP', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'apps', 'N', NULL, 'sendExternalSignatoryBookAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (531, '', 'Envoyer pour annotation sur la tablette (Maarch Parapheur)', 'ATT_MP', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'apps', 'N', NULL, 'sendExternalSignatoryBookAction');
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 ------------
 -- BANNETTES SECONDAIRES
