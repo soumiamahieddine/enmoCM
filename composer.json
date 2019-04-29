@@ -35,7 +35,8 @@
             "MessageExchange\\"         : "src/app/external/messageExchange/",
             "ExportSeda\\"              : "src/app/external/exportSeda/",
             "ExternalSignatoryBook\\"   : "src/app/external/externalSignatoryBook/",
-            "Sendmail\\"                : "modules/sendmail/"
+            "Sendmail\\"                : "modules/sendmail/",
+            "Noxxie\\PdfParser\\"       : "vendor/noxxie/pdfparser/src/Smalot/PdfParser/"
     	}
     },
     "require": {
