@@ -195,7 +195,7 @@ if ($mode == 'add') {
         $content .= '<div id="adressList" class="autocomplete"></div>';
         $content .= '<script type="text/javascript">addEmailAdress(\'email\', \'adressList\', \''
             .$_SESSION['config']['businessappurl']
-            .'index.php?display=true&module=sendmail&page=adresss_autocomletion\', \'what\', \'2\');</script>';
+            .'index.php?display=true&module=sendmail&page=address_autocompletion\', \'what\', \'2\');</script>';
         $content .= ' <select name="target" id="target">'
             .'<option id="target_target_to" value="to">'._SEND_TO_SHORT.'</option>'
             .'<option id="target_cc" value="cc">'._COPY_TO_SHORT.'</option>'
@@ -650,7 +650,7 @@ if ($mode == 'add') {
             $content .= '<div id="adressList" class="autocomplete"></div>';
             $content .= '<script type="text/javascript">addEmailAdress(\'email\', \'adressList\', \''
                 .$_SESSION['config']['businessappurl']
-                .'index.php?display=true&module=sendmail&page=adresss_autocomletion\', \'what\', \'2\');</script> ';
+                .'index.php?display=true&module=sendmail&page=address_autocompletion\', \'what\', \'2\');</script> ';
             $content .= '<select name="target" id="target">'
                 .'<option id="target_target_to" value="to">'._SEND_TO_SHORT.'</option>'
                 .'<option id="target_cc" value="cc">'._COPY_TO_SHORT.'</option>'
