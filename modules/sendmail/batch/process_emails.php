@@ -75,16 +75,21 @@ while ($state <> 'END') {
                     if (!empty($mailfrom_generic)) {
                         $GLOBALS['logger']->write('process e-mail '.($currentEmail+1)."/".$totalEmailsToProcess.' (FROM => '.$userInfo['firstname'].' '.$userInfo['lastname'].' <'.$mailfrom_generic.'>'.', TO => '.$email->to_list.', SUBJECT => '.$email->email_object.', CC =>'.$email->cc_list.', CCI => '.$email->cci_list.') ...', 'INFO');
 
-                        $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
-                            . $userInfo['lastname'].' <'.$mailfrom_generic.'> ');
+
+                        $setFrom = $userInfo['firstname'].' ' . $userInfo['lastname'].' <'.$mailfrom_generic.'> ';
+                        $setFrom = functions::normalize($setFrom);
+                        $GLOBALS['mailer']->setFrom($setFrom);
+
                         $emailFrom = $mailfrom_generic;
                         $email->email_body = 'Courriel envoyé par : ' . $userInfo['firstname'].' '
                             . $userInfo['lastname'] . ' ' . $email->sender_email . ' ' .  '.<br/><br/>' . $email->email_body;
                     } else {
                         $GLOBALS['logger']->write('process e-mail '.($currentEmail+1)."/".$totalEmailsToProcess.' (FROM => '.$userInfo['firstname'].' '.$userInfo['lastname'].' <'.$email->sender_email.'>'.', TO => '.$email->to_list.', SUBJECT => '.$email->email_object.', CC =>'.$email->cc_list.', CCI => '.$email->cci_list.') ...', 'INFO');
 
-                        $GLOBALS['mailer']->setFrom($userInfo['firstname'].' '
-                            . $userInfo['lastname'].' <'.$email->sender_email.'> ');
+                        $setFrom = $userInfo['firstname'].' ' . $userInfo['lastname'].' <'.$email->sender_email.'> ';
+                        $setFrom = functions::normalize($setFrom);
+                        $GLOBALS['mailer']->setFrom($setFrom);
+
                         $emailFrom = $email->sender_email;
                     }
                     $GLOBALS['mailer']->setReplyTo($email->sender_email);
@@ -92,15 +97,21 @@ while ($state <> 'END') {
                     if (!empty($mailfrom_generic)) {
                         $mailsEntities = $sendmail_tools->getAttachedEntitiesMails();
                         $entityShortLabel = substr($mailsEntities[$email->sender_email], 0, strrpos($mailsEntities[$email->sender_email], "("));
-                            
-                        $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $mailfrom_generic. '> ');
+                           
+                        $setFrom = $entityShortLabel . ' <' . $mailfrom_generic. '> ';
+                        $setFrom = functions::normalize($setFrom);
+                        $GLOBALS['mailer']->setFrom($setFrom);
+
                         $emailFrom = $mailfrom_generic;
                         $email->email_body = 'Courriel envoyé par : ' . $entityShortLabel . ' ' . $sendmail_tools->explodeSenderEmail($email->sender_email) . ' ' .  '.<br/><br/>' . $email->email_body;
                     } else {
                         $mailsEntities = $sendmail_tools->getAttachedEntitiesMails();
                         $entityShortLabel = substr($mailsEntities[$email->sender_email], 0, strrpos($mailsEntities[$email->sender_email], "("));
 
-                        $GLOBALS['mailer']->setFrom($entityShortLabel . ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '> ');
+                        $setFrom = $entityShortLabel . ' <' . $sendmail_tools->explodeSenderEmail($email->sender_email) . '> ';
+                        $setFrom = functions::normalize($setFrom);
+                        $GLOBALS['mailer']->setFrom($setFrom);
+
                         $emailFrom = $sendmail_tools->explodeSenderEmail($email->sender_email);
                     }
                     $GLOBALS['mailer']->setReplyTo($sendmail_tools->explodeSenderEmail($email->sender_email));
