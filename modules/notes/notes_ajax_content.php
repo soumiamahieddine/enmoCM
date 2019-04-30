@@ -180,6 +180,7 @@ switch ($mode) {
                         //}
                     }
                 }
+                $entitiesForRestriction[] = $destination;
             }
             for ($i=0;$i<count($entitiesList);$i++) {
                 if ($entitiesForRestriction && in_array($entitiesList[$i]->entity_id, $entitiesForRestriction)) {
