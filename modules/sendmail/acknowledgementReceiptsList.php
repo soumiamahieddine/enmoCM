@@ -34,8 +34,8 @@ $tab=$request->PDOselect($select, $where, [$identifier], $orderstr, $_SESSION['c
 
 if (!empty($tab)) {
     //Result Array
-    for ($i=0;$i<count($tab);$i++) {
-        for ($j=0;$j<count($tab[$i]);$j++) {
+    for ($i=0; $i<count($tab); $i++) {
+        for ($j=0; $j<count($tab[$i]); $j++) {
             foreach (array_keys($tab[$i][$j]) as $value) {
                 if ($tab[$i][$j][$value]=="id") {
                     $tab[$i][$j]["label"]       = 'id';

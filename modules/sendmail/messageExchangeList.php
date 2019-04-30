@@ -5,17 +5,32 @@ $select = [];
 $select["message_exchange"] = [];
     
 //Fields
-    array_push($select["message_exchange"], "message_id", "date", "reference", "type", "sender_org_name", "account_id",
-        "recipient_org_identifier", "recipient_org_name", "reception_date", "operation_date", "status", "data", "res_id_master", "filename");
+array_push(
+    $select["message_exchange"],
+    "message_id",
+    "date",
+    "reference",
+    "type",
+    "sender_org_name",
+    "account_id",
+    "recipient_org_identifier",
+    "recipient_org_name",
+    "reception_date",
+    "operation_date",
+    "data",
+    "res_id_master",
+    "filename",
+    'status as status_label'
+);
     
 //Where clause
-    $where_tab = array();
-    //
-    $where_tab[] = " res_id_master = ? ";
-    $where_tab[] = " (type = 'ArchiveTransfer' or reference like '%_ReplySent')";
+$where_tab = array();
 
-    //Build where
-    $where = implode(' and ', $where_tab);
+$where_tab[] = " res_id_master = ? ";
+$where_tab[] = " (type = 'ArchiveTransfer' or reference like '%_ReplySent')";
+
+//Build where
+$where = implode(' and ', $where_tab);
 
 //Order
     $orderstr = "order by date desc";
@@ -25,8 +40,8 @@ $select["message_exchange"] = [];
 
 if (!empty($tab)) {
     //Result Array
-    for ($i=0;$i<count($tab);$i++) {
-        for ($j=0;$j<count($tab[$i]);$j++) {
+    for ($i=0; $i<count($tab); $i++) {
+        for ($j=0; $j<count($tab[$i]); $j++) {
             foreach (array_keys($tab[$i][$j]) as $value) {
                 if ($tab[$i][$j][$value]=="message_id") {
                     $tab[$i][$j]["message_id"]  = $tab[$i][$j]['value'];
@@ -107,7 +122,7 @@ if (!empty($tab)) {
                 if ($tab[$i][$j][$value]=="account_id") {
                     $userInfo = \User\models\UserModel::getByLogin(['login' => $tab[$i][$j]["value"]]);
                     $senderName = '';
-                    if(!empty($sender_org_name)){
+                    if (!empty($sender_org_name)) {
                         $senderName = ' ('.$sender_org_name.')';
                     }
                     $tab[$i][$j]["value"]       = $userInfo['firstname'] . " " . $userInfo['lastname'] . $senderName;
@@ -119,32 +134,29 @@ if (!empty($tab)) {
                     $tab[$i][$j]["show"]        = true;
                     $tab[$i][$j]["order"]       = 'account_id';
                 }
-                if ($tab[$i][$j][$value]=="status") {
-                    $tab[$i][$j]["value"] = '<img src="'
-                        .$_SESSION['config']['businessappurl'].'static.php?module=sendmail&filename='
-                        .$_SESSION['sendmail']['status'][$tab[$i][$j]["value"]]['img'].'" title="'
-                        .$_SESSION['sendmail']['status'][$tab[$i][$j]["value"]]['label'].'" width="20" height="20" />';
+                if ($tab[$i][$j][$value]=="status_label") {
+                    $tab[$i][$j]['value']       = $sendmail_tools->emailStatus(['status' => $tab[$i][$j]['value']]);
                     $tab[$i][$j]["label"]       = _STATUS;
                     $tab[$i][$j]["size"]        = "1";
                     $tab[$i][$j]["label_align"] = "left";
                     $tab[$i][$j]["align"]       = "left";
                     $tab[$i][$j]["valign"]      = "bottom";
                     $tab[$i][$j]["show"]        = true;
-                    $tab[$i][$j]["order"]       = 'status';
+                    $tab[$i][$j]["order"]       = 'status_label';
                 }
             }
         }
     }
     
     //List
-    $listKey                        = 'message_id';                                       //Cle de la liste
-    $paramsTab                      = array();                                            //Initialiser le tableau de parametres
-    $paramsTab['bool_sortColumn']   = false;                                              //Affichage Tri
-    $paramsTab['pageTitle']         = '<br><br>'._NUMERIC_PACKAGE_SENT;                   //Titre de la page
-    $paramsTab['bool_bigPageTitle'] = false;                                              //Affichage du titre en grand
-    $paramsTab['urlParameters']     = 'identifier='.$identifier."&origin=".$origin.'&display=true'.$parameters;            //Parametres d'url supplementaires
-    $paramsTab['listHeight']        = '100%';                                             //Hauteur de la liste
-    $paramsTab['listCss']           = $css;                                               //CSS
+    $listKey                        = 'message_id';                                                             // Cle de la liste
+    $paramsTab                      = array();                                                                  // Initialiser le tableau de parametres
+    $paramsTab['bool_sortColumn']   = false;                                                                    // Affichage Tri
+    $paramsTab['pageTitle']         = '<br><br>'._NUMERIC_PACKAGE_SENT;                                         // Titre de la page
+    $paramsTab['bool_bigPageTitle'] = false;                                                                    // Affichage du titre en grand
+    $paramsTab['urlParameters']     = 'identifier='.$identifier."&origin=".$origin.'&display=true'.$parameters; // Parametres d'url supplementaires
+    $paramsTab['listHeight']        = '100%';                                                                   // Hauteur de la liste
+    $paramsTab['listCss']           = $css;                                                                     // CSS
     
     //Action icons array
     $paramsTab['actionIcons'] = array();

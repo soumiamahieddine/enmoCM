@@ -50,22 +50,6 @@ abstract class SendmailAbstract extends Database
             . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
             . $_SESSION['config']['lang'] . '.php';
 
-        //Status
-        $_SESSION['sendmail']['status'] = array();
-        if (count($xmlconfig->STATUS) > 0) {
-            foreach ($xmlconfig->STATUS as $status) {
-                foreach ($status->STS as $STS) {
-                    $label = (string)$STS->LABEL;
-                    if (!empty($label) && defined($label) && constant($label) <> null) {
-                        $label = constant($label);
-                    }
-                    $_SESSION['sendmail']['status'][(string)$STS->ID]['id'] = (string)$STS->ID;
-                    $_SESSION['sendmail']['status'][(string)$STS->ID]['label'] = $label;
-                    $_SESSION['sendmail']['status'][(string)$STS->ID]['img'] = (string)$STS->IMG;
-                }
-            }
-        }
-
         //History
         $hist = $xmlconfig->HISTORY;
         $_SESSION['history']['mailadd'] = (string) $hist->mailadd;
@@ -671,18 +655,18 @@ abstract class SendmailAbstract extends Database
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-            . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
-            . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml'
+            . DIRECTORY_SEPARATOR . 'sendmail'
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml'
         )
         ) {
             $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
                 . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-                . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
-                . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
+                . DIRECTORY_SEPARATOR . 'sendmail'
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
             $getXml = true;
-        } elseif (file_exists($_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml')) {
-            $path = $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. DIRECTORY_SEPARATOR . 'batch'
-                . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
+        } elseif (file_exists($_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'. 'xml' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml')) {
+            $path = $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'sendmail'
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'externalMailsEntities.xml';
             $getXml = true;
         }
 

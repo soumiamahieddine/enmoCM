@@ -123,15 +123,15 @@ class EmailModel
         ValidatorModel::intVal($aArgs, ['id']);
 
         $email = DatabaseModel::select([
-            'select'    => [1],
+            'select'    => ['document'],
             'table'     => ['emails'],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']],
         ]);
 
-        $email[0]['document'] = (array)json_decode($email['document']);
+        $document = (array)json_decode($email[0]['document']);
 
-        if ($email['document']['isLinked'] || !empty($email['document']['attachments']) || !empty($email['document']['notes'])) {
+        if ($document['isLinked'] || !empty($document['attachments']) || !empty($document['notes'])) {
             return true;
         } else {
             return false;
