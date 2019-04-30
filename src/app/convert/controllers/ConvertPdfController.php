@@ -194,7 +194,7 @@ class ConvertPdfController
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
         if ($loadedXml) {
             foreach ($loadedXml->FORMAT as $value) {
-                if ((string)$value->name == $args['extension'] && (string)$value->index_frame_show == 'true') {
+                if ((string)$value->name == strtoupper($args['extension']) && (string)$value->index_frame_show == 'true') {
                     $canConvert = true;
                 }
             }
