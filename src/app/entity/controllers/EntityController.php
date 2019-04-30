@@ -253,7 +253,7 @@ class EntityController
         $neededData = [
             'entity_label', 'short_label', 'entity_type', 'adrs_1', 'adrs_2', 'adrs_3',
             'zipcode', 'city', 'country', 'email', 'business_id', 'parent_entity_id',
-            'entity_path', 'ldap_id', 'archival_agreement', 'archival_agency', 'entity_full_name'
+            'ldap_id', 'archival_agreement', 'archival_agency', 'entity_full_name'
         ];
         foreach ($data as $key => $value) {
             if (!in_array($key, $neededData)) {

@@ -246,6 +246,7 @@ ALTER TABLE notes DROP COLUMN IF EXISTS coll_id;
 ALTER TABLE notes DROP COLUMN IF EXISTS type;
 ALTER TABLE notes ADD COLUMN type CHARACTER VARYING (32) DEFAULT 'resource' NOT NULL;
 ALTER TABLE users DROP COLUMN IF EXISTS thumbprint;
+ALTER TABLE entities DROP COLUMN IF EXISTS entity_path;
 
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'notes') AND attname = 'date_note') = 1 THEN

@@ -83,7 +83,7 @@ abstract class EntityModelAbstract
         ValidatorModel::stringType($aArgs, [
             'entity_id', 'entity_label', 'short_label', 'entity_type', 'adrs_1', 'adrs_2', 'adrs_3',
             'zipcode', 'city', 'country', 'email', 'business_id', 'parent_entity_id',
-            'entity_path', 'ldap_id', 'transferring_agency', 'archival_agreement', 'archival_agency', 'entity_full_name'
+            'ldap_id', 'transferring_agency', 'archival_agreement', 'archival_agency', 'entity_full_name'
         ]);
 
         DatabaseModel::insert([
@@ -102,7 +102,6 @@ abstract class EntityModelAbstract
                 'business_id'           => $aArgs['business_id'],
                 'parent_entity_id'      => $aArgs['parent_entity_id'],
                 'entity_type'           => $aArgs['entity_type'],
-                'entity_path'           => $aArgs['entity_path'],
                 'ldap_id'               => $aArgs['ldap_id'],
                 'archival_agreement'    => $aArgs['archival_agreement'],
                 'archival_agency'       => $aArgs['archival_agency'],
@@ -120,7 +119,7 @@ abstract class EntityModelAbstract
         ValidatorModel::stringType($aArgs['set'], [
             'entity_label', 'short_label', 'entity_type', 'adrs_1', 'adrs_2', 'adrs_3',
             'zipcode', 'city', 'country', 'email', 'business_id', 'parent_entity_id',
-            'entity_path', 'ldap_id', 'transferring_agency', 'archival_agreement', 'archival_agency', 'entity_full_name'
+            'ldap_id', 'transferring_agency', 'archival_agreement', 'archival_agency', 'entity_full_name'
         ]);
 
         DatabaseModel::update([
@@ -406,5 +405,27 @@ abstract class EntityModelAbstract
         }
 
         return $roles;
+    }
+
+    public static function getEntityPathByEntityId(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['entityId']);
+        ValidatorModel::stringType($args, ['entityId', 'path']);
+
+        $entity = EntityModel::getByEntityId([
+            'select'   => ['entity_id', 'parent_entity_id'],
+            'entityId' => $args['entityId']
+        ]);
+
+        if (!empty($args['path'])) {
+            $args['path'] = "/{$args['path']}";
+        }
+        $args['path'] = $entity['entity_id'] . $args['path'];
+
+        if (empty($entity['parent_entity_id'])) {
+            return $args['path'];
+        }
+
+        return EntityModel::getEntityPathByEntityId(['entityId' => $entity['parent_entity_id'], 'path' => $args['path']]);
     }
 }

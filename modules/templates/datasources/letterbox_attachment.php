@@ -46,6 +46,7 @@ if (!empty($res_id)) {
         foreach ($initiator as $column => $value) {
             $doc['initiator_'.$column] = $value;
         }
+        $doc['initiator_entity_path'] = \Entity\models\EntityModel::getEntityPathByEntityId(['entityId' => $doc['initiator'], 'path' => '']);
     }
 
     $datasources['res_letterbox'][] = $doc;

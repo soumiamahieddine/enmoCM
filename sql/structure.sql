@@ -447,7 +447,6 @@ CREATE TABLE entities
   business_id character varying(32),
   parent_entity_id character varying(32),
   entity_type character varying(64),
-  entity_path character varying(2048),
   ldap_id character varying(255),
   archival_agency character varying(255),
   archival_agreement character varying(255),
