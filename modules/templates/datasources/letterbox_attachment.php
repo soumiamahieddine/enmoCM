@@ -59,6 +59,7 @@ if (!empty($res_id)) {
         foreach ($dest as $column => $value) {
             $datasources['user'][0][$column] = $value;
         }
+        $datasources['user'][0]['entity_path'] = \Entity\models\EntityModel::getEntityPathByEntityId(['entityId' => $_SESSION['user']['primaryentity']['id'], 'path' => '']);
     }
 
     //COMPLEMENTARY CURRENT USER PARENT ENTITY INFO
@@ -68,6 +69,7 @@ if (!empty($res_id)) {
         foreach ($dest as $column => $value) {
             $datasources['user'][0]['parent_'.$column] = $value;
         }
+        $datasources['user'][0]['parent_entity_path'] = \Entity\models\EntityModel::getEntityPathByEntityId(['entityId' => $datasources['user'][0]['parent_entity_id'], 'path' => '']);
     }
 
     //multicontact
