@@ -509,7 +509,10 @@ class PreProcessActionController
             } elseif ($signatureBookEnabled == 'xParaph') {
                 $userInfos  = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['external_id']]);
                 $externalId = json_decode($userInfos['external_id'], true);
-                $additionalsInfos['accounts'] = $externalId['xParaph'];
+                $additionalsInfos['accounts'] = [];
+                if (!empty($externalId['xParaph'])) {
+                    $additionalsInfos['accounts'] = $externalId['xParaph'];
+                }
 
                 foreach ($data['resources'] as $resId) {
                     $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);

@@ -334,7 +334,6 @@ class XParaphController
 
     public static function retrieveSignedMails($aArgs)
     {
-
         $tmpPath = CoreConfigModel::getTmpPath();
         foreach (['noVersion', 'isVersion'] as $version) {
             $depotids = [];
@@ -550,6 +549,7 @@ class XParaphController
         foreach ($externalId['xParaph'] as $key => $value) {
             if ($value['login'] == $data['login'] && $value['siret'] == $data['siret']) {
                 unset($externalId['xParaph'][$key]);
+                $externalId['xParaph'] = array_values($externalId['xParaph']);
                 UserModel::updateExternalId(['id' => $user['id'], 'externalId' => json_encode($externalId)]);
                 $accountFound = true;
                 HistoryController::add([
