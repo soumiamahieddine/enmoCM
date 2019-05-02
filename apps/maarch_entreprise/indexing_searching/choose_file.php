@@ -178,7 +178,7 @@ $_SESSION['upfile']['fileNamePdfOnTmp'] = '';
             <?php
             } ?>
 
-            <input type="file" name="file" id="file" onchange="$j('#with_file')[0].value='false';this.form.method = 'post';this.form.submit();"
+            <input type="file" name="file" id="file" onchange="uploadFiles();"
                    value="<?php $_REQUEST['with_file'] = 'false';
                             if (isset($_SESSION['file_path'])) {
                                 echo $_SESSION['file_path'];

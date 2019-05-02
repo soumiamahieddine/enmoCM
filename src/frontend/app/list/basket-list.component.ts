@@ -110,11 +110,6 @@ export class BasketListComponent implements OnInit {
 
         this.loading = false;
 
-        if (this.mobileMode) {
-            $j('.mat-paginator-navigation-previous').hide();
-            $j('.mat-paginator-navigation-next').hide();
-        }
-
         this.http.get(this.coreUrl + "rest/home")
             .subscribe((data: any) => {
                 this.homeData = data;

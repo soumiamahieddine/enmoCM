@@ -166,12 +166,12 @@ foreach ($customs as $custom) {
 
         $aValues = [];
         foreach ($users as $user) {
-            $aValues[] = [$user['id'], $delimiter, json_encode($aData)];
+            $aValues[] = [$user['id'], 'csv', $delimiter, json_encode($aData)];
         }
 
         \SrcCore\models\DatabaseModel::insertMultiple([
             'table'     => 'exports_templates',
-            'columns'   => ['user_id', 'delimiter', 'data'],
+            'columns'   => ['user_id', 'format', 'delimiter', 'data'],
             'values'    => $aValues
         ]);
 

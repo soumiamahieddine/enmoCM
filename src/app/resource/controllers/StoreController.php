@@ -15,12 +15,15 @@
 
 namespace Resource\controllers;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Attachment\models\AttachmentModel;
 use Contact\models\ContactModel;
 use Docserver\controllers\DocserverController;
 use Resource\models\ChronoModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use Respect\Validation\Validator;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
@@ -453,5 +456,46 @@ class StoreController
         $formatedData['res_id'] = $aArgs['resId'];
 
         return $formatedData;
+    }
+
+    public function checkFileUpload(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::notEmpty()->validate($body['size'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'filesize is empty']);
+        } else if (!Validator::notEmpty()->validate($body['type'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'no mime type detected']);
+        } else if (!Validator::notEmpty()->validate($body['extension'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'this filename has no extension']);
+        }
+
+        if (!StoreController::isFileAllowed($body)) {
+            return $response->withStatus(400)->withJson(['errors' => _FILE_NOT_ALLOWED_INFO_1.' "'.$body['extension'].'" '._FILE_NOT_ALLOWED_INFO_2.' "'. $body['type']. '" '._FILE_NOT_ALLOWED_INFO_3]);
+        }
+
+        $maxFilesizeMo = ini_get('upload_max_filesize');
+        $maxFilesizeKo = ini_get('upload_max_filesize')*1024;
+
+        if ($body['size']/1024 > $maxFilesizeKo) {
+            return $response->withStatus(400)->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED.' ('.round($maxFilesizeMo).'Mo Max.)']);
+        }
+        return $response->withJson(['success']);
+    }
+
+    private static function isFileAllowed(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['extension', 'type']);
+        ValidatorModel::stringType($args, ['extension', 'type']);
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->FORMAT as $value) {
+                if (strtolower((string)$value->name) == strtolower($args['extension']) && strtolower((string)$value->mime) == strtolower($args['type'])) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

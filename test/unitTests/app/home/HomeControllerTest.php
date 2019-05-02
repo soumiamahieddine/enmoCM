@@ -10,6 +10,7 @@
 * @author  dev <dev@maarch.org>
 * @ingroup core
 */
+
 use PHPUnit\Framework\TestCase;
 
 class HomeControllerTest extends TestCase
@@ -29,5 +30,18 @@ class HomeControllerTest extends TestCase
         $this->assertNotNull($responseBody->regroupedBaskets);
         $this->assertNotNull($responseBody->assignedBaskets);
         $this->assertNotEmpty($responseBody->homeMessage);
+    }
+
+    public function testGetLastRessources()
+    {
+        $homeController = new \Home\controllers\HomeController();
+
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $homeController->getLastRessources($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string) $response->getBody());
+        
+        $this->assertInternalType('array', $responseBody->lastResources);
     }
 }

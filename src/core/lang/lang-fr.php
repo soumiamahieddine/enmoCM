@@ -491,3 +491,7 @@ define("_SECONDARY_INFORMATION", "Informations secondaires");
 define("_DEST_INFORMATION", "Informations de destination");
 define("_XPARAPH_ACCOUNT_DELETED", "Compte xParaph supprimé");
 define("_XPARAPH_ACCOUNT_CREATED", "Compte xParaph créé");
+
+define("_FILE_NOT_ALLOWED_INFO_1", "L'extension");
+define("_FILE_NOT_ALLOWED_INFO_2", "avec le type MIME");
+define("_FILE_NOT_ALLOWED_INFO_3", "n'est pas autorisée");

@@ -94,7 +94,7 @@ if (isset($_GET['num'])) {
             readfile($loc);
             exit();
         } else {
-            echo '<br/><br/><div class="error">'._PROBLEM_LOADING_FILE_TMP_DIR.'.</div>';
+            echo '<br/><br/><div class="error" style="display:block">'._PROBLEM_LOADING_FILE_TMP_DIR.'.</div>';
             exit();
         }
         $extension = explode('.', $_SESSION['upfile'][$num]['name']);
@@ -139,7 +139,7 @@ if (isset($_GET['num'])) {
             <?php
             $ext = strtolower($_SESSION['upfile'][$num]['format']);
             if (file_exists($_SESSION['upfile'][$num]['local_path'])) {
-                echo '<br/><br/><div class="error">'
+                echo '<br/><br/><div class="error" style="display:block">'
                 ._FILE_LOADED_BUT_NOT_VISIBLE._ONLY_FILETYPES_AUTHORISED
                 .' <br/><ul>';
                 for ($i = 0; $i < count($extList); ++$i) {
@@ -147,7 +147,7 @@ if (isset($_GET['num'])) {
                 }
                 echo '</ul></div>';
             } else {
-                echo '<br/><br/><div class="error">'
+                echo '<br/><br/><div class="error" style="display:block">'
                 ._PROBLEM_LOADING_FILE_TMP_DIR.'.</div>';
             } ?>
             &nbsp;
@@ -280,7 +280,7 @@ if (isset($_GET['num'])) {
                     .' <br/><ul>';
                 echo '</ul></div>';
             } else {
-                echo '<br/><br/><div class="error">'
+                echo '<br/><br/><div class="error" style="display:block">'
                     ._PROBLEM_LOADING_FILE_TMP_DIR.'.</div>';
             } ?>
             &nbsp;
@@ -297,7 +297,7 @@ if (isset($_GET['num'])) {
             && $_SESSION['upfile']['error'] == 1
         ) {
             $filesize = $func->return_bytes(ini_get('upload_max_filesize'));
-            echo '<br/><br/><div class="error">'._MAX_SIZE_UPLOAD_REACHED
+            echo '<br/><br/><div class="error" style="display:block">'._MAX_SIZE_UPLOAD_REACHED
                 .' ('.round($filesize / 1024, 2).'Ko Max)</div>';
         } else {
             echo '<br/><br/><div class="advertissement">'.$_SESSION['error']

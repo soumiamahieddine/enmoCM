@@ -29,9 +29,9 @@
             </button>
         </ng-container>
     </mat-menu>
-    <button *ngIf="!mobileMode" mat-button [matMenuTriggerFor]="menu" class="userProfilButtom">
+    <button *ngIf="!mobileMode" mat-button [matMenuTriggerFor]="menu">
         <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white; margin:0px 12px 8px 0px;"></mat-icon>
-        {{headerService.user.firstname | titlecase }} <b>{{headerService.user.lastname | uppercase}}</b>
+        <span>{{headerService.user.firstname | titlecase }}</span>&nbsp;<b>{{headerService.user.lastname | uppercase}}</b>
     </button>
     <button *ngIf="mobileMode" mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white;height: auto;"></mat-icon>

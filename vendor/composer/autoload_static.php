@@ -80,6 +80,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         ),
         'N' => 
         array (
+            'Noxxie\\PdfParser\\' => 17,
             'Notification\\' => 13,
             'Note\\' => 5,
         ),
@@ -267,6 +268,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'Noxxie\\PdfParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/noxxie/pdfparser/src/Smalot/PdfParser',
         ),
         'Notification\\' => 
         array (

@@ -272,6 +272,81 @@ class UserControllerTest extends TestCase
         $this->assertSame('Y', $responseBody->entities[0]->primary_entity);
     }
 
+    public function testGetUsersById()
+    {
+        $entityController = new \Entity\controllers\EntityController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'DGS']);
+        $responseBody   = json_decode((string)$response->getBody());
+        $entitySerialId = $responseBody->entity->id;
+
+        $response     = $entityController->getUsersById($request, new \Slim\Http\Response(), ['id' => $entitySerialId]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->users);
+
+        $found = false;
+        foreach ($responseBody->users as $value) {
+            $this->assertNotNull($value->id);
+            $this->assertInternalType('integer', $value->id);
+            $this->assertNotNull($value->user_id);
+            $this->assertNotNull($value->firstname);
+            $this->assertNotNull($value->lastname);
+            $this->assertNotNull($value->labelToDisplay);
+            $this->assertNotNull($value->descriptionToDisplay);
+
+            if ($value->id == self::$id) {
+                $this->assertSame('test-ckent', $value->user_id);
+                $this->assertSame('TEST-CLARK2', $value->firstname);
+                $this->assertSame('TEST-KENT2', $value->lastname);
+                $this->assertSame($value->firstname . ' ' . $value->lastname, $value->labelToDisplay);
+                $found = true;
+            }
+        }
+
+        $this->assertSame(true, $found);
+
+        //ERROR
+        $response     = $entityController->getUsersById($request, new \Slim\Http\Response(), ['id' => 99989]);
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame('Entity not found', $responseBody->errors);
+    }
+
+    public function testIsDeletable()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $userController->isDeletable($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(true, $responseBody->isDeletable);
+        $this->assertInternalType('array', $responseBody->listTemplates);
+        $this->assertEmpty($responseBody->listTemplates);
+        $this->assertInternalType('array', $responseBody->listInstances);
+        $this->assertEmpty($responseBody->listInstances);
+    }
+
+    public function testIsEntityDeletable()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $userController->isEntityDeletable($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'DGS']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(false, $responseBody->hasConfidentialityInstances);
+        $this->assertSame(false, $responseBody->hasListTemplates);
+    }
+
     public function testUpdatePrimaryEntity()
     {
         $userController = new \User\controllers\UserController();

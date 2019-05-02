@@ -18,11 +18,15 @@ use Attachment\models\AttachmentModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use History\controllers\HistoryController;
+use Noxxie\PdfParser\Parser;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
 use User\models\UserModel;
+
+include_once('vendor/tinybutstrong/opentbs/tbs_plugin_opentbs.php');
 
 class XParaphController
 {
@@ -30,7 +34,7 @@ class XParaphController
     {
         $attachments = AttachmentModel::getOnView([
             'select'    => [
-                'res_id', 'res_id_version', 'title'],
+                'res_id', 'res_id_version', 'title', 'docserver_id', 'path', 'filename'],
             'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
             'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'print_folder', 'signed_response']]
         ]);
@@ -51,8 +55,17 @@ class XParaphController
             $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
             $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
             $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
-            $filesize      = filesize($filePath);
-            $fileContent   = file_get_contents($filePath);
+            
+            $documentToSend = XParaphController::replaceXParaphSignatureField(['pdf' => $filePath, 'attachmentInfo' => $value]);
+            $filePath = $documentToSend['documentPath'];
+            if ($documentToSend['remat']) {
+                $pml = 1;
+            } else {
+                $pml = 0;
+            }
+
+            $filesize    = filesize($filePath);
+            $fileContent = file_get_contents($filePath);
             
             $xmlStep = '';
             foreach ($aArgs['steps'] as $key => $step) {
@@ -83,7 +96,7 @@ class XParaphController
                         <contenu xsi:type="xsd:base64Binary">'.base64_encode($fileContent).'</contenu>
                         <nom xsi:type="xsd:string">'.$value['title'].'</nom>
                         <taille xsi:type="xsd:int">'.$filesize.'</taille>
-                        <pml xsi:type="xsd:string">1</pml>
+                        <pml xsi:type="xsd:string">'.$pml.'</pml>
                         <avertir xsi:type="xsd:string">1</avertir>
                         <etapes xsi:type="urn:EtapeDepot" soapenc:arrayType="urn:EtapeDepotItem[]">'.$xmlStep.'</etapes>
                     </params>
@@ -109,6 +122,139 @@ class XParaphController
         }
 
         return ['sended' => $attachmentToFreeze];
+    }
+
+    protected static function replaceXParaphSignatureField(array $aArgs)
+    {
+        $parser = new Parser();
+        $pdf    = $parser->parseFile($aArgs['pdf']);
+        $pages  = $pdf->getPages();
+
+        $searchableArray = ["[xParaphSignature]"];
+
+        foreach ($pages as $page) {
+            $pageCount++;
+            foreach ($page->GetTextArrayWithCoordinates() as $text) {
+                if (XParaphController::strposa($text['text'], $searchableArray) !== false) {
+                    $detailText = '';
+                    $originalYDetail = null;
+                    foreach ($text['details'] as $detail) {
+                        // Check if the complete text line has the wanted text
+                        if (XParaphController::strposa($detail['text'], $searchableArray) !== false) {
+                            $coordinates[] = [
+                                'text' => trim($detail['text']),
+                                'x'    => $detail['x'],
+                                'y'    => $detail['y'],
+                                'p'    => $pageCount,
+                            ];
+                            break;
+                        } else {
+                            // It is possible (the way PDF works) that the text is on the correct line but splitted into
+                            // multi Tc objects, check if this is the case, if so return the first accurance of X and Y
+                            $detailText .= $detail['text'];
+                            if (is_null($originalYDetail)) {
+                                $originalYDetail = $detail;
+                            } elseif ($originalYDetail['y'] != $detail['y']) {
+                                $originalYDetail = $detail;
+                            }
+                            if (XParaphController::strposa($detailText, $searchableArray) !== false) {
+                                $coordinates[] = [
+                                    'text' => trim($detailText),
+                                    'x'    => $originalYDetail['x'],
+                                    'y'    => $originalYDetail['y'],
+                                    'p'    => $pageCount,
+                                ];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!empty($coordinates)) {
+            $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $aArgs['attachmentInfo']['docserver_id']]);
+            $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $aArgs['attachmentInfo']['path']) . $aArgs['attachmentInfo']['filename'];
+
+            $tbs = new \clsTinyButStrong();
+            $tbs->NoErr = true;
+            $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
+
+            if (!empty($filePath)) {
+                $pathInfo = pathinfo($filePath);
+                $extension = $pathInfo['extension'];
+            } else {
+                $tbs->Source = $args['content'];
+                $extension = 'unknow';
+                $args['path'] = null;
+            }
+
+            if (!empty($filePath)) {
+                if ($extension == 'odt') {
+                    $tbs->LoadTemplate($filePath, OPENTBS_ALREADY_UTF8);
+                } elseif ($extension == 'docx') {
+                    $tbs->LoadTemplate($filePath, OPENTBS_ALREADY_UTF8);
+                } else {
+                    $tbs->LoadTemplate($filePath, OPENTBS_ALREADY_UTF8);
+                }
+            }
+
+            $tbs->MergeField('xParaphSignature', ' ');
+
+            if (in_array($extension, ['odt', 'ods', 'odp', 'xlsx', 'pptx', 'docx', 'odf'])) {
+                $tbs->Show(OPENTBS_STRING);
+            } else {
+                $tbs->Show(TBS_NOTHING);
+            }
+
+            $tmpPath = CoreConfigModel::getTmpPath();
+            $filename = $tmpPath . $GLOBALS['userId'] . '_' . rand() . '_xParaphSignature.';
+            $pathFilename = $filename . $extension;
+            file_put_contents($pathFilename, $tbs->Source);
+
+            $documentConverted = ConvertPdfController::tmpConvert([
+                'fullFilename' => $pathFilename,
+            ]);
+            unlink($pathFilename);
+            $pdfToSend = $documentConverted['fullFilename'];
+            
+            $pdf = new Fpdi('P', 'pt');
+            $pdf->setPrintHeader(false);
+            $nbPages = $pdf->setSourceFile($pdfToSend);
+            for ($i = 1; $i <= $nbPages; $i++) {
+                $page = $pdf->importPage($i, 'CropBox');
+                $size = $pdf->getTemplateSize($page);
+                $pdf->AddPage($size['orientation'], $size);
+                $pdf->useImportedPage($page);
+                foreach ($coordinates as $key => $coordinate) {
+                    if ($coordinate['p'] == $i) {
+                        $signatureNb = $key + 1;
+                        $pdf->SetXY($coordinate['x'], -$coordinate['y']-15);
+                        $pdf->SetTextColor(255, 255, 255);
+                        $pdf->Write(5, '[[[signature'.$signatureNb.']]]');
+                    }
+                }
+            }
+
+            $fileContent = $pdf->Output('', 'S');
+            file_put_contents($filename . 'pdf', $fileContent);
+            return ['remat' => true, 'documentPath' => $filename . 'pdf'];
+        } else {
+            return ['remat' => false, 'documentPath' => $aArgs['pdf']];
+        }
+    }
+
+    private static function strposa(string $haystack, array $needle, int $offset = 0)
+    {
+        if (!is_array($needle)) {
+            $needle = [$needle];
+        }
+        foreach ($needle as $query) {
+            if (strpos($haystack, $query, $offset) !== false) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static function getWorkflow(Request $request, Response $response, array $aArgs)
@@ -188,7 +334,6 @@ class XParaphController
 
     public static function retrieveSignedMails($aArgs)
     {
-
         $tmpPath = CoreConfigModel::getTmpPath();
         foreach (['noVersion', 'isVersion'] as $version) {
             $depotids = [];
@@ -404,6 +549,7 @@ class XParaphController
         foreach ($externalId['xParaph'] as $key => $value) {
             if ($value['login'] == $data['login'] && $value['siret'] == $data['siret']) {
                 unset($externalId['xParaph'][$key]);
+                $externalId['xParaph'] = array_values($externalId['xParaph']);
                 UserModel::updateExternalId(['id' => $user['id'], 'externalId' => json_encode($externalId)]);
                 $accountFound = true;
                 HistoryController::add([
