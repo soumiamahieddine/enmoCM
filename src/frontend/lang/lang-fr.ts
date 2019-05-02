@@ -1024,4 +1024,5 @@ export const LANG_FR = {
     "roles"                                             : "Rôles",
     "contextParaph"                                     : "En tant que",
     "addNewAccount"                                     : "Ajouter un nouveau compte",
+    "warnShapingOption"                                 : "<b>Attention !</b> L'adresse sera 'incrustée' sur la première page des documents envoyés",
 };

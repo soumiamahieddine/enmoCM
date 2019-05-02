@@ -991,4 +991,5 @@ export const LANG_EN = {
     "roles"                                     : "Roles",
     "contextParaph"                             : "Context",
     "addNewAccount"                             : "Add new account",
+    "warnShapingOption"                         : "<b>Be carefull !</b> The address will be setted in the first page of sended documents",
 };

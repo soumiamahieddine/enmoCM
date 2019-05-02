@@ -1018,4 +1018,5 @@ export const LANG_NL = {
     "roles"                                     : "Roles", //_TO_TRANSLATE
     "contextParaph"                             : "Context", //_TO_TRANSLATE
     "addNewAccount"                             : "Add new account", //_TO_TRANSLATE
+    "warnShapingOption"                         : "<b>Be carefull !</b> The address will be setted in the first page of sended documents", //_TO_TRANSLATE
 };
