@@ -822,7 +822,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'IndexingBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'IndexingBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'IndexingBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('IndexingBasket', 'Courriers à indexer', 'Bannette d''indexation', ' ', 'letterbox_coll', 'Y', 'N', 'Y',20);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('IndexingBasket', 'Courriers à indexer', 'Bannette d''indexation', '1=0', 'letterbox_coll', 'Y', 'N', 'Y',20);
 DELETE FROM baskets WHERE basket_id = 'NumericBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'NumericBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'NumericBasket';
