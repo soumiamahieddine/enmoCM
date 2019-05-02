@@ -14,7 +14,6 @@
 
 namespace Entity\controllers;
 
-use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
@@ -39,7 +38,7 @@ class EntityController
 
     public function getById(Request $request, Response $response, array $aArgs)
     {
-        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id']]);
+        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -53,7 +52,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id']]);
+        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -122,7 +121,7 @@ class EntityController
                         'sequence'              => $listTemplate['sequence'],
                         'title'                 => $listTemplate['title'],
                         'description'           => $listTemplate['description'],
-                        'labelToDisplay'        => entitymodel::getByEntityId(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label'],
+                        'labelToDisplay'        => EntityModel::getByEntityId(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label'],
                         'descriptionToDisplay'  => ''
                     ];
                 }
@@ -181,7 +180,7 @@ class EntityController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingEntity = entitymodel::getByEntityId(['entityId' => $data['entity_id'], 'select' => [1]]);
+        $existingEntity = EntityModel::getByEntityId(['entityId' => $data['entity_id'], 'select' => [1]]);
         if (!empty($existingEntity)) {
             return $response->withStatus(400)->withJson(['errors' => _ENTITY_ID_ALREADY_EXISTS]);
         }
@@ -224,7 +223,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
+        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -301,7 +300,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
+        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -346,8 +345,8 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $dyingEntity = entitymodel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['parent_entity_id']]);
-        $successorEntity = entitymodel::getByEntityId(['entityId' => $aArgs['newEntityId'], 'select' => [1]]);
+        $dyingEntity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['parent_entity_id']]);
+        $successorEntity = EntityModel::getByEntityId(['entityId' => $aArgs['newEntityId'], 'select' => [1]]);
         if (empty($dyingEntity) || empty($successorEntity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
         }
@@ -421,7 +420,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = entitymodel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
+        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
