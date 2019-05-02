@@ -160,6 +160,9 @@ if (!defined('_FILEINFO')) {
 if (!defined('_GETTEXT')) {
     define('_GETTEXT', 'gettext library');
 }
+if (!defined('_IMAGICK')) {
+    define('_IMAGICK', 'IMagick library');
+}
 if (!defined('_PEAR')) {
     define('_PEAR', 'PEAR');
 }
