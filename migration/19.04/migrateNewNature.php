@@ -5,6 +5,7 @@ require '../../vendor/autoload.php';
 chdir('../..');
 
 $nonReadableFiles = [];
+$migrated = 0;
 $customs =  scandir('custom');
 
 foreach ($customs as $custom) {
@@ -30,11 +31,12 @@ foreach ($customs as $custom) {
             $newNature->addChild('label', '_NUMERIC_PACKAGE');
 
             $loadedXml->mail_natures->addChild('default_nature', $default_nature);
-        }
-        $res = formatXml($loadedXml);
-        $fp = fopen($path, "w+");
-        if ($fp) {
-            fwrite($fp, $res);
+            $res = formatXml($loadedXml);
+            $fp = fopen($path, "w+");
+            if ($fp) {
+                fwrite($fp, $res);
+            }
+            $migrated++;
         }
     }
 }
@@ -43,6 +45,7 @@ foreach ($nonReadableFiles as $file) {
     printf("The file %s it is not readable or not writable.\n", $file);
 }
 
+printf($migrated . " custom(s) avec entreprise.xml (natures) trouvé(s) et migré(s).\n");
 
 function formatXml($simpleXMLElement)
 {

@@ -30,7 +30,7 @@ foreach ($customs as $custom) {
             $newSignatoryBook->addChild('externalValidated', 'VAL');
             $newSignatoryBook->addChild('externalRefused', 'REF');
 
-            $res = $loadedXml->asXML();
+            $res = formatXml($loadedXml);
             $fp = fopen($path, "w+");
             if ($fp) {
                 fwrite($fp, $res);
@@ -43,4 +43,15 @@ foreach ($customs as $custom) {
 foreach ($nonReadableFiles as $file) {
     printf("The file %s it is not readable or not writable.\n", $file);
 }
+
 printf($migrated . " custom(s) avec un fichier remoteSignatoryBooks.xml trouvé(s) et refactoré(s).\n");
+
+function formatXml($simpleXMLElement)
+{
+    $xmlDocument = new DOMDocument('1.0');
+    $xmlDocument->preserveWhiteSpace = false;
+    $xmlDocument->formatOutput = true;
+    $xmlDocument->loadXML($simpleXMLElement->asXML());
+
+    return $xmlDocument->saveXML();
+}

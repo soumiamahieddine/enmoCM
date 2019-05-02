@@ -3,6 +3,7 @@
 chdir('../..');
 
 $nonReadableFiles = [];
+$migrated = 0;
 $customs =  scandir('custom');
 
 foreach ($customs as $custom) {
@@ -25,6 +26,7 @@ foreach ($customs as $custom) {
             if ($fp) {
                 fwrite($fp, $res);
             }
+            $migrated++;
         }
     }
 }
@@ -32,3 +34,5 @@ foreach ($customs as $custom) {
 foreach ($nonReadableFiles as $file) {
     printf("The file %s it is not readable or not writable.\n", $file);
 }
+
+printf($migrated . " custom(s) avec entreprise.xml (priorities) trouvé(s) et migré(s).\n");
