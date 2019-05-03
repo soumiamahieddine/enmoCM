@@ -58,7 +58,7 @@ En voici les grands principes de fonctionnement :
 * C'est à partir de cette branche qu'est géré l'internationalisation produite par notre [plateforme de traduction](http://translate.maarch.org/)
 
 ##### Version stable
-'v17.x' (v18.x, v19.x, v20.x, …) est la version opérationnelle et stable de Maarch Courrier de l'année en cours
+'v19.x' (v18.x, v19.x, v20.x, …) est la version opérationnelle et stable de Maarch Courrier de l'année en cours
 
 * Son code représente un instant T dans l'année de 'master' qu'on a jugé prêt et stable pour déploiement chez les utilisateurs.
 * À sa création, c'est donc une branche directement issue de 'master' sans rien d'autre.
@@ -67,8 +67,8 @@ En voici les grands principes de fonctionnement :
 * Cette branche est 'taguée' régulièrement pour indiquer à tous qu'il y a eu des corrections de bugs.
 * C'est sur cette branche que sont passés l'ensemble des tests unitaires (créés dans 'develop'), d'intégration (créés dans 'master') et fonctionnels.
 * Les montées de versions sont :
-** Scriptés par Maarch pour passer d'une v17.x à une v18.x
-** (Semi-) Automatisés pour passer d'une version 17.x à une version 17.y
+** Scriptés par Maarch pour passer d'une v18.x à une v19.x
+** (Semi-) Automatisés pour passer d'une version 19.x à une version 19.y
 
 ## Comment je contribue ?
 ### Signaler des bugs
