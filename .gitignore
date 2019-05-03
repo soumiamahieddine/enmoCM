@@ -14,6 +14,3 @@ modules/convert/batch/scripts/launch_convert_letterbox.sh
 modules/convert/batch/config/config_only_indexes.xml
 modules/convert/batch/tmp/
 modules/visa/xml/remoteSignatoryBooks.xml
-dist/
-node_modules/
-package-lock.json
