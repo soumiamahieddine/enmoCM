@@ -2,7 +2,7 @@
 
 Tout d'abord, merci de prendre le temps de contribuer.
 
-Voici un ensemble de lignes directrices pour contribuer à Maarch et ses produits, hébergés dans l'Organisation Maarch sur [http://labs.maarch.org Maarch GitLab].
+Voici un ensemble de lignes directrices pour contribuer à Maarch et ses produits, hébergés dans l'Organisation Maarch sur [Maarch GitLab](http://labs.maarch.org).
 
 ## Que dois-je savoir avant de commencer ?
 ### Contrat de contribution
