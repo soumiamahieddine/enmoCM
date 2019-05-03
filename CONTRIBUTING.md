@@ -96,4 +96,5 @@ En suivant ces directives, les responsables de la maintenance et la communauté 
 Les améliorations peuvent être soumises sur notre [https://community.maarch.org/c/maarch-courrier Site communautaire].
 
 ### Et comment je code dans Maarch ?
-Il faut suivre le [[https://labs.maarch.org/maarch/MaarchCourrier/wikis/Maarch-Developer-Handbook|guide du développeur]].
+Il faut suivre le [guide du développeur](https://labs.maarch.org/maarch/MaarchCourrier/wikis/Maarch-Developer-Handbook).
+
