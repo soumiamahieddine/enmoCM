@@ -10,7 +10,7 @@
 * @author  dev <dev@maarch.org>
 * @ingroup lang
 */
-if (!defined('_MEP_VERSION')) { define('_MEP_VERSION', 'Maarch v18.10');}
+if (!defined('_MEP_VERSION')) { define('_MEP_VERSION', 'Maarch v19.04');}
 if (!defined('_ID_TO_DISPLAY')) { define('_ID_TO_DISPLAY', 'chrono_number');}
 if (!defined('_SVR')) { define('_SVR', 'Stilzwijgende weigering');}
 if (!defined('_SVA')) { define('_SVA', 'Stilzwijgende aanvaarding');}
