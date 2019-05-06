@@ -2,8 +2,8 @@
     "swagger" : "2.0",
     "info" : {
         "title" : "Maarch Courrier",
-        "version" : "18.10",
-        "description" : "Documentation de l'API Maarch Courrier V18.10",
+        "version" : "19.04",
+        "description" : "Documentation de l'API Maarch Courrier V19.04",
         "contact" : {
             "name" : "Maarch",
             "email" : "info@maarch.org"

@@ -1447,10 +1447,6 @@ class core_tools extends functions
             <meta http-equiv="Content-Language" content="<?php functions::xecho($_SESSION['config']['lang']); ?>" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
             <link rel="icon" type="image/png" href="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=logo_only.svg"/>
-            <link href="index.php?display&page=generate_search_xml" title="Maarch <?php 
-                echo functions::xssafe($_SESSION['config']['applicationname']).' '
-                    ._GLOBAL_SEARCH
-                ; ?>" type="application/opensearchdescription+xml" rel="search"/>
             <?php
             if ($load_css) {
                 $this->load_css();

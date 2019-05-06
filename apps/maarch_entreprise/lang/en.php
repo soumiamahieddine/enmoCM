@@ -20,7 +20,7 @@
  */
 
 if (!defined('_MEP_VERSION')) {
-    define('_MEP_VERSION', 'Maarch v18.10');
+    define('_MEP_VERSION', 'Maarch v19.04');
 }
 
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number

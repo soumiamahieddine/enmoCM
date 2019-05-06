@@ -11,7 +11,7 @@
 * @ingroup lang
 */
 if (!defined('_MEP_VERSION')) {
-    define('_MEP_VERSION', 'Maarch v18.10');
+    define('_MEP_VERSION', 'Maarch v19.04');
 }
 
 if (!defined('_ID_TO_DISPLAY')) { // value res_id || chrono_number

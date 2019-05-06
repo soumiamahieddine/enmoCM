@@ -92,7 +92,7 @@ VALUES (16, 2, 'TNL', 'TNL_MLB', 'tests#', 'sva_route_66.png', '0');
 INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
 VALUES (17, 3, 'TNL', 'TNL_MLB', 'tests#', 'svr_route_chien_bruyant.png', '0');
 INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (18, 4, 'TNL', 'TNL_MLB', 'tests#', 'emtpy.png', '0');
+VALUES (18, 4, 'TNL', 'TNL_MLB', 'tests#', 'invitation.png', '0');
 INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
 VALUES (19, 5, 'TNL', 'TNL_MLB', 'tests#', 'demande_place_creche.png', '0');
 INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
@@ -180,16 +180,17 @@ VALUES (3, 3, 'PDF', 'CONVERT_ATTACH', 'tests#', 'ar_svr.pdf', '0');
 INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
 VALUES (4, 4, 'PDF', 'CONVERT_ATTACH', 'tests#', 'invitation.pdf', '0');
 INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (5, 5, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_creche.pdf', '0');
+VALUES (5, 4, 'TNL', 'TNL_MLB', 'tests#', 'invitation.png', '0');
 INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (6, 6, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard.pdf', '0');
+VALUES (6, 5, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_creche.pdf', '0');
+INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
+VALUES (7, 6, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard.pdf', '0');
 -- to process documents nnataly
 INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (7, 7, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard_demande_intervention.pdf', '0');
+VALUES (8, 7, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard_demande_intervention.pdf', '0');
 -- to paraph documents ppetit
 INSERT INTO adr_attachments (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (8, 8, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard_demande_intervention.pdf', '0');
-
+VALUES (9, 8, 'PDF', 'CONVERT_ATTACH', 'tests#', 'rep_standard_demande_intervention.pdf', '0');
 Select setval('adr_attachments_id_seq', (select max(res_id)+1 from adr_attachments), false);
 
 TRUNCATE TABLE mlb_coll_ext;

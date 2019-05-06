@@ -31,7 +31,7 @@ export class ShippingAdministrationComponent implements OnInit {
         label: '',
         description: '',
         options: {
-            shapingOptions: [],
+            shapingOptions: ['addressPage'],
             sendMode: 'fast',
         },
         fee: {
