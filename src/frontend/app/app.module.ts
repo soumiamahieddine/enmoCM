@@ -54,6 +54,7 @@ import { DiffusionsListComponent }             from './diffusions/diffusions-lis
 import { VisaWorkflowComponent }             from './visa/visa-workflow.component';
 import { AvisWorkflowComponent }             from './avis/avis-workflow.component';
 
+import { PrintSeparatorComponent }                        from './separator/print-separator/print-separator.component';
 
 
 @NgModule({
@@ -105,6 +106,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
         RedirectActionComponent,
         SendShippingActionComponent,
         ActionsListComponent,
+        PrintSeparatorComponent,
     ],
     entryComponents: [
         CustomSnackbarComponent,

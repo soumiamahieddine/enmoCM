@@ -9,6 +9,7 @@ import { HomeComponent }                    from './home.component';
 import { BasketListComponent }              from './list/basket-list.component';
 import { SignatureBookComponent }           from './signature-book.component';
 import { SaveNumericPackageComponent }      from './save-numeric-package.component';
+import { PrintSeparatorComponent }          from './separator/print-separator/print-separator.component';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import { SaveNumericPackageComponent }      from './save-numeric-package.compone
             { path: 'home', component: HomeComponent },
             { path: 'basketList/users/:userSerialId/groups/:groupSerialId/baskets/:basketId', component: BasketListComponent },
             { path: 'saveNumericPackage', component: SaveNumericPackageComponent },
+            { path: 'separators/print', component: PrintSeparatorComponent },
             { path: 'signatureBook/users/:userId/groups/:groupId/baskets/:basketId/resources/:resId', component: SignatureBookComponent },
             { path: '**',   redirectTo: 'home', pathMatch: 'full' },
         ], { useHash: true }),

@@ -1019,4 +1019,11 @@ export const LANG_NL = {
     "workingDays"                           : "werkdag(en)",
     "yes"                                   : "Ja",
     "zipcode"                               : "Postcode",
+    "printSeparatorInfo" : "You can print separators <b>by entity</b> or <b>generic</b> in order to use in <b>maarchCapture</b> to record scanned mails in right entity.", //_TO_TRANSLATE
+    "generic" : "Generic", //_TO_TRANSLATE
+    "qrcode" : "QR code", //_TO_TRANSLATE
+    "separatorType" : "Separator type", //_TO_TRANSLATE
+    "separatorTarget" : "Separator target", //_TO_TRANSLATE
+    "print" : "print", //_TO_TRANSLATE
+    "separators" : "Separator(s)", //_TO_TRANSLATE
 };
