@@ -25,25 +25,29 @@
                 <div style="height:100%;overflow:auto;position:absolute;width:100%;">
                     <div class="alert-message alert-message-info" role="alert" style="max-width: 100%;margin: 30px;"
                         [innerHTML]="lang.printSeparatorInfo"></div>
-                    <div class="col-md-4">
-                        <mat-form-field>
-                            <mat-label>{{lang.separatorType}}</mat-label>
-                            <mat-select [(ngModel)]="separator.type" (selectionChange)="this.docBuffer = null">
-                                <mat-option *ngFor="let separatorType of separatorTypes" [value]="separatorType">
-                                    {{lang[separatorType]}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>{{lang.separatorTarget}}</mat-label>
-                            <mat-select [(ngModel)]="separator.target" (selectionChange)="changeType($event)">
-                                <mat-option *ngFor="let separatorTarget of separatorTargets" [value]="separatorTarget">
-                                    {{lang[separatorTarget]}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-8">
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <mat-label>{{lang.separatorType}}</mat-label>
+                                <mat-select [(ngModel)]="separator.type" (selectionChange)="this.docBuffer = null">
+                                    <mat-option *ngFor="let separatorType of separatorTypes" [value]="separatorType">
+                                        {{lang[separatorType]}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <mat-label>{{lang.separatorTarget}}</mat-label>
+                                <mat-select [(ngModel)]="separator.target" (selectionChange)="changeType($event)">
+                                    <mat-option *ngFor="let separatorTarget of separatorTargets"
+                                        [value]="separatorTarget">
+                                        {{lang[separatorTarget]}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
                         <mat-form-field>
                             <input matInput id="jstree_search" name="jstree_search" type="text"
                                 placeholder="{{lang.searchEntities}}">
