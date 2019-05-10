@@ -543,38 +543,8 @@ if (!defined('_STORE_DIFF_LIST')) {
 if (!defined('_DIFF_LIST_STORED')) {
     define('_DIFF_LIST_STORED', 'Bewaarde verdelingslijst');
 }
-if (!defined('_PRINT_SEP')) {
-    define('_PRINT_SEP', 'Afdrukken van de separator');
-}
-if (!defined('_PRINT_SEP_TITLE')) {
-    define('_PRINT_SEP_TITLE', 'Type separator');
-}
-if (!defined('_COMMENT_FOR_SEP1')) {
-    define('_COMMENT_FOR_SEP1', 'Plaats deze separator op de stapel');
-}
-if (!defined('_COMMENT_FOR_SEP2')) {
-    define('_COMMENT_FOR_SEP2', 'brieven van het type:');
-}
-if (!defined('_PRINT_SEP_WILL_BE_START')) {
-    define('_PRINT_SEP_WILL_BE_START', 'Het afdrukken van de brieven gaat automatisch van start.');
-}
-if (!defined('_PRINT_SEPS')) {
-    define('_PRINT_SEPS', 'Afdrukken van de separatoren');
-}
 if (!defined('_CHOOSE_ENTITIES')) {
     define('_CHOOSE_ENTITIES', 'Kies de diensten');
-}
-if (!defined('_PRINT_SEPS_BUTTON')) {
-    define('_PRINT_SEPS_BUTTON', 'De separatoren afdrukken');
-}
-if (!defined('_ENTITIES_PRINT_SEP_MLB')) {
-    define('_ENTITIES_PRINT_SEP_MLB', 'De separatoren per dienst afdrukken');
-}
-if (!defined('_ENTITIES_PRINT_SEP_MLB_GENERIC')) {
-    define('_ENTITIES_PRINT_SEP_MLB_GENERIC', 'De algemene separator COURRIER afdrukken');
-}
-if (!defined('_SELECT_BARCODE_TYPE')) {
-    define('_SELECT_BARCODE_TYPE', 'Type barcode');
 }
 if (!defined('_DEL_USER_LISTDIFF')) {
     define('_DEL_USER_LISTDIFF', 'De gebruiker van de verdelingslijst halen');
@@ -647,9 +617,6 @@ if (!defined('_ALLOW_ENTITIES')) {
 }
 if (!defined('_CHOOSE_ENTITIES')) {
     define('_CHOOSE_ENTITIES', 'Kies de eenheden');
-}
-if (!defined('_ENTITIES_PRINT_SEP_MLB')) {
-    define('_ENTITIES_PRINT_SEP_MLB', 'De separatoren per eenheid afdrukken');
 }
 if (!defined('_ARCHIVAL_AGENCY')) {
     define('_ARCHIVAL_AGENCY', 'Archiefeenheid');

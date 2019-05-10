@@ -69,7 +69,7 @@ class EntitySeparatorController
         if ($bodyData['type'] == 'qrcode') {
             $parameter = ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'QrCodePrefix']);
             if ($parameter['param_value_int'] == 1) {
-                $prefix = 'Maarch_';
+                $prefix = 'MAARCH_';
             }
         }
         foreach ($entitiesList as $entityId => $entityLabel) {

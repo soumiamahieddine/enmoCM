@@ -31,14 +31,6 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="entities" type="ajax_ids" />
     </validationRule>
-    <validationRule name="print_sep_mlb" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="entitieslist" type="arrayOfStrings" />
-		<parameter name="typeBarcode" type="identifier" />
-		<parameter name="submit" type="string" />
-		<parameter name="try" type="string" />
-		<parameter name="print_generic" type="string" />
-    </validationRule>
     <validationRule name="entity_ban" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="id" type="identifier" />
