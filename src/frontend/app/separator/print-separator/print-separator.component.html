@@ -22,7 +22,7 @@
         </div>
         <div class="container" [class.fullContainer]="mobileMode">
             <div class="container-content">
-                <div style="height:100%;overflow:auto;position:absolute;width:100%;">
+                <div style="height:90%;overflow:auto;position:absolute;width:100%;">
                     <div class="alert-message alert-message-info" role="alert" style="max-width: 100%;margin: 30px;"
                         [innerHTML]="lang.printSeparatorInfo"></div>
 
@@ -55,10 +55,10 @@
                         </mat-form-field>
                         <div id="jstree"></div>
                     </div>
-                    <div class="col-md-12 text-center" style="padding-top: 10px;">
-                        <button mat-raised-button color="primary" (click)="generateSeparators()"
-                            [disabled]="loading || (separator.target == 'entities' && separator.entities.length == 0)">{{lang.generateAndDownload}}</button>
-                    </div>
+                </div>
+                <div class="col-md-12 text-center" style="bottom:0px;padding-top: 10px;position: absolute;height:10%;width:100%;">
+                    <button mat-raised-button color="primary" (click)="generateSeparators()"
+                        [disabled]="loading || (separator.target == 'entities' && separator.entities.length == 0)">{{lang.generateAndDownload}}</button>
                 </div>
                 <div class="table-head">
                 </div>
