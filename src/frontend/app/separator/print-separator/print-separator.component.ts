@@ -142,40 +142,33 @@ export class PrintSeparatorComponent implements OnInit {
     }
 
     downloadSeparators() {
-        
-        const url = this.docUrl;
-        this.http.get(url, {
-            responseType: 'blob'
-        }).subscribe(
-            (response) => {
-                const a = document.createElement('a');
-                document.body.appendChild(a);
-                a.style.display = 'none';
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.style.display = 'none';
 
-                const url = `data:application/pdf;base64,${this.docData}`;
-                a.href = url;
+        const url = `data:application/pdf;base64,${this.docData}`;
+        a.href = url;
 
-                let today: any;
-                let dd: any;
-                let mm: any;
-                let yyyy: any;
+        let today: any;
+        let dd: any;
+        let mm: any;
+        let yyyy: any;
 
-                today = new Date();
-                dd = today.getDate();
-                mm = today.getMonth() + 1;
-                yyyy = today.getFullYear();
+        today = new Date();
+        dd = today.getDate();
+        mm = today.getMonth() + 1;
+        yyyy = today.getFullYear();
 
-                if (dd < 10) {
-                    dd = '0' + dd;
-                }
-                if (mm < 10) {
-                    mm = '0' + mm;
-                }
-                today = dd + '-' + mm + '-' + yyyy;
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        today = dd + '-' + mm + '-' + yyyy;
 
-                a.download = this.lang.separators + "_" + today + ".pdf";
-                a.click();
-                window.URL.revokeObjectURL(url);
-        });        
+        a.download = this.lang.separators + "_" + today + ".pdf";
+        a.click();
+        window.URL.revokeObjectURL(url);
     }
 }
