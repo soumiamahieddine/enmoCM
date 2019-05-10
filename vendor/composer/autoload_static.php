@@ -142,6 +142,8 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
             'ContentManagement\\' => 18,
             'Contact\\' => 8,
             'Configuration\\' => 14,
+            'Com\\Tecnick\\Color\\' => 18,
+            'Com\\Tecnick\\Barcode\\' => 20,
             'Clue\\StreamFilter\\' => 18,
         ),
         'B' => 
@@ -409,6 +411,14 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Configuration\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/configuration',
+        ),
+        'Com\\Tecnick\\Color\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tecnickcom/tc-lib-color/src',
+        ),
+        'Com\\Tecnick\\Barcode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tecnickcom/tc-lib-barcode/src',
         ),
         'Clue\\StreamFilter\\' => 
         array (

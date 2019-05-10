@@ -69,6 +69,8 @@ return array(
     'ContentManagement\\' => array($baseDir . '/src/app/contentManagement'),
     'Contact\\' => array($baseDir . '/src/app/contact'),
     'Configuration\\' => array($baseDir . '/src/app/configuration'),
+    'Com\\Tecnick\\Color\\' => array($vendorDir . '/tecnickcom/tc-lib-color/src'),
+    'Com\\Tecnick\\Barcode\\' => array($vendorDir . '/tecnickcom/tc-lib-barcode/src'),
     'Clue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),
     'Basket\\' => array($baseDir . '/src/app/basket'),
     'Attachment\\' => array($baseDir . '/src/app/attachment'),

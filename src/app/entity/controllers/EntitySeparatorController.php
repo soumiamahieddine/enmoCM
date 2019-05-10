@@ -8,12 +8,13 @@
 */
 
 /**
-* @brief Print Separator Controller
+* @brief Entity Separator Controller
 * @author dev@maarch.org
 */
 
 namespace Entity\controllers;
 
+use Com\Tecnick\Barcode\Barcode;
 use Endroid\QrCode\QrCode;
 use Entity\models\EntityModel;
 use Group\models\ServiceModel;
@@ -64,6 +65,13 @@ class EntitySeparatorController
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
+        if ($bodyData['type'] == 'qrcode') {
+            $parameter = ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'QrCodePrefix']);
+            $prefix = '';
+            if ($parameter['param_value_int'] == 1) {
+                $prefix = 'Maarch_';
+            }
+        }
         foreach ($entitiesList as $entityId => $entityLabel) {
             $pdf->AddPage();
             $pdf->SetFont('', 'B', 20);
@@ -72,18 +80,20 @@ class EntitySeparatorController
             $pdf->Cell(180, 10, '', 0, 1, 'C');
 
             if ($bodyData['type'] == 'qrcode') {
-                $parameter = ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'QrCodePrefix']);
-                $prefix = '';
-                if ($parameter['param_value_int'] == 1) {
-                    $prefix = 'Maarch_';
-                }
                 $qrCode = new QrCode($prefix . $entityId);
-                // $qrCode->setSize(110);
-                // $qrCode->setMargin(25);
                 $pdf->Image('@'.$qrCode->writeString(), 0, 0, 80);
             } else {
-                // $p_cab = $cab_pdf->generateBarCode($type, $code, 40, '', '', '');
-                // $pdf->Image($_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.$p_cab, 40, 50, 120);
+                $barcode = new Barcode();
+                $bobj = $barcode->getBarcodeObj(
+                    'C128',                     // barcode type and additional comma-separated parameters
+                    $prefix . $entityId,        // data string to encode
+                    -4,                         // bar width (use absolute or negative value as multiplication factor)
+                    -4,                         // bar height (use absolute or negative value as multiplication factor)
+                    'black',                    // foreground color
+                    array(-2, -2, -2, -2)       // padding (use absolute or negative values as multiplication factors)
+                )->setBackgroundColor('white'); // background color
+                
+                $pdf->Image('@'.$bobj->getPngData(), 40, 50, 120);
             }
             
             $pdf->Cell(180, 10, '', 0, 1, 'C');
