@@ -369,7 +369,7 @@ define('_CHOOSE_ENTITY', 'Choisissez une entité');
 define('_EDIT_RECIPIENT_IN_PROCESS', 'Modifier l\'attributaire dans le traitement');
 define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', "Modifier l'attributaire dans la liste de diffusion (hors traitement)");
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la fiche détaillée');
-define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par service');
+define('_ENTITIES_PRINT_SEP_MLB', 'Impression des séparateurs');
 define('_EXPORT_SEDA_VIEW', 'Voir le bordereau');
 define('_PUT_DOC_IN_FILEPLAN', 'Classer des courriers');
 define('_PUT_DOC_IN_FILEPLAN_COMMENT', 'Classer des courriers dans le plan de classement organisationnel');

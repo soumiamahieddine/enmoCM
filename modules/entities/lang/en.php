@@ -579,6 +579,10 @@ if (!defined('_DIFF_LIST_STORED')) {
 }
 
 /////////////print_sep
+if (!defined('_PRINT_SEPS')) {
+    define('_PRINT_SEPS', 'Printing separators');
+}
+
 if (!defined('_CHOOSE_ENTITIES')) {
     define('_CHOOSE_ENTITIES', 'Choose the departments');
 }

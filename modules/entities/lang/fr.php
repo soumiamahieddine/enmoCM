@@ -586,6 +586,10 @@ if (!defined('_DIFF_LIST_STORED')) {
 }
 
 /////////////print_sep
+if (!defined('_PRINT_SEPS')) {
+    define('_PRINT_SEPS', 'Impression des séparateurs');
+}
+
 if (!defined('_CHOOSE_ENTITIES')) {
     define('_CHOOSE_ENTITIES', 'Choisissez les entités');
 }

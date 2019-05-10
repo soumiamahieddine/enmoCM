@@ -543,6 +543,9 @@ if (!defined('_STORE_DIFF_LIST')) {
 if (!defined('_DIFF_LIST_STORED')) {
     define('_DIFF_LIST_STORED', 'Bewaarde verdelingslijst');
 }
+if (!defined('_PRINT_SEPS')) {
+    define('_PRINT_SEPS', 'Afdrukken van de separatoren');
+}
 if (!defined('_CHOOSE_ENTITIES')) {
     define('_CHOOSE_ENTITIES', 'Kies de diensten');
 }

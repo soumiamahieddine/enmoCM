@@ -28,6 +28,7 @@ foreach ($customs as $custom) {
                 if ($value->id == 'entities_print_sep_mlb') {
                     $loadedXml->SERVICE[$i]->servicepage = '/separators/print';
                     $loadedXml->SERVICE[$i]->angular = 'true';
+                    break;
                 }
                 ++$i;
             }
