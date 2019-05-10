@@ -28,7 +28,7 @@ class EntitySeparatorController
 {
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'entities_print_sep_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'entities_print_sep_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'menu'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
