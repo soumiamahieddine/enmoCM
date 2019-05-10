@@ -497,4 +497,4 @@ define("_FILE_NOT_ALLOWED_INFO_2", "with MIME-type");
 define("_FILE_NOT_ALLOWED_INFO_3", "is not allowed");
 
 define("_ENTITY", "Entity");
-define("_PRINT_SEP_TITLE", "Scan separator");
+define("_PRINT_SEP_TITLE", "Mail separator");

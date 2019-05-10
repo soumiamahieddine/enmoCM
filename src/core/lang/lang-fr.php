@@ -496,4 +496,4 @@ define("_FILE_NOT_ALLOWED_INFO_1", "L'extension");
 define("_FILE_NOT_ALLOWED_INFO_2", "avec le type MIME");
 define("_FILE_NOT_ALLOWED_INFO_3", "n'est pas autorisée");
 define("_ENTITY", "Entité");
-define("_PRINT_SEP_TITLE", "Séparateur de scan");
+define("_PRINT_SEP_TITLE", "Séparateur de courrier");

@@ -44,7 +44,7 @@ class EntitySeparatorController
 
         $entitiesList = [];
         if ($bodyData['target'] == 'generic') {
-            $entitiesList['COURRIER'] = 'Maarch Courrier';
+            $entitiesList['GÉNÉRIQUE'] = 'Maarch Courrier';
         } else {
             if (!Validator::arrayType()->notEmpty()->validate($bodyData['entities'])) {
                 return $response->withStatus(403)->withJson(['errors' => 'entities is not set or empty']);
@@ -74,14 +74,12 @@ class EntitySeparatorController
         }
         foreach ($entitiesList as $entityId => $entityLabel) {
             $pdf->AddPage();
-            $pdf->SetFont('', 'B', 20);
-            $pdf->Cell(250, 20, _PRINT_SEP_TITLE, 0, 1, 'C');
-            $pdf->Cell(250, 20, $entityId, 0, 1, 'C');
-            $pdf->Cell(180, 10, '', 0, 1, 'C');
+            $pdf->SetFont('', 'B', 25);
 
             if ($bodyData['type'] == 'qrcode') {
                 $qrCode = new QrCode($prefix . $entityId);
-                $pdf->Image('@'.$qrCode->writeString(), 0, 0, 80);
+                $qrCode->setSize(600);
+                $pdf->Image('@'.$qrCode->writeString(), 0, 40, 200, '', '', '', '', false, '', 'C');
             } else {
                 $barcode = new Barcode();
                 $bobj = $barcode->getBarcodeObj(
@@ -96,25 +94,15 @@ class EntitySeparatorController
                 $pdf->Image('@'.$bobj->getPngData(), 40, 50, 120);
             }
             
-            $pdf->Cell(180, 10, '', 0, 1, 'C');
-            $pdf->Cell(180, 10, '', 0, 1, 'C');
-            $pdf->Cell(180, 10, '', 0, 1, 'C');
-            $pdf->Cell(180, 10, '', 0, 1, 'C');
-            $pdf->Cell(180, 10, '', 0, 1, 'C');
-            $pdf->Cell(180, 10, '', 0, 1, 'C');
-            $pdf->Cell(180, 10, '', 0, 1, 'C');
-            $pdf->Cell(180, 10, '', 0, 1, 'C');
-            $pdf->Cell(180, 10, utf8_decode(_ENTITY), 1, 1, 'C');
+            $pdf->SetY($pdf->GetY() + 300);
+            $pdf->Cell(0, 20, _PRINT_SEP_TITLE, 0, 2, 'C', false);
+            $pdf->SetY($pdf->GetY() + 60);
+            $pdf->Cell(0, 30, _ENTITY, 1, 1, 'C');
             $pdf->SetFont('', 'B', 12);
-            $pdf->Cell(180, 10, utf8_decode($entityLabel), 1, 1, 'C');
+            $pdf->Cell(0, 30, $entityLabel . ' (' . $entityId . ')', 1, 1, 'C');
         }
 
         $fileContent = $pdf->Output('', 'S');
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($fileContent);
-
-        $response->write($fileContent);
-        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=entitySeparator.pdf");
 
         return $response->withJson(base64_encode($fileContent));
     }

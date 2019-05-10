@@ -499,4 +499,4 @@ define("_FILE_NOT_ALLOWED_INFO_2", "with MIME-type_TO_TRANSLATE");
 define("_FILE_NOT_ALLOWED_INFO_3", "is not allowed_TO_TRANSLATE");
 
 define("_ENTITY", "Entity_TO_TRANSLATE");
-define("_PRINT_SEP_TITLE", "Scan separator_TO_TRANSLATE");
+define("_PRINT_SEP_TITLE", "Mail separator_TO_TRANSLATE");
