@@ -7,18 +7,23 @@ import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
 
+declare var angularGlobals: any;
 
 @Component({
     templateUrl: "print-separator.component.html",
     styleUrls: ['print-separator.component.scss'],
+    providers: [NotificationService],
 })
 export class PrintSeparatorComponent implements OnInit {
 
+    mobileMode: boolean = false;
     lang: any = LANG;
     entities: any[] = [];
     entitiesChosen: any[] = [];
     loading: boolean = false;
     docUrl: string = '';
+    docData: string = '';
+    docBuffer: ArrayBuffer = null;
     separatorTypes: string [] = ['barcode', 'qrcode'];
     separatorTargets: string [] = ['entities', 'generic'];
 
@@ -31,7 +36,8 @@ export class PrintSeparatorComponent implements OnInit {
     @ViewChild('snav') sidenavLeft: MatSidenav;
     @ViewChild('snav2') sidenavRight: MatSidenav;
 
-    constructor(public http: HttpClient, private headerService: HeaderService) {
+    constructor(public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
+        this.mobileMode = angularGlobals.mobileMode;
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
 
@@ -55,9 +61,18 @@ export class PrintSeparatorComponent implements OnInit {
     loadEntities() {
 
         setTimeout(() => {
-            $j('#jstree').jstree({
+            $j('#jstree')
+            .on('select_node.jstree', (e: any, data: any) => {
+                this.separator.entities = $j('#jstree').jstree(true).get_checked(); // to trigger disable button if no entities
+                if (data.event) {
+                    data.instance.select_node(data.node.children_d);
+                }
+            })
+            .on('deselect_node.jstree', (e: any, data: any) => {
+                this.separator.entities = $j('#jstree').jstree(true).get_checked(); // to trigger disable button if no entities
+            })
+            .jstree({
                 "checkbox": {
-                    'deselect_all': true,
                     "three_state": false //no cascade selection
                 },
                 'core': {
@@ -65,7 +80,6 @@ export class PrintSeparatorComponent implements OnInit {
                         'name': 'proton',
                         'responsive': true
                     },
-                    'multiple': true,
                     'data': this.entities,
                 },
                 "plugins": ["checkbox", "search", "sort"]
@@ -79,13 +93,6 @@ export class PrintSeparatorComponent implements OnInit {
                 }, 250);
             });
             $j('#jstree')
-                // listen for event
-                .on('select_node.jstree', (e: any, data: any) => {
-                    this.generateSeparators();
-
-                }).on('deselect_node.jstree', (e: any, data: any) => {
-                    this.generateSeparators();
-                })
                 // create the instance
                 .jstree();
         }, 0);
@@ -93,18 +100,31 @@ export class PrintSeparatorComponent implements OnInit {
 
     generateSeparators() {
         this.loading = true;
-        this.entitiesChosen = $j('#jstree').jstree(true).get_checked();
+        this.separator.entities = $j('#jstree').jstree(true).get_checked();
+        this.http.post("../../rest/entitySeparators", this.separator)
+            .subscribe((data: any) => {
+                this.docData = data;
+                this.docBuffer = this.base64ToArrayBuffer(this.docData);
+                this.downloadSeparators();
+                this.loading = false;
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
+    }
 
-        if (this.entitiesChosen.length > 0) {
-            this.docUrl = '../../rest/res/100/content';
-        } else {
-            this.docUrl = '';
+    base64ToArrayBuffer(base64: any) {
+        var binary_string =  window.atob(base64);
+        var len = binary_string.length;
+        var bytes = new Uint8Array( len );
+        for (var i = 0; i < len; i++)        {
+            bytes[i] = binary_string.charCodeAt(i);
         }
+        return bytes.buffer;
     }
 
     changeType(type: any) {
+        this.docBuffer = null;
         if (type.value == 'entities') {
-            this.docUrl = '';
             this.entities.forEach(entity => {
                 entity.state.disabled = false;
             });
@@ -118,8 +138,44 @@ export class PrintSeparatorComponent implements OnInit {
             $j('#jstree').jstree(true).settings.core.data = this.entities;
             $j('#jstree').jstree('deselect_all');
             $j('#jstree').jstree("refresh");
-            this.sidenavRight.open();
-            this.generateSeparators();
         }
+    }
+
+    downloadSeparators() {
+        
+        const url = this.docUrl;
+        this.http.get(url, {
+            responseType: 'blob'
+        }).subscribe(
+            (response) => {
+                const a = document.createElement('a');
+                document.body.appendChild(a);
+                a.style.display = 'none';
+
+                const url = `data:application/pdf;base64,${this.docData}`;
+                a.href = url;
+
+                let today: any;
+                let dd: any;
+                let mm: any;
+                let yyyy: any;
+
+                today = new Date();
+                dd = today.getDate();
+                mm = today.getMonth() + 1;
+                yyyy = today.getFullYear();
+
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                today = dd + '-' + mm + '-' + yyyy;
+
+                a.download = this.lang.separators + "_" + today + ".pdf";
+                a.click();
+                window.URL.revokeObjectURL(url);
+        });        
     }
 }

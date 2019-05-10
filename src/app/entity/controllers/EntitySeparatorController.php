@@ -116,6 +116,6 @@ class EntitySeparatorController
         $response->write($fileContent);
         $response = $response->withAddedHeader('Content-Disposition', "inline; filename=entitySeparator.pdf");
 
-        return $response->withHeader('Content-Type', $mimeType);
+        return $response->withJson(base64_encode($fileContent));
     }
 }

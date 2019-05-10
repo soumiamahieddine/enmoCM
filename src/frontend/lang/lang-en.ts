@@ -997,6 +997,7 @@ export const LANG_EN = {
     "qrcode" : "QR code",
     "separatorType" : "Separator type",
     "separatorTarget" : "Separator target",
-    "print" : "print",
+    "generateAndDownload" : "Generate and download",
     "separators" : "Separator(s)",
+    "entityTreeInfoSeparator" : "Click on entity tree in order to generate the separator",
 };

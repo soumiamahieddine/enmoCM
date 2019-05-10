@@ -1024,6 +1024,7 @@ export const LANG_NL = {
     "qrcode" : "QR code", //_TO_TRANSLATE
     "separatorType" : "Separator type", //_TO_TRANSLATE
     "separatorTarget" : "Separator target", //_TO_TRANSLATE
-    "print" : "print", //_TO_TRANSLATE
+    "generateAndDownload" : "Generate and download", //_TO_TRANSLATE
     "separators" : "Separator(s)", //_TO_TRANSLATE
+    "entityTreeInfoSeparator" : "Click on entity tree in order to generate the separator", //_TO_TRANSLATE
 };

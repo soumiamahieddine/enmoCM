@@ -1030,6 +1030,7 @@ export const LANG_FR = {
     "qrcode" : "QR code",
     "separatorType" : "Type de séparateur",
     "separatorTarget" : "Cible de séparateur",
-    "print" : "Imprimer",
+    "generateAndDownload" : "Générer et télécharger",
     "separators" : "Séparateur(s)",
+    "entityTreeInfoSeparator" : "Cliquez sur une entité de l'arborescence afin de l'ajouter à la génération des séparateurs",
 };
