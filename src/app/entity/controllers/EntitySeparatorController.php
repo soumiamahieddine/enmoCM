@@ -65,9 +65,9 @@ class EntitySeparatorController
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
+        $prefix = '';
         if ($bodyData['type'] == 'qrcode') {
             $parameter = ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'QrCodePrefix']);
-            $prefix = '';
             if ($parameter['param_value_int'] == 1) {
                 $prefix = 'Maarch_';
             }
@@ -86,12 +86,12 @@ class EntitySeparatorController
                     'C128',                     // barcode type and additional comma-separated parameters
                     $prefix . $entityId,        // data string to encode
                     -4,                         // bar width (use absolute or negative value as multiplication factor)
-                    -4,                         // bar height (use absolute or negative value as multiplication factor)
+                    -100,                         // bar height (use absolute or negative value as multiplication factor)
                     'black',                    // foreground color
                     array(-2, -2, -2, -2)       // padding (use absolute or negative values as multiplication factors)
                 )->setBackgroundColor('white'); // background color
                 
-                $pdf->Image('@'.$bobj->getPngData(), 40, 50, 120);
+                $pdf->Image('@'.$bobj->getPngData(), 0, 40, 200, '', '', '', '', false, '', 'C');
             }
             
             $pdf->SetY($pdf->GetY() + 300);
@@ -99,7 +99,7 @@ class EntitySeparatorController
             $pdf->SetY($pdf->GetY() + 60);
             $pdf->Cell(0, 30, _ENTITY, 1, 1, 'C');
             $pdf->SetFont('', 'B', 12);
-            $pdf->Cell(0, 30, $entityLabel . ' (' . $entityId . ')', 1, 1, 'C');
+            $pdf->Cell(0, 30, $entityLabel . ' (' . $prefix . $entityId . ')', 1, 1, 'C');
         }
 
         $fileContent = $pdf->Output('', 'S');
