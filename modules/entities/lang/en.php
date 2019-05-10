@@ -579,40 +579,12 @@ if (!defined('_DIFF_LIST_STORED')) {
 }
 
 /////////////print_sep
-if (!defined('_PRINT_SEP')) {
-    define('_PRINT_SEP', 'Delimiter printing');
-}
-if (!defined('_PRINT_SEP_TITLE')) {
-    define('_PRINT_SEP_TITLE', 'Separateur de type');
-}
-if (!defined('_COMMENT_FOR_SEP1')) {
-    define('_COMMENT_FOR_SEP1', 'Put this delimiter on the stack of  ');
-}
-if (!defined('_COMMENT_FOR_SEP2')) {
-    define('_COMMENT_FOR_SEP2', 'mails type of');
-}
-if (!defined('_PRINT_SEP_WILL_BE_START')) {
-    define('_PRINT_SEP_WILL_BE_START', 'Mails printing will automatically start.');
+if (!defined('_PRINT_SEPS')) {
+    define('_PRINT_SEPS', 'Printing separators');
 }
 
-//print sep for mlb
-if (!defined('_PRINT_SEPS')) {
-    define('_PRINT_SEPS', 'Limiters printing');
-}
 if (!defined('_CHOOSE_ENTITIES')) {
     define('_CHOOSE_ENTITIES', 'Choose the departments');
-}
-if (!defined('_PRINT_SEPS_BUTTON')) {
-    define('_PRINT_SEPS_BUTTON', 'Print the delimiters');
-}
-if (!defined('_ENTITIES_PRINT_SEP_MLB')) {
-    define('_ENTITIES_PRINT_SEP_MLB', 'Print limiters by department/services');
-}
-if (!defined('_ENTITIES_PRINT_SEP_MLB_GENERIC')) {
-    define('_ENTITIES_PRINT_SEP_MLB_GENERIC', 'Imprimer séparateur générique COURRIER');
-}
-if (!defined('_SELECT_BARCODE_TYPE')) {
-    define('_SELECT_BARCODE_TYPE', 'Barecode type');
 }
 if (!defined('_DEL_USER_LISTDIFF')) {
     define('_DEL_USER_LISTDIFF', 'Remove the user from the diffusion list');

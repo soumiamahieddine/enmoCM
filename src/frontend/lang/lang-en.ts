@@ -992,4 +992,12 @@ export const LANG_EN = {
     "workingDays"                           : "Working days",
     "yes"                                   : "Yes",
     "zipcode"                               : "Zip code",
+    "printSeparatorInfo" : "You can print separators <b>by entity</b> or <b>generic</b> in order to use in <b>maarchCapture</b> to record scanned mails in right entity.",
+    "generic" : "Generic",
+    "qrcode" : "QR code",
+    "separatorType" : "Separator type",
+    "separatorTarget" : "Separator target",
+    "generateAndDownload" : "Generate and download",
+    "separators" : "Separator(s)",
+    "entityTreeInfoSeparator" : "Click on entity tree in order to generate the separator",
 };

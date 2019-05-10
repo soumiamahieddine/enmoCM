@@ -169,6 +169,7 @@ $app->get('/entities/{id}/users', \Entity\controllers\EntityController::class . 
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
 $app->put('/entities/{id}/status', \Entity\controllers\EntityController::class . ':updateStatus');
 $app->get('/entityTypes', \Entity\controllers\EntityController::class . ':getTypes');
+$app->post('/entitySeparators', \Entity\controllers\EntitySeparatorController::class . ':create');
 
 //Groups
 $app->get('/groups', \Group\controllers\GroupController::class . ':get');

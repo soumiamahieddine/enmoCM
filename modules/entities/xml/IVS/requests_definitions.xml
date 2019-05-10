@@ -29,11 +29,6 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="print_sep_mlb" >
-		<parameter name="page" value="print_sep_mlb"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="entity_form" >
 		<parameter name="page" value="entity_up"/>
 		<parameter name="module" value="entities"/>

@@ -586,40 +586,12 @@ if (!defined('_DIFF_LIST_STORED')) {
 }
 
 /////////////print_sep
-if (!defined('_PRINT_SEP')) {
-    define('_PRINT_SEP', 'Impression du séparateur');
-}
-if (!defined('_PRINT_SEP_TITLE')) {
-    define('_PRINT_SEP_TITLE', 'Separateur de type');
-}
-if (!defined('_COMMENT_FOR_SEP1')) {
-    define('_COMMENT_FOR_SEP1', 'Placez ce separateur sur la pile de ');
-}
-if (!defined('_COMMENT_FOR_SEP2')) {
-    define('_COMMENT_FOR_SEP2', 'courriers du type : ');
-}
-if (!defined('_PRINT_SEP_WILL_BE_START')) {
-    define('_PRINT_SEP_WILL_BE_START', "L'impression des courriers va débuter automatiquement.");
-}
-
-//print sep for mlb
 if (!defined('_PRINT_SEPS')) {
     define('_PRINT_SEPS', 'Impression des séparateurs');
 }
+
 if (!defined('_CHOOSE_ENTITIES')) {
     define('_CHOOSE_ENTITIES', 'Choisissez les entités');
-}
-if (!defined('_PRINT_SEPS_BUTTON')) {
-    define('_PRINT_SEPS_BUTTON', 'Imprimer les séparateurs');
-}
-if (!defined('_ENTITIES_PRINT_SEP_MLB')) {
-    define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par entité');
-}
-if (!defined('_ENTITIES_PRINT_SEP_MLB_GENERIC')) {
-    define('_ENTITIES_PRINT_SEP_MLB_GENERIC', 'Imprimer séparateur générique COURRIER');
-}
-if (!defined('_SELECT_BARCODE_TYPE')) {
-    define('_SELECT_BARCODE_TYPE', 'Type de code à barres');
 }
 if (!defined('_DEL_USER_LISTDIFF')) {
     define('_DEL_USER_LISTDIFF', "Retirer l'utilisateur de la liste de diffusion");

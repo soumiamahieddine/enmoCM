@@ -1025,4 +1025,12 @@ export const LANG_FR = {
     "workingDays"                           : "jour(s) ouvré(s)",
     "yes"                                   : "Oui",
     "zipcode"                               : "Code postal",
+    "printSeparatorInfo" : "Vous pourrez imprimer les séparateurs <b>par service</b> ou <b>générique</b> afin de pouvoir les utiliser dans <b>maarchCapture</b> pour verser les courriers numérisés dans les services adéquates.",
+    "generic" : "Générique",
+    "qrcode" : "QR code",
+    "separatorType" : "Type de séparateur",
+    "separatorTarget" : "Cible de séparateur",
+    "generateAndDownload" : "Générer et télécharger",
+    "separators" : "Séparateur(s)",
+    "entityTreeInfoSeparator" : "Cliquez sur une entité de l'arborescence afin de l'ajouter à la génération des séparateurs",
 };
