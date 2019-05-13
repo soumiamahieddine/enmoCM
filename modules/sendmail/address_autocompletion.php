@@ -27,7 +27,7 @@ $subQuery = array();
 $subQuery[1] = "SELECT UPPER(lastname) || ' ' || firstname || ' (' || mail || ')' AS result, "
             . ' %d AS confidence, mail AS email '
             . "FROM users"
-            . " WHERE enabled ='Y' AND "
+            . " WHERE status != 'SPD' AND "
     . "(LOWER(lastname) LIKE LOWER('%s') OR LOWER(firstname) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(mail) LIKE LOWER('%s'))";
 
 $subQuery[2]=

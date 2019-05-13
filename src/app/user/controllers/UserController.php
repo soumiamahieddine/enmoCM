@@ -56,7 +56,7 @@ class UserController
 
         if ($GLOBALS['userId'] == 'superadmin') {
             $users = UserModel::get([
-                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'mail'],
                 'where'     => ['user_id != ?', 'status != ?'],
                 'data'      => ['superadmin', 'DEL']
             ]);
@@ -65,12 +65,12 @@ class UserController
             $users = [];
             if (!empty($entities)) {
                 $users = UserEntityModel::getWithUsers([
-                    'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                    'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail'],
                     'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
                     'data'      => [$entities, 'DEL']
                 ]);
             }
-            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail']]);
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail']]);
             $users = array_merge($users, $usersNoEntities);
         }
 
@@ -82,8 +82,8 @@ class UserController
         $quota = [];
         $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
         if (!empty($userQuota['param_value_int'])) {
-            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
-            $inactiveUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['N', 'OK','superadmin']]);
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'user_id <> ?'], 'data' => ['OK','superadmin']]);
+            $inactiveUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'user_id <> ?'], 'data' => ['SPD','superadmin']]);
             $quota = ['actives' => $activeUser[0]['count'], 'inactives' => $inactiveUser[0]['count'], 'userQuota' => $userQuota['param_value_int']];
         }
 
@@ -97,7 +97,7 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'loginmode', 'external_id']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'phone', 'mail', 'initials', 'loginmode', 'external_id']]);
         $user['external_id']        = json_decode($user['external_id'], true);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
         $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
@@ -148,10 +148,9 @@ class UserController
         $existingUser = UserModel::getByLowerLogin(['login' => $data['userId'], 'select' => ['id', 'status']]);
 
         if (!empty($existingUser) && $existingUser['status'] == 'DEL') {
-            UserModel::updateStatus(['id' => $existingUser['id'], 'status' => 'OK']);
             UserModel::update([
                 'set'   => [
-                    'enabled'   => 'Y'
+                    'status'   => 'OK'
                 ],
                 'where' => ['id = ?'],
                 'data'  => [$existingUser['id']]
@@ -180,7 +179,7 @@ class UserController
 
         $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
         if (!empty($userQuota['param_value_int'])) {
-            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'user_id <> ?'], 'data' => ['OK', 'superadmin']]);
             if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
                 NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
             }
@@ -222,12 +221,18 @@ class UserController
             'initials'  => $data['initials'],
             'loginmode' => empty($data['loginmode']) ? 'standard' : $data['loginmode'],
         ];
-        if (!empty($data['enabled']) && $data['enabled'] == 'Y') {
-            $set['enabled'] = 'Y';
+        if (!empty($data['status']) && $data['status'] == 'OK') {
+            $set['status'] = 'OK';
         }
 
         if ($set['loginmode'] == 'restMode') {
             $set['change_password']= 'N';
+        }
+
+        $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
+        $user = [];
+        if (!empty($userQuota['param_value_int'])) {
+            $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']]);
         }
 
         UserModel::update([
@@ -236,11 +241,9 @@ class UserController
             'data'  => [$aArgs['id']]
         ]);
 
-        $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
         if (!empty($userQuota['param_value_int'])) {
-            $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['enabled']]);
-            if ($user['enabled'] == 'N' && $data['enabled'] == 'Y') {
-                $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id != ?'], 'data' => ['Y', 'OK', 'superadmin']]);
+            if ($user['status'] == 'SPD' && $data['status'] == 'OK') {
+                $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'user_id != ?'], 'data' => ['OK', 'superadmin']]);
                 if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
                     NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
                 }
@@ -369,7 +372,7 @@ class UserController
 
         UserModel::update([
             'set'   => [
-                'enabled'   => 'N'
+                'status'   => 'SPD'
             ],
             'where' => ['id = ?'],
             'data'  => [$aArgs['id']]

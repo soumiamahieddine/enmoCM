@@ -229,7 +229,7 @@ if (isset($_GET['what_services'])
     . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr
     . " order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc limit 50";*/
 
-$where = "u.status <> 'DEL' and u.enabled = 'Y' and"
+$where = "u.status <> 'DEL' and u.status != 'SPD' and"
     .' e.entity_id = ue.entity_id and u.user_id = ue.user_id and'
     ." e.enabled = 'Y' and ue.primary_entity='Y' ".$user_expr.$entity_expr;
 $order = 'order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc';
@@ -272,7 +272,7 @@ $entity_query =
         ."e.enabled = 'Y' ".$user_expr.$entity_expr
         .' group by e.entity_id, e.entity_label order by e.entity_label asc limit 50';
 
-$where = "u.status <> 'DEL' and u.enabled = 'Y'".'and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and '
+$where = "u.status <> 'DEL' and u.status != 'SPD'".'and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and '
         ."e.enabled = 'Y' ".$user_expr.$entity_expr;
 $order = 'ORDER by entity_label ASC';
 $entity_query = $db->limit_select(

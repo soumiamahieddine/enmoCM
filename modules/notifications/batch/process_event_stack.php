@@ -117,7 +117,7 @@ while ($state != 'END') {
                         $db = new Database();
                         $query = 'SELECT param_value_int FROM parameters WHERE id = ?';
                         $stmt = $db -> query($query, array('user_quota'));
-                        if (($recipient->enabled == 'N' AND $stmt -> fetchColumn() == 0) || $recipient->status == 'DEL') {
+                        if (($recipient->status == 'SPD' AND $stmt -> fetchColumn() == 0) || $recipient->status == 'DEL') {
                             $logger->write($user_id.' is disabled or deleted, this notification will not be send', 'INFO');
                             unset($recipients[$i]);
                             continue;

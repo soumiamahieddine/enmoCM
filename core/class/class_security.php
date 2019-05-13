@@ -130,7 +130,7 @@ class security extends Database
         }
 
         if (isset($user)) {
-            if ($user->__get('enabled') == 'Y') {
+            if ($user->__get('status') != 'SPD') {
                 $ugc = new usergroups_controler();
                 $sec_controler = new SecurityControler();
                 $serv_controler = new ServiceControler();

@@ -86,8 +86,8 @@ class AutoCompleteController
         $requestData = AutoCompleteController::getDataForRequest([
             'search'        => $data['search'],
             'fields'        => '(firstname ilike ? OR lastname ilike ?)',
-            'where'         => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
-            'data'          => ['Y', 'DEL', $excludedUsers],
+            'where'         => ['status not in (?)', 'user_id not in (?)'],
+            'data'          => [['DEL', 'SPD'], $excludedUsers],
             'fieldsNumber'  => 2,
         ]);
 
@@ -163,8 +163,8 @@ class AutoCompleteController
         $requestData = AutoCompleteController::getDataForRequest([
             'search'        => $data['search'],
             'fields'        => '(firstname ilike ? OR lastname ilike ?)',
-            'where'         => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
-            'data'          => ['Y', 'DEL', $excludedUsers],
+            'where'         => ['status not in (?)', 'user_id not in (?)'],
+            'data'          => [['DEL', 'SPD'], $excludedUsers],
             'fieldsNumber'  => 2,
         ]);
 
@@ -207,10 +207,9 @@ class AutoCompleteController
                 'where'         => [
                     'users.user_id = users_entities.user_id',
                     'users_entities.entity_id in (?)',
-                    'users.status != ?',
-                    'users.enabled = ?'
+                    'users.status not in (?)'
                 ],
-                'data'          => [$entities, 'DEL', 'Y'],
+                'data'          => [$entities, ['DEL', 'SPD']],
                 'fieldsNumber'  => 2,
             ]);
 
@@ -229,10 +228,9 @@ class AutoCompleteController
                     'where'         => [
                         'users_entities IS NULL',
                         'users.user_id not in (?)',
-                        'users.status != ?',
-                        'users.enabled = ?'
+                        'users.status not in (?)'
                     ],
-                    'data'          => [$excludedUsers, 'DEL', 'Y'],
+                    'data'          => [$excludedUsers, ['DEL', 'SPD']],
                     'fieldsNumber'  => 2,
                 ]);
 
@@ -251,8 +249,8 @@ class AutoCompleteController
             $requestData = AutoCompleteController::getDataForRequest([
                 'search'        => $data['search'],
                 'fields'        => '(firstname ilike ? OR lastname ilike ?)',
-                'where'         => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
-                'data'          => ['Y', 'DEL', $excludedUsers],
+                'where'         => ['status not in (?)', 'user_id not in (?)'],
+                'data'          => [['DEL', 'SPD'], $excludedUsers],
                 'fieldsNumber'  => 2,
             ]);
 
@@ -296,10 +294,9 @@ class AutoCompleteController
                 'usergroup_content.user_id = users.user_id',
                 'usergroups_services.service_id in (?)',
                 'users.user_id not in (?)',
-                'users.enabled = ?',
-                'users.status != ?'
+                'users.status not in (?)'
             ],
-            'data'          => [['visa_documents', 'sign_document'], $excludedUsers, 'Y', 'DEL'],
+            'data'          => [['visa_documents', 'sign_document'], $excludedUsers, ['DEL', 'SPD']],
             'fieldsNumber'  => 2,
         ]);
 

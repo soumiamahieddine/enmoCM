@@ -6,3 +6,6 @@
 --                                                                          --
 -- *************************************************************************--
 UPDATE parameters SET param_value_string = '19.10.1' WHERE id = 'database_version';
+
+UPDATE users SET status = 'SPD' WHERE enabled = 'N' and status = 'OK';
+ALTER TABLE users DROP COLUMN IF EXISTS enabled;
