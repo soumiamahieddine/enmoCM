@@ -61,7 +61,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='</form>';
     $frm_str .='</div>';
     $frm_str .='<div align="center">';
-    $frm_str .=' <input type="button" name="redirect_dep" value="'._VALIDATE.'" id="redirect_dep" class="button" onclick="actionValidation(\''.$path_to_script.'&page=Ajax_validation&type=purge&reference='.$values_str.'\');" />';
+    $frm_str .=' <input type="button" name="redirect_dep" value="'._VALIDATE.'" id="redirect_dep" class="button" onclick="actionValidation(\''.$path_to_script.'&page=Ajax_validation&type=purge&reference='.$values_str.'\', '. $_SESSION['urlV2Basket'] .');" />';
     $frm_str .=' <input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();actions_status.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
     $frm_str .='</div>';
 
