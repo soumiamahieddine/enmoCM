@@ -79,7 +79,7 @@ class EntitySeparatorController
             if ($bodyData['type'] == 'qrcode') {
                 $qrCode = new QrCode($prefix . $entityId);
                 $qrCode->setSize(600);
-                $pdf->Image('@'.$qrCode->writeString(), 0, 40, 200, '', '', '', '', false, '', 'C');
+                $pdf->Image('@'.$qrCode->writeString(), 0, 40, 200, '', '', '', '', false, 300, 'C');
             } else {
                 $barcode = new Barcode();
                 $bobj = $barcode->getBarcodeObj(
@@ -91,7 +91,7 @@ class EntitySeparatorController
                     array(-2, -2, -2, -2)       // padding (use absolute or negative values as multiplication factors)
                 )->setBackgroundColor('white'); // background color
                 
-                $pdf->Image('@'.$bobj->getPngData(), 0, 40, 200, '', '', '', '', false, '', 'C');
+                $pdf->Image('@'.$bobj->getPngData(), 0, 40, 200, '', '', '', '', false, 300, 'C');
             }
             
             $pdf->SetY($pdf->GetY() + 300);
