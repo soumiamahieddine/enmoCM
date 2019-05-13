@@ -123,7 +123,8 @@ Class CheckReply {
     public function getReply($reference) {
         $header = [
             'accept:application/json',
-            'content-type:application/json'
+            'content-type:application/json',
+            'user-agent:maarchrestclient'
         ];
 
         $refEncode = str_replace('.', '%2E', urlencode($reference));
