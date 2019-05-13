@@ -616,10 +616,19 @@ class RequestSeda
 
         $storeResult = array();
 
-        $storeResult = $docserverControler->storeResourceOnDocserver(
+        /*$storeResult = $docserverControler->storeResourceOnDocserver(
             $_SESSION['collection_id_choice'],
             $fileInfos
-        );
+        );*/
+
+        $resource = file_get_contents($data->tmpDir . '/' . $data->tmpFileName);
+        $pathInfo = pathinfo($data->tmpDir . '/' . $data->tmpFileName);
+        $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
+            'collId'            => 'attachments_coll',
+            'docserverTypeId'   => 'FASTHD',
+            'encodedResource'   => base64_encode($resource),
+            'format'            => $pathInfo['extension']
+        ]);
 
         if (isset($storeResult['error']) && $storeResult['error'] <> '') {
             $_SESSION['error'] = $storeResult['error'];
@@ -686,7 +695,7 @@ class RequestSeda
                 $_SESSION['data'],
                 array(
                     'column' => "coll_id",
-                    'value' => $_SESSION['collection_id_choice'],
+                    'value' => 'letterbox_coll',
                     'type' => "string",
                 )
             );
