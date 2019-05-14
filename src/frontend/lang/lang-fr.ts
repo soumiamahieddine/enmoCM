@@ -1033,4 +1033,7 @@ export const LANG_FR = {
     "generateAndDownload" : "Générer et télécharger",
     "separators" : "Séparateur(s)",
     "entityTreeInfoSeparator" : "Cliquez sur une entité de l'arborescence afin de l'ajouter à la génération des séparateurs",
+    "userOK" : "Actif",
+    "userSPD" : "Inactif",
+    "userABS" : "Absent",
 };

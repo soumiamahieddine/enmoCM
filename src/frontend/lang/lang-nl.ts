@@ -1027,4 +1027,7 @@ export const LANG_NL = {
     "generateAndDownload" : "Generate and download", //_TO_TRANSLATE
     "separators" : "Separator(s)", //_TO_TRANSLATE
     "entityTreeInfoSeparator" : "Click on entity tree in order to generate the separator", //_TO_TRANSLATE
+    "userOK" : "Active", //_TO_TRANSLATE
+    "userSPD" : "Inactive", //_TO_TRANSLATE
+    "userABS" : "Absent", //_TO_TRANSLATE
 };

@@ -1000,4 +1000,7 @@ export const LANG_EN = {
     "generateAndDownload" : "Generate and download",
     "separators" : "Separator(s)",
     "entityTreeInfoSeparator" : "Click on entity tree in order to generate the separator",
+    "userOK" : "Active",
+    "userSPD" : "Inactive",
+    "userABS" : "Absent",
 };
