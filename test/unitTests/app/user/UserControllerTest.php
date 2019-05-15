@@ -65,7 +65,6 @@ class UserControllerTest extends TestCase
         $this->assertSame('TEST-CLARK', $responseBody->firstname);
         $this->assertSame('TEST-KENT', $responseBody->lastname);
         $this->assertSame('OK', $responseBody->status);
-        $this->assertSame('Y', $responseBody->enabled);
         $this->assertSame(null, $responseBody->phone);
         $this->assertSame(null, $responseBody->mail);
         $this->assertSame(null, $responseBody->initials);
