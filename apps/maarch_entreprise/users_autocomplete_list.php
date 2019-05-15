@@ -25,12 +25,6 @@ $req = new request();
 $select = array();
 $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
 
-if(isset($_GET['getDisableUser'])){
-    $enabledUser = "";
-} else {
-    $enabledUser = "and enabled = 'Y'";
-}
-
 $where = " (lower(lastname) like lower(:input) "
 	."or lower(firstname) like lower(:input) "
 	."or user_id like :input) and (status = 'OK' or status = 'ABS') " . $enabledUser;

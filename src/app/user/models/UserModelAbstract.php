@@ -73,7 +73,6 @@ abstract class UserModelAbstract
                 'mail'                          => $aArgs['user']['mail'],
                 'phone'                         => $aArgs['user']['phone'],
                 'initials'                      => $aArgs['user']['initials'],
-                'enabled'                       => 'Y',
                 'status'                        => 'OK',
                 'change_password'               => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],
                 'loginmode'                     => empty($aArgs['user']['loginmode']) ? 'standard' : $aArgs['user']['loginmode'],

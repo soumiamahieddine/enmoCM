@@ -109,7 +109,7 @@ while ($res = $stmt->fetchObject()) {
     array_push($queries, array('ID' => $res->query_id, 'LABEL' => $res->query_name));
 }
 
-$stmt = $conn->query('SELECT user_id, firstname, lastname, status FROM '.$_SESSION['tablename']['users']." WHERE enabled = 'Y' and status <> 'DEL' order by lastname asc");
+$stmt = $conn->query('SELECT user_id, firstname, lastname, status FROM '.$_SESSION['tablename']['users']." WHERE status != 'SPD' and status != 'DEL' order by lastname asc");
 $users_list = array();
 while ($res = $stmt->fetchObject()) {
     array_push($users_list, array('ID' => functions::show_string($res->user_id), 'NOM' => functions::show_string($res->lastname), 'PRENOM' => functions::show_string($res->firstname), 'STATUT' => $res->status));

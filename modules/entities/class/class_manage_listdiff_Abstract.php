@@ -114,7 +114,7 @@ abstract class diffusion_list_Abstract extends functions
                     ."and l.item_type = 'user_id' "
                     .'and l.object_type = ? '
                     .'and l.object_id = ? '
-                    ."and u.enabled = 'Y' "
+                    ."and u.status != 'SPD' "
                     ."and u.status != 'DEL' "
                 .'ORDER BY l.sequence',
                 array($item_mode, $objectType, $objectId)

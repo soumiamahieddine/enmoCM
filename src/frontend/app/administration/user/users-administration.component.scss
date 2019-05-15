@@ -1,0 +1,14 @@
+@import '../../../css/vars.scss';
+
+
+button:disabled{
+    opacity:0.3 !important;
+}
+
+.statusUserLabelWarn {
+    color : $warn;
+}
+
+.statusUserLabelPrimary {
+    color : $primary;
+}

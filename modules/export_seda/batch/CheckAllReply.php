@@ -4,6 +4,7 @@ $checkAllReply = new CheckAllReply();
 require_once __DIR__ . '/../RequestSeda.php';
 require_once __DIR__ . '/../class/AbstractMessage.php';
 require_once __DIR__ . '/../CheckReply.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 $CheckReply = new CheckReply();
 $CheckReply->checkAll();

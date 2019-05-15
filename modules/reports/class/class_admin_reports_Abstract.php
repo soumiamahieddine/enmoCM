@@ -126,6 +126,8 @@ abstract class admin_reports_Abstract extends Database
             //$_SESSION['user']['reports'] = array();
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."usergroups_controler.php");
 
+            $usergroups_controler = new usergroups_controler();
+
             foreach(array_keys($enabled_reports)as $key)
             {
                 $stmt = $db->query("select group_id from ".$_SESSION['tablename']['usergroups_reports']." where report_id = ? ", array($key));
@@ -133,7 +135,7 @@ abstract class admin_reports_Abstract extends Database
                 $res = false;
                 while($res=$stmt->fetchObject())
                 {
-                    if(usergroups_controler::inGroup($user_id, $res->group_id) == true)
+                    if($usergroups_controler->inGroup($user_id, $res->group_id) == true)
                     {
                         $find = true;
                         break;

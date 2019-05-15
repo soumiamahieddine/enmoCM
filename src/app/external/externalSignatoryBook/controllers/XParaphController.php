@@ -41,6 +41,14 @@ class XParaphController
 
         $attachmentToFreeze = [];
 
+        $userGeneric = [];
+        foreach ($aArgs['config']['data']['userGeneric'] as $userGenericXml) {
+            if ($userGenericXml->siret == $aArgs['info']['siret']) {
+                $userGeneric = (array)$userGenericXml;
+                break;
+            }
+        }
+
         foreach ($attachments as $value) {
             if (!empty($value['res_id'])) {
                 $resId      = $value['res_id'];
@@ -89,7 +97,8 @@ class XParaphController
                         <reponse xsi:type="xsd:string">SOAP</reponse>
                         <siret xsi:type="xsd:string">'.$aArgs['info']['siret'].'</siret>
                         <login xsi:type="xsd:string">'.$aArgs['info']['login'].'</login>
-                        <password xsi:type="xsd:string">'.$aArgs['info']['password'].'</password>
+                        <logingen xsi:type="xsd:string">'.$userGeneric['login'].'</logingen>
+                        <password xsi:type="xsd:string">'.$userGeneric['password'].'</password>
                         <docutype xsi:type="xsd:string">'.$aArgs['config']['data']['docutype'].'</docutype>
                         <docustype xsi:type="xsd:string">'.$aArgs['config']['data']['docustype'].'</docustype>
                         <objet xsi:type="xsd:string">'.$value['title'].'</objet>
@@ -118,6 +127,22 @@ class XParaphController
             } else {
                 $depotId = $response['response']->children('SOAP-ENV', true)->Body->children('ns1', true)->XPRF_DeposerResponse->children()->return->children()->depotid;
                 $attachmentToFreeze[$collId][$resId] = (string)$depotId;
+
+                $aAttachment = AttachmentModel::getById([
+                    'select'    => ['external_id'],
+                    'id'        => $resId,
+                    'isVersion' => $is_version
+                ]);
+    
+                $externalId = json_decode($aAttachment[0]['external_id'], true);
+                $externalId['xparaphDepot'] = ['login' => $aArgs['info']['login'], 'siret' => $aArgs['info']['siret']];
+        
+                AttachmentModel::update([
+                    'set'       => ['external_id' => json_encode($externalId)],
+                    'where'     => ['res_id = ?'],
+                    'data'      => [$resId],
+                    'isVersion' => $is_version
+                ]);
             }
         }
 
@@ -260,19 +285,26 @@ class XParaphController
     public static function getWorkflow(Request $request, Response $response, array $aArgs)
     {
         $data = $request->getQueryParams();
-        foreach (['login', 'siret', 'password'] as $value) {
+        foreach (['login', 'siret'] as $value) {
             if (empty($data[$value])) {
                 return $response->withStatus(400)->withJson(['errors' => $value . ' is empty']);
             }
         }
 
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
-        $config = [];
+        $loadedXml   = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+        $config      = [];
+        $userGeneric = [];
 
         if (!empty($loadedXml)) {
             foreach ($loadedXml->signatoryBook as $value) {
                 if ($value->id == "xParaph") {
                     $config['data'] = (array)$value;
+                    foreach ($value->userGeneric as $userGenericXml) {
+                        if ($userGenericXml->siret == (string)$data['siret']) {
+                            $userGeneric = (array)$userGenericXml;
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -288,7 +320,8 @@ class XParaphController
                     <params xsi:type="urn:XPRF_Initialisation_Deposer_Param">
                         <siret xsi:type="xsd:string">'.$data['siret'].'</siret>
                         <login xsi:type="xsd:string">'.$data['login'].'</login>
-                        <password xsi:type="xsd:string">'.$data['password'].'</password>
+                        <logingen xsi:type="xsd:string">'.$userGeneric['login'].'</logingen>
+                        <password xsi:type="xsd:string">'.$userGeneric['password'].'</password>
                         <action xsi:type="xsd:string">DETAIL</action>
                         <scenario xsi:type="xsd:string">' . $config['data']['docutype'] . '-' . $config['data']['docustype'].'</scenario>
                         <version xsi:type="xsd:string">2</version>

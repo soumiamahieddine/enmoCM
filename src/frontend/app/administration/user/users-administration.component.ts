@@ -13,7 +13,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "users-administration.component.html",
-    styleUrls: ['users-administration.component.css'],
+    styleUrls: ['users-administration.component.scss'],
     providers: [NotificationService]
 })
 export class UsersAdministrationComponent extends AutoCompletePlugin implements OnInit {
@@ -77,6 +77,9 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
         this.http.get(this.coreUrl + 'rest/users')
             .subscribe((data: any) => {
                 this.data = data['users'];
+                 this.data.forEach(element => {
+                    element.statusLabel = this.lang['user'+element.status]
+                });
                 this.quota = data['quota'];
                 if (this.quota.actives > this.quota.userQuota) {
                     this.notify.error(this.lang.quotaExceeded);
@@ -97,7 +100,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.authorize + ' « ' + user.user_id + ' »');
 
         if (r) {
-            user.enabled = 'Y';
+            user.status = 'OK';
             this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                 .subscribe(() => {
                     this.notify.success(this.lang.userAuthorized);
@@ -109,7 +112,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                         }
                     }
                 }, (err) => {
-                    user.enabled = 'N';
+                    user.status = 'SPD';
                     this.notify.error(err.error.errors);
                 });
         }
@@ -201,9 +204,9 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                                     this.dataSource.paginator = this.paginator;
                                                                     this.dataSource.sort = this.sort;
 
-                                                                    if (this.quota.userQuota && user.enabled == 'Y') {
+                                                                    if (this.quota.userQuota && user.status != 'SPD') {
                                                                         this.quota.actives--;
-                                                                    } else if (this.quota.userQuota && user.enabled == 'N') {
+                                                                    } else if (this.quota.userQuota && user.status == 'SPD') {
                                                                         this.quota.inactives--;
                                                                     }
 
@@ -217,7 +220,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                         } else if (user.mode == 'suspend') {
                                                             this.http.put(this.coreUrl + 'rest/users/' + user.id + '/suspend', user)
                                                                 .subscribe(() => {
-                                                                    user.enabled = 'N';
+                                                                    user.status = 'SPD';
                                                                     this.notify.success(this.lang.userSuspended);
                                                                     if (this.quota.userQuota) {
                                                                         this.quota.inactives++;
@@ -225,7 +228,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                                     }
 
                                                                 }, (err) => {
-                                                                    user.enabled = 'Y';
+                                                                    user.status = 'OK';
                                                                     this.notify.error(err.error.errors);
                                                                 });
                                                         }
@@ -261,9 +264,9 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                         this.dataSource.paginator = this.paginator;
                                                         this.dataSource.sort = this.sort;
 
-                                                        if (this.quota.userQuota && user.enabled == 'Y') {
+                                                        if (this.quota.userQuota && user.status == 'OK') {
                                                             this.quota.actives--;
-                                                        } else if (this.quota.userQuota && user.enabled == 'N') {
+                                                        } else if (this.quota.userQuota && user.status == 'SPD') {
                                                             this.quota.inactives--;
                                                         }
 
@@ -277,7 +280,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                             } else if (user.mode == 'suspend') {
                                                 this.http.put(this.coreUrl + 'rest/users/' + user.id + '/suspend', user)
                                                     .subscribe(() => {
-                                                        user.enabled = 'N';
+                                                        user.status = 'SPD';
                                                         this.notify.success(this.lang.userSuspended);
                                                         if (this.quota.userQuota) {
                                                             this.quota.inactives++;
@@ -285,7 +288,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                         }
 
                                                     }, (err) => {
-                                                        user.enabled = 'Y';
+                                                        user.status = 'OK';
                                                         this.notify.error(err.error.errors);
                                                     });
                                             }
@@ -316,9 +319,9 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                         this.dataSource.paginator = this.paginator;
                                                         this.dataSource.sort = this.sort;
 
-                                                        if (this.quota.userQuota && user.enabled == 'Y') {
+                                                        if (this.quota.userQuota && user.status == 'OK') {
                                                             this.quota.actives--;
-                                                        } else if (this.quota.userQuota && user.enabled == 'N') {
+                                                        } else if (this.quota.userQuota && user.status == 'SPD') {
                                                             this.quota.inactives--;
                                                         }
 
@@ -332,7 +335,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                             } else if (user.mode == 'suspend') {
                                                 this.http.put(this.coreUrl + 'rest/users/' + user.id + '/suspend', user)
                                                     .subscribe(() => {
-                                                        user.enabled = 'N';
+                                                        user.status = 'SPD';
                                                         this.notify.success(this.lang.userSuspended);
                                                         if (this.quota.userQuota) {
                                                             this.quota.inactives++;
@@ -340,7 +343,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                         }
 
                                                     }, (err) => {
-                                                        user.enabled = 'Y';
+                                                        user.status = 'OK';
                                                         this.notify.error(err.error.errors);
                                                     });
                                             }
@@ -365,9 +368,9 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                             this.dataSource.paginator = this.paginator;
                                             this.dataSource.sort = this.sort;
 
-                                            if (this.quota.userQuota && user.enabled == 'Y') {
+                                            if (this.quota.userQuota && user.status == 'OK') {
                                                 this.quota.actives--;
-                                            } else if (this.quota.userQuota && user.enabled == 'N') {
+                                            } else if (this.quota.userQuota && user.status == 'SPD') {
                                                 this.quota.inactives--;
                                             }
 
@@ -381,7 +384,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                 } else if (user.mode == 'suspend') {
                                     this.http.put(this.coreUrl + 'rest/users/' + user.id + '/suspend', user)
                                         .subscribe(() => {
-                                            user.enabled = 'N';
+                                            user.status = 'SPD';
                                             this.notify.success(this.lang.userSuspended);
                                             if (this.quota.userQuota) {
                                                 this.quota.inactives++;
@@ -389,7 +392,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                             }
 
                                         }, (err) => {
-                                            user.enabled = 'Y';
+                                            user.status = 'OK';
                                             this.notify.error(err.error.errors);
                                         });
                                 }

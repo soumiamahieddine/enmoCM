@@ -51,7 +51,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     }
     $users = array();
     if (!empty($_SESSION['user']['redirect_groupbasket_by_group'][$_SESSION['current_basket']['id']][$_SESSION['current_basket']['group_id']][$id_action]['users_entities'])) {
-        $stmt = $db->query("select distinct ue.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id in (".$_SESSION['user']['redirect_groupbasket_by_group'][$_SESSION['current_basket']['id']][$_SESSION['current_basket']['group_id']][$id_action]['users_entities'].") and u.user_id = ue.user_id and (u.status = 'OK' or u.status = 'ABS') and enabled = 'Y' order by u.lastname asc");
+        $stmt = $db->query("select distinct ue.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id in (".$_SESSION['user']['redirect_groupbasket_by_group'][$_SESSION['current_basket']['id']][$_SESSION['current_basket']['group_id']][$id_action]['users_entities'].") and u.user_id = ue.user_id and (u.status = 'OK' or u.status = 'ABS') order by u.lastname asc");
         while ($res = $stmt->fetchObject()) {
             array_push($users, array( 'ID' => $res->user_id, 'NOM' => functions::show_string($res->lastname), "PRENOM" => functions::show_string($res->firstname)));
         }
