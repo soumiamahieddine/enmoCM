@@ -616,11 +616,6 @@ class RequestSeda
 
         $storeResult = array();
 
-        /*$storeResult = $docserverControler->storeResourceOnDocserver(
-            $_SESSION['collection_id_choice'],
-            $fileInfos
-        );*/
-
         $resource = file_get_contents($data->tmpDir . '/' . $data->tmpFileName);
         $pathInfo = pathinfo($data->tmpDir . '/' . $data->tmpFileName);
         $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([

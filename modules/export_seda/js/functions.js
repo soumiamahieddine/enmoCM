@@ -57,7 +57,7 @@ function actionSeda(path,type) {
     );
 }
 
-function actionValidation(path, aUrlBasket) {
+function actionValidation(path, userId, groupIdSer, basketId) {
     new Ajax.Request(path,
         {
             method:'post',
@@ -69,7 +69,7 @@ function actionValidation(path, aUrlBasket) {
                 } else {
                     alert(response.error);
                 }
-                triggerAngular('#/basketList/users/' + aUrlBasket['userId'] + '/groups/' + aUrlBasket['groupIdSer'] + '/baskets/' + aUrlBasket['basketId']);
+                triggerAngular('#/basketList/users/' + userId + '/groups/' + groupIdSer + '/baskets/' + basketId);
             }
         });
 }
