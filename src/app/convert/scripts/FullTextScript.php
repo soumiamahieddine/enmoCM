@@ -43,7 +43,7 @@ class FullTextScript
                     'set'       => ['fulltext_result' => 'SUCCESS'],
                     'where'     => ['res_id = ?'],
                     'data'      => [$args['resId']],
-                    'isVersion' => $args['collId'] == 'version_attachments_coll'
+                    'isVersion' => $args['collId'] == 'attachments_version_coll'
                 ]);
             }
         } else {
@@ -54,7 +54,7 @@ class FullTextScript
                     'set'       => ['fulltext_result' => 'ERROR'],
                     'where'     => ['res_id = ?'],
                     'data'      => [$args['resId']],
-                    'isVersion' => $args['collId'] == 'version_attachments_coll'
+                    'isVersion' => $args['collId'] == 'attachments_version_coll'
                 ]);
             }
         }

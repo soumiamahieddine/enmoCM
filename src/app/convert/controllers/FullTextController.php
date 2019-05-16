@@ -48,7 +48,7 @@ class FullTextController
             return ['errors' => 'Document not found on docserver'];
         }
 
-        $fullTextDocserver = DocserverModel::getCurrentDocserver(['collId' => 'letterbox_coll', 'typeId' => 'FULLTEXT']);
+        $fullTextDocserver = DocserverModel::getCurrentDocserver(['collId' => $args['collId'], 'typeId' => 'FULLTEXT']);
         if (empty($fullTextDocserver['path_template']) || !is_dir($fullTextDocserver['path_template'])) {
             return ['errors' => 'FullText docserver does not exist'];
         }
