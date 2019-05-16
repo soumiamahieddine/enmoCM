@@ -368,84 +368,94 @@ class XParaphController
     public static function retrieveSignedMails($aArgs)
     {
         $tmpPath = CoreConfigModel::getTmpPath();
+
         foreach (['noVersion', 'isVersion'] as $version) {
-            $depotids = [];
+            $depotsBySiret = [];
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                $depotids[$value->external_id] = $resId;
+                $externalId = json_decode($value['xparaphDepot'], true);
+                $depotsBySiret[$externalId['siret']][$value->external_id] = ['resId' => $resId, 'login' => $externalId['login']];
             }
 
-            if (!empty($depotids)) {
-                $avancements = XParaphController::getAvancement(['config' => $aArgs['config'], 'depotsIds' => $depotids]);
-            } else {
-                unset($aArgs['idsToRetrieve'][$version]);
-                continue;
-            }
-
-            foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                $avancement = $avancements[$value->external_id];
-
-                $state = XParaphController::getState(['avancement' => $avancement]);
-
-                if ($state['id'] == 'refused') {
-                    $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
-
-                    $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
-                    if (!empty($processedFile['errors'])) {
-                        unset($aArgs['idsToRetrieve'][$version][$resId]);
-                        continue;
+            foreach ($depotsBySiret as $siret => $depotids) {
+                foreach ($aArgs['config']['userGeneric'] as $userGenericXml) {
+                    if ($userGenericXml['siret'] == $siret) {
+                        $userGeneric = $userGenericXml;
+                        break;
                     }
-                    $file      = base64_decode($processedFile['zip']);
-                    $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
-                    $tmpName   = $unzipName . '.zip';
-            
-                    file_put_contents($tmpPath . $tmpName, $file);
-
-                    $zip = new \ZipArchive();
-                    $zip->open($tmpPath . $tmpName);
-                    $zip->extractTo($tmpPath . $unzipName);
-
-                    foreach (glob($tmpPath . $unzipName . '/*.xml') as $filename) {
-                        $log = base64_encode(file_get_contents($filename));
-                    }
-                    unlink($tmpPath . $tmpName);
-
-                    $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
-                } elseif ($state['id'] == 'validateSignature' || $state['id'] == 'validateOnlyVisa') {
-                    $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
-                    if (!empty($processedFile['errors'])) {
-                        unset($aArgs['idsToRetrieve'][$version][$resId]);
-                        continue;
-                    }
-                    $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-                    $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf';
-
-                    $file      = base64_decode($processedFile['zip']);
-                    $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
-                    $tmpName   = $unzipName . '.zip';
-            
-                    file_put_contents($tmpPath . $tmpName, $file);
-
-                    $zip = new \ZipArchive();
-                    $zip->open($tmpPath . $tmpName);
-                    $zip->extractTo($tmpPath . $unzipName);
-
-                    foreach (glob($tmpPath . $unzipName . '/*.pdf') as $filename) {
-                        $encodedFile = base64_encode(file_get_contents($filename));
-                    }
-                    foreach (glob($tmpPath . $unzipName . '/*.xml') as $filename) {
-                        $log = base64_encode(file_get_contents($filename));
-                    }
-                    unlink($tmpPath . $tmpName);
-
-                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $encodedFile;
-                    $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
-                    if ($state['id'] == 'validateOnlyVisa') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->onlyVisa = true;
-                    }
-                    $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
+                }
+                if (!empty($depotids)) {
+                    $avancements = XParaphController::getAvancement(['config' => $aArgs['config'], 'depotsIds' => $depotids, 'userGeneric' => $userGeneric]);
                 } else {
-                    unset($aArgs['idsToRetrieve'][$version][$resId]);
+                    unset($aArgs['idsToRetrieve'][$version]);
+                    continue;
+                }
+    
+                foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
+                    $avancement = $avancements[$value->external_id];
+    
+                    $state = XParaphController::getState(['avancement' => $avancement]);
+    
+                    if ($state['id'] == 'refused') {
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
+                        $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+    
+                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id, 'userGeneric' => $userGeneric, 'depotLogin' => $depotids['login']]);
+                        if (!empty($processedFile['errors'])) {
+                            unset($aArgs['idsToRetrieve'][$version][$resId]);
+                            continue;
+                        }
+                        $file      = base64_decode($processedFile['zip']);
+                        $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
+                        $tmpName   = $unzipName . '.zip';
+                
+                        file_put_contents($tmpPath . $tmpName, $file);
+    
+                        $zip = new \ZipArchive();
+                        $zip->open($tmpPath . $tmpName);
+                        $zip->extractTo($tmpPath . $unzipName);
+    
+                        foreach (glob($tmpPath . $unzipName . '/*.xml') as $filename) {
+                            $log = base64_encode(file_get_contents($filename));
+                        }
+                        unlink($tmpPath . $tmpName);
+    
+                        $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
+                    } elseif ($state['id'] == 'validateSignature' || $state['id'] == 'validateOnlyVisa') {
+                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
+                        if (!empty($processedFile['errors'])) {
+                            unset($aArgs['idsToRetrieve'][$version][$resId]);
+                            continue;
+                        }
+                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
+                        $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf';
+    
+                        $file      = base64_decode($processedFile['zip']);
+                        $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
+                        $tmpName   = $unzipName . '.zip';
+                
+                        file_put_contents($tmpPath . $tmpName, $file);
+    
+                        $zip = new \ZipArchive();
+                        $zip->open($tmpPath . $tmpName);
+                        $zip->extractTo($tmpPath . $unzipName);
+    
+                        foreach (glob($tmpPath . $unzipName . '/*.pdf') as $filename) {
+                            $encodedFile = base64_encode(file_get_contents($filename));
+                        }
+                        foreach (glob($tmpPath . $unzipName . '/*.xml') as $filename) {
+                            $log = base64_encode(file_get_contents($filename));
+                        }
+                        unlink($tmpPath . $tmpName);
+    
+                        $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $encodedFile;
+                        $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+                        if ($state['id'] == 'validateOnlyVisa') {
+                            $aArgs['idsToRetrieve'][$version][$resId]->onlyVisa = true;
+                        }
+                        $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
+                    } else {
+                        unset($aArgs['idsToRetrieve'][$version][$resId]);
+                    }
                 }
             }
         }
@@ -495,15 +505,18 @@ class XParaphController
             $depotIds .= '<listDepotIds>'.$key.'</listDepotIds>';
         }
 
+        // use $step['login'] because only need anyone who exist in xparaph
+
         $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
         <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:parafwsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
             <soapenv:Header/>
             <soapenv:Body>
                 <urn:XPRF_AvancementDepot soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
                     <params xsi:type="urn:XPRF_AvancementDepot_Param">
-                        <siret xsi:type="xsd:string">?</siret>
-                        <login xsi:type="xsd:string">?</login>
-                        <password xsi:type="xsd:string">?</password>
+                        <siret xsi:type="xsd:string">'.$aArgs['userGeneric']['siret'].'</siret>
+                        <login xsi:type="xsd:string">'.$step['login'].'</login>
+                        <logingen xsi:type="xsd:string">'.$aArgs['userGeneric']['login'].'</logingen>
+                        <password xsi:type="xsd:string">'.$aArgs['userGeneric']['password'].'</password>
                         <depotids xsi:type="urn:listDepotIds" soapenc:arrayType="xsd:string[]">' . $depotIds . '</depotids>
                         <withNote xsi:type="xsd:string">1</withNote>
                     </params>
@@ -536,9 +549,10 @@ class XParaphController
             <soapenv:Body>
                 <urn:XPRF_getFiles soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
                     <params xsi:type="urn:XPRF_getFiles_Param">
-                        <siret xsi:type="xsd:string">?</siret>
-                        <login xsi:type="xsd:string">?</login>
-                        <password xsi:type="xsd:string">?</password>
+                        <siret xsi:type="xsd:string">'.$aArgs['userGeneric']['siret'].'</siret>
+                        <login xsi:type="xsd:string">'.$aArgs['depotLogin'].'</login>
+                        <logingen xsi:type="xsd:string">'.$aArgs['userGeneric']['login'].'</logingen>
+                        <password xsi:type="xsd:string">'.$aArgs['userGeneric']['password'].'</password>
                         <depotid xsi:type="xsd:string">'.$aArgs['depotId'].'</depotid>
                     </params>
                 </urn:XPRF_getFiles>
