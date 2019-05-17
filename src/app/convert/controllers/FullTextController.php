@@ -76,10 +76,7 @@ class FullTextController
         $fileContent = fread($fp, filesize($tmpFile));
         fclose($fp);
 
-        $fileContent = TextFormatModel::normalize(['string' => $fileContent]);
-        $fileContent = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $fileContent);
-        $fileContent = preg_replace('/[[:punct:]]/', ' ', $fileContent);
-        $fileContent = trim($fileContent);
+        $fileContent = FullTextController::cleanFileContent($fileContent);
 
         $doc = new \Zend_Search_Lucene_Document();
 
@@ -95,7 +92,7 @@ class FullTextController
         return ['success' => 'success'];
     }
 
-    public static function isDirEmpty($dir)
+    private static function isDirEmpty($dir)
     {
         $dir = opendir($dir);
         $isEmpty = true;
@@ -108,5 +105,24 @@ class FullTextController
         closedir($dir);
 
         return $isEmpty;
+    }
+
+    private static function cleanFileContent($fileContent)
+    {
+        $fileContent = TextFormatModel::normalize(['string' => $fileContent]);
+        $fileContent = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $fileContent);
+        $fileContent = preg_replace('/[[:punct:]]/', ' ', $fileContent);
+        $fileContent = trim($fileContent);
+
+        $cleanArrayFile = [];
+        $rawArrayFile = explode(' ', $fileContent);
+        foreach ($rawArrayFile as $value) {
+            if (!empty($value) && strlen($value) > 2) {
+                $cleanArrayFile[] = $value;
+            }
+        }
+        $fileContent = implode(' ', $cleanArrayFile);
+
+        return $fileContent;
     }
 }

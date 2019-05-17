@@ -149,15 +149,17 @@ class DocserverController
             $data['path_template'] .= "/";
         }
 
-        $updateData = [
-            'id'                    => $aArgs['id'],
-            'device_label'          => $data['device_label'],
-            'size_limit_number'     => $data['size_limit_number'],
-            'path_template'         => $data['path_template'],
-            'is_readonly'           => empty($data['is_readonly']) ? 'N' : 'Y'
-        ];
+        DocserverModel::update([
+            'set'   => [
+                'device_label'          => $data['device_label'],
+                'size_limit_number'     => $data['size_limit_number'],
+                'path_template'         => $data['path_template'],
+                'is_readonly'           => empty($data['is_readonly']) ? 'N' : 'Y'
+            ],
+            'where' => ['id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
 
-        DocserverModel::update($updateData);
         HistoryController::add([
             'tableName' => 'docservers',
             'recordId'  => $aArgs['id'],
@@ -231,8 +233,11 @@ class DocserverController
         $destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $directory);
 
         DocserverModel::update([
-            'id'                    => $docserver['id'],
-            'actual_size_number'    => $docserver['actual_size_number'] + $aArgs['fileInfos']['size']
+            'set'   => [
+                'actual_size_number' => $docserver['actual_size_number'] + $aArgs['fileInfos']['size']
+            ],
+            'where' => ['id = ?'],
+            'data'  => [$docserver['id']]
         ]);
 
         return [
