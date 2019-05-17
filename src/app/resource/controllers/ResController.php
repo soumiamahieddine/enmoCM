@@ -78,6 +78,17 @@ class ResController
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
         }
 
+        ConvertPdfController::convert([
+            'resId'     => $resId,
+            'collId'    => 'letterbox_coll',
+            'isVersion' => false
+        ]);
+
+        $customId = CoreConfigModel::getCustomId();
+        $customId = empty($customId) ? 'null' : $customId;
+        $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
+        exec("php src/app/convert/scripts/FullTextScript.php {$customId} {$resId} 'letterbox_coll' {$user['id']} > /dev/null &");
+
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $resId,
