@@ -42,11 +42,21 @@ class XParaphController
         $attachmentToFreeze = [];
 
         $userGeneric = [];
-        foreach ($aArgs['config']['data']['userGeneric'] as $userGenericXml) {
-            if ($userGenericXml->siret == $aArgs['info']['siret']) {
-                $userGeneric = (array)$userGenericXml;
-                break;
+        if (isset($aArgs['config']['data']['userGeneric']->siret)) {
+            if ($aArgs['config']['data']['userGeneric']->siret == $aArgs['info']['siret']) {
+                $userGeneric = (array)$aArgs['config']['data']['userGeneric'];
             }
+        } else {
+            foreach ($aArgs['config']['data']['userGeneric'] as $userGenericXml) {
+                if ($userGenericXml->siret == $aArgs['info']['siret']) {
+                    $userGeneric = (array)$userGenericXml;
+                    break;
+                }
+            }
+        }
+
+        if (empty($userGeneric)) {
+            return ['error' => 'No user generic for this siret'];
         }
 
         foreach ($attachments as $value) {
@@ -308,6 +318,9 @@ class XParaphController
                     break;
                 }
             }
+            if (empty($userGeneric)) {
+                return $response->withStatus(403)->withJson(['error' => 'No user generic for this siret']);
+            }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'xParaph is not enabled']);
         }
@@ -372,17 +385,24 @@ class XParaphController
         foreach (['noVersion', 'isVersion'] as $version) {
             $depotsBySiret = [];
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                $externalId = json_decode($value['xparaphDepot'], true);
+                $externalId = json_decode($value->xparaphdepot, true);
                 $depotsBySiret[$externalId['siret']][$value->external_id] = ['resId' => $resId, 'login' => $externalId['login']];
             }
 
             foreach ($depotsBySiret as $siret => $depotids) {
-                foreach ($aArgs['config']['userGeneric'] as $userGenericXml) {
-                    if ($userGenericXml['siret'] == $siret) {
-                        $userGeneric = $userGenericXml;
-                        break;
+                if (isset($aArgs['config']['data']['userGeneric']->siret)) {
+                    if ($aArgs['config']['data']['userGeneric']->siret == $siret) {
+                        $userGeneric = (array)$aArgs['config']['data']['userGeneric'];
+                    }
+                } else {
+                    foreach ($aArgs['config']['data']['userGeneric'] as $userGenericXml) {
+                        if ($userGenericXml->siret == $siret) {
+                            $userGeneric = (array)$userGenericXml;
+                            break;
+                        }
                     }
                 }
+
                 if (!empty($depotids)) {
                     $avancements = XParaphController::getAvancement(['config' => $aArgs['config'], 'depotsIds' => $depotids, 'userGeneric' => $userGeneric]);
                 } else {
@@ -391,6 +411,7 @@ class XParaphController
                 }
     
                 foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
+                    $xParaphDepot = json_decode($value->xparaphdepot, true);
                     $avancement = $avancements[$value->external_id];
     
                     $state = XParaphController::getState(['avancement' => $avancement]);
@@ -399,7 +420,7 @@ class XParaphController
                         $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
                         $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
     
-                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id, 'userGeneric' => $userGeneric, 'depotLogin' => $depotids['login']]);
+                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id, 'userGeneric' => $userGeneric, 'depotLogin' => $xParaphDepot['login']]);
                         if (!empty($processedFile['errors'])) {
                             unset($aArgs['idsToRetrieve'][$version][$resId]);
                             continue;
@@ -421,7 +442,7 @@ class XParaphController
     
                         $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
                     } elseif ($state['id'] == 'validateSignature' || $state['id'] == 'validateOnlyVisa') {
-                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id]);
+                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id, 'userGeneric' => $userGeneric, 'depotLogin' => $xParaphDepot['login']]);
                         if (!empty($processedFile['errors'])) {
                             unset($aArgs['idsToRetrieve'][$version][$resId]);
                             continue;
