@@ -544,7 +544,8 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 if (empty($customId)) {
                                     $customId = 'null';
                                 }
-                                exec("php src/app/convert/scripts/FullTextScript.php {$customId} {$id} 'attachments_coll' > /dev/null &");
+                                $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $_SESSION['user']['UserId']]);
+                                exec("php src/app/convert/scripts/FullTextScript.php {$customId} {$id} 'attachments_coll' {$user['id']} > /dev/null &");
 
                                 if ($id == false) {
                                     $error = $resAttach->get_error();
@@ -1232,7 +1233,8 @@ if (isset($_POST['add']) && $_POST['add']) {
     if (empty($customId)) {
         $customId = 'null';
     }
-    exec("php src/app/convert/scripts/FullTextScript.php {$customId} {$id} {$targetCollId} > /dev/null &");
+    $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $_SESSION['user']['UserId']]);
+    exec("php src/app/convert/scripts/FullTextScript.php {$customId} {$id} {$targetCollId} {$user['id']} > /dev/null &");
 
     if (empty($error)) {
         //DELETE TEMPORARY BACKUP

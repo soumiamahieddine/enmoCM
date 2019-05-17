@@ -51,6 +51,8 @@ class FullTextController
         $fullTextDocserver = DocserverModel::getCurrentDocserver(['collId' => $args['collId'], 'typeId' => 'FULLTEXT']);
         if (empty($fullTextDocserver['path_template']) || !is_dir($fullTextDocserver['path_template'])) {
             return ['errors' => 'FullText docserver does not exist'];
+        } elseif (!is_writable($fullTextDocserver['path_template'])) {
+            return ['errors' => 'FullText docserver is not writable'];
         }
 
         if (FullTextController::isDirEmpty($fullTextDocserver['path_template'])) {
@@ -64,19 +66,20 @@ class FullTextController
         $index->setMaxBufferedDocs(1000);
 
         $tmpFile = CoreConfigModel::getTmpPath() . basename($pathToDocument) . rand() . '.txt';
-        exec("pdftotext " . escapeshellarg($pathToDocument) . " " . escapeshellarg($tmpFile));
+        $pdfToText = exec("pdftotext " . escapeshellarg($pathToDocument) . " " . escapeshellarg($tmpFile));
 
         if (!is_file($tmpFile)) {
-            return ['errors' => 'Command pdftotext did not work'];
+            return ['errors' => 'Command pdftotext did not work : ' . $pdfToText];
         }
 
         $fp = fopen($tmpFile, "r");
         $fileContent = fread($fp, filesize($tmpFile));
         fclose($fp);
 
-        $fileContent = trim($fileContent);
         $fileContent = TextFormatModel::normalize(['string' => $fileContent]);
         $fileContent = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $fileContent);
+        $fileContent = preg_replace('/[[:punct:]]/', ' ', $fileContent);
+        $fileContent = trim($fileContent);
 
         $doc = new \Zend_Search_Lucene_Document();
 
