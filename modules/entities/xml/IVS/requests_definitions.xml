@@ -64,15 +64,6 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="view_tree_entities" >
-		<parameter name="page" value="view_tree_entities"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="choose_tree" >
-		<parameter name="page" value="choose_tree"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
 
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="get_tree_childs" >
 		<parameter name="page" value="get_tree_childs"/>

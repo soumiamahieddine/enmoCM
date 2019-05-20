@@ -176,7 +176,7 @@ elseif(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'user')
 			$stmt = $db->query("SELECT u.user_id, u.lastname ,u.firstname, (SELECT COUNT(DISTINCT h.record_id) 
 								FROM ".$_SESSION['tablename']['history']." h INNER JOIN ".$_SESSION['tablename']['users']." u ON h.user_id = u.user_id 
 								WHERE h.event_type = 'VIEW' AND h.table_name = :foldFolder ".$whereUser.") AS nbr 
-								FROM ".$_SESSION['tablename']['users']." u WHERE u.enabled = 'Y' ".$whereUser, $arrayPDO);
+								FROM ".$_SESSION['tablename']['users']." u WHERE u.status != 'SPD' ".$whereUser, $arrayPDO);
 
 			$tab=array();
 			while($line = $stmt->fetch(PDO::FETCH_ASSOC))

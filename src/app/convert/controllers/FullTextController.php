@@ -55,19 +55,8 @@ class FullTextController
             return ['errors' => 'FullText docserver is not writable'];
         }
 
-        if (FullTextController::isDirEmpty($fullTextDocserver['path_template'])) {
-            $index = \Zend_Search_Lucene::create($fullTextDocserver['path_template']);
-        } else {
-            $index = \Zend_Search_Lucene::open($fullTextDocserver['path_template']);
-        }
-
-        $index->setFormatVersion(\Zend_Search_Lucene::FORMAT_2_3);
-        \Zend_Search_Lucene_Analysis_Analyzer::setDefault(new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
-        $index->setMaxBufferedDocs(1000);
-
         $tmpFile = CoreConfigModel::getTmpPath() . basename($pathToDocument) . rand() . '.txt';
         $pdfToText = exec("pdftotext " . escapeshellarg($pathToDocument) . " " . escapeshellarg($tmpFile));
-
         if (!is_file($tmpFile)) {
             return ['errors' => 'Command pdftotext did not work : ' . $pdfToText];
         }
@@ -78,14 +67,28 @@ class FullTextController
 
         $fileContent = FullTextController::cleanFileContent($fileContent);
 
-        $doc = new \Zend_Search_Lucene_Document();
+        try {
+            if (FullTextController::isDirEmpty($fullTextDocserver['path_template'])) {
+                $index = \Zend_Search_Lucene::create($fullTextDocserver['path_template']);
+            } else {
+                $index = \Zend_Search_Lucene::open($fullTextDocserver['path_template']);
+            }
 
-        $doc->addField(\Zend_Search_Lucene_Field::UnIndexed('Id', (integer)$args['resId']));
-        $doc->addField(\Zend_Search_Lucene_Field::UnStored('contents', $fileContent));
+            $index->setFormatVersion(\Zend_Search_Lucene::FORMAT_2_3);
+            \Zend_Search_Lucene_Analysis_Analyzer::setDefault(new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
+            $index->setMaxBufferedDocs(1000);
 
-        $index->addDocument($doc);
-        $index->commit();
-        $index->optimize();
+            $doc = new \Zend_Search_Lucene_Document();
+
+            $doc->addField(\Zend_Search_Lucene_Field::UnIndexed('Id', (integer)$args['resId']));
+            $doc->addField(\Zend_Search_Lucene_Field::UnStored('contents', $fileContent));
+
+            $index->addDocument($doc);
+            $index->commit();
+            $index->optimize();
+        } catch (\Exception $e) {
+            return ['errors' => 'Full Text index failed : ' . $e];
+        }
 
         unlink($tmpFile);
 
@@ -110,8 +113,8 @@ class FullTextController
     private static function cleanFileContent($fileContent)
     {
         $fileContent = TextFormatModel::normalize(['string' => $fileContent]);
-        $fileContent = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $fileContent);
         $fileContent = preg_replace('/[[:punct:]]/', ' ', $fileContent);
+        $fileContent = preg_replace('/[[:cntrl:]]/', ' ', $fileContent);
         $fileContent = trim($fileContent);
 
         $cleanArrayFile = [];
