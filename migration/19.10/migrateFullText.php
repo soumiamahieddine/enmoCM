@@ -37,6 +37,18 @@ foreach ($customs as $custom) {
             ]);
         }
 
+        foreach ($xmlfile->MODULES as $key => $module) {
+            if ((string)$module->moduleid == 'full_text') {
+                unset($xmlfile->MODULES[$key]);
+            }
+        }
+
+        $res = $xmlfile->asXML();
+        $fp = fopen($path, "w+");
+        if ($fp) {
+            fwrite($fp, $res);
+        }
+
         $migrated++;
     }
 }

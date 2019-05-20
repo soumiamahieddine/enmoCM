@@ -45,8 +45,6 @@ if (file_exists($filename)) {
     $applicationname = $CONFIG->applicationname;
     // var_dump((string) $CONFIG->applicationname);
     // var_dump($applicationname);
-    $COLLECTION = $xmlconfig->COLLECTION;
-    $path_to_lucene_index = (string) $COLLECTION->path_to_lucene_index;
 
     $xmlconfigSMTP = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/config/config.xml');
 
@@ -278,11 +276,6 @@ if (file_exists($filename)) {
                         <td><b style="color:red"><?php echo _APPLICATIONNAME;?></b></td>
                         <td>:</td>
                         <td><input type="text" name="applicationname" id="applicationname" value="<?php echo (string) $_SESSION['config']['databasename']; ?> "/></td>
-                    </tr>
-                    <tr>
-                        <td><?php echo _PATH_TO_DOCSERVER;?></td>
-                        <td>:</td>
-                        <td><input type="text" name="smtpPassword" id="smtpPassword" disabled="disabled" value=<?php echo $path_to_lucene_index; ?> /></td>
                     </tr>
                     <tr>
                         <td></td>
