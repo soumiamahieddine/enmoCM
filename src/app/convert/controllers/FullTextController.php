@@ -47,7 +47,9 @@ class FullTextController
 
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
         if (!is_file($pathToDocument)) {
-            return ['errors' => 'Document not found on docserver'];
+            return ['errors' => 'Converted document not found on docserver'];
+        } elseif (!is_readable($pathToDocument)) {
+            return ['errors' => 'Converted document is not readable'];
         }
 
         $fullTextDocserver = DocserverModel::getCurrentDocserver(['collId' => $args['collId'], 'typeId' => 'FULLTEXT']);

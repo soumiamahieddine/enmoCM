@@ -266,7 +266,7 @@ class ResController
                 } else {
                     $collId = "attachments_coll";
                 }
-                $convertedDocument = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
+                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
                 if (empty($convertedDocument['errors'])) {
                     $attachmentTodisplay = $convertedDocument;
                 }
@@ -276,7 +276,7 @@ class ResController
                 $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
             }
         } else {
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
 
             if (empty($convertedDocument['errors'])) {
                 $documentTodisplay = $convertedDocument;
