@@ -15,6 +15,8 @@
 namespace Convert\controllers;
 
 use Convert\models\AdrModel;
+use Resource\models\ResModel;
+use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\TextFormatModel;
@@ -127,5 +129,28 @@ class FullTextController
         $fileContent = implode(' ', $cleanArrayFile);
 
         return $fileContent;
+    }
+
+    public static function getFailedIndexes(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['collId']);
+        ValidatorModel::stringType($args, ['collId']);
+
+        if ($args['collId'] == 'letterbox_coll') {
+            $resIds = ResModel::get([
+                'select'    => ['res_id'],
+                'table'     => ['res_letterbox'],
+                'where'     => ['status NOT IN (?)', 'fulltext_result = ?'],
+                'data'      => [['DEL'],'ERROR'],
+            ]);
+        } else {
+            $resIds = AttachmentModel::get([
+                'select'    => ['res_id'],
+                'table'     => [$args['collId'] == 'attachments_coll' ? 'res_attachments' : 'res_version_attachments'],
+                'where'     => ['attachment_type <> ?', 'status NOT IN (?)', 'fulltext_result = ?'],
+                'data'      => ['print_folder', ['DEL','OBS','TMP'],'ERROR'],
+            ]);
+        }
+        return $resIds;
     }
 }

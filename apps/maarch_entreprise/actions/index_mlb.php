@@ -2067,7 +2067,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         $customId = 'null';
     }
     $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $_SESSION['user']['UserId']]);
-    exec("php src/app/convert/scripts/FullTextScript.php {$customId} {$resId} 'letterbox_coll' {$user['id']} > /dev/null &");
+    exec("php src/app/convert/scripts/FullTextScript.php --custom {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$user['id']} > /dev/null &");
 
     if ($attach) {
         $idDoc = get_value_fields($formValues, 'res_id');

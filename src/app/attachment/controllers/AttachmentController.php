@@ -112,7 +112,7 @@ class AttachmentController
         $customId = CoreConfigModel::getCustomId();
         $customId = empty($customId) ? 'null' : $customId;
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
-        exec("php src/app/convert/scripts/FullTextScript.php {$customId} {$resId} {$collId} {$user['id']} > /dev/null &");
+        exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId {$collId} --userId {$user['id']} > /dev/null &");
 
         HistoryController::add([
             'tableName' => $body['table'],

@@ -20,6 +20,25 @@ use SrcCore\models\ValidatorModel;
 
 abstract class AttachmentModelAbstract
 {
+    public static function get(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
+
+        $aResources = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => empty($aArgs['table']) ? ['res_attachments'] : $aArgs['table'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
+        return $aResources;
+    }
+
+
     public static function getOnView(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);

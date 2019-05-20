@@ -87,7 +87,7 @@ class ResController
         $customId = CoreConfigModel::getCustomId();
         $customId = empty($customId) ? 'null' : $customId;
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
-        exec("php src/app/convert/scripts/FullTextScript.php {$customId} {$resId} 'letterbox_coll' {$user['id']} > /dev/null &");
+        exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$user['id']} > /dev/null &");
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
