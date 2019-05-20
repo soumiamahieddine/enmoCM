@@ -18,3 +18,22 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 VALUES ('FULLTEXT_ATTACHMENT', 'FULLTEXT', 'Full text indexes for attachments', 'N', 50000000000, 0, '/opt/maarch/docservers/indexes/attachments/', '2019-11-01 12:00:00.123456', 'attachments_coll');
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
 VALUES ('FULLTEXT_ATTACHMENT_VERSION', 'FULLTEXT', 'Full text indexes for documents', 'N', 50000000000, 0, '/opt/maarch/docservers/indexes/attachments_version/', '2019-11-01 12:00:00.123456', 'attachments_version_coll');
+
+/* REFACTORING */
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS converter_result;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS converter_result;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS convert_result;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS convert_result;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS convert_result;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS convert_attempts;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS convert_attempts;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS convert_attempts;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS fulltext_attempts;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS fulltext_attempts;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS fulltext_attempts;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_attempts;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_attempts;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_attempts;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_result;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_result;
