@@ -26,8 +26,10 @@ foreach ($customs as $custom) {
                 $collId = 'letterbox_coll';
             } elseif ((string)$collection->table == 'res_attachments') {
                 $collId = 'attachments_coll';
-            } else {
+            } elseif ((string)$collection->table == 'res_version_attachments') {
                 $collId = 'attachments_version_coll';
+            } else {
+                continue;
             }
 
             \Docserver\models\DocserverModel::update([
