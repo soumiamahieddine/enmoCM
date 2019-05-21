@@ -82,6 +82,12 @@ class FullTextController
             \Zend_Search_Lucene_Analysis_Analyzer::setDefault(new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
             $index->setMaxBufferedDocs(1000);
 
+            $term = new \Zend_Search_Lucene_Index_Term((integer)$args['resId'], 'Id');
+            $terms = $index->termDocs($term);
+            foreach ($terms as $value) {
+                $index->delete($value);
+            }
+
             $doc = new \Zend_Search_Lucene_Document();
 
             $doc->addField(\Zend_Search_Lucene_Field::UnIndexed('Id', (integer)$args['resId']));
@@ -89,7 +95,9 @@ class FullTextController
 
             $index->addDocument($doc);
             $index->commit();
-            $index->optimize();
+            if ((integer)$args['resId'] % 100 === 0) {
+                $index->optimize(); // Optimize every 100 documents
+            }
         } catch (\Exception $e) {
             return ['errors' => 'Full Text index failed : ' . $e];
         }
@@ -148,9 +156,9 @@ class FullTextController
         } else {
             $resIds = AttachmentModel::get([
                 'select'    => ['res_id'],
-                'table'     => [$args['collId'] == 'attachments_coll' ? 'res_attachments' : 'res_version_attachments'],
+                'isVersion' => $args['collId'] == 'attachments_version_coll',
                 'where'     => ['attachment_type <> ?', 'status NOT IN (?)', 'fulltext_result = ?'],
-                'data'      => ['print_folder', ['DEL','OBS','TMP'],'ERROR'],
+                'data'      => ['print_folder', ['DEL','OBS','TMP'], 'ERROR'],
             ]);
         }
         return $resIds;

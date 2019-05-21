@@ -42,7 +42,6 @@ class FullTextScript
     {
         $customId = '';
         $resId    = '';
-        $userId   = '';
         $collId   = '';
         $mode     = '';
 
