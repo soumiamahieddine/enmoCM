@@ -24,8 +24,9 @@ use SrcCore\models\DatabasePDO;
 use User\models\UserModel;
 
 // SAMPLE COMMANDS :
-// Launch index fulltext for specific document(for res_letterbox) : php FullTextScript.php --customId yourcustom --collId letterbox_coll --userId 10
-// Launch reindex failed fulltext (for res_letterbox) : php FullTextScript.php --customId yourcustom --collId letterbox_coll --mode reindex
+// (in root app)
+// Launch index fulltext for specific document(for res_letterbox) : php src/app/convert/scripts/FullTextScript.php --customId yourcustom --collId letterbox_coll --userId 10
+// Launch reindex failed fulltext (for res_letterbox) : php src/app/convert/scripts/FullTextScript.php --customId yourcustom --collId letterbox_coll --mode reindex
 
 // ARGS
 // --customId    : instance id;
