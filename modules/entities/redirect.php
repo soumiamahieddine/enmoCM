@@ -311,7 +311,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $stmt = $db->query(
             "select u.user_id, u.firstname, u.lastname, e.entity_id, e.entity_label "
             . "FROM " . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
-            . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
+            . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.status != 'SPD' and"
             . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
             . " e.enabled = 'Y' and ue.primary_entity='Y' and u.user_id = ?",
             array($userId)

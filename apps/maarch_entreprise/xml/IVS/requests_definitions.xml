@@ -17,12 +17,6 @@
     </requestDefinition>
 
     <!-- Admin architecture -->
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_architecture" >
-      <parameter name="admin" value="architecture"/>
-      <parameter name="page" value="choose_tree"/>
-      <parameter name="display" value="true"/>
-      <parameter name="tree_id"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_structure" >
       <parameter name="page" value="structure_up"/>
       <parameter name="display" value="true"/>
@@ -571,7 +565,6 @@
     <xi:include href="../../../../modules/entities/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/fileplan/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/folder/xml/IVS/requests_definitions.xml"/>
-    <xi:include href="../../../../modules/full_text/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/ldap/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/life_cycle/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/notes/xml/IVS/requests_definitions.xml"/>
@@ -602,7 +595,6 @@
     <xi:include href="../../../../modules/entities/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/fileplan/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/folder/xml/IVS/validation_rules.xml"/>
-    <xi:include href="../../../../modules/full_text/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/ldap/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/life_cycle/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/notes/xml/IVS/validation_rules.xml"/>
@@ -633,7 +625,6 @@
     <xi:include href="../../../../modules/entities/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/fileplan/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/folder/xml/IVS/data_types.xml"/>
-    <xi:include href="../../../../modules/full_text/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/ldap/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/life_cycle/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/notes/xml/IVS/data_types.xml"/>

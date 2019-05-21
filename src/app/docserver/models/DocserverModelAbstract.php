@@ -105,17 +105,14 @@ class DocserverModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-
-        $id = $aArgs['id'];
-        unset($aArgs['id']);
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table'     => 'docservers',
-            'set'       => $aArgs,
-            'where'     => ['id = ?'],
-            'data'      => [$id]
+            'table' => 'docservers',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
         ]);
 
         return true;

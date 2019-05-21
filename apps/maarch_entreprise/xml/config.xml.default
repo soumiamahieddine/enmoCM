@@ -55,7 +55,6 @@
         <extensions>
             <table>mlb_coll_ext</table>
         </extensions>
-        <path_to_lucene_index>/opt/maarch/docservers/indexes/letterbox_coll/</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>
@@ -95,7 +94,6 @@
         <extensions>
             <table/>
         </extensions>
-        <path_to_lucene_index>/opt/maarch/docservers/indexes/attachments_coll/</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>
@@ -105,7 +103,7 @@
         </categories>
     </COLLECTION>
     <COLLECTION>
-        <id>version_attachments_coll</id>
+        <id>attachments_version_coll</id>
         <label>_ATTACHMENTS_VERS_COLL</label>
         <table>res_version_attachments</table>
         <version_table>res_version_attachments</version_table>
@@ -119,7 +117,6 @@
         <extensions>
             <table/>
         </extensions>
-        <path_to_lucene_index>/opt/maarch/docservers/indexes/version_attachments_coll/</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>
@@ -255,10 +252,6 @@
     <MODULES>
         <moduleid>folder</moduleid>
         <comment>_FOLDERS_COMMENT</comment>
-    </MODULES>
-    <MODULES>
-        <moduleid>full_text</moduleid>
-        <comment>_FULL_TEXT</comment>
     </MODULES>
     <MODULES>
         <moduleid>notes</moduleid>

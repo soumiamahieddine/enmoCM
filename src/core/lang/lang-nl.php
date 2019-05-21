@@ -232,7 +232,6 @@ define('_CASES_COMMENT', 'Zaken');
 define('_ENTITIES_COMMENT', 'Eenheden');
 define('_FILEPLAN_COMMENT', 'Organisatorisch klasseringsplan');
 define('_FOLDERS_COMMENT', 'Mappen');
-define('_FULL_TEXT', 'Volle tekst');
 define('_NOTES_COMMENT', 'Opmerkingen');
 define('_NOTIFICATIONS_COMMENT', 'Meldingen');
 define('_TEMPLATES_COMMENT', 'Documentmodellen');

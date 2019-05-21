@@ -63,7 +63,6 @@ if (!$Class_Install->createDocservers($_REQUEST['docserverRoot'])) {
 $updateDocserversDB = $Class_Install->updateDocserversDB(
     $_REQUEST['docserverRoot']
 );
-$Class_Install->updateDocserverForXml($_REQUEST['docserverRoot']);
 
 $return['status'] = 1;
 $return['text'] = '';

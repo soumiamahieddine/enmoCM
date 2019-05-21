@@ -180,7 +180,6 @@ abstract class business_app_tools_Abstract extends Database
                         'script_search'        => (string) $col->script_search,
                         'script_search_result' => (string) $col->script_search_result,
                         'script_details'       => (string) $col->script_details,
-                        'path_to_lucene_index' => (string) $col->path_to_lucene_index,
                         'extensions'           => $tab,
                     );
                     
@@ -210,7 +209,6 @@ abstract class business_app_tools_Abstract extends Database
                         'script_search' => (string) $col->script_search,
                         'script_search_result' => (string) $col->script_search_result,
                         'script_details' => (string) $col->script_details,
-                        'path_to_lucene_index' => (string) $col->path_to_lucene_index,
                         'extensions' => $tab,
                     );
                 }

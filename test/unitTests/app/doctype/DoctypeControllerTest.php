@@ -561,7 +561,7 @@ class DoctypeControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $fileContent = file_get_contents('modules/convert/Test/Samples/test.txt');
+        $fileContent = file_get_contents('test/unitTests/samples/test.txt');
         $encodedFile = base64_encode($fileContent);
 
         $data = [

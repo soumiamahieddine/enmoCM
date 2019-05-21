@@ -233,7 +233,6 @@ define('_CASES_COMMENT', 'Affaires');
 define('_ENTITIES_COMMENT', 'Entités');
 define('_FILEPLAN_COMMENT', 'Plan de classement organisationnel');
 define('_FOLDERS_COMMENT', 'Dossiers');
-define('_FULL_TEXT', 'Plein texte');
 define('_NOTES_COMMENT', 'Annotations');
 define('_NOTIFICATIONS_COMMENT', 'Notifications');
 define('_TEMPLATES_COMMENT', 'Modèles de document');

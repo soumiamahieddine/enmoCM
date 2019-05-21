@@ -233,7 +233,6 @@ define('_CASES_COMMENT', 'Cases');
 define('_ENTITIES_COMMENT', 'Departments');
 define('_FILEPLAN_COMMENT', 'Organizational file plan');
 define('_FOLDERS_COMMENT', 'Folders');
-define('_FULL_TEXT', 'Full text');
 define('_NOTES_COMMENT', 'Notes');
 define('_NOTIFICATIONS_COMMENT', 'Notifications');
 define('_TEMPLATES_COMMENT', 'Templates');

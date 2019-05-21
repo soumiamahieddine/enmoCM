@@ -78,6 +78,17 @@ class ResController
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
         }
 
+        ConvertPdfController::convert([
+            'resId'     => $resId,
+            'collId'    => 'letterbox_coll',
+            'isVersion' => false
+        ]);
+
+        $customId = CoreConfigModel::getCustomId();
+        $customId = empty($customId) ? 'null' : $customId;
+        $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
+        exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$user['id']} > /dev/null &");
+
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $resId,
@@ -255,7 +266,7 @@ class ResController
                 } else {
                     $collId = "attachments_coll";
                 }
-                $convertedDocument = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
+                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
                 if (empty($convertedDocument['errors'])) {
                     $attachmentTodisplay = $convertedDocument;
                 }
@@ -265,7 +276,7 @@ class ResController
                 $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
             }
         } else {
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
 
             if (empty($convertedDocument['errors'])) {
                 $documentTodisplay = $convertedDocument;

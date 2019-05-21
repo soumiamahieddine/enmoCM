@@ -368,8 +368,10 @@ if (count($_REQUEST['meta']) > 0) {
                     
                     $_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
 
-                    foreach ($_SESSION['collections'] as $key => $tmpCollection) {
-                        $path_to_lucene_index = $tmpCollection['path_to_lucene_index'];
+                    foreach (['letterbox_coll', 'attachments_coll', 'attachments_version_coll'] as $key => $tmpCollection) {
+                        $fullTextDocserver = \Docserver\models\DocserverModel::getCurrentDocserver(['collId' => $tmpCollection, 'typeId' => 'FULLTEXT']);
+
+                        $path_to_lucene_index = $fullTextDocserver['path_template'];
 
                         if (is_dir($path_to_lucene_index)) {
                             if (!$func->isDirEmpty($path_to_lucene_index)) {
@@ -386,10 +388,10 @@ if (count($_REQUEST['meta']) > 0) {
                                     $cptIds ++;
                                 }
 
-                                if ($tmpCollection['table'] == 'res_attachments') {
+                                if ($tmpCollection == 'attachments_coll') {
                                     $tmpArray = preg_split("/[,' ]/", $Liste_Ids);
                                     array_splice($tmpArray, 0, 1);
-                                    $_SESSION['fullTextAttachments']['attachments'] = $tmpArray;
+                                    $_SESSION['fullTextAttachments']['attachments'] = array_filter($tmpArray);
                                     $db = new Database();
                                     $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('print_folder')");
                                     $idMasterDatas = [];
@@ -402,10 +404,10 @@ if (count($_REQUEST['meta']) > 0) {
                                         $Liste_Ids .= ", '{$tmpIdMaster->res_id_master}'";
                                         $_SESSION['fullTextAttachments']['letterbox'][] = $tmpIdMaster->res_id_master;
                                     }
-                                } elseif ($tmpCollection['table'] == 'res_version_attachments') {
+                                } elseif ($tmpCollection == 'attachments_version_coll') {
                                     $tmpArray = preg_split("/[,' ]/", $Liste_Ids);
                                     array_splice($tmpArray, 0, 1);
-                                    $_SESSION['fullTextAttachments']['versionAttachments'] = $tmpArray;
+                                    $_SESSION['fullTextAttachments']['versionAttachments'] = array_filter($tmpArray);
                                     $db = new Database();
                                     $stmt = $db->query("SELECT DISTINCT res_id_master FROM res_version_attachments WHERE res_id IN ($Liste_Ids) AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('print_folder')");
                                     $idMasterDatas = [];
@@ -426,7 +428,7 @@ if (count($_REQUEST['meta']) > 0) {
 
                                 $where_request .= " res_id IN ($Liste_Ids) ";
 
-                                if (empty($_SESSION['collections'][$key + 1])) {
+                                if ($key == 2) {
                                     $where_request .= ') and ';
                                 } else {
                                     $where_request .= ' or ';
@@ -438,7 +440,7 @@ if (count($_REQUEST['meta']) > 0) {
 
                                 $where_request .= " 1=-1 ";
 
-                                if (empty($_SESSION['collections'][$key + 1])) {
+                                if ($key == 2) {
                                     $where_request .= ') and ';
                                 } else {
                                     $where_request .= ' or ';
@@ -451,7 +453,7 @@ if (count($_REQUEST['meta']) > 0) {
 
                             $where_request .= " 1=-1 ";
 
-                            if (empty($_SESSION['collections'][$key + 1])) {
+                            if ($key == 2) {
                                 $where_request .= ') and ';
                             } else {
                                 $where_request .= ' or ';

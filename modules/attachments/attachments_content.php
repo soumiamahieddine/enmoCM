@@ -540,6 +540,13 @@ if (isset($_POST['add']) && $_POST['add']) {
                                     unset($_SESSION['upfile'][$attachNum]['fileNamePdfOnTmp']);
                                 }
 
+                                $customId = \SrcCore\models\CoreConfigModel::getCustomId();
+                                if (empty($customId)) {
+                                    $customId = 'null';
+                                }
+                                $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $_SESSION['user']['UserId']]);
+                                exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$id} --collId 'attachments_coll' --userId {$user['id']} > /dev/null &");
+
                                 if ($id == false) {
                                     $error = $resAttach->get_error();
                                 } else {
@@ -1186,21 +1193,20 @@ if (isset($_POST['add']) && $_POST['add']) {
         }
     }
 
+    if ((int) $_REQUEST['relation'] == 1 && $is_new_version == false) {
+        $targetCollId = 'attachments_coll';
+        $targetAdrVersion = false;
+    } else {
+        $targetCollId = 'attachments_version_coll';
+        $targetAdrVersion = true;
+    }
+
     //copie de la version PDF de la pièce si mode de conversion sur le client
     if ($_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && empty($error) && $_SESSION['upfile'][0]['upAttachment'] != false && empty($_REQUEST['mailing'])) {
         if ($id != null) {
             $_SESSION['new_id'] = $id;
         } else {
             $_SESSION['new_id'] = $_REQUEST['res_id'];
-        }
-        
-
-        if ((int) $_REQUEST['relation'] == 1 && $is_new_version == false) {
-            $targetCollId = 'attachments_coll';
-            $targetAdrVersion = false;
-        } else {
-            $targetCollId = 'attachments_version_coll';
-            $targetAdrVersion = true;
         }
 
         $resource = file_get_contents($_SESSION['config']['tmppath'] . $_SESSION['upfile'][0]['fileNamePdfOnTmp']);
@@ -1222,6 +1228,13 @@ if (isset($_POST['add']) && $_POST['add']) {
             'fingerprint'   => $storeResult['fingerPrint'],
         ]);
     }
+
+    $customId = \SrcCore\models\CoreConfigModel::getCustomId();
+    if (empty($customId)) {
+        $customId = 'null';
+    }
+    $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $_SESSION['user']['UserId']]);
+    exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$id} --collId {$targetCollId} --userId {$user['id']} > /dev/null &");
 
     if (empty($error)) {
         //DELETE TEMPORARY BACKUP

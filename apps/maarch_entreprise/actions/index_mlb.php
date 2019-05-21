@@ -1863,6 +1863,12 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             'filename'      => $storeResult['file_destination_name'],
             'fingerprint'   => $storeResult['fingerPrint'],
         ]);
+    } else {
+        \Convert\controllers\ConvertPdfController::convert([
+            'resId'     => $resId,
+            'collId'    => 'letterbox_coll',
+            'isVersion' => false,
+        ]);
     }
     \History\controllers\HistoryController::add([
         'tableName' => 'res_letterbox',
@@ -2055,6 +2061,13 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
         return false;
     }
+
+    $customId = \SrcCore\models\CoreConfigModel::getCustomId();
+    if (empty($customId)) {
+        $customId = 'null';
+    }
+    $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $_SESSION['user']['UserId']]);
+    exec("php src/app/convert/scripts/FullTextScript.php --custom {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$user['id']} > /dev/null &");
 
     if ($attach) {
         $idDoc = get_value_fields($formValues, 'res_id');

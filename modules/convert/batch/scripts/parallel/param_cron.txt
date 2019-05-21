@@ -1,6 +1,0 @@
-# tous les jours toutes les 2 heures de 0h a 20h du lundi au samedi lancement des batchs de conversion
-0 0-20/2 * * 1-6 maarch /var/www/html/MaarchCourrier/modules/convert/batch/scripts/parallel/launch_convert_letterbox_0.sh
-1 0-20/2 * * 1-6 maarch /var/www/html/MaarchCourrier/modules/convert/batch/scripts/parallel/launch_convert_letterbox_1.sh
-2 0-20/2 * * 1-6 maarch /var/www/html/MaarchCourrier/modules/convert/batch/scripts/parallel/launch_convert_letterbox_2.sh
-3 0-20/2 * * 1-6 maarch /var/www/html/MaarchCourrier/modules/convert/batch/scripts/parallel/launch_convert_letterbox_3.sh
-4 0-20/2 * * 1-6 maarch /var/www/html/MaarchCourrier/modules/convert/batch/scripts/parallel/launch_convert_letterbox_4.sh

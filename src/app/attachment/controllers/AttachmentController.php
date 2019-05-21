@@ -36,6 +36,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use Template\controllers\TemplateController;
+use User\models\UserModel;
 
 class AttachmentController
 {
@@ -100,6 +101,18 @@ class AttachmentController
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[AttachmentController create] ' . $resId['errors']]);
         }
+
+        $collId = empty($body['version']) ? 'attachments_coll' : 'attachments_version_coll';
+        ConvertPdfController::convert([
+            'resId'     => $resId,
+            'collId'    => $collId,
+            'isVersion' => !empty($body['version'])
+        ]);
+
+        $customId = CoreConfigModel::getCustomId();
+        $customId = empty($customId) ? 'null' : $customId;
+        $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
+        exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId {$collId} --userId {$user['id']} > /dev/null &");
 
         HistoryController::add([
             'tableName' => $body['table'],

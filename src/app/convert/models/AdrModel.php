@@ -28,7 +28,7 @@ class AdrModel
 
         if ($aArgs['collId'] == 'letterbox_coll') {
             $table = "adr_letterbox";
-        } else if ($aArgs['isVersion']) {
+        } else if ($aArgs['collId'] == 'attachments_version_coll' || $aArgs['isVersion']) {
             $table = "adr_attachments_version";
         } else {
             $table = "adr_attachments";
