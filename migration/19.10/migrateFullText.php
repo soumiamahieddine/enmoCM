@@ -19,6 +19,8 @@ foreach ($customs as $custom) {
     $xmlfile = simplexml_load_file($path);
 
     if ($xmlfile) {
+
+        $i = 0;
         foreach ($xmlfile->COLLECTION as $collection) {
             if ((string)$collection->table == 'res_letterbox') {
                 $collId = 'letterbox_coll';
@@ -35,12 +37,18 @@ foreach ($customs as $custom) {
                 'where' => ['docserver_type_id = ?', 'coll_id = ?'],
                 'data'  => ['FULLTEXT', $collId]
             ]);
+            unset($xmlfile->COLLECTION[$i]->path_to_lucene_index);
+
+            ++$i;
         }
 
-        foreach ($xmlfile->MODULES as $key => $module) {
+        $i = 0;
+        foreach ($xmlfile->MODULES as $module) {
             if ((string)$module->moduleid == 'full_text') {
-                unset($xmlfile->MODULES[$key]);
+                unset($xmlfile->MODULES[$i]);
+                break;
             }
+            ++$i;
         }
 
         $res = $xmlfile->asXML();
