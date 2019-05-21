@@ -152,6 +152,7 @@ class FullTextController
                 'table'     => ['res_letterbox'],
                 'where'     => ['status NOT IN (?)', 'fulltext_result = ?'],
                 'data'      => [['DEL'],'ERROR'],
+                'orderBy'      => ['res_id DESC'],
             ]);
         } else {
             $resIds = AttachmentModel::get([
@@ -159,6 +160,7 @@ class FullTextController
                 'isVersion' => $args['collId'] == 'attachments_version_coll',
                 'where'     => ['attachment_type <> ?', 'status NOT IN (?)', 'fulltext_result = ?'],
                 'data'      => ['print_folder', ['DEL','OBS','TMP'], 'ERROR'],
+                'orderBy'      => ['res_id DESC'],
             ]);
         }
         return $resIds;

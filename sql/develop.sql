@@ -7,8 +7,12 @@
 -- *************************************************************************--
 UPDATE parameters SET param_value_string = '19.10.1' WHERE id = 'database_version';
 
-UPDATE users SET status = 'SPD' WHERE enabled = 'N' and (status = 'OK' or status = 'ABS');
-ALTER TABLE users DROP COLUMN IF EXISTS enabled;
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'users') AND attname = 'enabled') THEN
+    UPDATE users SET status = 'SPD' WHERE enabled = 'N' and (status = 'OK' or status = 'ABS');
+    ALTER TABLE users DROP COLUMN IF EXISTS enabled;
+  END IF;
+END$$;
 
 /* FULL TEXT */
 DELETE FROM docservers where docserver_type_id = 'FULLTEXT';
