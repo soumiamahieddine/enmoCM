@@ -179,6 +179,20 @@ class MaarchParapheurController
         $senderPrimaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         if ($aArgs['objectSent'] == 'attachment') {
+            $listinstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'users.user_id', 'requested_signature'], 'id' => $mainResource[0]['res_id']]);
+            if (empty($listinstances)) {
+                return ['error' => 'No visa workflow'];
+            }
+
+            $workflow = [];
+            foreach ($listinstances as $user) {
+                $externalId = json_decode($user['external_id'], true);
+                if (empty($externalId['maarchParapheur'])) {
+                    return ['error' => 'Some users does not exist in Maarch Parapheur'];
+                }
+                $workflow[] = ['processingUser' => $user['user_id'], 'mode' => ($user['requested_signature'] ? 'sign' : 'visa')];
+            }
+
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
 
             $attachments = AttachmentModel::getOnView([
@@ -249,12 +263,11 @@ class MaarchParapheurController
                     $bodyData = [
                         'title'           => $value['title'],
                         'reference'       => $value['identifier'],
-                        'mode'            => $aArgs['config']['data']['signature'],
                         'encodedDocument' => $encodedZipDocument,
-                        'processingUser'  => $processingUser,
                         'sender'          => trim($sender['firstname'] . ' ' .$sender['lastname']),
                         'deadline'        => $processLimitDate,
                         'attachments'     => $attachmentsData,
+                        'workflow'        => $workflow,
                         'metadata'        => $metadata
                     ];
         
@@ -282,15 +295,15 @@ class MaarchParapheurController
                 $metadata[_RECIPIENTS] = $contact;
             }
 
+            $workflow = [['processingUser' => $processingUser, 'mode' => 'note']];
             $bodyData = [
-                'title'              => $mainResource[0]['subject'],
-                'reference'          => $mainResource[0]['alt_identifier'],
-                'mode'               => $aArgs['config']['data']['annotation'],
-                'encodedDocument'    => $encodedMainZipFile,
-                'processingUser'     => $processingUser,
-                'sender'             => trim($sender['firstname'] . ' ' .$sender['lastname']),
-                'deadline'           => $processLimitDate,
-                'metadata'           => $metadata
+                'title'            => $mainResource[0]['subject'],
+                'reference'        => $mainResource[0]['alt_identifier'],
+                'encodedDocument'  => $encodedMainZipFile,
+                'sender'           => trim($sender['firstname'] . ' ' .$sender['lastname']),
+                'deadline'         => $processLimitDate,
+                'workflow'         => $workflow,
+                'metadata'         => $metadata
             ];
 
             $response = CurlModel::exec([
