@@ -450,20 +450,6 @@ class PreProcessActionController
                         $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
                     }
 
-                    $listinstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'firstname', 'lastname'], 'id' => $resId]);
-                    if (empty($listinstances)) {
-                        $additionalsInfos['visaWorkflowError'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noVisaWorkflow'];
-                        continue;
-                    }
-
-                    foreach ($listinstances as $user) {
-                        $externalId = json_decode($user['external_id'], true);
-                        if (!in_array($externalId['maarchParapheur'], $aUsersInMP)) {
-                            $additionalsInfos['visaWorkflowError'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noUserDefinedInMaarchParapheur'];
-                            continue 2;
-                        }
-                    }
-
                     $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
                     if (empty($adrMainInfo['docserver_id'])) {
                         $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];
@@ -480,6 +466,20 @@ class PreProcessActionController
                         continue;
                     }
                     $additionalsInfos['mails'][] = ['res_id' => $resId];
+
+                    $listinstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'firstname', 'lastname'], 'id' => $resId]);
+                    if (empty($listinstances)) {
+                        $additionalsInfos['visaWorkflowError'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noVisaWorkflow'];
+                        continue;
+                    }
+
+                    foreach ($listinstances as $user) {
+                        $externalId = json_decode($user['external_id'], true);
+                        if (!in_array($externalId['maarchParapheur'], $aUsersInMP)) {
+                            $additionalsInfos['visaWorkflowError'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noUserDefinedInMaarchParapheur'];
+                            continue 2;
+                        }
+                    }
 
                     // Check attachments
                     $attachments = AttachmentModel::getOnView([
