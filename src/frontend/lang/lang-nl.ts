@@ -1030,4 +1030,6 @@ export const LANG_NL = {
     "userOK" : "Active", //_TO_TRANSLATE
     "userSPD" : "Inactive", //_TO_TRANSLATE
     "userABS" : "Absent", //_TO_TRANSLATE
+    "noVisaWorkflow"                        : "No visa workflow set up.", //_TO_TRANSLATE
+    "visaWorkflowWillBeSend"                : "Visa workflow will be send to Maarch Parapheur", //_TO_TRANSLATE
 };

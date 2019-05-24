@@ -27,10 +27,11 @@ export class MaarchParaphComponent implements OnInit {
     ngOnInit(): void { }
 
     checkValidParaph() {
-        if (!this.externalSignatoryBookDatas.processingUser || 
-            this.additionalsInfos.users.length == 0 || 
-            (this.externalSignatoryBookDatas.objectSent == 'attachment' && this.additionalsInfos.attachments.length == 0) || 
-            (this.externalSignatoryBookDatas.objectSent == 'mail' && this.additionalsInfos.mails.length == 0)) {
+        if ((this.externalSignatoryBookDatas.objectSent == 'attachment' && this.additionalsInfos.attachments.length == 0) || 
+            (this.externalSignatoryBookDatas.objectSent == 'mail' && 
+                (this.additionalsInfos.mails.length == 0 || !this.externalSignatoryBookDatas.processingUser || this.additionalsInfos.users.length == 0)
+            )
+            ) {
             return true;
         } else {
             return false;

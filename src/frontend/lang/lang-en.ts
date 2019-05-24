@@ -1003,4 +1003,6 @@ export const LANG_EN = {
     "userOK" : "Active",
     "userSPD" : "Inactive",
     "userABS" : "Absent",
+    "noVisaWorkflow"                        : "No visa workflow set up.",
+    "visaWorkflowWillBeSend"                : "Visa workflow will be send to Maarch Parapheur"
 };

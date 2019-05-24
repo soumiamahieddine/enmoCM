@@ -286,33 +286,6 @@ abstract class visa_Abstract extends Database
             return false;
         }
 
-        /*$resFirstFiles = [];
-
-        while ($res = $stmt->fetchObject()) {
-            if (($res->format == 'doc' || $res->format == 'docx' || $res->format == 'odt') && !in_array($res->attachment_type, ['simple_attachment', 'simple_attachment_rp'])) {
-                array_push($resFirstFiles, $res);
-            }
-        }
-
-        $stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND coll_id = ? AND attachment_type IN ('converted_pdf') AND status NOT IN ('DEL','OBS','TMP')", array($res_id, $coll_id));
-
-        $resSecondFiles = [];
-
-        while ($res = $stmt->fetchObject()) {
-            array_push($resSecondFiles, $res->filename);
-        }
-        foreach ($resFirstFiles as $tmpObj) {
-            if ($this->hasSameFileInArray($tmpObj->filename, $resSecondFiles)) {
-                continue;
-            }
-            if (!$this->errorMessageVisa) {
-                $this->errorMessageVisa .= _PLEASE_CONVERT_PDF_VISA;
-            }
-            $this->errorMessageVisa .= '<br/>&nbsp;&nbsp;';
-            $this->errorMessageVisa .= $_SESSION['attachment_types'][$tmpObj->attachment_type].' : ';
-            $this->errorMessageVisa .= $tmpObj->title;
-        }*/
-
         return true;
     }
 
@@ -659,14 +632,12 @@ abstract class visa_Abstract extends Database
             foreach ($tab_userentities as $key => $value) {
                 $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
                 foreach ($tab_users as $user) {
-                    if ($user['enabled'] == 'Y') {
-                        if ($tab_userentities[$key]['entity_id'] == $user['entity_id']) {
-                            $selected = ' ';
-                            if ($user['id'] == $step['user_id']) {
-                                $selected = ' selected';
-                            }
-                            $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].' '.$user['firstname'].'</option>';
+                    if ($tab_userentities[$key]['entity_id'] == $user['entity_id']) {
+                        $selected = ' ';
+                        if ($user['id'] == $step['user_id']) {
+                            $selected = ' selected';
                         }
+                        $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].' '.$user['firstname'].'</option>';
                     }
                 }
                 $str .= '</optgroup>';

@@ -1,4 +1,4 @@
-<div class="col-md-12" style="padding-top: 10px;" *ngIf="additionalsInfos.users.length != 0">
+<div class="col-md-12" style="padding-top: 10px;" *ngIf="additionalsInfos.users.length != 0 && externalSignatoryBookDatas.objectSent == 'mail'">
     <mat-form-field>
         <mat-label>{{lang.userMaarchParapheur}}</mat-label>
         <mat-select name="processingUser" [(ngModel)]="externalSignatoryBookDatas.processingUser" required>
@@ -10,6 +10,23 @@
 </div>
 <div class="col-md-12" *ngIf="additionalsInfos.users.length == 0">
     {{lang.noUserDefinedInMaarchParapheur}}
+</div>
+<div class="col-md-12" *ngIf="externalSignatoryBookDatas.objectSent == 'attachment'">
+    <div class="alert-message alert-message-info" role="alert">{{lang.visaWorkflowWillBeSend}}</div>
+</div>
+<div class="col-md-12" *ngIf="additionalsInfos.visaWorkflowError && externalSignatoryBookDatas.objectSent == 'attachment'">
+    <div>
+        <div class="alert-message alert-message-danger mailList" role="alert">
+            <p>
+                {{lang.canNotMakeAction}} :
+            </p>
+            <ul>
+                <li *ngFor="let visaError of additionalsInfos.visaWorkflowError">
+                    <b>{{visaError.alt_identifier}}</b> : {{lang[visaError.reason]}}
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 <div class="col-sm-12" *ngIf="additionalsInfos.users.length != 0">
     <mat-radio-group required name="objectSent" [(ngModel)]="externalSignatoryBookDatas.objectSent">

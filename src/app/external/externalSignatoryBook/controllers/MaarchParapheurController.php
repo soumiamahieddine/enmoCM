@@ -75,76 +75,77 @@ class MaarchParapheurController
             'data'   => [$aArgs['resIdMaster']]
         ]);
 
-        if ($aArgs['objectSent'] == 'mail') {
-            if (empty($mainResource)) {
-                return ['error' => 'Mail does not exist'];
-            }
+        if (empty($mainResource)) {
+            return ['error' => 'Mail does not exist'];
+        }
 
-            $units = [];
-            $units[] = ['unit' => 'primaryInformations'];
-            $units[] = ['unit' => 'secondaryInformations', 'label' => _SECONDARY_INFORMATION];
-            $units[] = ['unit' => 'senderRecipientInformations', 'label' => _DEST_INFORMATION];
-            $units[] = ['unit' => 'diffusionList', 'label' => _DIFFUSION_LIST];
-            $units[] = ['unit' => 'visaWorkflow', 'label' => _VISA_WORKFLOW];
-            $units[] = ['unit' => 'opinionWorkflow', 'label' => _AVIS_WORKFLOW];
-            $units[] = ['unit' => 'notes', 'label' => _NOTES_COMMENT];
+        $units = [];
+        $units[] = ['unit' => 'primaryInformations'];
+        $units[] = ['unit' => 'secondaryInformations',       'label' => _SECONDARY_INFORMATION];
+        $units[] = ['unit' => 'senderRecipientInformations', 'label' => _DEST_INFORMATION];
+        $units[] = ['unit' => 'diffusionList',               'label' => _DIFFUSION_LIST];
+        $units[] = ['unit' => 'visaWorkflow',                'label' => _VISA_WORKFLOW];
+        $units[] = ['unit' => 'opinionWorkflow',             'label' => _AVIS_WORKFLOW];
+        $units[] = ['unit' => 'notes',                       'label' => _NOTES_COMMENT];
 
-            // Data for resources
-            $tmpIds = [$aArgs['resIdMaster']];
-            $data   = [];
-            foreach ($units as $unit) {
-                if ($unit['unit'] == 'notes') {
-                    $data['notes'] = NoteModel::get([
-                        'select'   => ['id', 'note_text', 'user_id', 'creation_date', 'identifier'],
-                        'where'    => ['identifier in (?)'],
-                        'data'     => [$tmpIds],
-                        'order_by' => ['identifier']]);
+        // Data for resources
+        $tmpIds = [$aArgs['resIdMaster']];
+        $data   = [];
+        foreach ($units as $unit) {
+            if ($unit['unit'] == 'notes') {
+                $data['notes'] = NoteModel::get([
+                    'select'   => ['id', 'note_text', 'user_id', 'creation_date', 'identifier'],
+                    'where'    => ['identifier in (?)'],
+                    'data'     => [$tmpIds],
+                    'order_by' => ['identifier']]);
 
-                    $userEntities = EntityModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['entity_id']]);
-                    $data['userEntities'] = [];
-                    foreach ($userEntities as $userEntity) {
-                        $data['userEntities'][] = $userEntity['entity_id'];
-                    }
-                } elseif ($unit['unit'] == 'opinionWorkflow') {
-                    $data['listInstancesOpinion'] = ListInstanceModel::get([
-                        'select'    => ['item_id', 'process_date', 'res_id'],
-                        'where'     => ['difflist_type = ?', 'res_id in (?)'],
-                        'data'      => ['AVIS_CIRCUIT', $tmpIds],
-                        'orderBy'   => ['listinstance_id']
-                    ]);
-                } elseif ($unit['unit'] == 'visaWorkflow') {
-                    $data['listInstancesVisa'] = ListInstanceModel::get([
-                        'select'    => ['item_id', 'requested_signature', 'process_date', 'res_id'],
-                        'where'     => ['difflist_type = ?', 'res_id in (?)'],
-                        'data'      => ['VISA_CIRCUIT', $tmpIds],
-                        'orderBy'   => ['listinstance_id']
-                    ]);
-                } elseif ($unit['unit'] == 'diffusionList') {
-                    $data['listInstances'] = ListInstanceModel::get([
-                        'select'  => ['item_id', 'item_type', 'item_mode', 'res_id'],
-                        'where'   => ['difflist_type = ?', 'res_id in (?)'],
-                        'data'    => ['entity_id', $tmpIds],
-                        'orderBy' => ['listinstance_id']
-                    ]);
-                } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                    $data['mlbCollExt'] = ResModel::getExt([
-                        'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
-                        'where'  => ['res_id in (?)'],
-                        'data'   => [$tmpIds]
-                    ]);
+                $userEntities = EntityModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['entity_id']]);
+                $data['userEntities'] = [];
+                foreach ($userEntities as $userEntity) {
+                    $data['userEntities'][] = $userEntity['entity_id'];
                 }
+            } elseif ($unit['unit'] == 'opinionWorkflow') {
+                $data['listInstancesOpinion'] = ListInstanceModel::get([
+                    'select'    => ['item_id', 'process_date', 'res_id'],
+                    'where'     => ['difflist_type = ?', 'res_id in (?)'],
+                    'data'      => ['AVIS_CIRCUIT', $tmpIds],
+                    'orderBy'   => ['listinstance_id']
+                ]);
+            } elseif ($unit['unit'] == 'visaWorkflow') {
+                $data['listInstancesVisa'] = ListInstanceModel::get([
+                    'select'    => ['item_id', 'requested_signature', 'process_date', 'res_id'],
+                    'where'     => ['difflist_type = ?', 'res_id in (?)'],
+                    'data'      => ['VISA_CIRCUIT', $tmpIds],
+                    'orderBy'   => ['listinstance_id']
+                ]);
+            } elseif ($unit['unit'] == 'diffusionList') {
+                $data['listInstances'] = ListInstanceModel::get([
+                    'select'  => ['item_id', 'item_type', 'item_mode', 'res_id'],
+                    'where'   => ['difflist_type = ?', 'res_id in (?)'],
+                    'data'    => ['entity_id', $tmpIds],
+                    'orderBy' => ['listinstance_id']
+                ]);
+            } elseif ($unit['unit'] == 'senderRecipientInformations') {
+                $data['mlbCollExt'] = ResModel::getExt([
+                    'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
+                    'where'  => ['res_id in (?)'],
+                    'data'   => [$tmpIds]
+                ]);
             }
+        }
 
-            $pdf = new Fpdi('P', 'pt');
-            $pdf->setPrintHeader(false);
-            SummarySheetController::createSummarySheet($pdf, ['resource' => $mainResource[0], 'units' => $units, 'login' => $aArgs['userId'], 'data' => $data]);
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+        SummarySheetController::createSummarySheet($pdf, ['resource' => $mainResource[0], 'units' => $units, 'login' => $aArgs['userId'], 'data' => $data]);
 
-            $tmpPath = CoreConfigModel::getTmpPath();
-            $filename = $tmpPath . "summarySheet_".$aArgs['resIdMaster'] . "_" . $aArgs['userId'] ."_".rand().".pdf";
-            $pdf->Output($filename, 'F');
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $filename = $tmpPath . "summarySheet_".$aArgs['resIdMaster'] . "_" . $aArgs['userId'] ."_".rand().".pdf";
+        $pdf->Output($filename, 'F');
 
-            $concatPdf = new Fpdi('P', 'pt');
-            $concatPdf->setPrintHeader(false);
+        $concatPdf = new Fpdi('P', 'pt');
+        $concatPdf->setPrintHeader(false);
+
+        if ($aArgs['objectSent'] == 'mail') {
             foreach ([$filename, $arrivedMailMainfilePath] as $file) {
                 $pageCount = $concatPdf->setSourceFile($file);
                 for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
@@ -178,6 +179,20 @@ class MaarchParapheurController
         $senderPrimaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         if ($aArgs['objectSent'] == 'attachment') {
+            $listinstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'users.user_id', 'requested_signature'], 'id' => $mainResource[0]['res_id']]);
+            if (empty($listinstances)) {
+                return ['error' => 'No visa workflow'];
+            }
+
+            $workflow = [];
+            foreach ($listinstances as $user) {
+                $externalId = json_decode($user['external_id'], true);
+                if (empty($externalId['maarchParapheur'])) {
+                    return ['error' => 'Some users does not exist in Maarch Parapheur'];
+                }
+                $workflow[] = ['processingUser' => $user['user_id'], 'mode' => ($user['requested_signature'] ? 'sign' : 'visa')];
+            }
+
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
 
             $attachments = AttachmentModel::getOnView([
@@ -222,6 +237,13 @@ class MaarchParapheurController
                             'title'           => $mainResource[0]['subject'],
                             'reference'       => $mainResource[0]['alt_identifier']
                         ]];
+
+                        $summarySheetEncodedZip = MaarchParapheurController::createZip(['filepath' => $filename, 'filename' => "summarySheet.pdf"]);
+                        $attachmentsData[] = [
+                            'encodedDocument' => $summarySheetEncodedZip,
+                            'title'           => "summarySheet.pdf",
+                            'reference'       => ""
+                        ];
                     } else {
                         $attachmentsData = [];
                     }
@@ -241,12 +263,11 @@ class MaarchParapheurController
                     $bodyData = [
                         'title'           => $value['title'],
                         'reference'       => $value['identifier'],
-                        'mode'            => $aArgs['config']['data']['signature'],
                         'encodedDocument' => $encodedZipDocument,
-                        'processingUser'  => $processingUser,
                         'sender'          => trim($sender['firstname'] . ' ' .$sender['lastname']),
                         'deadline'        => $processLimitDate,
                         'attachments'     => $attachmentsData,
+                        'workflow'        => $workflow,
                         'metadata'        => $metadata
                     ];
         
@@ -274,15 +295,15 @@ class MaarchParapheurController
                 $metadata[_RECIPIENTS] = $contact;
             }
 
+            $workflow = [['processingUser' => $processingUser, 'mode' => 'note']];
             $bodyData = [
-                'title'              => $mainResource[0]['subject'],
-                'reference'          => $mainResource[0]['alt_identifier'],
-                'mode'               => $aArgs['config']['data']['annotation'],
-                'encodedDocument'    => $encodedMainZipFile,
-                'processingUser'     => $processingUser,
-                'sender'             => trim($sender['firstname'] . ' ' .$sender['lastname']),
-                'deadline'           => $processLimitDate,
-                'metadata'           => $metadata
+                'title'            => $mainResource[0]['subject'],
+                'reference'        => $mainResource[0]['alt_identifier'],
+                'encodedDocument'  => $encodedMainZipFile,
+                'sender'           => trim($sender['firstname'] . ' ' .$sender['lastname']),
+                'deadline'         => $processLimitDate,
+                'workflow'         => $workflow,
+                'metadata'         => $metadata
             ];
 
             $response = CurlModel::exec([
