@@ -408,12 +408,12 @@ class MaarchParapheurController
             'method'   => 'GET'
         ]);
 
-        return $response['encodedDocument'];
+        return $response['document'];
     }
 
     public static function getState($aArgs)
     {
-        $step['status'] == 'validated';
+        $state['status'] = 'validated';
         foreach ($aArgs['workflow'] as $step) {
             if ($step['status'] == 'REF') {
                 $state['status'] = 'refused';
