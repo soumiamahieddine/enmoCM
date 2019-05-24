@@ -1037,5 +1037,6 @@ export const LANG_FR = {
     "userSPD" : "Inactif",
     "userABS" : "Absent",
     "noVisaWorkflow"                        : "Aucun circuit de visa paramétré.",
-    "visaWorkflowWillBeSend"                : "Le circuit visa des courriers sera envoyé à Maarch Parapheur"
+    "visaWorkflowWillBeSend"                : "Le circuit visa des courriers sera envoyé à Maarch Parapheur",
+    "usersNotExistedInMaarchParapheur"      : "Certains utilisateurs n'existent pas dans Maarch Parapheur"
 };

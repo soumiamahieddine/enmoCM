@@ -1032,4 +1032,5 @@ export const LANG_NL = {
     "userABS" : "Absent", //_TO_TRANSLATE
     "noVisaWorkflow"                        : "No visa workflow set up.", //_TO_TRANSLATE
     "visaWorkflowWillBeSend"                : "Visa workflow will be send to Maarch Parapheur", //_TO_TRANSLATE
+    "usersNotExistedInMaarchParapheur"      : "Some users does not exist in Maarch Parapheur", //_TO_TRANSLATE
 };

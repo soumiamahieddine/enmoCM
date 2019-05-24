@@ -476,7 +476,7 @@ class PreProcessActionController
                     foreach ($listinstances as $user) {
                         $externalId = json_decode($user['external_id'], true);
                         if (!in_array($externalId['maarchParapheur'], $aUsersInMP)) {
-                            $additionalsInfos['visaWorkflowError'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noUserDefinedInMaarchParapheur'];
+                            $additionalsInfos['visaWorkflowError'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'usersNotExistedInMaarchParapheur'];
                             continue 2;
                         }
                     }
