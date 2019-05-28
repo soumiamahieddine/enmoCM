@@ -59,12 +59,10 @@ trait ExternalSignatoryBookTrait
                     return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }
 
-                $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $args['data']['processingUser']]);
                 $sendedInfo = MaarchParapheurController::sendDatas([
                     'config'           => $config,
                     'resIdMaster'      => $args['resId'],
-                    'processingUser'   => $processingUserInfo['login'],
-                    'objectSent'       => $args['data']['objectSent'],
+                    'objectSent'       => 'attachment',
                     'userId'           => $GLOBALS['userId']
                 ]);
                 if (!empty($sendedInfo['error'])) {
@@ -73,7 +71,7 @@ trait ExternalSignatoryBookTrait
                     $attachmentToFreeze = $sendedInfo['sended'];
                 }
 
-                $historyInfo = ' (à ' . $processingUserInfo['firstname'] . ' ' . $processingUserInfo['lastname'] . ')';
+                $historyInfo = '';
             } elseif ($config['id'] == 'xParaph') {
                 $attachments = AttachmentModel::getOnView([
                     'select'    => [

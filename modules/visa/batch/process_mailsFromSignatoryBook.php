@@ -162,6 +162,7 @@ try {
     }
 
     $configRemoteSignatoryBook = [];
+    $configRemoteNoteBook = ['id' => 'maarchParapheur'];
     if (file_exists($path)) {
         $loadedXml = simplexml_load_file($path);
         if ($loadedXml) {
@@ -169,6 +170,9 @@ try {
             foreach ($loadedXml->signatoryBook as $value) {
                 if ($value->id == $configRemoteSignatoryBook['id']) {
                     $configRemoteSignatoryBook['data'] = (array)$value;
+                }
+                if ($value->id == $configRemoteNoteBook['id']) {
+                    $configRemoteNoteBook['data'] = (array)$value;
                 }
             }
         }
@@ -244,15 +248,6 @@ while ($reqResult = $stmt->fetchObject()) {
     }
 }
 
-$GLOBALS['logger']->write('Retrieve mails sent to remote signatory book', 'INFO');
-$query = "SELECT res_id, external_signatory_book_id as external_id, subject, typist 
-        FROM res_letterbox WHERE external_signatory_book_id IS NOT NULL";
-$stmt = $GLOBALS['db']->query($query, []);
-
-while ($reqResult = $stmt->fetchObject()) {
-    $idsToRetrieve['resLetterbox'][$reqResult->res_id] = $reqResult;
-}
-
 // On récupère les pj signés dans le parapheur distant
 $GLOBALS['logger']->write('Retrieve signed/annotated documents from remote signatory book', 'INFO');
 if ($configRemoteSignatoryBook['id'] == 'ixbus') {
@@ -265,6 +260,19 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
     $retrievedMails = \ExternalSignatoryBook\controllers\MaarchParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 } elseif ($configRemoteSignatoryBook['id'] == 'xParaph') {
     $retrievedMails = \ExternalSignatoryBook\controllers\XParaphController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
+}
+
+$GLOBALS['logger']->write('Retrieve mails sent to remote signatory book', 'INFO');
+$query = "SELECT res_id, external_signatory_book_id as external_id, subject, typist 
+        FROM res_letterbox WHERE external_signatory_book_id IS NOT NULL";
+$stmt = $GLOBALS['db']->query($query, []);
+
+while ($reqResult = $stmt->fetchObject()) {
+    $idsToRetrieve['resLetterbox'][$reqResult->res_id] = $reqResult;
+}
+if (!empty($idsToRetrieve['resLetterbox'])) {
+    $retrievedLetterboxMails = \ExternalSignatoryBook\controllers\MaarchParapheurController::retrieveSignedMails(['config' => $configRemoteNoteBook, 'idsToRetrieve' => $idsToRetrieve]);
+    $retrievedMails['resLetterbox'] = $retrievedLetterboxMails['resLetterbox'];
 }
 
 if (!empty($retrievedMails['error'])) {

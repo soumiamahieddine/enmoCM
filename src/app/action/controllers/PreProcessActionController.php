@@ -418,9 +418,7 @@ class PreProcessActionController
             $signatureBookEnabled = $config['id'];
             $additionalsInfos = [
                 'attachments'   => [],
-                'noAttachment'  => [],
-                'mails'         => [],
-                'noMail'        => []
+                'noAttachment'  => []
             ];
             if ($signatureBookEnabled == 'ixbus') {
                 // TODO
@@ -444,28 +442,10 @@ class PreProcessActionController
                 }
 
                 foreach ($data['resources'] as $resId) {
-                    // Check Mail
                     $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
                     if (empty($noAttachmentsResource['alt_identifier'])) {
                         $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
                     }
-
-                    $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
-                    if (empty($adrMainInfo['docserver_id'])) {
-                        $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];
-                        continue;
-                    }
-                    $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
-                    if (empty($docserverMainInfo['path_template'])) {
-                        $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'docserverDoesNotExists'];
-                        continue;
-                    }
-                    $filePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
-                    if (!is_file($filePath)) {
-                        $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
-                        continue;
-                    }
-                    $additionalsInfos['mails'][] = ['res_id' => $resId];
 
                     $listinstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'firstname', 'lastname'], 'id' => $resId]);
                     if (empty($listinstances)) {
@@ -587,6 +567,103 @@ class PreProcessActionController
         }
 
         return $response->withJson(['signatureBookEnabled' => $signatureBookEnabled, 'additionalsInfos' => $additionalsInfos, 'errors' => $errors]);
+    }
+
+    public function checkExternalNoteBook(Request $request, Response $response, array $aArgs)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $data = $request->getParsedBody();
+
+        $data['resources'] = array_slice($data['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resources = ResModel::get([
+            'select' => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$data['resources']]
+        ]);
+
+        $resourcesForProcess = [];
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+            if (!$lock) {
+                $resourcesForProcess[] = $resource['res_id'];
+            }
+        }
+        $data['resources'] = $resourcesForProcess;
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        $errors = [];
+        if (!empty($loadedXml)) {
+            $config['id'] = 'maarchParapheur';
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == $config['id']) {
+                    $config['data'] = (array)$value;
+                    break;
+                }
+            }
+
+            $additionalsInfos = [
+                'mails'  => [],
+                'noMail' => []
+            ];
+
+            $userList = MaarchParapheurController::getInitializeDatas(['config' => $config]);
+            if (!empty($userList['users'])) {
+                $additionalsInfos['users'] = $userList['users'];
+                $aUsersInMP = [];
+                foreach ($userList['users'] as $value) {
+                    $aUsersInMP[] = $value['id'];
+                }
+            } else {
+                $additionalsInfos['users'] = [];
+            }
+            if (!empty($userList['errors'])) {
+                $errors[] = $userList['errors'];
+            }
+
+            foreach ($data['resources'] as $resId) {
+                $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
+                if (empty($noAttachmentsResource['alt_identifier'])) {
+                    $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
+                }
+
+                $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
+                if (empty($adrMainInfo['docserver_id'])) {
+                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];
+                    continue;
+                }
+                $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
+                if (empty($docserverMainInfo['path_template'])) {
+                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'docserverDoesNotExists'];
+                    continue;
+                }
+                $filePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
+                if (!is_file($filePath)) {
+                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
+                    continue;
+                }
+                $additionalsInfos['mails'][] = ['res_id' => $resId];
+            }
+        }
+
+        return $response->withJson(['additionalsInfos' => $additionalsInfos, 'errors' => $errors]);
     }
 
     public function checkShippings(Request $request, Response $response)

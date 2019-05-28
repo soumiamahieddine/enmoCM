@@ -33,6 +33,7 @@ import { CreateAcknowledgementReceiptActionComponent }             from './actio
 import { CloseAndIndexActionComponent }             from './actions/close-and-index-action/close-and-index-action.component';
 import { UpdateDepartureDateActionComponent }   from './actions/update-departure-date-action/update-departure-date-action.component';
 import { SendExternalSignatoryBookActionComponent }   from './actions/send-external-signatory-book-action/send-external-signatory-book-action.component';
+import { SendExternalNoteBookActionComponent }   from './actions/send-external-note-book-action/send-external-note-book-action.component';
 import { XParaphComponent }                         from './actions/send-external-signatory-book-action/x-paraph/x-paraph.component';
 import { MaarchParaphComponent }                         from './actions/send-external-signatory-book-action/maarch-paraph/maarch-paraph.component';
 import { ProcessActionComponent }               from './actions/process-action/process-action.component';
@@ -99,6 +100,7 @@ import { PrintSeparatorComponent }                        from './separator/prin
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
         SendExternalSignatoryBookActionComponent,
+        SendExternalNoteBookActionComponent,
         XParaphComponent,
         MaarchParaphComponent,
         ProcessActionComponent,
@@ -125,6 +127,7 @@ import { PrintSeparatorComponent }                        from './separator/prin
         CloseMailActionComponent,
         UpdateDepartureDateActionComponent,
         SendExternalSignatoryBookActionComponent,
+        SendExternalNoteBookActionComponent,
         ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,

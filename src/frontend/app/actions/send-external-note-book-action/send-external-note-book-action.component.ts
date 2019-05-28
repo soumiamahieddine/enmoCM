@@ -4,44 +4,37 @@ import { NotificationService } from '../../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
-import { XParaphComponent } from './x-paraph/x-paraph.component';
-import { MaarchParaphComponent } from './maarch-paraph/maarch-paraph.component';
 
 @Component({
-    templateUrl: "send-external-signatory-book-action.component.html",
-    styleUrls: ['send-external-signatory-book-action.component.scss'],
+    templateUrl: "send-external-note-book-action.component.html",
+    styleUrls: ['send-external-note-book-action.component.scss'],
     providers: [NotificationService],
 })
-export class SendExternalSignatoryBookActionComponent implements OnInit {
+export class SendExternalNoteBookActionComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
     additionalsInfos: any = {
         users: [],
-        attachments: [],
-        noAttachment: []
+        mails: [],
+        noMail: []
     };
-    signatoryBookEnabled: string = 'maarchParapheur';
 
     externalSignatoryBookDatas: any = {
-        objectSent: 'attachment'
+        processingUser: ''
     };
     errors: any;
 
     @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
-    
-    @ViewChild('xParaph') xParaph: XParaphComponent;
-    @ViewChild('maarchParapheur') maarchParapheur: MaarchParaphComponent;
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalSignatoryBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalNoteBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void {
         this.loading = true;
 
-        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkExternalSignatoryBook', { resources: this.data.selectedRes })
+        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkExternalNoteBook', { resources: this.data.selectedRes })
             .subscribe((data: any) => {
                 this.additionalsInfos = data.additionalsInfos;
-                this.signatoryBookEnabled = data.signatureBookEnabled;
                 this.errors = data.errors;
                 this.loading = false;
             }, (err: any) => {
@@ -56,8 +49,8 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
         let realResSelected: string[];
         let datas: any;
 
-        realResSelected = this[this.signatoryBookEnabled].getRessources();
-        datas = this[this.signatoryBookEnabled].getDatas();
+        realResSelected = this.additionalsInfos.mails.map((e: any) => { return e.res_id; });
+        datas = this.externalSignatoryBookDatas;
 
         this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: realResSelected, note: this.noteEditor.getNoteContent(), data: datas })
             .subscribe((data: any) => {
@@ -75,10 +68,10 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     }
 
     checkValidAction() {
-        if (this[this.signatoryBookEnabled] !== undefined) {   
-            return this[this.signatoryBookEnabled].checkValidParaph();
-        } else {
+        if (this.additionalsInfos.mails.length == 0 || !this.externalSignatoryBookDatas.processingUser || this.additionalsInfos.users.length == 0) {
             return true;
+        } else {
+            return false;
         }
     }
 }
