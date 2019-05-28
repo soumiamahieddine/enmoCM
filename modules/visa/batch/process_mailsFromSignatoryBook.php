@@ -364,6 +364,7 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
                 'table'           => 'res_attachments',
                 'noteContent'     => $value->noteContent
             ]);
+            $value->noteContent = '';
         }
         $GLOBALS['logger']->write('Document refused', 'INFO');
         Bt_refusedSignedMail([
@@ -467,6 +468,7 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
                 'table'           => 'res_attachments',
                 'noteContent'     => $value->noteContent
             ]);
+            $value->noteContent = '';
         }
         $GLOBALS['logger']->write('Document refused', 'INFO');
         Bt_refusedSignedMail([

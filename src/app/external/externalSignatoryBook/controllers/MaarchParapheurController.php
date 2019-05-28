@@ -231,22 +231,20 @@ class MaarchParapheurController
         
                     $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
         
+                    $attachmentsData = [];
                     if ($mainResource[0]['category_id'] != 'outgoing') {
                         $attachmentsData = [[
                             'encodedDocument' => $encodedMainZipFile,
                             'title'           => $mainResource[0]['subject'],
                             'reference'       => $mainResource[0]['alt_identifier']
                         ]];
-
-                        $summarySheetEncodedZip = MaarchParapheurController::createZip(['filepath' => $filename, 'filename' => "summarySheet.pdf"]);
-                        $attachmentsData[] = [
-                            'encodedDocument' => $summarySheetEncodedZip,
-                            'title'           => "summarySheet.pdf",
-                            'reference'       => ""
-                        ];
-                    } else {
-                        $attachmentsData = [];
                     }
+                    $summarySheetEncodedZip = MaarchParapheurController::createZip(['filepath' => $filename, 'filename' => "summarySheet.pdf"]);
+                    $attachmentsData[] = [
+                        'encodedDocument' => $summarySheetEncodedZip,
+                        'title'           => "summarySheet.pdf",
+                        'reference'       => ""
+                    ];
     
                     $metadata = [];
                     if (!empty($priority['label'])) {
@@ -402,13 +400,13 @@ class MaarchParapheurController
     public static function getDocument(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'],
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/content',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
         ]);
 
-        return $response['document'];
+        return $response;
     }
 
     public static function getState($aArgs)
