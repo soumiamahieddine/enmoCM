@@ -874,7 +874,7 @@ CREATE TABLE notif_email_stack
   html_body text,
   text_body text,
   charset character varying(50) NOT NULL,
-  attachments character varying(2000),
+  attachments text,
   module character varying(50) NOT NULL,
   exec_date timestamp without time zone,
   exec_result character varying(50),
