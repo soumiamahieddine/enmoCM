@@ -256,6 +256,7 @@ class EmailController
 
             $phpmailer->Host = $configuration['host'];
             $phpmailer->Port = $configuration['port'];
+            $phpmailer->SMTPAutoTLS = false;
             if (!empty($configuration['secure'])) {
                 $phpmailer->SMTPSecure = $configuration['secure'];
             }
