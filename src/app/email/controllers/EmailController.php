@@ -247,8 +247,13 @@ class EmailController
 
         $phpmailer = new PHPMailer();
 
-        if ($configuration['type'] == 'smtp') {
-            $phpmailer->isSMTP();
+        if (in_array($configuration['type'], ['smtp', 'mail'])) {
+            if ($configuration['type'] == 'smtp') {
+                $phpmailer->isSMTP();
+            } elseif ($configuration['type'] == 'mail') {
+                $phpmailer->isMail();
+            }
+
             $phpmailer->Host = $configuration['host'];
             $phpmailer->Port = $configuration['port'];
             if (!empty($configuration['secure'])) {
