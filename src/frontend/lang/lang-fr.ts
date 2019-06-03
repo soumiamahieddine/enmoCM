@@ -882,7 +882,10 @@ export const LANG_FR = {
     "since"                                 : "Depuis",
     "siret"                                 : "Numéro SIRET",
     "siretCode"                             : "Numéro SIRET",
-    "smtp"                                  : "Configuration interne",
+    "phpmail"                               : "Fonction php 'mail'",
+    "qmail"                                 : "Serveur mail local 'Qmail'",
+    "smtprelay"                             : "Relai smtp (sendmail)",
+    "smtpclient"                            : "Client smtp (smtp)",
     "smtpAuth"                              : "Méthode d'authentification",
     "SPH"                                   : "Supérieur hiérarchique",
     "status"                                : "Statut",
@@ -893,7 +896,6 @@ export const LANG_FR = {
     "statusModification"                    : "Modification du statut",
     "statusName"                            : "Nom du statut",
     "statusUpdated"                         : "Statut mis à jour",
-    "stmpDesc"                              : "Utilisateur du module interne phpmailer de l'application",
     "string"                                : "Chaine de caractère",
     "subEntities"                           : "Entités (et sous-entités)",
     "subject"                               : "Objet",
@@ -1037,5 +1039,6 @@ export const LANG_FR = {
     "userSPD" : "Inactif",
     "userABS" : "Absent",
     "noVisaWorkflow"                        : "Aucun circuit de visa paramétré.",
-    "visaWorkflowWillBeSend"                : "Le circuit visa des courriers sera envoyé à Maarch Parapheur"
+    "visaWorkflowWillBeSend"                : "Le circuit visa des courriers sera envoyé à Maarch Parapheur",
+    "usersNotExistedInMaarchParapheur"      : "Certains utilisateurs n'existent pas dans Maarch Parapheur"
 };

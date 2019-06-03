@@ -7,6 +7,8 @@
 -- *************************************************************************--
 UPDATE parameters SET param_value_string = '19.10.1' WHERE id = 'database_version';
 
+ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
+
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'users') AND attname = 'enabled') THEN
     UPDATE users SET status = 'SPD' WHERE enabled = 'N' and (status = 'OK' or status = 'ABS');

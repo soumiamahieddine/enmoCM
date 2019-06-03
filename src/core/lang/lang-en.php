@@ -320,6 +320,7 @@ define('_MARK_AS_READ_DESC', 'Mark the mail as \'read\' in the basket. Insert th
 define('_SEND_FILE_WS', 'Send file via Web Service');
 define('_SEND_DATA_WS', 'Send data via Web Service');
 define('_SEND_TO_EXTERNAL_SB', 'Send data to external signature book');
+define('_SEND_TO_EXTERNAL_NOTEBOOK', 'Send data to external note book');
 define('_CLOSE_MAIL_AND_INDEX', 'Close a mail and launch the indexation');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Allows you to update the closing date of a mail (\'closing_date\' of the mlb_coll_ext table) AND opens the indexing page to save a new mail.');
 define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Closing with attachment');

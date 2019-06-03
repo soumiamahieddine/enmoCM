@@ -878,9 +878,11 @@ export const LANG_NL = {
     "since"                                 : "Sinds",
     "siret"                                 : "SIRET number", //_TO_TRANSLATE
     "siretCode"                             : "SIRET-nummer",
-    "smtp"                                  : "_TO_TRANSLATE",
+    "phpmail"                               : "Function php 'mail'", //_TO_TRANSLATE
+    "qmail"                                 : "Qmail",
+    "smtprelay"                             : "Sendmail",
+    "smtpclient"                            : "Smtp",
     "smtpAuth"                              : "_TO_TRANSLATE",
-    "smtpDesc"                              : "_TO_TRANSLATE",
     "status"                                : "Status",
     "statusAdded"                           : "Status toegevoegd",
     "statusCreation"                        : "Aanmaak van een status",
@@ -1032,4 +1034,5 @@ export const LANG_NL = {
     "userABS" : "Absent", //_TO_TRANSLATE
     "noVisaWorkflow"                        : "No visa workflow set up.", //_TO_TRANSLATE
     "visaWorkflowWillBeSend"                : "Visa workflow will be send to Maarch Parapheur", //_TO_TRANSLATE
+    "usersNotExistedInMaarchParapheur"      : "Some users does not exist in Maarch Parapheur", //_TO_TRANSLATE
 };

@@ -231,22 +231,20 @@ class MaarchParapheurController
         
                     $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
         
+                    $attachmentsData = [];
                     if ($mainResource[0]['category_id'] != 'outgoing') {
                         $attachmentsData = [[
                             'encodedDocument' => $encodedMainZipFile,
                             'title'           => $mainResource[0]['subject'],
                             'reference'       => $mainResource[0]['alt_identifier']
                         ]];
-
-                        $summarySheetEncodedZip = MaarchParapheurController::createZip(['filepath' => $filename, 'filename' => "summarySheet.pdf"]);
-                        $attachmentsData[] = [
-                            'encodedDocument' => $summarySheetEncodedZip,
-                            'title'           => "summarySheet.pdf",
-                            'reference'       => ""
-                        ];
-                    } else {
-                        $attachmentsData = [];
                     }
+                    $summarySheetEncodedZip = MaarchParapheurController::createZip(['filepath' => $filename, 'filename' => "summarySheet.pdf"]);
+                    $attachmentsData[] = [
+                        'encodedDocument' => $summarySheetEncodedZip,
+                        'title'           => "summarySheet.pdf",
+                        'reference'       => ""
+                    ];
     
                     $metadata = [];
                     if (!empty($priority['label'])) {
@@ -356,25 +354,26 @@ class MaarchParapheurController
 
     public static function retrieveSignedMails(array $aArgs)
     {
-        $validated = $aArgs['config']['data']['externalValidated'];
-        $refused   = $aArgs['config']['data']['externalRefused'];
-
         foreach (['noVersion', 'isVersion', 'resLetterbox'] as $version) {
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                $documentStatus = MaarchParapheurController::getDocumentStatus(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
+                $documentWorkflow = MaarchParapheurController::getDocumentWorkflow(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
+                $state = MaarchParapheurController::getState(['workflow' => $documentWorkflow]);
                 
-                if (in_array($documentStatus['reference'], [$validated, $refused])) {
-                    $signedDocument = MaarchParapheurController::getProcessedDocument(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
-                    $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf'; // format du fichier récupéré
-                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $signedDocument;
-                    if ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'SIGN') {
+                if (in_array($state['status'], ['validated', 'refused'])) {
+                    $signedDocument = MaarchParapheurController::getDocument(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
+                    $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf';
+                    $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $signedDocument['encodedDocument'];
+                    if ($state['status'] == 'validated' && in_array($state['mode'], ['sign', 'visa'])) {
                         $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'SIGN') {
+                    } elseif ($state['status'] == 'refused' && in_array($state['mode'], ['sign', 'visa'])) {
                         $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                    } elseif ($documentStatus['reference'] == $validated && $documentStatus['mode'] == 'NOTE') {
+                    } elseif ($state['status'] == 'validated' && $state['mode'] == 'note') {
                         $aArgs['idsToRetrieve'][$version][$resId]->status = 'validatedNote';
-                    } elseif ($documentStatus['reference'] == $refused && $documentStatus['mode'] == 'NOTE') {
+                    } elseif ($state['status'] == 'refused' && $state['mode'] == 'note') {
                         $aArgs['idsToRetrieve'][$version][$resId]->status = 'refusedNote';
+                    }
+                    if (!empty($state['note'])) {
+                        $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
                     }
                 } else {
                     unset($aArgs['idsToRetrieve'][$version][$resId]);
@@ -386,27 +385,45 @@ class MaarchParapheurController
         return $aArgs['idsToRetrieve'];
     }
 
-    public static function getDocumentStatus(array $aArgs)
+    public static function getDocumentWorkflow(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/status',
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/workflow',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
         ]);
 
-        return $response['status'];
+        return $response['workflow'];
     }
 
-    public static function getProcessedDocument(array $aArgs)
+    public static function getDocument(array $aArgs)
     {
         $response = CurlModel::exec([
-            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/processedDocument',
+            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/content',
             'user'     => $aArgs['config']['data']['userId'],
             'password' => $aArgs['config']['data']['password'],
             'method'   => 'GET'
         ]);
 
-        return $response['encodedDocument'];
+        return $response;
+    }
+
+    public static function getState($aArgs)
+    {
+        $state['status'] = 'validated';
+        foreach ($aArgs['workflow'] as $step) {
+            if ($step['status'] == 'REF') {
+                $state['status'] = 'refused';
+                $state['note']   = $step['note'];
+                break;
+            } elseif (empty($step['status'])) {
+                $state['status'] = 'inProgress';
+                break;
+            }
+        }
+
+        $state['mode'] = $step['mode'];
+        return $state;
     }
 }

@@ -27,11 +27,7 @@ export class MaarchParaphComponent implements OnInit {
     ngOnInit(): void { }
 
     checkValidParaph() {
-        if ((this.externalSignatoryBookDatas.objectSent == 'attachment' && this.additionalsInfos.attachments.length == 0) || 
-            (this.externalSignatoryBookDatas.objectSent == 'mail' && 
-                (this.additionalsInfos.mails.length == 0 || !this.externalSignatoryBookDatas.processingUser || this.additionalsInfos.users.length == 0)
-            )
-            ) {
+        if (this.additionalsInfos.attachments.length == 0) {
             return true;
         } else {
             return false;
@@ -39,11 +35,7 @@ export class MaarchParaphComponent implements OnInit {
     }
 
     getRessources() {
-        if (this.externalSignatoryBookDatas.objectSent == 'attachment') {
-            return this.additionalsInfos.attachments.map((e: any) => { return e.res_id; });
-        } else if (this.externalSignatoryBookDatas.objectSent == 'mail') {
-            return this.additionalsInfos.mails.map((e: any) => { return e.res_id; });
-        }
+        return this.additionalsInfos.attachments.map((e: any) => { return e.res_id; });
     }
 
     getDatas() {
