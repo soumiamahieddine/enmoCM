@@ -265,7 +265,7 @@ class ListTemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
         }
 
-        $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => ['object_id = ?', 'object_type = ?'], 'data' => [$entity['entity_id'], 'entity_id']]);
+        $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => ['object_id = ?'], 'data' => [$entity['entity_id']]]);
 
         foreach ($listTemplates as $key => $value) {
             if ($value['item_type'] == 'entity_id') {
