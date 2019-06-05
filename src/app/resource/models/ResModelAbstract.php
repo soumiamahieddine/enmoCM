@@ -80,7 +80,7 @@ abstract class ResModelAbstract
 
         $aResources = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => array_merge(['res_letterbox'], $aArgs['table']),
+            'table'     => empty($aArgs['table']) ? ['res_letterbox'] : array_merge(['res_letterbox'], $aArgs['table']),
             'left_join' => empty($aArgs['leftJoin']) ? [] : $aArgs['leftJoin'],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
