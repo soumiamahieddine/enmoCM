@@ -179,8 +179,12 @@ class MaarchParapheurController
         $senderPrimaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         if ($aArgs['objectSent'] == 'attachment') {
-            foreach ($aArgs['steps'] as $step) {
-                $workflow[] = ['userId' => $step['externalId'], 'mode' => $step['action']];
+            if (!empty($aArgs['steps'])) {
+                foreach ($aArgs['steps'] as $step) {
+                    $workflow[] = ['userId' => $step['externalId'], 'mode' => $step['action']];
+                }
+            } else {
+                return ['error' => 'steps is empty'];
             }
 
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
