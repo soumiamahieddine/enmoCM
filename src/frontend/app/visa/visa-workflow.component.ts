@@ -1,9 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+
+declare function $j(selector: any): any;
 
 @Component({
     selector: 'app-visa-workflow',
@@ -91,5 +93,16 @@ export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit 
         });
 
         return usersMissing;
+    }
+    
+    addItem(event: any) {
+        const user = {
+            'externalId': event.option.value.externalId,
+            'labelToDisplay' : event.option.value.idToDisplay,
+            'requested_signature' : false,
+        }
+        this.visaWorkflow.items.push(user);
+        $j('#availableUsers').blur();
+        this.userCtrl.setValue('');
     }
 }

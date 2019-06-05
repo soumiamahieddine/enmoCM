@@ -4,7 +4,7 @@
             [matAutocomplete]="auto" [formControl]="userCtrl">
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addItem($event)" isOpen="true">
             <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-                {{user.displayName}}
+                {{user.idToDisplay}}
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>

@@ -154,6 +154,11 @@ class AutoCompleteController
                 }
                 return $response->withStatus(400)->withJson(['errors' => $errors]);
             }
+
+            foreach ($curlResponse['response'] as $key => $value) {
+                $curlResponse['response'][$key]['idToDisplay'] = $value['firstname'] . ' ' . $value['lastname'];
+                $curlResponse['response'][$key]['externalId']['maarchParapheur'] = $value['id'];
+            }
             return $response->withJson($curlResponse['response']);
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
