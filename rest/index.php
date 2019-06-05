@@ -78,6 +78,7 @@ $app->get('/res/{resIdMaster}/attachments/{resId}/thumbnail', \Attachment\contro
 //AutoComplete
 $app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
 $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
+$app->get('/autocomplete/maarchParapheurUsers', \SrcCore\controllers\AutoCompleteController::class . ':getMaarchParapheurUsers');
 $app->get('/autocomplete/contactsUsers', \SrcCore\controllers\AutoCompleteController::class . ':getContactsAndUsers');
 $app->get('/autocomplete/contacts/groups', \SrcCore\controllers\AutoCompleteController::class . ':getContactsForGroups');
 $app->get('/autocomplete/users/administration', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForAdministration');

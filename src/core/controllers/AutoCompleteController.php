@@ -115,6 +115,54 @@ class AutoCompleteController
         return $response->withJson($data);
     }
 
+    public static function getMaarchParapheurUsers(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+        $check = Validator::stringType()->notEmpty()->validate($data['search']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    $url      = $value->url;
+                    $userId   = $value->userId;
+                    $password = $value->password;
+                    break;
+                }
+            }
+
+            $bodyData = [
+                "search"  => $data['search']
+            ];
+            $curlResponse = CurlModel::execSimple([
+                'url'           => rtrim($url, '/') . '/rest/autocomplete/users',
+                'basicAuth'     => ['user' => $userId, 'password' => $password],
+                'headers'       => ['content-type:application/json'],
+                'method'        => 'POST',
+                'body'          => json_encode($bodyData)
+            ]);
+
+            if ($curlResponse['code'] != '200') {
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
+            }
+            return $response->withJson($curlResponse['response']);
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+    }
+
     public static function getContactsAndUsers(Request $request, Response $response)
     {
         $data = $request->getQueryParams();

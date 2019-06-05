@@ -427,16 +427,6 @@ class PreProcessActionController
             } elseif ($signatureBookEnabled == 'fastParapheur') {
                 // TODO
             } elseif ($signatureBookEnabled == 'maarchParapheur') {
-                $userList = MaarchParapheurController::getInitializeDatas(['config' => $config]);
-                if (!empty($userList['users'])) {
-                    $additionalsInfos['users'] = $userList['users'];
-                } else {
-                    $additionalsInfos['users'] = [];
-                }
-                if (!empty($userList['errors'])) {
-                    $errors[] = $userList['errors'];
-                }
-
                 if (is_array($data['resources']) && count($data['resources']) == 1) {
                     $resDestination = ResModel::getById([
                         'select'   => ['entities.id'],
