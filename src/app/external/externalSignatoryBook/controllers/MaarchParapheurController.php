@@ -179,18 +179,8 @@ class MaarchParapheurController
         $senderPrimaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         if ($aArgs['objectSent'] == 'attachment') {
-            $listinstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'users.user_id', 'requested_signature'], 'id' => $mainResource[0]['res_id']]);
-            if (empty($listinstances)) {
-                return ['error' => 'No visa workflow'];
-            }
-
-            $workflow = [];
-            foreach ($listinstances as $user) {
-                $externalId = json_decode($user['external_id'], true);
-                if (empty($externalId['maarchParapheur'])) {
-                    return ['error' => 'Some users does not exist in Maarch Parapheur'];
-                }
-                $workflow[] = ['processingUser' => $user['user_id'], 'mode' => ($user['requested_signature'] ? 'sign' : 'visa')];
+            foreach ($aArgs['steps'] as $step) {
+                $workflow[] = ['userId' => $step['externalId'], 'mode' => $step['action']];
             }
 
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];

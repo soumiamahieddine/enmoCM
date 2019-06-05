@@ -60,10 +60,11 @@ trait ExternalSignatoryBookTrait
                 }
 
                 $sendedInfo = MaarchParapheurController::sendDatas([
-                    'config'           => $config,
-                    'resIdMaster'      => $args['resId'],
-                    'objectSent'       => 'attachment',
-                    'userId'           => $GLOBALS['userId']
+                    'config'      => $config,
+                    'resIdMaster' => $args['resId'],
+                    'objectSent'  => 'attachment',
+                    'userId'      => $GLOBALS['userId'],
+                    'steps'       => $args['data']['steps'],
                 ]);
                 if (!empty($sendedInfo['error'])) {
                     return ['errors' => [$sendedInfo['error']]];
