@@ -136,15 +136,11 @@ class AutoCompleteController
                 }
             }
 
-            $bodyData = [
-                "search"  => $data['search']
-            ];
             $curlResponse = CurlModel::execSimple([
-                'url'           => rtrim($url, '/') . '/rest/autocomplete/users',
+                'url'           => rtrim($url, '/') . '/rest/users?search='.$data['search'],
                 'basicAuth'     => ['user' => $userId, 'password' => $password],
                 'headers'       => ['content-type:application/json'],
-                'method'        => 'POST',
-                'body'          => json_encode($bodyData)
+                'method'        => 'GET'
             ]);
 
             if ($curlResponse['code'] != '200') {
