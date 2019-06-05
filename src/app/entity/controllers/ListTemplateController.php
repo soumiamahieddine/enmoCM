@@ -274,6 +274,9 @@ class ListTemplateController
             } else {
                 $listTemplates[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                 $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
+
+                $userInfos = UserModel::getByLowerLogin(['login' => $value['item_id'], 'select' => ['external_id']]);
+                $listTemplates[$key]['externalId'] = json_decode($userInfos['external_id'], true);
             }
         }
 
