@@ -137,7 +137,7 @@ class AutoCompleteController
             }
 
             $curlResponse = CurlModel::execSimple([
-                'url'           => rtrim($url, '/') . '/rest/users?search='.$data['search'],
+                'url'           => rtrim($url, '/') . '/rest/autocomplete/users?search='.$data['search'],
                 'basicAuth'     => ['user' => $userId, 'password' => $password],
                 'headers'       => ['content-type:application/json'],
                 'method'        => 'GET'
