@@ -437,6 +437,11 @@ class PreProcessActionController
                     $errors[] = $userList['errors'];
                 }
 
+                if (is_array($data['resources']) && count($data['resources']) == 1) {
+                    $resDestination = ResModel::getById(['select' => ['destination'], 'resId' => $data['resources'][0]]);
+                    $additionalsInfos['destination'] = $resDestination['destination'];
+                }
+
                 foreach ($data['resources'] as $resId) {
                     $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
                     if (empty($noAttachmentsResource['alt_identifier'])) {
