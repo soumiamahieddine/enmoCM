@@ -445,6 +445,8 @@ class PreProcessActionController
                         'resId'    => $data['resources'][0]
                     ]);
                     $additionalsInfos['destinationId'] = $resDestination['id'];
+                } else {
+                    $additionalsInfos['destinationId'] = '';
                 }
 
                 foreach ($data['resources'] as $resId) {

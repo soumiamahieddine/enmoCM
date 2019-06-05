@@ -310,7 +310,7 @@ class AutoCompleteController
         ]);
 
         $data = [];
-        foreach ($users as $key => $value) {
+        foreach ($users as $value) {
             $data[] = [
                 'type'          => 'user',
                 'id'            => $value['user_id'],
