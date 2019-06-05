@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
 import { HttpClient } from '@angular/common/http';
+import { VisaWorkflowComponent } from '../../../visa/visa-workflow.component';
 
 declare function $j(selector: any): any;
 
@@ -18,16 +19,27 @@ export class MaarchParaphComponent implements OnInit {
 
     currentAccount: any = null;
     usersWorkflowList: any[] = [];
+
+    injectDatasParam = {
+        resId: 0,
+        editable: true
+    };
    
+    @ViewChild('appVisaWorkflow') appVisaWorkflow: VisaWorkflowComponent;
+    
     @Input('additionalsInfos') additionalsInfos: any;
     @Input('externalSignatoryBookDatas') externalSignatoryBookDatas: any;
 
     constructor(public http: HttpClient, private notify: NotificationService) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        if (this.additionalsInfos.destinationId !== '') {
+            this.appVisaWorkflow.loadListModel(this.additionalsInfos.destinationId);
+        }
+    }
 
     checkValidParaph() {
-        if (this.additionalsInfos.attachments.length == 0) {
+        if (this.additionalsInfos.attachments.length == 0 || this.appVisaWorkflow.getWorkflow().length === 0 || this.appVisaWorkflow.checkExternalSignatoryBook().length > 0) {
             return true;
         } else {
             return false;
@@ -39,6 +51,17 @@ export class MaarchParaphComponent implements OnInit {
     }
 
     getDatas() {
+        const workflow = this.appVisaWorkflow.getWorkflow();
+
+        workflow.forEach((element:any) => {
+            this.externalSignatoryBookDatas.steps.push(
+                {
+                    'externalId' : element.externalId.maarchParapheur,
+                    'action' : element.requested_signature ? 'sign' : 'visa',
+                }
+            );
+        });
+
         return this.externalSignatoryBookDatas;
     }
 }

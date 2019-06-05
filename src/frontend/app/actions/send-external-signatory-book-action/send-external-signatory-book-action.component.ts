@@ -17,13 +17,15 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
     additionalsInfos: any = {
+        destinationId: '',
         users: [],
         attachments: [],
         noAttachment: []
     };
-    signatoryBookEnabled: string = 'maarchParapheur';
+    signatoryBookEnabled: string = '';
 
     externalSignatoryBookDatas: any = {
+        steps: [],
         objectSent: 'attachment'
     };
     errors: any;
@@ -44,6 +46,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
                 this.signatoryBookEnabled = data.signatureBookEnabled;
                 this.errors = data.errors;
                 this.loading = false;
+                console.log(data);
             }, (err: any) => {
                 this.notify.handleErrors(err);
                 this.loading = false;

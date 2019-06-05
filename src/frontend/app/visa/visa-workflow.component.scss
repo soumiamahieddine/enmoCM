@@ -38,3 +38,37 @@
 .notEditable {
     cursor: initial;
 }
+
+.currentContextButton{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    width: 150px;
+    text-align: left;
+}
+
+.currentRoleButton{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    width: 120px;
+    text-align: center;
+}
+
+::ng-deep.listMenu {
+    .mat-menu-content {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.emptyContent {
+    opacity: 0.5;
+    text-align: center;
+    font-size: 10px;
+    padding: 10px;
+}
+
+.processed {
+    background: rgba(0, 128, 0, 0.11);
+}

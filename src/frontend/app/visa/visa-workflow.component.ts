@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
 @Component({
     selector: 'app-visa-workflow',
@@ -10,18 +11,21 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
     styleUrls: ['visa-workflow.component.scss'],
     providers: [NotificationService]
 })
-export class VisaWorkflowComponent implements OnInit {
+export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit {
 
     lang: any = LANG;
     visaWorkflow: any = {
+        roles: ['sign','visa'],
         items : []
     };
-    loading: boolean = true;
+    loading: boolean = false;
     data: any;
 
     @Input('injectDatas') injectDatas: any;
 
-    constructor(public http: HttpClient, private notify: NotificationService) { }
+    constructor(public http: HttpClient, private notify: NotificationService) {
+        super(http, ['signatureBookUsers']);
+     }
 
     ngOnInit(): void { }
 
@@ -31,52 +35,21 @@ export class VisaWorkflowComponent implements OnInit {
         }
     }
 
-    loadListModel(entityId: string) {
+    loadListModel(entityId: number) {
         this.loading = true;
 
         this.visaWorkflow.items = [];
 
-
-        // TO DO : ADD ROUTE
-        /*this.http.get("../../rest/???")
+        this.http.get("../../rest/listTemplates/entities/" + entityId)
             .subscribe((data: any) => {
+                data.listTemplate.forEach((element:any) => {
+                    if (element.object_type === 'VISA_CIRCUIT') {
+                        element.requested_signature = (element.item_mode === 'visa' ? false : true);
+                        this.visaWorkflow.items.push(element);
+                    }
+                });
                 this.loading = false;
-            });*/
-
-            this.visaWorkflow.items.push(
-            {
-                "listinstance_id": 20,
-                "sequence": 0,
-                "item_mode": "visa",
-                "item_id": "bbain",
-                "item_type": "user_id",
-                "item_firstname": "Barbara",
-                "item_lastname": "BAIN",
-                "item_entity": "P\u00f4le Jeunesse et Sport",
-                "viewed": 0,
-                "process_date": null,
-                "process_comment": "",
-                "signatory": false,
-                "requested_signature": false
             });
-
-            this.visaWorkflow.items.push(
-            {
-                "listinstance_id": 21,
-                "sequence": 0,
-                "item_mode": "sign",
-                "item_id": "DSG",
-                "item_type": "entity_id",
-                "item_entity": "Secr\u00e9tariat G\u00e9n\u00e9ral",
-                "viewed": 0,
-                "process_date": null,
-                "process_comment": null,
-                "signatory": true,
-                "requested_signature": false
-            }
-        );
-
-        this.loading = false;
     }
 
     loadWorkflow(resId: number) {
@@ -99,5 +72,24 @@ export class VisaWorkflowComponent implements OnInit {
 
     getVisaCount() {
         return this.visaWorkflow.items.length;
+    }
+
+    changeRole(i: number) {
+        this.visaWorkflow.items[i].requested_signature = !this.visaWorkflow.items[i].requested_signature;
+    }
+
+    getWorkflow() {
+        return this.visaWorkflow.items;
+    }
+
+    checkExternalSignatoryBook() {
+        let usersMissing: string[] = [];
+        this.visaWorkflow.items.forEach((element: any) => {
+            if (Object.keys(element.externalId).indexOf('maarchParapheur') === -1) {
+                usersMissing.push(element.labelToDisplay);
+            }
+        });
+
+        return usersMissing;
     }
 }
