@@ -438,8 +438,13 @@ class PreProcessActionController
                 }
 
                 if (is_array($data['resources']) && count($data['resources']) == 1) {
-                    $resDestination = ResModel::getById(['select' => ['destination'], 'resId' => $data['resources'][0]]);
-                    $additionalsInfos['destination'] = $resDestination['destination'];
+                    $resDestination = ResModel::getById([
+                        'select'   => ['entities.id'],
+                        'table'    => ['entities'],
+                        'leftJoin' => ['res_letterbox.destination = entities.entity_id'],
+                        'resId'    => $data['resources'][0]
+                    ]);
+                    $additionalsInfos['destinationId'] = $resDestination['id'];
                 }
 
                 foreach ($data['resources'] as $resId) {
