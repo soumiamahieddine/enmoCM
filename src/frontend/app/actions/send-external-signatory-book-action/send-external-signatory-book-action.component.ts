@@ -43,7 +43,9 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
         this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkExternalSignatoryBook', { resources: this.data.selectedRes })
             .subscribe((data: any) => {
                 this.additionalsInfos = data.additionalsInfos;
-                this.signatoryBookEnabled = data.signatureBookEnabled;
+                if (this.additionalsInfos.attachments.length > 0) {
+                    this.signatoryBookEnabled = data.signatureBookEnabled;
+                }  
                 this.errors = data.errors;
                 this.loading = false;
                 console.log(data);
