@@ -121,7 +121,7 @@ class AutoCompleteController
         $data = $request->getQueryParams();
         $check = Validator::stringType()->notEmpty()->validate($data['search']);
         if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withStatus(400)->withJson(['errors' => 'search is empty']);
         }
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);

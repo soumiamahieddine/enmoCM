@@ -23,7 +23,10 @@ use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\controllers\SummarySheetController;
 use Resource\models\ResModel;
+use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
 use User\models\UserModel;
@@ -419,5 +422,50 @@ class MaarchParapheurController
 
         $state['mode'] = $step['mode'];
         return $state;
+    }
+
+    public static function getUserPicture(Request $request, Response $response, array $aArgs)
+    {
+
+        $check = Validator::intVal()->validate($aArgs['id']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'id should be an integer']);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    $url      = $value->url;
+                    $userId   = $value->userId;
+                    $password = $value->password;
+                    break;
+                }
+            }
+
+            $curlResponse = CurlModel::execSimple([
+                'url'           => rtrim($url, '/') . '/rest/users/'.$aArgs['id'].'/picture',
+                'basicAuth'     => ['user' => $userId, 'password' => $password],
+                'headers'       => ['content-type:application/json'],
+                'method'        => 'GET'
+            ]);
+
+            if ($curlResponse['code'] != '200') {
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
+            }
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+
+        return $response->withJson(['picture' => $curlResponse['response']['picture']]);
     }
 }
