@@ -66,6 +66,12 @@
     background: rgba(0, 128, 0, 0.11);
 }
 
+.workflow {
+    height: auto !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .workflowLine {
     display: flex !important;
     align-items: center;
@@ -82,6 +88,7 @@
     }
 
     &SubLabel {
+        font-size: 80%;
         opacity:0.5;
         flex: 1;
         text-overflow: ellipsis;
@@ -90,7 +97,7 @@
 
     &ProcessDate {
         flex: 1;
-        text-align: right;
+        text-align: left;
         font-size: 90%;
     }
 }

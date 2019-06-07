@@ -13,7 +13,7 @@
         <div class="emptyContent" *ngIf="visaWorkflow.items.length === 0">
             {{lang.noPerson}}
         </div>
-        <mat-list-item *ngFor="let diffusion of visaWorkflow.items;let i=index" cdkDrag class="columns"
+        <mat-list-item *ngFor="let diffusion of visaWorkflow.items;let i=index" cdkDrag class="columns workflow"
             [cdkDragDisabled]="!injectDatas.editable" [class.notDraggable]="!injectDatas.editable"
             [class.notEditable]="!injectDatas.editable" [class.processed]="diffusion.process_date != null">
             <mat-icon mat-list-icon class="fa fa-user fa-2x" color="primary"></mat-icon>
