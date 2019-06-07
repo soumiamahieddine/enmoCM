@@ -850,8 +850,8 @@ export const LANG_EN = {
     "since"                                 : "Since",
     "siret"                                 : "SIRET number",
     "siretCode"                             : "SIRET code",
-    "phpmail"                               : "Function php 'mail'",
-    "qmail"                                 : "Local mail server 'Qmail'",
+    "phpmail"                               : "Function php (mail)",
+    "qmail"                                 : "Local mail server (Qmail)",
     "smtprelay"                             : "Smtp relay (sendmail)",
     "smtpclient"                            : "Smtp client (smtp)",
     "smtpAuth"                              : "Authentication methode",
@@ -1005,7 +1005,8 @@ export const LANG_EN = {
     "userOK" : "Active",
     "userSPD" : "Inactive",
     "userABS" : "Absent",
-    "noVisaWorkflow"                        : "No visa workflow set up.",
-    "visaWorkflowWillBeSend"                : "Visa workflow will be send to Maarch Parapheur",
-    "usersNotExistedInMaarchParapheur"      : "Some users does not exist in Maarch Parapheur"
+    "noVisaWorkflow" : "No visa workflow set up.",
+    "visaWorkflowWillBeSend" : "Visa workflow will be send to Maarch Parapheur",
+    "usersNotExistedInMaarchParapheur" : "Some users does not exist in Maarch Parapheur",
+    "usersMissingInSignatureBook" : "missing in Maarch Parapheur",
 };

@@ -23,7 +23,10 @@ use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\controllers\SummarySheetController;
 use Resource\models\ResModel;
+use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
 use User\models\UserModel;
@@ -179,18 +182,12 @@ class MaarchParapheurController
         $senderPrimaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
 
         if ($aArgs['objectSent'] == 'attachment') {
-            $listinstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'users.user_id', 'requested_signature'], 'id' => $mainResource[0]['res_id']]);
-            if (empty($listinstances)) {
-                return ['error' => 'No visa workflow'];
-            }
-
-            $workflow = [];
-            foreach ($listinstances as $user) {
-                $externalId = json_decode($user['external_id'], true);
-                if (empty($externalId['maarchParapheur'])) {
-                    return ['error' => 'Some users does not exist in Maarch Parapheur'];
+            if (!empty($aArgs['steps'])) {
+                foreach ($aArgs['steps'] as $step) {
+                    $workflow[] = ['userId' => $step['externalId'], 'mode' => $step['action']];
                 }
-                $workflow[] = ['processingUser' => $user['user_id'], 'mode' => ($user['requested_signature'] ? 'sign' : 'visa')];
+            } else {
+                return ['error' => 'steps is empty'];
             }
 
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
@@ -425,5 +422,50 @@ class MaarchParapheurController
 
         $state['mode'] = $step['mode'];
         return $state;
+    }
+
+    public static function getUserPicture(Request $request, Response $response, array $aArgs)
+    {
+
+        $check = Validator::intVal()->validate($aArgs['id']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'id should be an integer']);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    $url      = $value->url;
+                    $userId   = $value->userId;
+                    $password = $value->password;
+                    break;
+                }
+            }
+
+            $curlResponse = CurlModel::execSimple([
+                'url'           => rtrim($url, '/') . '/rest/users/'.$aArgs['id'].'/picture',
+                'basicAuth'     => ['user' => $userId, 'password' => $password],
+                'headers'       => ['content-type:application/json'],
+                'method'        => 'GET'
+            ]);
+
+            if ($curlResponse['code'] != '200') {
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
+            }
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+
+        return $response->withJson(['picture' => $curlResponse['response']['picture']]);
     }
 }

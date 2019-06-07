@@ -5,7 +5,10 @@
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
-UPDATE parameters SET param_value_string = '19.04.1' WHERE id = 'database_version';
+UPDATE parameters SET param_value_string = '19.04.3' WHERE id = 'database_version';
+
+DELETE FROM parameters WHERE id = 'QrCodePrefix';
+INSERT INTO parameters (id, description, param_value_int) VALUES ('QrCodePrefix', 'Si activé (1), ajoute "Maarch_" dans le contenu des QrCode générés. (Utilisable avec MaarchCapture >= 1.4)', 0);
 
 DROP VIEW IF EXISTS res_view_letterbox;
 DROP VIEW IF EXISTS view_contacts;
@@ -255,6 +258,8 @@ END$$;
 ALTER TABLE res_mark_as_read DROP COLUMN IF EXISTS coll_id;
 
 UPDATE listinstance SET added_by_entity = 'superadmin' WHERE added_by_user = 'superadmin';
+UPDATE listinstance SET added_by_entity = 'superadmin' WHERE listinstance_id IN 
+	(SELECT listinstance_id FROM listinstance LEFT JOIN entities ON listinstance.added_by_entity = entities.entity_id WHERE entities.entity_id IS null);
 UPDATE listinstance SET added_by_entity =
     (SELECT entity_id FROM users_entities WHERE users_entities.user_id = listinstance.added_by_user AND primary_entity = 'Y')
 WHERE added_by_entity IS NULL OR added_by_entity = '';

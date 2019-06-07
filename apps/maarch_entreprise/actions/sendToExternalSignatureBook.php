@@ -50,7 +50,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     }
 
     $html = '<div id="frm_error_'.$id_action.'" class="error"></div>';
-    $html .= '<h2 class="title">' . $labelAction . '</h2>';
+    $html .= '<h2 class="title">'._ACTION_CONFIRM. '<br>' . $labelAction . '</h2>';
 
     $html .= '<form name="sendToExternalSB" id="sendToExternalSB" method="post" class="forms" action="#">';
     $html .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
@@ -94,6 +94,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
                         }
                     }
                 }
+                $htmlModal = '';
             }
         }
 
@@ -238,11 +239,26 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $attachmentToFreeze = FastParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);
             } elseif ($config['id'] == 'maarchParapheur') {
 
+                $listinstances = \Entity\models\ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'users.user_id', 'requested_signature'], 'id' => $res_id]);
+                if (empty($listinstances)) {
+                    var_dump('No visa workflow');
+                }
+    
+                $workflow = [];
+                foreach ($listinstances as $user) {
+                    $externalId = json_decode($user['external_id'], true);
+                    if (empty($externalId['maarchParapheur'])) {
+                        return ['error' => 'Some users does not exist in Maarch Parapheur'];
+                    }
+                    $workflow[] = ['userId' => $externalId['maarchParapheur'], 'mode' => ($user['requested_signature'] ? 'sign' : 'visa')];
+                }
+
                 $sendedInfo = \ExternalSignatoryBook\controllers\MaarchParapheurController::sendDatas([
-                    'config'             => $config,
-                    'resIdMaster'        => $res_id,
-                    'objectSent'         => 'attachment',
-                    'userId'             => $_SESSION['user']['UserId']
+                    'config'      => $config,
+                    'resIdMaster' => $res_id,
+                    'objectSent'  => 'attachment',
+                    'userId'      => $_SESSION['user']['UserId'],
+                    'steps'       => $workflow,
                 ]);
                 if (!empty($sendedInfo['error'])) {
                     var_dump($sendedInfo['error']);

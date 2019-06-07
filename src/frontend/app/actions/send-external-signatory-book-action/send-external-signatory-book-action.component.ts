@@ -17,13 +17,15 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
     additionalsInfos: any = {
+        destinationId: '',
         users: [],
         attachments: [],
         noAttachment: []
     };
-    signatoryBookEnabled: string = 'maarchParapheur';
+    signatoryBookEnabled: string = '';
 
     externalSignatoryBookDatas: any = {
+        steps: [],
         objectSent: 'attachment'
     };
     errors: any;
@@ -41,9 +43,12 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
         this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkExternalSignatoryBook', { resources: this.data.selectedRes })
             .subscribe((data: any) => {
                 this.additionalsInfos = data.additionalsInfos;
-                this.signatoryBookEnabled = data.signatureBookEnabled;
+                if (this.additionalsInfos.attachments.length > 0) {
+                    this.signatoryBookEnabled = data.signatureBookEnabled;
+                }  
                 this.errors = data.errors;
                 this.loading = false;
+                console.log(data);
             }, (err: any) => {
                 this.notify.handleErrors(err);
                 this.loading = false;

@@ -265,7 +265,7 @@ class ListTemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
         }
 
-        $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => ['object_id = ?', 'object_type = ?'], 'data' => [$entity['entity_id'], 'entity_id']]);
+        $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => ['object_id = ?'], 'data' => [$entity['entity_id']]]);
 
         foreach ($listTemplates as $key => $value) {
             if ($value['item_type'] == 'entity_id') {
@@ -274,6 +274,9 @@ class ListTemplateController
             } else {
                 $listTemplates[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                 $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
+
+                $userInfos = UserModel::getByLowerLogin(['login' => $value['item_id'], 'select' => ['external_id']]);
+                $listTemplates[$key]['externalId'] = json_decode($userInfos['external_id'], true);
             }
         }
 

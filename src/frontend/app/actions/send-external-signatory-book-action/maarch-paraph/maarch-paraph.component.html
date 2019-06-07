@@ -1,8 +1,13 @@
-<div class="col-md-12" *ngIf="additionalsInfos.users.length == 0">
-    {{lang.noUserDefinedInMaarchParapheur}}
-</div>
 <div class="col-md-12">
-    <div class="alert-message alert-message-info" role="alert">{{lang.visaWorkflowWillBeSend}}</div>
+    <div class="fieldsetdContainer" style="flex:2">
+        <h2>{{lang.visaWorkflow}} :</h2>
+        <div class="fieldsetdContent">
+            <app-visa-workflow #appVisaWorkflow [injectDatas]="injectDatasParam"></app-visa-workflow>
+            <div *ngIf="appVisaWorkflow.checkExternalSignatoryBook().length > 0" class="alert-message alert-message-danger" role="alert">
+                <b>{{appVisaWorkflow.checkExternalSignatoryBook().join(', ')}}</b> {{lang.usersMissingInSignatureBook}} !       
+            </div>
+        </div>
+    </div>
 </div>
 <div class="col-md-12" *ngIf="additionalsInfos.visaWorkflowError">
     <div>

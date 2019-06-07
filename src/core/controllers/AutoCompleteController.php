@@ -17,11 +17,12 @@ namespace SrcCore\controllers;
 use Contact\controllers\ContactController;
 use Contact\controllers\ContactGroupController;
 use Contact\models\ContactModel;
+use Entity\models\EntityModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Entity\models\EntityModel;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\CurlModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
@@ -113,6 +114,55 @@ class AutoCompleteController
         }
 
         return $response->withJson($data);
+    }
+
+    public static function getMaarchParapheurUsers(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+        $check = Validator::stringType()->notEmpty()->validate($data['search']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'search is empty']);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    $url      = $value->url;
+                    $userId   = $value->userId;
+                    $password = $value->password;
+                    break;
+                }
+            }
+
+            $curlResponse = CurlModel::execSimple([
+                'url'           => rtrim($url, '/') . '/rest/autocomplete/users?search='.$data['search'],
+                'basicAuth'     => ['user' => $userId, 'password' => $password],
+                'headers'       => ['content-type:application/json'],
+                'method'        => 'GET'
+            ]);
+
+            if ($curlResponse['code'] != '200') {
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
+            }
+
+            foreach ($curlResponse['response'] as $key => $value) {
+                $curlResponse['response'][$key]['idToDisplay'] = $value['firstname'] . ' ' . $value['lastname'];
+                $curlResponse['response'][$key]['externalId']['maarchParapheur'] = $value['id'];
+            }
+            return $response->withJson($curlResponse['response']);
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
     }
 
     public static function getContactsAndUsers(Request $request, Response $response)
@@ -310,7 +360,7 @@ class AutoCompleteController
         ]);
 
         $data = [];
-        foreach ($users as $key => $value) {
+        foreach ($users as $value) {
             $data[] = [
                 'type'          => 'user',
                 'id'            => $value['user_id'],

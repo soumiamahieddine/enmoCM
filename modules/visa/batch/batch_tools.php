@@ -275,47 +275,6 @@ function Bt_refusedSignedMail($aArgs = [])
     ]);
 }
 
-function Bt_processVisaWorkflow($aArgs = [])
-{
-    $visaWorkflow = Bt_getVisaWorkflow(['resId' => $aArgs['res_id_master']]);
-
-    $nbVisaWorkflow = $visaWorkflow->rowCount();
-
-    if ($nbVisaWorkflow > 0) {
-        while ($listInstance = $visaWorkflow->fetchObject()) {
-            $GLOBALS['db']->query("UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE listinstance_id = ?", [$listInstance->listinstance_id]);
-            $nbUserProcess++;
-            // Stop to the first signatory user
-            if ($listInstance->requested_signature) {
-                $GLOBALS['db']->query("UPDATE listinstance SET signatory = 'true' WHERE listinstance_id = ?", [$listInstance->listinstance_id]);
-                break;
-            }
-        }
-        if ($nbUserProcess < $nbVisaWorkflow) {
-            // Get the next user in workflow
-            $listInstance = $visaWorkflow->fetchObject();
-            if ($listInstance->requested_signature) {
-                $mailStatus = 'ESIG';
-            } else {
-                $mailStatus = 'EVIS';
-            }
-            Bt_validatedMail(['status' => $mailStatus, 'resId' => $aArgs['res_id_master']]);
-        } else {
-            Bt_validatedMail(['status' => $aArgs['validatedStatus'], 'resId' => $aArgs['res_id_master']]);
-        }
-    } else {
-        Bt_validatedMail(['status' => $aArgs['validatedStatus'], 'resId' => $aArgs['res_id_master']]);
-    }
-}
-
-function Bt_getVisaWorkflow($aArgs = [])
-{
-    $req = "SELECT listinstance_id, item_id, requested_signature FROM listinstance WHERE res_id = ? AND difflist_type = 'VISA_CIRCUIT' AND process_date IS NULL ORDER BY listinstance_id ASC";
-    $stmt = $GLOBALS['db']->query($req, array($aArgs['resId']));
-
-    return $stmt;
-}
-
 function Bt_validatedMail($aArgs = [])
 {
     $req       = "SELECT count(1) as nbresult FROM res_view_attachments WHERE res_id_master = ? AND status = ?";

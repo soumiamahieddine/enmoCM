@@ -882,8 +882,8 @@ export const LANG_FR = {
     "since"                                 : "Depuis",
     "siret"                                 : "Numéro SIRET",
     "siretCode"                             : "Numéro SIRET",
-    "phpmail"                               : "Fonction php 'mail'",
-    "qmail"                                 : "Serveur mail local 'Qmail'",
+    "phpmail"                               : "Fonction php (mail)",
+    "qmail"                                 : "Serveur mail local (Qmail)",
     "smtprelay"                             : "Relai smtp (sendmail)",
     "smtpclient"                            : "Client smtp (smtp)",
     "smtpAuth"                              : "Méthode d'authentification",
@@ -1038,7 +1038,8 @@ export const LANG_FR = {
     "userOK" : "Actif",
     "userSPD" : "Inactif",
     "userABS" : "Absent",
-    "noVisaWorkflow"                        : "Aucun circuit de visa paramétré.",
-    "visaWorkflowWillBeSend"                : "Le circuit visa des courriers sera envoyé à Maarch Parapheur",
-    "usersNotExistedInMaarchParapheur"      : "Certains utilisateurs n'existent pas dans Maarch Parapheur"
+    "noVisaWorkflow" : "Aucun circuit de visa paramétré.",
+    "visaWorkflowWillBeSend" : "Le circuit visa des courriers sera envoyé à Maarch Parapheur",
+    "usersNotExistedInMaarchParapheur" : "Certains utilisateurs n'existent pas dans Maarch Parapheur",
+    "usersMissingInSignatureBook" : "non présent dans Maarch Parapheur",
 };

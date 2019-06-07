@@ -427,38 +427,22 @@ class PreProcessActionController
             } elseif ($signatureBookEnabled == 'fastParapheur') {
                 // TODO
             } elseif ($signatureBookEnabled == 'maarchParapheur') {
-                $userList = MaarchParapheurController::getInitializeDatas(['config' => $config]);
-                if (!empty($userList['users'])) {
-                    $additionalsInfos['users'] = $userList['users'];
-                    $aUsersInMP = [];
-                    foreach ($userList['users'] as $value) {
-                        $aUsersInMP[] = $value['id'];
-                    }
+                if (is_array($data['resources']) && count($data['resources']) == 1) {
+                    $resDestination = ResModel::getById([
+                        'select'   => ['entities.id'],
+                        'table'    => ['entities'],
+                        'leftJoin' => ['res_letterbox.destination = entities.entity_id'],
+                        'resId'    => $data['resources'][0]
+                    ]);
+                    $additionalsInfos['destinationId'] = $resDestination['id'];
                 } else {
-                    $additionalsInfos['users'] = [];
-                }
-                if (!empty($userList['errors'])) {
-                    $errors[] = $userList['errors'];
+                    $additionalsInfos['destinationId'] = '';
                 }
 
                 foreach ($data['resources'] as $resId) {
                     $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
                     if (empty($noAttachmentsResource['alt_identifier'])) {
                         $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
-                    }
-
-                    $listinstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'firstname', 'lastname'], 'id' => $resId]);
-                    if (empty($listinstances)) {
-                        $additionalsInfos['visaWorkflowError'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noVisaWorkflow'];
-                        continue;
-                    }
-
-                    foreach ($listinstances as $user) {
-                        $externalId = json_decode($user['external_id'], true);
-                        if (!in_array($externalId['maarchParapheur'], $aUsersInMP)) {
-                            $additionalsInfos['visaWorkflowError'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'usersNotExistedInMaarchParapheur'];
-                            continue 2;
-                        }
                     }
 
                     // Check attachments
@@ -627,10 +611,6 @@ class PreProcessActionController
             $userList = MaarchParapheurController::getInitializeDatas(['config' => $config]);
             if (!empty($userList['users'])) {
                 $additionalsInfos['users'] = $userList['users'];
-                $aUsersInMP = [];
-                foreach ($userList['users'] as $value) {
-                    $aUsersInMP[] = $value['id'];
-                }
             } else {
                 $additionalsInfos['users'] = [];
             }

@@ -335,8 +335,8 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
         } else {
             $status = $validatedStatus;
         }
-        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $status]);
 
+        Bt_validatedMail(['status' => $status, 'resId' => $value->res_id_master]);
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_version_attachments) a été validée dans le parapheur externe';
         Bt_history([
             'table_name' => 'res_version_attachments',
@@ -439,7 +439,7 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
         } else {
             $status = $validatedStatus;
         }
-        Bt_processVisaWorkflow(['res_id_master' => $value->res_id_master, 'validatedStatus' => $status]);
+        Bt_validatedMail(['status' => $status, 'resId' => $value->res_id_master]);
 
         $historyInfo = 'La signature de la pièce jointe '.$resId.' (res_attachments) a été validée dans le parapheur externe';
         Bt_history([
@@ -508,7 +508,7 @@ foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
 
     if ($value->status == 'validatedNote') {
         $GLOBALS['logger']->write('Document validated', 'INFO');
-        Bt_processVisaWorkflow(['res_id_master' => $value->res_id, 'validatedStatus' => $validatedStatusAnnot]);
+        Bt_validatedMail(['status' => $validatedStatusAnnot, 'resId' => $value->res_id]);
 
         Bt_history([
             'table_name' => 'res_letterbox',
