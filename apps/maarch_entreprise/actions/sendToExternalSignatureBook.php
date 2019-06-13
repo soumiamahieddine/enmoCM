@@ -238,7 +238,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 include_once 'modules/visa/class/FastParapheurController.php';
                 $attachmentToFreeze = FastParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);
             } elseif ($config['id'] == 'maarchParapheur') {
-
                 $listinstances = \Entity\models\ListInstanceModel::getVisaCircuitByResId(['select' => ['external_id', 'users.user_id', 'requested_signature'], 'id' => $res_id]);
                 if (empty($listinstances)) {
                     var_dump('No visa workflow');
@@ -248,7 +247,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 foreach ($listinstances as $user) {
                     $externalId = json_decode($user['external_id'], true);
                     if (empty($externalId['maarchParapheur'])) {
-                        return ['error' => 'Some users does not exist in Maarch Parapheur'];
+                        return ['error' => 'Some users do not exist in Maarch Parapheur'];
                     }
                     $workflow[] = ['userId' => $externalId['maarchParapheur'], 'mode' => ($user['requested_signature'] ? 'sign' : 'visa')];
                 }

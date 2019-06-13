@@ -17,8 +17,8 @@ export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit 
 
     lang: any = LANG;
     visaWorkflow: any = {
-        roles: ['sign','visa'],
-        items : []
+        roles: ['sign', 'visa'],
+        items: []
     };
     loading: boolean = false;
     data: any;
@@ -27,7 +27,7 @@ export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit 
 
     constructor(public http: HttpClient, private notify: NotificationService) {
         super(http, ['signatureBookUsers']);
-     }
+    }
 
     ngOnInit(): void { }
 
@@ -44,10 +44,17 @@ export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit 
 
         this.http.get("../../rest/listTemplates/entities/" + entityId)
             .subscribe((data: any) => {
-                data.listTemplate.forEach((element:any) => {
+                data.listTemplate.forEach((element: any, index : number) => {
                     if (element.object_type === 'VISA_CIRCUIT') {
-                        element.requested_signature = (element.item_mode === 'visa' ? false : true);
-                        this.visaWorkflow.items.push(element);
+                        this.http.get("../../rest/maarchParapheur/user/" + element.externalId.maarchParapheur + "/picture")
+                            .subscribe((data: any) => {
+                                element.picture = data.picture
+                                element.requested_signature = (element.item_mode === 'visa' ? false : true);
+                                this.visaWorkflow.items.push(element);
+                            }, (err: any) => {
+                                this.notify.handleErrors(err);
+                            });
+
                     }
                 });
                 this.loading = false;
@@ -58,14 +65,14 @@ export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit 
         this.loading = true;
         this.visaWorkflow.items = [];
         this.http.get("../../rest/res/" + resId + "/visaCircuit")
-         .subscribe((data: any) => {
-            data.forEach((element:any) => {
-                this.visaWorkflow.items.push(element);
+            .subscribe((data: any) => {
+                data.forEach((element: any) => {
+                    this.visaWorkflow.items.push(element);
+                });
+                this.loading = false;
+            }, (err: any) => {
+                this.notify.handleErrors(err);
             });
-            this.loading = false;
-        }, (err: any) => {
-            this.notify.handleErrors(err);
-        });
     }
 
     deleteItem(index: number) {
@@ -94,15 +101,22 @@ export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit 
 
         return usersMissing;
     }
-    
+
     addItem(event: any) {
         const user = {
             'externalId': event.option.value.externalId,
-            'labelToDisplay' : event.option.value.idToDisplay,
-            'requested_signature' : false,
+            'labelToDisplay': event.option.value.idToDisplay,
+            'requested_signature': false,
+            'picture': ''
         }
         this.visaWorkflow.items.push(user);
         $j('#availableUsers').blur();
         this.userCtrl.setValue('');
+        this.http.get("../../rest/maarchParapheur/user/" + user.externalId.maarchParapheur + "/picture")
+            .subscribe((data: any) => {
+                this.visaWorkflow.items[this.visaWorkflow.items.length - 1].picture = data.picture;
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
     }
 }
