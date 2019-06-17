@@ -497,3 +497,7 @@ define("_FILE_NOT_ALLOWED_INFO_2", "avec le type MIME");
 define("_FILE_NOT_ALLOWED_INFO_3", "n'est pas autorisée");
 define("_ENTITY", "Entité");
 define("_PRINT_SEP_TITLE", "Séparateur de courrier");
+define("_SIGNATORY", "Signataire");
+define("_VISA_USER_MIN", "Viseur");
+define("_NOTE_USER", "Annotateur");
+define("_WF_SEND_TO", "Envoyé à : ");

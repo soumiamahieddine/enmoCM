@@ -157,9 +157,16 @@ function Bt_myInclude($file)
 function Bt_createAttachment($aArgs = [])
 {
     if (!empty($aArgs['noteContent'])) {
+        $creatorName = '';
+        if (!empty($aArgs['noteCreatorId'])) {
+            $creatorId = $aArgs['noteCreatorId'];
+        } else {
+            $creatorId = 'superadmin';
+            $creatorName = $aArgs['noteCreatorName'] . ' : ';
+        }
         $GLOBALS['db']->query(
-            "INSERT INTO notes (identifier, user_id, creation_date, note_text) VALUES (?, 'superadmin', CURRENT_TIMESTAMP, ?)",
-            [$aArgs['res_id_master'], $aArgs['noteContent']]
+            "INSERT INTO notes (identifier, user_id, creation_date, note_text) VALUES (?, ?, CURRENT_TIMESTAMP, ?)",
+            [$aArgs['res_id_master'], $creatorId, $creatorName . $aArgs['noteContent']]
         );
     }
 
@@ -247,9 +254,16 @@ function Bt_createAttachment($aArgs = [])
 function Bt_refusedSignedMail($aArgs = [])
 {
     if (!empty($aArgs['noteContent'])) {
+        $creatorName = '';
+        if (!empty($aArgs['noteCreatorId'])) {
+            $creatorId = $aArgs['noteCreatorId'];
+        } else {
+            $creatorId = 'superadmin';
+            $creatorName = $aArgs['noteCreatorName'] . ' : ';
+        }
         $GLOBALS['db']->query(
-            "INSERT INTO notes (identifier, user_id, creation_date, note_text) VALUES (?, 'superadmin', CURRENT_TIMESTAMP, ?)",
-            [$aArgs['resIdMaster'], $aArgs['noteContent']]
+            "INSERT INTO notes (identifier, user_id, creation_date, note_text) VALUES (?, $creatorId, CURRENT_TIMESTAMP, ?)",
+            [$aArgs['resIdMaster'], $creatorName . $aArgs['noteContent']]
         );
     }
     $GLOBALS['db']->query("UPDATE ".$aArgs['tableAttachment']." SET status = 'A_TRA' WHERE res_id = ?", [$aArgs['resIdAttachment']]);
@@ -257,7 +271,7 @@ function Bt_refusedSignedMail($aArgs = [])
     
     $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $aArgs['refusedStatus'] . "' WHERE res_id = ?", [$aArgs['resIdMaster']]);
 
-    $historyInfo = 'La signature de la pièce jointe '.$aArgs['resIdAttachment'].' ('.$aArgs['tableAttachment'].') a été refusée dans le parapheur externe';
+    $historyInfo = 'La signature de la pièce jointe '.$aArgs['resIdAttachment'].' ('.$aArgs['tableAttachment'].') a été refusée dans le parapheur externe' . $aArgs['additionalHistoryInfo'];
     Bt_history([
         'table_name' => $aArgs['tableAttachment'],
         'record_id'  => $aArgs['resIdAttachment'],

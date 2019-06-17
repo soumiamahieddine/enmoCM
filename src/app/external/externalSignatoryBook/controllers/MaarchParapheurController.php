@@ -312,7 +312,27 @@ class MaarchParapheurController
             $attachmentToFreeze['letterbox_coll'][$aArgs['resIdMaster']] = $response['id'];
         }
 
-        return ['sended' => $attachmentToFreeze];
+        $workflowInfos = [];
+        foreach ($workflow as $value) {
+            $userInfos = UserModel::getByExternalId([
+                'select'            => ['firstname', 'lastname'],
+                'externalId'        => $value['userId'],
+                'signatoryBookName' => 'maarchParapheur'
+            ]);
+            if ($value['mode'] == 'note') {
+                $mode = _NOTE_USER;
+            } elseif ($value['mode'] == 'visa') {
+                $mode = _VISA_USER;
+            } elseif ($value['mode'] == 'sign') {
+                $mode = _SIGNATORY;
+            }
+            $workflowInfos[] = $userInfos['firstname'] . ' ' . $userInfos['lastname'] . ' ('. $mode .')';
+        }
+        if (!empty($workflowInfos)) {
+            $historyInfos = ' ' . _WF_SEND_TO . ' ' . implode(", ", $workflowInfos);
+        }
+
+        return ['sended' => $attachmentToFreeze, 'historyInfos' => $historyInfos];
     }
 
     public static function createZip(array $aArgs)
@@ -371,7 +391,18 @@ class MaarchParapheurController
                     }
                     if (!empty($state['note'])) {
                         $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+                        $userInfos = UserModel::getByExternalId([
+                            'select'            => ['user_id'],
+                            'externalId'        => $state['noteCreatorId'],
+                            'signatoryBookName' => 'maarchParapheur'
+                        ]);
+                        if (!empty($userInfos)) {
+                            $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorId = $userInfos['user_id'];
+                        } else {
+                            $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $state['noteCreatorName'];
+                        }
                     }
+                    $aArgs['idsToRetrieve'][$version][$resId]->workflowInfo = implode(", ", $state['workflowInfo']);
                 } else {
                     unset($aArgs['idsToRetrieve'][$version][$resId]);
                 }
@@ -409,10 +440,19 @@ class MaarchParapheurController
     public static function getState($aArgs)
     {
         $state['status'] = 'validated';
+        $state['workflowInfo'] = [];
         foreach ($aArgs['workflow'] as $step) {
+            if ($step['status'] == 'VAL' && $step['mode'] == 'sign') {
+                $state['workflowInfo'][] = $step['userDisplay'] . ' (Signé le ' . $step['processDate'] . ')';
+            } elseif ($step['status'] == 'VAL' && $step['mode'] == 'visa') {
+                $state['workflowInfo'][] = $step['userDisplay'] . ' (Visé le ' . $step['processDate'] . ')';
+            }
             if ($step['status'] == 'REF') {
-                $state['status'] = 'refused';
-                $state['note']   = $step['note'];
+                $state['status']          = 'refused';
+                $state['note']            = $step['note'];
+                $state['noteCreatorId']   = $step['userId'];
+                $state['noteCreatorName'] = $step['userDisplay'];
+                $state['workflowInfo'][]  = $step['userDisplay'] . ' (Refusé le ' . $step['processDate'] . ')';
                 break;
             } elseif (empty($step['status'])) {
                 $state['status'] = 'inProgress';
@@ -426,7 +466,6 @@ class MaarchParapheurController
 
     public static function getUserPicture(Request $request, Response $response, array $aArgs)
     {
-
         $check = Validator::intVal()->validate($aArgs['id']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'id should be an integer']);

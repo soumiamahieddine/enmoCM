@@ -266,7 +266,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     $attachmentToFreeze = $sendedInfo['sended'];
                 }
 
-                $message = ' (à ' . $processingUserInfo['firstname'] . ' ' . $processingUserInfo['lastname'] . ')';
+                $message = $sendedInfo['historyInfos'];
             }
         }
 
@@ -288,17 +288,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                         'externalId' => $externalId
                     ]);
                 }
-            }
-
-            $stmt     = $db->query('SELECT status FROM res_letterbox WHERE res_id = ?', array($res_id));
-            $resource = $stmt->fetchObject();
-            
-            if ($resource->status == 'EVIS' || $resource->status == 'ESIG') {
-                $sequence    = $circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
-                $stepDetails = array();
-                $stepDetails = $circuit_visa->getStepDetails($res_id, $coll_id, 'VISA_CIRCUIT', $sequence);
-
-                $message = $circuit_visa->processVisaWorkflow(['stepDetails' => $stepDetails, 'res_id' => $res_id]);
             }
         }
     }

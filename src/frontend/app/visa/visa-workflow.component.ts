@@ -44,17 +44,20 @@ export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit 
 
         this.http.get("../../rest/listTemplates/entities/" + entityId)
             .subscribe((data: any) => {
-                data.listTemplate.forEach((element: any, index : number) => {
+                data.listTemplate.forEach((element: any) => {
                     if (element.object_type === 'VISA_CIRCUIT') {
+                        element.requested_signature = (element.item_mode === 'visa' ? false : true);
+                        this.visaWorkflow.items.push(element);
+                    }
+                });
+                this.visaWorkflow.items.forEach((element: any) => {
+                    if (element.externalId.maarchParapheur !== undefined) {
                         this.http.get("../../rest/maarchParapheur/user/" + element.externalId.maarchParapheur + "/picture")
                             .subscribe((data: any) => {
-                                element.picture = data.picture
-                                element.requested_signature = (element.item_mode === 'visa' ? false : true);
-                                this.visaWorkflow.items.push(element);
+                                element.picture = data.picture;
                             }, (err: any) => {
                                 this.notify.handleErrors(err);
                             });
-
                     }
                 });
                 this.loading = false;
