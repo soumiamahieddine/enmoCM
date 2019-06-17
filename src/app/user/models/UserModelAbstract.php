@@ -60,13 +60,13 @@ abstract class UserModelAbstract
 
     public static function getByExternalId(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['externalId', 'signatoryBookName']);
+        ValidatorModel::notEmpty($aArgs, ['externalId', 'externalName']);
         ValidatorModel::intVal($aArgs, ['externalId']);
 
         $aUser = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
-            'where'     => ['external_id->>\''.$aArgs['signatoryBookName'].'\' = ?'],
+            'where'     => ['external_id->>\''.$aArgs['externalName'].'\' = ?'],
             'data'      => [$aArgs['externalId']]
         ]);
 

@@ -317,7 +317,7 @@ class MaarchParapheurController
             $userInfos = UserModel::getByExternalId([
                 'select'            => ['firstname', 'lastname'],
                 'externalId'        => $value['userId'],
-                'signatoryBookName' => 'maarchParapheur'
+                'externalName'      => 'maarchParapheur'
             ]);
             if ($value['mode'] == 'note') {
                 $mode = _NOTE_USER;
@@ -394,7 +394,7 @@ class MaarchParapheurController
                         $userInfos = UserModel::getByExternalId([
                             'select'            => ['user_id'],
                             'externalId'        => $state['noteCreatorId'],
-                            'signatoryBookName' => 'maarchParapheur'
+                            'externalName'      => 'maarchParapheur'
                         ]);
                         if (!empty($userInfos)) {
                             $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorId = $userInfos['user_id'];
