@@ -4,13 +4,13 @@
         <ID>standard</ID>
         <NAME>_STANDARD_LOGIN</NAME>
         <SCRIPT>standard_connect.php</SCRIPT>
-        <ENABLED>true</ENABLED>
+        <ENABLED>false</ENABLED>
     </METHOD>
     <METHOD>
         <ID>ldap</ID>
         <NAME>_STANDARD_LOGIN</NAME>
         <SCRIPT>standard_connect.php</SCRIPT>
-        <ENABLED>false</ENABLED>
+        <ENABLED>true</ENABLED>
     </METHOD>
     <METHOD>
         <ID>sso</ID>
