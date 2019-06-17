@@ -498,3 +498,7 @@ define("_FILE_NOT_ALLOWED_INFO_3", "is not allowed");
 
 define("_ENTITY", "Entity");
 define("_PRINT_SEP_TITLE", "Mail separator");
+define("_SIGNATORY", "Signatory");
+define("_VISA_USER_MIN", "Visa user");
+define("_NOTE_USER", "Note user");
+define("_WF_SEND_TO", "Send to : ");
