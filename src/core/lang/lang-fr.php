@@ -455,6 +455,8 @@ define('_CLOSING_DATE', 'Date de clôture');
 define('_ACTION_DATE', 'Date d\'action');
 
 define('_USER_CREATED_IN_MAARCHPARAPHEUR', 'Utilisateur créé dans Maarch Parapheur');
+define('_USER_LINKED_TO_MAARCHPARAPHEUR', 'Utilisateur associé à un compte Maarch Parapheur');
+define('_USER_UNLINKED_TO_MAARCHPARAPHEUR', 'Utilisateur dissocié d\'un Maarch Parapheur');
 define('_SIGNATURES_SEND_TO_MAARCHPARAPHEUR', 'Signature(s) envoyée(s) à Maarch Parapheur');
 
 define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Générer et envoyer les accusés de réception');
