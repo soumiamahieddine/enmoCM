@@ -884,7 +884,7 @@ export const LANG_FR = {
     "siretCode"                             : "Numéro SIRET",
     "phpmail"                               : "Fonction php (mail)",
     "qmail"                                 : "Serveur mail local (Qmail)",
-    "smtprelay"                             : "Relai smtp (sendmail)",
+    "smtprelay"                             : "Relais smtp (sendmail)",
     "smtpclient"                            : "Client smtp (smtp)",
     "smtpAuth"                              : "Méthode d'authentification",
     "SPH"                                   : "Supérieur hiérarchique",
