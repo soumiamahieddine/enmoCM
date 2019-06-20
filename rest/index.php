@@ -341,6 +341,7 @@ $app->put('/users/{id}/status', \User\controllers\UserController::class . ':upda
 $app->put('/users/{id}/createInMaarchParapheur', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':sendUserToMaarchParapheur');
 $app->put('/users/{id}/linkToMaarchParapheur', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':linkUserToMaarchParapheur');
 $app->put('/users/{id}/unlinkToMaarchParapheur', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':unlinkUserToMaarchParapheur');
+$app->get('/users/{id}/statusInMaarchParapheur', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':userStatusInMaarchParapheur');
 $app->put('/users/{id}/externalSignatures', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':sendSignaturesToMaarchParapheur');
 $app->post('/users/{id}/groups', \User\controllers\UserController::class . ':addGroup');
 $app->put('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':updateGroup');
