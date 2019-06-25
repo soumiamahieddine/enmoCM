@@ -1042,4 +1042,12 @@ export const LANG_FR = {
     "visaWorkflowWillBeSend" : "Le circuit visa des courriers sera envoyé à Maarch Parapheur",
     "usersNotExistedInMaarchParapheur" : "Certains utilisateurs n'existent pas dans Maarch Parapheur",
     "usersMissingInSignatureBook" : "non présent dans Maarch Parapheur",
+    "unlinkAccount" : "Dissocier le compte",
+    "accountLinked" : "Compte associé",
+    "accountUnlinked" : "Compte dissocié",
+    "linkAccount" : "Lier un compte Maarch Parapheur",
+    "maarchParapheurAccountMsg" : "Un <b>nouveau</b> compte avec l'identifiant",
+    "maarchParapheurAccountMsg2" : "sera créé dans Maarch Parapheur.",
+    "searchUserInMaarchParapheur" : "Recherche un utilisateur dans Maarch Parapheur",
+    "newLoginInMaarchParapheur" : "Nouvel identifiant Maarch Parapheur",
 };
