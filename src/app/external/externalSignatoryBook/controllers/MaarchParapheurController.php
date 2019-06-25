@@ -732,13 +732,13 @@ class MaarchParapheurController
             }
 
             if (empty($curlResponse['response']['user'])) {
-                return $response->withJson(['connected' => false]);
+                return $response->withJson(['link' => '']);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
         }
 
-        return $response->withJson(['connected' => true]);
+        return $response->withJson(['link' => $curlResponse['response']['user']['login']]);
     }
 
     public static function sendSignaturesToMaarchParapheur(Request $request, Response $response, array $aArgs)
