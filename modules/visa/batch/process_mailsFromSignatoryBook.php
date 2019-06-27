@@ -335,7 +335,7 @@ foreach ($retrievedMails['isVersion'] as $resId => $value) {
         }
     
         $GLOBALS['logger']->write('Document validated', 'INFO');
-        $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ?", [$resId]);
+        $GLOBALS['db']->query("UPDATE res_version_attachments set status = 'OBS', external_id = external_id - 'signatureBookId' WHERE res_id = ?", [$resId]);
         if (!empty($value->onlyVisa) && $value->onlyVisa) {
             $status = $validatedStatusOnlyVisa;
         } else {
@@ -450,7 +450,7 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
         }
 
         $GLOBALS['logger']->write('Document validated', 'INFO');
-        $GLOBALS['db']->query("UPDATE res_attachments SET status = 'OBS' WHERE res_id = ?", [$resId]);
+        $GLOBALS['db']->query("UPDATE res_attachments SET status = 'OBS', external_id = external_id - 'signatureBookId' WHERE res_id = ?", [$resId]);
         if (!empty($value->onlyVisa) && $value->onlyVisa) {
             $status = $validatedStatusOnlyVisa;
         } else {
