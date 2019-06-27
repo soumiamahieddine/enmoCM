@@ -1050,4 +1050,5 @@ export const LANG_FR = {
     "maarchParapheurAccountMsg2" : "sera créé dans Maarch Parapheur.",
     "searchUserInMaarchParapheur" : "Recherche un utilisateur dans Maarch Parapheur",
     "newLoginInMaarchParapheur" : "Nouvel identifiant Maarch Parapheur",
+    "loginAlreadyExistsInMaarchParapheur" : "Ce login existe déjà dans Maarch Parapheur"
 };

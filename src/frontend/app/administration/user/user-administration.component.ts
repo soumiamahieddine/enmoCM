@@ -218,6 +218,9 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 this.checkInfoMaarchParapheurAccount();
                 this.notify.success(this.lang.accountAdded);
             }, (err) => {
+                if (err.error.errors == 'Login already exists') {
+                    err.error.errors = this.lang.loginAlreadyExistsInMaarchParapheur
+                }
                 this.notify.error(err.error.errors);
             });
     }
