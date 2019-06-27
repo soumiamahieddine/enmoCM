@@ -28,7 +28,7 @@ export class AccountLinkComponent extends AutoCompletePlugin {
     }
 
     ngOnInit(): void {
-        this.http.get(this.coreUrl + 'rest/autocomplete/maarchParapheurUsers', { params: { "search": this.data.user.lastname, "exludeAlreadyConnected": 'true' } })
+        this.http.get(this.coreUrl + 'rest/autocomplete/maarchParapheurUsers', { params: { "search": this.data.user.mail, "exludeAlreadyConnected": 'true' } })
         .subscribe((dataUsers: any) => {
             if ( dataUsers.length > 0) {
                 this.externalUser = dataUsers[0];
@@ -67,6 +67,7 @@ export class AccountLinkComponent extends AutoCompletePlugin {
     unlinkMaarchParapheurAccount() {
         this.externalUser.inMaarchParapheur = false;
         this.externalUser = this.data.user;
+        this.externalUser.login = this.data.user.user_id;
         this.externalUser.email = this.data.user.mail;
     }
 }

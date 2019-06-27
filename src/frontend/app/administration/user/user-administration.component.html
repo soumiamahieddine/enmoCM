@@ -30,7 +30,7 @@
                         {{lang.changePassword}}
                     </p>
                 </a>
-                <a mat-list-item *ngIf="user.canCreateMaarchParapheurUser" (click)="linkMaarchParapheurAccount()"
+                <a mat-list-item *ngIf="user.canCreateMaarchParapheurUser || maarchParapheurLink.login === ''" (click)="linkMaarchParapheurAccount()"
                     title="{{lang.createUserInMaarchParapheur}}">
                     <mat-icon color="primary" mat-list-icon class="fa fa-link"></mat-icon>
                     <p mat-line>
