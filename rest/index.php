@@ -192,6 +192,7 @@ $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
 //Home
 $app->get('/home', \Home\controllers\HomeController::class . ':get');
 $app->get('/home/lastRessources', \Home\controllers\HomeController::class . ':getLastRessources');
+$app->get('/home/maarchParapheurDocuments', \Home\controllers\HomeController::class . ':getMaarchParapheurDocuments');
 
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
@@ -270,7 +271,6 @@ $app->get('/categories', \Resource\controllers\ResController::class . ':getCateg
 $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
 $app->post('/resources/checkFileUpload', \Resource\controllers\StoreController::class . ':checkFileUpload');
-
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
