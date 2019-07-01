@@ -36,6 +36,9 @@
                     <p mat-line>
                         {{lang.linkAccount}}
                     </p>
+                    <p mat-line *ngIf="!maarchParapheurConnectionStatus" style="font-size:11px;color:red">
+                        {{lang.maarchParapheurLinkbroken}}
+                    </p>
                 </a>
             </mat-nav-list>
             <mat-divider></mat-divider>

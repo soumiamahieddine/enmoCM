@@ -1044,4 +1044,5 @@ export const LANG_NL = {
     "searchUserInMaarchParapheur" : "Search unlinked an user in Maarch Parapheur", //_TO_TRANSLATE
     "newLoginInMaarchParapheur" : "New Maarch Parapheur Login", //_TO_TRANSLATE
     "loginAlreadyExistsInMaarchParapheur" : "Login already exists in Maarch Parapheur", //_TO_TRANSLATE
+    "maarchParapheurLinkbroken" : "Maarch Parapheur link is broken", //_TO_TRANSLATE
 };

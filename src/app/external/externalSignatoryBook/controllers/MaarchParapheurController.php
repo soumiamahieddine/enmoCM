@@ -518,7 +518,8 @@ class MaarchParapheurController
             return $response->withStatus(400)->withJson(['errors' => 'login is empty or wrong format']);
         }
         
-        $error = UserController::hasUsersRights(['id' => $aArgs['id']]);
+        $userController = new UserController();
+        $error = $userController->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
@@ -591,7 +592,8 @@ class MaarchParapheurController
             return $response->withStatus(400)->withJson(['errors' => 'maarchParapheurUserId is empty or not an integer']);
         }
         
-        $error = UserController::hasUsersRights(['id' => $aArgs['id']]);
+        $userController = new UserController();
+        $error = $userController->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
@@ -664,7 +666,8 @@ class MaarchParapheurController
 
     public static function unlinkUserToMaarchParapheur(Request $request, Response $response, array $aArgs)
     {
-        $error = UserController::hasUsersRights(['id' => $aArgs['id']]);
+        $userController = new UserController();
+        $error = $userController->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
@@ -689,7 +692,8 @@ class MaarchParapheurController
 
     public static function userStatusInMaarchParapheur(Request $request, Response $response, array $aArgs)
     {
-        $error = UserController::hasUsersRights(['id' => $aArgs['id']]);
+        $userController = new UserController();
+        $error = $userController->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
@@ -719,6 +723,7 @@ class MaarchParapheurController
                 return $response->withStatus(400)->withJson(['errors' => 'User does not have Maarch Parapheur Id']);
             }
 
+            $errors = '';
             if ($curlResponse['code'] != '200') {
                 if (!empty($curlResponse['response']['errors'])) {
                     $errors =  $curlResponse['response']['errors'];
@@ -728,22 +733,22 @@ class MaarchParapheurController
                 if (empty($errors)) {
                     $errors = 'An error occured. Please check your configuration file.';
                 }
-                return $response->withStatus(400)->withJson(['errors' => $errors]);
             }
 
             if (empty($curlResponse['response']['user'])) {
-                return $response->withJson(['link' => '']);
+                return $response->withJson(['link' => '', 'errors' => $errors]);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
         }
 
-        return $response->withJson(['link' => $curlResponse['response']['user']['login']]);
+        return $response->withJson(['link' => $curlResponse['response']['user']['login'], 'errors' => '']);
     }
 
     public static function sendSignaturesToMaarchParapheur(Request $request, Response $response, array $aArgs)
     {
-        $error = UserController::hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
+        $userController = new UserController();
+        $error = $userController->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
