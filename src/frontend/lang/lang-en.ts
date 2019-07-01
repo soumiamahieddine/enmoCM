@@ -1009,4 +1009,13 @@ export const LANG_EN = {
     "visaWorkflowWillBeSend" : "Visa workflow will be send to Maarch Parapheur",
     "usersNotExistedInMaarchParapheur" : "Some users does not exist in Maarch Parapheur",
     "usersMissingInSignatureBook" : "missing in Maarch Parapheur",
+    "unlinkAccount" : "Unlink account",
+    "accountLinked" : "Account linked",
+    "accountUnlinked" : "Account unlinked",
+    "linkAccount" : "Link Maarch Parapheur account",
+    "maarchParapheurAccountMsg" : "A <b>new</b> account with login",
+    "maarchParapheurAccountMsg2" : " will be created in Maarch Parapheur.",
+    "searchUserInMaarchParapheur" : "Search an user in Maarch Parapheur",
+    "newLoginInMaarchParapheur" : "New Maarch Parapheur Login",
+    "loginAlreadyExistsInMaarchParapheur" : "Login already exists in Maarch Parapheur"
 };

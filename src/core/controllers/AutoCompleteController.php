@@ -124,6 +124,16 @@ class AutoCompleteController
             return $response->withStatus(400)->withJson(['errors' => 'search is empty']);
         }
 
+        if (!empty($data['exludeAlreadyConnected'])) {
+            $usersAlreadyConnected = UserModel::get([
+                'select' => ['external_id->>\'maarchParapheur\' as external_id'],
+                'where' => ['external_id->>\'maarchParapheur\' is not null']
+            ]);
+            $externalId = ['excludeId' => array_column($usersAlreadyConnected, 'external_id')];
+            $exclude = '&'.http_build_query($externalId);
+        }
+
+
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
 
         if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
@@ -137,7 +147,7 @@ class AutoCompleteController
             }
 
             $curlResponse = CurlModel::execSimple([
-                'url'           => rtrim($url, '/') . '/rest/autocomplete/users?search='.$data['search'],
+                'url'           => rtrim($url, '/') . '/rest/autocomplete/users?search='.urlencode($data['search']).$exclude,
                 'basicAuth'     => ['user' => $userId, 'password' => $password],
                 'headers'       => ['content-type:application/json'],
                 'method'        => 'GET'

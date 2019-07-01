@@ -19,6 +19,7 @@ use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use History\controllers\HistoryController;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\controllers\SummarySheetController;
@@ -29,6 +30,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
+use User\controllers\UserController;
 use User\models\UserModel;
 
 class MaarchParapheurController
@@ -317,7 +319,7 @@ class MaarchParapheurController
             $userInfos = UserModel::getByExternalId([
                 'select'            => ['firstname', 'lastname'],
                 'externalId'        => $value['userId'],
-                'signatoryBookName' => 'maarchParapheur'
+                'externalName'      => 'maarchParapheur'
             ]);
             if ($value['mode'] == 'note') {
                 $mode = _NOTE_USER;
@@ -394,7 +396,7 @@ class MaarchParapheurController
                         $userInfos = UserModel::getByExternalId([
                             'select'            => ['user_id'],
                             'externalId'        => $state['noteCreatorId'],
-                            'signatoryBookName' => 'maarchParapheur'
+                            'externalName'      => 'maarchParapheur'
                         ]);
                         if (!empty($userInfos)) {
                             $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorId = $userInfos['user_id'];
@@ -506,5 +508,329 @@ class MaarchParapheurController
         }
 
         return $response->withJson(['picture' => $curlResponse['response']['picture']]);
+    }
+
+    public static function sendUserToMaarchParapheur(Request $request, Response $response, array $aArgs)
+    {
+        $body = $request->getParsedBody();
+        $check = Validator::stringType()->notEmpty()->validate($body['login']) && preg_match("/^[\w.@-]*$/", $body['login']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'login is empty or wrong format']);
+        }
+        
+        $error = UserController::hasUsersRights(['id' => $aArgs['id']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            $userInfo = UserModel::getById(['select' => ['firstname', 'lastname', 'mail', 'external_id'], 'id' => $aArgs['id']]);
+
+            $bodyData = [
+                "lastname"  => $userInfo['lastname'],
+                "firstname" => $userInfo['firstname'],
+                "login"     => $body['login'],
+                "email"     => $userInfo['mail']
+            ];
+
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    $url      = $value->url;
+                    $userId   = $value->userId;
+                    $password = $value->password;
+                    break;
+                }
+            }
+
+            $curlResponse = CurlModel::execSimple([
+                'url'           => rtrim($url, '/') . '/rest/users',
+                'basicAuth'     => ['user' => $userId, 'password' => $password],
+                'headers'       => ['content-type:application/json'],
+                'method'        => 'POST',
+                'body'          => json_encode($bodyData)
+            ]);
+
+            if ($curlResponse['code'] != '200') {
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
+            }
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+
+        $externalId = json_decode($userInfo['external_id'], true);
+        $externalId['maarchParapheur'] = $curlResponse['response']['id'];
+
+        UserModel::updateExternalId(['id' => $aArgs['id'], 'externalId' => json_encode($externalId)]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'ADD',
+            'eventId'      => 'userCreation',
+            'info'         => _USER_CREATED_IN_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
+        ]);
+
+        return $response->withJson(['externalId' => $curlResponse['response']['id']]);
+    }
+
+    public static function linkUserToMaarchParapheur(Request $request, Response $response, array $aArgs)
+    {
+        $body = $request->getParsedBody();
+        $check = Validator::intType()->notEmpty()->validate($body['maarchParapheurUserId']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'maarchParapheurUserId is empty or not an integer']);
+        }
+        
+        $error = UserController::hasUsersRights(['id' => $aArgs['id']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    $url      = $value->url;
+                    $userId   = $value->userId;
+                    $password = $value->password;
+                    break;
+                }
+            }
+
+            $curlResponse = CurlModel::execSimple([
+                'url'           => rtrim($url, '/') . '/rest/users/'.$body['maarchParapheurUserId'],
+                'basicAuth'     => ['user' => $userId, 'password' => $password],
+                'headers'       => ['content-type:application/json'],
+                'method'        => 'GET'
+            ]);
+
+            if ($curlResponse['code'] != '200') {
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
+            }
+
+            if (empty($curlResponse['response']['user'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'User does not exist in Maarch Parapheur']);
+            }
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+
+        $userInfos = UserModel::getByExternalId([
+            'select'            => ['user_id'],
+            'externalId'        => $body['maarchParapheurUserId'],
+            'externalName'      => 'maarchParapheur'
+        ]);
+
+        if (!empty($userInfos)) {
+            return $response->withStatus(403)->withJson(['errors' => 'This maarch parapheur user is already linked to someone. Choose another one.']);
+        }
+
+        $userInfo = UserModel::getById(['select' => ['external_id', 'firstname', 'lastname'], 'id' => $aArgs['id']]);
+
+        $externalId = json_decode($userInfo['external_id'], true);
+        $externalId['maarchParapheur'] = $body['maarchParapheurUserId'];
+
+        UserModel::updateExternalId(['id' => $aArgs['id'], 'externalId' => json_encode($externalId)]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'ADD',
+            'eventId'      => 'userCreation',
+            'info'         => _USER_LINKED_TO_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
+        ]);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    public static function unlinkUserToMaarchParapheur(Request $request, Response $response, array $aArgs)
+    {
+        $error = UserController::hasUsersRights(['id' => $aArgs['id']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $userInfo = UserModel::getById(['select' => ['external_id', 'firstname', 'lastname'], 'id' => $aArgs['id']]);
+
+        $externalId = json_decode($userInfo['external_id'], true);
+        unset($externalId['maarchParapheur']);
+
+        UserModel::updateExternalId(['id' => $aArgs['id'], 'externalId' => json_encode($externalId)]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'ADD',
+            'eventId'      => 'userCreation',
+            'info'         => _USER_UNLINKED_TO_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
+        ]);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    public static function userStatusInMaarchParapheur(Request $request, Response $response, array $aArgs)
+    {
+        $error = UserController::hasUsersRights(['id' => $aArgs['id']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    $url      = $value->url;
+                    $userId   = $value->userId;
+                    $password = $value->password;
+                    break;
+                }
+            }
+
+            $userInfo = UserModel::getById(['select' => ['external_id->\'maarchParapheur\' as external_id'], 'id' => $aArgs['id']]);
+
+            if (!empty($userInfo['external_id'])) {
+                $curlResponse = CurlModel::execSimple([
+                    'url'           => rtrim($url, '/') . '/rest/users/'.$userInfo['external_id'],
+                    'basicAuth'     => ['user' => $userId, 'password' => $password],
+                    'headers'       => ['content-type:application/json'],
+                    'method'        => 'GET'
+                ]);
+            } else {
+                return $response->withStatus(400)->withJson(['errors' => 'User does not have Maarch Parapheur Id']);
+            }
+
+            if ($curlResponse['code'] != '200') {
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
+            }
+
+            if (empty($curlResponse['response']['user'])) {
+                return $response->withJson(['link' => '']);
+            }
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+
+        return $response->withJson(['link' => $curlResponse['response']['user']['login']]);
+    }
+
+    public static function sendSignaturesToMaarchParapheur(Request $request, Response $response, array $aArgs)
+    {
+        $error = UserController::hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+
+        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+            $userInfo   = UserModel::getById(['select' => ['external_id', 'user_id'], 'id' => $aArgs['id']]);
+            $externalId = json_decode($userInfo['external_id'], true);
+
+            if (!empty($externalId['maarchParapheur'])) {
+                $userSignatures = UserSignatureModel::get([
+                    'select'    => ['signature_path', 'signature_file_name', 'id'],
+                    'where'     => ['user_serial_id = ?'],
+                    'data'      => [$aArgs['id']]
+                ]);
+                if (empty($userSignatures)) {
+                    return $response->withStatus(400)->withJson(['errors' => 'User has no signature']);
+                }
+        
+                $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+                if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Path for signature docserver does not exists']);
+                }
+
+                $signatures = [];
+                $signaturesId = [];
+                foreach ($userSignatures as $value) {
+                    $pathToSignature = $docserver['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
+                    if (is_file($pathToSignature)) {
+                        $base64          = base64_encode(file_get_contents($pathToSignature));
+                        $format          = pathinfo($pathToSignature, PATHINFO_EXTENSION);
+                        $signatures[]    = ['encodedSignature' => $base64, 'format' => $format];
+                        $signaturesId[]   = $value['id'];
+                    } else {
+                        return $response->withStatus(403)->withJson(['errors' => 'File does not exists : ' . $pathToSignature]);
+                    }
+                }
+
+                $bodyData = [
+                    "signatures"          => $signatures,
+                    "externalApplication" => 'maarchCourrier'
+                ];
+    
+                foreach ($loadedXml->signatoryBook as $value) {
+                    if ($value->id == "maarchParapheur") {
+                        $url      = $value->url;
+                        $userId   = $value->userId;
+                        $password = $value->password;
+                        break;
+                    }
+                }
+
+                $curlResponse = CurlModel::execSimple([
+                    'url'           => rtrim($url, '/') . '/rest/users/' . $externalId['maarchParapheur'] . '/externalSignatures',
+                    'basicAuth'     => ['user' => $userId, 'password' => $password],
+                    'headers'       => ['content-type:application/json'],
+                    'method'        => 'PUT',
+                    'body'          => json_encode($bodyData)
+                ]);
+            } else {
+                return $response->withStatus(403)->withJson(['errors' => 'user does not exists in maarch Parapheur']);
+            }
+
+            if ($curlResponse['code'] != '204') {
+                if (!empty($curlResponse['response']['errors'])) {
+                    $errors =  $curlResponse['response']['errors'];
+                } else {
+                    $errors =  $curlResponse['errors'];
+                }
+                if (empty($errors)) {
+                    $errors = 'An error occured. Please check your configuration file.';
+                }
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
+            }
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'maarchParapheur is not enabled']);
+        }
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $userInfo['user_id'],
+            'eventType'    => 'UP',
+            'eventId'      => 'signatureSync',
+            'info'         => _SIGNATURES_SEND_TO_MAARCHPARAPHEUR . " : " . implode(", ", $signaturesId)
+        ]);
+
+        return $response->withJson(['success' => 'success']);
     }
 }

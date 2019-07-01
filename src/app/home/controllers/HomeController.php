@@ -20,6 +20,8 @@ use Group\models\GroupModel;
 use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
+use SrcCore\models\CurlModel;
 use User\models\UserModel;
 use Parameter\models\ParameterModel;
 
@@ -84,10 +86,24 @@ class HomeController
             $assignedBaskets[$key]['ownerLogin'] = UserModel::getById(['id' => $assignedBasket['owner_user_id'], 'select' => ['user_id']])['user_id'];
         }
 
+        $isMaarchParapheurConnected = false;
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+        if (!empty($loadedXml)) {
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == "maarchParapheur") {
+                    if (!empty($value->url) && !empty($value->userId) && !empty($value->password)) {
+                        $isMaarchParapheurConnected = true;
+                    }
+                    break;
+                }
+            }
+        }
+
         return $response->withJson([
-            'regroupedBaskets'  => $regroupedBaskets,
-            'assignedBaskets'   => $assignedBaskets,
-            'homeMessage'       => $homeMessage,
+            'regroupedBaskets'              => $regroupedBaskets,
+            'assignedBaskets'               => $assignedBaskets,
+            'homeMessage'                   => $homeMessage,
+            'isMaarchParapheurConnected'    => $isMaarchParapheurConnected
         ]);
     }
 
@@ -113,5 +129,58 @@ class HomeController
         return $response->withJson([
             'lastResources'     => $lastResources,
         ]);
+    }
+
+    public function getMaarchParapheurDocuments(Request $request, Response $response)
+    {
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['external_id']]);
+
+        $externalId = json_decode($user['external_id'], true);
+        if (empty($externalId['maarchParapheur'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'User is not linked to Maarch Parapheur']);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+        if (empty($loadedXml)) {
+            return $response->withStatus(400)->withJson(['errors' => 'SignatoryBooks configuration file missing']);
+        }
+
+        $url      = '';
+        $userId   = '';
+        $password = '';
+        foreach ($loadedXml->signatoryBook as $value) {
+            if ($value->id == "maarchParapheur") {
+                $url      = $value->url;
+                $userId   = $value->userId;
+                $password = $value->password;
+                break;
+            }
+        }
+
+        if (empty($url)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Maarch Parapheur configuration missing']);
+        }
+
+        $curlResponse = CurlModel::execSimple([
+            'url'           => rtrim($url, '/') . '/rest/documents',
+            'basicAuth'     => ['user' => $userId, 'password' => $password],
+            'headers'       => ['content-type:application/json'],
+            'method'        => 'GET',
+            'queryParams'   => ['userId' => $externalId['maarchParapheur'], 'limit' => 10]
+        ]);
+
+        if ($curlResponse['code'] != '200') {
+            if (!empty($curlResponse['response']['errors'])) {
+                $errors =  $curlResponse['response']['errors'];
+            } else {
+                $errors =  $curlResponse['errors'];
+            }
+            if (empty($errors)) {
+                $errors = 'An error occured. Please check your configuration file.';
+            }
+            return $response->withStatus(400)->withJson(['errors' => $errors]);
+        }
+
+        return $response->withJson($curlResponse['response']);
     }
 }

@@ -884,7 +884,7 @@ export const LANG_FR = {
     "siretCode"                             : "Numéro SIRET",
     "phpmail"                               : "Fonction php (mail)",
     "qmail"                                 : "Serveur mail local (Qmail)",
-    "smtprelay"                             : "Relai smtp (sendmail)",
+    "smtprelay"                             : "Relais smtp (sendmail)",
     "smtpclient"                            : "Client smtp (smtp)",
     "smtpAuth"                              : "Méthode d'authentification",
     "SPH"                                   : "Supérieur hiérarchique",
@@ -1042,4 +1042,13 @@ export const LANG_FR = {
     "visaWorkflowWillBeSend" : "Le circuit visa des courriers sera envoyé à Maarch Parapheur",
     "usersNotExistedInMaarchParapheur" : "Certains utilisateurs n'existent pas dans Maarch Parapheur",
     "usersMissingInSignatureBook" : "non présent dans Maarch Parapheur",
+    "unlinkAccount" : "Dissocier le compte",
+    "accountLinked" : "Compte associé",
+    "accountUnlinked" : "Compte dissocié",
+    "linkAccount" : "Lier un compte Maarch Parapheur",
+    "maarchParapheurAccountMsg" : "Un <b>nouveau</b> compte avec l'identifiant",
+    "maarchParapheurAccountMsg2" : "sera créé dans Maarch Parapheur.",
+    "searchUserInMaarchParapheur" : "Rechercher un utilisateur dans Maarch Parapheur",
+    "newLoginInMaarchParapheur" : "Nouvel identifiant Maarch Parapheur",
+    "loginAlreadyExistsInMaarchParapheur" : "Ce login existe déjà dans Maarch Parapheur"
 };
