@@ -1018,5 +1018,9 @@ export const LANG_EN = {
     "searchUserInMaarchParapheur" : "Search an user in Maarch Parapheur",
     "newLoginInMaarchParapheur" : "New Maarch Parapheur Login",
     "loginAlreadyExistsInMaarchParapheur" : "Login already exists in Maarch Parapheur",
-    "maarchParapheurLinkbroken" : "Maarch Parapheur link is broken"
+    "maarchParapheurLinkbroken" : "Maarch Parapheur link is broken",
+    "maarchParapheurDocuments" : "Last Maarch Parapheur document(s)",
+    "to_visa" : "To approve",
+    "to_sign" : "To sign",
+    "to_note" : "To note",
 };

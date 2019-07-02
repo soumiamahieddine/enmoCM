@@ -1051,5 +1051,9 @@ export const LANG_FR = {
     "searchUserInMaarchParapheur" : "Rechercher un utilisateur dans Maarch Parapheur",
     "newLoginInMaarchParapheur" : "Nouvel identifiant Maarch Parapheur",
     "loginAlreadyExistsInMaarchParapheur" : "Ce login existe déjà dans Maarch Parapheur",
-    "maarchParapheurLinkbroken" : "L'utilisateur n'existe plus dans Maarch Parapheur."
+    "maarchParapheurLinkbroken" : "L'utilisateur n'existe plus dans Maarch Parapheur.",
+    "maarchParapheurDocuments" : "Mes derniers documents Maarch Parapheur",
+    "to_visa" : "À vise",
+    "to_sign" : "À signer",
+    "to_note" : "À annoter",
 };

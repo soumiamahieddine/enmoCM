@@ -9,7 +9,8 @@
         <mat-divider></mat-divider>
     </mat-sidenav>
     <mat-sidenav-content>
-        <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;"><img style="max-height: 100vh;" src="{{thumbnailUrl}}" />
+        <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;"><img
+                style="max-height: 100vh;" src="{{thumbnailUrl}}" />
         </mat-card>
         <div class="bg-head">
             <div class="bg-head-title" [class.customContainerRight]="mobileMode">
@@ -111,10 +112,15 @@
                                     </div>
                                 </td>
                             </ng-container>
-
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToDetail(row);"
                                 style="cursor:pointer;"></tr>
                         </table>
+                    </mat-tab>
+                    <mat-tab *ngIf="homeData.isLinkedToMaarchParapheur">
+                        <ng-template matTabLabel>
+                            <span [class.noDoc]="nbMpDocs === 0" matBadge="{{nbMpDocs}}" matBadgeOverlap="false">{{lang.maarchParapheurDocuments}}</span>
+                        </ng-template>
+                        <app-maarch-parapheur-list (triggerEvent)="updateNbMpDocs($event)"></app-maarch-parapheur-list>
                     </mat-tab>
                 </mat-tab-group>
             </div>
@@ -123,7 +129,8 @@
     <mat-sidenav #snav2 [fixedInViewport]="mobileQuery.matches" position='end'
         [opened]="mobileQuery.matches ? false : false" [mode]="mobileMode ? 'over' : 'side'" class="panel-right"
         style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '30%'}" autoFocus="false">
-        <pdf-viewer [src]="docUrl" [render-text]="true" [autoresize]="true" [original-size]="false" [show-all]="true"></pdf-viewer>
+        <pdf-viewer [src]="docUrl" [render-text]="true" [autoresize]="true" [original-size]="false" [show-all]="true">
+        </pdf-viewer>
         <!-- <div *ngIf="innerHtml" [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div> -->
     </mat-sidenav>
 </mat-sidenav-container>

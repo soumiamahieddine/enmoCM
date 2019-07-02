@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild, QueryList, ViewChildren } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from './translate.component';
+import { LANG } from '../translate.component';
 import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource } from '@angular/material';
-import { NotificationService } from './notification.service';
-import { HeaderService }        from '../service/header.service';
+import { NotificationService } from '../notification.service';
+import { HeaderService }        from '../../service/header.service';
 
 
-import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
+import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 declare function $j(selector: any): any;
@@ -35,6 +35,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     homeMessage         : string;
     dataSource          : any;
     currentDate         : string    = "";
+    nbMpDocs            : number    = 0;
 
 
     public innerHtml    : SafeHtml;
@@ -71,7 +72,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
         this.http.get(this.coreUrl + "rest/home")
             .subscribe((data: any) => {
                 this.homeData = data;
-                this.homeMessage = data['homeMessage']
+                this.homeMessage = data['homeMessage'];
         });
     }
 
@@ -120,5 +121,9 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
             }, () => {
                 this.notify.error(this.lang.errorOccured);
             });
+    }
+
+    updateNbMpDocs(ev: any) {
+        this.nbMpDocs = ev;
     }
 }
