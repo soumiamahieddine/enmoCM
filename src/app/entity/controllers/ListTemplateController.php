@@ -14,16 +14,17 @@
 
 namespace Entity\controllers;
 
-use Group\models\ServiceModel;
-use SrcCore\models\CoreConfigModel;
-use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
+use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
+use SrcCore\models\CurlModel;
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
 class ListTemplateController
@@ -277,6 +278,28 @@ class ListTemplateController
 
                 $userInfos = UserModel::getByLowerLogin(['login' => $value['item_id'], 'select' => ['external_id']]);
                 $listTemplates[$key]['externalId'] = json_decode($userInfos['external_id'], true);
+                if (!empty($listTemplates[$key]['externalId']['maarchParapheur'])) {
+                    $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+                    if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
+                        foreach ($loadedXml->signatoryBook as $value) {
+                            if ($value->id == "maarchParapheur") {
+                                $url      = $value->url;
+                                $userId   = $value->userId;
+                                $password = $value->password;
+                                break;
+                            }
+                        }
+                        $curlResponse = CurlModel::execSimple([
+                            'url'           => rtrim($url, '/') . '/rest/users/'.$listTemplates[$key]['externalId']['maarchParapheur'],
+                            'basicAuth'     => ['user' => $userId, 'password' => $password],
+                            'headers'       => ['content-type:application/json'],
+                            'method'        => 'GET'
+                        ]);
+                        if (empty($curlResponse['response']['user'])) {
+                            unset($listTemplates[$key]['externalId']['maarchParapheur']);
+                        }
+                    }
+                }
             }
         }
 
