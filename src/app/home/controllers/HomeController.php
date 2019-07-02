@@ -171,6 +171,7 @@ class HomeController
             return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
 
-        return $response->withJson(['documents' => $curlResponse['response'], 'url' => $url]);
+        $curlResponse['response']['url'] = $url;
+        return $response->withJson($curlResponse['response']);
     }
 }
