@@ -31,7 +31,7 @@ class HomeController
     {
         $regroupedBaskets = [];
 
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'external_id']]);
         $homeMessage = ParameterModel::getById(['select' => ['param_value_string'], 'id'=> 'homepage_message']);
         $homeMessage = trim($homeMessage['param_value_string']);
 
@@ -86,24 +86,13 @@ class HomeController
             $assignedBaskets[$key]['ownerLogin'] = UserModel::getById(['id' => $assignedBasket['owner_user_id'], 'select' => ['user_id']])['user_id'];
         }
 
-        $isMaarchParapheurConnected = false;
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
-        if (!empty($loadedXml)) {
-            foreach ($loadedXml->signatoryBook as $value) {
-                if ($value->id == "maarchParapheur") {
-                    if (!empty($value->url) && !empty($value->userId) && !empty($value->password)) {
-                        $isMaarchParapheurConnected = true;
-                    }
-                    break;
-                }
-            }
-        }
+        $externalId = json_decode($user['external_id'], true);
 
         return $response->withJson([
             'regroupedBaskets'              => $regroupedBaskets,
             'assignedBaskets'               => $assignedBaskets,
             'homeMessage'                   => $homeMessage,
-            'isMaarchParapheurConnected'    => $isMaarchParapheurConnected
+            'isLinkedToMaarchParapheur'     => !empty($externalId['maarchParapheur'])
         ]);
     }
 
