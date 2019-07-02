@@ -140,7 +140,7 @@ class HomeController
         $password = '';
         foreach ($loadedXml->signatoryBook as $value) {
             if ($value->id == "maarchParapheur") {
-                $url      = $value->url;
+                $url      = rtrim($value->url, '/');
                 $userId   = $value->userId;
                 $password = $value->password;
                 break;
@@ -171,6 +171,6 @@ class HomeController
             return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
 
-        return $response->withJson($curlResponse['response']);
+        return $response->withJson(['documents' => $curlResponse['response'], 'url' => $url]);
     }
 }
