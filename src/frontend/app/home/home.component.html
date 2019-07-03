@@ -117,7 +117,7 @@
                                 style="cursor:pointer;"></tr>
                         </table>
                     </mat-tab>
-                    <mat-tab *ngIf="homeData.isLinkedToMaarchParapheur">
+                    <mat-tab *ngIf="homeData !== undefined && homeData.isLinkedToMaarchParapheur">
                         <ng-template matTabLabel>
                             <span [class.noDoc]="nbMpDocs === 0" matBadge="{{nbMpDocs}}" matBadgeOverlap="false">{{lang.maarchParapheurDocuments}}</span>
                         </ng-template>
