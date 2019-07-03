@@ -1023,4 +1023,5 @@ export const LANG_EN = {
     "to_visa" : "To approve",
     "to_sign" : "To sign",
     "to_note" : "To note",
+    "confidential" : "Confidential",
 };

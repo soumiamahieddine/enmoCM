@@ -1049,4 +1049,5 @@ export const LANG_NL = {
     "to_visa" : "To approve", //_TO_TRANSLATE
     "to_sign" : "To sign", //_TO_TRANSLATE
     "to_note" : "To note", //_TO_TRANSLATE
+    "confidential" : "Confidential", //_TO_TRANSLATE
 };

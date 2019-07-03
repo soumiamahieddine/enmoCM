@@ -1053,7 +1053,8 @@ export const LANG_FR = {
     "loginAlreadyExistsInMaarchParapheur" : "Ce login existe déjà dans Maarch Parapheur",
     "maarchParapheurLinkbroken" : "L'utilisateur n'existe plus dans Maarch Parapheur.",
     "maarchParapheurDocuments" : "Mes derniers documents Maarch Parapheur",
-    "to_visa" : "À vise",
+    "to_visa" : "À viser",
     "to_sign" : "À signer",
     "to_note" : "À annoter",
+    "confidential" : "Confidentiel",
 };
