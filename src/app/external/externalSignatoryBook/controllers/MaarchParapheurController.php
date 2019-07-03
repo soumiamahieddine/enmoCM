@@ -32,6 +32,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
 use User\controllers\UserController;
 use User\models\UserModel;
+use User\models\UserSignatureModel;
 
 class MaarchParapheurController
 {
