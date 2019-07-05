@@ -129,7 +129,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $sendedInfo         = \ExternalSignatoryBook\controllers\MaarchParapheurController::sendDatas([
                 'config'             => $config,
                 'resIdMaster'        => $res_id,
-                'processingUser'     => $processingUserInfo['login'],
+                'processingUser'     => $processingUser,
                 'objectSent'         => 'mail',
                 'userId'             => $_SESSION['user']['UserId']
             ]);
