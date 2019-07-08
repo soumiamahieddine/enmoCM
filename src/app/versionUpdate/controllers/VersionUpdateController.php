@@ -159,7 +159,7 @@ class VersionUpdateController
         exec('git fetch');
         exec("git checkout {$minorVersion}", $output);
 
-        $log = "Application updated from {$currentVersion} to {$minorVersion}\n" . implode(' ', $output);
+        $log = "Application updated from {$currentVersion} to {$minorVersion}\nCheckout response => " . implode(' ', $output) . "\n";
         file_put_contents('updateVersion.log', $log, FILE_APPEND);
 
         return $response->withStatus(204);
