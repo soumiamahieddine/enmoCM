@@ -16,7 +16,6 @@ namespace VersionUpdate\controllers;
 
 use Gitlab\Client;
 use Group\models\ServiceModel;
-use Parameter\models\ParameterModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
@@ -38,7 +37,7 @@ class VersionUpdateController
 
         $applicationVersion = CoreConfigModel::getApplicationVersion();
 
-        if(!$applicationVersion) {
+        if (empty($applicationVersion)) {
             return $response->withStatus(400)->withJson(['errors' => "Can't load xml applicationVersion"]);
         } else {
             $currentVersion = $applicationVersion['applicationMinorVersion'];
@@ -71,7 +70,6 @@ class VersionUpdateController
             }
         }
 
-        //Sort array using a case insensitive "natural order" algorithm
         natcasesort($availableMinorVersions);
         natcasesort($availableMajorVersions);
 
@@ -87,10 +85,74 @@ class VersionUpdateController
             $lastAvailableMajorVersion = $availableMajorVersions[0];
         }
 
+        $output = [];
+        $diff = exec('git diff', $output);
+        $stagedDiff = exec('git diff --staged', $output);
+
         return $response->withJson([
             'lastAvailableMinorVersion' => $lastAvailableMinorVersion,
             'lastAvailableMajorVersion' => $lastAvailableMajorVersion,
-            'currentVersion'            => $currentVersion
+            'currentVersion'            => $currentVersion,
+            'canUpdate'                 => empty($output) && empty($diff) && empty($stagedDiff)
         ]);
+    }
+
+    public function update(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_update_control', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $client = Client::create('https://labs.maarch.org/api/v4/');
+        try {
+            $tags = $client->api('tags')->all('12');
+        } catch (\Exception $e) {
+            return $response->withJson(['errors' => $e->getMessage()]);
+        }
+
+        $applicationVersion = CoreConfigModel::getApplicationVersion();
+
+        if (empty($applicationVersion)) {
+            return $response->withStatus(400)->withJson(['errors' => "Can't load xml applicationVersion"]);
+        } else {
+            $currentVersion = $applicationVersion['applicationMinorVersion'];
+        }
+
+        $currentVersionBranch = substr($currentVersion, 0, 5);
+        $currentVersionTag = substr($currentVersion, 6);
+
+        $availableMinorVersions = [];
+
+        foreach ($tags as $value) {
+            if (!preg_match("/^\d{2}\.\d{2}\.\d+$/", $value['name'])) {
+                continue;
+            }
+            $tag = substr($value['name'], 6);
+            $pos = strpos($value['name'], $currentVersionBranch);
+            if ($pos !== false && $tag > $currentVersionTag) {
+                $availableMinorVersions[] = $value['name'];
+            }
+        }
+
+        if (empty($availableMinorVersions)) {
+            return $response->withStatus(400)->withJson(['errors' => 'No minor versions available']);
+        }
+
+        natcasesort($availableMinorVersions);
+
+        $minorVersion = $availableMinorVersions[0];
+
+        $output = [];
+        $diff = exec('git diff', $output);
+        $stagedDiff = exec('git diff --staged', $output);
+
+        if (!empty($output) || !empty($diff) || !empty($stagedDiff)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application']);
+        }
+
+        $fetch = exec('git fetch');
+        $checkout = exec("git checkout {$minorVersion}");
+
+        return $response->withStatus(204);
     }
 }

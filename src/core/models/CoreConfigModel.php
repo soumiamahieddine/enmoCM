@@ -85,8 +85,8 @@ class CoreConfigModel
 
         if ($loadedXml) {
             return [
-                'applicationVersion'       =>  (string) $loadedXml->majorVersion,
-                'applicationMinorVersion'  =>  (string) $loadedXml->minorVersion,
+                'applicationVersion'       =>  (string)$loadedXml->majorVersion,
+                'applicationMinorVersion'  =>  (string)$loadedXml->minorVersion,
             ];
         }
 
