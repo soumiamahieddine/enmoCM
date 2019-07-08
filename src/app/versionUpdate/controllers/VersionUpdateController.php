@@ -43,10 +43,11 @@ class VersionUpdateController
             $currentVersion = $applicationVersion['applicationMinorVersion'];
         }
 
-        $currentVersionBranch = substr($currentVersion, 0, 5);
-        $currentVersionBranchYear = substr($currentVersion, 0, 2);
-        $currentVersionBranchMonth = substr($currentVersion, 3, 2);
-        $currentVersionTag = substr($currentVersion, 6);
+        $versions = explode('.', $currentVersion);
+        $currentVersionBranch = "{$versions[0]}.{$versions[1]}";
+        $currentVersionTag = $versions[2];
+        $currentVersionBranchYear = $versions[0];
+        $currentVersionBranchMonth = $versions[1];
 
         $availableMinorVersions = [];
         $availableMajorVersions = [];
@@ -55,7 +56,9 @@ class VersionUpdateController
             if (!preg_match("/^\d{2}\.\d{2}\.\d+$/", $value['name'])) {
                 continue;
             }
-            $tag = substr($value['name'], 6);
+            $explodedValue = explode('.', $value['name']);
+            $tag = $explodedValue[2];
+
             $pos = strpos($value['name'], $currentVersionBranch);
             if ($pos === false) {
                 $year = substr($value['name'], 0, 2);
@@ -118,18 +121,20 @@ class VersionUpdateController
             $currentVersion = $applicationVersion['applicationMinorVersion'];
         }
 
-        $currentVersionBranch = substr($currentVersion, 0, 5);
-        $currentVersionTag = substr($currentVersion, 6);
+        $versions = explode('.', $currentVersion);
+        $currentVersionBranch = "{$versions[0]}.{$versions[1]}";
+        $currentVersionTag = $versions[2];
 
         $availableMinorVersions = [];
 
         foreach ($tags as $value) {
-            if (!preg_match("/^\d{2}\.\d{2}\.\d+$/", $value['name'])) {
+            if (strpos($value['name'], $currentVersionBranch) === false) {
                 continue;
             }
-            $tag = substr($value['name'], 6);
-            $pos = strpos($value['name'], $currentVersionBranch);
-            if ($pos !== false && $tag > $currentVersionTag) {
+            $explodedValue = explode('.', $value['name']);
+            $tag = $explodedValue[2];
+
+            if ($tag > $currentVersionTag) {
                 $availableMinorVersions[] = $value['name'];
             }
         }
