@@ -155,8 +155,12 @@ class VersionUpdateController
             return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application']);
         }
 
-        $fetch = exec('git fetch');
-        $checkout = exec("git checkout {$minorVersion}");
+        $output = [];
+        exec('git fetch');
+        exec("git checkout {$minorVersion}", $output);
+
+        $log = "Application updated from {$currentVersion} to {$minorVersion}\n" . implode(' ', $output);
+        file_put_contents('updateVersion.log', $log, FILE_APPEND);
 
         return $response->withStatus(204);
     }
