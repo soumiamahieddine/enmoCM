@@ -1054,4 +1054,5 @@ export const LANG_NL = {
     "ok" : "Ok", //_TO_TRANSLATE
     "updateOk" : "Update successfull !", //_TO_TRANSLATE
     "updateInProgress" : "Update in progress ...", //_TO_TRANSLATE
+    "updateInfo" : "This action cannot be undone! Do not make any actions during process.", //_TO_TRANSLATE
 };

@@ -1028,4 +1028,5 @@ export const LANG_EN = {
     "ok" : "Ok",
     "updateOk" : "Update successfull !",
     "updateInProgress" : "Update in progress ...",
+    "updateInfo" : "This action cannot be undone! Do not make any actions during process.",
 };

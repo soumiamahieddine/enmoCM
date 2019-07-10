@@ -4,10 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav, MatDialog, MatDialogRef } from '@angular/material';
 import { HeaderService } from '../../../service/header.service';
-import { tap, catchError, exhaustMap } from 'rxjs/operators';
+import { tap, catchError, exhaustMap, filter } from 'rxjs/operators';
 import { NotificationService } from '../../notification.service';
 import { of } from 'rxjs';
 import { AlertComponent } from '../../../plugins/modal/alert.component';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
 declare function $j(selector: any): any;
 
@@ -66,16 +67,28 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
     }
 
     updateVersionAccess() {
-        this.updateInprogress = true;
 
-        this.http.put('../../rest/versionsUpdate', {}).pipe(
+        this.dialogRef = this.dialog.open(ConfirmComponent, { data: { title: this.lang.confirm + ' ?', msg: this.lang.updateInfo  } });
+        this.dialogRef.afterClosed().pipe(
+            filter((data) => {
+                this.dialogRef = null;
+                
+                if (data === 'ok') {
+                    this.updateInprogress = true;
+                    return true;
+                } else {
+                    this.updateInprogress = false;
+                    return false;
+                }    
+            }),
+            exhaustMap(() => this.http.put('../../rest/versionsUpdate', {})),
             tap(() => {
-                this.dialogRef = this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { mode: '', title: this.lang.updateOk, msg: '' } });
+                this.dialogRef = this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.updateOk, msg: '' } });
             }),
             exhaustMap(() => this.dialogRef.afterClosed()),
             tap(() => {
-                window.location.reload(true);
                 this.dialogRef = null;
+                window.location.reload(true);
             }),
             catchError(err => {
                 this.notify.handleErrors(err);
@@ -83,7 +96,9 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
             }),
             tap(() => {
                 this.updateInprogress = false;
-            })
+            }),
+
         ).subscribe();
+        
     }
 }

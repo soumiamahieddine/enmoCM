@@ -45,6 +45,7 @@ import { BasketHomeComponent }                        from './basket/basket-home
 
 /*MODAL*/
 import { AlertComponent }                        from '../plugins/modal/alert.component';
+import { ConfirmComponent }                        from '../plugins/modal/confirm.component';
 
 
 export class MyHammerConfig extends HammerGestureConfig {
@@ -84,7 +85,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
-        AlertComponent
+        AlertComponent,
+        ConfirmComponent
     ],
     exports: [
         CommonModule,
@@ -125,7 +127,8 @@ export class MyHammerConfig extends HammerGestureConfig {
     ],
     entryComponents: [
         IndexingGroupModalComponent,
-        AlertComponent
+        AlertComponent,
+        ConfirmComponent
     ],
 })
 export class SharedModule { }
