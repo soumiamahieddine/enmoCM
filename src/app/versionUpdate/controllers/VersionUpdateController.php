@@ -40,7 +40,7 @@ class VersionUpdateController
         if (empty($applicationVersion)) {
             return $response->withStatus(400)->withJson(['errors' => "Can't load xml applicationVersion"]);
         } else {
-            $currentVersion = $applicationVersion['applicationMinorVersion'];
+            $currentVersion = $applicationVersion;
         }
 
         $versions = explode('.', $currentVersion);
@@ -118,7 +118,7 @@ class VersionUpdateController
         if (empty($applicationVersion)) {
             return $response->withStatus(400)->withJson(['errors' => "Can't load xml applicationVersion"]);
         } else {
-            $currentVersion = $applicationVersion['applicationMinorVersion'];
+            $currentVersion = $applicationVersion;
         }
 
         $versions = explode('.', $currentVersion);
