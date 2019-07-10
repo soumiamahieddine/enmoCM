@@ -11,7 +11,7 @@ export const LANG_EN = {
     'quotaExceeded'                         : 'Quota exceeded',
     "aboutUs"                               : "About Maarch Courrier",
     "abs"                                   : "Absent",
-    "accessUpdateWizard"                    : "Access to wizard update version",
+    "makeUpdate"                            : "Update",
     "accordingTemplateParameters"           : "According to the parameters defined in the model",
     "accountAdded"                          : "Account added",
     "accountDeleted"                        : "Account deleted",
@@ -1024,4 +1024,5 @@ export const LANG_EN = {
     "to_sign" : "To sign",
     "to_note" : "To note",
     "confidential" : "Confidential",
+    "ok" : "Ok",
 };

@@ -1,33 +1,9 @@
-<!--<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
-    <mat-toolbar color="primary" class="admin-toolbar">
-        <button mat-button (click)="snav.toggle()">
-            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
-        </button>
-        <h1 class="admin-toolbar-title">{{lang.updateVersionControl}}
-        </h1>
-        <span style="flex: 1 1 auto;"></span>
-        <menu-top></menu-top>
-    </mat-toolbar>
-    <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true" style="width:300px;">
-            <menu-nav></menu-nav>
-            <mat-divider></mat-divider>
-        </mat-sidenav>
-        <mat-sidenav-content>
-            <div>
-                Votre version : {{versions.currentVersion}}
-                <mat-form-field>
-                    <mat-select id="entity_type" name="minorVersions" title="{{lang.availableMinorVersions}}" placeholder="{{lang.entityType}}" maxlength="32" required>
-                        <mat-option *ngFor="let minorVersion of versions.currentMinorVersions" [value]="minorVersion.name">
-                            {{minorVersion.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </mat-sidenav-content>
-    </mat-sidenav-container>   
-</div>-->
+<div *ngIf="updateInprogress" class="updateInProgress">
+    <mat-spinner diameter="30"></mat-spinner>&nbsp;
+    <div>
+        Mise à jour en cours ...
+    </div>
+</div>
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
@@ -53,7 +29,7 @@
                     <mat-icon class="fa fa-info-circle fa-2x" style="flex: 1;text-align: right;"></mat-icon>
                 </div>
                 <div class="col-sm-12" style="text-align:center;" *ngIf="versions.lastAvailableMinorVersion!=null">
-                    <button mat-raised-button color="primary" (click)="updateVersionAccess();">{{lang.accessUpdateWizard}}</button>
+                    <button mat-raised-button color="primary" (click)="updateVersionAccess();">{{lang.makeUpdate}}</button>
                 </div>
             </mat-card>
         </mat-sidenav-content>

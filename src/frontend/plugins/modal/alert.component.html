@@ -1,0 +1,9 @@
+<div class="modalContent {{data.mode}}">
+  <h1 mat-dialog-title>{{data.title}}</h1>
+  <div mat-dialog-content [innerHTML]="data.msg">
+
+  </div>
+  <div mat-dialog-actions>
+    <button class="actions" color="primary" mat-raised-button (click)="this.dialogRef.close();">{{lang.ok}}</button>
+  </div>
+</div>

@@ -13,7 +13,7 @@ export const LANG_FR = {
     "abs"                                   : "Absent",
     "absOff"                                : "Absence désactivée",
     "absOn"                                 : "Absence activée",
-    "accessUpdateWizard"                    : "Accéder à l'assistant de mise à jour",
+    "makeUpdate"                            : "Mettre à jour",
     "accordingTemplateParameters"           : "Selon les paramètres définis dans le modèle",
     "accountAdded"                          : "Compte créé",
     "accountDeleted"                        : "Compte supprimé",
@@ -1057,4 +1057,5 @@ export const LANG_FR = {
     "to_sign" : "À signer",
     "to_note" : "À annoter",
     "confidential" : "Confidentiel",
+    "ok" : "Ok",
 };

@@ -6,7 +6,7 @@ export const LANG_NL = {
     "abs"                                   : "Afwezig",
     "absOff"                                : "Afwezigheid uitgeschakeld",
     "absOn"                                 : "Afwezigheid ingeschakeld",
-    "accessUpdateWizard"                    : "Toegang tot de update-assistent verkrijgen",
+    "makeUpdate"                            : "Update",
     "accordingTemplateParameters"           : "According to the parameters defined in the model", //_TO_TRANSLATE
     "accountAdded"                          : "Account added", //_TO_TRANSLATE
     "accountDeleted"                        : "Account deleted", //_TO_TRANSLATE
@@ -1050,4 +1050,5 @@ export const LANG_NL = {
     "to_sign" : "To sign", //_TO_TRANSLATE
     "to_note" : "To note", //_TO_TRANSLATE
     "confidential" : "Confidential", //_TO_TRANSLATE
+    "ok" : "Ok", //_TO_TRANSLATE
 };

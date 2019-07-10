@@ -43,6 +43,10 @@ import { SearchHomeComponent }                        from './search/search-home
 import { BasketHomeComponent }                        from './basket/basket-home.component';
 
 
+/*MODAL*/
+import { AlertComponent }                        from '../plugins/modal/alert.component';
+
+
 export class MyHammerConfig extends HammerGestureConfig {
     overrides = <any> {
         'pinch': { enable: false },
@@ -80,6 +84,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
+        AlertComponent
     ],
     exports: [
         CommonModule,
@@ -119,7 +124,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         }
     ],
     entryComponents: [
-        IndexingGroupModalComponent
+        IndexingGroupModalComponent,
+        AlertComponent
     ],
 })
 export class SharedModule { }
