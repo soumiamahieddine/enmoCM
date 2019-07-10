@@ -129,6 +129,7 @@ export const LANG_NL = {
     "canBeSearched"                         : "Zoeken",
     "cancel"                                : "Annuleren",
     "canNotMakeAction"                      : "Can make action on this mail", //_TO_TRANSLATE
+    "canNotUpdateApplication"               : "Some files are modified. Can not update application", // TO TRANSLATE
     "cantMoveDoctype"                       : "Het documenttype kan enkel in een submap verplaatst worden",
     "cantMoveFirstLevel"                    : "De submap kan enkel in een map verplaatst worden",
     "case"                                  : "Zaak",

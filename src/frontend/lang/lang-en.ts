@@ -130,6 +130,7 @@ export const LANG_EN = {
     "canBeSearched"                         : "Searchable",
     "cancel"                                : "Cancel",
     "canNotMakeAction"                      : "Can make action on this mail",
+    "canNotUpdateApplication"               : "Some files are modified. Can not update application",
     "cantMoveDoctype"                       : "The document type can only be moved in a sub-folder",
     "cantMoveFirstLevel"                    : "Sub-folder can only be moved in folder",
     "case"                                  : "Case",

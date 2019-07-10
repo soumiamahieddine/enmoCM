@@ -152,7 +152,7 @@ class VersionUpdateController
         $stagedDiff = exec('git diff --staged', $output);
 
         if (!empty($output) || !empty($diff) || !empty($stagedDiff)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application']);
+            return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application', 'lang' => 'canNotUpdateApplication']);
         }
 
         $output = [];

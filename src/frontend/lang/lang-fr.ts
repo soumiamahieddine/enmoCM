@@ -136,6 +136,7 @@ export const LANG_FR = {
     "cancel"                                : "Annuler",
     "canNotMakeAction"                      : "Impossible de faire l'action sur les courriers suivants",
     "canNotSendAr"                          : "accusé(s) de réception impossible à envoyer",
+    "canNotUpdateApplication"               : "Certains fichiers de l'application sont modifiés sur le serveur. Impossible de mettre à jour l'application",
     "cantMoveDoctype"                       : "Le type de document peut uniquement être déplacé dans une sous-chemise",
     "cantMoveFirstLevel"                    : "La sous-chemise peut uniquement être déplacée dans une chemise",
     "case"                                  : "Affaire",
