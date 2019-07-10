@@ -1051,4 +1051,6 @@ export const LANG_NL = {
     "to_note" : "To note", //_TO_TRANSLATE
     "confidential" : "Confidential", //_TO_TRANSLATE
     "ok" : "Ok", //_TO_TRANSLATE
+    "updateOk" : "Update successfull !", //_TO_TRANSLATE
+    "updateInProgress" : "Update in progress ...", //_TO_TRANSLATE
 };

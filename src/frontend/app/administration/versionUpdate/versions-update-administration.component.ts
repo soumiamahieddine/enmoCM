@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav, MatDialog, MatDialogRef } from '@angular/material';
 import { HeaderService } from '../../../service/header.service';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, exhaustMap } from 'rxjs/operators';
 import { NotificationService } from '../../notification.service';
 import { of } from 'rxjs';
 import { AlertComponent } from '../../../plugins/modal/alert.component';
@@ -70,11 +70,12 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
 
         this.http.put('../../rest/versionsUpdate', {}).pipe(
             tap(() => {
-                this.dialogRef = this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { mode: '', title: 'Mise à jour effectuée avec succès !', msg: '' } });
-                this.dialogRef.afterClosed().subscribe(() => {
-                    window.location.reload(true);
-                    this.dialogRef = null;
-                });
+                this.dialogRef = this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { mode: '', title: this.lang.updateOk, msg: '' } });
+            }),
+            exhaustMap(() => this.dialogRef.afterClosed()),
+            tap(() => {
+                window.location.reload(true);
+                this.dialogRef = null;
             }),
             catchError(err => {
                 this.notify.handleErrors(err);
@@ -82,7 +83,7 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
             }),
             tap(() => {
                 this.updateInprogress = false;
-            }),
+            })
         ).subscribe();
     }
 }

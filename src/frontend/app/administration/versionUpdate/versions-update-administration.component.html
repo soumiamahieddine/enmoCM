@@ -1,7 +1,7 @@
 <div *ngIf="updateInprogress" class="updateInProgress">
     <mat-spinner diameter="30"></mat-spinner>&nbsp;
     <div>
-        Mise à jour en cours ...
+        {{lang.updateInProgress}}
     </div>
 </div>
 <div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">

@@ -1058,4 +1058,6 @@ export const LANG_FR = {
     "to_note" : "À annoter",
     "confidential" : "Confidentiel",
     "ok" : "Ok",
+    "updateOk" : "Mise à jour effectuée avec succès !",
+    "updateInProgress" : "Mise à jour en cours ...",
 };

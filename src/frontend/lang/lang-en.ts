@@ -1025,4 +1025,6 @@ export const LANG_EN = {
     "to_note" : "To note",
     "confidential" : "Confidential",
     "ok" : "Ok",
+    "updateOk" : "Update successfull !",
+    "updateInProgress" : "Update in progress ...",
 };
