@@ -31,8 +31,10 @@
                     </span>
                     <mat-icon class="fa fa-info-circle fa-2x" style="flex: 1;text-align: right;"></mat-icon>
                 </div>
+                <div class="alert-message alert-message-danger" *ngIf="!versions.canUpdate && versions.lastAvailableMinorVersion!=null" [innerHTML]="lang.updateWarn">
+                </div>
                 <div class="col-sm-12" style="text-align:center;" *ngIf="versions.lastAvailableMinorVersion!=null">
-                    <button mat-raised-button color="primary"
+                    <button mat-raised-button color="primary" [disabled]="!versions.canUpdate"
                         (click)="updateVersionAccess();">{{lang.makeUpdate}}</button>
                 </div>
             </mat-card>
