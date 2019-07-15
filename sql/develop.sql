@@ -5,7 +5,7 @@
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
-UPDATE parameters SET param_value_string = '19.10.1' WHERE id = 'database_version';
+UPDATE parameters SET param_value_string = '19.12' WHERE id = 'database_version';
 
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 
