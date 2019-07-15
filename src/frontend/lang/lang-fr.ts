@@ -1061,7 +1061,6 @@ export const LANG_FR = {
     "ok" : "Ok",
     "updateOk" : "Mise à jour effectuée avec succès !",
     "updateInProgress" : "Mise à jour en cours ...",
-    "updateWarn" : "Des fichiers de l'application ont été <b>modifiés</b>, veuillez régler ce problème afin de pouvoir procéder à la <b>mise à jour</b>.",
-    "updateInfo" : "Cette action est irréversible ! Il est préférable de ne pas faire d'actions durant le processus.",
+    "updateInfo" : "Cette action est irréversible ! Il est préférable de ne pas faire d'actions durant le processus et qu'aucun utilisateur ne soit connecté.",
     "isAvailable" : "est disponible",
 };
