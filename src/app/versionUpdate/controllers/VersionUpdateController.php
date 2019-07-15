@@ -89,8 +89,8 @@ class VersionUpdateController
         }
 
         $output = [];
-        $diff = exec('git diff', $output);
-        $stagedDiff = exec('git diff --staged', $output);
+        $diff = exec('git diff 2>&1', $output);
+        $stagedDiff = exec('git diff --staged 2>&1', $output);
 
         return $response->withJson([
             'lastAvailableMinorVersion' => $lastAvailableMinorVersion,
@@ -148,8 +148,8 @@ class VersionUpdateController
         $minorVersion = $availableMinorVersions[0];
 
         $output = [];
-        $diff = exec('git diff', $output);
-        $stagedDiff = exec('git diff --staged', $output);
+        $diff = exec('git diff 2>&1', $output);
+        $stagedDiff = exec('git diff --staged 2>&1', $output);
 
         if (!empty($output) || !empty($diff) || !empty($stagedDiff)) {
             return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application', 'lang' => 'canNotUpdateApplication']);
@@ -157,7 +157,7 @@ class VersionUpdateController
 
         $output = [];
         exec('git fetch');
-        exec("git checkout {$minorVersion}", $output);
+        exec("git checkout {$minorVersion} 2>&1", $output);
 
         $log = "Application updated from {$currentVersion} to {$minorVersion}\nCheckout response => " . implode(' ', $output) . "\n";
         file_put_contents('updateVersion.log', $log, FILE_APPEND);
