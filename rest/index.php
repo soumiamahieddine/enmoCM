@@ -361,6 +361,7 @@ $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':upd
 
 //VersionsUpdate
 $app->get('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':get');
+$app->put('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':update');
 
 //CurrentUser
 $app->get('/currentUser/profile', \User\controllers\UserController::class . ':getProfile');

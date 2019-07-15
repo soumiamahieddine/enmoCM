@@ -31,7 +31,7 @@ class CoreController
         $aInit = [];
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
         $aInit['applicationName'] = CoreConfigModel::getApplicationName();
-        $aInit['applicationMinorVersion'] = CoreConfigModel::getApplicationVersion()['applicationMinorVersion'];
+        $aInit['applicationVersion'] = CoreConfigModel::getApplicationVersion();
         $aInit['lang'] = CoreConfigModel::getLanguage();
         $aInit['user'] = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
 

@@ -1,0 +1,10 @@
+<div class="modalContent">
+  <h1 mat-dialog-title>{{data.title}}</h1>
+  <div *ngIf="data.msg !== ''" mat-dialog-content>
+    <div class="alert-message alert-message-info" [innerHTML]="data.msg"></div>
+  </div>
+  <div mat-dialog-actions>
+    <button class="actions" color="primary" mat-raised-button (click)="this.dialogRef.close('ok');">{{lang.ok}}</button>
+    <button class="actions" color="" mat-raised-button (click)="this.dialogRef.close('');" cdkFocusInitial>{{lang.cancel}}</button>
+  </div>
+</div>

@@ -6,7 +6,7 @@ export const LANG_NL = {
     "abs"                                   : "Afwezig",
     "absOff"                                : "Afwezigheid uitgeschakeld",
     "absOn"                                 : "Afwezigheid ingeschakeld",
-    "accessUpdateWizard"                    : "Toegang tot de update-assistent verkrijgen",
+    "makeUpdate"                            : "Update",
     "accordingTemplateParameters"           : "According to the parameters defined in the model", //_TO_TRANSLATE
     "accountAdded"                          : "Account added", //_TO_TRANSLATE
     "accountDeleted"                        : "Account deleted", //_TO_TRANSLATE
@@ -129,6 +129,7 @@ export const LANG_NL = {
     "canBeSearched"                         : "Zoeken",
     "cancel"                                : "Annuleren",
     "canNotMakeAction"                      : "Can make action on this mail", //_TO_TRANSLATE
+    "canNotUpdateApplication"               : "Some files are modified. Can not update application", // TO TRANSLATE
     "cantMoveDoctype"                       : "Het documenttype kan enkel in een submap verplaatst worden",
     "cantMoveFirstLevel"                    : "De submap kan enkel in een map verplaatst worden",
     "case"                                  : "Zaak",
@@ -1044,4 +1045,16 @@ export const LANG_NL = {
     "searchUserInMaarchParapheur" : "Search unlinked an user in Maarch Parapheur", //_TO_TRANSLATE
     "newLoginInMaarchParapheur" : "New Maarch Parapheur Login", //_TO_TRANSLATE
     "loginAlreadyExistsInMaarchParapheur" : "Login already exists in Maarch Parapheur", //_TO_TRANSLATE
+    "maarchParapheurLinkbroken" : "Maarch Parapheur link is broken", //_TO_TRANSLATE
+    "maarchParapheurDocuments" : "Last Maarch Parapheur document(s)", //_TO_TRANSLATE
+    "to_visa" : "To approve", //_TO_TRANSLATE
+    "to_sign" : "To sign", //_TO_TRANSLATE
+    "to_note" : "To note", //_TO_TRANSLATE
+    "confidential" : "Confidential", //_TO_TRANSLATE
+    "ok" : "Ok", //_TO_TRANSLATE
+    "updateOk" : "Update successfull !", //_TO_TRANSLATE
+    "updateInProgress" : "Update in progress ...", //_TO_TRANSLATE
+    "updateWarn" : "Some files have been <b>modified</b>, fix this problem to <b>update</b> your application.", //_TO_TRANSLATE
+    "updateInfo" : "This action cannot be undone! Do not make any actions during process.", //_TO_TRANSLATE
+    "isAvailable" : "is available", //_TO_TRANSLATE
 };

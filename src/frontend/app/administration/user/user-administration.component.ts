@@ -85,6 +85,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     displayedColumns = ['event_date', 'event_type', 'info', 'remote_ip'];
     dataSource = new MatTableDataSource(this.data);
     selectedTabIndex: number = 0;
+    maarchParapheurConnectionStatus = true;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -177,10 +178,9 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 this.loading = false;
                 if (this.maarchParapheurLink.login !== '') {
                     this.loadAvatarMaarchParapheur(this.user.external_id.maarchParapheur);
+                } else {
+                    this.maarchParapheurConnectionStatus = false;
                 }
-
-            }, (err) => {
-                this.notify.handleErrors(err);
             });
     }
 
@@ -245,6 +245,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                     this.maarchParapheurLink.login = '';
                     this.maarchParapheurLink.picture = '';
                     this.notify.success(this.lang.accountUnlinked);
+                    this.maarchParapheurConnectionStatus = true;
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });

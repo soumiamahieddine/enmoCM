@@ -31,7 +31,7 @@ class HomeController
     {
         $regroupedBaskets = [];
 
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'external_id']]);
         $homeMessage = ParameterModel::getById(['select' => ['param_value_string'], 'id'=> 'homepage_message']);
         $homeMessage = trim($homeMessage['param_value_string']);
 
@@ -86,12 +86,14 @@ class HomeController
             $assignedBaskets[$key]['ownerLogin'] = UserModel::getById(['id' => $assignedBasket['owner_user_id'], 'select' => ['user_id']])['user_id'];
         }
 
+        $externalId = json_decode($user['external_id'], true);
+
         $isMaarchParapheurConnected = false;
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
         if (!empty($loadedXml)) {
             foreach ($loadedXml->signatoryBook as $value) {
                 if ($value->id == "maarchParapheur") {
-                    if (!empty($value->url) && !empty($value->userId) && !empty($value->password)) {
+                    if (!empty($value->url) && !empty($value->userId) && !empty($value->password) && !empty($externalId['maarchParapheur'])) {
                         $isMaarchParapheurConnected = true;
                     }
                     break;
@@ -103,7 +105,7 @@ class HomeController
             'regroupedBaskets'              => $regroupedBaskets,
             'assignedBaskets'               => $assignedBaskets,
             'homeMessage'                   => $homeMessage,
-            'isMaarchParapheurConnected'    => $isMaarchParapheurConnected
+            'isLinkedToMaarchParapheur'     => $isMaarchParapheurConnected
         ]);
     }
 
@@ -117,6 +119,7 @@ class HomeController
                 'priorities.color as priority_color',
                 'mlb.process_limit_date',
                 'r.res_id',
+                'r.confidentiality',
                 'status.img_filename as status_icon',
                 'status.label_status as status_label',
                 'status.id as status_id',
@@ -150,7 +153,7 @@ class HomeController
         $password = '';
         foreach ($loadedXml->signatoryBook as $value) {
             if ($value->id == "maarchParapheur") {
-                $url      = $value->url;
+                $url      = rtrim($value->url, '/');
                 $userId   = $value->userId;
                 $password = $value->password;
                 break;
@@ -181,6 +184,7 @@ class HomeController
             return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
 
+        $curlResponse['response']['url'] = $url;
         return $response->withJson($curlResponse['response']);
     }
 }

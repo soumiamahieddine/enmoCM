@@ -23,7 +23,7 @@ export class AboutUsComponent implements OnInit {
     private _mobileQueryListener: () => void;
     mobileQuery: MediaQueryList;
     mobileMode                      : boolean   = false;
-    applicationMinorVersion              : string;
+    applicationVersion              : string;
     coreUrl: string;
     lang: any = LANG;
 
@@ -44,7 +44,7 @@ export class AboutUsComponent implements OnInit {
         window['MainHeaderComponent'].setSnavRight(null);
 
         this.coreUrl = angularGlobals.coreUrl;
-        this.applicationMinorVersion = angularGlobals.applicationMinorVersion;
+        this.applicationVersion = angularGlobals.applicationVersion;
         this.loading = false;
 
     }

@@ -83,14 +83,11 @@ class CoreConfigModel
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/applicationVersion.xml']);
 
-        if ($loadedXml) {
-            return [
-                'applicationVersion'       =>  (string) $loadedXml->majorVersion,
-                'applicationMinorVersion'  =>  (string) $loadedXml->minorVersion,
-            ];
+        if (empty($loadedXml)) {
+            return '';
         }
 
-        return [];
+        return (string)$loadedXml->version;
     }
 
     public static function getLanguage()

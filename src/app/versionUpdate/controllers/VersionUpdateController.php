@@ -16,7 +16,6 @@ namespace VersionUpdate\controllers;
 
 use Gitlab\Client;
 use Group\models\ServiceModel;
-use Parameter\models\ParameterModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
@@ -38,16 +37,17 @@ class VersionUpdateController
 
         $applicationVersion = CoreConfigModel::getApplicationVersion();
 
-        if(!$applicationVersion) {
+        if (empty($applicationVersion)) {
             return $response->withStatus(400)->withJson(['errors' => "Can't load xml applicationVersion"]);
         } else {
-            $currentVersion = $applicationVersion['applicationMinorVersion'];
+            $currentVersion = $applicationVersion;
         }
 
-        $currentVersionBranch = substr($currentVersion, 0, 5);
-        $currentVersionBranchYear = substr($currentVersion, 0, 2);
-        $currentVersionBranchMonth = substr($currentVersion, 3, 2);
-        $currentVersionTag = substr($currentVersion, 6);
+        $versions = explode('.', $currentVersion);
+        $currentVersionBranch = "{$versions[0]}.{$versions[1]}";
+        $currentVersionTag = $versions[2];
+        $currentVersionBranchYear = $versions[0];
+        $currentVersionBranchMonth = $versions[1];
 
         $availableMinorVersions = [];
         $availableMajorVersions = [];
@@ -56,7 +56,9 @@ class VersionUpdateController
             if (!preg_match("/^\d{2}\.\d{2}\.\d+$/", $value['name'])) {
                 continue;
             }
-            $tag = substr($value['name'], 6);
+            $explodedValue = explode('.', $value['name']);
+            $tag = $explodedValue[2];
+
             $pos = strpos($value['name'], $currentVersionBranch);
             if ($pos === false) {
                 $year = substr($value['name'], 0, 2);
@@ -71,7 +73,6 @@ class VersionUpdateController
             }
         }
 
-        //Sort array using a case insensitive "natural order" algorithm
         natcasesort($availableMinorVersions);
         natcasesort($availableMajorVersions);
 
@@ -87,10 +88,80 @@ class VersionUpdateController
             $lastAvailableMajorVersion = $availableMajorVersions[0];
         }
 
+        $output = [];
+        $diff = exec('git diff 2>&1', $output);
+        $stagedDiff = exec('git diff --staged 2>&1', $output);
+
         return $response->withJson([
             'lastAvailableMinorVersion' => $lastAvailableMinorVersion,
             'lastAvailableMajorVersion' => $lastAvailableMajorVersion,
-            'currentVersion'            => $currentVersion
+            'currentVersion'            => $currentVersion,
+            'canUpdate'                 => empty($output) && empty($diff) && empty($stagedDiff)
         ]);
+    }
+
+    public function update(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_update_control', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $client = Client::create('https://labs.maarch.org/api/v4/');
+        try {
+            $tags = $client->api('tags')->all('12');
+        } catch (\Exception $e) {
+            return $response->withJson(['errors' => $e->getMessage()]);
+        }
+
+        $applicationVersion = CoreConfigModel::getApplicationVersion();
+
+        if (empty($applicationVersion)) {
+            return $response->withStatus(400)->withJson(['errors' => "Can't load xml applicationVersion"]);
+        } else {
+            $currentVersion = $applicationVersion;
+        }
+
+        $versions = explode('.', $currentVersion);
+        $currentVersionBranch = "{$versions[0]}.{$versions[1]}";
+        $currentVersionTag = $versions[2];
+
+        $availableMinorVersions = [];
+
+        foreach ($tags as $value) {
+            if (strpos($value['name'], $currentVersionBranch) === false) {
+                continue;
+            }
+            $explodedValue = explode('.', $value['name']);
+            $tag = $explodedValue[2];
+
+            if ($tag > $currentVersionTag) {
+                $availableMinorVersions[] = $value['name'];
+            }
+        }
+
+        if (empty($availableMinorVersions)) {
+            return $response->withStatus(400)->withJson(['errors' => 'No minor versions available']);
+        }
+
+        natcasesort($availableMinorVersions);
+
+        $minorVersion = $availableMinorVersions[0];
+
+        $output = [];
+        $diff = exec('git diff 2>&1', $output);
+        $stagedDiff = exec('git diff --staged 2>&1', $output);
+
+        if (!empty($output) || !empty($diff) || !empty($stagedDiff)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application', 'lang' => 'canNotUpdateApplication']);
+        }
+
+        $output = [];
+        exec('git fetch');
+        exec("git checkout {$minorVersion} 2>&1", $output);
+
+        $log = "Application updated from {$currentVersion} to {$minorVersion}\nCheckout response => " . implode(' ', $output) . "\n";
+        file_put_contents('updateVersion.log', $log, FILE_APPEND);
+
+        return $response->withStatus(204);
     }
 }

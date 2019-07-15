@@ -111,7 +111,7 @@ class ResourceListController
             $select = [
                 'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'mlb_coll_ext.alt_identifier',
                 'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"',
-                'mlb_coll_ext.closing_date', 'res_letterbox.locker_user_id', 'res_letterbox.locker_time'
+                'mlb_coll_ext.closing_date', 'res_letterbox.locker_user_id', 'res_letterbox.locker_time', 'res_letterbox.confidentiality'
             ];
             $tableFunction = ['status', 'mlb_coll_ext', 'priorities'];
             $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id', 'res_letterbox.priority = priorities.id'];
@@ -151,15 +151,16 @@ class ResourceListController
             ]);
 
             foreach ($resources as $key => $resource) {
-                $formattedResources[$key]['res_id']           = $resource['res_id'];
-                $formattedResources[$key]['alt_identifier']   = $resource['alt_identifier'];
-                $formattedResources[$key]['barcode']          = $resource['barcode'];
-                $formattedResources[$key]['subject']          = $resource['subject'];
-                $formattedResources[$key]['statusLabel']      = $resource['status.label_status'];
-                $formattedResources[$key]['statusImage']      = $resource['status.img_filename'];
-                $formattedResources[$key]['priorityColor']    = $resource['priorities.color'];
-                $formattedResources[$key]['closing_date']     = $resource['closing_date'];
-                $formattedResources[$key]['countAttachments'] = 0;
+                $formattedResources[$key]['res_id']             = $resource['res_id'];
+                $formattedResources[$key]['alt_identifier']     = $resource['alt_identifier'];
+                $formattedResources[$key]['barcode']            = $resource['barcode'];
+                $formattedResources[$key]['subject']            = $resource['subject'];
+                $formattedResources[$key]['confidentiality']    = $resource['confidentiality'];
+                $formattedResources[$key]['statusLabel']        = $resource['status.label_status'];
+                $formattedResources[$key]['statusImage']        = $resource['status.img_filename'];
+                $formattedResources[$key]['priorityColor']      = $resource['priorities.color'];
+                $formattedResources[$key]['closing_date']       = $resource['closing_date'];
+                $formattedResources[$key]['countAttachments']   = 0;
                 foreach ($attachments as $attachment) {
                     if ($attachment['res_id_master'] == $resource['res_id']) {
                         $formattedResources[$key]['countAttachments'] = $attachment['count'];

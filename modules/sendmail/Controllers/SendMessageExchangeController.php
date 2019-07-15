@@ -151,7 +151,12 @@ class SendMessageExchangeController
             $filePath = $sendMessage->generateMessageFile($dataObject, "ArchiveTransfer", $_SESSION['config']['tmppath']);
 
             /******** SAVE MESSAGE *********/
-            $messageId = self::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $aArgs['identifier'], 'file_path' => $filePath, 'type' => 'ArchiveTransfer']);
+            $messageExchangeReturn = self::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $aArgs['identifier'], 'file_path' => $filePath, 'type' => 'ArchiveTransfer']);
+            if (!empty($messageExchangeReturn['error'])) {
+                return ['errors' => $messageExchangeReturn['error']];
+            } else {
+                $messageId = $messageExchangeReturn['messageId'];
+            }
             self::saveUnitIdentifier(['attachment' => $aMergeAttachment, 'notes' => $aArgs['notes'], 'messageId' => $messageId]);
 
             \History\controllers\HistoryController::add([
@@ -187,7 +192,7 @@ class SendMessageExchangeController
         return true;
     }
 
-    protected function control($aArgs = [])
+    protected static function control($aArgs = [])
     {
         $errors = [];
 
@@ -218,7 +223,7 @@ class SendMessageExchangeController
         return $errors;
     }
 
-    protected function generateComments($aArgs = [])
+    protected static function generateComments($aArgs = [])
     {
         $aReturn    = [];
 
