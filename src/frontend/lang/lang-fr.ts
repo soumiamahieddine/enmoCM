@@ -1063,4 +1063,5 @@ export const LANG_FR = {
     "updateInProgress" : "Mise à jour en cours ...",
     "updateInfo" : "Cette action est irréversible ! Il est préférable de ne pas faire d'actions durant le processus et qu'aucun utilisateur ne soit connecté.",
     "isAvailable" : "est disponible",
+    "updateWarn" : "<b>Impossible</b> d'effectuer la mise à jour. Voici les fichiers pouvant être mise en cause :<br/><br/>"
 };

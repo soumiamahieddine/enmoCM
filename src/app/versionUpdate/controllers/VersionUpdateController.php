@@ -89,9 +89,9 @@ class VersionUpdateController
         }
 
         $output = [];
-        exec('git diff 2>&1', $output);
-        exec('git diff --staged 2>&1', $output);
 
+        exec('git status --porcelain --untracked-files=no 2>&1', $output);
+        
         return $response->withJson([
             'lastAvailableMinorVersion' => $lastAvailableMinorVersion,
             'lastAvailableMajorVersion' => $lastAvailableMajorVersion,
@@ -149,10 +149,9 @@ class VersionUpdateController
         $minorVersion = $availableMinorVersions[0];
 
         $output = [];
-        $diff = exec('git diff 2>&1', $output);
-        $stagedDiff = exec('git diff --staged 2>&1', $output);
+        exec('git status --porcelain --untracked-files=no 2>&1', $output);
 
-        if (!empty($output) || !empty($diff) || !empty($stagedDiff)) {
+        if (!empty($output)) {
             return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application', 'lang' => 'canNotUpdateApplication']);
         }
 

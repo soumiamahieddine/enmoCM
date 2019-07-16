@@ -1030,4 +1030,5 @@ export const LANG_EN = {
     "updateInProgress" : "Update in progress ...",
     "updateInfo" : "This action cannot be undone! Do not make any actions during process.",
     "isAvailable" : "is available",
+    "updateWarn" : "Update is not possible.<br/>These files can be modified : <br/>"
 };
