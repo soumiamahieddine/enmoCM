@@ -149,6 +149,11 @@
                             <mat-row *matRowDef="let row; columns: basketsDisplayedColumns;" routerLink="/administration/baskets/{{row.basket_id}}" matTooltip="{{lang.view}}" style="cursor:pointer;"></mat-row>
                         </mat-table>
                     </mat-tab>
+                    <mat-tab label="Indexation" *ngIf="!creationMode">
+                        <ng-template matTabContent>
+                            <app-indexing-administration></app-indexing-administration>
+                        </ng-template>
+                    </mat-tab>
                 </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>
