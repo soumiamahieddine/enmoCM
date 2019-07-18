@@ -18,6 +18,7 @@ use Basket\models\GroupBasketRedirectModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
+use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
@@ -300,7 +301,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => [1]]);
+        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -325,6 +326,11 @@ class EntityController
         }
 
         ListTemplateModel::delete(['where' => ['object_id = ?'], 'data' => [$aArgs['id']]]);
+        GroupModel::update([
+            'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{entities}', (indexation_parameters->'entities') - '{$entity['id']}')"],
+            'where'     => ['1=1']
+        ]);
+
         EntityModel::delete(['where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
 
         HistoryController::add([
@@ -345,7 +351,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $dyingEntity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['parent_entity_id']]);
+        $dyingEntity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['parent_entity_id', 'id']]);
         $successorEntity = EntityModel::getByEntityId(['entityId' => $aArgs['newEntityId'], 'select' => [1]]);
         if (empty($dyingEntity) || empty($successorEntity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
@@ -399,6 +405,11 @@ class EntityController
         ListTemplateModel::delete(['where' => ['object_id = ?'], 'data' => [$aArgs['id']]]);
         //Templates
         TemplateAssociationModel::update(['set' => ['value_field' => $aArgs['newEntityId']], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
+        //GroupIndexing
+        GroupModel::update([
+            'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{entities}', (indexation_parameters->'entities') - '{$dyingEntity['id']}')"],
+            'where'     => ['1=1']
+        ]);
 
 
         EntityModel::delete(['where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
