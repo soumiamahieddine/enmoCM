@@ -367,6 +367,7 @@ CREATE TABLE groupbasket
   group_id character varying(32) NOT NULL,
   basket_id character varying(32) NOT NULL,
   list_display json DEFAULT '[]',
+  list_event character varying(255),
   CONSTRAINT groupbasket_pkey PRIMARY KEY (group_id, basket_id),
   CONSTRAINT groupbasket_unique_key UNIQUE (id)
 )

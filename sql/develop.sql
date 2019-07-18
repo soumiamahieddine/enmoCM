@@ -38,6 +38,8 @@ ALTER TABLE usergroups ADD COLUMN can_index boolean NOT NULL DEFAULT FALSE;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS indexation_parameters;
 ALTER TABLE usergroups ADD COLUMN indexation_parameters jsonb NOT NULL DEFAULT '{"actions" : {}, "entities" : [], "keywords" : []}';
 
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event;
+ALTER TABLE groupbasket ADD COLUMN list_event character varying(255);
 
 /* REFACTORING */
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS converter_result;
