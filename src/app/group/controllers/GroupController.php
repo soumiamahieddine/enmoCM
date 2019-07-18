@@ -100,7 +100,16 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
-        GroupModel::update(['id' => $aArgs['id'], 'description' => $data['description'], 'clause' => $data['security']['where_clause'], 'comment' => $data['security']['maarch_comment']]);
+        GroupModel::update([
+            'set'   => ['group_desc' => $data['description']],
+            'where' => ['id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
+        GroupModel::updateSecurity([
+            'set'   => ['where_clause' => $data['security']['where_clause'], 'maarch_comment' => $data['security']['maarch_comment']],
+            'where' => ['group_id = ?'],
+            'data'  => [$group['group_id']]
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -207,7 +216,7 @@ class GroupController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function getIndexingDetailsById(Request $request, Response $response, array $args)
+    public function getIndexingInformationsById(Request $request, Response $response, array $args)
     {
         if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -218,7 +227,10 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        $group['indexation_parameters'] = json_decode($group['indexation_parameters'], true);
+        $group['canIndex'] = $group['can_index'];
+        $group['indexationParameters'] = json_decode($group['indexation_parameters'], true);
+        unset($group['can_index'], $group['indexation_parameters']);
+
         $allActions = ActionModel::get(['select' => ['id', 'label_action'], 'where' => ['component in (?)'], 'data' => [['confirmAction', 'closeMailAction']]]);
 
         $allEntities = EntityModel::get([
@@ -248,8 +260,52 @@ class GroupController
             $allEntities[$key]['text'] = $value['entity_label'];
         }
 
-
         return $response->withJson(['group' => $group, 'actions' => $allActions, 'entities' => $allEntities]);
+    }
+
+    public function updateIndexingInformations(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $group = GroupModel::getById(['id' => $args['id'], 'select' => ['indexation_parameters']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+
+        $indexationParameters = json_decode($group['indexation_parameters'], true);
+
+        $body = $request->getParsedBody();
+        if (!Validator::boolType()->validate($body['canIndex'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body canIndex is empty or not a boolean']);
+        }
+
+        if (!empty($body['actions']) && is_array($body['actions'])) {
+            $countActions = ActionModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['actions']]]);
+            if ($countActions[0]['count'] != count($body['actions'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body actions contains invalid actions']);
+            }
+            $indexationParameters['actions'] = $body['actions'];
+        }
+        if (!empty($body['entities']) && is_array($body['entities'])) {
+            $countEntities = EntityModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['entities']]]);
+            if ($countEntities[0]['count'] != count($body['entities'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body entities contains invalid entities']);
+            }
+            $indexationParameters['entities'] = $body['entities'];
+        }
+        if (!empty($body['keywords']) && is_array($body['keywords'])) {
+            $indexationParameters['keywords'] = $body['keywords'];
+        }
+        
+        GroupModel::update([
+            'set'   => ['can_index' => $body['canIndex'], 'indexation_parameters' => json_encode($indexationParameters)],
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        return $response->withStatus(204);
     }
 
     public static function getGroupsClause(array $aArgs)
