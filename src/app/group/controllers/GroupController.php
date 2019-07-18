@@ -2,7 +2,9 @@
 
 namespace Group\controllers;
 
+use Action\models\ActionModel;
 use Basket\models\GroupBasketModel;
+use Entity\models\EntityModel;
 use Group\models\ServiceModel;
 use Group\models\GroupModel;
 use Respect\Validation\Validator;
@@ -130,7 +132,7 @@ class GroupController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $group = GroupModel::getById(['id' => $aArgs['id']]);
+        $group = GroupModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'group_id', 'group_desc', 'enabled']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
@@ -203,6 +205,51 @@ class GroupController
         GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id'], 'ignoredUsers' => $ignoredUsers]);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public function getIndexingDetailsById(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $group = GroupModel::getById(['id' => $args['id'], 'select' => ['can_index', 'indexation_parameters']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+
+        $group['indexation_parameters'] = json_decode($group['indexation_parameters'], true);
+        $allActions = ActionModel::get(['select' => ['id', 'label_action'], 'where' => ['component in (?)'], 'data' => [['confirmAction', 'closeMailAction']]]);
+
+        $allEntities = EntityModel::get([
+            'select'    => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
+            'table'     => ['entities e1', 'entities e2'],
+            'left_join' => ['e1.parent_entity_id = e2.entity_id'],
+            'where'     => ['e1.enabled = ?'],
+            'data'      => ['Y']
+        ]);
+
+        foreach ($allEntities as $key => $value) {
+            $allEntities[$key]['id'] = $value['id'];
+            if (empty($value['parent_id'])) {
+                $allEntities[$key]['parent'] = '#';
+                $allEntities[$key]['icon']   = "fa fa-building";
+            } else {
+                $allEntities[$key]['parent'] = $value['parent_id'];
+                $allEntities[$key]['icon']   = "fa fa-sitemap";
+            }
+            $allEntities[$key]['state']['opened'] = false;
+            $allEntities[$key]['allowed']         = true;
+            if (in_array($value['id'], $group['indexation_parameters']['entities'])) {
+                $allEntities[$key]['state']['opened']   = true;
+                $allEntities[$key]['state']['selected'] = true;
+            }
+
+            $allEntities[$key]['text'] = $value['entity_label'];
+        }
+
+
+        return $response->withJson(['group' => $group, 'actions' => $allActions, 'entities' => $allEntities]);
     }
 
     public static function getGroupsClause(array $aArgs)

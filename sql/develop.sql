@@ -32,6 +32,12 @@ UPDATE res_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1
 UPDATE res_version_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_version_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 
+/* GROUPS INDEXING */
+ALTER TABLE usergroups DROP COLUMN IF EXISTS can_index;
+ALTER TABLE usergroups ADD COLUMN can_index boolean NOT NULL DEFAULT FALSE;
+ALTER TABLE usergroups DROP COLUMN IF EXISTS indexation_parameters;
+ALTER TABLE usergroups ADD COLUMN indexation_parameters jsonb NOT NULL DEFAULT '{"actions" : {}, "entities" : [], "keywords" : []}';
+
 
 /* REFACTORING */
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS converter_result;

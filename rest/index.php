@@ -179,6 +179,7 @@ $app->get('/groups/{id}', \Group\controllers\GroupController::class . ':getById'
 $app->put('/groups/{id}', \Group\controllers\GroupController::class . ':update');
 $app->delete('/groups/{id}', \Group\controllers\GroupController::class . ':delete');
 $app->get('/groups/{id}/details', \Group\controllers\GroupController::class . ':getDetailledById');
+$app->get('/groups/{id}/indexing', \Group\controllers\GroupController::class . ':getIndexingDetailsById');
 $app->put('/groups/{id}/services/{serviceId}', \Group\controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
 
