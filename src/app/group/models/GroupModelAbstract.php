@@ -92,14 +92,15 @@ abstract class GroupModelAbstract
 
     public static function update(array $args)
     {
-        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
+        ValidatorModel::notEmpty($args, ['where']);
+        ValidatorModel::arrayType($args, ['set', 'postSet', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'usergroups',
-            'set'   => $args['set'],
-            'where' => $args['where'],
-            'data'  => $args['data']
+            'table'     => 'usergroups',
+            'set'       => empty($args['set']) ? [] : $args['set'],
+            'postSet'   => empty($args['postSet']) ? [] : $args['postSet'],
+            'where'     => $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data']
         ]);
 
         return true;

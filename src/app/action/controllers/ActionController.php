@@ -12,6 +12,7 @@
 
 namespace Action\controllers;
 
+use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
@@ -161,23 +162,31 @@ class ActionController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function delete(Request $request, Response $response, array $aArgs)
+    public function delete(Request $request, Response $response, array $args)
     {
         if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (!Validator::intVal()->validate($aArgs['id'])) {
+        if (!Validator::intVal()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
+        $action = ActionModel::getById(['id' => $args['id'], 'select' => ['label_action']]);
+        if (empty($action)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action does not exist']);
+        }
 
-        ActionModel::delete(['id' => $aArgs['id']]);
-        ActionModel::deleteCategories(['id' => $aArgs['id']]);
+        ActionModel::delete(['id' => $args['id']]);
+        ActionModel::deleteCategories(['id' => $args['id']]);
 
-        $action = ActionModel::getById(['id' => $aArgs['id'], 'select' => ['label_action']]);
+        GroupModel::update([
+            'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{actions}', (indexation_parameters->'actions') - '{$args['id']}')"],
+            'where'     => ['1=1']
+        ]);
+
         HistoryController::add([
             'tableName' => 'actions',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'DEL',
             'eventId'   => 'actiondel',
             'info'      => _ACTION_DELETED. ' : ' . $action['label_action']
