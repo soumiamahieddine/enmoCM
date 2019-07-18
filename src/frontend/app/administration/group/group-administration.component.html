@@ -151,7 +151,7 @@
                     </mat-tab>
                     <mat-tab label="Indexation" *ngIf="!creationMode">
                         <ng-template matTabContent>
-                            <app-indexing-administration></app-indexing-administration>
+                            <app-indexing-administration [groupId]="group.id"></app-indexing-administration>
                         </ng-template>
                     </mat-tab>
                 </mat-tab-group>

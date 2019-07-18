@@ -1,14 +1,23 @@
 <div class="row" style="margin:0px;">
+    <div class="col-md-12">
+        <div *ngIf="!indexingInfo.canIndex" class="alert-message alert-message-danger" role="alert"
+            style="margin-top: 30px;">Le groupe ne peut pas enregistrer de document. <a
+                (click)="indexingInfo.canIndex=true">Activer l'indexation pour ce groupe</a></div>
+        <button *ngIf="indexingInfo.canIndex" color="warn" mat-raised-button (click)="indexingInfo.canIndex=false">Désactiver l'indexation pour ce groupe</button>
+    </div>
     <div class="col-md-8">
-        <fieldset>
-            <legend>Action(s) choisie(s)</legend>
+        <div class="formType">
+            <div class="formType-title">
+                Action(s) choisie(s)
+            </div>
             <mat-form-field appearance="outline">
-                <input type="text" placeholder="Associer une nouvelle action" aria-label="Number" matInput [formControl]="myControl"
-                    [matAutocomplete]="auto" (focus)="myControl.setValue('')">
+                <input id="addAction" type="text" placeholder="Associer une nouvelle action" aria-label="Number"
+                    matInput [formControl]="myControl" [matAutocomplete]="auto" (focus)="myControl.setValue('')">
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addAction($event)">
                     <mat-optgroup *ngIf="actionList.length > 0" label="Action(s) disponible(s)">
-                        <mat-option *ngFor="let action of filteredActionList | async" [value]="action.id">
-                            {{action.label}}
+                        <mat-option *ngFor="let action of filteredActionList | async | sortBy: 'label_action'"
+                            [value]="action.id">
+                            {{action.label_action}}
                         </mat-option>
                     </mat-optgroup>
                     <mat-option *ngIf="actionList.length === 0" disabled>
@@ -16,16 +25,26 @@
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
-            <mat-list role="list">
-                <mat-list-item role="listitem" *ngFor="let action of indexingInfo.actions">{{action.label}}
+            <mat-list class="selectedActionList" role="list">
+                <mat-list-item class="selectedAction" role="listitem"
+                    *ngFor="let action of indexingInfo.actions;let i=index">
+                    <div class="actionLabel">{{action.label_action}}</div>
+                    <div>
+                        <button mat-icon-button color="warn" (click)="removeAction(i)">
+                            <mat-icon class="fa fa-trash"></mat-icon>
+                        </button>
+                    </div>
+                    <mat-divider></mat-divider>
                 </mat-list-item>
             </mat-list>
-        </fieldset>
+        </div>
     </div>
     <div class="col-md-4">
-        <fieldset>
-            <legend>Service de destination autorisé</legend>
-        </fieldset>
-        <div id="jstree"></div>
+        <div class="formType">
+            <div class="formType-title">
+                Service de destination autorisé
+            </div>
+            <div #jstree id="jstree"></div>
+        </div>
     </div>
 </div>
