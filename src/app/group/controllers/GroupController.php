@@ -252,7 +252,7 @@ class GroupController
             }
             $allEntities[$key]['state']['opened'] = false;
             $allEntities[$key]['allowed']         = true;
-            if (in_array($value['id'], $group['indexation_parameters']['entities'])) {
+            if (in_array($value['id'], $group['indexationParameters']['entities'])) {
                 $allEntities[$key]['state']['opened']   = true;
                 $allEntities[$key]['state']['selected'] = true;
             }
