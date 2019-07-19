@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, startWith, debounceTime, filter, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
+import { LANG } from '../../app/translate.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'plugin-autocomplete',
@@ -11,25 +13,42 @@ import { LatinisePipe } from 'ngx-pipes';
     styleUrls: ['autocomplete.component.scss'],
 })
 export class PluginAutocomplete implements OnInit {
+    lang: any = LANG;
     myControl = new FormControl();
+    loading = false;
+
+    listInfo: string;
 
     @Input('datas') options: any;
+    @Input('routeDatas') routeDatas: string;
     @Input('labelPlaceholder') placeholder: string;
     @Input('labelList') optGroupLabel: string;
     @Input('targetSearchKey') key: string;
+    @Input('subInfoKey') subInfoKey: string;
     @Output('triggerEvent') selectedOpt = new EventEmitter();
 
     @ViewChild('autoCompleteInput') autoCompleteInput: ElementRef;
 
     filteredOptions: Observable<string[]>;
 
-    constructor(private latinisePipe: LatinisePipe
+    constructor(
+        public http: HttpClient,
+        private latinisePipe: LatinisePipe
     ) { }
 
     ngOnInit() {
-        this.optGroupLabel = this.optGroupLabel === undefined ? 'Valeurs disponibles' : this.optGroupLabel;
-        this.placeholder = this.placeholder === undefined ? 'Choisissez une valeur' : this.placeholder;
+        this.optGroupLabel = this.optGroupLabel === undefined ? this.lang.availableValues : this.optGroupLabel;
+        this.placeholder = this.placeholder === undefined ? this.lang.chooseValue : this.placeholder;
 
+        if (this.routeDatas !== undefined) {
+            this.initAutocompleteRoute();
+        } else {
+            this.initAutocompleteData();
+        }
+    }
+
+    initAutocompleteData() {
+        this.listInfo = this.lang.noAvailableValue;
         this.filteredOptions = this.myControl.valueChanges
             .pipe(
                 startWith(''),
@@ -37,10 +56,37 @@ export class PluginAutocomplete implements OnInit {
             );
     }
 
+    initAutocompleteRoute() {
+        this.listInfo = this.lang.autocompleteInfo;
+        this.options = [];
+        this.myControl.valueChanges
+            .pipe(
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                tap(() => this.loading = true),
+                switchMap((data: any) => this.http.get('../..' + this.routeDatas, { params: { "search": data } })),
+                tap((data: any) => {
+                    this.listInfo = data.length === 0 ? this.lang.noAvailableValue : '';
+                    this.options = data;
+                    this.filteredOptions = of(this.options);
+                    this.loading = false;
+                })
+            ).subscribe();
+    }
+
     selectOpt(ev: any) {
-        this.myControl.setValue('');
+        this.resetAutocomplete();
         this.autoCompleteInput.nativeElement.blur();
         this.selectedOpt.emit(ev.option.value);
+    }
+
+    resetAutocomplete() {
+        this.myControl.setValue('');
+        if (this.routeDatas !== undefined) {
+            this.options = [];
+            this.listInfo = this.lang.autocompleteInfo;
+        }
     }
 
     private _filter(value: string): string[] {

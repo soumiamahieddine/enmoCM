@@ -1030,5 +1030,10 @@ export const LANG_EN = {
     "updateInProgress" : "Update in progress ...",
     "updateInfo" : "This action cannot be undone! Do not make any actions during process.",
     "isAvailable" : "is available",
-    "updateWarn" : "Update is not possible.<br/>These files are modified : <br/>"
+    "updateWarn" : "Update is not possible.<br/>These files are modified : <br/>",
+    "chooseValue" : "Choose a value",
+    "availableValues" : "Available values",
+    "noAvailableValue" : "No available value",
+    "autocompleteInfo" : "The criteria must contain at least&nbsp;<b>3 letters</b>",
+    "availableUsers" : "Available users",
 };

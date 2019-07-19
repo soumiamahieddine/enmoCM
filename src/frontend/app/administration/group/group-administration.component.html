@@ -80,24 +80,7 @@
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12" *ngIf="group.canAdminUsers" style="padding:5px;">
-                                <mat-form-field>
-                                    <span matPrefix><mat-icon class="fa fa-user-plus" color="primary"></mat-icon>&nbsp;&nbsp;</span>
-                                    <input class="autocompleteSearch" #autocompleteFilter placeholder="{{lang.linkUser}}" type="text" matInput [matAutocomplete]="auto"
-                                        [formControl]="userCtrl">
-                                    <mat-autocomplete #auto="matAutocomplete">
-                                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.idToDisplay" (click)="linkUser(user)">
-                                            <p mat-line style="margin:0;">
-                                                <span class="col-xm-1" style="padding-right:5px;">
-                                                    <mat-icon color="primary" [class]="user.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'" style="margin-right:0px;"></mat-icon>
-                                                </span>
-                                                <span class="col-xm-11">
-                                                    {{ user.idToDisplay }}
-                                                    <small>{{ user.otherInfo }}</small>
-                                                </span>
-                                            </p>
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                </mat-form-field>
+                                <plugin-autocomplete [labelPlaceholder]="lang.linkUser" [labelList]="lang.availableUsers" [routeDatas]="'/rest/autocomplete/users'" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'id'" (triggerEvent)="linkUser($event)"></plugin-autocomplete>
                                 <hr/>
                             </div>
                             <div class="col-md-6 col-xs-6">

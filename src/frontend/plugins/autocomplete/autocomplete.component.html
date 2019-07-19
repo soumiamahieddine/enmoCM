@@ -1,14 +1,18 @@
 <form>
-	<mat-form-field appearance="outline">
-		<input type="text" #autoCompleteInput [placeholder]="placeholder" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" (focus)="myControl.setValue('')">
+  <mat-form-field appearance="outline">
+    <mat-icon color="primary" class="fa fa-search" matPrefix></mat-icon>
+    <input type="text" #autoCompleteInput [placeholder]="placeholder" aria-label="Number" matInput [formControl]="myControl"
+      [matAutocomplete]="auto" (focus)="resetAutocomplete()">
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOpt($event)">
-      <mat-optgroup  [label]="optGroupLabel" *ngIf="options.length > 0">
-         <mat-option *ngFor="let option of filteredOptions | async | sortBy: key" [value]="option">
-        {{option[key]}}
-      </mat-option>
+      <mat-optgroup [label]="optGroupLabel" *ngIf="options.length > 0 && !loading">
+        <mat-option *ngFor="let option of filteredOptions | async | sortBy: key" [value]="option">
+          <span color="primary">{{option[key]}}</span>&nbsp;<small>{{option[subInfoKey]}}</small>
+        </mat-option>
       </mat-optgroup>
-       <mat-option *ngIf="options.length === 0" disabled>
-        Aucun élément disponible
+      <mat-option *ngIf="options.length === 0 && !loading" disabled [innerHTML]="listInfo">
+      </mat-option>
+      <mat-option *ngIf="loading" disabled>
+        <mat-spinner diameter="20"></mat-spinner>
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

@@ -7,8 +7,6 @@ import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatSidenav} from '@angular/material';
 
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
-
 declare function $j(selector: any) : any;
 declare const angularGlobals : any;
 
@@ -17,7 +15,7 @@ declare const angularGlobals : any;
     templateUrl: "group-administration.component.html",
     providers   : [NotificationService]
 })
-export class GroupAdministrationComponent  extends AutoCompletePlugin implements OnInit {
+export class GroupAdministrationComponent implements OnInit {
     /*HEADER*/
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
@@ -57,7 +55,6 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
-        super(http, ['adminUsers']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -137,13 +134,11 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
     }
 
     linkUser(newUser:any) {
-        this.userCtrl.setValue('');
-        $j('.autocompleteSearch').blur();
         var groupReq = {
             "groupId"   : this.group.group_id,
             "role"      : this.group.role
         };
-        this.http.post(this.coreUrl + "rest/users/" + newUser.id + "/groups", groupReq)
+        this.http.post(this.coreUrl + "rest/users/" + newUser.serialId + "/groups", groupReq)
             .subscribe(() => {
                 var displayName = newUser.idToDisplay.split(" ");
                 var user = {

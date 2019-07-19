@@ -1056,5 +1056,10 @@ export const LANG_NL = {
     "updateInProgress" : "Update in progress ...", //_TO_TRANSLATE
     "updateInfo" : "This action cannot be undone! Do not make any actions during process.", //_TO_TRANSLATE
     "isAvailable" : "is available", //_TO_TRANSLATE
-    "updateWarn" : "Update is not possible.<br/>These files are modified : <br/>"
+    "updateWarn" : "Update is not possible.<br/>These files are modified : <br/>", //_TO_TRANSLATE
+    "chooseValue" : "Choose a value", //_TO_TRANSLATE
+    "availableValues" : "Available values", //_TO_TRANSLATE
+    "noAvailableValue" : "No available value", //_TO_TRANSLATE
+    "autocompleteInfo" : "The criteria must contain at least&nbsp;<b>3 letters</b>", //_TO_TRANSLATE
+    "availableUsers" : "Available users", //_TO_TRANSLATE
 };

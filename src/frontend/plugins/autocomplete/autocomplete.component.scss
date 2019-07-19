@@ -1,0 +1,15 @@
+@import '../../css/vars.scss';
+
+/deep/.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: $primary;
+}
+
+/deep/.mat-form-field-prefix {
+    top: 0px !important;
+}
+.mat-option {
+    span {
+        font-size: 110%;
+        font-weight: bold;
+    }
+}

@@ -1063,5 +1063,10 @@ export const LANG_FR = {
     "updateInProgress" : "Mise à jour en cours ...",
     "updateInfo" : "Cette action est irréversible ! Il est préférable de ne pas faire d'actions durant le processus et qu'aucun utilisateur ne soit connecté.",
     "isAvailable" : "est disponible",
-    "updateWarn" : "<b>Impossible</b> d'effectuer la mise à jour. Voici les fichiers modifiés :<br/><br/>"
+    "updateWarn" : "<b>Impossible</b> d'effectuer la mise à jour. Voici les fichiers modifiés :<br/><br/>",
+    "chooseValue" : "Choisissez une valeur",
+    "availableValues" : "Valeur(s) disponible(s)",
+    "noAvailableValue" : "Aucun élément disponible",
+    "autocompleteInfo" : "La recherche doit contenir au minimum&nbsp;<b>3 caractères</b>",
+    "availableUsers" : "Utilisateur(s) disponible(s)",
 };
