@@ -5,7 +5,7 @@
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
-UPDATE parameters SET param_value_string = '19.10.1' WHERE id = 'database_version';
+UPDATE parameters SET param_value_string = '19.12' WHERE id = 'database_version';
 
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 
@@ -32,6 +32,14 @@ UPDATE res_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1
 UPDATE res_version_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_version_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 
+/* GROUPS INDEXING */
+ALTER TABLE usergroups DROP COLUMN IF EXISTS can_index;
+ALTER TABLE usergroups ADD COLUMN can_index boolean NOT NULL DEFAULT FALSE;
+ALTER TABLE usergroups DROP COLUMN IF EXISTS indexation_parameters;
+ALTER TABLE usergroups ADD COLUMN indexation_parameters jsonb NOT NULL DEFAULT '{"actions" : [], "entities" : [], "keywords" : []}';
+
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event;
+ALTER TABLE groupbasket ADD COLUMN list_event character varying(255);
 
 /* REFACTORING */
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS converter_result;
@@ -51,3 +59,4 @@ ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_attempts;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_result;
+ALTER TABLE usergroups DROP COLUMN IF EXISTS enabled;

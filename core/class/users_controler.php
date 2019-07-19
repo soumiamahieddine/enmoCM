@@ -190,7 +190,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $func = new functions();
         $query = 'select uc.group_id, uc.primary_group, uc.role from '
                . USERGROUP_CONTENT_TABLE . ' uc, ' . USERGROUPS_TABLE
-               . " u where uc.user_id = ? and u.enabled = 'Y' and uc.group_id = u.group_id ";
+               . " u where uc.user_id = ? and uc.group_id = u.group_id ";
         try {
             $stmt = self::$db->query($query, array($userId));
         } catch (Exception $e){

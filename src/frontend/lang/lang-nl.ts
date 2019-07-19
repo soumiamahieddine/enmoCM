@@ -1054,7 +1054,7 @@ export const LANG_NL = {
     "ok" : "Ok", //_TO_TRANSLATE
     "updateOk" : "Update successfull !", //_TO_TRANSLATE
     "updateInProgress" : "Update in progress ...", //_TO_TRANSLATE
-    "updateWarn" : "Some files have been <b>modified</b>, fix this problem to <b>update</b> your application.", //_TO_TRANSLATE
     "updateInfo" : "This action cannot be undone! Do not make any actions during process.", //_TO_TRANSLATE
     "isAvailable" : "is available", //_TO_TRANSLATE
+    "updateWarn" : "Update is not possible.<br/>These files are modified : <br/>"
 };

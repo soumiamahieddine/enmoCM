@@ -14,6 +14,7 @@ import { AccountLinkComponent }      from './user/account-link/account-link.comp
 import { GroupsAdministrationComponent, GroupsAdministrationRedirectModalComponent }    from './group/groups-administration.component';
 import { UserAdministrationComponent, UserAdministrationRedirectModalComponent }                  from './user/user-administration.component';
 import { GroupAdministrationComponent }                 from './group/group-administration.component';
+import { IndexingAdministrationComponent }                 from './group/indexing/indexing-administration.component';
 import { BasketsAdministrationComponent }               from './basket/baskets-administration.component';
 import { BasketAdministrationComponent, BasketAdministrationSettingsModalComponent, BasketAdministrationGroupListModalComponent }                from './basket/basket-administration.component';
 import { EntitiesAdministrationComponent, EntitiesAdministrationRedirectModalComponent} from './entity/entities-administration.component';
@@ -63,6 +64,7 @@ import { ShippingAdministrationComponent }              from './shipping/shippin
         UserAdministrationComponent,
         GroupsAdministrationComponent,
         GroupAdministrationComponent,
+        IndexingAdministrationComponent,
         BasketsAdministrationComponent,
         BasketAdministrationComponent,
         DoctypesAdministrationComponent,

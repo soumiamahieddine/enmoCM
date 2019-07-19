@@ -189,8 +189,9 @@ CREATE TABLE usergroups
 (
   id serial NOT NULL,
   group_id character varying(32) NOT NULL,
-  group_desc character varying(255) DEFAULT NULL::character varying,
-  enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  group_desc character varying(255),
+  can_index boolean NOT NULL DEFAULT FALSE,
+  indexation_parameters jsonb NOT NULL DEFAULT '{"actions" : [], "entities" : [], "keywords" : []}',
   CONSTRAINT usergroups_pkey PRIMARY KEY (group_id),
   CONSTRAINT usergroups_id_key UNIQUE (id)
 )
@@ -367,6 +368,7 @@ CREATE TABLE groupbasket
   group_id character varying(32) NOT NULL,
   basket_id character varying(32) NOT NULL,
   list_display json DEFAULT '[]',
+  list_event character varying(255),
   CONSTRAINT groupbasket_pkey PRIMARY KEY (group_id, basket_id),
   CONSTRAINT groupbasket_unique_key UNIQUE (id)
 )

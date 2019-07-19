@@ -89,14 +89,15 @@ class VersionUpdateController
         }
 
         $output = [];
-        $diff = exec('git diff 2>&1', $output);
-        $stagedDiff = exec('git diff --staged 2>&1', $output);
 
+        exec('git status --porcelain --untracked-files=no 2>&1', $output);
+        
         return $response->withJson([
             'lastAvailableMinorVersion' => $lastAvailableMinorVersion,
             'lastAvailableMajorVersion' => $lastAvailableMajorVersion,
             'currentVersion'            => $currentVersion,
-            'canUpdate'                 => empty($output) && empty($diff) && empty($stagedDiff)
+            'canUpdate'                 => empty($output),
+            'diffOutput'                => $output,
         ]);
     }
 
@@ -148,19 +149,22 @@ class VersionUpdateController
         $minorVersion = $availableMinorVersions[0];
 
         $output = [];
-        $diff = exec('git diff 2>&1', $output);
-        $stagedDiff = exec('git diff --staged 2>&1', $output);
+        exec('git status --porcelain --untracked-files=no 2>&1', $output);
 
-        if (!empty($output) || !empty($diff) || !empty($stagedDiff)) {
+        if (!empty($output)) {
             return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application', 'lang' => 'canNotUpdateApplication']);
         }
 
         $output = [];
         exec('git fetch');
-        exec("git checkout {$minorVersion} 2>&1", $output);
+        exec("git checkout {$minorVersion} 2>&1", $output, $returnCode);
 
-        $log = "Application updated from {$currentVersion} to {$minorVersion}\nCheckout response => " . implode(' ', $output) . "\n";
+        $log = "Application update from {$currentVersion} to {$minorVersion}\nCheckout response {$returnCode} => " . implode(' ', $output) . "\n";
         file_put_contents('updateVersion.log', $log, FILE_APPEND);
+
+        if ($returnCode != 0) {
+            return $response->withStatus(400)->withJson(['errors' => 'Application update failed. Please check updateVersion.log at root application']);
+        }
 
         return $response->withStatus(204);
     }

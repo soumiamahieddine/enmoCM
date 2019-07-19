@@ -505,7 +505,10 @@ class BasketController
         $data['list_display'] = json_encode($data['list_display']);
 
         GroupBasketModel::update([
-            'set'   => ['list_display' => $data['list_display']],
+            'set'   => [
+                'list_display' => $data['list_display'],
+                'list_event' => $data['list_event']
+            ],
             'where' => ['group_id = ?', 'basket_id = ?'],
             'data'  => [$aArgs['groupId'], $aArgs['id']]
         ]);

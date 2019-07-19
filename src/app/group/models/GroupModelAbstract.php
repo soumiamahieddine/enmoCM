@@ -26,8 +26,6 @@ abstract class GroupModelAbstract
         $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroups'],
-            'where'     => ['enabled = ?'],
-            'data'      => ['Y'],
             'order_by'  => ['group_desc']
         ]);
 
@@ -90,30 +88,32 @@ abstract class GroupModelAbstract
         return true;
     }
 
-    public static function update(array $aArgs)
+    public static function update(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'description', 'clause']);
-        ValidatorModel::stringType($aArgs, ['id', 'description', 'clause', 'comment']);
+        ValidatorModel::notEmpty($args, ['where']);
+        ValidatorModel::arrayType($args, ['set', 'postSet', 'where', 'data']);
 
         DatabaseModel::update([
             'table'     => 'usergroups',
-            'set'       => [
-                'group_desc'    => $aArgs['description']
-            ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'set'       => empty($args['set']) ? [] : $args['set'],
+            'postSet'   => empty($args['postSet']) ? [] : $args['postSet'],
+            'where'     => $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data']
         ]);
 
-        $group = GroupModel::getById(['id' => $aArgs['id'], 'select' => ['group_id']]);
+        return true;
+    }
+
+    public static function updateSecurity(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table'     => 'security',
-            'set'       => [
-                'where_clause'      => $aArgs['clause'],
-                'maarch_comment'    => $aArgs['comment'],
-            ],
-            'where'     => ['group_id = ?'],
-            'data'      => [$group['group_id']]
+            'table' => 'security',
+            'set'   => $args['set'],
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;
