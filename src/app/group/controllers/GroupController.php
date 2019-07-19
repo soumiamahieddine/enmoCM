@@ -141,7 +141,7 @@ class GroupController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $group = GroupModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'group_id', 'group_desc', 'enabled']]);
+        $group = GroupModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'group_id', 'group_desc']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
@@ -250,10 +250,8 @@ class GroupController
                 $allEntities[$key]['parent'] = $value['parent_id'];
                 $allEntities[$key]['icon']   = "fa fa-sitemap";
             }
-            $allEntities[$key]['state']['opened'] = false;
-            $allEntities[$key]['allowed']         = true;
+            $allEntities[$key]['state']['opened'] = true;
             if (in_array($value['id'], $group['indexationParameters']['entities'])) {
-                $allEntities[$key]['state']['opened']   = true;
                 $allEntities[$key]['state']['selected'] = true;
             }
 
@@ -269,17 +267,17 @@ class GroupController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        $body = $request->getParsedBody();
+        if (!Validator::boolType()->validate($body['canIndex'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body canIndex is empty or not a boolean']);
+        }
+
         $group = GroupModel::getById(['id' => $args['id'], 'select' => ['indexation_parameters']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
         $indexationParameters = json_decode($group['indexation_parameters'], true);
-
-        $body = $request->getParsedBody();
-        if (!Validator::boolType()->validate($body['canIndex'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body canIndex is empty or not a boolean']);
-        }
 
         if (!empty($body['actions']) && is_array($body['actions'])) {
             $countActions = ActionModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['actions']]]);
