@@ -14,7 +14,6 @@
 
 namespace Convert\controllers;
 
-
 use Attachment\models\AttachmentModel;
 use Convert\models\AdrModel;
 use Docserver\controllers\DocserverController;
@@ -37,7 +36,7 @@ class ConvertPdfController
 
         $tmpPath = CoreConfigModel::getTmpPath();
 
-        self::addBom($aArgs['fullFilename']);
+        ConvertPdfController::addBom($aArgs['fullFilename']);
         $command = "unoconv -f pdf " . escapeshellarg($aArgs['fullFilename']);
 
         exec('export HOME=' . $tmpPath . ' && '.$command.' 2>&1', $output, $return);
@@ -93,7 +92,7 @@ class ConvertPdfController
         copy($pathToDocument, $tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
 
         if (strtolower($docInfo["extension"]) != 'pdf') {
-            self::addBom($tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
+            ConvertPdfController::addBom($tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
             $command = "unoconv -f pdf " . escapeshellarg($tmpPath.$fileNameOnTmp.'.'.$docInfo["extension"]);
             exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
 
@@ -148,7 +147,7 @@ class ConvertPdfController
 
         file_put_contents($tmpPath . $tmpFilename, base64_decode($aArgs['encodedResource']));
 
-        self::addBom($tmpPath.$tmpFilename);
+        ConvertPdfController::addBom($tmpPath.$tmpFilename);
         $command = "unoconv -f pdf {$tmpPath}{$tmpFilename}";
         exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
 
@@ -206,7 +205,8 @@ class ConvertPdfController
         return $canConvert;
     }
 
-    public static function addBom($filePath) {
+    public static function addBom($filePath)
+    {
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
         if (strtolower($extension) == strtolower('txt')) {
             $content = file_get_contents($filePath);

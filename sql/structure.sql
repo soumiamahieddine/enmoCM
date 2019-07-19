@@ -636,6 +636,18 @@ CREATE TABLE folders
 )
 WITH (OIDS=FALSE);
 
+-- CREATE TABLE folders
+-- (
+--   id serial NOT NULL,
+--   label character varying(255) NOT NULL,
+--   public boolean NOT NULL,
+--   sharing jsonb DEFAULT '{"entities" : []}',
+--   user_id INTEGER NOT NULL,
+--   parent_id INTEGER,
+--   CONSTRAINT folders_pkey PRIMARY KEY (id)
+-- )
+-- WITH (OIDS=FALSE);
+
 CREATE SEQUENCE foldertype_id_id_seq
   INCREMENT 1
   MINVALUE 1

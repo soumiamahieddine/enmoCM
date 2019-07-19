@@ -60,3 +60,19 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS enabled;
+
+/* FOLDERS */
+
+ALTER TABLE folders RENAME TO folder_tmp;
+
+CREATE TABLE folders
+(
+  id serial NOT NULL,
+  label character varying(255) NOT NULL,
+  public boolean NOT NULL,
+  sharing jsonb DEFAULT '{"entities" : []}',
+  user_id INTEGER NOT NULL,
+  parent_id INTEGER,
+  CONSTRAINT folders_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
