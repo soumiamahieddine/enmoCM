@@ -10,21 +10,7 @@
             <div class="formType-title">
                 Action(s) choisie(s)
             </div>
-            <mat-form-field appearance="outline">
-                <input id="addAction" type="text" placeholder="Associer une nouvelle action" aria-label="Number"
-                    matInput [formControl]="myControl" [matAutocomplete]="auto" (focus)="myControl.setValue('')">
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addAction($event)">
-                    <mat-optgroup *ngIf="actionList.length > 0" label="Action(s) disponible(s)">
-                        <mat-option *ngFor="let action of filteredActionList | async | sortBy: 'label_action'"
-                            [value]="action.id">
-                            {{action.label_action}}
-                        </mat-option>
-                    </mat-optgroup>
-                    <mat-option *ngIf="actionList.length === 0" disabled>
-                        Aucune action disponible
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
+            <plugin-autocomplete [labelPlaceholder]="'Associer une nouvelle action'" [labelList]="'Action(s) disponible(s)'" [datas]="actionList" [targetSearchKey]="'label_action'" (triggerEvent)="addAction($event)"></plugin-autocomplete>
             <mat-list class="selectedActionList" role="list">
                 <mat-list-item class="selectedAction" role="listitem"
                     *ngFor="let action of indexingInfo.actions;let i=index">

@@ -1,14 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
 import { tap } from 'rxjs/internal/operators/tap';
-import { exhaustMap, startWith, map } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
-import { LatinisePipe } from 'ngx-pipes';
+import { map } from 'rxjs/operators';
 
 declare function $j(selector: any): any;
 
@@ -30,19 +25,15 @@ export class IndexingAdministrationComponent implements OnInit {
     keywordEntities: any[] = [];
     actionList: any[] = [];
 
-    myControl = new FormControl();
-
     indexingInfo: any = {
         canIndex: false,
         actions: [],
         keywords: [],
         entities: []
     };
-    filteredActionList: Observable<any[]>;
 
     constructor(public http: HttpClient,
         private notify: NotificationService,
-        private latinisePipe: LatinisePipe
     ) {
 
         this.keywordEntities = [{
@@ -105,12 +96,6 @@ export class IndexingAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.filteredActionList = this.myControl.valueChanges
-            .pipe(
-                startWith(''),
-                map(value => this._filter(value))
-            );
-
         this.getIndexingInformations().pipe(
             tap((data: any) => this.indexingInfo.canIndex = data.group.canIndex),
             tap((data: any) => this.getActions(data.actions)),
@@ -119,7 +104,6 @@ export class IndexingAdministrationComponent implements OnInit {
             map((data: any) => this.getSelectedEntities(data)),
             tap((data: any) => this.initEntitiesTree(data))
         ).subscribe();
-
     }
 
     initEntitiesTree(entities: any) {
@@ -165,14 +149,14 @@ export class IndexingAdministrationComponent implements OnInit {
 
     getSelectedEntities(data: any) {
         this.indexingInfo.entities = [...data.group.indexationParameters.entities];
-        data.entities.forEach((entity: any) => {
+        /*data.entities.forEach((entity: any) => {
             if (this.indexingInfo.entities.indexOf(entity.id) > -1 ) {
                 entity.state = { "opened": true, "selected": true };
             } else {
                 entity.state = { "opened": true, "selected": false };
             }
             
-        });
+        });*/
         return data.entities;
     }
 
@@ -217,26 +201,16 @@ export class IndexingAdministrationComponent implements OnInit {
         console.log(this.indexingInfo.keywords);
     }
 
-    addAction(actionOpt: MatAutocompleteSelectedEvent) {
-        const index = this.actionList.findIndex(action => action.id === actionOpt.option.value);
+    addAction(actionOpt: any) {
+        const index = this.actionList.findIndex(action => action.id === actionOpt.id);
         const action = {...this.actionList[index]};
         this.indexingInfo.actions.push(action);
         this.actionList.splice(index, 1);
-        $j('#addAction').blur();
     }
 
     removeAction(index: number) {
         const action = {...this.indexingInfo.actions[index]};
         this.actionList.push(action);
         this.indexingInfo.actions.splice(index, 1);
-    }
-
-    private _filter(value: string): any[] {
-        if (typeof value === 'string') {
-            const filterValue = this.latinisePipe.transform(value.toLowerCase());
-            return this.actionList.filter(option => this.latinisePipe.transform(option.label_action.toLowerCase()).includes(filterValue));
-        } else {
-            return this.actionList;
-        }
     }
 }

@@ -1,0 +1,15 @@
+<form>
+	<mat-form-field appearance="outline">
+		<input type="text" #autoCompleteInput [placeholder]="placeholder" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" (focus)="myControl.setValue('')">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOpt($event)">
+      <mat-optgroup  [label]="optGroupLabel" *ngIf="options.length > 0">
+         <mat-option *ngFor="let option of filteredOptions | async | sortBy: key" [value]="option">
+        {{option[key]}}
+      </mat-option>
+      </mat-optgroup>
+       <mat-option *ngIf="options.length === 0" disabled>
+        Aucun élément disponible
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
