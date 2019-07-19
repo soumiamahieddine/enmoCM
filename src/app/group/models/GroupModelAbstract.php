@@ -26,8 +26,6 @@ abstract class GroupModelAbstract
         $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroups'],
-            'where'     => ['enabled = ?'],
-            'data'      => ['Y'],
             'order_by'  => ['group_desc']
         ]);
 
