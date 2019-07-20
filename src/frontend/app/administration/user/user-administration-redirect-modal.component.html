@@ -19,28 +19,7 @@
                         {{lang.reaffectUserRedirect}}
                     </mat-radio-button>
                 </mat-radio-group>
-                <mat-form-field *ngIf="this.processMode == 'reaffect'">
-                    <input name="userDestRedirectModel" id="userDestRedirectModel" type="text" placeholder="{{lang.userReplacement}}" matInput
-                        [matAutocomplete]="auto" [formControl]="userCtrl" [(ngModel)]="this.redirectUser" tabindex="-1" required>
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option value="NO_USER" style="text-align:center;">
-                            <i>- {{lang.noUserReplacement}} -</i>
-                        </mat-option>
-                        <ng-container *ngFor="let user of filteredUsers | async">
-                            <mat-option [value]="user.id">
-                                <div class="container-fluid">
-                                    <span class="col-xm-1">
-                                        <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
-                                    </span>
-                                    <span class="col-xm-11">
-                                        {{ user.idToDisplay }}
-                                        <small>{{ user.otherInfo }}</small>
-                                    </span>
-                                </div>
-                            </mat-option>
-                        </ng-container>
-                    </mat-autocomplete>
-                </mat-form-field>
+                <plugin-autocomplete *ngIf="this.processMode == 'reaffect'" [labelPlaceholder]="lang.userReplacement" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="setRedirectUser($event)" singleMode required></plugin-autocomplete>
 
                 <div class="alert-message alert-message-info" role="alert" style="max-width: inherit;">
                     <span *ngIf="this.processMode == ''"><em>{{lang.doNothingRedirectInformations}}</em></span>

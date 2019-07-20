@@ -16,7 +16,7 @@ declare var angularGlobals: any;
     styleUrls: ['users-administration.component.scss'],
     providers: [NotificationService]
 })
-export class UsersAdministrationComponent extends AutoCompletePlugin implements OnInit {
+export class UsersAdministrationComponent implements OnInit {
 
     /*RESPONSIVE*/
     private _mobileQueryListener            : () => void;
@@ -54,7 +54,6 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
-        super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -411,16 +410,20 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 }
 @Component({
     templateUrl: "users-administration-redirect-modal.component.html",
-    styleUrls: ['users-administration-redirect-modal.scss']
+    styleUrls: ['users-administration-redirect-modal.scss'],
+    providers: [NotificationService]
 })
-export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugin {
+export class UsersAdministrationRedirectModalComponent {
     lang: any               = LANG;
     loadModel: boolean      = false;
     loadInstance: boolean   = false;
     modalTitle: string      = this.lang.confirmAction;
 
-    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UsersAdministrationRedirectModalComponent>) {
-        super(http, ['users']);
+    constructor(
+        public http: HttpClient, 
+        @Inject(MAT_DIALOG_DATA) public data: any, 
+        public dialogRef: MatDialogRef<UsersAdministrationRedirectModalComponent>,
+        private notify: NotificationService) {
     }
 
     ngOnInit(): void {
@@ -451,7 +454,26 @@ export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugi
                 this.data.inInstanceList = true;
             }
         }
+    }
 
+    setRedirectUserListModels(index:number, user: any) {
+        if(this.data.userDestRedirect.user_id != user.id) {
+            this.data.redirectListModels[index].redirectUserId = user.id;
+        } else {
+            this.data.redirectListModels[index].redirectUserId = null;
+            this.notify.error(this.lang.userUnauthorized);
+        }
+        
+    }
+
+    setRedirectUserRes(user: any) {
+        if(this.data.userDestRedirect.user_id != user.id) {
+            this.data.redirectDestResUserId = user.id;
+        } else {
+            this.data.redirectDestResUserId = null;
+            this.notify.error(this.lang.userUnauthorized);
+        }
+        
     }
 
     sendFunction() {

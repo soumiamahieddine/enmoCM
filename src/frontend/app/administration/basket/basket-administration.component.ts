@@ -354,7 +354,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     statusCtrl = new FormControl();
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
-        super(http, ['users', 'statuses']);
+        super(http, ['statuses']);
     }
 
     @ViewChild('statusInput') statusInput: ElementRef;

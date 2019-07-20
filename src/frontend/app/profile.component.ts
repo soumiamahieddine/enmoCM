@@ -7,7 +7,6 @@ import { HeaderService }        from '../service/header.service';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MatSidenav, MatExpansionPanel } from '@angular/material';
 
-import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
 
@@ -22,7 +21,7 @@ declare var angularGlobals: any;
     styleUrls: ['profile.component.css'],
     providers: [NotificationService]
 })
-export class ProfileComponent extends AutoCompletePlugin implements OnInit {
+export class ProfileComponent implements OnInit {
 
     private _mobileQueryListener: () => void;
     mobileQuery: MediaQueryList;
@@ -163,7 +162,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog, private _formBuilder: FormBuilder, private headerService: HeaderService) {
-        super(http, ['users']);
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -528,7 +526,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         if (r) {
             this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets", basketsRedirect)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.redirectedBaskets = data["redirectedBaskets"];
                     this.selectionBaskets.clear();
@@ -545,7 +542,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.redirectedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -561,7 +557,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.assignedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -584,7 +579,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                 }
             ])
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.assignedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);

@@ -1069,4 +1069,6 @@ export const LANG_FR = {
     "noAvailableValue" : "Aucun élément disponible",
     "autocompleteInfo" : "La recherche doit contenir au minimum&nbsp;<b>3 caractères</b>",
     "availableUsers" : "Utilisateur(s) disponible(s)",
+    "userUnauthorized" : "Utilisateur non autorisé",
+
 };

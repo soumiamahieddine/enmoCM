@@ -5,9 +5,6 @@ import { LANG } from '../translate.component';
 import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource } from '@angular/material';
 import { NotificationService } from '../notification.service';
 import { HeaderService }        from '../../service/header.service';
-
-
-import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 declare function $j(selector: any): any;
@@ -19,7 +16,7 @@ declare var angularGlobals: any;
     styleUrls: ['home.component.scss'],
     providers: [NotificationService]
 })
-export class HomeComponent extends AutoCompletePlugin implements OnInit {
+export class HomeComponent implements OnInit {
 
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
@@ -46,7 +43,6 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private notify: NotificationService, private headerService: HeaderService) {
-        super(http, ['users']);
         this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');

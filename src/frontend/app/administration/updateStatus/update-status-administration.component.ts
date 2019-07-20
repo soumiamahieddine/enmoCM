@@ -5,8 +5,7 @@ import { LANG } from '../../translate.component';
 import { MatSidenav } from '@angular/material';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
-
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
+import { tap } from 'rxjs/internal/operators/tap';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -17,7 +16,7 @@ declare var angularGlobals: any;
     styleUrls: ['update-status-administration.component.css'],
     providers: [NotificationService]
 })
-export class UpdateStatusAdministrationComponent extends AutoCompletePlugin implements OnInit {
+export class UpdateStatusAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
@@ -37,7 +36,6 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     chronoList                      : string[]  = [];
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
-        super(http, ['statuses']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -55,7 +53,11 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
 
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
-        this.loading = false;
+
+        this.http.get(this.coreUrl + 'rest/autocomplete/statuses').pipe(
+            tap((data : any) => this.statuses = data),
+            tap(() => this.loading = false)
+        ).subscribe();
     }
 
     onSubmit() {
@@ -93,6 +95,10 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
             this.chronoList.push(this.chrono);
         }
         this.chrono = "";
+    }
+
+    setStatus(status: any) {
+        this.statusId = status.id;
     }
 
     removeResId(resId: string) :void {

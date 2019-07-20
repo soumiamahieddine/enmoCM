@@ -1062,4 +1062,5 @@ export const LANG_NL = {
     "noAvailableValue" : "No available value", //_TO_TRANSLATE
     "autocompleteInfo" : "The criteria must contain at least&nbsp;<b>3 letters</b>", //_TO_TRANSLATE
     "availableUsers" : "Available users", //_TO_TRANSLATE
+    "userUnauthorized" : "User Unauthorized", //_TO_TRANSLATE
 };

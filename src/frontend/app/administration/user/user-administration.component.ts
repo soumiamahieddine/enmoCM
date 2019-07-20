@@ -4,11 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AccountLinkComponent } from './account-link/account-link.component';
 
@@ -21,7 +20,7 @@ declare const angularGlobals: any;
     styleUrls: ['user-administration.component.scss'],
     providers: [NotificationService]
 })
-export class UserAdministrationComponent extends AutoCompletePlugin implements OnInit {
+export class UserAdministrationComponent implements OnInit {
     @ViewChild('snav') public sidenavLeft: MatSidenav;
     @ViewChild('snav2') public sidenavRight: MatSidenav;
 
@@ -111,7 +110,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService, private _formBuilder: FormBuilder) {
-        super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -560,7 +558,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         if (r) {
             this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets", basketsRedirect)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.redirectedBaskets = data["redirectedBaskets"];
                     this.selectionBaskets.clear();
@@ -584,7 +581,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 }
             ])
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.assignedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -600,7 +596,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.redirectedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -616,7 +611,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.assignedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -904,13 +898,16 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     templateUrl: "user-administration-redirect-modal.component.html",
     styles: [".mat-dialog-content{max-height: 65vh;width:600px;}"]
 })
-export class UserAdministrationRedirectModalComponent extends AutoCompletePlugin {
+export class UserAdministrationRedirectModalComponent {
     lang: any = LANG;
 
     redirectUser: String = '';
     processMode: String = '';
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UserAdministrationRedirectModalComponent>) {
-        super(http, ['users']);
+    }
+
+    setRedirectUser(user: any) {
+        this.redirectUser = user;
     }
 }

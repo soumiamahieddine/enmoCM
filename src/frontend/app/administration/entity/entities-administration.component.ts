@@ -8,8 +8,6 @@ import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { Router } from '@angular/router';
 
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
-
 declare function $j(selector: any): any;
 
 declare var angularGlobals: any;
@@ -19,7 +17,7 @@ declare var angularGlobals: any;
     styleUrls: ['entities-administration.component.css'],
     providers: [NotificationService]
 })
-export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
+export class EntitiesAdministrationComponent implements OnInit {
     /*HEADER*/
     titleHeader                              : string;
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
@@ -67,7 +65,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService, private router: Router) {
-        super(http, ['adminUsers', 'usersAndEntities', 'visaUsers']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -264,8 +261,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 this.currentEntity.listTemplate.cc.unshift(newElemListModel);
             }
         }
-        this.elementCtrl.setValue('');
-        $j('.autocompleteSearch').blur();
     }
 
     addElemListModelVisa(element: any) {
@@ -284,8 +279,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         if (this.currentEntity.visaTemplate.length > 1) {
             this.currentEntity.visaTemplate[this.currentEntity.visaTemplate.length-2].item_mode = 'visa';
         }
-        this.visaUserCtrl.setValue('');
-        $j('.autocompleteSearch').blur();
     }
 
     saveEntity() {
@@ -704,8 +697,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     linkUser(newUser:any) {
-        this.userCtrl.setValue('');
-        $j('.autocompleteSearch').blur();
         let entity = {
             "entityId"  : this.currentEntity.entity_id,
             "role"      : ''
@@ -739,10 +730,14 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 @Component({
     templateUrl: "entities-administration-redirect-modal.component.html"
 })
-export class EntitiesAdministrationRedirectModalComponent extends AutoCompletePlugin {
+export class EntitiesAdministrationRedirectModalComponent {
     lang: any = LANG;
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<EntitiesAdministrationRedirectModalComponent>) {
-        super(http, ['entities']);
+        console.log(this.data.entity.redirectEntity);
+    }
+
+    setRedirectEntity(entity: any) {
+        this.data.entity.redirectEntity = entity.id;
     }
 }

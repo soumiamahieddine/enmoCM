@@ -1,5 +1,8 @@
 @import '../../css/vars.scss';
 
+.mat-form-field-appearance-outline {
+    font-size: 11px;
+}
 /deep/.mat-form-field-appearance-outline .mat-form-field-outline-thick {
     color: $primary;
 }
@@ -8,8 +11,17 @@
     top: 0px !important;
 }
 .mat-option {
+    ::ng-deep.mat-option-text {
+        display: flex;
+    }
     span {
         font-size: 110%;
         font-weight: bold;
     }
+}
+
+.autcompleteIcon {
+    width: 20px;
+    display: flex;
+    align-items: center;
 }

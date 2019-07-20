@@ -1,13 +1,5 @@
 <mat-list *ngIf="!loading">
-    <mat-form-field *ngIf="injectDatas.editable" appearance="outline" floatLabel="never" [style.fontSize.px]="10">
-        <input id="availableUsers" type="text" matInput placeholder="{{lang.addPerson}}" [matAutocomplete]="auto"
-            [formControl]="userCtrl">
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addItem($event)" isOpen="true">
-            <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-                {{user.idToDisplay}}
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
+    <plugin-autocomplete *ngIf="injectDatas.editable" [labelPlaceholder]="lang.addPerson" [routeDatas]="['/rest/autocomplete/maarchParapheurUsers']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addItem($event)"></plugin-autocomplete>
     <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="visaWorkflow.items" class="cdk-list"
         (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="!injectDatas.editable">
         <div class="emptyContent" *ngIf="visaWorkflow.items.length === 0">

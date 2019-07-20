@@ -13,26 +13,7 @@
 
                     <div *ngFor="let redirectModel of data.redirectListModels; index as i" id="{{redirectModel.object_id}}"
                         class="form-group">
-                        <mat-form-field class="example-full-width">
-                            <input name="redirectModel_{{i}}" id="redirectModel_{{i}}" [(ngModel)]="redirectModel.redirectUserId"
-                                type="text" placeholder="{{lang.newDest}} : {{redirectModel.title}}" matInput
-                                [matAutocomplete]="auto" [formControl]="userCtrl" required>
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <ng-container *ngFor="let user of filteredUsers | async">
-                                    <mat-option [value]="user.id" *ngIf="this.data.userDestRedirect.user_id != user.id">
-                                        <div class="container-fluid">
-                                            <span class="col-xm-1">
-                                                <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
-                                            </span>
-                                            <span class="col-xm-11">
-                                                {{ user.idToDisplay }}
-                                                <small>{{ user.otherInfo }}</small>
-                                            </span>
-                                        </div>
-                                    </mat-option>
-                                </ng-container>
-                            </mat-autocomplete>
-                        </mat-form-field>
+                        <plugin-autocomplete [labelPlaceholder]="lang.newDest + ' : ' + redirectModel.title" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="setRedirectUserListModels(i, $event)" singleMode required></plugin-autocomplete>
                     </div>
                 </div>
 
@@ -44,26 +25,7 @@
                     </div>
 
                     <div id="{{this.data.userDestRedirect.user_id}}" class="form-group">
-                        <mat-form-field class="example-full-width">
-                            <input name="redirectModel_resDest" id="redirectModel_resDest" [(ngModel)]="this.data.redirectDestResUserId"
-                                type="text" placeholder="{{lang.newDestRes}} : " matInput [matAutocomplete]="auto"
-                                [formControl]="userCtrl" required>
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <ng-container *ngFor="let user of filteredUsers | async">
-                                    <mat-option [value]="user.id" *ngIf="this.data.userDestRedirect.user_id != user.id">
-                                        <div class="container-fluid">
-                                            <span class="col-xm-1">
-                                                <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
-                                            </span>
-                                            <span class="col-xm-11">
-                                                {{ user.idToDisplay }}
-                                                <small>{{ user.otherInfo }}</small>
-                                            </span>
-                                        </div>
-                                    </mat-option>
-                                </ng-container>
-                            </mat-autocomplete>
-                        </mat-form-field>
+                        <plugin-autocomplete [labelPlaceholder]="lang.newDestRes" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="setRedirectUserRes($event)" singleMode required></plugin-autocomplete>
                     </div>
                 </div>
 

@@ -221,27 +221,7 @@
                                                     style="opacity: 0.5;font-style: italic;font-size: 80%;">
                                                     {{lang.selectAll}}
                                                 </span>
-                                                <mat-form-field *ngIf="selectionBaskets.hasValue()">
-                                                    <input matTooltip="{{lang.redirectWhenAbscence}}"
-                                                        matTooltipPosition="above" type="text"
-                                                        placeholder="{{ lang.redirectBaskets }}" matInput
-                                                        [matAutocomplete]="auto" [formControl]="userCtrl">
-                                                    <mat-autocomplete #auto="matAutocomplete">
-                                                        <mat-option *ngFor="let user of filteredUsers | async"
-                                                            [value]="user.id" (click)="addBasketRedirection(user)">
-                                                            <p mat-line matTooltip="{{ user.otherInfo }}">
-                                                                <span class="col-xm-1">
-                                                                    <mat-icon color="primary" class="fa fa-user fa-2x"
-                                                                        style="margin-right:0px;"></mat-icon>
-                                                                </span>
-                                                                <span class="col-xm-11">
-                                                                    {{ user.idToDisplay }}
-                                                                    <small>{{ user.otherInfo }}</small>
-                                                                </span>
-                                                            </p>
-                                                        </mat-option>
-                                                    </mat-autocomplete>
-                                                </mat-form-field>
+                                                <plugin-autocomplete *ngIf="selectionBaskets.hasValue()" [labelPlaceholder]="lang.redirectBaskets" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addBasketRedirection($event)"></plugin-autocomplete>
                                             </p>
                                         </mat-list-item>
                                         <mat-divider></mat-divider>
@@ -314,32 +294,7 @@
                                                                 style="font-weight:normal">{{basket.group_desc}}</span>
                                                         </h4>
                                                         <p mat-line>
-                                                            <mat-form-field *ngIf="basket.userToDisplay == null"
-                                                                floatLabel="never">
-                                                                <input matTooltip="{{lang.redirectBasket}}"
-                                                                    matTooltipPosition="above" type="text"
-                                                                    placeholder="{{lang.redirectBasket}}" matInput
-                                                                    [matAutocomplete]="auto" [formControl]="userCtrl">
-                                                                <mat-autocomplete #auto="matAutocomplete">
-                                                                    <mat-option
-                                                                        *ngFor="let user of filteredUsers | async"
-                                                                        [value]="user.id"
-                                                                        (click)="reassignBasketRedirection(user,basket,i)">
-                                                                        <p mat-line matTooltip="{{ user.otherInfo }}">
-                                                                            <span class="col-xm-1">
-                                                                                <mat-icon color="primary"
-                                                                                    class="fa fa-user fa-2x"
-                                                                                    style="margin-right:0px;">
-                                                                                </mat-icon>
-                                                                            </span>
-                                                                            <span class="col-xm-11">
-                                                                                {{ user.idToDisplay }}
-                                                                                <small>{{ user.otherInfo }}</small>
-                                                                            </span>
-                                                                        </p>
-                                                                    </mat-option>
-                                                                </mat-autocomplete>
-                                                            </mat-form-field>
+                                                            <plugin-autocomplete *ngIf="basket.userToDisplay == null" [labelPlaceholder]="lang.redirectBaskets" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="reassignBasketRedirection($event,basket,i)"></plugin-autocomplete>
                                                             <mat-form-field>
                                                                 <input type="text" color="warn" matInput disabled
                                                                     value="{{lang.assignBy}} {{basket.userToDisplay}}">

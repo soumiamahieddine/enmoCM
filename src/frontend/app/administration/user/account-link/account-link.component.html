@@ -1,14 +1,6 @@
 <h1 mat-dialog-title>{{lang.linkAccount}}</h1>
 <mat-dialog-content class="modal-container">
-  <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
-    <input id="availableUsers" type="text" matInput placeholder="{{lang.searchUserInMaarchParapheur}}"
-      [matAutocomplete]="auto" [formControl]="userCtrl">
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectUser($event)" isOpen="true">
-      <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-        {{user.idToDisplay}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+  <plugin-autocomplete [labelPlaceholder]="lang.searchUserInMaarchParapheur" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/maarchParapheurUsers']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'email'" (triggerEvent)="selectUser($event)"></plugin-autocomplete>
   <mat-list *ngIf="externalUser.inMaarchParapheur">
     <mat-list-item >
       <mat-icon class="avatarAccount" color="primary" mat-list-icon

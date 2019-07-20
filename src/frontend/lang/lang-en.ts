@@ -1036,4 +1036,5 @@ export const LANG_EN = {
     "noAvailableValue" : "No available value",
     "autocompleteInfo" : "The criteria must contain at least&nbsp;<b>3 letters</b>",
     "availableUsers" : "Available users",
+    "userUnauthorized" : "User Unauthorized",
 };

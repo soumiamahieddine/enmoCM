@@ -80,7 +80,7 @@
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12" *ngIf="group.canAdminUsers" style="padding:5px;">
-                                <plugin-autocomplete [labelPlaceholder]="lang.linkUser" [labelList]="lang.availableUsers" [routeDatas]="'/rest/autocomplete/users'" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'id'" (triggerEvent)="linkUser($event)"></plugin-autocomplete>
+                                <plugin-autocomplete [labelPlaceholder]="lang.linkUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'id'" (triggerEvent)="linkUser($event)"></plugin-autocomplete>
                                 <hr/>
                             </div>
                             <div class="col-md-6 col-xs-6">

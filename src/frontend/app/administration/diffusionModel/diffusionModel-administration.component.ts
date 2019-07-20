@@ -5,8 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
-
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { MatSidenav } from '@angular/material';
 
 declare function $j(selector: any): any;
@@ -19,7 +17,7 @@ declare const angularGlobals: any;
     styleUrls: ['diffusionModel-administration.component.css'],
     providers: [NotificationService]
 })
-export class DiffusionModelAdministrationComponent extends AutoCompletePlugin implements OnInit {
+export class DiffusionModelAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
@@ -42,7 +40,6 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
     dataSource          : any;
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
-        super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -109,15 +106,13 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
             "item_id": element.id,
             "sequence": this.diffusionModel.diffusionList.length,
             "idToDisplay": element.idToDisplay,
-            "descriptionToDisplay": element.otherInfo
+            "descriptionToDisplay": element.descriptionToDisplay
         };
 
         this.diffusionModel.diffusionList.push(newElemListModel);
         if (this.diffusionModel.diffusionList.length > 1) {
             this.diffusionModel.diffusionList[this.diffusionModel.diffusionList.length-2].item_mode = item_mode2;
         }
-        this.userCtrl.setValue('');
-        $j('.autocompleteSearch').blur();
     }
 
     updateDiffListVisa(template: any): any {
