@@ -87,32 +87,6 @@ $theme: mat-light-theme($primary, $accent, $warn);
   cursor:not-allowed;
 }
 
-.adminArea {
-  display: flex;
-  flex-flow: row wrap;
-}
-
-.adminArea_1{
-  flex: 1;
-  overflow: hidden;
-  padding:20px;
-}
-
-.adminArea_2{
-  overflow: hidden;
-  padding:20px;
-}
-
-.adminArea_3{
-  overflow: hidden;
-  padding:20px;
-}
-
-.adminArea_4{
-  overflow: hidden;
-  padding:20px;
-}
-
 .dndFile{
   border: dashed 5px grey;
   padding:10px;

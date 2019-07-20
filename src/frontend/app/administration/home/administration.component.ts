@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit, Input, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { LANG } from '../translate.component';
+import { LANG } from '../../translate.component';
 import { MatSidenav, MatBottomSheet } from '@angular/material';
-import { HeaderService } from "../../service/header.service";
-import { TechnicalAdministrationComponent } from "../administration/technical/technical-administration.component";
+import { HeaderService } from "../../../service/header.service";
+import { TechnicalAdministrationComponent } from "../technical/technical-administration.component";
 
 declare function $j(selector: any): any;
 
@@ -14,12 +14,13 @@ declare const angularGlobals: any;
 
 @Component({
     templateUrl: "administration.component.html",
+    styleUrls: ['administration.component.scss'],
 })
 export class AdministrationComponent implements OnInit {
 
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
-
+    mobileMode: boolean = false;
     coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
@@ -33,6 +34,7 @@ export class AdministrationComponent implements OnInit {
     @ViewChild('snav2') public sidenavRight: MatSidenav;
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private router: Router, private headerService: HeaderService, private bottomSheet: MatBottomSheet) {
+        this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();

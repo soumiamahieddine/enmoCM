@@ -1,0 +1,43 @@
+.adminArea {
+    display: flex;
+    flex-flow: row wrap;
+  }
+  
+  .adminArea_1{
+    flex: 1;
+    overflow: hidden;
+    padding:20px;
+  }
+  
+  .adminArea_2{
+    overflow: hidden;
+    padding:20px;
+  }
+  
+  .adminArea_3{
+    overflow: hidden;
+    padding:20px;
+  }
+  
+  .adminArea_4{
+    overflow: hidden;
+    padding:20px;
+  }
+
+.loading {
+    display:flex;
+    height:100%;
+}
+
+.adminArea-label {
+    font-size: 20px;
+    font-weight: bolder;
+    opacity: 0.2;
+    text-align: center
+}
+
+.adminArea-button {
+    white-space:inherit;
+    height: 100px;
+    line-height:20px;
+}

@@ -1,19 +1,20 @@
 <div class="row" style="margin:0px;">
     <div class="col-md-12">
-        <div *ngIf="!indexingInfo.canIndex" class="alert-message alert-message-danger" role="alert"
-            style="margin-top: 30px;">Le groupe ne peut pas enregistrer de document. <a
-                (click)="indexingInfo.canIndex=true">Activer l'indexation pour ce groupe</a></div>
-        <button *ngIf="indexingInfo.canIndex" color="warn" mat-raised-button (click)="indexingInfo.canIndex=false">Désactiver l'indexation pour ce groupe</button>
+        <div *ngIf="!indexingInfo.canIndex" class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">Le
+            groupe ne peut pas enregistrer de document. <a (click)="indexingInfo.canIndex=true">Activer l'indexation
+                pour ce groupe</a></div>
+        <button *ngIf="indexingInfo.canIndex" color="warn" mat-raised-button (click)="indexingInfo.canIndex=false">Désactiver
+            l'indexation pour ce groupe</button>
     </div>
     <div class="col-md-8">
         <div class="formType">
             <div class="formType-title">
                 Action(s) choisie(s)
             </div>
-            <plugin-autocomplete [labelPlaceholder]="'Associer une nouvelle action'" [labelList]="'Action(s) disponible(s)'" [datas]="actionList" [targetSearchKey]="'label_action'" (triggerEvent)="addAction($event)"></plugin-autocomplete>
+            <plugin-autocomplete [labelPlaceholder]="'Associer une nouvelle action'" [labelList]="'Action(s) disponible(s)'"
+                [datas]="actionList" [targetSearchKey]="'label_action'" (triggerEvent)="addAction($event)"></plugin-autocomplete>
             <mat-list class="selectedActionList" role="list">
-                <mat-list-item class="selectedAction" role="listitem"
-                    *ngFor="let action of indexingInfo.actions;let i=index">
+                <mat-list-item class="selectedAction" role="listitem" *ngFor="let action of indexingInfo.actions;let i=index">
                     <div class="actionLabel">{{action.label_action}}</div>
                     <div>
                         <button mat-icon-button color="warn" (click)="removeAction(i)">

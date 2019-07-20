@@ -8,7 +8,7 @@ import { SharedModule }                         from '../app-common.module';
 
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
-import { AdministrationComponent }                      from './administration.component';
+import { AdministrationComponent }                      from './home/administration.component';
 import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent }      from './user/users-administration.component';
 import { AccountLinkComponent }      from './user/account-link/account-link.component';
 import { GroupsAdministrationComponent, GroupsAdministrationRedirectModalComponent }    from './group/groups-administration.component';
