@@ -1,15 +1,12 @@
 import { Component, OnInit, Inject }    from '@angular/core';
 import { Router }               from '@angular/router';
 import { HttpClient }           from '@angular/common/http';
-import { Location }             from '@angular/common';
 import { LANG }                 from '../translate.component';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { HeaderService } from '../../service/header.service';
+import { AppService } from '../../service/app.service';
 
 declare function $j(selector: any) : any;
-
-declare var angularGlobals : any;
-
 
 @Component({
     selector: 'menu-shortcut',
@@ -18,9 +15,7 @@ declare var angularGlobals : any;
 })
 export class MenuShortcutComponent implements OnInit {
 
-    coreUrl     : string;
     lang        : any       = LANG;
-    mobileMode  : boolean   = false;
     router      : any;
     dialogRef   : MatDialogRef<any>;
     config      : any       = {};
@@ -28,14 +23,18 @@ export class MenuShortcutComponent implements OnInit {
     speedDialFabColumnDirection = 'column';
 
 
-    constructor(public http: HttpClient, private _location: Location, private _router: Router, public headerService: HeaderService, public dialog: MatDialog) {
-        this.mobileMode = angularGlobals.mobileMode;
+    constructor(
+        public http: HttpClient, 
+        private _router: Router, 
+        public headerService: HeaderService, 
+        public dialog: MatDialog,
+        public appService: AppService
+    ) {
         this.router = _router;
         /**/
     }
 
     ngOnInit(): void {      
-        this.coreUrl = angularGlobals.coreUrl;
         setTimeout(() => {
             if(this.headerService.user.indexingGroups.length > 0) {
                 this.headerService.user.indexingGroups.forEach((group: any) => {

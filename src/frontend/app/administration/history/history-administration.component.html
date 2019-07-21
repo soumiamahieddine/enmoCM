@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
         </mat-sidenav>
@@ -52,20 +52,20 @@
                                     <mat-cell *matCellDef="let element" style="flex:1;">{{element.event_date | date : "dd/MM/y HH:mm"}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="event_type">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.event}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches"> {{element.event_type}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()">{{lang.event}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()"> {{element.event_type}} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="user_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.user}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches"> {{element.user_id}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()">{{lang.user}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()"> {{element.user_id}} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="info">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:3;">{{lang.description}}</mat-header-cell>
                                     <mat-cell *matCellDef="let element" style="flex:3;"> {{element.info}} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="remote_ip">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.ip}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches"> {{element.remote_ip}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()">{{lang.ip}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()"> {{element.remote_ip}} </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
@@ -111,20 +111,20 @@
                                     <mat-cell *matCellDef="let element">{{element.event_date | date : "dd/MM/y HH:mm"}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="total_processed">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.totalProcessed}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.total_processed}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()">{{lang.totalProcessed}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"> {{element.total_processed}} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="total_errors">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.totalErrors}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.total_errors}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()">{{lang.totalErrors}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"> {{element.total_errors}} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="info">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.info}} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="module_name">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.module}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.module_name}} </mat-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()">{{lang.module}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"> {{element.module_name}} </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="batchDisplayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: batchDisplayedColumns;"></mat-row>
@@ -134,8 +134,8 @@
                 </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            position='end' [opened]="appService.getViewMode() ? false : false">
             <mat-nav-list>
                 <h3 mat-subheader>Actions</h3>
             </mat-nav-list>

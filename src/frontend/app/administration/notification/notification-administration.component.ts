@@ -1,31 +1,23 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSidenav } from '@angular/material';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
-
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
-declare var angularGlobals: any;
-
-
 @Component({
     templateUrl: "notification-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class NotificationAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-
     creationMode: boolean; 
     notification: any = {
         diffusionType_label: null
@@ -33,20 +25,19 @@ export class NotificationAdministrationComponent implements OnInit {
     loading: boolean = false;
     lang: any = LANG;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
         this.loading = true;
-        this.coreUrl = angularGlobals.coreUrl;
 
         this.route.params.subscribe((params: any) => {
             if (typeof params['identifier'] == "undefined") {
@@ -55,7 +46,7 @@ export class NotificationAdministrationComponent implements OnInit {
                 window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = true;
-                this.http.get(this.coreUrl + 'rest/administration/notifications/new')
+                this.http.get('../../rest/administration/notifications/new')
                     .subscribe((data: any) => {
                         this.notification = data.notification;
                         this.notification.attachfor_properties = [];
@@ -68,7 +59,7 @@ export class NotificationAdministrationComponent implements OnInit {
                 window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = false;
-                this.http.get(this.coreUrl + 'rest/notifications/' + params['identifier'])
+                this.http.get('../../rest/notifications/' + params['identifier'])
                     .subscribe((data: any) => {
                         this.headerService.setHeader(this.lang.notificationModification, data.notification.description);
 
@@ -84,7 +75,7 @@ export class NotificationAdministrationComponent implements OnInit {
     }
 
     createScript() {
-        this.http.post(this.coreUrl + 'rest/scriptNotification', this.notification)
+        this.http.post('../../rest/scriptNotification', this.notification)
             .subscribe((data: any) => {
                 this.notification.scriptcreated = data;
                 this.notify.success(this.lang.scriptCreated);
@@ -96,7 +87,7 @@ export class NotificationAdministrationComponent implements OnInit {
     onSubmit() {
         if (this.creationMode) {
             this.notification.is_enabled = "Y";
-            this.http.post(this.coreUrl + 'rest/notifications', this.notification)
+            this.http.post('../../rest/notifications', this.notification)
                 .subscribe((data: any) => {
                     this.router.navigate(['/administration/notifications']);
                     this.notify.success(this.lang.notificationAdded);
@@ -104,7 +95,7 @@ export class NotificationAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.put(this.coreUrl + 'rest/notifications/' + this.notification.notification_sid, this.notification)
+            this.http.put('../../rest/notifications/' + this.notification.notification_sid, this.notification)
                 .subscribe((data: any) => {
                     this.router.navigate(['/administration/notifications']);
                     this.notify.success(this.lang.notificationUpdated);
@@ -120,7 +111,7 @@ export class NotificationAdministrationComponent implements OnInit {
         } else {
             this.notification.is_enabled = "Y";
         }
-        this.http.put(this.coreUrl + 'rest/notifications/' + this.notification.notification_sid, this.notification)
+        this.http.put('../../rest/notifications/' + this.notification.notification_sid, this.notification)
             .subscribe((data: any) => {
                 this.notify.success(this.lang.notificationUpdated);
             }, (err) => {

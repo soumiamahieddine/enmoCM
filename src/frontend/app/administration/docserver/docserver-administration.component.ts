@@ -1,30 +1,24 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Pipe, PipeTransform } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatSidenav } from '@angular/material';
+import { MatPaginator, MatSort, MatSidenav } from '@angular/material';
 import { HeaderService } from '../../../service/header.service';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
-declare var angularGlobals: any;
-
 @Component({
     templateUrl: "docserver-administration.component.html",
-    providers   : [NotificationService]
+    providers   : [NotificationService, AppService]
 })
 
 export class DocserverAdministrationComponent implements OnInit {
     /*HEADER*/
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
-    
-    mobileQuery                     : MediaQueryList;
-    private _mobileQueryListener    : () => void;
 
-    coreUrl     : string;
     lang        : any = LANG;
     loading     : boolean = false;
     dataSource  : any;
@@ -35,26 +29,24 @@ export class DocserverAdministrationComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private router: Router, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.docserverCreation);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
-        this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/docserverTypes')
+        this.http.get('../../rest/docserverTypes')
             .subscribe((data: any) => {
                 this.docserversTypes = data.docserverTypes;
                 this.loading = false;
@@ -64,7 +56,7 @@ export class DocserverAdministrationComponent implements OnInit {
 
     onSubmit(docserver:any) {
         docserver.size_limit_number = docserver.limitSizeFormatted * 1000000000;
-        this.http.post(this.coreUrl + 'rest/docservers', docserver)
+        this.http.post('../../rest/docservers', docserver)
             .subscribe((data: any) => {     
                 this.notify.success(this.lang.docserverAdded);
                 this.router.navigate(["/administration/docservers/"]);

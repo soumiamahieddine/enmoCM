@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container">
-        <mat-sidenav #snav [mode]="mobileMode ? 'over' : 'side'" [fixedInViewport]="mobileMode" fixedTopGap="56"
-            [opened]="mobileMode ? false : true" autoFocus="false">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true" autoFocus="false">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list>
@@ -169,7 +169,7 @@
                                             style="position: absolute;margin-left: 30px;margin-top: -10px;"></mat-icon>
                                         <span>{{lang.basketsColor}}</span>
                                     </mat-panel-title>
-                                    <mat-panel-description *ngIf="!mobileMode">
+                                    <mat-panel-description *ngIf="!appService.getViewMode()">
                                         {{lang.basketsColorAdmin}}
                                     </mat-panel-description>
                                 </mat-expansion-panel-header>
@@ -203,7 +203,7 @@
                                             style="position: absolute;margin-left: 30px;margin-top: -10px;"></mat-icon>
                                         {{lang.myBaskets}}
                                     </mat-panel-title>
-                                    <mat-panel-description *ngIf="!mobileMode">
+                                    <mat-panel-description *ngIf="!appService.getViewMode()">
                                         {{lang.myBasketsDesc}}
                                     </mat-panel-description>
                                 </mat-expansion-panel-header>
@@ -329,7 +329,7 @@
                                             style="font-size:25px;width:50px;"></mat-icon>
                                         {{lang.mySignMail}}
                                     </mat-panel-title>
-                                    <mat-panel-description *ngIf="!mobileMode">
+                                    <mat-panel-description *ngIf="!appService.getViewMode()">
                                         {{lang.mySignMailDesc}}
                                     </mat-panel-description>
                                 </mat-expansion-panel-header>
@@ -397,7 +397,7 @@
                                             style="font-size:25px;width:50px;"></mat-icon>
                                         {{lang.mySignSignatureBook}}
                                     </mat-panel-title>
-                                    <mat-panel-description *ngIf="!mobileMode">
+                                    <mat-panel-description *ngIf="!appService.getViewMode()">
                                         {{lang.mySignSignatureBookDesc}}
                                     </mat-panel-description>
                                 </mat-expansion-panel-header>
@@ -485,7 +485,7 @@
                                             style="font-size:25px;width:50px;"></mat-icon>
                                         {{lang.myContactsGroups}}
                                     </mat-panel-title>
-                                    <mat-panel-description *ngIf="!mobileMode">
+                                    <mat-panel-description *ngIf="!appService.getViewMode()">
                                         {{lang.myContactsGroupsDesc}}
                                     </mat-panel-description>
                                 </mat-expansion-panel-header>
@@ -559,10 +559,10 @@
                                                 matSortDirection="asc">
                                                 <ng-container matColumnDef="label">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                        [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">
+                                                        [class.hide-for-mobile]="appService.getViewMode()" style="flex:2;">
                                                         {{lang.label}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let element"
-                                                        [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">
+                                                        [class.hide-for-mobile]="appService.getViewMode()" style="flex:2;">
                                                         {{element.label}} </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="description">
@@ -583,10 +583,10 @@
                                                 </ng-container>
                                                 <ng-container matColumnDef="public">
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header
-                                                        [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">
+                                                        [class.hide-for-mobile]="appService.getViewMode()" style="flex:1;">
                                                         {{lang.public}}</mat-header-cell>
                                                     <mat-cell *matCellDef="let element"
-                                                        [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">
+                                                        [class.hide-for-mobile]="appService.getViewMode()" style="flex:1;">
                                                         <span *ngIf="!element.public"> {{lang.no}} </span>
                                                         <span *ngIf="element.public"> {{lang.yes}} </span>
                                                     </mat-cell>
@@ -857,8 +857,8 @@
                 </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
-            fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : true"
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
+            fixedTopGap="56" position='end' [opened]="appService.getViewMode() ? false : true"
             style="overflow-x:hidden;max-width:500px;">
 
             <mat-list>

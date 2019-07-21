@@ -1,11 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
@@ -14,20 +13,15 @@ declare var angularGlobals: any;
 @Component({
     templateUrl: "users-administration.component.html",
     styleUrls: ['users-administration.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class UsersAdministrationComponent implements OnInit {
-
-    /*RESPONSIVE*/
-    private _mobileQueryListener            : () => void;
-    mobileQuery                             : MediaQueryList;
 
     @ViewChild('snav') public sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight : MatSidenav;
 
     dialogRef                               : MatDialogRef<any>;
 
-    coreUrl                                 : string;
     lang                                    : any                   = LANG;
     loading                                 : boolean               = false;
     updateListModel                         : boolean               = true;
@@ -53,15 +47,14 @@ export class UsersAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        public dialog: MatDialog, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -69,11 +62,10 @@ export class UsersAdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
         this.user = angularGlobals.user;
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/users')
+        this.http.get('../../rest/users')
             .subscribe((data: any) => {
                 this.data = data['users'];
                  this.data.forEach(element => {
@@ -100,7 +92,7 @@ export class UsersAdministrationComponent implements OnInit {
 
         if (r) {
             user.status = 'OK';
-            this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
+            this.http.put('../../rest/users/' + user.id, user)
                 .subscribe(() => {
                     this.notify.success(this.lang.userAuthorized);
                     if (this.quota.userQuota) {
@@ -120,7 +112,7 @@ export class UsersAdministrationComponent implements OnInit {
     deleteUser(user: any, mode: string) {
         user.mode = mode;
 
-        this.http.get(this.coreUrl + 'rest/users/' + user.id + '/isDeletable')
+        this.http.get('../../rest/users/' + user.id + '/isDeletable')
             .subscribe((response: any) => {
                 if (response.errors) {
                     this.notify.error(response.errors);
@@ -177,14 +169,14 @@ export class UsersAdministrationComponent implements OnInit {
                             if (user.inDiffListDest && user.isResDestUser) { //user is inDiffListDest and isResDestUser
 
                                 //update listModels
-                                this.http.put(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
+                                this.http.put('../../rest/listTemplates/entityDest/itemId/' + user.user_id, user)
                                     .subscribe((data: any) => {
                                         if (data.errors) {
                                             this.notify.error(data.errors);
                                         } else {
 
                                             //update listInstances
-                                            this.http.put(this.coreUrl + 'rest/listinstances', user.redirectListInstances)
+                                            this.http.put('../../rest/listinstances', user.redirectListInstances)
                                                 .subscribe((data: any) => {
                                                     if (data.errors) {
                                                         this.notify.error(data.errors);
@@ -192,7 +184,7 @@ export class UsersAdministrationComponent implements OnInit {
 
                                                         //delete user
                                                         if (user.mode == 'delete') {
-                                                            this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                                                            this.http.delete('../../rest/users/' + user.id)
                                                                 .subscribe(() => {
                                                                     for (let i in this.data) {
                                                                         if (this.data[i].id == user.id) {
@@ -217,7 +209,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                                 });
                                                             //suspend user
                                                         } else if (user.mode == 'suspend') {
-                                                            this.http.put(this.coreUrl + 'rest/users/' + user.id + '/suspend', user)
+                                                            this.http.put('../../rest/users/' + user.id + '/suspend', user)
                                                                 .subscribe(() => {
                                                                     user.status = 'SPD';
                                                                     this.notify.success(this.lang.userSuspended);
@@ -244,7 +236,7 @@ export class UsersAdministrationComponent implements OnInit {
 
                             } else if (user.inDiffListDest && !user.isResDestUser) { //user is inDiffListDest
                                 //update listModels
-                                this.http.put(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
+                                this.http.put('../../rest/listTemplates/entityDest/itemId/' + user.user_id, user)
                                     .subscribe((data: any) => {
                                         if (data.errors) {
                                             this.notify.error(data.errors);
@@ -252,7 +244,7 @@ export class UsersAdministrationComponent implements OnInit {
 
                                             //delete user
                                             if (user.mode == 'delete') {
-                                                this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                                                this.http.delete('../../rest/users/' + user.id)
                                                     .subscribe(() => {
                                                         for (let i in this.data) {
                                                             if (this.data[i].id == user.id) {
@@ -277,7 +269,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                     });
                                                 //suspend user
                                             } else if (user.mode == 'suspend') {
-                                                this.http.put(this.coreUrl + 'rest/users/' + user.id + '/suspend', user)
+                                                this.http.put('../../rest/users/' + user.id + '/suspend', user)
                                                     .subscribe(() => {
                                                         user.status = 'SPD';
                                                         this.notify.success(this.lang.userSuspended);
@@ -299,7 +291,7 @@ export class UsersAdministrationComponent implements OnInit {
 
                             } else if (!user.inDiffListDest && user.isResDestUser) { //user isResDestUser
                                 //update listInstances
-                                this.http.put(this.coreUrl + 'rest/listinstances', user.redirectListInstances)
+                                this.http.put('../../rest/listinstances', user.redirectListInstances)
                                     .subscribe((data: any) => {
                                         if (data.errors) {
                                             this.notify.error(data.errors);
@@ -307,7 +299,7 @@ export class UsersAdministrationComponent implements OnInit {
 
                                             //delete user
                                             if (user.mode == 'delete') {
-                                                this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                                                this.http.delete('../../rest/users/' + user.id)
                                                     .subscribe(() => {
                                                         for (let i in this.data) {
                                                             if (this.data[i].id == user.id) {
@@ -332,7 +324,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                     });
                                                 //suspend user
                                             } else if (user.mode == 'suspend') {
-                                                this.http.put(this.coreUrl + 'rest/users/' + user.id + '/suspend', user)
+                                                this.http.put('../../rest/users/' + user.id + '/suspend', user)
                                                     .subscribe(() => {
                                                         user.status = 'SPD';
                                                         this.notify.success(this.lang.userSuspended);
@@ -356,7 +348,7 @@ export class UsersAdministrationComponent implements OnInit {
 
                                 //delete user
                                 if (user.mode == 'delete') {
-                                    this.http.delete(this.coreUrl + 'rest/users/' + user.id)
+                                    this.http.delete('../../rest/users/' + user.id)
                                         .subscribe(() => {
                                             for (let i in this.data) {
                                                 if (this.data[i].id == user.id) {
@@ -381,7 +373,7 @@ export class UsersAdministrationComponent implements OnInit {
                                         });
                                     //suspend user
                                 } else if (user.mode == 'suspend') {
-                                    this.http.put(this.coreUrl + 'rest/users/' + user.id + '/suspend', user)
+                                    this.http.put('../../rest/users/' + user.id + '/suspend', user)
                                         .subscribe(() => {
                                             user.status = 'SPD';
                                             this.notify.success(this.lang.userSuspended);

@@ -1,21 +1,19 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatSidenav, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { HeaderService } from '../../../service/header.service';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 declare var tinymce: any;
-declare var angularGlobals: any;
-
 
 @Component({
     templateUrl: "template-administration.component.html",
     styleUrls: ['template-administration.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class TemplateAdministrationComponent implements OnInit {
 
@@ -23,10 +21,6 @@ export class TemplateAdministrationComponent implements OnInit {
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-
-    coreUrl                 : string;
     lang                    : any = LANG;
     loading                 : boolean = false;
 
@@ -49,22 +43,23 @@ export class TemplateAdministrationComponent implements OnInit {
     config                  : any        = {};
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService, public dialog: MatDialog) {
+    constructor(
+        public http: HttpClient, 
+        private zone: NgZone, 
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private notify: NotificationService, 
+        private headerService: HeaderService, 
+        public dialog: MatDialog,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
         window['angularTemplateComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content)
         };
     }
 
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
-    }
-
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
         this.route.params.subscribe(params => {
@@ -75,7 +70,7 @@ export class TemplateAdministrationComponent implements OnInit {
 
                 this.creationMode = true;
 
-                this.http.get(this.coreUrl + 'rest/administration/templates/new')
+                this.http.get('../../rest/administration/templates/new')
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template.template_target = '';
@@ -88,7 +83,7 @@ export class TemplateAdministrationComponent implements OnInit {
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = false;
-                this.http.get(this.coreUrl + 'rest/templates/' + params['id'] + '/details')
+                this.http.get('../../rest/templates/' + params['id'] + '/details')
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template = data.template;
@@ -252,11 +247,11 @@ export class TemplateAdministrationComponent implements OnInit {
         this.jnlpValue.uniqueId = 0;
         this.jnlpValue.cookies = document.cookie;
 
-        this.http.post(this.coreUrl + 'rest/jnlp', this.jnlpValue)
+        this.http.post('../../rest/jnlp', this.jnlpValue)
             .subscribe((data: any) => {
                 this.template.jnlpUniqueId = data.jnlpUniqueId;
                 this.fileToImport();
-                window.location.href = this.coreUrl + 'rest/jnlp/' + data.generatedJnlp;
+                window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
                 this.checkLockFile();
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -265,7 +260,7 @@ export class TemplateAdministrationComponent implements OnInit {
 
     checkLockFile() {
         this.intervalLockFile = setInterval(() => {
-            this.http.get(this.coreUrl + 'rest/jnlp/lock/' + this.template.jnlpUniqueId)
+            this.http.get('../../rest/jnlp/lock/' + this.template.jnlpUniqueId)
                 .subscribe((data: any) => {
                     this.lockFound = data.lockFileFound;
                     if (!this.lockFound) {
@@ -280,7 +275,7 @@ export class TemplateAdministrationComponent implements OnInit {
             let r = confirm(this.lang.confirmDuplicate);
 
             if (r) {
-                this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', { 'id': this.template.template_id })
+                this.http.post('../../rest/templates/' + this.template.template_id + '/duplicate', { 'id': this.template.template_id })
                     .subscribe((data: any) => {
                         this.notify.success(this.lang.templateDuplicated);
                         this.router.navigate(['/administration/templates/' + data.id]);
@@ -320,7 +315,7 @@ export class TemplateAdministrationComponent implements OnInit {
             if (this.template.template_style == 'uploadFile') {
                 this.template.template_style = '';
             }
-            this.http.post(this.coreUrl + 'rest/templates', this.template)
+            this.http.post('../../rest/templates', this.template)
                 .subscribe((data: any) => {
                     if (data.checkEntities) {
                         this.config = {
@@ -341,7 +336,7 @@ export class TemplateAdministrationComponent implements OnInit {
             if (this.template.template_style == 'uploadFile') {
                 this.template.template_style = '';
             }
-            this.http.put(this.coreUrl + 'rest/templates/' + this.template.template_id, this.template)
+            this.http.put('../../rest/templates/' + this.template.template_id, this.template)
                 .subscribe((data: any) => {
                     if (data.checkEntities) {
                         this.config = {

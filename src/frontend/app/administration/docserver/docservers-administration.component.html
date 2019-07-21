@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true" style="width:300px;">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true" style="width:300px;">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list>

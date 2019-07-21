@@ -4,10 +4,10 @@
         {{lang.updateInProgress}}
     </div>
 </div>
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container">
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
-            fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
+            fixedTopGap="56" [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
         </mat-sidenav>
@@ -39,8 +39,8 @@
                 </div>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
-            fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : true" style="overflow-x:hidden;">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
+            fixedTopGap="56" position='end' [opened]="appService.getViewMode() ? false : true" style="overflow-x:hidden;">
             <div class="alert-message alert-message-info" *ngIf="versions.lastAvailableMajorVersion!=null"
                 style="display: flex;">
                 Maarch Courrier&nbsp;<a style="font-weight: bold;"

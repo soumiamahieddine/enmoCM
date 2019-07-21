@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true" style="width:300px;">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true" style="width:300px;">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list>
@@ -44,7 +44,7 @@
                 <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{entities.length}} {{lang.entities}}</div>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
             position='end' [opened]="false" class="col-md-5 col-xs-11">
             <mat-nav-list>
                 <mat-tab-group>

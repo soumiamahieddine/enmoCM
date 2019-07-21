@@ -1,29 +1,23 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatSidenav} from '@angular/material';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any) : any;
-declare const angularGlobals : any;
-
 
 @Component({
     templateUrl: "group-administration.component.html",
-    providers   : [NotificationService]
+    providers   : [NotificationService, AppService]
 })
 export class GroupAdministrationComponent implements OnInit {
     /*HEADER*/
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-
-    coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
 
@@ -54,19 +48,18 @@ export class GroupAdministrationComponent implements OnInit {
         this.basketsDataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
         this.route.params.subscribe(params => {
@@ -83,7 +76,7 @@ export class GroupAdministrationComponent implements OnInit {
                 window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = false;
-                this.http.get(this.coreUrl + "rest/groups/" + params['id'] + "/details")
+                this.http.get("../../rest/groups/" + params['id'] + "/details")
                     .subscribe((data : any) => {
                         this.group = data['group'];
                         this.headerService.setHeader(this.lang.groupModification, this.group['group_desc']);
@@ -106,7 +99,7 @@ export class GroupAdministrationComponent implements OnInit {
 
     onSubmit() {
         if (this.creationMode) {
-            this.http.post(this.coreUrl + "rest/groups", this.group)
+            this.http.post("../../rest/groups", this.group)
                 .subscribe((data : any) => {
                     this.notify.success(this.lang.groupAdded);
                     this.router.navigate(["/administration/groups/" + data.group]);
@@ -114,7 +107,7 @@ export class GroupAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.put(this.coreUrl + "rest/groups/" + this.group['id'] , {"description" : this.group['group_desc'], "security" : this.group['security']})
+            this.http.put("../../rest/groups/" + this.group['id'] , {"description" : this.group['group_desc'], "security" : this.group['security']})
                 .subscribe(() => {
                     this.notify.success(this.lang.groupUpdated);
                 }, (err) => {
@@ -124,7 +117,7 @@ export class GroupAdministrationComponent implements OnInit {
     }
 
     updateService(service: any) {
-        this.http.put(this.coreUrl + "rest/groups/" + this.group['id'] + "/services/" + service['id'], service)
+        this.http.put("../../rest/groups/" + this.group['id'] + "/services/" + service['id'], service)
             .subscribe(() => {
                 this.notify.success(this.lang.groupServicesUpdated);
             }, (err) => {
@@ -138,7 +131,7 @@ export class GroupAdministrationComponent implements OnInit {
             "groupId"   : this.group.group_id,
             "role"      : this.group.role
         };
-        this.http.post(this.coreUrl + "rest/users/" + newUser.serialId + "/groups", groupReq)
+        this.http.post("../../rest/users/" + newUser.serialId + "/groups", groupReq)
             .subscribe(() => {
                 var displayName = newUser.idToDisplay.split(" ");
                 var user = {

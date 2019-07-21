@@ -1,28 +1,21 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, QueryList, ViewChildren } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild, QueryList, ViewChildren } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource } from '@angular/material';
 import { NotificationService } from '../notification.service';
 import { HeaderService }        from '../../service/header.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { AppService } from '../../service/app.service';
 
 declare function $j(selector: any): any;
-
-declare var angularGlobals: any;
 
 @Component({
     templateUrl: "home.component.html",
     styleUrls: ['home.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class HomeComponent implements OnInit {
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-    mobileMode                      : boolean   = false;
-
-    coreUrl             : string;
     lang                : any       = LANG;
     loading             : boolean   = false;
 
@@ -42,31 +35,33 @@ export class HomeComponent implements OnInit {
     @ViewChild('snav2') sidenavRight: MatSidenav;
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private notify: NotificationService, private headerService: HeaderService) {
-        this.mobileMode = angularGlobals.mobileMode;
+    constructor(
+        public http: HttpClient, 
+        public dialog: MatDialog, 
+        private sanitizer: DomSanitizer, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+        ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
 
     ngOnInit(): void {
         this.loading = true;
-        if (this.mobileMode) {
+        if (this.appService.getViewMode()) {
             this.displayedColumns = ['res_id', 'subject'];
         }
         this.headerService.setHeader(this.lang.home);
         window['MainHeaderComponent'].setSnav(this.snav);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
         let event = new Date();
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
         this.currentDate = event.toLocaleDateString('fr-FR', options);
 
-        this.http.get(this.coreUrl + "rest/home")
+        this.http.get("../../rest/home")
             .subscribe((data: any) => {
                 this.homeData = data;
                 this.homeMessage = data['homeMessage'];
@@ -74,7 +69,7 @@ export class HomeComponent implements OnInit {
     }
 
     ngAfterViewInit(): void {
-        this.http.get(this.coreUrl + "rest/home/lastRessources")
+        this.http.get("../../rest/home/lastRessources")
         .subscribe((data: any) => {
             setTimeout(() => {
                 this.dataSource = new MatTableDataSource(data.lastResources);
@@ -84,10 +79,10 @@ export class HomeComponent implements OnInit {
     }
 
     goTo(row:any) {
-        if (this.docUrl == this.coreUrl+'rest/res/'+row.res_id+'/content' && this.sidenavRight.opened) {
+        if (this.docUrl == '../../rest/res/'+row.res_id+'/content' && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
-            this.docUrl = this.coreUrl+'rest/res/'+row.res_id+'/content';
+            this.docUrl = '../../rest/res/'+row.res_id+'/content';
 
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
                 "<iframe style='height:100%;width:100%;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
@@ -97,7 +92,7 @@ export class HomeComponent implements OnInit {
     }
 
     viewThumbnail(row:any) {
-        this.thumbnailUrl = this.coreUrl+'rest/res/' + row.res_id + '/thumbnail';
+        this.thumbnailUrl = '../../rest/res/' + row.res_id + '/thumbnail';
         $j('#viewThumbnail').show();
         $j('#listContent').css({"overflow":"hidden"});
     }
@@ -108,7 +103,7 @@ export class HomeComponent implements OnInit {
     }
 
     goToDetail(row:any) {
-        this.http.get(this.coreUrl + "rest/resources/" + row.res_id + "/isAllowed")
+        this.http.get("../../rest/resources/" + row.res_id + "/isAllowed")
             .subscribe((data: any) => {
                 if (data['isAllowed']) {
                     location.href = "index.php?page=details&dir=indexing_searching&id=" + row.res_id;

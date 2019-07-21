@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { merge, Observable, of as observableOf, Subject  } from 'rxjs';
 import { NotificationService } from '../notification.service';
-import { MatDialog, MatSidenav, MatPaginator, MatSort, MatBottomSheet } from '@angular/material';
+import { MatDialog, MatSidenav, MatPaginator, MatSort } from '@angular/material';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError, takeUntil } from 'rxjs/operators';
@@ -17,23 +16,18 @@ import { ActionsListComponent } from '../actions/actions-list.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { BasketHomeComponent } from '../basket/basket-home.component';
 import { PanelListComponent } from './panel/panel-list.component';
+import { AppService } from '../../service/app.service';
 
 
 declare function $j(selector: any): any;
 
-declare var angularGlobals: any;
-
 @Component({
     templateUrl: "basket-list.component.html",
     styleUrls: ['basket-list.component.scss'],
-    providers: [NotificationService],
+    providers: [NotificationService, AppService],
 })
 export class BasketListComponent implements OnInit {
 
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
-    mobileMode: boolean = false;
-    coreUrl: string;
     lang: any = LANG;
 
     loading: boolean = false;
@@ -99,20 +93,25 @@ export class BasketListComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, private router: Router, private route: ActivatedRoute, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog, private sanitizer: DomSanitizer, private bottomSheet: MatBottomSheet, private headerService: HeaderService, public filtersListService: FiltersListService, private notify: NotificationService, public overlay: Overlay, public viewContainerRef: ViewContainerRef) {
-        this.mobileMode = angularGlobals.mobileMode;
-        $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
+    constructor(
+        private router: Router, 
+        private route: ActivatedRoute, 
+        public http: HttpClient, 
+        public dialog: MatDialog, 
+        private sanitizer: DomSanitizer, 
+        private headerService: HeaderService, 
+        public filtersListService: FiltersListService, 
+        private notify: NotificationService, 
+        public overlay: Overlay, 
+        public viewContainerRef: ViewContainerRef,
+        public appService: AppService) {
+            $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = false;
 
-        this.http.get(this.coreUrl + "rest/home")
+        this.http.get("../../rest/home")
             .subscribe((data: any) => {
                 this.homeData = data;
             });
@@ -187,10 +186,10 @@ export class BasketListComponent implements OnInit {
 
     goTo(row: any) {
         this.filtersListService.filterMode = false;
-        if (this.docUrl == this.coreUrl + 'rest/res/' + row.res_id + '/content' && this.sidenavRight.opened) {
+        if (this.docUrl == '../../rest/res/' + row.res_id + '/content' && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
-            this.docUrl = this.coreUrl + 'rest/res/' + row.res_id + '/content';
+            this.docUrl = '../../rest/res/' + row.res_id + '/content';
             this.currentChrono = row.alt_identifier;
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
                 "<iframe style='height:100%;width:100%;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
@@ -246,7 +245,7 @@ export class BasketListComponent implements OnInit {
     }
 
     viewThumbnail(row: any) {
-        this.thumbnailUrl = this.coreUrl + 'rest/res/' + row.res_id + '/thumbnail';
+        this.thumbnailUrl = '../../rest/res/' + row.res_id + '/thumbnail';
         $j('#viewThumbnail').show();
         $j('#listContent').css({ "overflow": "hidden" });
     }

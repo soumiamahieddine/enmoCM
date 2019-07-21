@@ -6,7 +6,7 @@
         <input type="hidden" name="baskets_clause" value="true">
         <mat-form-field floatLabel="never" style="width:100%;margin-top: -3px;margin-left:-13px;font-size: 12px;">
             <input #searchInput="matInput" matInput type="text" (blur)="hideSearch = !hideSearch" name="welcome" title="{{lang.searchMails}}"  placeholder="{{lang.searchMails}}">
-            <button mat-icon-button matSuffix *ngIf="!mobileMode" style="opacity:0.5;">
+            <button mat-icon-button matSuffix *ngIf="!appService.getViewMode()" style="opacity:0.5;">
                 <mat-icon class="fa fa-search" style="font-size:22px;"></mat-icon>
             </button>
         </mat-form-field>
@@ -17,7 +17,7 @@
         <mat-icon class="fa fa-search" style="font-size:22px;"></mat-icon>
     </button>
 
-    <button mat-icon-button [matMenuTriggerFor]="applications" *ngIf="!mobileMode" matTooltip="{{lang.menu}}">
+    <button mat-icon-button [matMenuTriggerFor]="applications" *ngIf="!appService.getViewMode()" matTooltip="{{lang.menu}}">
         <mat-icon class="fa fa-th" style="font-size:22px;"></mat-icon>
     </button>
     <mat-menu #applications="matMenu" class="headerMaarchShortcut">
@@ -29,11 +29,11 @@
             </button>
         </ng-container>
     </mat-menu>
-    <button *ngIf="!mobileMode" mat-button [matMenuTriggerFor]="menu">
+    <button *ngIf="!appService.getViewMode()" mat-button [matMenuTriggerFor]="menu">
         <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white; margin:0px 12px 8px 0px;"></mat-icon>
         <span>{{headerService.user.firstname | titlecase }}</span>&nbsp;<b>{{headerService.user.lastname | uppercase}}</b>
     </button>
-    <button *ngIf="mobileMode" mat-icon-button [matMenuTriggerFor]="menu">
+    <button *ngIf="appService.getViewMode()" mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white;height: auto;"></mat-icon>
     </button>
     <mat-menu #menu="matMenu" class="headerMaarch">

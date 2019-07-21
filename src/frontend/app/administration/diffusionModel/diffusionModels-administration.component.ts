@@ -1,14 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MatSidenav } from '@angular/material';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-declare var angularGlobals: any;
-
 
 @Component({
     templateUrl: "diffusionModels-administration.component.html",
@@ -19,11 +17,8 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
     dialogRef                       : MatDialogRef<any>;
 
-    coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
 
@@ -43,15 +38,14 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        public dialog: MatDialog, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -59,10 +53,9 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
-        this.http.get(this.coreUrl + "rest/listTemplates")
+        this.http.get("../../rest/listTemplates")
             .subscribe((data: any) => {
                 data['listTemplates'].forEach((template: any) => {
                     if (template.object_id.indexOf('VISA_CIRCUIT_') != -1 || template.object_id.indexOf('AVIS_CIRCUIT_') != -1) {
@@ -84,7 +77,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + listTemplate.title + ' »');
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/listTemplates/" + listTemplate['id'])
+            this.http.delete("../../rest/listTemplates/" + listTemplate['id'])
                 .subscribe(() => {
                     setTimeout(() => {
                         var i = 0;

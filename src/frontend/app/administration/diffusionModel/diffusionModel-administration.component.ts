@@ -1,31 +1,24 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { MatSidenav } from '@angular/material';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-
-declare const angularGlobals: any;
-
 
 @Component({
     templateUrl: "diffusionModel-administration.component.html",
     styleUrls: ['diffusionModel-administration.component.css'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class DiffusionModelAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-
-    coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
 
@@ -39,19 +32,18 @@ export class DiffusionModelAdministrationComponent implements OnInit {
     displayedColumns    = ['firstname', 'lastname'];
     dataSource          : any;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
@@ -71,7 +63,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = false;
-                this.http.get(this.coreUrl + "rest/listTemplates/" + params['id'])
+                this.http.get("../../rest/listTemplates/" + params['id'])
                 .subscribe((data: any) => {
                         this.diffusionModel = data['listTemplate'];
                         this.headerService.setHeader(this.lang.diffusionModelModification, this.diffusionModel.title);
@@ -152,7 +144,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
     }
 
     loadDiffList() {
-        this.http.get(this.coreUrl + "rest/listTemplates/" + this.idCircuit)
+        this.http.get("../../rest/listTemplates/" + this.idCircuit)
             .subscribe((data: any) => {
                 this.diffusionModel = data['listTemplate'];
                 if (this.diffusionModel.diffusionList[0]) {
@@ -195,7 +187,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                 });
             });
             newDiffList.object_id = newDiffList.object_type + '_' + (Math.random()+ +new Date).toString(36).replace('.','').toUpperCase();
-            this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
+            this.http.post("../../rest/listTemplates", newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuit = data.id;
                     this.router.navigate(["/administration/diffusionModels"]);
@@ -224,7 +216,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                     "sequence": listModel.sequence
                 });
             });
-            this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuit, newDiffList)
+            this.http.put("../../rest/listTemplates/" + this.idCircuit, newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuit = data.id;
                     this.notify.success(this.lang.diffusionModelUpdated);

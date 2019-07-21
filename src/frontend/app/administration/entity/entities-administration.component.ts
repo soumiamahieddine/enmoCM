@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -7,15 +6,14 @@ import { ConfirmModalComponent } from '../../confirmModal.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { Router } from '@angular/router';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-
-declare var angularGlobals: any;
 
 @Component({
     templateUrl: "entities-administration.component.html",
     styleUrls: ['entities-administration.component.css'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class EntitiesAdministrationComponent implements OnInit {
     /*HEADER*/
@@ -23,11 +21,8 @@ export class EntitiesAdministrationComponent implements OnInit {
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
     dialogRef                       : MatDialogRef<any>;
 
-    coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
 
@@ -64,15 +59,15 @@ export class EntitiesAdministrationComponent implements OnInit {
         this.dataSourceTemplates.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService, private router: Router) {
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        public dialog: MatDialog, 
+        private headerService: HeaderService, 
+        private router: Router,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -80,23 +75,21 @@ export class EntitiesAdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
-        this.http.get(this.coreUrl + "rest/entityTypes")
+        this.http.get("../../rest/entityTypes")
             .subscribe((data: any) => {
                 this.entityTypeList = data['types'];
             }, (err: any) => {
                 this.notify.error(err.error.errors);
             });
-        this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+        this.http.get("../../rest/listTemplates/types/entity_id/roles")
             .subscribe((data: any) => {
                 this.listTemplateRoles = data['roles'];
             }, (err: any) => {
                 this.notify.error(err.error.errors);
             });
 
-        this.http.get(this.coreUrl + "rest/entities")
+        this.http.get("../../rest/entities")
             .subscribe((data: any) => {
                 this.entities = data['entities'];
                 this.loading = false;
@@ -193,7 +186,7 @@ export class EntitiesAdministrationComponent implements OnInit {
 
     loadEntity(entity_id: any) {
         this.listDiffModified = false;
-        this.http.get(this.coreUrl + "rest/entities/" + entity_id + '/details')
+        this.http.get("../../rest/entities/" + entity_id + '/details')
             .subscribe((data: any) => {
                 this.currentEntity = data['entity'];
                 if (this.currentEntity.visaTemplate[0]) {
@@ -293,7 +286,7 @@ export class EntitiesAdministrationComponent implements OnInit {
 
         if (r) {
             if (this.creationMode) {
-                this.http.post(this.coreUrl + "rest/entities", this.currentEntity)
+                this.http.post("../../rest/entities", this.currentEntity)
                     .subscribe((data: any) => {
                         this.currentEntity.listTemplate = [];
                         this.entities = data['entities'];
@@ -311,7 +304,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                         this.notify.error(err.error.errors);
                     });
             } else {
-                this.http.put(this.coreUrl + "rest/entities/" + this.currentEntity.entity_id, this.currentEntity)
+                this.http.put("../../rest/entities/" + this.currentEntity.entity_id, this.currentEntity)
                     .subscribe((data: any) => {
                         this.entities = data['entities'];
                         $j('#jstree').jstree(true).settings.core.data = this.entities;
@@ -325,7 +318,7 @@ export class EntitiesAdministrationComponent implements OnInit {
     }
 
     moveEntity() {
-        this.http.put(this.coreUrl + "rest/entities/" + this.currentEntity.entity_id, this.currentEntity)
+        this.http.put("../../rest/entities/" + this.currentEntity.entity_id, this.currentEntity)
             .subscribe(() => {
                 this.notify.success(this.lang.entityUpdated);
             }, (err) => {
@@ -363,10 +356,10 @@ export class EntitiesAdministrationComponent implements OnInit {
             this.dialogRef.afterClosed().subscribe((result: any) => {
                 if (result) {
                     if (this.currentEntity.listTemplate.id) {
-                        this.http.delete(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id)
+                        this.http.delete("../../rest/listTemplates/" + this.currentEntity.listTemplate.id)
                         .subscribe((data: any) => {
                             this.currentEntity.listTemplate.id = data.id;
-                            this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                            this.http.get("../../rest/listTemplates/types/entity_id/roles")
                                 .subscribe((data: any) => {
                                     this.listTemplateRoles = data['roles'];
                                 }, (err) => {
@@ -378,7 +371,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                     }
 
                     if (this.idCircuitVisa) {
-                        this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
+                        this.http.delete("../../rest/listTemplates/" + this.idCircuitVisa)
                             .subscribe(() => {
                                 this.idCircuitVisa = null;
                             }, (err) => {
@@ -386,7 +379,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                             });
                     }
                     
-                    this.http.put(this.coreUrl + "rest/entities/" + result.entity_id + "/reassign/" + result.redirectEntity, {})
+                    this.http.put("../../rest/entities/" + result.entity_id + "/reassign/" + result.redirectEntity, {})
                         .subscribe((data: any) => {
                             this.entities = data['entities'];
                             $j('#jstree').jstree(true).settings.core.data = this.entities;
@@ -405,10 +398,10 @@ export class EntitiesAdministrationComponent implements OnInit {
 
             if (r) {
                 if (this.currentEntity.listTemplate.id) {
-                    this.http.delete(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id)
+                    this.http.delete("../../rest/listTemplates/" + this.currentEntity.listTemplate.id)
                     .subscribe((data: any) => {
                         this.currentEntity.listTemplate.id = data.id;
-                        this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                        this.http.get("../../rest/listTemplates/types/entity_id/roles")
                             .subscribe((data: any) => {
                                 this.listTemplateRoles = data['roles'];
                             }, (err) => {
@@ -420,7 +413,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                 }
 
                 if (this.idCircuitVisa) {
-                    this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
+                    this.http.delete("../../rest/listTemplates/" + this.idCircuitVisa)
                         .subscribe(() => {
                             this.idCircuitVisa = null;
                         }, (err) => {
@@ -428,7 +421,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                         });
                 }
                 
-                this.http.delete(this.coreUrl + "rest/entities/" + this.currentEntity.entity_id)
+                this.http.delete("../../rest/entities/" + this.currentEntity.entity_id)
                     .subscribe((data: any) => {
                         this.entities = data['entities'];
                         $j('#jstree').jstree(true).settings.core.data = this.entities;
@@ -468,7 +461,7 @@ export class EntitiesAdministrationComponent implements OnInit {
     }
 
     updateStatus(entity: any, method: string) {
-        this.http.put(this.coreUrl + "rest/entities/" + entity['entity_id'] + "/status", { "method": method })
+        this.http.put("../../rest/entities/" + entity['entity_id'] + "/status", { "method": method })
             .subscribe((data: any) => {
                 this.notify.success("");
             }, (err) => {
@@ -514,10 +507,10 @@ export class EntitiesAdministrationComponent implements OnInit {
         });
 
         if (newDiffList.items.length == 0) {
-            this.http.delete(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id)
+            this.http.delete("../../rest/listTemplates/" + this.currentEntity.listTemplate.id)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate.id = null;
-                    this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                    this.http.get("../../rest/listTemplates/types/entity_id/roles")
                         .subscribe((data: any) => {
                             this.listTemplateRoles = data['roles'];
                         }, (err) => {
@@ -528,10 +521,10 @@ export class EntitiesAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else if (this.currentEntity.listTemplate.id) {
-            this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
+            this.http.put("../../rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate.id = data.id;
-                    this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                    this.http.get("../../rest/listTemplates/types/entity_id/roles")
                         .subscribe((data: any) => {
                             this.listTemplateRoles = data['roles'];
                         }, (err) => {
@@ -542,10 +535,10 @@ export class EntitiesAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
+            this.http.post("../../rest/listTemplates", newDiffList)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate.id = data.id;
-                    this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                    this.http.get("../../rest/listTemplates/types/entity_id/roles")
                         .subscribe((data: any) => {
                             this.listTemplateRoles = data['roles'];
                         }, (err) => {
@@ -595,7 +588,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                     "sequence": listModel.sequence
                 });
             });
-            this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
+            this.http.post("../../rest/listTemplates", newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
                     this.notify.success(this.lang.diffusionModelUpdated);
@@ -618,7 +611,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                     "sequence": listModel.sequence
                 });
             });
-            this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
+            this.http.put("../../rest/listTemplates/" + this.idCircuitVisa, newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
                     this.notify.success(this.lang.diffusionModelUpdated);
@@ -626,7 +619,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
+            this.http.delete("../../rest/listTemplates/" + this.idCircuitVisa)
             .subscribe(() => {
                 this.idCircuitVisa = null;
                 this.notify.success(this.lang.diffusionModelDeleted);
@@ -664,7 +657,7 @@ export class EntitiesAdministrationComponent implements OnInit {
             dialogRef.afterClosed().subscribe(result => {
                 if (result === "ok") {
                     role.available = !role.available;
-                    this.http.put(this.coreUrl + "rest/listTemplates/types/entity_id/roles", { "roles": this.listTemplateRoles })
+                    this.http.put("../../rest/listTemplates/types/entity_id/roles", { "roles": this.listTemplateRoles })
                         .subscribe(() => {
                             role.usedIn = [];
                             if (this.currentEntity.listTemplate) {
@@ -678,11 +671,11 @@ export class EntitiesAdministrationComponent implements OnInit {
             });
         } else {
             role.available = !role.available;
-            this.http.put(this.coreUrl + "rest/listTemplates/types/entity_id/roles", { "roles": this.listTemplateRoles })
+            this.http.put("../../rest/listTemplates/types/entity_id/roles", { "roles": this.listTemplateRoles })
                 .subscribe(() => {
                     if (this.currentEntity.listTemplate) {
                         this.currentEntity.listTemplate[role.id] = [];
-                        this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                        this.http.get("../../rest/listTemplates/types/entity_id/roles")
                             .subscribe((data: any) => {
                                 this.listTemplateRoles = data['roles'];
                             }, (err) => {
@@ -702,7 +695,7 @@ export class EntitiesAdministrationComponent implements OnInit {
             "role"      : ''
         };
 
-        this.http.post(this.coreUrl + "rest/users/" + newUser.id + "/entities", entity)
+        this.http.post("../../rest/users/" + newUser.id + "/entities", entity)
             .subscribe((data: any) => {
                 var displayName = newUser.idToDisplay.split(" ");
                 var user = {

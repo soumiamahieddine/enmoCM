@@ -1,20 +1,17 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatSidenav } from '@angular/material';
 import { HeaderService } from '../../../service/header.service';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
-declare var angularGlobals: any;
-
-
 @Component({
     templateUrl: "priority-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class PriorityAdministrationComponent implements OnInit {
 
@@ -22,10 +19,6 @@ export class PriorityAdministrationComponent implements OnInit {
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-
-    coreUrl         : string;
     id              : string;
     creationMode    : boolean;
     lang            : any       = LANG;
@@ -39,20 +32,18 @@ export class PriorityAdministrationComponent implements OnInit {
         default_priority: false
     };
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+    constructor( 
+        public http: HttpClient, 
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
         this.route.params.subscribe((params) => {
@@ -69,7 +60,7 @@ export class PriorityAdministrationComponent implements OnInit {
 
                 this.creationMode = false;
                 this.id = params['id'];
-                this.http.get(this.coreUrl + "rest/priorities/" + this.id)
+                this.http.get("../../rest/priorities/" + this.id)
                     .subscribe((data: any) => {
                         this.priority = data.priority;
                         this.headerService.setHeader(this.lang.priorityModification, this.priority.label);
@@ -93,7 +84,7 @@ export class PriorityAdministrationComponent implements OnInit {
         }
         this.priority.working_days = this.priority.working_days == "true";
         if (this.creationMode) {
-            this.http.post(this.coreUrl + "rest/priorities", this.priority)
+            this.http.post("../../rest/priorities", this.priority)
                 .subscribe(() => {
                     this.notify.success(this.lang.priorityAdded);
                     this.router.navigate(["/administration/priorities"]);
@@ -101,7 +92,7 @@ export class PriorityAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.put(this.coreUrl + "rest/priorities/" + this.id, this.priority)
+            this.http.put("../../rest/priorities/" + this.id, this.priority)
                 .subscribe(() => {
                     this.notify.success(this.lang.priorityUpdated);
                     this.router.navigate(["/administration/priorities"]);

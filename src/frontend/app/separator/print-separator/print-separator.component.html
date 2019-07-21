@@ -1,7 +1,7 @@
 <mat-sidenav-container class="maarch-container">
-    <mat-sidenav #snavLeft mode="side" opened class="panel-left" #snav [mode]="mobileMode ? 'over' : 'side'"
-        [fixedInViewport]="mobileMode" [opened]="mobileMode ? false : true" autoFocus="false" style="overflow-x:hidden;"
-        [ngStyle]="{'width': mobileMode ? '80%' : '350px'}">
+    <mat-sidenav #snavLeft class="panel-left" #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
+        [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true" autoFocus="false" style="overflow-x:hidden;"
+        [ngStyle]="{'width': appService.getViewMode() ? '80%' : '350px'}">
         <header-panel [snavLeft]="snav"></header-panel>
         <menu-shortcut></menu-shortcut>
         <menu-nav></menu-nav>
@@ -9,7 +9,7 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="bg-head">
-            <div class="bg-head-title" [class.customContainerRight]="mobileMode">
+            <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
                 <div class="bg-head-title-label">
                     <header-left [snavLeft]="snav"></header-left>
                 </div>
@@ -17,10 +17,10 @@
                     <header-right></header-right>
                 </div>
             </div>
-            <div class="bg-head-content" [class.fullContainer]="mobileMode">
+            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
             </div>
         </div>
-        <div class="container" [class.fullContainer]="mobileMode">
+        <div class="container" [class.fullContainer]="appService.getViewMode()">
             <div class="container-content">
                 <div style="height:90%;overflow:auto;position:absolute;width:100%;">
                     <div class="alert-message alert-message-info" role="alert" style="max-width: 100%;margin: 30px;"
@@ -65,9 +65,9 @@
             </div>
         </div>
     </mat-sidenav-content>
-    <mat-sidenav #snav2 [fixedInViewport]="mobileMode" position='end'
-        [opened]="mobileMode || docBuffer == null ? false : true" [mode]="mobileMode ? 'over' : 'side'"
-        class="panel-right" style="overflow-x:hidden;" [ngStyle]="{'width': mobileMode ? '80%' : '30%'}"
+    <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
+        [opened]="appService.getViewMode() || docBuffer == null ? false : true" [mode]="appService.getViewMode() ? 'over' : 'side'"
+        class="panel-right" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}"
         autoFocus="false">
         <div class="example-loading-shade" *ngIf="loading">
             <mat-spinner></mat-spinner>

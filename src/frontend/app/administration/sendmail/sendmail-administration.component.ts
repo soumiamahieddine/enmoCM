@@ -1,30 +1,23 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav } from '@angular/material';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-
-declare var angularGlobals: any;
-
 
 @Component({
     templateUrl: "sendmail-administration.component.html",
     styleUrls: ['sendmail-administration.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class SendmailAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public sidenavLeft: MatSidenav;
     @ViewChild('snav2') public sidenavRight: MatSidenav;
 
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-
-    coreUrl: string;
     lang: any = LANG;
     loading: boolean = false;
 
@@ -87,11 +80,13 @@ export class SendmailAdministrationComponent implements OnInit {
 
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -100,9 +95,8 @@ export class SendmailAdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnavRight(null);
 
         this.loading = true;
-        this.coreUrl = angularGlobals.coreUrl;
 
-        this.http.get(this.coreUrl + 'rest/configurations/admin_email_server')
+        this.http.get('../../rest/configurations/admin_email_server')
             .subscribe((data: any) => {
                 this.sendmail = data.configuration.value
                 this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
@@ -118,7 +112,7 @@ export class SendmailAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        this.http.put(this.coreUrl + 'rest/configurations/admin_email_server', this.sendmail)
+        this.http.put('../../rest/configurations/admin_email_server', this.sendmail)
             .subscribe((data: any) => {
                 this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
                 this.notify.success(this.lang.configurationUpdated);

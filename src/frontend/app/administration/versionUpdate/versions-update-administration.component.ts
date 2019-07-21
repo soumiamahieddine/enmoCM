@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav, MatDialog, MatDialogRef } from '@angular/material';
@@ -9,23 +8,20 @@ import { NotificationService } from '../../notification.service';
 import { of } from 'rxjs';
 import { AlertComponent } from '../../../plugins/modal/alert.component';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "versions-update-administration.component.html",
     styleUrls: ['versions-update-administration.component.scss'],
-    providers: [NotificationService],
+    providers: [NotificationService, AppService],
 })
 export class VersionsUpdateAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public sidenavLeft: MatSidenav;
     @ViewChild('snav2') public sidenavRight: MatSidenav;
 
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-
-    coreUrl: string;
     lang: any = LANG;
     loading: boolean = false;
     updateInprogress: boolean = false;
@@ -33,16 +29,14 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
 
     versions: any = {};
 
-
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private headerService: HeaderService, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(
+        public http: HttpClient, 
+        private headerService: HeaderService, 
+        private notify: NotificationService, 
+        public dialog: MatDialog,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {

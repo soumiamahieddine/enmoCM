@@ -1,17 +1,16 @@
-import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatSidenav} from '@angular/material';
 import { HeaderService }        from '../../../service/header.service';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-declare var angularGlobals: any;
 
 @Component({
     templateUrl: "actions-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 
 export class ActionsAdministrationComponent implements OnInit {
@@ -19,9 +18,6 @@ export class ActionsAdministrationComponent implements OnInit {
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
     lang: any = LANG;
     search: string = null;
 
@@ -40,26 +36,22 @@ export class ActionsAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
-        $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+        ) {
+            $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/actions')
+        this.http.get('../../rest/actions')
             .subscribe((data) => {
                 this.actions = data['actions'];
                 this.headerService.setHeader(this.lang.administration + ' ' + this.lang.actions);
@@ -79,7 +71,7 @@ export class ActionsAdministrationComponent implements OnInit {
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + action.label_action + ' »');
 
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
+            this.http.delete('../../rest/actions/' + action.id)
                 .subscribe((data: any) => {
                     this.actions = data.actions;
                     this.dataSource = new MatTableDataSource(this.actions);

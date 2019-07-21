@@ -1,19 +1,17 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatSidenav } from '@angular/material';
 import { HeaderService }        from '../../../service/header.service';
+import { AppService } from '../../../service/app.service';
+
 declare function $j(selector: any): any;
-
-declare var angularGlobals: any;
-
 
 @Component({
     templateUrl: "action-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class ActionAdministrationComponent implements OnInit {
 
@@ -21,10 +19,7 @@ export class ActionAdministrationComponent implements OnInit {
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
     lang: any = LANG;
-    coreUrl: string;
     creationMode: boolean;
     action: any = {};
     statuses: any[] = [];
@@ -34,19 +29,17 @@ export class ActionAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
         this.route.params.subscribe(params => {
@@ -56,7 +49,7 @@ export class ActionAdministrationComponent implements OnInit {
 
                 this.creationMode = true;
 
-                this.http.get(this.coreUrl + 'rest/initAction')
+                this.http.get('../../rest/initAction')
                     .subscribe((data: any) => {
                         this.action = data.action;
                         this.categoriesList = data.categoriesList;
@@ -74,7 +67,7 @@ export class ActionAdministrationComponent implements OnInit {
                 
                 this.creationMode = false;
 
-                this.http.get(this.coreUrl + 'rest/actions/' + params['id'])
+                this.http.get('../../rest/actions/' + params['id'])
                     .subscribe((data: any) => {
                         this.action = data.action;
                         this.categoriesList = data.categoriesList;
@@ -90,7 +83,7 @@ export class ActionAdministrationComponent implements OnInit {
 
     onSubmit() {
         if (this.creationMode) {
-            this.http.post(this.coreUrl + 'rest/actions', this.action)
+            this.http.post('../../rest/actions', this.action)
                 .subscribe(() => {
                     this.router.navigate(['/administration/actions']);
                     this.notify.success(this.lang.actionAdded);
@@ -99,7 +92,7 @@ export class ActionAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
+            this.http.put('../../rest/actions/' + this.action.id, this.action)
                 .subscribe(() => {
                     this.router.navigate(['/administration/actions']);
                     this.notify.success(this.lang.actionUpdated);

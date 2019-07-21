@@ -4,10 +4,9 @@ import { LANG } from '../../translate.component';
 import { HeaderService } from '../../../service/header.service';
 import { NotificationService } from '../../notification.service';
 import { MatSidenav } from '@angular/material';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-
-declare var angularGlobals: any;
 
 @Component({
     templateUrl: "print-separator.component.html",
@@ -16,7 +15,6 @@ declare var angularGlobals: any;
 })
 export class PrintSeparatorComponent implements OnInit {
 
-    mobileMode: boolean = false;
     lang: any = LANG;
     entities: any[] = [];
     entitiesChosen: any[] = [];
@@ -36,8 +34,12 @@ export class PrintSeparatorComponent implements OnInit {
     @ViewChild('snav') sidenavLeft: MatSidenav;
     @ViewChild('snav2') sidenavRight: MatSidenav;
 
-    constructor(public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
-        this.mobileMode = angularGlobals.mobileMode;
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
 

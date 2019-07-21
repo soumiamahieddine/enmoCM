@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list>
@@ -39,16 +39,16 @@
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="notification_id" matSortDirection="asc">
                     <ng-container matColumnDef="notification_id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches"> {{element.notification_id}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()">{{lang.id}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()"> {{element.notification_id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="description">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.description}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" style="flex:2;"> {{element.description}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="is_enabled">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.status}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()">{{lang.status}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" style="flex:1;" [class.hide-for-mobile]="appService.getViewMode()">
                             <span *ngIf="element.is_enabled == 'Y'" color="primary" class="label">{{lang.active}}</span>
                             <span *ngIf="element.is_enabled == 'N'" color="warn" class="label">{{lang.suspended}}</span>
                         </mat-cell>
@@ -68,8 +68,8 @@
                 <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{notifications.length}} {{lang.notifications}}</div>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            position='end' [opened]="appService.getViewMode() ? false : false">
             <mat-list>
                 <h3 mat-subheader>{{lang.notificationSchedule}}</h3>
                 <form class="form-horizontal" #notifForm="ngForm" style="overflow:hidden;">
