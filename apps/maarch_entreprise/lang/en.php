@@ -697,9 +697,6 @@ if (!defined('_VIEW_HISTORY2')) {
 if (!defined('_VIEW_HISTORY_BATCH2')) {
     define('_VIEW_HISTORY_BATCH2', 'Batch history view');
 }
-if (!defined('_INDEX_FILE')) {
-    define('_INDEX_FILE', 'Index a folder');
-}
 if (!defined('_WORDING')) {
     define('_WORDING', 'Wording');
 }
@@ -3244,12 +3241,6 @@ if (!defined('_MAKE_NEW_SEARCH')) {
 }
 if (!defined('_NO_PAGE')) {
     define('_NO_PAGE', 'No page');
-}
-if (!defined('_VALIDATE_QUALIF')) {
-    define('_VALIDATE_QUALIF', 'Validation / certification');
-}
-if (!defined('_VALIDATE_QUALIF_DESC')) {
-    define('_VALIDATE_QUALIF_DESC', "Opens the edit page of a previously saved document (metadata can be edited from this page).");
 }
 if (!defined('_DB_CONNEXION_ERROR')) {
     define('_DB_CONNEXION_ERROR', 'Connection error to the database');

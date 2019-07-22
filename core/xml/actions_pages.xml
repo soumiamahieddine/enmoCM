@@ -60,59 +60,6 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>process</ID>
-        <LABEL>_PROCESS_ACTION</LABEL>
-        <NAME>process</NAME>
-        <DESC>_PROCESS_DESC</DESC>
-        <component>v1Action</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>index_mlb</ID>
-        <LABEL>_INDEX_FILE</LABEL>
-        <NAME>index_mlb</NAME>
-        <DESC>_INDEX_FILE_DESC</DESC>
-        <component>v1Action</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <KEYWORD>indexing</KEYWORD>
-        <FLAG_CREATE>true</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>validate_mail</ID>
-        <LABEL>_VALIDATE_QUALIF</LABEL>
-        <NAME>validate_mail</NAME>
-        <DESC>_VALIDATE_QUALIF_DESC</DESC>
-        <component>v1Action</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>view</ID>
-        <LABEL>_VIEW_DOC</LABEL>
-        <NAME>view</NAME>
-        <DESC>_VIEW_DOC_DESC</DESC>
-        <component>viewDoc</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
         <ID>close_mail</ID>
         <LABEL>_CLOSE_MAIL</LABEL>
         <NAME>close_mail</NAME>
