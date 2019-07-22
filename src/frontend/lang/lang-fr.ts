@@ -1070,5 +1070,13 @@ export const LANG_FR = {
     "autocompleteInfo" : "La recherche doit contenir au minimum&nbsp;<b>3 caractères</b>",
     "availableUsers" : "Utilisateur(s) disponible(s)",
     "userUnauthorized" : "Utilisateur non autorisé",
-
+    "authorizedEntities" : "Entité(s) traitante(s) authorisée(s)",
+    "warnIndex" : "Le groupe ne peut pas enregistrer de document.",
+    "enableIndex" : "Activer l'enregistrement de document pour ce groupe",
+    "disableIndex" : "Désactiver l'enregistrement de document pour ce groupe",
+    "indexEnabled" : "Enregistrement de document activé",
+    "indexDisabled" : "Enregistrement de document désactivé",
+    "indexation" : "Enregistrement de document",
+    "keywordAdded" : "Mot-clé ajouté",
+    "keywordDeleted" : "Mot-clé supprimé",
 };

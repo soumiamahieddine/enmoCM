@@ -77,6 +77,11 @@
                             </mat-tab>
                         </mat-tab-group>
                     </mat-tab>
+                    <mat-tab label="{{lang.indexation}}" *ngIf="!creationMode">
+                        <ng-template matTabContent>
+                            <app-indexing-administration [groupId]="group.id"></app-indexing-administration>
+                        </ng-template>
+                    </mat-tab>
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12" *ngIf="group.canAdminUsers" style="padding:5px;">
@@ -131,11 +136,6 @@
                             <mat-header-row *matHeaderRowDef="basketsDisplayedColumns"></mat-header-row>
                             <mat-row *matRowDef="let row; columns: basketsDisplayedColumns;" routerLink="/administration/baskets/{{row.basket_id}}" matTooltip="{{lang.view}}" style="cursor:pointer;"></mat-row>
                         </mat-table>
-                    </mat-tab>
-                    <mat-tab label="Indexation" *ngIf="!creationMode">
-                        <ng-template matTabContent>
-                            <app-indexing-administration [groupId]="group.id"></app-indexing-administration>
-                        </ng-template>
                     </mat-tab>
                 </mat-tab-group>
             </mat-card>

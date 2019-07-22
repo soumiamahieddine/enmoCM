@@ -1037,4 +1037,13 @@ export const LANG_EN = {
     "autocompleteInfo" : "The criteria must contain at least&nbsp;<b>3 letters</b>",
     "availableUsers" : "Available users",
     "userUnauthorized" : "User Unauthorized",
+    "authorizedEntities" : "Authorized entities destination",
+    "warnIndex" : "This group can not index document.",
+    "enableIndex" : "Enable document indexation for this group",
+    "disableIndex" : "Disable document indexation for this group",
+    "indexEnabled" : "Document indexation enabled",
+    "indexDisabled" : "Document indexation disabled",
+    "indexation" : "Document indexation",
+    "keywordAdded" : "Keyword added",
+    "keywordDeleted" : "Keyword deleted",
 };

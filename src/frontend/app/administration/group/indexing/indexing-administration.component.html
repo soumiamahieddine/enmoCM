@@ -1,15 +1,17 @@
+<div *ngIf="loading" class="loading">
+    <mat-spinner style="margin:auto;"></mat-spinner>
+</div>
 <div class="row" style="margin:0px;">
     <div class="col-md-12">
-        <div *ngIf="!indexingInfo.canIndex" class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">Le
-            groupe ne peut pas enregistrer de document. <a (click)="indexingInfo.canIndex=true">Activer l'indexation
-                pour ce groupe</a></div>
-        <button *ngIf="indexingInfo.canIndex" color="warn" mat-raised-button (click)="indexingInfo.canIndex=false">Désactiver
-            l'indexation pour ce groupe</button>
+        <div *ngIf="!indexingInfo.canIndex" class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">{{lang.warnIndex}} 
+            <button mat-raised-button (click)="toggleIndex(!indexingInfo.canIndex)">{{lang.enableIndex}}</button>
+        </div>
+        <button *ngIf="indexingInfo.canIndex" color="warn" mat-raised-button (click)="toggleIndex(!indexingInfo.canIndex)">{{lang.disableIndex}}</button>
     </div>
     <div class="col-md-8">
         <div class="formType">
             <div class="formType-title">
-                Action(s) choisie(s)
+                {{lang.actionChosen}}
             </div>
             <plugin-autocomplete [labelPlaceholder]="'Associer une nouvelle action'" [labelList]="'Action(s) disponible(s)'"
                 [datas]="actionList" [targetSearchKey]="'label_action'" (triggerEvent)="addAction($event)"></plugin-autocomplete>
@@ -29,7 +31,7 @@
     <div class="col-md-4">
         <div class="formType">
             <div class="formType-title">
-                Service de destination autorisé
+                {{lang.authorizedEntities}}
             </div>
             <div #jstree id="jstree"></div>
         </div>

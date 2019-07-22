@@ -3,7 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
 import { tap } from 'rxjs/internal/operators/tap';
-import { map } from 'rxjs/operators';
+import { map, catchError, filter, exhaustMap, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { MatDialogRef, MatDialog } from '@angular/material';
+import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 
 declare function $j(selector: any): any;
 
@@ -18,7 +21,7 @@ export class IndexingAdministrationComponent implements OnInit {
     mobileQuery: MediaQueryList;
 
     lang: any = LANG;
-    loading: boolean = false;
+    loading: boolean = true;
 
     @Input('groupId') groupId: number;
 
@@ -31,9 +34,11 @@ export class IndexingAdministrationComponent implements OnInit {
         keywords: [],
         entities: []
     };
+    dialogRef: MatDialogRef<any>;
 
     constructor(public http: HttpClient,
         private notify: NotificationService,
+        private dialog: MatDialog,
     ) {
 
         this.keywordEntities = [{
@@ -102,12 +107,12 @@ export class IndexingAdministrationComponent implements OnInit {
             tap((data: any) => this.getSelectedActions(data.group.indexationParameters.actions)),
             map((data: any) => this.getEntities(data)),
             map((data: any) => this.getSelectedEntities(data)),
-            tap((data: any) => this.initEntitiesTree(data))
+            tap((data: any) => this.initEntitiesTree(data)),
+            finalize(() => this.loading = false)
         ).subscribe();
     }
 
     initEntitiesTree(entities: any) {
-        
         $j('#jstree').jstree({
             "checkbox": {
                 "three_state": false //no cascade selection
@@ -143,20 +148,20 @@ export class IndexingAdministrationComponent implements OnInit {
     }
 
     getEntities(data: any) {
+        this.keywordEntities.forEach((entity: any) => {
+            if (data.group.indexationParameters.keywords.indexOf(entity.id) > -1) {
+                entity.state = { "opened": true, "selected": true };
+            } else {
+                entity.state = { "opened": true, "selected": false };
+            } 
+        });
         data.entities = this.keywordEntities.concat(data.entities);
         return data;
     }
 
     getSelectedEntities(data: any) {
         this.indexingInfo.entities = [...data.group.indexationParameters.entities];
-        /*data.entities.forEach((entity: any) => {
-            if (this.indexingInfo.entities.indexOf(entity.id) > -1 ) {
-                entity.state = { "opened": true, "selected": true };
-            } else {
-                entity.state = { "opened": true, "selected": false };
-            }
-            
-        });*/
+        this.indexingInfo.keywords = [...data.group.indexationParameters.keywords];
         return data.entities;
     }
 
@@ -180,37 +185,141 @@ export class IndexingAdministrationComponent implements OnInit {
     }
 
     addEntity(entityId: number) {
-        this.indexingInfo.entities.push(entityId);
-        console.log(this.indexingInfo.entities);
+        const newEntityList = this.indexingInfo.entities.concat([entityId]);
+        
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { entities : newEntityList }).pipe(
+            tap(() => {
+                this.indexingInfo.entities.push(entityId);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.entityAdded);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();  
     }
 
     removeEntity(entityId: number) {
         const index = this.indexingInfo.entities.indexOf(entityId);
-        this.indexingInfo.entities.splice(index, 1);
-        console.log(this.indexingInfo.entities);
+        let newEntityList = [...this.indexingInfo.entities];
+        newEntityList.splice(index, 1);
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { entities : newEntityList }).pipe(
+            tap(() => {
+                this.indexingInfo.entities.splice(index, 1);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.entityDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();  
     }
 
     addKeyword(keyword: string) {
-        this.indexingInfo.keywords.push(keyword);
-        console.log(this.indexingInfo.keywords);
+        const newKeywordList = this.indexingInfo.keywords.concat([keyword]);
+        
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { keywords : newKeywordList }).pipe(
+            tap(() => {
+                this.indexingInfo.keywords.push(keyword);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.keywordAdded);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();  
     }
 
     removeKeyword(keyword: string) {
         const index = this.indexingInfo.keywords.indexOf(keyword);
-        this.indexingInfo.keywords.splice(index, 1);
-        console.log(this.indexingInfo.keywords);
+        let newKeywordList = [...this.indexingInfo.keywords];
+        newKeywordList.splice(index, 1);
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { keywords : newKeywordList }).pipe(
+            tap(() => {
+                this.indexingInfo.keywords.splice(index, 1);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.keywordDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe(); 
     }
 
     addAction(actionOpt: any) {
-        const index = this.actionList.findIndex(action => action.id === actionOpt.id);
-        const action = {...this.actionList[index]};
-        this.indexingInfo.actions.push(action);
-        this.actionList.splice(index, 1);
+        const newActionListIds = this.indexingInfo.actions.map((action: any) => action.id).concat([actionOpt].map((action: any) => action.id));
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { actions : newActionListIds }).pipe(
+            tap(() => {
+                const index = this.actionList.findIndex(action => action.id === actionOpt.id);
+                const action = {...this.actionList[index]};
+                this.indexingInfo.actions.push(action);
+                this.actionList.splice(index, 1);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.actionAdded);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();   
     }
 
     removeAction(index: number) {
-        const action = {...this.indexingInfo.actions[index]};
-        this.actionList.push(action);
-        this.indexingInfo.actions.splice(index, 1);
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            map(() => {
+                this.dialogRef = null;
+                let newActionList = [...this.indexingInfo.actions];
+                newActionList.splice(index, 1);
+                return newActionList.map((action: any) => action.id);
+            }),
+            exhaustMap((data) => this.http.put('../../rest/groups/' + this.groupId + '/indexing', { actions : data})),
+            tap(() => {
+                this.actionList.push(this.indexingInfo.actions[index]);
+                this.indexingInfo.actions.splice(index, 1);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.actionDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
+
+    toggleIndex(canIndex: boolean) {
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { canIndex : canIndex }).pipe(
+            tap(() => {
+                this.indexingInfo.canIndex = canIndex;
+            }),
+            tap(() => {
+                if (this.indexingInfo.canIndex) {
+                    this.notify.success(this.lang.indexEnabled);
+                } else {
+                    this.notify.success(this.lang.indexDisabled);
+                }
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();   
+    }
+
 }

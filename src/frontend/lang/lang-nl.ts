@@ -1063,4 +1063,13 @@ export const LANG_NL = {
     "autocompleteInfo" : "The criteria must contain at least&nbsp;<b>3 letters</b>", //_TO_TRANSLATE
     "availableUsers" : "Available users", //_TO_TRANSLATE
     "userUnauthorized" : "User Unauthorized", //_TO_TRANSLATE
+    "warnIndex" : "This group can not index document.", //_TO_TRANSLATE
+    "authorizedEntities" : "Authorized entities destination", //_TO_TRANSLATE
+    "enableIndex" : "Activate document indexation for this group", //_TO_TRANSLATE
+    "disableIndex" : "Disable document indexation for this group", //_TO_TRANSLATE
+    "indexEnabled" : "Document indexation enabled", //_TO_TRANSLATE
+    "indexDisabled" : "Document indexation disabled", //_TO_TRANSLATE
+    "indexation" : "Document indexation", //_TO_TRANSLATE
+    "keywordAdded" : "Keyword added", //_TO_TRANSLATE
+    "keywordDeleted" : "Keyword deleted", //_TO_TRANSLATE
 };
