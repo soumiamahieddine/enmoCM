@@ -77,3 +77,34 @@ CREATE TABLE folders
   CONSTRAINT folders_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
+UPDATE groupbasket SET list_event = 'processDoc'
+FROM (
+    SELECT basket_id, group_id 
+    FROM actions_groupbaskets ag
+    LEFT JOIN actions a ON ag.id_action = a.id
+    WHERE ag.default_action_list = 'Y' AND a.action_page in ('validate_mail', 'process')
+) AS subquery
+WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
+
+UPDATE groupbasket SET list_event = 'viewDoc'
+FROM (
+    SELECT basket_id, group_id 
+    FROM actions_groupbaskets ag
+    LEFT JOIN actions a ON ag.id_action = a.id
+    WHERE ag.default_action_list = 'Y' AND a.component = 'viewDoc'
+) AS subquery
+WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
+
+UPDATE groupbasket SET list_event = 'visaMail'
+FROM (
+    SELECT basket_id, group_id 
+    FROM actions_groupbaskets ag
+    LEFT JOIN actions a ON ag.id_action = a.id
+    WHERE ag.default_action_list = 'Y' AND a.action_page in ('visa_mail')
+) AS subquery
+WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
+
+
+UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
+DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
