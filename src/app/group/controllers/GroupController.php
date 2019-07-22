@@ -268,8 +268,8 @@ class GroupController
         }
 
         $body = $request->getParsedBody();
-        if (!Validator::boolType()->validate($body['canIndex'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body canIndex is empty or not a boolean']);
+        if (!Validator::arrayType()->notEmpty()->validate($body)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body is empty or not an array']);
         }
 
         $group = GroupModel::getById(['id' => $args['id'], 'select' => ['indexation_parameters']]);
@@ -277,8 +277,12 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
+        $set = [];
         $indexationParameters = json_decode($group['indexation_parameters'], true);
 
+        if (!empty($body['canIndex']) && is_bool($body['canIndex'])) {
+            $set['can_index'] = $body['canIndex'] ? 'true' : 'false';
+        }
         if (!empty($body['actions']) && is_array($body['actions'])) {
             $countActions = ActionModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['actions']]]);
             if ($countActions[0]['count'] != count($body['actions'])) {
@@ -296,9 +300,10 @@ class GroupController
         if (!empty($body['keywords']) && is_array($body['keywords'])) {
             $indexationParameters['keywords'] = $body['keywords'];
         }
-        
+        $set['indexation_parameters'] = json_encode($indexationParameters);
+
         GroupModel::update([
-            'set'   => ['can_index' => $body['canIndex'], 'indexation_parameters' => json_encode($indexationParameters)],
+            'set'   => $set,
             'where' => ['id = ?'],
             'data'  => [$args['id']]
         ]);
