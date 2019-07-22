@@ -7,14 +7,6 @@
 -- *************************************************************************--
 UPDATE parameters SET param_value_string = '19.12' WHERE id = 'database_version';
 
-ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
-
-DO $$ BEGIN
-  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'users') AND attname = 'enabled') THEN
-    UPDATE users SET status = 'SPD' WHERE enabled = 'N' and (status = 'OK' or status = 'ABS');
-    ALTER TABLE users DROP COLUMN IF EXISTS enabled;
-  END IF;
-END$$;
 
 /* FULL TEXT */
 DELETE FROM docservers where docserver_type_id = 'FULLTEXT';
@@ -39,10 +31,39 @@ ALTER TABLE usergroups ADD COLUMN can_index boolean NOT NULL DEFAULT FALSE;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS indexation_parameters;
 ALTER TABLE usergroups ADD COLUMN indexation_parameters jsonb NOT NULL DEFAULT '{"actions" : [], "entities" : [], "keywords" : []}';
 
+/* BASKETS LIST EVENT */
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event;
 ALTER TABLE groupbasket ADD COLUMN list_event character varying(255);
 
-/* REFACTORING */
+/* FOLDERS */
+ALTER TABLE folders RENAME TO folder_tmp;
+CREATE TABLE folders
+(
+  id serial NOT NULL,
+  label character varying(255) NOT NULL,
+  public boolean NOT NULL,
+  sharing jsonb DEFAULT '{"entities" : []}',
+  user_id INTEGER NOT NULL,
+  parent_id INTEGER,
+  CONSTRAINT folders_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+/* REFACTORING DATA */
+DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+DELETE FROM usergroups_reports WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+DELETE FROM usergroups_services WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+DELETE FROM security WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+DELETE FROM groupbasket WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+DELETE FROM groupbasket_redirect WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+DELETE FROM groupbasket_status WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+DELETE FROM users_baskets_preferences WHERE group_serial_id in (SELECT id FROM usergroups WHERE enabled = 'N');
+DELETE FROM usergroups WHERE enabled = 'N';
+
+/* REFACTORING MODIFICATION */
+ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
+
+/* REFACTORING SUPPRESSION */
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS converter_result;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS converter_result;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS convert_result;
@@ -61,19 +82,9 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS enabled;
-
-/* FOLDERS */
-
-ALTER TABLE folders RENAME TO folder_tmp;
-
-CREATE TABLE folders
-(
-  id serial NOT NULL,
-  label character varying(255) NOT NULL,
-  public boolean NOT NULL,
-  sharing jsonb DEFAULT '{"entities" : []}',
-  user_id INTEGER NOT NULL,
-  parent_id INTEGER,
-  CONSTRAINT folders_pkey PRIMARY KEY (id)
-)
-WITH (OIDS=FALSE);
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'users') AND attname = 'enabled') THEN
+    UPDATE users SET status = 'SPD' WHERE enabled = 'N' and (status = 'OK' or status = 'ABS');
+    ALTER TABLE users DROP COLUMN IF EXISTS enabled;
+  END IF;
+END$$;
