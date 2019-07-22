@@ -36,13 +36,14 @@ export class MenuShortcutComponent implements OnInit {
 
     ngOnInit(): void {      
         setTimeout(() => {
-            if(this.headerService.user.indexingGroups.length > 0) {
-                this.headerService.user.indexingGroups.forEach((group: any) => {
+            const index = this.headerService.shortcut.map(index => index.id).indexOf('indexing');
+            if(index > -1) {
+                this.headerService.shortcut[index].groups.forEach((group: any) => {
                     this.speedDialFabButtons.push({
                         icon: 'fa fa-plus',
                         tooltip: this.lang.indexingWithProfile+' '+ group.label,
                         label: group.label,
-                        id: group.groupId
+                        id: group.id
                     });
                 });
             }
