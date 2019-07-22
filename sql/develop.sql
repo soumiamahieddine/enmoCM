@@ -33,6 +33,7 @@ UPDATE res_version_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_re
 UPDATE res_version_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 
 /* GROUPS INDEXING */
+ALTER TABLE usergroups ALTER COLUMN group_desc DROP DEFAULT;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS can_index;
 ALTER TABLE usergroups ADD COLUMN can_index boolean NOT NULL DEFAULT FALSE;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS indexation_parameters;

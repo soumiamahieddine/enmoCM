@@ -151,6 +151,13 @@ class ActionController
             ActionModel::createCategories(['id' => $aArgs['id'], 'categories' => $body['actionCategories']]);
         }
 
+        if (!in_array($body['component'], ['confirmAction', 'closeMailAction'])) {
+            GroupModel::update([
+                'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{actions}', (indexation_parameters->'actions') - '{$aArgs['id']}')"],
+                'where'     => ['1=1']
+            ]);
+        }
+
         HistoryController::add([
             'tableName' => 'actions',
             'recordId'  => $aArgs['id'],
