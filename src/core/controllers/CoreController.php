@@ -85,6 +85,10 @@ class CoreController
         $user['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
         $user['indexingGroups'] = [];
 
+        $shortcuts = [
+            ['id' => 'home']
+        ];
+
         if ($GLOBALS['userId'] == 'superadmin') {
             $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
             foreach ($menu as $key => $value) {
@@ -96,20 +100,32 @@ class CoreController
             $menu = array_merge($menu, $menuModules);
         } else {
             $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
-            foreach ($menu as $value) {
-                if ($value['id'] == 'index_mlb') {
-                    foreach ($user['groups'] as $group) {
-                        if (GroupBasketModel::hasBasketByGroupId(['groupId' => $group['group_id'], 'basketId' => 'IndexingBasket'])) {
-                            $user['indexingGroups'][] = ['groupId' => $group['group_id'], 'label' => $group['group_desc']];
-                        }
-                    }
-                }
+        }
+
+        foreach ($menu as $value) {
+            if ($value['id'] == 'admin') {
+                $shortcuts[] = ['id' => 'administration'];
+            } elseif ($value['id'] == 'adv_search_mlb') {
+                $shortcuts[] = ['id' => 'search'];
             }
+        }
+        $indexingGroups = [];
+        foreach ($user['groups'] as $group) {
+            if ($group['can_index']) {
+                $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
+            }
+        }
+        if (!empty($indexingGroups)) {
+            $shortcuts[] = [
+                'id'        => 'indexing',
+                'groups'    => $indexingGroups
+            ];
         }
 
         return $response->withJson([
-            'user'  => $user,
-            'menu'  => $menu
+            'user'      => $user,
+            'menu'      => $menu,
+            'shortcuts' => $shortcuts
         ]);
     }
 

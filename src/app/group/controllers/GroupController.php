@@ -280,24 +280,28 @@ class GroupController
         $set = [];
         $indexationParameters = json_decode($group['indexation_parameters'], true);
 
-        if (!empty($body['canIndex']) && is_bool($body['canIndex'])) {
+        if (isset($body['canIndex']) && is_bool($body['canIndex'])) {
             $set['can_index'] = $body['canIndex'] ? 'true' : 'false';
         }
-        if (!empty($body['actions']) && is_array($body['actions'])) {
-            $countActions = ActionModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['actions']]]);
-            if ($countActions[0]['count'] != count($body['actions'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body actions contains invalid actions']);
+        if (isset($body['actions']) && is_array($body['actions'])) {
+            if (!empty($body['actions'])) {
+                $countActions = ActionModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['actions']]]);
+                if ($countActions[0]['count'] != count($body['actions'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Body actions contains invalid actions']);
+                }
             }
             $indexationParameters['actions'] = $body['actions'];
         }
-        if (!empty($body['entities']) && is_array($body['entities'])) {
-            $countEntities = EntityModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['entities']]]);
-            if ($countEntities[0]['count'] != count($body['entities'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body entities contains invalid entities']);
+        if (isset($body['entities']) && is_array($body['entities'])) {
+            if (!empty($body['entities'])) {
+                $countEntities = EntityModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['entities']]]);
+                if ($countEntities[0]['count'] != count($body['entities'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Body entities contains invalid entities']);
+                }
             }
             $indexationParameters['entities'] = $body['entities'];
         }
-        if (!empty($body['keywords']) && is_array($body['keywords'])) {
+        if (isset($body['keywords']) && is_array($body['keywords'])) {
             $indexationParameters['keywords'] = $body['keywords'];
         }
         $set['indexation_parameters'] = json_encode($indexationParameters);
