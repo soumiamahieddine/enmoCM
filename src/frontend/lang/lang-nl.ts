@@ -1065,11 +1065,12 @@ export const LANG_NL = {
     "userUnauthorized" : "User Unauthorized", //_TO_TRANSLATE
     "warnIndex" : "This group can not index document.", //_TO_TRANSLATE
     "authorizedEntities" : "Authorized entities destination", //_TO_TRANSLATE
-    "enableIndex" : "Activate document indexation for this group", //_TO_TRANSLATE
-    "disableIndex" : "Disable document indexation for this group", //_TO_TRANSLATE
-    "indexEnabled" : "Document indexation enabled", //_TO_TRANSLATE
-    "indexDisabled" : "Document indexation disabled", //_TO_TRANSLATE
-    "indexation" : "Document indexation", //_TO_TRANSLATE
+    "enableIndex" : "Activate mail indexing", //_TO_TRANSLATE
+    "disableIndex" : "Disable mail indexing", //_TO_TRANSLATE
+    "indexEnabled" : "Mail indexation enabled", //_TO_TRANSLATE
+    "indexDisabled" : "Mail indexation disabled", //_TO_TRANSLATE
+    "indexation" : "Mail indexation", //_TO_TRANSLATE
     "keywordAdded" : "Keyword added", //_TO_TRANSLATE
     "keywordDeleted" : "Keyword deleted", //_TO_TRANSLATE
+    "actionsInfo" : "Only actions with \"simple confirmation\" and \"close mail\" will be displayed", //_TO_TRANSLATE
 };

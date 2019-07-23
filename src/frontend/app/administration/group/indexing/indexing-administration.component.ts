@@ -127,6 +127,16 @@ export class IndexingAdministrationComponent implements OnInit {
             "plugins": ["checkbox", "search"]
         });
 
+        let to: any = false;
+        $j('#jstree_search').keyup(function () {
+            if (to) { clearTimeout(to); }
+            to = setTimeout(function () {
+                const v = $j('#jstree_search').val();
+                $j('#jstree').jstree(true).search(v);
+            }, 250);
+        });
+
+
         $j('#jstree')
             // listen for event
             .on('select_node.jstree', (e: any, data: any) => {
@@ -153,7 +163,7 @@ export class IndexingAdministrationComponent implements OnInit {
                 entity.state = { "opened": true, "selected": true };
             } else {
                 entity.state = { "opened": true, "selected": false };
-            } 
+            }
         });
         data.entities = this.keywordEntities.concat(data.entities);
         return data;
@@ -186,8 +196,8 @@ export class IndexingAdministrationComponent implements OnInit {
 
     addEntity(entityId: number) {
         const newEntityList = this.indexingInfo.entities.concat([entityId]);
-        
-        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { entities : newEntityList }).pipe(
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { entities: newEntityList }).pipe(
             tap(() => {
                 this.indexingInfo.entities.push(entityId);
             }),
@@ -198,7 +208,7 @@ export class IndexingAdministrationComponent implements OnInit {
                 this.notify.handleErrors(err);
                 return of(false);
             })
-        ).subscribe();  
+        ).subscribe();
     }
 
     removeEntity(entityId: number) {
@@ -206,7 +216,7 @@ export class IndexingAdministrationComponent implements OnInit {
         let newEntityList = [...this.indexingInfo.entities];
         newEntityList.splice(index, 1);
 
-        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { entities : newEntityList }).pipe(
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { entities: newEntityList }).pipe(
             tap(() => {
                 this.indexingInfo.entities.splice(index, 1);
             }),
@@ -217,13 +227,13 @@ export class IndexingAdministrationComponent implements OnInit {
                 this.notify.handleErrors(err);
                 return of(false);
             })
-        ).subscribe();  
+        ).subscribe();
     }
 
     addKeyword(keyword: string) {
         const newKeywordList = this.indexingInfo.keywords.concat([keyword]);
-        
-        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { keywords : newKeywordList }).pipe(
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { keywords: newKeywordList }).pipe(
             tap(() => {
                 this.indexingInfo.keywords.push(keyword);
             }),
@@ -234,7 +244,7 @@ export class IndexingAdministrationComponent implements OnInit {
                 this.notify.handleErrors(err);
                 return of(false);
             })
-        ).subscribe();  
+        ).subscribe();
     }
 
     removeKeyword(keyword: string) {
@@ -242,7 +252,7 @@ export class IndexingAdministrationComponent implements OnInit {
         let newKeywordList = [...this.indexingInfo.keywords];
         newKeywordList.splice(index, 1);
 
-        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { keywords : newKeywordList }).pipe(
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { keywords: newKeywordList }).pipe(
             tap(() => {
                 this.indexingInfo.keywords.splice(index, 1);
             }),
@@ -253,16 +263,16 @@ export class IndexingAdministrationComponent implements OnInit {
                 this.notify.handleErrors(err);
                 return of(false);
             })
-        ).subscribe(); 
+        ).subscribe();
     }
 
     addAction(actionOpt: any) {
         const newActionListIds = this.indexingInfo.actions.map((action: any) => action.id).concat([actionOpt].map((action: any) => action.id));
 
-        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { actions : newActionListIds }).pipe(
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { actions: newActionListIds }).pipe(
             tap(() => {
                 const index = this.actionList.findIndex(action => action.id === actionOpt.id);
-                const action = {...this.actionList[index]};
+                const action = { ...this.actionList[index] };
                 this.indexingInfo.actions.push(action);
                 this.actionList.splice(index, 1);
             }),
@@ -273,12 +283,12 @@ export class IndexingAdministrationComponent implements OnInit {
                 this.notify.handleErrors(err);
                 return of(false);
             })
-        ).subscribe();   
+        ).subscribe();
     }
 
     removeAction(index: number) {
         this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
-        
+
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             map(() => {
@@ -287,7 +297,7 @@ export class IndexingAdministrationComponent implements OnInit {
                 newActionList.splice(index, 1);
                 return newActionList.map((action: any) => action.id);
             }),
-            exhaustMap((data) => this.http.put('../../rest/groups/' + this.groupId + '/indexing', { actions : data})),
+            exhaustMap((data) => this.http.put('../../rest/groups/' + this.groupId + '/indexing', { actions: data })),
             tap(() => {
                 this.actionList.push(this.indexingInfo.actions[index]);
                 this.indexingInfo.actions.splice(index, 1);
@@ -304,7 +314,7 @@ export class IndexingAdministrationComponent implements OnInit {
 
     toggleIndex(canIndex: boolean) {
 
-        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { canIndex : canIndex }).pipe(
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { canIndex: canIndex }).pipe(
             tap(() => {
                 this.indexingInfo.canIndex = canIndex;
             }),
@@ -319,7 +329,7 @@ export class IndexingAdministrationComponent implements OnInit {
                 this.notify.handleErrors(err);
                 return of(false);
             })
-        ).subscribe();   
+        ).subscribe();
     }
 
 }

@@ -10,6 +10,10 @@
     width: 100%;
 }
 
+.infoActions {
+    font-size: 80%;
+}
+
 .selectedAction {
 
     height: 70px;
@@ -52,4 +56,10 @@
 
 a {
     cursor: pointer;
+}
+
+.jstreeEntities {
+    .mat-form-field-appearance-outline {
+        font-size: 11px;
+    }
 }
