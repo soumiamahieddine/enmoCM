@@ -24,9 +24,6 @@ CREATE TABLE actions
   action_page character varying(255),
   component CHARACTER VARYING (128),
   history character(1) NOT NULL DEFAULT 'N'::bpchar,
-  origin character varying(255) NOT NULL DEFAULT 'apps'::bpchar,
-  create_id  character(1) NOT NULL DEFAULT 'N'::bpchar,
-  category_id character varying(255),
   CONSTRAINT actions_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

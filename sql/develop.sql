@@ -24,6 +24,7 @@ UPDATE res_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1
 UPDATE res_version_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_version_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 
+
 /* GROUPS INDEXING */
 ALTER TABLE usergroups ALTER COLUMN group_desc DROP DEFAULT;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS can_index;
@@ -31,9 +32,37 @@ ALTER TABLE usergroups ADD COLUMN can_index boolean NOT NULL DEFAULT FALSE;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS indexation_parameters;
 ALTER TABLE usergroups ADD COLUMN indexation_parameters jsonb NOT NULL DEFAULT '{"actions" : [], "entities" : [], "keywords" : []}';
 
+
 /* BASKETS LIST EVENT */
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event;
 ALTER TABLE groupbasket ADD COLUMN list_event character varying(255);
+UPDATE groupbasket SET list_event = 'processDoc'
+FROM (
+       SELECT basket_id, group_id
+       FROM actions_groupbaskets ag
+         LEFT JOIN actions a ON ag.id_action = a.id
+       WHERE ag.default_action_list = 'Y' AND a.action_page in ('validate_mail', 'process')
+     ) AS subquery
+WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
+UPDATE groupbasket SET list_event = 'viewDoc'
+FROM (
+       SELECT basket_id, group_id
+       FROM actions_groupbaskets ag
+         LEFT JOIN actions a ON ag.id_action = a.id
+       WHERE ag.default_action_list = 'Y' AND a.component = 'viewDoc'
+     ) AS subquery
+WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
+UPDATE groupbasket SET list_event = 'visaMail'
+FROM (
+       SELECT basket_id, group_id
+       FROM actions_groupbaskets ag
+         LEFT JOIN actions a ON ag.id_action = a.id
+       WHERE ag.default_action_list = 'Y' AND a.action_page in ('visa_mail')
+     ) AS subquery
+WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
+UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
+DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
+
 
 /* FOLDERS */
 ALTER TABLE folders RENAME TO folder_tmp;
@@ -49,6 +78,7 @@ CREATE TABLE folders
 )
 WITH (OIDS=FALSE);
 
+
 /* REFACTORING DATA */
 DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
 DELETE FROM usergroups_reports WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
@@ -60,10 +90,18 @@ DELETE FROM groupbasket_status WHERE group_id in (SELECT group_id FROM usergroup
 DELETE FROM users_baskets_preferences WHERE group_serial_id in (SELECT id FROM usergroups WHERE enabled = 'N');
 DELETE FROM usergroups WHERE enabled = 'N';
 
+
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 
+
 /* REFACTORING SUPPRESSION */
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'users') AND attname = 'enabled') THEN
+    UPDATE users SET status = 'SPD' WHERE enabled = 'N' and (status = 'OK' or status = 'ABS');
+    ALTER TABLE users DROP COLUMN IF EXISTS enabled;
+  END IF;
+END$$;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS converter_result;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS converter_result;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS convert_result;
@@ -82,56 +120,6 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS enabled;
-
-/* FOLDERS */
-
-ALTER TABLE folders RENAME TO folder_tmp;
-
-CREATE TABLE folders
-(
-  id serial NOT NULL,
-  label character varying(255) NOT NULL,
-  public boolean NOT NULL,
-  sharing jsonb DEFAULT '{"entities" : []}',
-  user_id INTEGER NOT NULL,
-  parent_id INTEGER,
-  CONSTRAINT folders_pkey PRIMARY KEY (id)
-)
-WITH (OIDS=FALSE);
-
-UPDATE groupbasket SET list_event = 'processDoc'
-FROM (
-    SELECT basket_id, group_id 
-    FROM actions_groupbaskets ag
-    LEFT JOIN actions a ON ag.id_action = a.id
-    WHERE ag.default_action_list = 'Y' AND a.action_page in ('validate_mail', 'process')
-) AS subquery
-WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
-
-UPDATE groupbasket SET list_event = 'viewDoc'
-FROM (
-    SELECT basket_id, group_id 
-    FROM actions_groupbaskets ag
-    LEFT JOIN actions a ON ag.id_action = a.id
-    WHERE ag.default_action_list = 'Y' AND a.component = 'viewDoc'
-) AS subquery
-WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
-
-UPDATE groupbasket SET list_event = 'visaMail'
-FROM (
-    SELECT basket_id, group_id 
-    FROM actions_groupbaskets ag
-    LEFT JOIN actions a ON ag.id_action = a.id
-    WHERE ag.default_action_list = 'Y' AND a.action_page in ('visa_mail')
-) AS subquery
-WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
-
-UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
-DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
-
-DO $$ BEGIN
-  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'users') AND attname = 'enabled') THEN
-    UPDATE users SET status = 'SPD' WHERE enabled = 'N' and (status = 'OK' or status = 'ABS');
-    ALTER TABLE users DROP COLUMN IF EXISTS enabled;
-  END IF;
-END$$;
+ALTER TABLE actions DROP COLUMN IF EXISTS origin;
+ALTER TABLE actions DROP COLUMN IF EXISTS create_id;
+ALTER TABLE actions DROP COLUMN IF EXISTS category_id;
