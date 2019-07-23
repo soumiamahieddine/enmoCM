@@ -414,7 +414,7 @@ export class BasketListComponent implements OnInit {
         this.toggleRes(thisSelect, row);
         
         setTimeout(() => {
-            this.actionsList.launchEvent(action);
+            this.actionsList.launchEvent(action, row);
         }, 200);
         
     }

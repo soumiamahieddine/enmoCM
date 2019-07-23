@@ -136,7 +136,7 @@ export class ListAdministrationComponent implements OnInit {
         },        
         {
             id: 'eventVisaMail',
-            value: 'visaMail'
+            value: 'signatureBookAction'
         },        
         {
             id: 'eventProcessDoc',

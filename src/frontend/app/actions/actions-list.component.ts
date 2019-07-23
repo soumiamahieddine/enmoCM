@@ -71,7 +71,7 @@ export class ActionsListComponent implements OnInit {
         return false;
     }
 
-    launchEvent(action: any) {
+    launchEvent(action: any, row: any) {
         this.arrRes = [];
         this.currentAction = action;
 
@@ -82,10 +82,14 @@ export class ActionsListComponent implements OnInit {
             this.contextMenuTitle = '';
             this.contextResId = 0;
         }
+        
+        if (row !== undefined){
+            this.contextMenuTitle = row.alt_identifier;
+        }
 
         if (action.component == 'v1Action' && this.arrRes.length > 1) {
             alert(this.lang.actionMassForbidden);
-        } else {
+        } else if (action.component !== null) {
             
             this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
                 .subscribe((data: any) => {
