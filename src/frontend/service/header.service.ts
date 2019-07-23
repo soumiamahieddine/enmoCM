@@ -45,7 +45,7 @@ export class HeaderService {
     }
 
     refreshShortcuts() {
-        this.shortcut = [];
+        this.shortcut = null;
         this.getShortcut();
     }
 
