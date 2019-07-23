@@ -5,7 +5,6 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { FormControl } from '@angular/forms';
 import { AppService } from '../../../service/app.service';
 
@@ -339,16 +338,12 @@ export class BasketAdministrationComponent implements OnInit {
     templateUrl: "basket-administration-settings-modal.component.html",
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
-export class BasketAdministrationSettingsModalComponent extends AutoCompletePlugin {
+export class BasketAdministrationSettingsModalComponent {
 
     lang: any = LANG;
     allEntities: any[] = [];
-    statuses: any;
-    selectedStatuses: any[] = [];
-    statusCtrl = new FormControl();
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
-        super(http, ['statuses']);
     }
 
     @ViewChild('statusInput') statusInput: ElementRef;
@@ -423,36 +418,6 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
             }, () => {
                 location.href = "index.php";
             });
-        this.http.get(this.coreUrl + 'rest/statuses')
-            .subscribe((response: any) => {
-                this.statuses = response.statuses;
-                response.statuses.forEach((status: any) => {
-                    if (this.data.action.statuses.indexOf(status.id) > -1) {
-                        this.selectedStatuses[this.data.action.statuses.indexOf(status.id)] = { idToDisplay: status.label_status, id: status.id };
-                    }
-                });
-            });
-    }
-
-    remove(index: number): void {
-        this.selectedStatuses.splice(index, 1);
-        this.statusCtrl.setValue(null);
-        this.statusInput.nativeElement.value = '';
-    }
-
-    add(status: any): void {
-        let isIn = false;
-
-        this.selectedStatuses.forEach((statusList: any) => {
-            if (status.id == statusList.id) {
-                isIn = true;
-            }
-        });
-        if (!isIn) {
-            this.selectedStatuses.push(status);
-            this.statusCtrl.setValue(null);
-            this.statusInput.nativeElement.value = '';
-        }
     }
 
     initService() {
@@ -578,10 +543,6 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     }
 
     saveSettings() {
-        this.data.action.statuses = [];
-        this.selectedStatuses.forEach((status: any) => {
-            this.data.action.statuses.push(status.id);
-        });
         this.dialogRef.close(this.data);
     }
 }

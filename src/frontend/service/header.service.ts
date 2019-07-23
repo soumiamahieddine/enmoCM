@@ -36,7 +36,6 @@ export class HeaderService {
         this.http.get('../../rest/shortcuts').pipe(
             filter(() => this.shortcut === null),
             tap((data: any) => this.setShortcut(data.shortcuts)),
-            tap(() => console.log(this.shortcut)),
             catchError((err: any) => {
                 console.log(err);
                 return of(false);

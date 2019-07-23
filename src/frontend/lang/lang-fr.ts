@@ -1080,4 +1080,8 @@ export const LANG_FR = {
     "keywordAdded" : "Mot-clé ajouté",
     "keywordDeleted" : "Mot-clé supprimé",
     "actionsInfo" : "Seule les actions avec \"confirmation simple\" et \"clôturer un courrier\" seront affichés",
+    "noEventList" : "Ne rien faire",
+    "eventVisaMail" : "Parapheur",
+    "eventProcessDoc" : "Fiche de traitement",
+    "eventViewDoc" : "Visionneuse de document",
 };
