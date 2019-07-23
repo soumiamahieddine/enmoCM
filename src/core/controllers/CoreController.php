@@ -127,13 +127,18 @@ class CoreController
                 $shortcuts[] = ['id' => 'search'];
             }
         }
+
+        $indexingGroups = [];
         foreach ($userGroups as $group) {
             if ($group['can_index']) {
-                $shortcuts[] = [
-                    'id'        => 'indexing',
-                    'groups'    => ['id' => $group['id'], 'label' => $group['group_desc']]
-                ];
+                $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
             }
+        }
+        if (!empty($indexingGroups)) {
+            $shortcuts[] = [
+                'id'        => 'indexing',
+                'groups'    => $indexingGroups
+            ];
         }
 
         return $response->withJson([
