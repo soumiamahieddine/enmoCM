@@ -7,6 +7,7 @@ import { map, catchError, filter, exhaustMap, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
+import { HeaderService } from '../../../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -38,6 +39,7 @@ export class IndexingAdministrationComponent implements OnInit {
 
     constructor(public http: HttpClient,
         private notify: NotificationService,
+        private headerService: HeaderService,
         private dialog: MatDialog,
     ) {
 
@@ -317,6 +319,7 @@ export class IndexingAdministrationComponent implements OnInit {
         this.http.put('../../rest/groups/' + this.groupId + '/indexing', { canIndex: canIndex }).pipe(
             tap(() => {
                 this.indexingInfo.canIndex = canIndex;
+                this.headerService.refreshShortcuts();
             }),
             tap(() => {
                 if (this.indexingInfo.canIndex) {

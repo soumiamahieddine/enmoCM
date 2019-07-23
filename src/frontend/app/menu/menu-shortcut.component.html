@@ -31,13 +31,13 @@
     <h3 mat-subheader>{{lang.shortcut}}</h3>
     <div class="button-row" style="padding-left: 10px;padding-right: 10px;display: flex;width: 300px;margin-top: -10px;margin-bottom: 10px;">
         <ng-container *ngFor="let shortcut of headerService.shortcut">
-            <span style="flex:1;text-align: left;padding: 5px;" *ngIf="(shortcut.id == 'indexing' && speedDialFabButtons.length<=1) || (shortcut.id != 'indexing')">
+            <span style="flex:1;text-align: left;padding: 5px;" *ngIf="(shortcut.id == 'indexing' && shortcut.groups.length<=1) || (shortcut.id != 'indexing')">
                 <button style="z-index: 9999;" color="default" mat-fab (click)="gotToMenu(shortcut);" matTooltip="{{shortcut.name}}"
                     matTooltipPosition="above">
                     <mat-icon class="fa {{shortcut.style}}" style="height:auto;font-size:22px;"></mat-icon>
                 </button>
             </span>
-            <span style="flex:1;text-align: left;padding: 5px;position: relative;" *ngIf="shortcut.id=='indexing' && speedDialFabButtons.length>1">
+            <span style="flex:1;text-align: left;padding: 5px;position: relative;" *ngIf="shortcut.id=='indexing' && shortcut.groups.length>1">
                 <smd-fab-speed-dial #myFab direction="down" animationMode="fling" fixed="false" (mouseenter)="myFab.open = true"
                     (mouseleave)="myFab.open = false">
                     <smd-fab-trigger spin="true">
@@ -47,9 +47,9 @@
                     </smd-fab-trigger>
 
                     <smd-fab-actions>
-                        <button color="primary" mat-mini-fab (click)="onSpeedDialFabClicked(button,shortcut)" *ngFor="let button of speedDialFabButtons">
-                            <span class="speedDialLabel" color="primary" style="display:none;position: absolute;margin-left: 20px;margin-top: -5px;">{{button.label}}</span>
-                            <mat-icon class="{{button.icon}}"></mat-icon>
+                        <button color="primary" mat-mini-fab (click)="onSpeedDialFabClicked(group,shortcut)" *ngFor="let group of shortcut.groups">
+                            <span class="speedDialLabel" color="primary" style="display:none;position: absolute;margin-left: 20px;margin-top: -5px;">{{group.label}}</span>
+                            <mat-icon class="fa fa-plus"></mat-icon>
                         </button>
                     </smd-fab-actions>
                 </smd-fab-speed-dial>

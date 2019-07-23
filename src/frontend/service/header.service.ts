@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../app/translate.component';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class HeaderService {
     subHeaderMessage: string = "";
     user: any = { firstname: "", lastname: "" };
     menu: any[] = [];
-    shortcut: any[] = [];
+    shortcut: any[] = null;
     shortcutIcon: any = {
         home: 'fa fa-home',
         administration: 'fa fa-cogs',
@@ -25,12 +25,28 @@ export class HeaderService {
         this.http.get('../../rest/header').pipe(
             tap((data: any) => this.setUser(data.user)),
             tap((data: any) => this.setMenu(data.menu)),
-            tap((data: any) => this.setShortcut(data.shortcuts)),
             catchError((err: any) => {
-                console.log(err.error.errors);
+                console.log(err);
                 return of(false);
             })
         ).subscribe();
+    }
+
+    getShortcut() {
+        this.http.get('../../rest/shortcuts').pipe(
+            filter(() => this.shortcut === null),
+            tap((data: any) => this.setShortcut(data.shortcuts)),
+            tap(() => console.log(this.shortcut)),
+            catchError((err: any) => {
+                console.log(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    refreshShortcuts() {
+        this.shortcut = [];
+        this.getShortcut();
     }
 
     setUser(user: any) {
@@ -53,6 +69,7 @@ export class HeaderService {
     }
 
     setShortcut(shortcuts: any) {
+        this.shortcut = [];
         shortcuts.forEach((element: any) => {
             if (['indexing', 'search'].indexOf(element.id) > -1) {
                 // TO DO : DELETE AFTER FULL V2

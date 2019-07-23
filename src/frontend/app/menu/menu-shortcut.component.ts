@@ -34,24 +34,12 @@ export class MenuShortcutComponent implements OnInit {
         /**/
     }
 
-    ngOnInit(): void {      
-        setTimeout(() => {
-            const index = this.headerService.shortcut.map(index => index.id).indexOf('indexing');
-            if(index > -1) {
-                this.headerService.shortcut[index].groups.forEach((group: any) => {
-                    this.speedDialFabButtons.push({
-                        icon: 'fa fa-plus',
-                        tooltip: this.lang.indexingWithProfile+' '+ group.label,
-                        label: group.label,
-                        id: group.id
-                    });
-                });
-            }
-        }, 500);
+    ngOnInit(): void {
+        this.headerService.getShortcut();
     }
 
-    onSpeedDialFabClicked(btn: any, shortcut:any) {
-        location.href = shortcut.servicepage+'&groupId='+btn.id;
+    onSpeedDialFabClicked(group: any, shortcut:any) {
+        location.href = shortcut.servicepage+'&groupId='+group.id;
     }
 
     gotToMenu(shortcut:any) {
