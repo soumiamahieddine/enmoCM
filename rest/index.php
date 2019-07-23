@@ -184,6 +184,13 @@ $app->put('/groups/{id}/indexing', \Group\controllers\GroupController::class . '
 $app->put('/groups/{id}/services/{serviceId}', \Group\controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
 
+//Folders
+$app->get('/folders', \Folder\controllers\FolderController::class . ':get');
+$app->post('/folders', \Folder\controllers\FolderController::class . ':create');
+$app->get('/folders/{id}', \Folder\controllers\FolderController::class . ':getById');
+$app->put('/folders/{id}', \Folder\controllers\FolderController::class . ':update');
+$app->delete('/folders/{id}', \Folder\controllers\FolderController::class . ':delete');
+
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');

@@ -66,6 +66,7 @@ DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 
 /* FOLDERS */
 ALTER TABLE folders RENAME TO folder_tmp;
+ALTER TABLE folder_tmp RENAME CONSTRAINT folders_pkey to folders_tmp_pkey;
 CREATE TABLE folders
 (
   id serial NOT NULL,
