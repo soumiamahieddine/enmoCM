@@ -83,7 +83,30 @@ class CoreController
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
-        $user['indexingGroups'] = [];
+
+        if ($GLOBALS['userId'] == 'superadmin') {
+            $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
+            foreach ($menu as $key => $value) {
+                if ($value['id'] == 'index_mlb') {
+                    unset($menu[$key]);
+                    break;
+                }
+            }
+            $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
+            $menu = array_merge($menu, $menuModules);
+        } else {
+            $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+        }
+
+        return $response->withJson([
+            'user'      => $user,
+            'menu'      => $menu
+        ]);
+    }
+
+    public function getShortcuts(Request $request, Response $response)
+    {
+        $userGroups = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
 
         $shortcuts = [
             ['id' => 'home']
@@ -91,11 +114,6 @@ class CoreController
 
         if ($GLOBALS['userId'] == 'superadmin') {
             $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
-            foreach ($menu as $key => $value) {
-                if ($value['id'] == 'index_mlb' && $GLOBALS['userId'] == 'superadmin') {
-                    unset($menu[$key]);
-                }
-            }
             $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
             $menu = array_merge($menu, $menuModules);
         } else {
@@ -109,22 +127,16 @@ class CoreController
                 $shortcuts[] = ['id' => 'search'];
             }
         }
-        $indexingGroups = [];
-        foreach ($user['groups'] as $group) {
+        foreach ($userGroups as $group) {
             if ($group['can_index']) {
-                $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
+                $shortcuts[] = [
+                    'id'        => 'indexing',
+                    'groups'    => ['id' => $group['id'], 'label' => $group['group_desc']]
+                ];
             }
-        }
-        if (!empty($indexingGroups)) {
-            $shortcuts[] = [
-                'id'        => 'indexing',
-                'groups'    => $indexingGroups
-            ];
         }
 
         return $response->withJson([
-            'user'      => $user,
-            'menu'      => $menu,
             'shortcuts' => $shortcuts
         ]);
     }

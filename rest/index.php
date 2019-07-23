@@ -190,6 +190,7 @@ $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryControl
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
+$app->get('/shortcuts', \SrcCore\controllers\CoreController::class . ':getShortcuts');
 
 //Home
 $app->get('/home', \Home\controllers\HomeController::class . ':get');
