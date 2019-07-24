@@ -39,7 +39,7 @@ export class FolderTreeComponent implements OnInit {
         return {
             expandable: !!node.children && node.children.length > 0,
             id: node.id,
-            parent: node.parent,
+            parent: node.parent_id,
             label: node.label,
             level: level,
         };
@@ -75,7 +75,6 @@ export class FolderTreeComponent implements OnInit {
                         this.treeControl.expand(this.treeControl.dataNodes[indexSelectedFolder]);
                     }
                 }
-
                 return data;
             }),
         ).subscribe();
@@ -114,9 +113,12 @@ export class FolderTreeComponent implements OnInit {
                 initial.nested.push(value)
             }
             else {
-                let parentFound = this.findParent(initial.nested, value)
-                if (parentFound) this.checkLeftOvers(initial.left, value)
-                else initial.left.push(value)
+                let parentFound = this.findParent(initial.nested, value);
+                if (parentFound) {
+                    this.checkLeftOvers(initial.left, value);
+                } else {
+                    initial.left.push(value);
+                }
             }
             return index < original.length - 1 ? initial : initial.nested
         }, { nested: [], left: [] })
@@ -126,7 +128,7 @@ export class FolderTreeComponent implements OnInit {
     checkLeftOvers(leftOvers: any, possibleParent: any) {
         for (let i = 0; i < leftOvers.length; i++) {
             if (leftOvers[i].parent_id === possibleParent.id) {
-                delete leftOvers[i].parent_id;
+                // delete leftOvers[i].parent_id;
                 possibleParent.children ? possibleParent.children.push(leftOvers[i]) : possibleParent.children = [leftOvers[i]];
                 possibleParent.count = possibleParent.children.length;
                 const addedObj = leftOvers.splice(i, 1);
@@ -140,7 +142,7 @@ export class FolderTreeComponent implements OnInit {
         for (let i = 0; i < possibleParents.length; i++) {
             if (possibleParents[i].id === possibleChild.parent_id) {
                 found = true;
-                delete possibleChild.parent_id;
+                //delete possibleChild.parent_id;
                 if (possibleParents[i].children) {
                     possibleParents[i].children.push(possibleChild);
                 } else {
