@@ -40,7 +40,7 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
         if (!empty($login)) {
             \SrcCore\controllers\CoreController::setGlobals(['login' => $login]);
             if (!empty($currentRoute)) {
-                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $login, 'currentRoute' => $currentRoute]);
+                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['login' => $login, 'currentRoute' => $currentRoute]);
                 if (!$r['isRouteAvailable']) {
                     return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
                 }

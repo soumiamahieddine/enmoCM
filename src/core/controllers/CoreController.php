@@ -162,7 +162,7 @@ class CoreController
     public static function setGlobals(array $args)
     {
         ValidatorModel::notEmpty($args, ['login']);
-        ValidatorModel::intVal($args, ['login']);
+        ValidatorModel::stringType($args, ['login']);
 
         $user = UserModel::getByLogin(['login' => $args['login'], 'select' => ['id']]);
         $GLOBALS['userId'] = $args['login'];

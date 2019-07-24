@@ -188,7 +188,7 @@ class core_tools extends functions
             $stmt = $db->query(
                 'select id, label_action from '
                 .$_SESSION['tablename']['actions']
-                ." where enabled = 'Y' and history = 'Y'"
+                ." where history = 'Y'"
             );
             while ($res = $stmt->fetchObject()) {
                 array_push(

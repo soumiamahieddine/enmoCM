@@ -90,6 +90,10 @@ DELETE FROM groupbasket_redirect WHERE group_id in (SELECT group_id FROM usergro
 DELETE FROM groupbasket_status WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
 DELETE FROM users_baskets_preferences WHERE group_serial_id in (SELECT id FROM usergroups WHERE enabled = 'N');
 DELETE FROM usergroups WHERE enabled = 'N';
+DELETE FROM actions_categories WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
+DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE enabled = 'N');
+DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
+DELETE FROM actions WHERE enabled = 'N';
 
 
 /* REFACTORING MODIFICATION */
@@ -121,6 +125,7 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS enabled;
+ALTER TABLE actions DROP COLUMN IF EXISTS enabled;
 ALTER TABLE actions DROP COLUMN IF EXISTS origin;
 ALTER TABLE actions DROP COLUMN IF EXISTS create_id;
 ALTER TABLE actions DROP COLUMN IF EXISTS category_id;
