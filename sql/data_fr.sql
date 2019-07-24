@@ -815,10 +815,6 @@ DELETE FROM baskets WHERE basket_id = 'QualificationBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'QualificationBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'QualificationBasket';
 INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('QualificationBasket', 'Courriers à qualifier', 'Bannette de qualification', 'status=''INIT''', 'letterbox_coll', 'Y', 'N', 'Y',10);
-DELETE FROM baskets WHERE basket_id = 'IndexingBasket';
-DELETE FROM actions_groupbaskets WHERE basket_id = 'IndexingBasket';
-DELETE FROM groupbasket_redirect WHERE basket_id = 'IndexingBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('IndexingBasket', 'Courriers à indexer', 'Bannette d''indexation', '1=0', 'letterbox_coll', 'Y', 'N', 'Y',20);
 DELETE FROM baskets WHERE basket_id = 'NumericBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'NumericBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'NumericBasket';
@@ -908,10 +904,6 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 TRUNCATE TABLE groupbasket;
 DELETE FROM groupbasket WHERE basket_id = 'QualificationBasket';
 INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('COURRIER', 'QualificationBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
-DELETE FROM groupbasket WHERE basket_id = 'IndexingBasket';
-INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('COURRIER', 'IndexingBasket', '[]');
-INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'IndexingBasket', '[]');
-INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'IndexingBasket', '[]');
 DELETE FROM groupbasket WHERE basket_id = 'CopyMailBasket';
 INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'CopyMailBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'CopyMailBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
@@ -1285,7 +1277,6 @@ ORDER BY users.id;
 --ACTIONS_GROUPBASKETS
 ------------
 TRUNCATE TABLE actions_groupbaskets;
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'COURRIER', 'IndexingBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (24, '', 'COURRIER', 'RetourCourrier', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'COURRIER', 'RetourCourrier', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (531, '', 'COURRIER', 'RetourCourrier', 'N', 'Y', 'N');
@@ -1319,7 +1310,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'AGENT', 'RetAvisBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (5, '', 'AGENT', 'RetAvisBasket', 'Y', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'AGENT', 'IndexingBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (37, '', 'AGENT', 'DdeAvisBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'AGENT', 'DdeAvisBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'AGENT', 'SupAvisBasket', 'Y', 'Y', 'Y');
@@ -1358,7 +1348,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'RESPONSABLE', 'DepartmentBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'RESPONSABLE', 'DepartmentBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'RESPONSABLE', 'DepartmentBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'RESPONSABLE', 'IndexingBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (37, '', 'RESPONSABLE', 'DdeAvisBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'RESPONSABLE', 'DdeAvisBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'RESPONSABLE', 'SupAvisBasket', 'Y', 'Y', 'Y');
@@ -1380,7 +1369,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (5, '', 'RESPONSABLE', 'SendToSignatoryBook', 'Y', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'ELU', 'MyBasket', 'Y', 'Y', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'ELU', 'IndexingBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (37, '', 'ELU', 'DdeAvisBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'ELU', 'DdeAvisBasket', 'Y', 'Y', 'Y');
 
@@ -1406,8 +1394,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 --GROUPBASKET_REDIRECT
 ------------
 TRUNCATE TABLE groupbasket_redirect;
-INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'IndexingBasket', 112, '', 'MY_ENTITIES', 'ENTITY');
-INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'IndexingBasket', 112, '', 'ENTITIES_BELOW', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'MyBasket', 1, '', 'MY_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'MyBasket', 1, '', 'ENTITIES_BELOW', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'MyBasket', 1, '', 'ENTITIES_JUST_UP', 'ENTITY');
@@ -1427,25 +1413,16 @@ INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, key
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('RESPONSABLE', 'DepartmentBasket', 1, '', 'MY_ENTITIES', 'USERS');
 
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('ELU', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
-INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('ELU', 'IndexingBasket', 112, '', 'ALL_ENTITIES', 'ENTITY');
 Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 from groupbasket_redirect), false);
 
 ------------
 --GROUPBASKET_STATUS
 ------------
 TRUNCATE TABLE groupbasket_status;
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'IndexingBasket', 112, 'VAL', 1);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'IndexingBasket', 112, 'NEW', 2);
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'QualificationBasket', 18, 'VAL', 4);
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'QualificationBasket', 18, 'NEW', 5);
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'NumericBasket', 18, 'VAL', 6);
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'NumericBasket', 18, 'NEW', 7);
-
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('AGENT', 'IndexingBasket', 112, 'END',1);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('AGENT', 'IndexingBasket', 112, 'NEW',2);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'END',1);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'NEW',2);
-Select setval('groupbasket_status_system_id_seq', (select max(system_id)+1 from groupbasket_status), false);
 
 ------------
 --FOLDERTYPES

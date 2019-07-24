@@ -290,11 +290,7 @@ class BasketController
             $groups[$key]['groupActions'] = $actionsForGroup;
         }
 
-        if ($aArgs['id'] == 'IndexingBasket') {
-            $basketPages = BasketModel::getBasketPages();
-        } else {
-            $basketPages = BasketModel::getBasketPages(['unneeded' => ['redirect_to_action']]);
-        }
+        $basketPages = BasketModel::getBasketPages(['unneeded' => ['redirect_to_action']]);
 
         return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages]);
     }

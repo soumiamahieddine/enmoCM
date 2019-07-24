@@ -104,7 +104,7 @@ class UserController
         $user['allGroups']          = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities']           = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities']        = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
-        $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['history']            = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
@@ -445,7 +445,7 @@ class UserController
         $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups']             = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
         $user['entities']           = UserModel::getEntitiesById(['userId' => $user['user_id']]);
-        $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['regroupedBaskets']   = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
@@ -620,7 +620,7 @@ class UserController
 
         return $response->withJson([
             'redirectedBaskets' => RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $aArgs['id']]),
-            'baskets'           => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
+            'baskets'           => BasketModel::getBasketsByLogin(['login' => $user['user_id']])
         ]);
     }
 
@@ -668,7 +668,7 @@ class UserController
         DatabaseModel::commitTransaction();
 
         return $response->withJson([
-            'baskets'   => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
+            'baskets'   => BasketModel::getBasketsByLogin(['login' => $user['user_id']])
         ]);
     }
 
@@ -951,7 +951,7 @@ class UserController
 
         return $response->withJson([
             'groups'    => UserModel::getGroupsByLogin(['login' => $user['user_id']]),
-            'baskets'   => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
+            'baskets'   => BasketModel::getBasketsByLogin(['login' => $user['user_id']])
         ]);
     }
 
@@ -1019,7 +1019,7 @@ class UserController
 
         return $response->withJson([
             'groups'            => UserModel::getGroupsByLogin(['login' => $user['user_id']]),
-            'baskets'           => BasketModel::getBasketsByLogin(['login' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]),
+            'baskets'           => BasketModel::getBasketsByLogin(['login' => $user['user_id']]),
             'redirectedBaskets' => RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $aArgs['id']]),
         ]);
     }

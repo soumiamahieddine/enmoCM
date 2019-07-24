@@ -697,7 +697,7 @@ class ResController
             }
         }
 
-        $baskets = BasketModel::getBasketsByLogin(['login' => $aArgs['userId'], 'unneededBasketId' => ['IndexingBasket']]);
+        $baskets = BasketModel::getBasketsByLogin(['login' => $aArgs['userId']]);
         $basketsClause = '';
         foreach ($baskets as $basket) {
             if (!empty($basket['basket_clause'])) {

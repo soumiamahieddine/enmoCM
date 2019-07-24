@@ -44,9 +44,6 @@ if (! defined('APPS_SAVED_QUERIES')) {
 if (! defined('APPS_CONTACTS')) {
     define('APPS_CONTACTS', 'contacts');
 }
-if (! defined('GROUPBASKET_STATUS')) {
-    define('GROUPBASKET_STATUS', 'groupbasket_status');
-}
 if (! defined('APPS_CONTACTS_V2')) {
     define('APPS_CONTACTS_V2', 'contacts_v2');
 }

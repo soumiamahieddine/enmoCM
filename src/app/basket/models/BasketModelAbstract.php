@@ -368,10 +368,9 @@ abstract class BasketModelAbstract
                 'groupbasket.group_id = ?',
                 'users_baskets_preferences.group_serial_id = ?',
                 'users_baskets_preferences.user_serial_id = ?',
-                'baskets.is_visible = ?',
-                'baskets.basket_id != ?'
+                'baskets.is_visible = ?'
             ],
-            'data'      => [$aArgs['groupId'], $aArgs['groupSerialId'], $aArgs['userSerialId'], 'Y', 'IndexingBasket'],
+            'data'      => [$aArgs['groupId'], $aArgs['groupSerialId'], $aArgs['userSerialId'], 'Y'],
             'order_by'  => ['baskets.basket_order', 'baskets.basket_name']
         ]);
 
