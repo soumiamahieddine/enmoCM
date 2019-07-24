@@ -14,6 +14,7 @@
 
 namespace Folder\controllers;
 
+use Folder\models\EntityFolderModel;
 use Folder\models\FolderModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
@@ -48,11 +49,19 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
         }
 
-        // Check rights
+        //TODO Check rights
 
         $folder = FolderModel::getById(['id' => $aArgs['id']]);
         if (empty($folder)) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder not found']);
+        }
+
+        $folder['sharing']['entities'] = [];
+        if ($folder['public']) {
+            $entitiesFolder = EntityFolderModel::getByFolderId(['folder_id' => $aArgs['id']]);
+            foreach ($entitiesFolder as $value) {
+                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition']];
+            }
         }
 
         return $response->withJson(['folder' => $folder]);
@@ -68,21 +77,33 @@ class FolderController
         if (!empty($data['parent_id']) && !Validator::intval()->validate($data['parent_id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
         }
-        if (!Validator::boolVal()->notEmpty()->validate($data['public'])) {
+        if (!Validator::boolVal()->validate($data['public'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
         }
 
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        // Check rights parent_id
+        //TODO Check rights
 
         $id = FolderModel::create([
             'label'      => $data['label'],
-            'public'     => true,
-            'sharing'    => $data['sharing'],
+            'public'     => $data['public'],
             'user_id'    => $currentUser['id'],
             'parent_id'  => $data['parent_id']
         ]);
+
+        if (!empty($data['sharing']['entities'])) {
+            //TODO check entities exists
+
+            foreach ($data['sharing']['entities'] as $entity) {
+                EntityFolderModel::create([
+                    'folder_id' => $id,
+                    'entity_id' => $entity['entity_id'],
+                    'edition'   => $entity['edition'],
+                ]);
+            }
+        }
+
         HistoryController::add([
             'tableName' => 'folders',
             'recordId'  => $id,
@@ -108,23 +129,41 @@ class FolderController
         if (!empty($data['parent_id']) &&!Validator::intval()->validate($data['parent_id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
         }
-        if (!Validator::boolVal()->notEmpty()->validate($data['public'])) {
+        if (!Validator::boolVal()->validate($data['public'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
         }
 
-        // Check rights
-        // Check rights parent_id
+        //TODO Check rights
 
         FolderModel::update([
             'set' => [
                 'label'      => $data['label'],
                 'public'     => empty($data['public']) ? 'false' : 'true',
-                'sharing'    => $data['sharing'],
                 'parent_id'  => $data['parent_id']
             ],
             'where' => ['id = ?'],
             'data' => [$aArgs['id']]
         ]);
+
+        if ($data['public']) {
+            if (!empty($data['sharing']['entities'])) {
+                //TODO check entities exists
+
+                foreach ($data['sharing']['entities'] as $entity) {
+                    EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
+                    EntityFolderModel::create([
+                        'folder_id' => $aArgs['id'],
+                        'entity_id' => $entity['entity_id'],
+                        'edition'   => $entity['edition'],
+                    ]);
+                }
+                // TODO share subfolders
+            }
+        } else {
+            EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
+            // TODO unshare subfolders
+        }
+
         HistoryController::add([
             'tableName' => 'folders',
             'recordId'  => $aArgs['id'],
@@ -143,9 +182,14 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
         }
 
-        // Check rights
+        //TODO Check rights
 
         FolderModel::delete(['id' => $aArgs['id']]);
+        EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
+        
+        //TODO Delete sub folders
+        //TODO Delete resources folders
+
         HistoryController::add([
             'tableName' => 'folder',
             'recordId'  => $aArgs['id'],

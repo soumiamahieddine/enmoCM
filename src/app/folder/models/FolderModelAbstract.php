@@ -20,12 +20,12 @@ class FolderModelAbstract
     {
         ValidatorModel::arrayType($aArgs, ['select']);
 
-        $folderType = DatabaseModel::select([
+        $folders = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'  => ['folders']
         ]);
 
-        return $folderType;
+        return $folders;
     }
 
     public static function getById(array $aArgs)
@@ -33,14 +33,14 @@ class FolderModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $aGroups = DatabaseModel::select([
+        $folder = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['folders'],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
         ]);
 
-        return $aGroups[0];
+        return $folder[0];
     }
 
     public static function create(array $aArgs)
@@ -58,7 +58,6 @@ class FolderModelAbstract
                 'id'         => $nextSequenceId,
                 'label'      => $aArgs['label'],
                 'public'     => empty($aArgs['public']) ? 'false' : 'true',
-                'sharing'    => $aArgs['sharing'],
                 'user_id'    => $aArgs['user_id'],
                 'parent_id'  => $aArgs['parent_id']
             ]

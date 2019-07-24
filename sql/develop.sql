@@ -65,20 +65,47 @@ DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 
 
 /* FOLDERS */
-ALTER TABLE folders RENAME TO folder_tmp;
-ALTER TABLE folder_tmp RENAME CONSTRAINT folders_pkey to folders_tmp_pkey;
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'folders') AND attname = 'folders_system_id') THEN
+    ALTER TABLE folders RENAME TO folder_tmp;
+    ALTER TABLE folder_tmp RENAME CONSTRAINT folders_pkey to folders_tmp_pkey;
+  END IF;
+END$$;
+
+DROP TABLE IF EXISTS folders;
 CREATE TABLE folders
 (
   id serial NOT NULL,
   label character varying(255) NOT NULL,
-  public boolean NOT NULL,
-  sharing jsonb DEFAULT '{"entities" : []}',
+  public boolean NOT NULL,   
   user_id INTEGER NOT NULL,
   parent_id INTEGER,
   CONSTRAINT folders_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS resources_folders;
+CREATE TABLE resources_folders
+(
+  id serial NOT NULL,
+  folder_id INTEGER NOT NULL,
+  res_id INTEGER NOT NULL,
+  CONSTRAINT resources_folders_pkey PRIMARY KEY (id),
+  CONSTRAINT resources_folders_unique_key UNIQUE (folder_id, res_id)
+)
+WITH (OIDS=FALSE);
+
+DROP TABLE IF EXISTS entities_folders;
+CREATE TABLE entities_folders
+(
+  id serial NOT NULL,
+  folder_id INTEGER NOT NULL,
+  entity_id INTEGER NOT NULL,
+  edition boolean NOT NULL,
+  CONSTRAINT entities_folders_pkey PRIMARY KEY (id),
+  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id)
+)
+WITH (OIDS=FALSE);
 
 /* REFACTORING DATA */
 DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
