@@ -26,6 +26,19 @@ class FolderController
     public function get(Request $request, Response $response)
     {
         $folders = FolderModel::get();
+
+        foreach ($folders as $key => $value) {
+            $folders[$key]['icon'] = "fa fa-folder-open";
+            if (empty($value['parent_id'])) {
+                $folders[$key]['parent'] = '#';
+            } else {
+                $folders[$key]['parent'] = $value['parent_id'];
+            }
+
+            $folders[$key]['state']['opened'] = true;
+            $folders[$key]['text'] = $value['label'];
+        }
+
         return $response->withJson(['folders' => $folders]);
     }
 
