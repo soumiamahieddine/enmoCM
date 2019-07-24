@@ -1047,4 +1047,5 @@ export const LANG_EN = {
     "keywordAdded" : "Keyword added",
     "keywordDeleted" : "Keyword deleted",
     "actionsInfo" : "Only actions with \"simple confirmation\" and \"close mail\" will be displayed",
+    "eventList" : "Open page",
 };

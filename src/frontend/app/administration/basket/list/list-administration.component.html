@@ -1,11 +1,12 @@
-<mat-form-field>
-    <mat-label>Ouverture la page</mat-label>
+<mat-form-field class="eventList" appearance="outline">
+    <mat-label>{{lang.eventList}}</mat-label>
     <mat-select [(ngModel)]="selectedListEvent">
         <mat-option *ngFor="let event of listEvent" [value]="event.value">
             {{lang[event.id]}}
         </mat-option>
     </mat-select>
 </mat-form-field>
+<hr/>
 <mat-toolbar class="editorTool">
     <span>
         <button color="primary" *ngIf="displayMode=='label'" mat-icon-button (click)="toggleData()"

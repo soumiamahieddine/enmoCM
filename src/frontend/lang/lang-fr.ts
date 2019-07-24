@@ -1084,4 +1084,5 @@ export const LANG_FR = {
     "eventVisaMail" : "Parapheur",
     "eventProcessDoc" : "Fiche de traitement",
     "eventViewDoc" : "Visionneuse de document",
+    "eventList" : "Ouverture de la page",
 };
