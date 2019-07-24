@@ -1,0 +1,55 @@
+<mat-nav-list>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node [@hideShow] *matTreeNodeDef="let node" matTreeNodePadding>
+            <!-- use a disabled button to provide padding for tree leaf -->
+            <button class="expandButton" mat-icon-button disabled></button>
+            <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseenter)="showAction(node)" (mouseleave)="hideAction(node)"
+                (click)="selectFolder(node)">
+                <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
+                    <span style="white-space: pre;">
+                        <i class="far fa-folder" color="primary"></i> {{node.label}}
+                    </span>
+                </span>
+                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();showAction(node);"
+                    [disabled]="!node.showAction">
+                    <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
+                    <span *ngIf="!node.showAction">
+                        4
+                    </span>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item>Nouveau dossier</button>
+                    <button mat-menu-item>Supprimer</button>
+                </mat-menu>
+            </a>
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-tree-node [@hideShow] *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+            <button class="expandButton" mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                <mat-icon
+                    class="mat-icon-rtl-mirror fa {{treeControl.isExpanded(node) ? 'fa-chevron-down' : 'fa-chevron-right'}}">
+                </mat-icon>
+            </button>
+            <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseleave)="hideAction(node)"
+                (mouseenter)="showAction(node)" (click)="selectFolder(node)">
+                <span style="flex:1">
+                    <span style="white-space: pre;">
+                        <i class="far fa-folder" color="primary"></i> {{node.label}}
+                    </span>
+                </span>
+                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();"
+                    [disabled]="!node.showAction">
+                    <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
+                    <span *ngIf="!node.showAction">
+                        4
+                    </span>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item>Nouveau dossier</button>
+                    <button mat-menu-item>Supprimer</button>
+                </mat-menu>
+            </a>
+        </mat-tree-node>
+    </mat-tree>
+</mat-nav-list>

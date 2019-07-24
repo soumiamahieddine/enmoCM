@@ -1,0 +1,24 @@
+@import '../../../css/vars.scss';
+
+.folderList {
+    box-shadow: none;
+
+    ::ng-deep.mat-expansion-panel-body {
+        padding: 0;
+    }
+
+    .mat-expansion-panel-header-title {
+        color: rgba(0, 0, 0, 0.54);
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .mat-expansion-panel-body {
+        padding: 0px;
+    }
+
+    .mat-line {
+        font-size: 12px;
+        font-weight: bold;
+    }
+}

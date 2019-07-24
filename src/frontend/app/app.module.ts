@@ -23,6 +23,9 @@ import { ActivateUserComponent }                from './activate-user.component'
 
 import { ActionsListComponent }                 from './actions/actions-list.component';
 
+import { FolderTreeComponent }                 from './folder/folder-tree.component';
+import { PanelFolderComponent }                 from './folder/panel/panel-folder.component';
+
 /*ACTIONS PAGES */
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
 import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence-action/disabled-basket-persistence-action.component';
@@ -111,6 +114,8 @@ import { PrintSeparatorComponent }                        from './separator/prin
         SendShippingActionComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
+        FolderTreeComponent,
+        PanelFolderComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
