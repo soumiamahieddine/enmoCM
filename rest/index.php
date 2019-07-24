@@ -189,6 +189,7 @@ $app->get('/folders', \Folder\controllers\FolderController::class . ':get');
 $app->post('/folders', \Folder\controllers\FolderController::class . ':create');
 $app->get('/folders/{id}', \Folder\controllers\FolderController::class . ':getById');
 $app->put('/folders/{id}', \Folder\controllers\FolderController::class . ':update');
+$app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
 $app->delete('/folders/{id}', \Folder\controllers\FolderController::class . ':delete');
 
 //Histories

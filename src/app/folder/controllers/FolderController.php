@@ -25,13 +25,14 @@ class FolderController
 {
     public function get(Request $request, Response $response)
     {
+        //TODO Check rights
         $folders = FolderModel::get(['order_by' => ['level']]);
 
         $tree = [];
         foreach ($folders as $folder) {
             $insert = [
                 'name'       => $folder['label'],
-                'expandable' => true,
+                'expandable' => false,
                 'id'         => $folder['id'],
                 'label'      => $folder['label'],
                 'public'     => $folder['public'],
@@ -42,11 +43,17 @@ class FolderController
             if ($folder['level'] == 0) {
                 $tree[] = $insert;
             } else {
+                $found = false;
                 foreach ($tree as $key => $branch) {
                     if ($branch['id'] == $folder['parent_id']) {
                         array_splice($tree, $key + 1, 0, [$insert]);
+                        $tree[$key]['expandable'] = true;
+                        $found = true;
                         break;
                     }
+                }
+                if (!$found) {
+                    $tree[] = $insert;
                 }
             }
         }
@@ -74,6 +81,8 @@ class FolderController
                 $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition']];
             }
         }
+
+        //TODO Get resources
 
         return $response->withJson(['folder' => $folder]);
     }
@@ -111,8 +120,8 @@ class FolderController
             'level'     => $level
         ]);
 
-        if (!empty($entitiesSharing)) {
-            //TODO $entitiesSharing = Get entities sharing from n-1
+        if ($public) {
+            $entitiesSharing = EntityFolderModel::getByFolderId(['folder_id' => $data['parent_id']]);
             foreach ($entitiesSharing as $entity) {
                 EntityFolderModel::create([
                     'folder_id' => $id,
@@ -126,7 +135,7 @@ class FolderController
             'tableName' => 'folders',
             'recordId'  => $id,
             'eventType' => 'ADD',
-            'info'      => _FOLDER_CREATION . " : {$id}",
+            'info'      => _FOLDER_CREATION . " : {$data['label']}",
             'moduleId'  => 'folder',
             'eventId'   => 'folderCreation',
         ]);
@@ -147,27 +156,20 @@ class FolderController
         if (!empty($data['parent_id']) &&!Validator::intval()->validate($data['parent_id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
         }
-        if (!Validator::boolVal()->validate($data['public'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
-        }
 
         //TODO Check rights
 
         if (empty($data['parent_id'])) {
             $data['parent_id'] = 0;
             $level  = 0;
-            $public = false;
         } else {
-            $folder = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['public', 'level']]);
-            $public = $folder['public'];
+            $folder = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['level']]);
             $level  = $folder['level'] + 1;
-            // Get entities sharing from n-1
         }
 
         FolderModel::update([
             'set' => [
                 'label'      => $data['label'],
-                'public'     => empty($public) ? 'false' : 'true',
                 'parent_id'  => $data['parent_id'],
                 'level'      => $level
             ],
@@ -175,30 +177,60 @@ class FolderController
             'data' => [$aArgs['id']]
         ]);
 
-        if ($data['public']) {
-            if (!empty($data['sharing']['entities'])) {
-                //TODO check entities exists
+        HistoryController::add([
+            'tableName' => 'folders',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _FOLDER_MODIFICATION . " : {$data['label']}",
+            'moduleId'  => 'folder',
+            'eventId'   => 'folderModification',
+        ]);
 
-                foreach ($data['sharing']['entities'] as $entity) {
-                    EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
-                    EntityFolderModel::create([
-                        'folder_id' => $aArgs['id'],
-                        'entity_id' => $entity['entity_id'],
-                        'edition'   => $entity['edition'],
-                    ]);
-                }
-                // TODO share subfolders
+        return $response->withStatus(200);
+    }
+
+    public function sharing(Request $request, Response $response, array $aArgs)
+    {
+        $data = $request->getParams();
+
+        if (!Validator::numeric()->notEmpty()->validate($aArgs['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
+        }
+        if (!Validator::boolVal()->validate($data['public'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
+        }
+
+        //TODO Check rights
+
+        FolderModel::update([
+            'set' => [
+                'public' => empty($data['public']) ? 'false' : 'true',
+            ],
+            'where' => ['id = ?'],
+            'data' => [$aArgs['id']]
+        ]);
+
+        EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
+        // TODO unshare subfolders
+
+        if ($data['public'] && !empty($data['sharing']['entities'])) {
+            //TODO check entities exists
+
+            foreach ($data['sharing']['entities'] as $entity) {
+                EntityFolderModel::create([
+                    'folder_id' => $aArgs['id'],
+                    'entity_id' => $entity['entity_id'],
+                    'edition'   => $entity['edition'],
+                ]);
             }
-        } else {
-            EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
-            // TODO unshare subfolders
+            // TODO share subfolders
         }
 
         HistoryController::add([
             'tableName' => 'folders',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _FOLDER_MODIFICATION . " : {$aArgs['id']}",
+            'info'      => _FOLDER_SHARING_MODIFICATION . " : {$data['label']}",
             'moduleId'  => 'folder',
             'eventId'   => 'folderModification',
         ]);
@@ -214,6 +246,8 @@ class FolderController
 
         //TODO Check rights
 
+        $folder = FolderModel::getById(['id' => $aArgs['id'], 'select' => ['label']]);
+
         FolderModel::delete(['id' => $aArgs['id']]);
         EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
         
@@ -224,7 +258,7 @@ class FolderController
             'tableName' => 'folder',
             'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
-            'info'      => _FOLDER_SUPPRESSION . " : {$aArgs['id']}",
+            'info'      => _FOLDER_SUPPRESSION . " : {$folder['label']}",
             'moduleId'  => 'folder',
             'eventId'   => 'folderSuppression',
         ]);

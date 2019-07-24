@@ -80,7 +80,7 @@ CREATE TABLE folders
   public boolean NOT NULL,   
   user_id INTEGER NOT NULL,
   parent_id INTEGER,
-  level INTEGER,
+  level INTEGER NOT NULL,
   CONSTRAINT folders_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
