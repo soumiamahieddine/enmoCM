@@ -188,7 +188,7 @@ export class IndexingAdministrationComponent implements OnInit {
     getSelectedActions(data: any) {
         let index = -1;
         data.forEach((actionId: any) => {
-            index = this.actionList.findIndex(action => action.id === actionId);
+            index = this.actionList.findIndex(action => action.id == actionId);
             if (index > -1) {
                 this.indexingInfo.actions.push(this.actionList[index]);
                 this.actionList.splice(index, 1);
