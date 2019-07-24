@@ -289,6 +289,9 @@ class GroupController
                 if ($countActions[0]['count'] != count($body['actions'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Body actions contains invalid actions']);
                 }
+                foreach ($body['actions'] as $key => $action) {
+                    $body['actions'][$key] = (string)$action;
+                }
             }
             $indexationParameters['actions'] = $body['actions'];
         }
@@ -297,6 +300,9 @@ class GroupController
                 $countEntities = EntityModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['entities']]]);
                 if ($countEntities[0]['count'] != count($body['entities'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Body entities contains invalid entities']);
+                }
+                foreach ($body['entities'] as $key => $entity) {
+                    $body['entities'][$key] = (string)$entity;
                 }
             }
             $indexationParameters['entities'] = $body['entities'];
