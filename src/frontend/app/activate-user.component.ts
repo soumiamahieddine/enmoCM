@@ -1,24 +1,22 @@
-import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MediaMatcher } from '@angular/cdk/layout';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
 import { Router } from '@angular/router';
 
 import { SelectionModel } from '@angular/cdk/collections';
+import { AppService } from '../service/app.service';
 
 declare var angularGlobals: any;
 declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "activate-user.component.html",
-    providers: [NotificationService],
+    providers: [NotificationService, AppService],
 })
 
 export class ActivateUserComponent implements OnInit {
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
-    coreUrl: string;
+
     lang: any = LANG;
 
     user: any = {
@@ -44,16 +42,15 @@ export class ActivateUserComponent implements OnInit {
         }
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private router: Router) {
-        $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private router: Router,
+        public appService: AppService) {
+            $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
         this.http.get('../../rest/currentUser/profile')
@@ -83,7 +80,7 @@ export class ActivateUserComponent implements OnInit {
     //action on user
     activateUser() : void {
 
-        this.http.put(this.coreUrl + 'rest/users/' + angularGlobals.user.id + '/status', {'status' : 'OK'})
+        this.http.put('../../rest/users/' + angularGlobals.user.id + '/status', {'status' : 'OK'})
         .subscribe(() => {
         
             let basketsRedirectedIds:any = "";
@@ -99,7 +96,7 @@ export class ActivateUserComponent implements OnInit {
             });
 
             if(basketsRedirectedIds != "") {
-                this.http.delete(this.coreUrl + "rest/users/" + angularGlobals.user.id + "/redirectedBaskets?redirectedBasketIds[]=" + basketsRedirectedIds)
+                this.http.delete("../../rest/users/" + angularGlobals.user.id + "/redirectedBaskets?redirectedBasketIds[]=" + basketsRedirectedIds)
                 .subscribe((data: any) => {
                     this.router.navigate(['/home']);
                     this.notify.success(this.lang.absOff);

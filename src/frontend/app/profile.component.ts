@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild, QueryList, ViewChildren } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, NgZone, ViewChild, QueryList, ViewChildren } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
@@ -7,9 +6,9 @@ import { HeaderService }        from '../service/header.service';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MatSidenav, MatExpansionPanel } from '@angular/material';
 
-import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
+import { AppService } from '../service/app.service';
 
 declare function $j(selector: any): any;
 
@@ -20,15 +19,11 @@ declare var angularGlobals: any;
 @Component({
     templateUrl: "profile.component.html",
     styleUrls: ['profile.component.css'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
-export class ProfileComponent extends AutoCompletePlugin implements OnInit {
+export class ProfileComponent implements OnInit {
 
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
     dialogRef: MatDialogRef<any>;
-    mobileMode                      : boolean   = false;
-    coreUrl: string;
     lang: any = LANG;
 
     user: any = {
@@ -162,13 +157,16 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog, private _formBuilder: FormBuilder, private headerService: HeaderService) {
-        super(http, ['users']);
-        this.mobileMode = angularGlobals.mobileMode;
+    constructor(
+        public http: HttpClient, 
+        private zone: NgZone, 
+        private notify: NotificationService, 
+        public dialog: MatDialog, 
+        private _formBuilder: FormBuilder, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
         window['angularProfileComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -176,7 +174,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
             debounceTime(500),
             filter(value => value.length > 2),
             distinctUntilChanged(),
-            switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/contacts/groups', { params: { "search": data, "type": this.contactTypeSearch } }))
+            switchMap(data => this.http.get('../../rest/autocomplete/contacts/groups', { params: { "search": data, "type": this.contactTypeSearch } }))
         ).subscribe((response: any) => {
             this.searchResult = response;
             this.dataSourceContactsListAutocomplete = new MatTableDataSource(this.searchResult);
@@ -188,11 +186,11 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     initComponents(event: any) {
         this.selectedIndex = event.index;
         if (event.index == 2) {
-            if (!this.mobileMode) {
+            if (!this.appService.getViewMode()) {
                 this.sidenavRight.open();
             } 
             //if (this.histories.length == 0) {
-                this.http.get(this.coreUrl + 'rest/histories/users/' + this.user.id)
+                this.http.get('../../rest/histories/users/' + this.user.id)
                     .subscribe((data: any) => {
                         this.histories = data.histories;
                         setTimeout(() => {
@@ -206,7 +204,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
             //}
         } else if(event.index == 1) {
             this.sidenavRight.close();
-        } else if(!this.mobileMode){
+        } else if(!this.appService.getViewMode()){
             this.sidenavRight.open();
         }
     }
@@ -245,7 +243,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     initGroupsContact() {
         this.contactsListMode = false;
         this.selectedIndexContactsGrp = 0;
-        this.http.get(this.coreUrl + 'rest/contactsGroups')
+        this.http.get('../../rest/contactsGroups')
             .subscribe((data) => {
                 this.contactsGroups = [];
                 this.contactsGroup = { public: false, contacts:[] };
@@ -269,7 +267,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     contactsGroupSubmit() {
-        this.http.post(this.coreUrl + 'rest/contactsGroups', this.contactsGroup)
+        this.http.post('../../rest/contactsGroups', this.contactsGroup)
             .subscribe((data: any) => {
                 this.initGroupsContact();
                 //this.toggleAddGrp();
@@ -280,7 +278,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     updateGroupSubmit() {
-        this.http.put(this.coreUrl + 'rest/contactsGroups/' + this.contactsGroup.id, this.contactsGroup)
+        this.http.put('../../rest/contactsGroups/' + this.contactsGroup.id, this.contactsGroup)
             .subscribe(() => {
                 this.notify.success(this.lang.contactsGroupUpdated);
                 this.initGroupsContact();    
@@ -293,7 +291,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         var contactsGroup = this.contactsGroups[row];
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + contactsGroup.label + ' »');
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/contactsGroups/' + contactsGroup.id)
+            this.http.delete('../../rest/contactsGroups/' + contactsGroup.id)
                 .subscribe(() => {
                     this.contactsListMode = false;
                     var lastElement = this.contactsGroups.length - 1;
@@ -313,12 +311,12 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     loadContactsGroup(contactsGroup: any) {
         this.contactsListMode = true;
-        this.http.get(this.coreUrl + 'rest/contactsTypes')
+        this.http.get('../../rest/contactsTypes')
             .subscribe((data: any) => {
                 this.contactTypes = data.contactsTypes;
             });
 
-        this.http.get(this.coreUrl + 'rest/contactsGroups/' + contactsGroup.id)
+        this.http.get('../../rest/contactsGroups/' + contactsGroup.id)
             .subscribe((data: any) => {
                 this.contactsGroup = data.contactsGroup;
                 setTimeout(() => {
@@ -333,7 +331,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     saveContactsList(elem: any): void {
         elem.textContent = this.lang.loading + '...';
         elem.disabled = true;
-        this.http.post(this.coreUrl + 'rest/contactsGroups/' + this.contactsGroup.id + '/contacts', { 'contacts': this.selection.selected })
+        this.http.post('../../rest/contactsGroups/' + this.contactsGroup.id + '/contacts', { 'contacts': this.selection.selected })
             .subscribe((data: any) => {
                 this.notify.success(this.lang.contactAdded);
                 this.selection.clear();
@@ -358,7 +356,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     removeContact(contact: any, row: any) {
-        this.http.delete(this.coreUrl + "rest/contactsGroups/" + this.contactsGroup.id + "/contacts/" + contact['addressId'])
+        this.http.delete("../../rest/contactsGroups/" + this.contactsGroup.id + "/contacts/" + contact['addressId'])
             .subscribe(() => {
                 var lastElement = this.contactsGroup.contacts.length - 1;
                 this.contactsGroup.contacts[row] = this.contactsGroup.contacts[lastElement];
@@ -401,7 +399,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.headerService.setHeader(this.lang.myProfile);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
-        this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
@@ -526,9 +523,8 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {
-            this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets", basketsRedirect)
+            this.http.post("../../rest/users/" + this.user.id + "/redirectedBaskets", basketsRedirect)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.redirectedBaskets = data["redirectedBaskets"];
                     this.selectionBaskets.clear();
@@ -543,9 +539,8 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
+            this.http.delete("../../rest/users/" + this.user.id + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.redirectedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -559,9 +554,8 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
+            this.http.delete("../../rest/users/" + this.user.id + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.assignedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -575,7 +569,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {
-            this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets", [
+            this.http.post("../../rest/users/" + this.user.id + "/redirectedBaskets", [
                 { 
                     "actual_user_id": newUser.serialId, 
                     "basket_id": basket.basket_id, 
@@ -584,7 +578,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                 }
             ])
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.assignedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -595,7 +588,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     updateBasketColor(i: number, y: number) {
-        this.http.put(this.coreUrl + "rest/currentUser/groups/" + this.user.regroupedBaskets[i].groupSerialId + "/baskets/" + this.user.regroupedBaskets[i].baskets[y].basket_id, { "color": this.user.regroupedBaskets[i].baskets[y].color })
+        this.http.put("../../rest/currentUser/groups/" + this.user.regroupedBaskets[i].groupSerialId + "/baskets/" + this.user.regroupedBaskets[i].baskets[y].basket_id, { "color": this.user.regroupedBaskets[i].baskets[y].color })
             .subscribe((data: any) => {
                 this.user.regroupedBaskets = data.userBaskets;
                 this.notify.success(this.lang.modificationSaved);
@@ -608,7 +601,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         let r = confirm(this.lang.confirmToBeAbsent);
 
         if (r) {
-            this.http.put(this.coreUrl + 'rest/users/' + this.user.id + '/status', { "status": "ABS" })
+            this.http.put('../../rest/users/' + this.user.id + '/status', { "status": "ABS" })
                 .subscribe(() => {
                     location.search = "?display=true&page=logout&logout=true";
                 }, (err) => {
@@ -635,7 +628,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.passwordModel.currentPassword = this.firstFormGroup.controls['currentPasswordCtrl'].value;
         this.passwordModel.newPassword = this.firstFormGroup.controls['newPasswordCtrl'].value;
         this.passwordModel.reNewPassword = this.firstFormGroup.controls['retypePasswordCtrl'].value;
-        this.http.put(this.coreUrl + 'rest/users/' + this.user.id + '/password', this.passwordModel)
+        this.http.put('../../rest/users/' + this.user.id + '/password', this.passwordModel)
             .subscribe((data: any) => {
                 this.showPassword = false;
                 this.passwordModel = {
@@ -652,7 +645,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     submitEmailSignature() {
         this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
 
-        this.http.post(this.coreUrl + 'rest/currentUser/emailSignature', this.mailSignatureModel)
+        this.http.post('../../rest/currentUser/emailSignature', this.mailSignatureModel)
             .subscribe((data: any) => {
                 if (data.errors) {
                     this.notify.error(data.errors);
@@ -673,7 +666,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
         var id = this.user.emailSignatures[this.mailSignatureModel.selected].id;
 
-        this.http.put(this.coreUrl + 'rest/currentUser/emailSignature/' + id, this.mailSignatureModel)
+        this.http.put('../../rest/currentUser/emailSignature/' + id, this.mailSignatureModel)
             .subscribe((data: any) => {
                 if (data.errors) {
                     this.notify.error(data.errors);
@@ -691,7 +684,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         if (r) {
             var id = this.user.emailSignatures[this.mailSignatureModel.selected].id;
 
-            this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
+            this.http.delete('../../rest/currentUser/emailSignature/' + id)
                 .subscribe((data: any) => {
                     if (data.errors) {
                         this.notify.error(data.errors);
@@ -710,7 +703,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     submitSignature() {
-        this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/signatures", this.signatureModel)
+        this.http.post("../../rest/users/" + this.user.id + "/signatures", this.signatureModel)
             .subscribe((data: any) => {
                 this.user.signatures = data.signatures;
                 this.signatureModel = {
@@ -728,7 +721,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     updateSignature(signature: any) {
-        this.http.put(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + signature.id, { "label": signature.signature_label })
+        this.http.put("../../rest/users/" + this.user.id + "/signatures/" + signature.id, { "label": signature.signature_label })
             .subscribe((data: any) => {
                 this.notify.success(this.lang.signatureUpdated);
             }, (err) => {
@@ -740,7 +733,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         let r = confirm(this.lang.confirmDeleteSignature);
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id)
+            this.http.delete("../../rest/users/" + this.user.id + "/signatures/" + id)
                 .subscribe((data: any) => {
                     this.user.signatures = data.signatures;
                     this.notify.success(this.lang.signatureDeleted);
@@ -751,7 +744,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     onSubmit() {
-        this.http.put(this.coreUrl + 'rest/currentUser/profile', this.user)
+        this.http.put('../../rest/currentUser/profile', this.user)
             .subscribe(() => {
                 this.notify.success(this.lang.modificationSaved);
             }, (err) => {
@@ -770,7 +763,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     changePasswd() {
-        this.http.get(this.coreUrl + 'rest/passwordRules')
+        this.http.get('../../rest/passwordRules')
             .subscribe((data: any) => {
                 let valArr : ValidatorFn[] = [];
                 let ruleTextArr: String[] = [];

@@ -268,8 +268,8 @@ class GroupController
         }
 
         $body = $request->getParsedBody();
-        if (!Validator::boolType()->validate($body['canIndex'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body canIndex is empty or not a boolean']);
+        if (!Validator::arrayType()->notEmpty()->validate($body)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body is empty or not an array']);
         }
 
         $group = GroupModel::getById(['id' => $args['id'], 'select' => ['indexation_parameters']]);
@@ -277,28 +277,37 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
+        $set = [];
         $indexationParameters = json_decode($group['indexation_parameters'], true);
 
-        if (!empty($body['actions']) && is_array($body['actions'])) {
-            $countActions = ActionModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['actions']]]);
-            if ($countActions[0]['count'] != count($body['actions'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body actions contains invalid actions']);
+        if (isset($body['canIndex']) && is_bool($body['canIndex'])) {
+            $set['can_index'] = $body['canIndex'] ? 'true' : 'false';
+        }
+        if (isset($body['actions']) && is_array($body['actions'])) {
+            if (!empty($body['actions'])) {
+                $countActions = ActionModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['actions']]]);
+                if ($countActions[0]['count'] != count($body['actions'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Body actions contains invalid actions']);
+                }
             }
             $indexationParameters['actions'] = $body['actions'];
         }
-        if (!empty($body['entities']) && is_array($body['entities'])) {
-            $countEntities = EntityModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['entities']]]);
-            if ($countEntities[0]['count'] != count($body['entities'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body entities contains invalid entities']);
+        if (isset($body['entities']) && is_array($body['entities'])) {
+            if (!empty($body['entities'])) {
+                $countEntities = EntityModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['entities']]]);
+                if ($countEntities[0]['count'] != count($body['entities'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Body entities contains invalid entities']);
+                }
             }
             $indexationParameters['entities'] = $body['entities'];
         }
-        if (!empty($body['keywords']) && is_array($body['keywords'])) {
+        if (isset($body['keywords']) && is_array($body['keywords'])) {
             $indexationParameters['keywords'] = $body['keywords'];
         }
-        
+        $set['indexation_parameters'] = json_encode($indexationParameters);
+
         GroupModel::update([
-            'set'   => ['can_index' => $body['canIndex'], 'indexation_parameters' => json_encode($indexationParameters)],
+            'set'   => $set,
             'where' => ['id = ?'],
             'data'  => [$args['id']]
         ]);
@@ -311,7 +320,7 @@ class GroupController
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-        $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
         $groupsClause = '';
         foreach ($groups as $key => $group) {
             if (!empty($group['where_clause'])) {

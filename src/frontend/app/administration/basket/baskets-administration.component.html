@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list>
@@ -39,16 +39,16 @@
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="basket_id" matSortDirection="asc">
                     <ng-container matColumnDef="basket_id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.basket_id}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()">{{lang.id}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"> {{element.basket_id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="basket_name">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.basket_name}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="basket_desc">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.basket_desc}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()">{{lang.description}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"> {{element.basket_desc}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
@@ -64,8 +64,8 @@
                 <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{baskets.length}} {{lang.baskets}}</div>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            position='end' [opened]="appService.getViewMode() ? false : false">
             <p style="font-size:15px;padding:5px"> {{lang.basketHelpDesc}} </p>
             <mat-list>
                 <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="basketsOrder">

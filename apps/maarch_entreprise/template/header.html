@@ -49,7 +49,7 @@
                         <h3 style="padding: 5px;margin-top:10px;color:white;text-align:left;">Groupes</h3>
                         <ul style="color:white;padding: 10px;text-align:left;opacity: 0.5;"> 
                             <?php
-                            $userGroups = \User\models\UserModel::getGroupsByUserId(['userId'=> $_SESSION['user']['UserId']]);
+                            $userGroups = \User\models\UserModel::getGroupsByLogin(['login'=> $_SESSION['user']['UserId']]);
                        
                             if(!empty($userGroups)){
                                 for($i=0;$i<count($userGroups);$i++){

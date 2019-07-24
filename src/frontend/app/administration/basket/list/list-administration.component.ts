@@ -129,6 +129,26 @@ export class ListAdministrationComponent implements OnInit {
     displayMode: string = 'label';
     dataControl = new FormControl();
     filteredDataOptions: Observable<string[]>;
+    listEvent: any[] = [
+        {
+            id: 'noEventList',
+            value: 'noEvent'
+        },        
+        {
+            id: 'eventVisaMail',
+            value: 'signatureBookAction'
+        },        
+        {
+            id: 'eventProcessDoc',
+            value: 'processDoc'
+        },
+        {
+            id: 'eventViewDoc',
+            value: 'viewDoc'
+        }
+    ];
+    selectedListEvent: string = null;
+    selectedListEventClone: string = null;
 
     @Input('currentBasketGroup') private basketGroup: any;
 
@@ -150,6 +170,8 @@ export class ListAdministrationComponent implements OnInit {
             this.displayedSecondaryData.push(this.availableData[indexData]);
             this.availableData.splice(indexData, 1);
         });
+        this.selectedListEvent = this.basketGroup.list_event === null ? 'noEvent' : this.basketGroup.list_event;
+        this.selectedListEventClone = this.selectedListEvent;
         this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
     }
 
@@ -216,6 +238,7 @@ export class ListAdministrationComponent implements OnInit {
     }
 
     saveTemplate() {
+        this.selectedListEvent = this.selectedListEvent === 'noEvent' ? null : this.selectedListEvent;
         let template: any = [];
         this.displayedSecondaryData.forEach((element: any) => {
             template.push(
@@ -227,10 +250,13 @@ export class ListAdministrationComponent implements OnInit {
             );
         });
 
-        this.http.put("../../rest/baskets/" + this.basketGroup.basket_id + "/groups/" + this.basketGroup.group_id, { 'list_display': template })
+        this.http.put("../../rest/baskets/" + this.basketGroup.basket_id + "/groups/" + this.basketGroup.group_id, { 'list_display': template, 'list_event': this.selectedListEvent })
             .subscribe(() => {
                 this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
                 this.basketGroup.list_display = template;
+                this.selectedListEvent = this.selectedListEvent === null ? 'noEvent' : this.selectedListEvent;
+                this.basketGroup.list_event = this.selectedListEvent;
+                this.selectedListEventClone = this.selectedListEvent;
                 this.notify.success(this.lang.resultPageUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -249,7 +275,7 @@ export class ListAdministrationComponent implements OnInit {
     }
 
     checkModif() { 
-        if (JSON.stringify(this.displayedSecondaryData) === JSON.stringify(this.displayedSecondaryDataClone)) {
+        if (JSON.stringify(this.displayedSecondaryData) === JSON.stringify(this.displayedSecondaryDataClone) && this.selectedListEvent === this.selectedListEventClone) {
             return true 
         } else {
            return false;
@@ -258,6 +284,7 @@ export class ListAdministrationComponent implements OnInit {
 
     cancelModification() {
         this.displayedSecondaryData = JSON.parse(JSON.stringify(this.displayedSecondaryDataClone));
+        this.selectedListEvent = this.selectedListEventClone;
         this.availableData = JSON.parse(JSON.stringify(this.availableDataClone));
         
         let indexData: number = 0;

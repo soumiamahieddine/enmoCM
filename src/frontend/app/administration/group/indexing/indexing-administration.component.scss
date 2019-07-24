@@ -1,9 +1,17 @@
-/deep/.mat-form-field-appearance-outline .mat-form-field-outline-thick {
-    color: #666;
+.loading {
+    display: flex;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    background: white;
+    z-index: 2;
 }
-
 .selectedActionList {
     width: 100%;
+}
+
+.infoActions {
+    font-size: 80%;
 }
 
 .selectedAction {
@@ -48,4 +56,10 @@
 
 a {
     cursor: pointer;
+}
+
+.jstreeEntities {
+    .mat-form-field-appearance-outline {
+        font-size: 11px;
+    }
 }

@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list>
@@ -45,8 +45,8 @@
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="delays">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">{{lang.processDelayDay}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()" style="flex:2;">{{lang.processDelayDay}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()" style="flex:2;">
                             <span *ngIf="element.delays == null">
                                 <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
                             </span>
@@ -56,8 +56,8 @@
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="working_days" >
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:3;">{{lang.processType}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:3;">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()" style="flex:3;">{{lang.processType}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()" style="flex:3;">
                             <span *ngIf="element.working_days">
                                 {{lang.workingDays}}
                             </span>
@@ -67,8 +67,8 @@
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="default_priority" >
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.defaultPriority}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()" style="flex:1;">{{lang.defaultPriority}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()" style="flex:1;">
                             <span *ngIf="element.default_priority" color="primary" class="fa fa-check fa-2x"></span>
                         </mat-cell>
                     </ng-container>
@@ -86,8 +86,8 @@
                 <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{priorities.length}} {{lang.priorities}}</div>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-                     position='end' [opened]="mobileQuery.matches ? false : false">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+                     position='end' [opened]="appService.getViewMode() ? false : false">
             <p style="font-size:15px;padding:5px"> {{lang.prioritiesHelpDesc}} </p>
             <mat-list>
                 <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="prioritiesOrder">

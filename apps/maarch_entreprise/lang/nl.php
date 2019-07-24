@@ -227,8 +227,6 @@ if (!defined('_MANAGE_DOCTYPES')) { define('_MANAGE_DOCTYPES', 'De documenttypes
 if (!defined('_MANAGE_DOCTYPES_DESC')) { define('_MANAGE_DOCTYPES_DESC', 'De documenttypes beheren. De documenttypes zijn gekoppeld aan een documentenverzameling. Voor elk type kunt u de in te voeren indexen bepalen evenals deze die verplicht zijn.');}
 if (!defined('_VIEW_HISTORY2')) { define('_VIEW_HISTORY2', 'Weergave van de geschiedenis');}
 if (!defined('_VIEW_HISTORY_BATCH2')) { define('_VIEW_HISTORY_BATCH2', 'Weergave van de geschiedenis van de batches');}
-if (!defined('_INDEX_FILE')) { define('_INDEX_FILE', 'Een bestand indexeren');}
-if (!defined('_INDEX_FILE_DESC')) { define('_INDEX_FILE_DESC', 'Open de indexeringspagina om een brief op te slaan.');}
 if (!defined('_WORDING')) { define('_WORDING', 'Omschrijving');}
 if (!defined('_COLLECTION')) { define('_COLLECTION', 'Verzameling');}
 if (!defined('_VIEW_TREE_DOCTYPES')) { define('_VIEW_TREE_DOCTYPES', 'Boomstructuur van het klasseringsplan');}
@@ -656,7 +654,6 @@ if (!defined('_FOUND_DOC')) { define('_FOUND_DOC', 'brieven gevonden');}
 if (!defined('_FOUND_LOGS')) { define('_FOUND_LOGS', 'logbestand(en) gevonden');}
 if (!defined('_PROCESS')) { define('_PROCESS', 'Verwerking');}
 if (!defined('_PROCESS')) { define('_PROCESS', 'Verwerken');}
-if (!defined('_PROCESS_DESC')) { define('_PROCESS_DESC', 'Opent de verwerkingspagina van een brief (de metagegevens kunnen niet vanop deze pagina gewijzigd worden).');}
 if (!defined('_DOC_NUM')) { define('_DOC_NUM', 'document nr.');}
 if (!defined('_LETTER_NUM')) { define('_LETTER_NUM', 'brief nr.');}
 if (!defined('_GENERAL_INFO')) { define('_GENERAL_INFO', 'Algemene gegevens');}
@@ -903,7 +900,6 @@ if (!defined('_FILE_DATA')) { define('_FILE_DATA', 'Informatie over het brief');
 if (!defined('_VIEW_DOC')) { define('_VIEW_DOC', 'Het brief bekijken');}
 if (!defined('_DOWNLOAD_LOCAL_DOC_COPY')) { define('_DOWNLOAD_LOCAL_DOC_COPY', 'Een plaatselijke kopie downloaden');}
 if (!defined('_VISUALIZE')) { define('_VISUALIZE', 'Weergeven');}
-if (!defined('_VIEW_DOC_DESC')) { define('_VIEW_DOC_DESC', 'Opent een modaliteit met de weergave van het brief. Verhoogt eveneens het geviewde gegeven van de instancelijst tabel (nuttig indien gebruikt in de bakjes clause)');}
 if (!defined('_TYPIST')) { define('_TYPIST', 'Operator');}
 if (!defined('_LOT')) { define('_LOT', 'Set');}
 if (!defined('_ARBOX')) { define('_ARBOX', 'Box');}
@@ -1042,8 +1038,6 @@ if (!defined('_SEARCH_DOC')) { define('_SEARCH_DOC', 'Een document opzoeken');}
 if (!defined('_DOCSERVER_COPY_ERROR')) { define('_DOCSERVER_COPY_ERROR', 'Fout tijdens het kopiëren op de DocServer');}
 if (!defined('_MAKE_NEW_SEARCH')) { define('_MAKE_NEW_SEARCH', 'Een nieuwe opzoeking uitvoeren');}
 if (!defined('_NO_PAGE')) { define('_NO_PAGE', 'Geen pagina');}
-if (!defined('_VALIDATE_QUALIF')) { define('_VALIDATE_QUALIF', 'Bevestigen/Kwalificeren');}
-if (!defined('_VALIDATE_QUALIF_DESC')) { define('_VALIDATE_QUALIF_DESC', 'Opent de wijzigingspagina van een reeds bewaard brief (de metagegevens kunnen vanop deze pagina gewijzigd worden).');}
 if (!defined('_DB_CONNEXION_ERROR')) { define('_DB_CONNEXION_ERROR', 'Verbindingsfout met de database');}
 if (!defined('_DATABASE_SERVER')) { define('_DATABASE_SERVER', 'Databaseserver');}
 if (!defined('_DB_PORT')) { define('_DB_PORT', 'Poort');}
@@ -1596,7 +1590,6 @@ if (!defined('_PROCESS_NOTES')) { define('_PROCESS_NOTES', 'Verwerkingsopmerking
 if (!defined('_CHOOSE_ENTITES_SEARCH_TITLE')) { define('_CHOOSE_ENTITES_SEARCH_TITLE', 'Voeg de gewenste eenheid (eenheden) toe om de opzoeking in te perken');}
 if (!defined('_DESTINATION_SEARCH')) { define('_DESTINATION_SEARCH', 'Getroffen eenheid (eenheden)');}
 if (!defined('_MULTI_FIELD_HELP')) { define('_MULTI_FIELD_HELP', 'Onderwerp beschrijving titel Num GED, Num chrono verwerkingsopmerkingen...');}
-if (!defined('_PROCESS_ACTION')) { define('_PROCESS_ACTION', 'Verwerken');}
 if (!defined('_CONTACT_ID')) { define('_CONTACT_ID', 'Contact ID');}
 if (!defined('_UPDATE_CONTACTS')) { define('_UPDATE_CONTACTS', 'Contacten bijwerken');}
 if (!defined('_VIEW_CONTACTS_GROUPS_DESC')) { define('_VIEW_CONTACTS_GROUPS_DESC', 'Contactgroeperingen gebruikt voor de indexering van een brief');}

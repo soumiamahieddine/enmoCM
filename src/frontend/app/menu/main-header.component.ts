@@ -5,22 +5,19 @@ import { HttpClient }           from '@angular/common/http';
 import { Router }               from '@angular/router';
 import { IndexingGroupModalComponent }  from './menu-shortcut.component';
 import { HeaderService }        from '../../service/header.service';
-
+import { AppService } from '../../service/app.service';
 
 declare function $j(selector: any) : any;
-declare var angularGlobals : any;
-
 
 @Component({
     selector    : "main-header",
-    templateUrl : "main-header.component.html"
+    templateUrl : "main-header.component.html",
+    providers: [AppService],
 })
 export class MainHeaderComponent implements OnInit {
 
-    coreUrl         : string;
     lang            : any       = LANG;
     user            : any       = {firstname : "",lastname : ""};
-    mobileMode      : boolean   = false;
     dialogRef   : MatDialogRef<any>;
     config      : any       = {};
     titleHeader     : string;
@@ -30,9 +27,15 @@ export class MainHeaderComponent implements OnInit {
     snav2           : MatSidenav;
 
 
-    constructor(public http: HttpClient, private zone: NgZone, private _router: Router, public headerService: HeaderService, public dialog: MatDialog) {
+    constructor(
+        public http: HttpClient, 
+        private zone: NgZone, 
+        private _router: Router, 
+        public headerService: HeaderService, 
+        public dialog: MatDialog,
+        public appService: AppService
+    ) {
         this.router = _router;
-        this.mobileMode = angularGlobals.mobileMode;
         window['MainHeaderComponent'] = {
             refreshTitle: (value: string) => this.setTitle(value),
             setSnav: (value: MatSidenav) => this.getSnav(value),

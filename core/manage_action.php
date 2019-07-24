@@ -80,7 +80,6 @@ if ($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST
     } else {
         $bool_history = 'N';
     }
-    $create_id = $res->create_id;
 
     //No script defined for this action
     if ($action_page == '') {
@@ -113,11 +112,7 @@ if ($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST
         echo "{status : 1, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."'}";
         exit();
     } else {
-        if ($create_id == 'N') {
-            echo "{status : 0, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."', page_result : '', manage_form_now : false}";
-        } else {
-            echo "{status : 0, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."', page_result : '', manage_form_now : true}";
-        }
+        echo "{status : 0, error_txt : '".addslashes(functions::xssafe($_SESSION['action_error']))."', page_result : '', manage_form_now : false}";
         exit();
     }
 } elseif (trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !empty($_POST['new_status']) && !empty($_POST['table'])) {

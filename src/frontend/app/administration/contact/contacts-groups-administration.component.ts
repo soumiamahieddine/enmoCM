@@ -1,20 +1,16 @@
-import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
-
+import { MatPaginator, MatTableDataSource, MatSort, MatSidenav } from '@angular/material';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
-declare var angularGlobals: any;
-
-
 @Component({
     templateUrl: "contacts-groups-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 
 export class ContactsGroupsAdministrationComponent implements OnInit {
@@ -22,9 +18,6 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
     lang: any = LANG;
     search: string = null;
 
@@ -43,15 +36,13 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -60,11 +51,9 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/contactsGroups')
+        this.http.get('../..rest/contactsGroups')
             .subscribe((data) => {
                 this.contactsGroups = data['contactsGroups'];
                 this.loading = false;
@@ -84,7 +73,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + contactsGroup.label + ' »');
 
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/contactsGroups/' + contactsGroup.id)
+            this.http.delete('../..rest/contactsGroups/' + contactsGroup.id)
                 .subscribe(() => {
                     var lastElement = this.contactsGroups.length - 1;
                     this.contactsGroups[row] = this.contactsGroups[lastElement];

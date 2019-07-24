@@ -92,6 +92,7 @@ class ResourceListController
         }
 
         $formattedResources = [];
+        $defaultAction = [];
         if (!empty($resIds)) {
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
             if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
@@ -105,8 +106,8 @@ class ResourceListController
                 'groupBy'   => ['res_id_master']
             ]);
 
-            $listDisplay = GroupBasketModel::get(['select' => ['list_display'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
-            $listDisplay = json_decode($listDisplay[0]['list_display']);
+            $groupBasket = GroupBasketModel::get(['select' => ['list_display', 'list_event'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
+            $listDisplay = json_decode($groupBasket[0]['list_display']);
 
             $select = [
                 'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'mlb_coll_ext.alt_identifier',
@@ -224,15 +225,8 @@ class ResourceListController
                 }
                 $formattedResources[$key]['display'] = $display;
             }
-        }
 
-        $defaultAction = ActionGroupBasketModel::get([
-            'select'    => ['id_action'],
-            'where'     => ['basket_id = ?', 'group_id = ?', 'default_action_list = ?'],
-            'data'      => [$basket['basket_id'], $group['group_id'], 'Y']
-        ]);
-        if (!empty($defaultAction[0]['id_action'])) {
-            $defaultAction = ActionModel::getById(['select' => ['id', 'label_action', 'component'], 'id' => $defaultAction[0]['id_action']]);
+            $defaultAction['component'] = $groupBasket[0]['list_event'];
         }
 
         return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'basket_id' => $basket['basket_id'], 'allResources' => $allResources, 'defaultAction' => $defaultAction]);
@@ -842,7 +836,7 @@ class ResourceListController
         }
 
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
-        $groups = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
         $groupFound = false;
         foreach ($groups as $value) {
             if ($value['id'] == $aArgs['groupId']) {

@@ -36,11 +36,11 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
     $currentRoute = empty($route) ? '' : $route->getPattern();
 
     if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication)) {
-        $userId = \SrcCore\controllers\AuthenticationController::authentication();
-        if (!empty($userId)) {
-            $GLOBALS['userId'] = $userId;
+        $login = \SrcCore\controllers\AuthenticationController::authentication();
+        if (!empty($login)) {
+            \SrcCore\controllers\CoreController::setGlobals(['login' => $login]);
             if (!empty($currentRoute)) {
-                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
+                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['login' => $login, 'currentRoute' => $currentRoute]);
                 if (!$r['isRouteAvailable']) {
                     return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
                 }
@@ -184,12 +184,20 @@ $app->put('/groups/{id}/indexing', \Group\controllers\GroupController::class . '
 $app->put('/groups/{id}/services/{serviceId}', \Group\controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
 
+//Folders
+$app->get('/folders', \Folder\controllers\FolderController::class . ':get');
+$app->post('/folders', \Folder\controllers\FolderController::class . ':create');
+$app->get('/folders/{id}', \Folder\controllers\FolderController::class . ':getById');
+$app->put('/folders/{id}', \Folder\controllers\FolderController::class . ':update');
+$app->delete('/folders/{id}', \Folder\controllers\FolderController::class . ':delete');
+
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
+$app->get('/shortcuts', \SrcCore\controllers\CoreController::class . ':getShortcuts');
 
 //Home
 $app->get('/home', \Home\controllers\HomeController::class . ':get');

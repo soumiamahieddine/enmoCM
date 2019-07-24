@@ -1,26 +1,21 @@
-import { ChangeDetectorRef, Component, OnInit, Input, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { LANG } from '../translate.component';
+import { LANG } from '../../translate.component';
 import { MatSidenav, MatBottomSheet } from '@angular/material';
-import { HeaderService } from "../../service/header.service";
-import { TechnicalAdministrationComponent } from "../administration/technical/technical-administration.component";
+import { HeaderService } from "../../../service/header.service";
+import { TechnicalAdministrationComponent } from "../technical/technical-administration.component";
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
-declare const angularGlobals: any;
-
-
 @Component({
     templateUrl: "administration.component.html",
+    styleUrls: ['administration.component.scss'],
+    providers: [AppService]
 })
 export class AdministrationComponent implements OnInit {
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-
-    coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
 
@@ -32,11 +27,15 @@ export class AdministrationComponent implements OnInit {
     @ViewChild('snav') public sidenavLeft: MatSidenav;
     @ViewChild('snav2') public sidenavRight: MatSidenav;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private router: Router, private headerService: HeaderService, private bottomSheet: MatBottomSheet) {
+    constructor(
+        public http: HttpClient, 
+        private router: Router, 
+        private headerService: HeaderService, 
+        private bottomSheet: MatBottomSheet,
+        public appService: AppService) {
+
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
+
     }
 
     ngOnInit(): void {
@@ -44,11 +43,9 @@ export class AdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/administration')
+        this.http.get('../../rest/administration')
             .subscribe((data: any) => {
                 this.organisationServices = data.administrations.organisation;
                 this.productionServices = data.administrations.production;

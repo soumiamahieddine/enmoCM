@@ -20,6 +20,7 @@ use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
 require_once 'core/class/Url.php';
@@ -81,39 +82,66 @@ class CoreController
     public function getHeader(Request $request, Response $response)
     {
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
-        $user['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
+        $user['groups'] = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
-        $user['indexingGroups'] = [];
 
         if ($GLOBALS['userId'] == 'superadmin') {
             $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
-            foreach ($menu as $key => $value) {
-                if ($value['id'] == 'index_mlb' && $GLOBALS['userId'] == 'superadmin') {
-                    unset($menu[$key]);
-                }
-            }
             $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
             $menu = array_merge($menu, $menuModules);
         } else {
             $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
-            foreach ($menu as $value) {
-                if ($value['id'] == 'index_mlb') {
-                    foreach ($user['groups'] as $group) {
-                        if (GroupBasketModel::hasBasketByGroupId(['groupId' => $group['group_id'], 'basketId' => 'IndexingBasket'])) {
-                            $user['indexingGroups'][] = ['groupId' => $group['group_id'], 'label' => $group['group_desc']];
-                        }
-                    }
-                }
-            }
         }
 
         return $response->withJson([
-            'user'  => $user,
-            'menu'  => $menu
+            'user'      => $user,
+            'menu'      => $menu
         ]);
     }
 
-    public static function getAdministration(Request $request, Response $response)
+    public function getShortcuts(Request $request, Response $response)
+    {
+        $userGroups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
+
+        $shortcuts = [
+            ['id' => 'home']
+        ];
+
+        if ($GLOBALS['userId'] == 'superadmin') {
+            $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
+            $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
+            $menu = array_merge($menu, $menuModules);
+        } else {
+            $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+        }
+
+        foreach ($menu as $value) {
+            if ($value['id'] == 'admin') {
+                $shortcuts[] = ['id' => 'administration'];
+            } elseif ($value['id'] == 'adv_search_mlb') {
+                $shortcuts[] = ['id' => 'search'];
+            }
+        }
+
+        $indexingGroups = [];
+        foreach ($userGroups as $group) {
+            if ($group['can_index']) {
+                $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
+            }
+        }
+        if (!empty($indexingGroups)) {
+            $shortcuts[] = [
+                'id'        => 'indexing',
+                'groups'    => $indexingGroups
+            ];
+        }
+
+        return $response->withJson([
+            'shortcuts' => $shortcuts
+        ]);
+    }
+
+    public function getAdministration(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -129,5 +157,15 @@ class CoreController
         }
 
         return $response->withJson($administration);
+    }
+
+    public static function setGlobals(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['login']);
+        ValidatorModel::stringType($args, ['login']);
+
+        $user = UserModel::getByLogin(['login' => $args['login'], 'select' => ['id']]);
+        $GLOBALS['userId'] = $args['login'];
+        $GLOBALS['id'] = $user['id'];
     }
 }

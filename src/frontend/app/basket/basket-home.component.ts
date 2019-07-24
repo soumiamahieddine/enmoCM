@@ -2,10 +2,9 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { MatSidenav } from '@angular/material';
+import { AppService } from '../../service/app.service';
 
 declare function $j(selector: any) : any;
-declare var angularGlobals : any;
-
 
 @Component({
     selector: 'basket-home',
@@ -15,8 +14,6 @@ declare var angularGlobals : any;
 export class BasketHomeComponent implements OnInit {
 
     lang: any = LANG;
-    coreUrl : string;
-    mobileMode                      : boolean   = false;
     
     @Input() homeData: any;
     @Input('currentBasketInfo') currentBasketInfo: any = {
@@ -27,13 +24,13 @@ export class BasketHomeComponent implements OnInit {
     @Input() snavL: MatSidenav;
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
 
-    constructor(public http: HttpClient) {
-        this.mobileMode = angularGlobals.mobileMode;
+    constructor(
+        public http: HttpClient,
+        public appService: AppService
+    ) {
     }
 
-    ngOnInit(): void {        
-        this.coreUrl = angularGlobals.coreUrl;
-    }
+    ngOnInit(): void { }
 
     goTo(basketId:any, groupId:any) {
         window.location.href="index.php?page=view_baskets&fromV2=true&module=basket&baskets="+basketId+"&groupId="+groupId;
@@ -44,7 +41,7 @@ export class BasketHomeComponent implements OnInit {
     }
 
     closePanelLeft() {
-        if(this.mobileMode) {
+        if(this.appService.getViewMode()) {
             this.snavL.close();
         }
     }
@@ -59,7 +56,7 @@ export class BasketHomeComponent implements OnInit {
     }
 
     refreshBasketHome(){
-        this.http.get(this.coreUrl + "rest/home")
+        this.http.get("../../rest/home")
             .subscribe((data: any) => {
                 this.homeData = data;
             });

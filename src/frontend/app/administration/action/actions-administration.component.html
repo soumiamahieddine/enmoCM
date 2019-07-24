@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list>
@@ -33,16 +33,16 @@
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
                     <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.id}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()">{{lang.id}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"> {{element.id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="label_action">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionName}}</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.label_action}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="history">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.actionHistory}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()">{{lang.actionHistory}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
                             <span *ngIf="element.history == 'N'"> {{lang.no}} </span>
                             <span *ngIf="element.history == 'Y'"> {{lang.yes}} </span>
                         </mat-cell>
@@ -61,8 +61,8 @@
                 <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{actions.length}} {{lang.actions}}</div>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            position='end' [opened]="appService.getViewMode() ? false : false">
         </mat-sidenav>
     </mat-sidenav-container>
 </div>

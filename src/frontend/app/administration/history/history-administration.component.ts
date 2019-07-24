@@ -1,27 +1,21 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild }  from '@angular/core';
+import { Component, OnInit, ViewChild }  from '@angular/core';
 import { HttpClient }                                       from '@angular/common/http';
-import { MediaMatcher }                                     from '@angular/cdk/layout';
 import { MatPaginator, MatTableDataSource, MatSort, MatSidenav }        from '@angular/material';
 import { LANG }                                             from '../../translate.component';
 import { HeaderService }        from '../../../service/header.service';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
-declare var angularGlobals: any;
-
-
 @Component({
-    templateUrl: "history-administration.component.html"
+    templateUrl: "history-administration.component.html",
+    providers: [AppService]
 })
 export class HistoryAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-
-    coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
     limitExceeded                   : boolean   = false;
@@ -58,7 +52,11 @@ export class HistoryAdministrationComponent implements OnInit {
         }        
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
 
         this.startDate.setHours(0,0,0,0);
@@ -68,14 +66,6 @@ export class HistoryAdministrationComponent implements OnInit {
         this.batchStartDate.setHours(0,0,0,0);
         this.batchStartDate.setMonth(this.endDate.getMonth()-1);
         this.batchEndDate.setHours(23,59,59,59);
-
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -83,10 +73,9 @@ export class HistoryAdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
+        this.http.get('../../rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
                 this.data = data['histories'];
                 this.limitExceeded = data['limitExceeded'];
@@ -106,7 +95,7 @@ export class HistoryAdministrationComponent implements OnInit {
                 }                
             });
 
-        this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
+        this.http.get('../../rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
                 this.batchData = data['batchHistories'];
                 this.batchLimitExceeded = data['limitExceeded'];
@@ -152,7 +141,7 @@ export class HistoryAdministrationComponent implements OnInit {
         if (historyType == 'normal') {
             this.startDate.setHours(0,0,0,0);
             this.endDate.setHours(23,59,59,59);
-            this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
+            this.http.get('../../rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
                 .subscribe((data: any) => {
                     this.data = data['histories'];
                     this.limitExceeded = data['limitExceeded'];
@@ -168,7 +157,7 @@ export class HistoryAdministrationComponent implements OnInit {
         } else {
             this.batchStartDate.setHours(0,0,0,0);
             this.batchEndDate.setHours(23,59,59,59);
-            this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
+            this.http.get('../../rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
                 .subscribe((data: any) => {
                     this.batchData = data['batchHistories'];
                     this.batchLimitExceeded = data['limitExceeded'];

@@ -1,13 +1,12 @@
-import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatSidenav} from '@angular/material';
 import { HeaderService } from '../../../service/header.service';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-declare var angularGlobals: any;
 
 @Component({
     templateUrl: "templates-administration.component.html",
@@ -19,9 +18,6 @@ export class TemplatesAdministrationComponent implements OnInit {
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
     lang: any = LANG;
     search: string = null;
 
@@ -49,15 +45,13 @@ export class TemplatesAdministrationComponent implements OnInit {
         };
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -65,11 +59,9 @@ export class TemplatesAdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/templates')
+        this.http.get('../../rest/templates')
             .subscribe((data) => {
                 this.templates = data['templates'];
                 this.loading = false;
@@ -89,7 +81,7 @@ export class TemplatesAdministrationComponent implements OnInit {
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + template.template_label + ' »');
 
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/templates/' + template.template_id)
+            this.http.delete('../../rest/templates/' + template.template_id)
                 .subscribe(() => {
                     for (let i in this.templates) {
                         if (this.templates[i].template_id == template.template_id) {

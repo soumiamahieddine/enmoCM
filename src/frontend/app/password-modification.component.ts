@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
 import { FormBuilder, FormGroup, Validators, ValidationErrors, AbstractControl, ValidatorFn } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
+import { AppService } from '../service/app.service';
 
 declare function $j(selector: any): any;
 
@@ -13,16 +13,13 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "password-modification.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class PasswordModificationComponent implements OnInit {
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
     dialogRef                       : MatDialogRef<any>;
     config                          : any       = {};
 
-    coreUrl         : string;
     lang            : any       = LANG;
     loading         : boolean   = false;
 
@@ -53,11 +50,14 @@ export class PasswordModificationComponent implements OnInit {
     };
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private _formBuilder: FormBuilder, public dialog: MatDialog) {
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private _formBuilder: FormBuilder, 
+        public dialog: MatDialog,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
         this.user = angularGlobals.user;
     }
 
@@ -85,8 +85,7 @@ export class PasswordModificationComponent implements OnInit {
             this.dialogRef = this.dialog.open(InfoChangePasswordModalComponent, this.config);
         }, 0);
 
-        this.coreUrl = angularGlobals.coreUrl;
-        this.http.get(this.coreUrl + 'rest/passwordRules')
+        this.http.get('../../rest/passwordRules')
             .subscribe((data: any) => {
                 let valArr : ValidatorFn[] = [];
                 let ruleTextArr: String[] = [];
@@ -207,7 +206,7 @@ export class PasswordModificationComponent implements OnInit {
         this.passwordModel.currentPassword = this.firstFormGroup.controls['currentPasswordCtrl'].value;
         this.passwordModel.newPassword = this.firstFormGroup.controls['newPasswordCtrl'].value;
         this.passwordModel.reNewPassword = this.firstFormGroup.controls['retypePasswordCtrl'].value;
-        this.http.put(this.coreUrl + 'rest/users/' + angularGlobals.user.id + '/password', this.passwordModel)
+        this.http.put('../../rest/users/' + angularGlobals.user.id + '/password', this.passwordModel)
             .subscribe(() => {
                 this.config = {data:{state:'END'},disableClose: true};
                 this.dialogRef = this.dialog.open(InfoChangePasswordModalComponent, this.config);

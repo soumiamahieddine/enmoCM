@@ -12,6 +12,7 @@
 
 namespace Action\controllers;
 
+use Basket\models\GroupBasketRedirectModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
@@ -151,6 +152,13 @@ class ActionController
             ActionModel::createCategories(['id' => $aArgs['id'], 'categories' => $body['actionCategories']]);
         }
 
+        if (!in_array($body['component'], ['confirmAction', 'closeMailAction'])) {
+            GroupModel::update([
+                'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{actions}', (indexation_parameters->'actions') - '{$aArgs['id']}')"],
+                'where'     => ['1=1']
+            ]);
+        }
+
         HistoryController::add([
             'tableName' => 'actions',
             'recordId'  => $aArgs['id'],
@@ -178,6 +186,7 @@ class ActionController
 
         ActionModel::delete(['id' => $args['id']]);
         ActionModel::deleteCategories(['id' => $args['id']]);
+        GroupBasketRedirectModel::delete(['where' => ['action_id = ?'], 'data' => [$args['id']]]);
 
         GroupModel::update([
             'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{actions}', (indexation_parameters->'actions') - '{$args['id']}')"],

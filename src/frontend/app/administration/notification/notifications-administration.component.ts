@@ -1,29 +1,21 @@
-import { ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
-
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
-declare var angularGlobals: any;
-
-
 @Component({
     templateUrl: "notifications-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class NotificationsAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
-
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
 
     notifications: any[] = [];
     loading: boolean = false;
@@ -60,15 +52,13 @@ export class NotificationsAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -77,10 +67,9 @@ export class NotificationsAdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/notifications')
+        this.http.get('../../rest/notifications')
             .subscribe((data: any) => {
                 this.notifications = data.notifications;
                 this.loading = false;
@@ -98,7 +87,7 @@ export class NotificationsAdministrationComponent implements OnInit {
         let r = confirm(this.lang.deleteMsg);
 
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/notifications/' + notification.notification_sid)
+            this.http.delete('../../rest/notifications/' + notification.notification_sid)
                 .subscribe((data: any) => {
                     this.notifications = data.notifications;
                     setTimeout(() => {
@@ -169,7 +158,7 @@ export class NotificationsAdministrationComponent implements OnInit {
             this.dom.push({label:i,value:String(i)});
         }
 
-        this.http.get(this.coreUrl + 'rest/notifications/schedule')
+        this.http.get('../../rest/notifications/schedule')
             .subscribe((data: any) => {
                 this.crontab = data.crontab;
                 this.authorizedNotification = data.authorizedNotification;
@@ -183,7 +172,7 @@ export class NotificationsAdministrationComponent implements OnInit {
         var description = this.newCron.cmd.split("/");
         this.newCron.description = description[description.length-1];
         this.crontab.push(this.newCron);
-        this.http.post(this.coreUrl + 'rest/notifications/schedule', this.crontab)
+        this.http.post('../../rest/notifications/schedule', this.crontab)
             .subscribe((data: any) => {
                 this.newCron = {
                     "m" : "",
@@ -203,7 +192,7 @@ export class NotificationsAdministrationComponent implements OnInit {
 
     deleteCron(i:number) {
         this.crontab[i].state = 'deleted';
-        this.http.post(this.coreUrl + 'rest/notifications/schedule', this.crontab)
+        this.http.post('../../rest/notifications/schedule', this.crontab)
             .subscribe((data: any) => {
                 this.crontab.splice(i,1);
                 this.notify.success(this.lang.notificationScheduleUpdated);

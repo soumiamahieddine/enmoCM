@@ -11,14 +11,14 @@ import { MatDialogRef, MatSidenav }         from '@angular/material';
 export class HeaderLeftComponent implements OnInit {
 
     lang        : any       = LANG;
-    mobileMode  : boolean   = false;
-
     dialogRef   : MatDialogRef<any>;
     config      : any       = {};
 
     @Input('snavLeft') snavLeft: MatSidenav;
     
-    constructor(public headerService: HeaderService) { }
+    constructor(
+        public headerService: HeaderService
+    ) { }
 
     ngOnInit(): void { }
 }

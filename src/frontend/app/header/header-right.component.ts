@@ -5,9 +5,9 @@ import { HeaderService }        from '../../service/header.service';
 import { MatDialog, MatDialogRef, MatInput } from '@angular/material';
 import { IndexingGroupModalComponent } from '../menu/menu-shortcut.component';
 import { Router } from '@angular/router';
+import { AppService } from '../../service/app.service';
 
 declare function $j(selector: any): any;
-declare var angularGlobals: any;
 
 @Component({
     selector: 'header-right',
@@ -17,7 +17,6 @@ declare var angularGlobals: any;
 export class HeaderRightComponent implements OnInit {
 
     lang        : any       = LANG;
-    mobileMode  : boolean   = false;
 
     dialogRef   : MatDialogRef<any>;
     config      : any       = {};
@@ -26,9 +25,12 @@ export class HeaderRightComponent implements OnInit {
 
     @ViewChild('searchInput') searchInput: MatInput;
 
-    constructor(public http: HttpClient, private router: Router, public headerService: HeaderService, public dialog: MatDialog) {
-        this.mobileMode = angularGlobals.mobileMode;
-     }
+    constructor(
+        public http: HttpClient, 
+        private router: Router,
+        public headerService: HeaderService, 
+        public dialog: MatDialog,
+        public appService: AppService) {}
 
     ngOnInit(): void {}
 

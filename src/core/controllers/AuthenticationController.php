@@ -42,11 +42,11 @@ class AuthenticationController
 
     public static function isRouteAvailable(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId', 'currentRoute']);
-        ValidatorModel::stringType($aArgs, ['userId', 'currentRoute']);
+        ValidatorModel::notEmpty($aArgs, ['login', 'currentRoute']);
+        ValidatorModel::stringType($aArgs, ['login', 'currentRoute']);
 
         if ($aArgs['currentRoute'] != '/initialize') {
-            $user = UserModel::getByLogin(['select' => ['status', 'change_password'], 'login' => $aArgs['userId']]);
+            $user = UserModel::getByLogin(['select' => ['status', 'change_password'], 'login' => $aArgs['login']]);
 
             if ($user['status'] == 'ABS' && !in_array($aArgs['currentRoute'], ['/users/{id}/status', '/currentUser/profile', '/header', '/passwordRules', '/users/{id}/password'])) {
                 return ['isRouteAvailable' => false, 'errors' => 'User is ABS and must be activated'];

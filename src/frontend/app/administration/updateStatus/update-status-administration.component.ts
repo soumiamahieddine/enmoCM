@@ -1,31 +1,24 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav } from '@angular/material';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
-
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
+import { tap } from 'rxjs/internal/operators/tap';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-declare var angularGlobals: any;
-
 
 @Component({
     templateUrl: "update-status-administration.component.html",
     styleUrls: ['update-status-administration.component.css'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
-export class UpdateStatusAdministrationComponent extends AutoCompletePlugin implements OnInit {
+export class UpdateStatusAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-
-    coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
 
@@ -36,16 +29,13 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     resIdList                       : string[]  = [];
     chronoList                      : string[]  = [];
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private headerService: HeaderService) {
-        super(http, ['statuses']);
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -54,8 +44,11 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
         window['MainHeaderComponent'].setSnavRight(null);
 
         this.loading = true;
-        this.coreUrl = angularGlobals.coreUrl;
-        this.loading = false;
+
+        this.http.get('../../rest/autocomplete/statuses').pipe(
+            tap((data : any) => this.statuses = data),
+            tap(() => this.loading = false)
+        ).subscribe();
     }
 
     onSubmit() {
@@ -68,7 +61,7 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
             body["chrono"] = this.chronoList;
         }        
 
-        this.http.put(this.coreUrl + "rest/res/resource/status", body)
+        this.http.put("../../rest/res/resource/status", body)
             .subscribe(() => {
                 this.resId = "";
                 this.chrono = "";
@@ -93,6 +86,10 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
             this.chronoList.push(this.chrono);
         }
         this.chrono = "";
+    }
+
+    setStatus(status: any) {
+        this.statusId = status.id;
     }
 
     removeResId(resId: string) :void {

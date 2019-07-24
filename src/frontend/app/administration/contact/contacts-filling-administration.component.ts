@@ -1,30 +1,23 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { MatSidenav } from '@angular/material';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
-declare var angularGlobals: any;
-
-
 @Component({
     templateUrl: "contacts-filling-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class ContactsFillingAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public sidenavLeft: MatSidenav;
     @ViewChild('snav2') public sidenavRight: MatSidenav;
 
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
     lang: any = LANG;
-    coreUrl: string;
 
     contactsFilling: any = {
         'rating_columns': [],
@@ -89,19 +82,15 @@ export class ContactsFillingAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
-        $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService) {
+            $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
@@ -109,7 +98,7 @@ export class ContactsFillingAdministrationComponent implements OnInit {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
-        this.http.get(this.coreUrl + 'rest/contactsFilling')
+        this.http.get('../../rest/contactsFilling')
             .subscribe((data: any) => {
                 this.contactsFilling = data.contactsFilling;
                 if (this.contactsFilling.rating_columns.length > 0) {
@@ -138,7 +127,7 @@ export class ContactsFillingAdministrationComponent implements OnInit {
         if (this.contactsFilling.first_threshold >= this.contactsFilling.second_threshold) {
             this.contactsFilling.second_threshold = this.contactsFilling.first_threshold + 1;
         }
-        this.http.put(this.coreUrl + 'rest/contactsFilling', this.contactsFilling)
+        this.http.put('../../rest/contactsFilling', this.contactsFilling)
             .subscribe(() => {
                 this.notify.success(this.lang.contactsFillingUpdated);
 

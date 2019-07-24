@@ -688,12 +688,6 @@ if (!defined('_VIEW_HISTORY2')) {
 if (!defined('_VIEW_HISTORY_BATCH2')) {
     define('_VIEW_HISTORY_BATCH2', "Visualisation de l'historique des batchs");
 }
-if (!defined('_INDEX_FILE')) {
-    define('_INDEX_FILE', 'Indexer un fichier');
-}
-if (!defined('_INDEX_FILE_DESC')) {
-    define('_INDEX_FILE_DESC', "Ouvre la page d'indexation afin d'enregistrer un courrier.");
-}
 if (!defined('_WORDING')) {
     define('_WORDING', 'Libellé');
 }
@@ -2048,12 +2042,6 @@ if (!defined('_FOUND_LOGS')) {
 if (!defined('_PROCESS')) {
     define('_PROCESS', 'Traitement ');
 }
-if (!defined('_PROCESS_ACTION')) {
-    define('_PROCESS_ACTION', 'Traiter');
-}
-if (!defined('_PROCESS_DESC')) {
-    define('_PROCESS_DESC', "Ouvre la page de traitement d'un courrier (les métas-données ne peuvent être modfiées depuis cette page).");
-}
 if (!defined('_DOC_NUM')) {
     define('_DOC_NUM', 'document n° ');
 }
@@ -2837,9 +2825,6 @@ if (!defined('_DOWNLOAD_LOCAL_DOC_COPY')) {
 if (!defined('_VISUALIZE')) {
     define('_VISUALIZE', 'Visualiser');
 }
-if (!defined('_VIEW_DOC_DESC')) {
-    define('_VIEW_DOC_DESC', "Ouvre une modal avec le courrier en visualisation. Incrémente également la donnée 'viewed' de la table listinstance (utile si utilisée dans les clauses de bannettes) ");
-}
 if (!defined('_TYPIST')) {
     define('_TYPIST', 'Opérateur');
 }
@@ -3280,12 +3265,6 @@ if (!defined('_MAKE_NEW_SEARCH')) {
 }
 if (!defined('_NO_PAGE')) {
     define('_NO_PAGE', 'Aucune page');
-}
-if (!defined('_VALIDATE_QUALIF')) {
-    define('_VALIDATE_QUALIF', 'Valider/Qualifier');
-}
-if (!defined('_VALIDATE_QUALIF_DESC')) {
-    define('_VALIDATE_QUALIF_DESC', "Ouvre la page de modification d'un courrier déjà enregistré (les métas-données peuvent être modifiées depuis cette page).");
 }
 if (!defined('_DB_CONNEXION_ERROR')) {
     define('_DB_CONNEXION_ERROR', 'Erreur de connexion à la base de données');

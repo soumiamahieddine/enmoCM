@@ -1,14 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
 import { tap } from 'rxjs/internal/operators/tap';
-import { exhaustMap, startWith, map } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
-import { LatinisePipe } from 'ngx-pipes';
+import { map, catchError, filter, exhaustMap, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { MatDialogRef, MatDialog } from '@angular/material';
+import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
+import { HeaderService } from '../../../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -23,14 +22,12 @@ export class IndexingAdministrationComponent implements OnInit {
     mobileQuery: MediaQueryList;
 
     lang: any = LANG;
-    loading: boolean = false;
+    loading: boolean = true;
 
     @Input('groupId') groupId: number;
 
     keywordEntities: any[] = [];
     actionList: any[] = [];
-
-    myControl = new FormControl();
 
     indexingInfo: any = {
         canIndex: false,
@@ -38,11 +35,12 @@ export class IndexingAdministrationComponent implements OnInit {
         keywords: [],
         entities: []
     };
-    filteredActionList: Observable<any[]>;
+    dialogRef: MatDialogRef<any>;
 
     constructor(public http: HttpClient,
         private notify: NotificationService,
-        private latinisePipe: LatinisePipe
+        private headerService: HeaderService,
+        private dialog: MatDialog,
     ) {
 
         this.keywordEntities = [{
@@ -105,25 +103,18 @@ export class IndexingAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.filteredActionList = this.myControl.valueChanges
-            .pipe(
-                startWith(''),
-                map(value => this._filter(value))
-            );
-
         this.getIndexingInformations().pipe(
             tap((data: any) => this.indexingInfo.canIndex = data.group.canIndex),
             tap((data: any) => this.getActions(data.actions)),
             tap((data: any) => this.getSelectedActions(data.group.indexationParameters.actions)),
             map((data: any) => this.getEntities(data)),
             map((data: any) => this.getSelectedEntities(data)),
-            tap((data: any) => this.initEntitiesTree(data))
+            tap((data: any) => this.initEntitiesTree(data)),
+            finalize(() => this.loading = false)
         ).subscribe();
-
     }
 
     initEntitiesTree(entities: any) {
-        
         $j('#jstree').jstree({
             "checkbox": {
                 "three_state": false //no cascade selection
@@ -137,6 +128,16 @@ export class IndexingAdministrationComponent implements OnInit {
             },
             "plugins": ["checkbox", "search"]
         });
+
+        let to: any = false;
+        $j('#jstree_search').keyup(function () {
+            if (to) { clearTimeout(to); }
+            to = setTimeout(function () {
+                const v = $j('#jstree_search').val();
+                $j('#jstree').jstree(true).search(v);
+            }, 250);
+        });
+
 
         $j('#jstree')
             // listen for event
@@ -159,20 +160,20 @@ export class IndexingAdministrationComponent implements OnInit {
     }
 
     getEntities(data: any) {
+        this.keywordEntities.forEach((entity: any) => {
+            if (data.group.indexationParameters.keywords.indexOf(entity.id) > -1) {
+                entity.state = { "opened": true, "selected": true };
+            } else {
+                entity.state = { "opened": true, "selected": false };
+            }
+        });
         data.entities = this.keywordEntities.concat(data.entities);
         return data;
     }
 
     getSelectedEntities(data: any) {
         this.indexingInfo.entities = [...data.group.indexationParameters.entities];
-        data.entities.forEach((entity: any) => {
-            if (this.indexingInfo.entities.indexOf(entity.id) > -1 ) {
-                entity.state = { "opened": true, "selected": true };
-            } else {
-                entity.state = { "opened": true, "selected": false };
-            }
-            
-        });
+        this.indexingInfo.keywords = [...data.group.indexationParameters.keywords];
         return data.entities;
     }
 
@@ -187,7 +188,7 @@ export class IndexingAdministrationComponent implements OnInit {
     getSelectedActions(data: any) {
         let index = -1;
         data.forEach((actionId: any) => {
-            index = this.actionList.findIndex(action => action.id === actionId);
+            index = this.actionList.findIndex(action => action.id == actionId);
             if (index > -1) {
                 this.indexingInfo.actions.push(this.actionList[index]);
                 this.actionList.splice(index, 1);
@@ -196,47 +197,142 @@ export class IndexingAdministrationComponent implements OnInit {
     }
 
     addEntity(entityId: number) {
-        this.indexingInfo.entities.push(entityId);
-        console.log(this.indexingInfo.entities);
+        const newEntityList = this.indexingInfo.entities.concat([entityId]);
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { entities: newEntityList }).pipe(
+            tap(() => {
+                this.indexingInfo.entities.push(entityId);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.entityAdded);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     removeEntity(entityId: number) {
         const index = this.indexingInfo.entities.indexOf(entityId);
-        this.indexingInfo.entities.splice(index, 1);
-        console.log(this.indexingInfo.entities);
+        let newEntityList = [...this.indexingInfo.entities];
+        newEntityList.splice(index, 1);
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { entities: newEntityList }).pipe(
+            tap(() => {
+                this.indexingInfo.entities.splice(index, 1);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.entityDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     addKeyword(keyword: string) {
-        this.indexingInfo.keywords.push(keyword);
-        console.log(this.indexingInfo.keywords);
+        const newKeywordList = this.indexingInfo.keywords.concat([keyword]);
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { keywords: newKeywordList }).pipe(
+            tap(() => {
+                this.indexingInfo.keywords.push(keyword);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.keywordAdded);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     removeKeyword(keyword: string) {
         const index = this.indexingInfo.keywords.indexOf(keyword);
-        this.indexingInfo.keywords.splice(index, 1);
-        console.log(this.indexingInfo.keywords);
+        let newKeywordList = [...this.indexingInfo.keywords];
+        newKeywordList.splice(index, 1);
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { keywords: newKeywordList }).pipe(
+            tap(() => {
+                this.indexingInfo.keywords.splice(index, 1);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.keywordDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
-    addAction(actionOpt: MatAutocompleteSelectedEvent) {
-        const index = this.actionList.findIndex(action => action.id === actionOpt.option.value);
-        const action = {...this.actionList[index]};
-        this.indexingInfo.actions.push(action);
-        this.actionList.splice(index, 1);
-        $j('#addAction').blur();
+    addAction(actionOpt: any) {
+        const newActionListIds = this.indexingInfo.actions.map((action: any) => action.id).concat([actionOpt].map((action: any) => action.id));
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { actions: newActionListIds }).pipe(
+            tap(() => {
+                const index = this.actionList.findIndex(action => action.id === actionOpt.id);
+                const action = { ...this.actionList[index] };
+                this.indexingInfo.actions.push(action);
+                this.actionList.splice(index, 1);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.actionAdded);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     removeAction(index: number) {
-        const action = {...this.indexingInfo.actions[index]};
-        this.actionList.push(action);
-        this.indexingInfo.actions.splice(index, 1);
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            map(() => {
+                this.dialogRef = null;
+                let newActionList = [...this.indexingInfo.actions];
+                newActionList.splice(index, 1);
+                return newActionList.map((action: any) => action.id);
+            }),
+            exhaustMap((data) => this.http.put('../../rest/groups/' + this.groupId + '/indexing', { actions: data })),
+            tap(() => {
+                this.actionList.push(this.indexingInfo.actions[index]);
+                this.indexingInfo.actions.splice(index, 1);
+            }),
+            tap(() => {
+                this.notify.success(this.lang.actionDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
-    private _filter(value: string): any[] {
-        if (typeof value === 'string') {
-            const filterValue = this.latinisePipe.transform(value.toLowerCase());
-            return this.actionList.filter(option => this.latinisePipe.transform(option.label_action.toLowerCase()).includes(filterValue));
-        } else {
-            return this.actionList;
-        }
+    toggleIndex(canIndex: boolean) {
+
+        this.http.put('../../rest/groups/' + this.groupId + '/indexing', { canIndex: canIndex }).pipe(
+            tap(() => {
+                this.indexingInfo.canIndex = canIndex;
+                this.headerService.refreshShortcuts();
+            }),
+            tap(() => {
+                if (this.indexingInfo.canIndex) {
+                    this.notify.success(this.lang.indexEnabled);
+                } else {
+                    this.notify.success(this.lang.indexDisabled);
+                }
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
+
 }

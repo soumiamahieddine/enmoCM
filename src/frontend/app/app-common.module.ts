@@ -47,6 +47,10 @@ import { BasketHomeComponent }                        from './basket/basket-home
 import { AlertComponent }                        from '../plugins/modal/alert.component';
 import { ConfirmComponent }                        from '../plugins/modal/confirm.component';
 
+/*PLUGIN COMPONENT*/
+import { PluginAutocomplete }                        from '../plugins/autocomplete/autocomplete.component';
+
+
 
 export class MyHammerConfig extends HammerGestureConfig {
     overrides = <any> {
@@ -60,6 +64,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpClientModule,
         RouterModule,
         PdfViewerModule,
@@ -86,7 +91,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
         AlertComponent,
-        ConfirmComponent
+        ConfirmComponent,
+        PluginAutocomplete
     ],
     exports: [
         CommonModule,
@@ -115,7 +121,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
-        DragDropModule
+        DragDropModule,
+        PluginAutocomplete
     ],
     providers: [
         LatinisePipe,

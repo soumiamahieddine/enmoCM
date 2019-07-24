@@ -27,19 +27,6 @@
     <angular>false</angular>
   </SERVICE>
   <SERVICE>
-    <id>index_mlb</id>
-    <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
-    <name>_INDEXING_MLB</name>
-    <comment>_INDEXING_MLB</comment>
-    <servicepage>index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket</servicepage>
-    <servicetype>menu</servicetype>
-    <shortcut>true</shortcut>
-    <system_service>false</system_service>
-    <enabled>true</enabled>
-    <style>fa fa-file-medical</style>
-    <angular>false</angular>
-  </SERVICE>
-  <SERVICE>
     <id>search_contacts</id>
     <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
     <name>_SEARCH_CONTACTS</name>

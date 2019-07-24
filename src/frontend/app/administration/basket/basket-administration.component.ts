@@ -1,35 +1,29 @@
-import { ChangeDetectorRef, Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { FormControl } from '@angular/forms';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-declare var angularGlobals: any;
-
 
 @Component({
     templateUrl: "basket-administration.component.html",
     styleUrls: ['basket-administration.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class BasketAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public sidenavLeft: MatSidenav;
     @ViewChild('snav2') public sidenavRight: MatSidenav;
 
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
     dialogRef: MatDialogRef<any>;
 
     selectedIndex: number = 0;
 
-    coreUrl: string;
     lang: any = LANG;
     loading: boolean = false;
 
@@ -62,19 +56,18 @@ export class BasketAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService) {
-        $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
+    constructor( 
+        public http: HttpClient,
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private notify: NotificationService, 
+        public dialog: MatDialog, 
+        private headerService: HeaderService,
+        public appService: AppService) {
+            $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
@@ -95,7 +88,7 @@ export class BasketAdministrationComponent implements OnInit {
                 this.creationMode = false;
                 this.basketIdAvailable = true;
                 this.id = params['id'];
-                this.http.get(this.coreUrl + "rest/baskets/" + this.id)
+                this.http.get("../../rest/baskets/" + this.id)
                     .subscribe((data: any) => {
                         this.headerService.setHeader(this.lang.basketModification, data.basket.basket_name);
 
@@ -122,7 +115,7 @@ export class BasketAdministrationComponent implements OnInit {
 
                         this.basketClone = JSON.parse(JSON.stringify(this.basket));
 
-                        this.http.get(this.coreUrl + "rest/baskets/" + this.id + "/groups")
+                        this.http.get("../../rest/baskets/" + this.id + "/groups")
                             .subscribe((data: any) => {
                                 this.allGroups = data.allGroups;
 
@@ -161,7 +154,7 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef = this.dialog.open(BasketAdministrationSettingsModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
-                this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + result.group.group_id + "/actions", { 'groupActions': result.group.groupActions })
+                this.http.put("../../rest/baskets/" + this.id + "/groups/" + result.group.group_id + "/actions", { 'groupActions': result.group.groupActions })
                     .subscribe(() => {
                         this.dialogRef = null;
                         this.notify.success(this.lang.basketUpdated);
@@ -176,7 +169,7 @@ export class BasketAdministrationComponent implements OnInit {
 
     isAvailable() {
         if (this.basket.id) {
-            this.http.get(this.coreUrl + "rest/baskets/" + this.basket.id)
+            this.http.get("../../rest/baskets/" + this.basket.id)
                 .subscribe(() => {
                     this.basketIdAvailable = false;
                 }, (err) => {
@@ -201,7 +194,7 @@ export class BasketAdministrationComponent implements OnInit {
             this.basket.basket_res_order = '';
         }
         if (this.creationMode) {
-            this.http.post(this.coreUrl + "rest/baskets", this.basket)
+            this.http.post("../../rest/baskets", this.basket)
                 .subscribe(() => {
                     this.notify.success(this.lang.basketAdded);
                     this.router.navigate(["/administration/baskets/" + this.basket.id]);
@@ -209,7 +202,7 @@ export class BasketAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.put(this.coreUrl + "rest/baskets/" + this.id, this.basket)
+            this.http.put("../../rest/baskets/" + this.id, this.basket)
                 .subscribe(() => {
                     this.notify.success(this.lang.basketUpdated);
                     this.router.navigate(["/administration/baskets"]);
@@ -249,7 +242,7 @@ export class BasketAdministrationComponent implements OnInit {
         let r = confirm(this.lang.unlinkGroup + ' ?');
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + this.basketGroups[groupIndex].group_id)
+            this.http.delete("../../rest/baskets/" + this.id + "/groups/" + this.basketGroups[groupIndex].group_id)
                 .subscribe(() => {
                     this.allGroups.forEach((tmpGroup: any) => {
                         if (tmpGroup.group_id == this.basketGroups[groupIndex].group_id) {
@@ -275,7 +268,7 @@ export class BasketAdministrationComponent implements OnInit {
                 } else {
                     result.list_display = [];
                 }
-                this.http.post(this.coreUrl + "rest/baskets/" + this.id + "/groups", result)
+                this.http.post("../../rest/baskets/" + this.id + "/groups", result)
                     .subscribe(() => {
                         this.basketGroups.push(result);
                         this.allGroups.forEach((tmpGroup: any) => {
@@ -294,7 +287,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     addAction(group: any) {
-        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'groupActions': group.groupActions })
+        this.http.put("../../rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'groupActions': group.groupActions })
             .subscribe(() => {
                 this.notify.success(this.lang.actionsGroupBasketUpdated);
             }, (err) => {
@@ -306,7 +299,7 @@ export class BasketAdministrationComponent implements OnInit {
         basket.isSearchBasket = !basket.isSearchBasket
         this.basketClone.isSearchBasket = basket.isSearchBasket;
 
-        this.http.put(this.coreUrl + "rest/baskets/" + this.id, this.basketClone)
+        this.http.put("../../rest/baskets/" + this.id, this.basketClone)
             .subscribe(() => {
                 this.notify.success(this.lang.basketUpdated);
             }, (err) => {
@@ -318,7 +311,7 @@ export class BasketAdministrationComponent implements OnInit {
         basket.flagNotif = !basket.flagNotif;
         this.basketClone.flagNotif = basket.flagNotif;
 
-        this.http.put(this.coreUrl + "rest/baskets/" + this.id, this.basketClone)
+        this.http.put("../../rest/baskets/" + this.id, this.basketClone)
             .subscribe(() => {
                 this.notify.success(this.lang.basketUpdated);
             }, (err) => {
@@ -331,7 +324,7 @@ export class BasketAdministrationComponent implements OnInit {
 
         if (r) {
             action.checked = false;
-            this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'groupActions': group.groupActions })
+            this.http.put("../../rest/baskets/" + this.id + "/groups/" + group.group_id + "/actions", { 'groupActions': group.groupActions })
                 .subscribe(() => {
                     this.notify.success(this.lang.actionsGroupBasketUpdated);
                 }, (err) => {
@@ -345,22 +338,18 @@ export class BasketAdministrationComponent implements OnInit {
     templateUrl: "basket-administration-settings-modal.component.html",
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
-export class BasketAdministrationSettingsModalComponent extends AutoCompletePlugin {
+export class BasketAdministrationSettingsModalComponent {
 
     lang: any = LANG;
     allEntities: any[] = [];
-    statuses: any;
-    selectedStatuses: any[] = [];
-    statusCtrl = new FormControl();
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
-        super(http, ['users', 'statuses']);
     }
 
     @ViewChild('statusInput') statusInput: ElementRef;
 
     ngOnInit(): void {
-        this.http.get(this.coreUrl + "rest/entities")
+        this.http.get("../../rest/entities")
             .subscribe((entities: any) => {
                 let keywordEntities = [{
                     id: 'ALL_ENTITIES',
@@ -429,36 +418,6 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
             }, () => {
                 location.href = "index.php";
             });
-        this.http.get(this.coreUrl + 'rest/statuses')
-            .subscribe((response: any) => {
-                this.statuses = response.statuses;
-                response.statuses.forEach((status: any) => {
-                    if (this.data.action.statuses.indexOf(status.id) > -1) {
-                        this.selectedStatuses[this.data.action.statuses.indexOf(status.id)] = { idToDisplay: status.label_status, id: status.id };
-                    }
-                });
-            });
-    }
-
-    remove(index: number): void {
-        this.selectedStatuses.splice(index, 1);
-        this.statusCtrl.setValue(null);
-        this.statusInput.nativeElement.value = '';
-    }
-
-    add(status: any): void {
-        let isIn = false;
-
-        this.selectedStatuses.forEach((statusList: any) => {
-            if (status.id == statusList.id) {
-                isIn = true;
-            }
-        });
-        if (!isIn) {
-            this.selectedStatuses.push(status);
-            this.statusCtrl.setValue(null);
-            this.statusInput.nativeElement.value = '';
-        }
     }
 
     initService() {
@@ -584,10 +543,6 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     }
 
     saveSettings() {
-        this.data.action.statuses = [];
-        this.selectedStatuses.forEach((status: any) => {
-            this.data.action.statuses.push(status.id);
-        });
         this.dialogRef.close(this.data);
     }
 }
@@ -607,8 +562,7 @@ export class BasketAdministrationGroupListModalComponent {
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
-        this.http.get(this.coreUrl + "rest/actions")
+        this.http.get("../../rest/actions")
             .subscribe((data: any) => {
                 data.actions.forEach((tmpAction: any) => {
                     tmpAction.where_clause = "";

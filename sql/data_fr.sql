@@ -4,16 +4,16 @@ TRUNCATE TABLE usergroups;
 TRUNCATE TABLE usergroups_services;
 DELETE FROM usergroups WHERE group_id = 'COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'COURRIER';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('COURRIER', 'Opérateur de numérisation');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('COURRIER', 'Opérateur de numérisation', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
 DELETE FROM usergroups WHERE group_id = 'AGENT';
 DELETE FROM usergroups_services WHERE group_id = 'AGENT';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('AGENT', 'Utilisateur');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('AGENT', 'Utilisateur', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
 DELETE FROM usergroups WHERE group_id = 'RESP_COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'RESP_COURRIER';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('RESP_COURRIER', 'Superviseur Courrier');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESP_COURRIER', 'Superviseur Courrier', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
 DELETE FROM usergroups WHERE group_id = 'RESPONSABLE';
 DELETE FROM usergroups_services WHERE group_id = 'RESPONSABLE';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('RESPONSABLE', 'Manager');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESPONSABLE', 'Manager', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
 DELETE FROM usergroups WHERE group_id = 'ADMINISTRATEUR_N1';
 DELETE FROM usergroups_services WHERE group_id = 'ADMINISTRATEUR_N1';
 INSERT INTO usergroups (group_id,group_desc) VALUES ('ADMINISTRATEUR_N1', 'Admin. Fonctionnel N1');
@@ -39,7 +39,6 @@ DELETE FROM usergroups WHERE group_id = 'SERVICE';
 DELETE FROM usergroups_services WHERE group_id = 'SERVICE';
 INSERT INTO usergroups (group_id,group_desc) VALUES ('SERVICE', 'Service');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'my_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'my_contacts_menu');
@@ -92,7 +91,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'file
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'save_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'my_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'my_contacts_menu');
@@ -134,7 +132,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'notes_r
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_thesaurus_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'my_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'my_contacts_menu');
@@ -173,7 +170,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_thesaurus_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'my_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'my_contacts_menu');
@@ -819,10 +815,6 @@ DELETE FROM baskets WHERE basket_id = 'QualificationBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'QualificationBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'QualificationBasket';
 INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('QualificationBasket', 'Courriers à qualifier', 'Bannette de qualification', 'status=''INIT''', 'letterbox_coll', 'Y', 'N', 'Y',10);
-DELETE FROM baskets WHERE basket_id = 'IndexingBasket';
-DELETE FROM actions_groupbaskets WHERE basket_id = 'IndexingBasket';
-DELETE FROM groupbasket_redirect WHERE basket_id = 'IndexingBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('IndexingBasket', 'Courriers à indexer', 'Bannette d''indexation', '1=0', 'letterbox_coll', 'Y', 'N', 'Y',20);
 DELETE FROM baskets WHERE basket_id = 'NumericBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'NumericBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'NumericBasket';
@@ -912,10 +904,6 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 TRUNCATE TABLE groupbasket;
 DELETE FROM groupbasket WHERE basket_id = 'QualificationBasket';
 INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('COURRIER', 'QualificationBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
-DELETE FROM groupbasket WHERE basket_id = 'IndexingBasket';
-INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('COURRIER', 'IndexingBasket', '[]');
-INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'IndexingBasket', '[]');
-INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'IndexingBasket', '[]');
 DELETE FROM groupbasket WHERE basket_id = 'CopyMailBasket';
 INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('AGENT', 'CopyMailBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
 INSERT INTO groupbasket (group_id, basket_id, list_display) VALUES ('RESPONSABLE', 'CopyMailBasket', '[{"value":"getPriority","cssClasses":[],"icon":"fa-traffic-light"},{"value":"getCategory","cssClasses":[],"icon":"fa-exchange-alt"},{"value":"getDoctype","cssClasses":[],"icon":"fa-suitcase"},{"value":"getAssignee","cssClasses":[],"icon":"fa-sitemap"},{"value":"getRecipients","cssClasses":[],"icon":"fa-user"},{"value":"getSenders","cssClasses":[],"icon":"fa-book"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_rightData"],"icon":"fa-calendar"}]');
@@ -1225,58 +1213,57 @@ INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type
 ------------
 TRUNCATE TABLE actions;
 TRUNCATE TABLE actions_categories;
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (1,  'redirect', 'Rediriger', 'NEW', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N', NULL, 'redirectAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (2,  '', 'Attribuer au service', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (3,  '', 'Retourner au service Courrier', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (4,  '', 'Enregistrer les modifications', '_NOSTATUS_', 'N', 'Y', 'process', 'N', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (5,  '', 'Remettre en traitement', 'COU', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (6,  '', 'Supprimer le courrier', 'DEL', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (18, 'indexing', 'Qualifier le courrier', '_NOSTATUS', 'N', 'Y', 'validate_mail', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (19, '', 'Traiter courrier', 'COU', 'N', 'Y', 'process', 'N', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (20, '', 'Cloturer', 'END', 'N', 'Y', 'close_mail', 'Y', 'apps', 'N', NULL, 'closeMailAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (21, 'indexing', 'Indexation', 'INIT', 'N', 'Y', 'index_mlb', 'Y', 'apps', 'Y', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (22, '', 'Attribuer au service', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (23, 'indexing', 'Attribuer au(x) service(s)', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (24, 'indexing', 'Remettre en validation', 'VAL', 'N', 'Y', 'validate_mail', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (36, '', 'Envoyer pour avis', 'EAVIS', 'N', 'Y', 'send_docs_to_recommendation', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (37, '', 'Donner un avis', '_NOSTATUS_', 'N', 'Y', 'avis_workflow_simple', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (100, '', 'Voir le document', '', 'N', 'Y', 'view', 'N', 'apps', 'N', NULL, 'viewDoc');
---INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (101, '', 'Envoyer pour visa', 'VIS', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (112, 'indexing', 'Enregistrer', '_NOSTATUS_', 'N', 'Y', 'index_mlb', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (113, 'redirect', 'Ajouter en copie', '', 'N', 'Y', 'put_in_copy', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (114, '', 'Marquer comme lu', '', 'N', 'Y', 'mark_as_read', 'N', 'apps', 'N', NULL, 'resMarkAsReadAction');
---INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (122, '', 'Attribuer au service', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (123, 'indexing', 'Attribuer au(x) service(s)', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
---INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (210, '', 'Transmettre l''AR signé', 'EENVAR', 'N', 'Y', 'confirm_status', 'Y', 'visa', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (400, '', 'Envoyer un AR', '_NOSTATUS_', 'N', 'Y', 'send_attachments_to_contact', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (405, '', 'Viser le courrier', '_NOSTATUS_', 'N', 'Y', 'visa_mail', 'Y', 'visa', 'N', NULL, 'signatureBookAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (407, '', 'Renvoyer pour traitement', 'COU', 'N', 'Y', 'confirm_status', 'Y', 'visa', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (408, '', 'Refuser le visa et remonter le circuit', '_NOSTATUS_', 'N', 'Y',  'rejection_visa_previous', 'N', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (410, '', 'Transmettre la réponse signée', 'EENV', 'N', 'Y', 'interrupt_visa', 'Y', 'visa', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (414, '', 'Envoyer au parapheur', '_NOSTATUS_', 'N', 'Y', 'send_to_visa', 'Y', 'visa', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (416, '', 'Valider et poursuivre le circuit', '_NOSTATUS_', 'N', 'Y', 'visa_workflow', 'Y', 'visa', 'N', NULL, 'v1Action');
---INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (417, '', 'Envoyer l''AR', 'SVX', 'N', 'Y', 'send_to_contact_with_mandatory_attachment', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (420, '', 'Classer sans suite', 'SSUITE', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (421, '', 'Retourner au Service Courrier', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (431, '', 'Envoyer en GRC', 'GRC', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (500, '', 'Transférer au système d''archivage', 'SEND_SEDA', 'N', 'Y', 'export_seda', 'Y', 'export_seda', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (501, '', 'Valider la réception du courrier par le système d''archivage', 'ACK_SEDA', 'N', 'Y', 'check_acknowledgement', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (502, '', 'Valider l''archivage du courrier', 'REPLY_SEDA', 'N', 'Y', 'check_reply', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (503, '', 'Supprimer courrier', 'DEL', 'N', 'Y', 'purge_letter', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (504, '', 'Remise à zero du courrier', 'END', 'N', 'Y', 'reset_letter', 'Y', 'apps', 'N', NULL, 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (505, '', 'Clôturer avec suivi', 'STDBY', 'N', 'Y', 'close_mail', 'Y', 'apps', 'N', NULL, 'closeMailAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (506, '', 'Terminer le suivi', 'END', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (507, '', 'Acter l’envoi', 'ENVDONE', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
---INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (522, '', 'Envoyer en validation DGS', 'VAL', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
---INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (523, 'indexing', 'Envoyer en validation DGS', 'VAL', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (524, '', 'Activer la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_on', 'N', 'apps', 'N', NULL, 'enabledBasketPersistenceAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (525, '', 'Désactiver la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_off', 'N', 'apps', 'N', NULL, 'disabledBasketPersistenceAction');
---INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (526, '', 'Libérer les courriers', 'VAL', 'Y', 'Y', 'confirm_status', 'N', 'apps', 'N', NULL, 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (527, '', 'Envoyer sur la tablette (Maarch Parapheur)', 'ATT_MP', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'apps', 'N', NULL, 'sendExternalSignatoryBookAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (528, '', 'Générer les accusés de réception', '_NOSTATUS_', 'N', 'Y', 'create_acknowledgement_receipt', 'Y', 'apps', 'N', NULL, 'createAcknowledgementReceiptsAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (529, '', 'Envoyer un pli postal Maileva', '_NOSTATUS_', 'N', 'Y', 'send_shipping', 'Y', 'apps', 'N', NULL, 'sendShippingAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (530, '', 'Re-Générér les accusés de réception papier si pb impression', '_NOSTATUS_', 'N', 'Y', 'create_acknowledgement_receipt', 'Y', 'apps', 'N', NULL, 'createAcknowledgementReceiptsAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, category_id, component) VALUES (531, '', 'Envoyer pour annotation sur la tablette (Maarch Parapheur)', 'ATT_MP', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'apps', 'N', NULL, 'sendExternalSignatoryBookAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (1,  'redirect', 'Rediriger', 'NEW', 'Y', 'Y', 'redirect', 'Y', 'redirectAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (2,  '', 'Attribuer au service', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (3,  '', 'Retourner au service Courrier', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (4,  '', 'Enregistrer les modifications', '_NOSTATUS_', 'N', 'Y', 'process', 'N', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (5,  '', 'Remettre en traitement', 'COU', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (6,  '', 'Supprimer le courrier', 'DEL', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (18, 'indexing', 'Qualifier le courrier', '_NOSTATUS', 'N', 'Y', 'validate_mail', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (19, '', 'Traiter courrier', 'COU', 'N', 'Y', 'process', 'N', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (20, '', 'Cloturer', 'END', 'N', 'Y', 'close_mail', 'Y', 'closeMailAction');
+INSERT INTO actions (id, label_action, id_status, is_system, enabled, history, component) VALUES (21, 'Enregistrer le courrier', 'INIT', 'N', 'Y', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (22, '', 'Attribuer au service', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (23, 'indexing', 'Attribuer au(x) service(s)', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (24, 'indexing', 'Remettre en validation', 'VAL', 'N', 'Y', 'validate_mail', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (36, '', 'Envoyer pour avis', 'EAVIS', 'N', 'Y', 'send_docs_to_recommendation', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (37, '', 'Donner un avis', '_NOSTATUS_', 'N', 'Y', 'avis_workflow_simple', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (100, '', 'Voir le document', '', 'N', 'Y', 'view', 'N', 'viewDoc');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (101, '', 'Envoyer pour visa', 'VIS', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (113, 'redirect', 'Ajouter en copie', '', 'N', 'Y', 'put_in_copy', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (114, '', 'Marquer comme lu', '', 'N', 'Y', 'mark_as_read', 'N', 'resMarkAsReadAction');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (122, '', 'Attribuer au service', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (123, 'indexing', 'Attribuer au(x) service(s)', 'NEW', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (210, '', 'Transmettre l''AR signé', 'EENVAR', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (400, '', 'Envoyer un AR', '_NOSTATUS_', 'N', 'Y', 'send_attachments_to_contact', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (405, '', 'Viser le courrier', '_NOSTATUS_', 'N', 'Y', 'visa_mail', 'Y', 'signatureBookAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (407, '', 'Renvoyer pour traitement', 'COU', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (408, '', 'Refuser le visa et remonter le circuit', '_NOSTATUS_', 'N', 'Y',  'rejection_visa_previous', 'N', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (410, '', 'Transmettre la réponse signée', 'EENV', 'N', 'Y', 'interrupt_visa', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (414, '', 'Envoyer au parapheur', '_NOSTATUS_', 'N', 'Y', 'send_to_visa', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (416, '', 'Valider et poursuivre le circuit', '_NOSTATUS_', 'N', 'Y', 'visa_workflow', 'Y', 'v1Action');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (417, '', 'Envoyer l''AR', 'SVX', 'N', 'Y', 'send_to_contact_with_mandatory_attachment', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (420, '', 'Classer sans suite', 'SSUITE', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (421, '', 'Retourner au Service Courrier', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (431, '', 'Envoyer en GRC', 'GRC', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (500, '', 'Transférer au système d''archivage', 'SEND_SEDA', 'N', 'Y', 'export_seda', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (501, '', 'Valider la réception du courrier par le système d''archivage', 'ACK_SEDA', 'N', 'Y', 'check_acknowledgement', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (502, '', 'Valider l''archivage du courrier', 'REPLY_SEDA', 'N', 'Y', 'check_reply', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (503, '', 'Supprimer courrier', 'DEL', 'N', 'Y', 'purge_letter', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (504, '', 'Remise à zero du courrier', 'END', 'N', 'Y', 'reset_letter', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (505, '', 'Clôturer avec suivi', 'STDBY', 'N', 'Y', 'close_mail', 'Y', 'closeMailAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (506, '', 'Terminer le suivi', 'END', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (507, '', 'Acter l’envoi', 'ENVDONE', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (522, '', 'Envoyer en validation DGS', 'VAL', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (523, 'indexing', 'Envoyer en validation DGS', 'VAL', 'N', 'Y', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (524, '', 'Activer la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_on', 'N', 'enabledBasketPersistenceAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (525, '', 'Désactiver la persistance', '_NOSTATUS_', 'N', 'Y', 'set_persistent_mode_off', 'N', 'disabledBasketPersistenceAction');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (526, '', 'Libérer les courriers', 'VAL', 'Y', 'Y', 'confirm_status', 'N', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (527, '', 'Envoyer sur la tablette (Maarch Parapheur)', 'ATT_MP', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'sendExternalSignatoryBookAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (528, '', 'Générer les accusés de réception', '_NOSTATUS_', 'N', 'Y', 'create_acknowledgement_receipt', 'Y', 'createAcknowledgementReceiptsAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (529, '', 'Envoyer un pli postal Maileva', '_NOSTATUS_', 'N', 'Y', 'send_shipping', 'Y', 'sendShippingAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (530, '', 'Re-Générér les accusés de réception papier si pb impression', '_NOSTATUS_', 'N', 'Y', 'create_acknowledgement_receipt', 'Y', 'createAcknowledgementReceiptsAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, component) VALUES (531, '', 'Envoyer pour annotation sur la tablette (Maarch Parapheur)', 'ATT_MP', 'N', 'Y', 'sendToExternalSignatureBook', 'Y', 'sendExternalSignatoryBookAction');
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 ------------
 -- BANNETTES SECONDAIRES
@@ -1290,7 +1277,6 @@ ORDER BY users.id;
 --ACTIONS_GROUPBASKETS
 ------------
 TRUNCATE TABLE actions_groupbaskets;
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'COURRIER', 'IndexingBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (24, '', 'COURRIER', 'RetourCourrier', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'COURRIER', 'RetourCourrier', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (531, '', 'COURRIER', 'RetourCourrier', 'N', 'Y', 'N');
@@ -1324,7 +1310,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'AGENT', 'RetAvisBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (5, '', 'AGENT', 'RetAvisBasket', 'Y', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'AGENT', 'IndexingBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (37, '', 'AGENT', 'DdeAvisBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'AGENT', 'DdeAvisBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'AGENT', 'SupAvisBasket', 'Y', 'Y', 'Y');
@@ -1363,7 +1348,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'RESPONSABLE', 'DepartmentBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'RESPONSABLE', 'DepartmentBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'RESPONSABLE', 'DepartmentBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'RESPONSABLE', 'IndexingBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (37, '', 'RESPONSABLE', 'DdeAvisBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'RESPONSABLE', 'DdeAvisBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'RESPONSABLE', 'SupAvisBasket', 'Y', 'Y', 'Y');
@@ -1385,7 +1369,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (5, '', 'RESPONSABLE', 'SendToSignatoryBook', 'Y', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'ELU', 'MyBasket', 'Y', 'Y', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'ELU', 'IndexingBasket', 'Y', 'Y', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (37, '', 'ELU', 'DdeAvisBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'ELU', 'DdeAvisBasket', 'Y', 'Y', 'Y');
 
@@ -1411,8 +1394,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 --GROUPBASKET_REDIRECT
 ------------
 TRUNCATE TABLE groupbasket_redirect;
-INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'IndexingBasket', 112, '', 'MY_ENTITIES', 'ENTITY');
-INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'IndexingBasket', 112, '', 'ENTITIES_BELOW', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'MyBasket', 1, '', 'MY_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'MyBasket', 1, '', 'ENTITIES_BELOW', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'MyBasket', 1, '', 'ENTITIES_JUST_UP', 'ENTITY');
@@ -1432,25 +1413,16 @@ INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, key
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('RESPONSABLE', 'DepartmentBasket', 1, '', 'MY_ENTITIES', 'USERS');
 
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('ELU', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
-INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('ELU', 'IndexingBasket', 112, '', 'ALL_ENTITIES', 'ENTITY');
 Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 from groupbasket_redirect), false);
 
 ------------
 --GROUPBASKET_STATUS
 ------------
 TRUNCATE TABLE groupbasket_status;
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'IndexingBasket', 112, 'VAL', 1);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'IndexingBasket', 112, 'NEW', 2);
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'QualificationBasket', 18, 'VAL', 4);
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'QualificationBasket', 18, 'NEW', 5);
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'NumericBasket', 18, 'VAL', 6);
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'NumericBasket', 18, 'NEW', 7);
-
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('AGENT', 'IndexingBasket', 112, 'END',1);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('AGENT', 'IndexingBasket', 112, 'NEW',2);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'END',1);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'NEW',2);
-Select setval('groupbasket_status_system_id_seq', (select max(system_id)+1 from groupbasket_status), false);
 
 ------------
 --FOLDERTYPES

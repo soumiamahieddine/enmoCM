@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
         </mat-sidenav>
@@ -57,16 +57,7 @@
                             <mat-divider></mat-divider>
                         </mat-tab>
                     </mat-tab-group>
-                    <mat-form-field>
-                            <input matInput [formControl]="statusCtrl" name="statusesList" placeholder="{{lang.availableStatuses}}" [(ngModel)]="this.statusId"
-                                [matAutocomplete]="auto" required>
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let status of filteredStatuses | async" [value]="status.id">
-                                    {{status.idToDisplay}}
-                                    <small style="opacity:0.3;">{{status.id}}</small>
-                                </mat-option>
-                            </mat-autocomplete>    
-                    </mat-form-field>
+                    <plugin-autocomplete [labelPlaceholder]="lang.availableStatuses" [labelList]="lang.availableStatuses" [datas]="statuses" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'id'" (triggerEvent)="setStatus($event)" singleMode required></plugin-autocomplete>
                     <div class="form-group">
                         <div class="col-md-12 text-center" style="padding:10px;">
                             <button mat-raised-button [disabled]="(resIdList.length == 0 && chronoList.length == 0) || (resIdList.length > 0 && chronoList.length > 0) || !statusId" color="primary">{{lang.save}}</button>
@@ -75,8 +66,8 @@
                 </form>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            position='end' [opened]="appService.getViewMode() ? false : false">
         </mat-sidenav>
     </mat-sidenav-container>
 </div>

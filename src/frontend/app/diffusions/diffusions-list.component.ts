@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
-import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
 
@@ -13,7 +12,7 @@ declare function $j(selector: any): any;
     styleUrls: ['diffusions-list.component.scss'],
     providers: [NotificationService]
 })
-export class DiffusionsListComponent extends AutoCompletePlugin implements OnInit {
+export class DiffusionsListComponent implements OnInit {
 
     lang: any = LANG;
     listinstance: any = [];
@@ -29,9 +28,7 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
 
     @Input('injectDatas') injectDatas: any;
 
-    constructor(public http: HttpClient, private notify: NotificationService) {
-        super(http, ['usersAndEntities']);
-    }
+    constructor(public http: HttpClient, private notify: NotificationService) { }
 
     ngOnInit(): void { }
 
@@ -249,9 +246,5 @@ export class DiffusionsListComponent extends AutoCompletePlugin implements OnIni
             };
             this.diffList['copy'].items.unshift(newElemListModel);
         }
-
-        $j('.userDiffList').val('');
-        $j('.userDiffList').blur();
-
     }
 }

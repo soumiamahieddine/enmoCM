@@ -1,26 +1,20 @@
-import { Component, OnInit, NgZone, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
 import { HeaderService }        from '../service/header.service';
 import { MatSidenav } from '@angular/material';
+import { AppService } from '../service/app.service';
 
 declare function $j(selector: any) : any;
-
-declare var angularGlobals : any;
-
 
 @Component({
     templateUrl : "save-numeric-package.component.html",
     styleUrls   : ['profile.component.css'],
-    providers   : [NotificationService]
+    providers   : [NotificationService, AppService]
 })
 export class SaveNumericPackageComponent implements OnInit {
 
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
-    coreUrl                     : string;
     lang                        : any       = LANG;
 
     numericPackage              : any       = {
@@ -35,14 +29,15 @@ export class SaveNumericPackageComponent implements OnInit {
     loading                     : boolean   = false;
 
     @ViewChild('snav') sidenavLeft: MatSidenav;
-    mobileMode                      : boolean   = false;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private notify: NotificationService, private headerService: HeaderService) {
-        this.mobileMode = angularGlobals.mobileMode;
+    constructor(
+        public http: HttpClient, 
+        private zone: NgZone, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
         window['angularSaveNumericPackageComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -50,7 +45,6 @@ export class SaveNumericPackageComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.saveNumericPackage);
-        this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = false;
     }
@@ -86,7 +80,7 @@ export class SaveNumericPackageComponent implements OnInit {
 
     submitNumericPackage() {
         if(this.numericPackage.size != 0) {
-            this.http.post(this.coreUrl + 'rest/saveNumericPackage', this.numericPackage)
+            this.http.post('../../rest/saveNumericPackage', this.numericPackage)
                 .subscribe((data : any) => {
                     if (data.errors) {
                         this.notify.error(data.errors);

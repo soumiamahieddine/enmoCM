@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
@@ -7,22 +6,19 @@ import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { FormControl, Validators} from '@angular/forms';
 import { MatSidenav } from '@angular/material';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-declare var angularGlobals: any;
 
 @Component({
     templateUrl: "status-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class StatusAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
     
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
     lang: any = LANG;
 
     creationMode: boolean;
@@ -47,19 +43,18 @@ export class StatusAdministrationComponent implements OnInit {
             this.statusId.hasError('pattern') ? this.lang.patternId : '';
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(
+        public http: HttpClient, 
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
-    }
-
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
-        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
         this.route.params.subscribe((params: any) => {
@@ -68,7 +63,7 @@ export class StatusAdministrationComponent implements OnInit {
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(null);
 
-                this.http.get(this.coreUrl + 'rest/administration/statuses/new')
+                this.http.get('../../rest/administration/statuses/new')
                     .subscribe((data: any) => {
                         this.status.img_filename = "fm-letter";
                         this.status.can_be_searched = true;
@@ -84,7 +79,7 @@ export class StatusAdministrationComponent implements OnInit {
 
                 this.creationMode = false;
                 this.statusIdentifier = params['identifier'];
-                this.http.get(this.coreUrl + 'rest/statuses/' + params['identifier'])
+                this.http.get('../../rest/statuses/' + params['identifier'])
                     .subscribe((data: any) => {
                         this.status = data['status'][0];
                         this.headerService.setHeader(this.lang.statusModification, this.status['label_status']);
@@ -111,7 +106,7 @@ export class StatusAdministrationComponent implements OnInit {
 
     isAvailable() {
         if (this.status.id) {
-            this.http.get(this.coreUrl + "rest/status/" + this.status.id)
+            this.http.get("../../rest/status/" + this.status.id)
                 .subscribe(() => {
                     this.statusIdAvailable = false;
                 }, (err) => {
@@ -127,7 +122,7 @@ export class StatusAdministrationComponent implements OnInit {
 
     submitStatus() {
         if (this.creationMode == true) {
-            this.http.post(this.coreUrl + 'rest/statuses', this.status)
+            this.http.post('../../rest/statuses', this.status)
                 .subscribe(() => {
                     this.notify.success(this.lang.statusAdded);
                     this.router.navigate(['administration/statuses']);
@@ -136,7 +131,7 @@ export class StatusAdministrationComponent implements OnInit {
                 });
         } else if (this.creationMode == false) {
 
-            this.http.put(this.coreUrl + 'rest/statuses/' + this.statusIdentifier, this.status)
+            this.http.put('../../rest/statuses/' + this.statusIdentifier, this.status)
                 .subscribe(() => {
                     this.notify.success(this.lang.statusUpdated);
                     this.router.navigate(['administration/statuses']);

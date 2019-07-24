@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container">
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
-            fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
+            fixedTopGap="56" [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list *ngIf="!creationMode && !loading">
@@ -265,27 +265,8 @@
                                             (click)="toggleBasket(true)">
                                             <mat-icon class="fa fa-check"></mat-icon>
                                         </button>
-                                        <mat-menu #menu="matMenu">
-                                            <mat-form-field style="padding:10px;width:200px !important;">
-                                                <input (click)="$event.stopPropagation()" type="text"
-                                                    placeholder="{{ lang.users }}" matInput [matAutocomplete]="auto"
-                                                    [formControl]="userCtrl">
-                                                <mat-autocomplete #auto="matAutocomplete">
-                                                    <mat-option *ngFor="let user of filteredUsers | async"
-                                                        [value]="user.id" (click)="addBasketRedirection(user)">
-                                                        <p mat-line matTooltip="{{ user.otherInfo }}">
-                                                            <span class="col-xm-1">
-                                                                <mat-icon color="primary" class="fa fa-user fa-2x"
-                                                                    style="margin-right:0px;"></mat-icon>
-                                                            </span>
-                                                            <span class="col-xm-11">
-                                                                {{ user.idToDisplay }}
-                                                                <small>{{ user.otherInfo }}</small>
-                                                            </span>
-                                                        </p>
-                                                    </mat-option>
-                                                </mat-autocomplete>
-                                            </mat-form-field>
+                                        <mat-menu #menu="matMenu" style="width:200px !important;">
+                                            <plugin-autocomplete [labelPlaceholder]="lang.redirectBaskets" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addBasketRedirection($event)"></plugin-autocomplete>
                                         </mat-menu>
                                     </p>
                                 </mat-list-item>
@@ -356,30 +337,7 @@
                                                         style="font-weight:normal">{{basket.group_desc}}</span>
                                                 </h4>
                                                 <p mat-line>
-                                                    <mat-form-field *ngIf="basket.userToDisplay == null"
-                                                        floatLabel="never">
-                                                        <input matTooltip="{{lang.redirectBasket}}"
-                                                            matTooltipPosition="above" type="text"
-                                                            placeholder="{{lang.redirectBasket}}" matInput
-                                                            [matAutocomplete]="auto" [formControl]="userCtrl">
-                                                        <mat-autocomplete #auto="matAutocomplete">
-                                                            <mat-option *ngFor="let user of filteredUsers | async"
-                                                                [value]="user.id"
-                                                                (click)="reassignBasketRedirection(user.id,basket,i)">
-                                                                <p mat-line matTooltip="{{ user.otherInfo }}">
-                                                                    <span class="col-xm-1">
-                                                                        <mat-icon color="primary"
-                                                                            class="fa fa-user fa-2x"
-                                                                            style="margin-right:0px;"></mat-icon>
-                                                                    </span>
-                                                                    <span class="col-xm-11">
-                                                                        {{ user.idToDisplay }}
-                                                                        <small>{{ user.otherInfo }}</small>
-                                                                    </span>
-                                                                </p>
-                                                            </mat-option>
-                                                        </mat-autocomplete>
-                                                    </mat-form-field>
+                                                    <plugin-autocomplete *ngIf="basket.userToDisplay == null" [labelPlaceholder]="lang.redirectBaskets" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="reassignBasketRedirection($event,basket,i)"></plugin-autocomplete>
                                                     <mat-form-field>
                                                         <input type="text" color="warn" matInput disabled
                                                             value="{{lang.assignBy}} {{basket.userToDisplay}}">
@@ -530,8 +488,8 @@
                 </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
-            fixedTopGap="56" position='end' [opened]="mobileQuery.matches || creationMode ? false : true"
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
+            fixedTopGap="56" position='end' [opened]="appService.getViewMode() || creationMode ? false : true"
             style="overflow-x:hidden;max-width:500px;">
             <mat-list>
                 <h3 mat-subheader>{{lang.groups}}</h3>

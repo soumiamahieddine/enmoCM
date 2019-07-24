@@ -196,7 +196,7 @@ abstract class GroupModelAbstract
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-        $rawUserGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
+        $rawUserGroups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
 
         $userGroups = [];
         foreach ($rawUserGroups as $value) {

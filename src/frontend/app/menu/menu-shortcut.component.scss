@@ -3,6 +3,10 @@
     color: #135f7f;
 }
 
+.mat-fab ::ng-deep.mat-button-wrapper {
+    padding: 0px;
+}
+
 .speedDialLabel {
     margin-left: -220px !important;
     width: 200px;
@@ -15,4 +19,8 @@
 .smd-opened .speedDialLabel {
     transition: opacity 1s ease-in !important;
     display: block !important;
+}
+
+.mat-icon {
+    height: auto !important;
 }

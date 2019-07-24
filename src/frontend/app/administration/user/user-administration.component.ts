@@ -1,35 +1,27 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 
-import { AutoCompletePlugin } from '../../../plugins/autocomplete.plugin';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AccountLinkComponent } from './account-link/account-link.component';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
-declare const angularGlobals: any;
-
 
 @Component({
     templateUrl: "user-administration.component.html",
     styleUrls: ['user-administration.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
-export class UserAdministrationComponent extends AutoCompletePlugin implements OnInit {
+export class UserAdministrationComponent implements OnInit {
     @ViewChild('snav') public sidenavLeft: MatSidenav;
     @ViewChild('snav2') public sidenavRight: MatSidenav;
 
-
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
-
-    coreUrl: string;
     lang: any = LANG;
     loading: boolean = false;
     dialogRef: MatDialogRef<any>;
@@ -110,24 +102,24 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog, private headerService: HeaderService, private _formBuilder: FormBuilder) {
-        super(http, ['users']);
+    constructor(
+        public http: HttpClient, 
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private zone: NgZone, 
+        private notify: NotificationService, 
+        public dialog: MatDialog, 
+        private headerService: HeaderService, 
+        private _formBuilder: FormBuilder,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
     }
 
-    ngOnDestroy(): void {
-        this.mobileQuery.removeListener(this._mobileQueryListener);
-    }
-
     ngOnInit(): void {
-
-        this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
@@ -145,7 +137,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
 
                 this.creationMode = false;
                 this.serialId = params['id'];
-                this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/details")
+                this.http.get("../../rest/users/" + this.serialId + "/details")
                     .subscribe((data: any) => {
                         this.user = data;
 
@@ -199,7 +191,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     linkAccountToMaarchParahpeur(externalId: number) {
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/linkToMaarchParapheur", { maarchParapheurUserId: externalId })
+        this.http.put("../../rest/users/" + this.serialId + "/linkToMaarchParapheur", { maarchParapheurUserId: externalId })
             .subscribe(() => {
                 this.user.canCreateMaarchParapheurUser = false;
                 this.user.external_id['maarchParapheur'] = externalId;
@@ -211,7 +203,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     createAccountToMaarchParahpeur(id: number, login: string) {
-        this.http.put(this.coreUrl + "rest/users/" + id + "/createInMaarchParapheur", { login: login })
+        this.http.put("../../rest/users/" + id + "/createInMaarchParapheur", { login: login })
             .subscribe((data: any) => {
                 this.user.canCreateMaarchParapheurUser = false;
                 this.user.external_id['maarchParapheur'] = data.externalId;
@@ -239,7 +231,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.unlinkAccount);
 
         if (r) {
-            this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/unlinkToMaarchParapheur", {})
+            this.http.put("../../rest/users/" + this.serialId + "/unlinkToMaarchParapheur", {})
                 .subscribe(() => {
                     this.user.canCreateMaarchParapheurUser = true;
                     this.maarchParapheurLink.login = '';
@@ -255,7 +247,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     toogleRedirect(basket: any) {
         $j('#redirectUser_' + basket.group_id + '_' + basket.basket_id).toggle();
 
-        this.http.get(this.coreUrl + 'rest/users')
+        this.http.get('../../rest/users')
             .subscribe((data: any) => {
                 //this.userList = data['users'];
 
@@ -354,7 +346,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.resetPsw);
 
         if (r) {
-            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
+            this.http.post("../../rest/users/" + this.serialId + "/password", {})
                 .subscribe((data: any) => {
                     this.notify.success(this.lang.pswReseted);
                 }, (err) => {
@@ -369,7 +361,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 "groupId": group.group_id,
                 "role": group.role
             };
-            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", groupReq)
+            this.http.post("../../rest/users/" + this.serialId + "/groups", groupReq)
                 .subscribe((data: any) => {
                     this.user.groups = data.groups;
                     this.user.baskets = data.baskets;
@@ -378,7 +370,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
+            this.http.delete("../../rest/users/" + this.serialId + "/groups/" + group.group_id)
                 .subscribe((data: any) => {
                     this.user.groups = data.groups;
                     this.user.baskets = data.baskets;
@@ -391,7 +383,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     updateGroup(group: any) {
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
+        this.http.put("../../rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe((data: any) => {
                 this.notify.success(this.lang.groupUpdated);
             }, (err) => {
@@ -405,7 +397,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             "role": ''
         };
 
-        this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
+        this.http.post("../../rest/users/" + this.serialId + "/entities", entity)
             .subscribe((data: any) => {
                 this.user.entities = data.entities;
                 this.user.allEntities = data.allEntities;
@@ -416,7 +408,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     updateEntity(entity: any) {
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
+        this.http.put("../../rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
             .subscribe(() => {
                 this.notify.success(this.lang.entityUpdated);
             }, (err) => {
@@ -425,7 +417,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     updatePrimaryEntity(entity: any) {
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id + "/primaryEntity", {})
+        this.http.put("../../rest/users/" + this.serialId + "/entities/" + entity.entity_id + "/primaryEntity", {})
             .subscribe((data: any) => {
                 this.user['entities'] = data.entities;
                 this.notify.success(this.lang.entityTooglePrimary + ' « ' + entity.entity_id + ' »');
@@ -437,10 +429,10 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     deleteEntity(entityId: any) {
 
         //first check confidential state
-        this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
+        this.http.get("../../rest/users/" + this.serialId + "/entities/" + entityId)
             .subscribe((data: any) => {
                 if (!data['hasConfidentialityInstances'] && !data['hasListTemplates']) {
-                    this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
+                    this.http.delete("../../rest/users/" + this.serialId + "/entities/" + entityId)
                         .subscribe((data: any) => {
                             this.user.entities = data.entities;
                             this.user.allEntities = data.allEntities;
@@ -455,7 +447,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                         this.mode = 'delete';
                         if (result) {
                             this.mode = result.processMode;
-                            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId, { body: { "mode": this.mode, "newUser": result.newUser } })
+                            this.http.request('DELETE', "../../rest/users/" + this.serialId + "/entities/" + entityId, { body: { "mode": this.mode, "newUser": result.newUser } })
                                 .subscribe((data: any) => {
                                     this.user.entities = data.entities;
                                     this.user.allEntities = data.allEntities;
@@ -477,7 +469,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     submitSignature() {
-        this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/signatures", this.signatureModel)
+        this.http.post("../../rest/users/" + this.serialId + "/signatures", this.signatureModel)
             .subscribe((data: any) => {
                 this.user.signatures = data.signatures;
                 this.notify.success(this.lang.signAdded);
@@ -498,7 +490,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         var id = this.user.signatures[selectedSignature].id;
         var label = this.user.signatures[selectedSignature].signature_label;
 
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, { "label": label })
+        this.http.put("../../rest/users/" + this.serialId + "/signatures/" + id, { "label": label })
             .subscribe((data: any) => {
                 this.user.signatures[selectedSignature].signature_label = data.signature.signature_label;
                 this.notify.success(this.lang.signUpdated);
@@ -511,7 +503,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + signature.signature_label + ' »');
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + signature.id)
+            this.http.delete("../../rest/users/" + this.serialId + "/signatures/" + signature.id)
                 .subscribe((data: any) => {
                     this.user.signatures = data.signatures;
                     this.notify.success(this.lang.signDeleted);
@@ -558,9 +550,8 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {
-            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets", basketsRedirect)
+            this.http.post("../../rest/users/" + this.serialId + "/redirectedBaskets", basketsRedirect)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.redirectedBaskets = data["redirectedBaskets"];
                     this.selectionBaskets.clear();
@@ -575,7 +566,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {
-            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets", [
+            this.http.post("../../rest/users/" + this.serialId + "/redirectedBaskets", [
                 {
                     "actual_user_id": newUser.serialId,
                     "basket_id": basket.basket_id,
@@ -584,7 +575,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 }
             ])
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.assignedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -598,9 +588,8 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
+            this.http.delete("../../rest/users/" + this.serialId + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.redirectedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -614,9 +603,8 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
+            this.http.delete("../../rest/users/" + this.serialId + "/redirectedBaskets?redirectedBasketIds[]=" + basket.id)
                 .subscribe((data: any) => {
-                    this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
                     this.user.assignedBaskets.splice(i, 1);
                     this.notify.success(this.lang.basketUpdated);
@@ -637,7 +625,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             });
         });
         if (basketsDisable.length > 0) {
-            this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", { "baskets": basketsDisable })
+            this.http.put("../../rest/users/" + this.serialId + "/baskets", { "baskets": basketsDisable })
                 .subscribe((data: any) => {
                     this.selectionBaskets.clear();
                     this.notify.success(this.lang.basketsUpdated);
@@ -648,7 +636,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     activateAbsence() {
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "ABS" })
+        this.http.put("../../rest/users/" + this.serialId + "/status", { "status": "ABS" })
             .subscribe((data: any) => {
                 this.user.status = data.user.status;
                 this.userAbsenceModel = [];
@@ -659,7 +647,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     desactivateAbsence() {
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "OK" })
+        this.http.put("../../rest/users/" + this.serialId + "/status", { "status": "OK" })
             .subscribe((data: any) => {
                 this.user.status = data.user.status;
                 this.notify.success(this.lang.absOff);
@@ -716,7 +704,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     changePasswd() {
-        this.http.get(this.coreUrl + 'rest/passwordRules')
+        this.http.get('../../rest/passwordRules')
             .subscribe((data: any) => {
                 let valArr: ValidatorFn[] = [];
                 let ruleTextArr: String[] = [];
@@ -809,7 +797,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.passwordModel.currentPassword = this.firstFormGroup.controls['currentPasswordCtrl'].value;
         this.passwordModel.newPassword = this.firstFormGroup.controls['newPasswordCtrl'].value;
         this.passwordModel.reNewPassword = this.firstFormGroup.controls['retypePasswordCtrl'].value;
-        this.http.put(this.coreUrl + 'rest/users/' + this.serialId + '/password', this.passwordModel)
+        this.http.put('../../rest/users/' + this.serialId + '/password', this.passwordModel)
             .subscribe(() => {
                 this.showPassword = false;
                 this.passwordModel = {
@@ -827,7 +815,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         if (this.creationMode) {
             var r = true;
 
-            this.http.get(this.coreUrl + "rest/users/" + this.user.userId + "/status")
+            this.http.get("../../rest/users/" + this.user.userId + "/status")
                 .subscribe((data: any) => {
                     var deletedUser = false;
                     if (data.status && data.status == 'DEL') {
@@ -835,7 +823,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                         deletedUser = true;
                     }
                     if (r) {
-                        this.http.post(this.coreUrl + "rest/users", this.user)
+                        this.http.post("../../rest/users", this.user)
                             .subscribe((data: any) => {
                                 if (deletedUser) {
                                     this.notify.success(this.lang.userUpdated);
@@ -850,7 +838,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 }, () => {
                 });
         } else {
-            this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
+            this.http.put("../../rest/users/" + this.serialId, this.user)
                 .subscribe((data: any) => {
                     this.notify.success(this.lang.userUpdated);
                 }, (err: any) => {
@@ -871,7 +859,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.createUserInMaarchParapheur);
 
         if (r) {
-            this.http.put(this.coreUrl + "rest/users/" + this.serialId + '/maarchParapheur', '')
+            this.http.put("../../rest/users/" + this.serialId + '/maarchParapheur', '')
                 .subscribe((data: any) => {
                     this.notify.success(this.lang.userCreatedInMaarchParapheur);
                     this.user.external_id['maarchParapheur'] = data.externalId;
@@ -904,13 +892,16 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     templateUrl: "user-administration-redirect-modal.component.html",
     styles: [".mat-dialog-content{max-height: 65vh;width:600px;}"]
 })
-export class UserAdministrationRedirectModalComponent extends AutoCompletePlugin {
+export class UserAdministrationRedirectModalComponent {
     lang: any = LANG;
 
     redirectUser: String = '';
     processMode: String = '';
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UserAdministrationRedirectModalComponent>) {
-        super(http, ['users']);
+    }
+
+    setRedirectUser(user: any) {
+        this.redirectUser = user;
     }
 }

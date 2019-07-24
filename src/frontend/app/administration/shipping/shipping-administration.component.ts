@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatSidenav } from '@angular/material';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
 
@@ -13,15 +13,12 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "shipping-administration.component.html",
     styleUrls: ['shipping-administration.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class ShippingAdministrationComponent implements OnInit {
 
     @ViewChild('snav') public sidenavLeft: MatSidenav;
     @ViewChild('snav2') public sidenavRight: MatSidenav;
-
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
 
     lang: any = LANG;
     loading: boolean = false;
@@ -66,11 +63,15 @@ export class ShippingAdministrationComponent implements OnInit {
 
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, private headerService: HeaderService) {
+    constructor( 
+        public http: HttpClient, 
+        private route: ActivatedRoute, 
+        private router: Router, 
+        private notify: NotificationService, 
+        private headerService: HeaderService,
+        public appService: AppService
+    ) {
         $j("link[href='merged_css.php']").remove();
-        this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-        this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {

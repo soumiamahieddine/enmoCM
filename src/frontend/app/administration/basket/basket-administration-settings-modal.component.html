@@ -14,12 +14,9 @@
             </div>
         </div>
         <mat-tab-group>
-            <mat-tab *ngIf="data.action.keyword == 'redirect'||data.action.keyword == 'indexing'">
+            <mat-tab *ngIf="data.action.keyword == 'redirect'">
                 <ng-template mat-tab-label *ngIf="data.action.keyword == 'redirect'">
                     {{lang.redirects}}
-                </ng-template>
-                <ng-template mat-tab-label *ngIf="data.action.keyword == 'indexing'">
-                    {{lang.indexing}}
                 </ng-template>
                 <mat-accordion>
                     <mat-expansion-panel (opened)="initService()">
@@ -32,34 +29,6 @@
                             <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
                         </mat-form-field>
                         <div id="jstree"></div>
-                    </mat-expansion-panel>
-                    <mat-expansion-panel *ngIf="data.action.keyword == 'indexing'" [disabled]="data.action.id_status != '_NOSTATUS_'">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                {{lang.toStatuses}} &nbsp;
-                                <mat-icon *ngIf="data.action.id_status != '_NOSTATUS_'" color="warn"
-                                    class="fa fa-exclamation-circle" matTooltip="{{lang.toStatusesDesc}}" style="cursor:help"></mat-icon>
-                            </mat-panel-title>
-
-                        </mat-expansion-panel-header>
-                        <mat-form-field class="example-chip-list">
-                            <mat-chip-list #chipList class="mat-chip-list-stacked">
-                                <mat-chip *ngFor="let status of selectedStatuses;let i = index" selectable="true" removable="true" (removed)="remove(i)"
-                                    style="cursor:pointer;margin:5px;border-radius:0px;display:flex;">
-                                    <b>{{i+1}})</b>&nbsp;{{status.idToDisplay}}
-                                    <span style="flex: 1 1 auto;"></span>
-                                    <mat-icon matChipRemove class="fa fa-times"></mat-icon>
-                                </mat-chip>
-                                <input placeholder="{{lang.availableStatuses}}" #statusInput [formControl]="statusCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
-                                    style="flex: 1 0 0px;width: 100%;">
-                            </mat-chip-list>
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let status of filteredStatuses | async" [value]="status.id" (click)="add(status)">
-                                    {{status.idToDisplay}}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-
                     </mat-expansion-panel>
                     <mat-expansion-panel (opened)="initService2()" *ngIf="data.action.keyword == 'redirect'">
                         <mat-expansion-panel-header>

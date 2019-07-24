@@ -1,7 +1,7 @@
 import { NgModule }     from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { AdministrationComponent }                      from './administration.component';
+import { AdministrationComponent }                      from './home/administration.component';
 import { UsersAdministrationComponent }                 from './user/users-administration.component';
 import { UserAdministrationComponent }                  from './user/user-administration.component';
 import { GroupsAdministrationComponent }                from './group/groups-administration.component';

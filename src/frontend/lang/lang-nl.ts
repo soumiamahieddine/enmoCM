@@ -1056,5 +1056,22 @@ export const LANG_NL = {
     "updateInProgress" : "Update in progress ...", //_TO_TRANSLATE
     "updateInfo" : "This action cannot be undone! Do not make any actions during process.", //_TO_TRANSLATE
     "isAvailable" : "is available", //_TO_TRANSLATE
-    "updateWarn" : "Update is not possible.<br/>These files are modified : <br/>"
+    "updateWarn" : "Update is not possible.<br/>These files are modified : <br/>", //_TO_TRANSLATE
+    "chooseValue" : "Choose a value", //_TO_TRANSLATE
+    "availableValues" : "Available values", //_TO_TRANSLATE
+    "noAvailableValue" : "No available value", //_TO_TRANSLATE
+    "autocompleteInfo" : "The criteria must contain at least&nbsp;<b>3 letters</b>", //_TO_TRANSLATE
+    "availableUsers" : "Available users", //_TO_TRANSLATE
+    "userUnauthorized" : "User Unauthorized", //_TO_TRANSLATE
+    "warnIndex" : "This group can not index document.", //_TO_TRANSLATE
+    "authorizedEntities" : "Authorized entities destination", //_TO_TRANSLATE
+    "enableIndex" : "Activate mail indexing", //_TO_TRANSLATE
+    "disableIndex" : "Disable mail indexing", //_TO_TRANSLATE
+    "indexEnabled" : "Mail indexation enabled", //_TO_TRANSLATE
+    "indexDisabled" : "Mail indexation disabled", //_TO_TRANSLATE
+    "indexation" : "Mail indexation", //_TO_TRANSLATE
+    "keywordAdded" : "Keyword added", //_TO_TRANSLATE
+    "keywordDeleted" : "Keyword deleted", //_TO_TRANSLATE
+    "actionsInfo" : "Only actions with \"simple confirmation\" and \"close mail\" will be displayed", //_TO_TRANSLATE
+    "eventList" : "Open page", //_TO_TRANSLATE
 };

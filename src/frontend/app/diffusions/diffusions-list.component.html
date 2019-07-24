@@ -6,25 +6,7 @@
     <div *ngIf="diffList.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
         {{lang.noDiffusionList}}
     </div>
-    <mat-form-field *ngIf="injectDatas.editable" appearance="outline" floatLabel="never" [style.fontSize.px]="10">
-        <input class="userDiffList" #autocompleteFilter type="text" placeholder="{{lang.addUserOrEntity}}" matInput
-            [matAutocomplete]="auto" [formControl]="elementCtrl">
-        <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let elem of filteredElements | async" [value]="elem.id" (click)="addElem(elem)">
-                <p mat-line style="margin:0;">
-                    <span class="col-xm-1" style="padding-right:5px;">
-                        <mat-icon color="primary"
-                            [class]="elem.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'"
-                            style="margin-right:0px;"></mat-icon>
-                    </span>
-                    <span class="col-xm-11">
-                        {{ elem.idToDisplay }}
-                        <small>{{ elem.descriptionToDisplay }}</small>
-                    </span>
-                </p>
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
+    <plugin-autocomplete *ngIf="injectDatas.editable" [labelPlaceholder]="lang.addUserOrEntity" [routeDatas]="['/rest/autocomplete/users','/rest/autocomplete/entities']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElem($event)"></plugin-autocomplete>
     <div cdkDropListGroup class="roleList">
         <ng-container *ngFor="let role of availableRoles">
             <h3 mat-subheader>{{role.label}}</h3>

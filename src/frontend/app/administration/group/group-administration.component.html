@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
         </mat-sidenav>
@@ -77,27 +77,15 @@
                             </mat-tab>
                         </mat-tab-group>
                     </mat-tab>
+                    <mat-tab label="{{lang.indexation}}" *ngIf="!creationMode">
+                        <ng-template matTabContent>
+                            <app-indexing-administration [groupId]="group.id"></app-indexing-administration>
+                        </ng-template>
+                    </mat-tab>
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12" *ngIf="group.canAdminUsers" style="padding:5px;">
-                                <mat-form-field>
-                                    <span matPrefix><mat-icon class="fa fa-user-plus" color="primary"></mat-icon>&nbsp;&nbsp;</span>
-                                    <input class="autocompleteSearch" #autocompleteFilter placeholder="{{lang.linkUser}}" type="text" matInput [matAutocomplete]="auto"
-                                        [formControl]="userCtrl">
-                                    <mat-autocomplete #auto="matAutocomplete">
-                                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.idToDisplay" (click)="linkUser(user)">
-                                            <p mat-line style="margin:0;">
-                                                <span class="col-xm-1" style="padding-right:5px;">
-                                                    <mat-icon color="primary" [class]="user.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'" style="margin-right:0px;"></mat-icon>
-                                                </span>
-                                                <span class="col-xm-11">
-                                                    {{ user.idToDisplay }}
-                                                    <small>{{ user.otherInfo }}</small>
-                                                </span>
-                                            </p>
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                </mat-form-field>
+                                <plugin-autocomplete [labelPlaceholder]="lang.linkUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'id'" (triggerEvent)="linkUser($event)"></plugin-autocomplete>
                                 <hr/>
                             </div>
                             <div class="col-md-6 col-xs-6">
@@ -149,16 +137,11 @@
                             <mat-row *matRowDef="let row; columns: basketsDisplayedColumns;" routerLink="/administration/baskets/{{row.basket_id}}" matTooltip="{{lang.view}}" style="cursor:pointer;"></mat-row>
                         </mat-table>
                     </mat-tab>
-                    <mat-tab label="Indexation" *ngIf="!creationMode">
-                        <ng-template matTabContent>
-                            <app-indexing-administration [groupId]="group.id"></app-indexing-administration>
-                        </ng-template>
-                    </mat-tab>
                 </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            position='end' [opened]="appService.getViewMode() ? false : false">
 
             <mat-nav-list>
                 <h3 mat-subheader>{{lang.keywordHelp}}</h3>

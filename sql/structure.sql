@@ -20,13 +20,9 @@ CREATE TABLE actions
   label_action character varying(255),
   id_status character varying(10),
   is_system character(1) NOT NULL DEFAULT 'N'::bpchar,
-  enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   action_page character varying(255),
   component CHARACTER VARYING (128),
   history character(1) NOT NULL DEFAULT 'N'::bpchar,
-  origin character varying(255) NOT NULL DEFAULT 'apps'::bpchar,
-  create_id  character(1) NOT NULL DEFAULT 'N'::bpchar,
-  category_id character varying(255),
   CONSTRAINT actions_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -561,78 +557,36 @@ WITH (
   OIDS=FALSE
 );
 
--- modules/folder/sql/structure/folder.postgresql.sql
-
-CREATE SEQUENCE folders_system_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 10000
-  CACHE 1;
-
+/* FOLDERS */
 CREATE TABLE folders
 (
-  folders_system_id bigint NOT NULL DEFAULT nextval('folders_system_id_seq'::regclass),
-  folder_id character varying(255) NOT NULL,
-  foldertype_id integer,
-  parent_id bigint DEFAULT (0)::bigint,
-  folder_name character varying(255) DEFAULT NULL::character varying,
-  subject character varying(255) DEFAULT NULL::character varying,
-  description character varying(255) DEFAULT NULL::character varying,
-  author character varying(255) DEFAULT NULL::character varying,
-  typist character varying(255) DEFAULT NULL::character varying,
-  status character varying(50) NOT NULL DEFAULT 'FOLDNEW'::character varying,
-  folder_level smallint DEFAULT (1)::smallint,
-  creation_date timestamp without time zone NOT NULL,
-  destination character varying(50) DEFAULT NULL,
-  dest_user character varying(128) DEFAULT NULL,
-  folder_out_id bigint,
-  video_status character varying(10) DEFAULT NULL,
-  video_user character varying(128) DEFAULT NULL,
-  is_frozen character(1) NOT NULL DEFAULT 'N',
-  custom_t1 character varying(255) DEFAULT NULL::character varying,
-  custom_n1 bigint,
-  custom_f1 numeric,
-  custom_d1 timestamp without time zone,
-  custom_t2 character varying(255) DEFAULT NULL::character varying,
-  custom_n2 bigint,
-  custom_f2 numeric,
-  custom_d2 timestamp without time zone,
-  custom_t3 character varying(255) DEFAULT NULL::character varying,
-  custom_n3 bigint,
-  custom_f3 numeric,
-  custom_d3 timestamp without time zone,
-  custom_t4 character varying(255) DEFAULT NULL::character varying,
-  custom_n4 bigint,
-  custom_f4 numeric,
-  custom_d4 timestamp without time zone,
-  custom_t5 character varying(255) DEFAULT NULL::character varying,
-  custom_n5 bigint,
-  custom_f5 numeric,
-  custom_d5 timestamp without time zone,
-  custom_t6 character varying(255) DEFAULT NULL::character varying,
-  custom_d6 timestamp without time zone,
-  custom_t7 character varying(255) DEFAULT NULL::character varying,
-  custom_d7 timestamp without time zone,
-  custom_t8 character varying(255) DEFAULT NULL::character varying,
-  custom_d8 timestamp without time zone,
-  custom_t9 character varying(255) DEFAULT NULL::character varying,
-  custom_d9 timestamp without time zone,
-  custom_t10 character varying(255) DEFAULT NULL::character varying,
-  custom_d10 timestamp without time zone,
-  custom_t11 character varying(255) DEFAULT NULL::character varying,
-  custom_d11 timestamp without time zone,
-  custom_t12 character varying(255) DEFAULT NULL::character varying,
-  custom_d12 timestamp without time zone,
-  custom_t13 character varying(255) DEFAULT NULL::character varying,
-  custom_d13 timestamp without time zone,
-  custom_t14 character varying(255) DEFAULT NULL::character varying,
-  custom_d14 timestamp without time zone,
-  custom_t15 character varying(255) DEFAULT NULL::character varying,
-  is_complete character(1) DEFAULT 'N'::bpchar,
-  is_folder_out character(1) DEFAULT 'N'::bpchar,
-  last_modified_date timestamp without time zone,
-  CONSTRAINT folders_pkey PRIMARY KEY (folders_system_id)
+  id serial NOT NULL,
+  label character varying(255) NOT NULL,
+  public boolean NOT NULL,   
+  user_id INTEGER NOT NULL,
+  parent_id INTEGER,
+  CONSTRAINT folders_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE resources_folders
+(
+  id serial NOT NULL,
+  folder_id INTEGER NOT NULL,
+  res_id INTEGER NOT NULL,
+  CONSTRAINT resources_folders_pkey PRIMARY KEY (id),
+  CONSTRAINT resources_folders_unique_key UNIQUE (folder_id, res_id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE entities_folders
+(
+  id serial NOT NULL,
+  folder_id INTEGER NOT NULL,
+  entity_id INTEGER NOT NULL,
+  edition boolean NOT NULL,
+  CONSTRAINT entities_folders_pkey PRIMARY KEY (id),
+  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id)
 )
 WITH (OIDS=FALSE);
 

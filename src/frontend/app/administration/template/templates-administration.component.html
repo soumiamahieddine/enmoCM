@@ -1,7 +1,7 @@
-<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
     <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list>
@@ -37,16 +37,16 @@
                         <mat-cell *matCellDef="let element" style="flex:2;"> {{element.template_label}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="template_comment">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;"> {{element.template_comment}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()" style="flex:2;">{{lang.description}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()" style="flex:2;"> {{element.template_comment}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="template_target">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()" style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="template_type">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.templateType}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;"> {{element.template_type}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()" style="flex:1;">{{lang.templateType}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()" style="flex:1;"> {{element.template_type}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
@@ -62,8 +62,8 @@
                 <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{templates.length}} {{lang.templates}}</div>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            position='end' [opened]="appService.getViewMode() ? false : false">
 
             <mat-nav-list>
                 <h3 mat-subheader>Modèles</h3>

@@ -16,6 +16,7 @@ namespace Group\models;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 abstract class ServiceModelAbstract
 {
@@ -315,6 +316,23 @@ abstract class ServiceModelAbstract
                     && ((string) $value->system_service == 'true' || in_array((string) $value->id, $servicesStoredInDB))) {
                     return true;
                 }
+            }
+        }
+
+        return false;
+    }
+
+    public static function canIndex(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['userId']);
+        ValidatorModel::intVal($args, ['userId']);
+
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
+
+        foreach ($groups as $group) {
+            if ($group['can_index']) {
+                return true;
             }
         }
 

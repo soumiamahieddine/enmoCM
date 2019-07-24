@@ -53,7 +53,7 @@ class ResController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!ServiceModel::canIndex(['userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -678,7 +678,7 @@ class ResController
         if ($aArgs['userId'] == 'superadmin') {
             return true;
         }
-        $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
         $groupsClause = '';
         foreach ($groups as $key => $group) {
             if (!empty($group['where_clause'])) {
@@ -697,7 +697,7 @@ class ResController
             }
         }
 
-        $baskets = BasketModel::getBasketsByLogin(['login' => $aArgs['userId'], 'unneededBasketId' => ['IndexingBasket']]);
+        $baskets = BasketModel::getBasketsByLogin(['login' => $aArgs['userId']]);
         $basketsClause = '';
         foreach ($baskets as $basket) {
             if (!empty($basket['basket_clause'])) {

@@ -1,9 +1,8 @@
-import { Component, Input, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
 
@@ -13,7 +12,7 @@ declare function $j(selector: any): any;
     styleUrls: ['visa-workflow.component.scss'],
     providers: [NotificationService]
 })
-export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit {
+export class VisaWorkflowComponent implements OnInit {
 
     lang: any = LANG;
     visaWorkflow: any = {
@@ -25,9 +24,7 @@ export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit 
 
     @Input('injectDatas') injectDatas: any;
 
-    constructor(public http: HttpClient, private notify: NotificationService) {
-        super(http, ['signatureBookUsers']);
-    }
+    constructor(public http: HttpClient, private notify: NotificationService) { }
 
     ngOnInit(): void { }
 
@@ -105,16 +102,14 @@ export class VisaWorkflowComponent extends AutoCompletePlugin implements OnInit 
         return usersMissing;
     }
 
-    addItem(event: any) {
+    addItem(userRest: any) {
         const user = {
-            'externalId': event.option.value.externalId,
-            'labelToDisplay': event.option.value.idToDisplay,
+            'externalId': userRest.externalId,
+            'labelToDisplay': userRest.idToDisplay,
             'requested_signature': false,
             'picture': ''
         }
         this.visaWorkflow.items.push(user);
-        $j('#availableUsers').blur();
-        this.userCtrl.setValue('');
         this.http.get("../../rest/maarchParapheur/user/" + user.externalId.maarchParapheur + "/picture")
             .subscribe((data: any) => {
                 this.visaWorkflow.items[this.visaWorkflow.items.length - 1].picture = data.picture;
