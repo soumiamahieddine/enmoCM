@@ -33,14 +33,15 @@ export class HeaderService {
     }
 
     getShortcut() {
-        this.http.get('../../rest/shortcuts').pipe(
-            filter(() => this.shortcut === null),
-            tap((data: any) => this.setShortcut(data.shortcuts)),
-            catchError((err: any) => {
-                console.log(err);
-                return of(false);
-            })
-        ).subscribe();
+        if (this.shortcut === null) {
+            this.http.get('../../rest/shortcuts').pipe(
+                tap((data: any) => this.setShortcut(data.shortcuts)),
+                catchError((err: any) => {
+                    console.log(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
     refreshShortcuts() {
