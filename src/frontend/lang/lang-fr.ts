@@ -1070,7 +1070,7 @@ export const LANG_FR = {
     "autocompleteInfo" : "La recherche doit contenir au minimum&nbsp;<b>3 caractères</b>",
     "availableUsers" : "Utilisateur(s) disponible(s)",
     "userUnauthorized" : "Utilisateur non autorisé",
-    "authorizedEntities" : "Entité(s) traitante(s) authorisée(s)",
+    "authorizedEntities" : "Entités traitantes autorisées",
     "warnIndex" : "Le groupe ne peut pas enregistrer de courrier.",
     "enableIndex" : "Activer l'enregistrement de courrier",
     "disableIndex" : "Désactiver l'enregistrement de courrier",
