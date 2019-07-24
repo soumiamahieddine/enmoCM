@@ -10,7 +10,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "doctypes-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 
 export class DoctypesAdministrationComponent implements OnInit {
