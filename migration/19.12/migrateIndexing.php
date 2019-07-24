@@ -111,6 +111,37 @@ foreach ($customs as $custom) {
             $migrated++;
         }
     }
+    \SrcCore\models\DatabaseModel::delete([
+        'table' => 'groupbasket',
+        'where' => ['basket_id = ?'],
+        'data'  => ['IndexingBasket']
+    ]);
+    \SrcCore\models\DatabaseModel::delete([
+        'table' => 'actions_groupbaskets',
+        'where' => ['basket_id = ?'],
+        'data'  => ['IndexingBasket']
+    ]);
+    \SrcCore\models\DatabaseModel::delete([
+        'table' => 'groupbasket_redirect',
+        'where' => ['basket_id = ?'],
+        'data'  => ['IndexingBasket']
+    ]);
+    \SrcCore\models\DatabaseModel::delete([
+        'table' => 'groupbasket_status',
+        'where' => ['basket_id = ?'],
+        'data'  => ['IndexingBasket']
+    ]);
+    \SrcCore\models\DatabaseModel::delete([
+        'table' => 'users_baskets_preferences',
+        'where' => ['basket_id = ?'],
+        'data'  => ['IndexingBasket']
+    ]);
+    \SrcCore\models\DatabaseModel::delete([
+        'table' => 'usergroups_services',
+        'where' => ['service_id = ?'],
+        'data'  => ['index_mlb']
+    ]);
+
     printf("Migration Indexing Basket (CUSTOM {$custom}) : " . $migrated . " groupe(s) avec le service et la bannette IndexingBasket trouvé(s) et migré(s).\n");
 }
 

@@ -836,7 +836,7 @@ class ResourceListController
         }
 
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
-        $groups = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
         $groupFound = false;
         foreach ($groups as $value) {
             if ($value['id'] == $aArgs['groupId']) {

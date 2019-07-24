@@ -261,7 +261,7 @@ abstract class BasketModelAbstract
         ValidatorModel::stringType($aArgs, ['login']);
         ValidatorModel::arrayType($aArgs, ['unneededBasketId']);
 
-        $userGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['login']]);
+        $userGroups = UserModel::getGroupsByLogin(['login' => $aArgs['login']]);
         $groupIds = [];
         foreach ($userGroups as $value) {
             $groupIds[] = $value['group_id'];
@@ -322,7 +322,7 @@ abstract class BasketModelAbstract
 
         $user = UserModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['id']]);
 
-        $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
         foreach ($groups as $group) {
             $baskets = BasketModel::getAvailableBasketsByGroupUser([
                 'select'        => ['baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc', 'baskets.color', 'users_baskets_preferences.color as pcolor'],

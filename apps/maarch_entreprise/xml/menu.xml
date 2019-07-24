@@ -19,13 +19,6 @@
         <url>index.php?page=contacts_v2</url>
         <style>fa fa-users</style>
     </MENU>
-<!-- LETTERBOX -->
-    <MENU>
-        <id>index_mlb</id>
-        <libconst>_INDEXING_MLB</libconst>
-        <url>index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket</url>
-        <style>fa fa-file-medical</style>
-    </MENU>
     <MENU>
         <id>adv_search_mlb</id>
         <libconst>_ADV_SEARCH_MLB</libconst>

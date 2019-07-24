@@ -20,6 +20,7 @@ use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
 require_once 'core/class/Url.php';
@@ -81,17 +82,11 @@ class CoreController
     public function getHeader(Request $request, Response $response)
     {
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
-        $user['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
+        $user['groups'] = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
 
         if ($GLOBALS['userId'] == 'superadmin') {
             $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
-            foreach ($menu as $key => $value) {
-                if ($value['id'] == 'index_mlb') {
-                    unset($menu[$key]);
-                    break;
-                }
-            }
             $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
             $menu = array_merge($menu, $menuModules);
         } else {
@@ -106,7 +101,7 @@ class CoreController
 
     public function getShortcuts(Request $request, Response $response)
     {
-        $userGroups = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
+        $userGroups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
 
         $shortcuts = [
             ['id' => 'home']
@@ -146,7 +141,7 @@ class CoreController
         ]);
     }
 
-    public static function getAdministration(Request $request, Response $response)
+    public function getAdministration(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -162,5 +157,15 @@ class CoreController
         }
 
         return $response->withJson($administration);
+    }
+
+    public static function setGlobals(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['login']);
+        ValidatorModel::intVal($args, ['login']);
+
+        $user = UserModel::getByLogin(['login' => $args['login'], 'select' => ['id']]);
+        $GLOBALS['userId'] = $args['login'];
+        $GLOBALS['id'] = $user['id'];
     }
 }

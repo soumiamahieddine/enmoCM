@@ -36,11 +36,11 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
     $currentRoute = empty($route) ? '' : $route->getPattern();
 
     if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication)) {
-        $userId = \SrcCore\controllers\AuthenticationController::authentication();
-        if (!empty($userId)) {
-            $GLOBALS['userId'] = $userId;
+        $login = \SrcCore\controllers\AuthenticationController::authentication();
+        if (!empty($login)) {
+            \SrcCore\controllers\CoreController::setGlobals(['login' => $login]);
             if (!empty($currentRoute)) {
-                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
+                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $login, 'currentRoute' => $currentRoute]);
                 if (!$r['isRouteAvailable']) {
                     return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
                 }

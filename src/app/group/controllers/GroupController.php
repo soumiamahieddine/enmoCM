@@ -320,7 +320,7 @@ class GroupController
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-        $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
         $groupsClause = '';
         foreach ($groups as $key => $group) {
             if (!empty($group['where_clause'])) {

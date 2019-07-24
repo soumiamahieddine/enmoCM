@@ -36,7 +36,7 @@ class HomeController
         $homeMessage = trim($homeMessage['param_value_string']);
 
         $redirectedBaskets = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
-        $groups = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
         foreach ($groups as $group) {
             $baskets = BasketModel::getAvailableBasketsByGroupUser([
                 'select'        => ['baskets.id', 'baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc', 'baskets.basket_clause', 'baskets.color', 'users_baskets_preferences.color as pcolor'],

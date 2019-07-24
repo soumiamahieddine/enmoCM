@@ -416,16 +416,16 @@ abstract class UserModelAbstract
         return $aEntity[0];
     }
 
-    public static function getGroupsByUserId(array $aArgs)
+    public static function getGroupsByLogin(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['login']);
+        ValidatorModel::stringType($aArgs, ['login']);
 
         $aGroups = DatabaseModel::select([
             'select'    => ['usergroups.id', 'usergroups.can_index', 'usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
             'table'     => ['usergroup_content, usergroups, security'],
             'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
-            'data'      => [$aArgs['userId']]
+            'data'      => [$aArgs['login']]
         ]);
 
         return $aGroups;
@@ -472,7 +472,7 @@ abstract class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['groupId']);
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        $groups = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
         foreach ($groups as $value) {
             if ($value['group_id'] == $aArgs['groupId']) {
                 return true;
