@@ -36,7 +36,7 @@ ALTER TABLE usergroups ADD COLUMN indexation_parameters jsonb NOT NULL DEFAULT '
 /* BASKETS LIST EVENT */
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event;
 ALTER TABLE groupbasket ADD COLUMN list_event character varying(255);
-UPDATE groupbasket SET list_event = 'processDoc'
+UPDATE groupbasket SET list_event = 'processDocument'
 FROM (
        SELECT basket_id, group_id
        FROM actions_groupbaskets ag
@@ -52,7 +52,7 @@ FROM (
        WHERE ag.default_action_list = 'Y' AND a.component = 'viewDoc'
      ) AS subquery
 WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
-UPDATE groupbasket SET list_event = 'visaMail'
+UPDATE groupbasket SET list_event = 'signatureBookAction'
 FROM (
        SELECT basket_id, group_id
        FROM actions_groupbaskets ag
@@ -80,6 +80,7 @@ CREATE TABLE folders
   public boolean NOT NULL,   
   user_id INTEGER NOT NULL,
   parent_id INTEGER,
+  level INTEGER,
   CONSTRAINT folders_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

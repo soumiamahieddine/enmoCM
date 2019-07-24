@@ -496,3 +496,7 @@ define("_SIGNATORY", "Signataire");
 define("_VISA_USER_MIN", "Viseur");
 define("_NOTE_USER", "Annotateur");
 define("_WF_SEND_TO", "Envoyé à : ");
+
+define("_FOLDER_CREATION", "Dossier créé");
+define("_FOLDER_MODIFICATION", "Dossier modifié");
+define("_FOLDER_SUPPRESSION", "Dossier supprimé");

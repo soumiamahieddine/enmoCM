@@ -20,27 +20,38 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use User\models\UserModel;
 
 class FolderController
 {
     public function get(Request $request, Response $response)
     {
-        $folders = FolderModel::get();
+        $folders = FolderModel::get(['order_by' => ['level']]);
 
-        foreach ($folders as $key => $value) {
-            $folders[$key]['icon'] = "fa fa-folder-open";
-            if (empty($value['parent_id'])) {
-                $folders[$key]['parent'] = '#';
+        $tree = [];
+        foreach ($folders as $folder) {
+            $insert = [
+                'name'       => $folder['label'],
+                'expandable' => true,
+                'id'         => $folder['id'],
+                'label'      => $folder['label'],
+                'public'     => $folder['public'],
+                'user_id'    => $folder['user_id'],
+                'parent_id'  => $folder['parent_id'],
+                'level'      => $folder['level'],
+            ];
+            if ($folder['level'] == 0) {
+                $tree[] = $insert;
             } else {
-                $folders[$key]['parent'] = $value['parent_id'];
+                foreach ($tree as $key => $branch) {
+                    if ($branch['id'] == $folder['parent_id']) {
+                        array_splice($tree, $key + 1, 0, [$insert]);
+                        break;
+                    }
+                }
             }
-
-            $folders[$key]['state']['opened'] = true;
-            $folders[$key]['text'] = $value['label'];
         }
 
-        return $response->withJson(['folders' => $folders]);
+        return $response->withJson(['folders' => $tree]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -77,25 +88,32 @@ class FolderController
         if (!empty($data['parent_id']) && !Validator::intval()->validate($data['parent_id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
         }
-        if (!Validator::boolVal()->validate($data['public'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
-        }
-
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
         //TODO Check rights
 
+        if (empty($data['parent_id'])) {
+            $data['parent_id'] = 0;
+            $level  = 0;
+            $owner  = $GLOBALS['id'];
+            $public = false;
+        } else {
+            $folder = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['user_id', 'public', 'level']]);
+            $owner  = $folder['user_id'];
+            $public = $folder['public'];
+            $level  = $folder['level'] + 1;
+        }
+
         $id = FolderModel::create([
-            'label'      => $data['label'],
-            'public'     => $data['public'],
-            'user_id'    => $currentUser['id'],
-            'parent_id'  => $data['parent_id']
+            'label'     => $data['label'],
+            'public'    => $public,
+            'user_id'   => $owner,
+            'parent_id' => $data['parent_id'],
+            'level'     => $level
         ]);
 
-        if (!empty($data['sharing']['entities'])) {
-            //TODO check entities exists
-
-            foreach ($data['sharing']['entities'] as $entity) {
+        if (!empty($entitiesSharing)) {
+            //TODO $entitiesSharing = Get entities sharing from n-1
+            foreach ($entitiesSharing as $entity) {
                 EntityFolderModel::create([
                     'folder_id' => $id,
                     'entity_id' => $entity['entity_id'],
@@ -135,11 +153,23 @@ class FolderController
 
         //TODO Check rights
 
+        if (empty($data['parent_id'])) {
+            $data['parent_id'] = 0;
+            $level  = 0;
+            $public = false;
+        } else {
+            $folder = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['public', 'level']]);
+            $public = $folder['public'];
+            $level  = $folder['level'] + 1;
+            // Get entities sharing from n-1
+        }
+
         FolderModel::update([
             'set' => [
                 'label'      => $data['label'],
-                'public'     => empty($data['public']) ? 'false' : 'true',
-                'parent_id'  => $data['parent_id']
+                'public'     => empty($public) ? 'false' : 'true',
+                'parent_id'  => $data['parent_id'],
+                'level'      => $level
             ],
             'where' => ['id = ?'],
             'data' => [$aArgs['id']]
@@ -194,7 +224,7 @@ class FolderController
             'tableName' => 'folder',
             'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
-            'info'      => _BASKET_SUPPRESSION . " : {$aArgs['id']}",
+            'info'      => _FOLDER_SUPPRESSION . " : {$aArgs['id']}",
             'moduleId'  => 'folder',
             'eventId'   => 'folderSuppression',
         ]);

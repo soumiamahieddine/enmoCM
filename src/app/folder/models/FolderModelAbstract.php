@@ -22,7 +22,8 @@ class FolderModelAbstract
 
         $folders = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'  => ['folders']
+            'table'  => ['folders'],
+            'order_by' => empty($aArgs['order_by']) ? ['label'] : $aArgs['order_by']
         ]);
 
         return $folders;
@@ -47,7 +48,7 @@ class FolderModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['user_id', 'label']);
         ValidatorModel::stringType($aArgs, ['label']);
-        ValidatorModel::intVal($aArgs, ['user_id', 'parent_id']);
+        ValidatorModel::intVal($aArgs, ['user_id', 'parent_id', 'level']);
         ValidatorModel::boolType($aArgs, ['public']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'folders_id_seq']);
@@ -59,7 +60,8 @@ class FolderModelAbstract
                 'label'      => $aArgs['label'],
                 'public'     => empty($aArgs['public']) ? 'false' : 'true',
                 'user_id'    => $aArgs['user_id'],
-                'parent_id'  => $aArgs['parent_id']
+                'parent_id'  => $aArgs['parent_id'],
+                'level'  => $aArgs['level']
             ]
         ]);
 

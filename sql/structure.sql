@@ -565,6 +565,7 @@ CREATE TABLE folders
   public boolean NOT NULL,   
   user_id INTEGER NOT NULL,
   parent_id INTEGER,
+  level INTEGER,
   CONSTRAINT folders_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
