@@ -24,6 +24,7 @@ import { ActivateUserComponent }                from './activate-user.component'
 import { ActionsListComponent }                 from './actions/actions-list.component';
 
 import { FolderTreeComponent }                 from './folder/folder-tree.component';
+import { FolderDocumentListComponent }                 from './folder/document-list/folder-document-list.component';
 import { PanelFolderComponent }                 from './folder/panel/panel-folder.component';
 
 /*ACTIONS PAGES */
@@ -115,7 +116,8 @@ import { PrintSeparatorComponent }                        from './separator/prin
         ActionsListComponent,
         PrintSeparatorComponent,
         FolderTreeComponent,
-        PanelFolderComponent
+        PanelFolderComponent,
+        FolderDocumentListComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,

@@ -22,7 +22,7 @@ declare function $j(selector: any): any;
     styleUrls: ['folder-document-list.component.scss'],
     providers: [NotificationService, AppService],
 })
-export class BasketListComponent implements OnInit {
+export class FolderDocumentListComponent implements OnInit {
 
     lang: any = LANG;
 

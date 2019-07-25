@@ -38,7 +38,7 @@
         </mat-tree-node>
         <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding
             matTreeNodePaddingIndent="45px">
-            <mat-form-field>
+            <mat-form-field style="width: 100%;">
                 <input matInput #itemValue placeholder="Nouveau dossier...">
             </mat-form-field>
             <button mat-icon-button (click)="saveNode(node, itemValue.value)" [disabled]="itemValue.value === ''">
