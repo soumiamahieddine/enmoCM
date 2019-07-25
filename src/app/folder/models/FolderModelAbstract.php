@@ -124,15 +124,11 @@ class FolderModelAbstract
     {
         ValidatorModel::arrayType($args, ['select', 'where', 'data']);
 
-        $where = ['folders.id = entities_folders.folder_id', 'folders.id = resources_folders.folder_id'];
-        if (!empty($args['where'])) {
-            $where = array_merge($where, $args['where']);
-        }
-
         $folders = DatabaseModel::select([
             'select'    => empty($args['select']) ? ['*'] : $args['select'],
-            'table'     => ['folders, entities_folders, resources_folders'],
-            'where'     => $where,
+            'table'     => ['folders', 'entities_folders', 'resources_folders'],
+            'left_join' => ['folders.id = entities_folders.folder_id', 'folders.id = resources_folders.folder_id'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
             'data'      => empty($args['data']) ? [] : $args['data']
         ]);
 
