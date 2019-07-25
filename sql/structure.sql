@@ -255,7 +255,6 @@ CREATE TABLE res_attachments
   relation bigint,
   doc_date timestamp without time zone,
   docserver_id character varying(32) NOT NULL,
-  folders_system_id bigint,
   path character varying(255) DEFAULT NULL::character varying,
   filename character varying(255) DEFAULT NULL::character varying,
   offset_doc character varying(255) DEFAULT NULL::character varying,
@@ -588,84 +587,6 @@ CREATE TABLE entities_folders
   edition boolean NOT NULL,
   CONSTRAINT entities_folders_pkey PRIMARY KEY (id),
   CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id)
-)
-WITH (OIDS=FALSE);
-
-CREATE SEQUENCE foldertype_id_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 200
-  CACHE 1;
-
-CREATE TABLE foldertypes
-(
-  foldertype_id  bigint NOT NULL DEFAULT nextval('foldertype_id_id_seq'::regclass),
-  foldertype_label character varying(255) NOT NULL,
-  maarch_comment text,
-  retention_time character varying(50),
-  custom_d1 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_f1 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_n1 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t1 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_d2 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_f2 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_n2 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t2 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_d3 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_f3 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_n3 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t3 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_d4 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_f4 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_n4 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t4 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_d5 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_f5 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_n5 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t5 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_d6 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t6 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_d7 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t7 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_d8 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t8 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_d9 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t9 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_d10 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t10 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t11 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t12 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t13 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t14 character varying(10) DEFAULT '0000000000'::character varying,
-  custom_t15 character varying(10) DEFAULT '0000000000'::character varying,
-  coll_id character varying(32),
-  CONSTRAINT foldertypes_pkey PRIMARY KEY (foldertype_id)
-)
-WITH (OIDS=FALSE);
-
-CREATE TABLE foldertypes_doctypes
-(
-  foldertype_id integer NOT NULL,
-  doctype_id integer NOT NULL,
-  CONSTRAINT foldertypes_doctypes_pkey PRIMARY KEY (foldertype_id, doctype_id)
-)
-WITH (OIDS=FALSE);
-
-CREATE TABLE foldertypes_doctypes_level1
-(
-  foldertype_id integer NOT NULL,
-  doctypes_first_level_id integer NOT NULL,
-  CONSTRAINT foldertypes_doctypes_level1_pkey PRIMARY KEY (foldertype_id, doctypes_first_level_id)
-)
-WITH (OIDS=FALSE);
-
-CREATE TABLE foldertypes_indexes
-(
-  foldertype_id bigint NOT NULL,
-  field_name character varying(255) NOT NULL,
-  mandatory character(1) NOT NULL DEFAULT 'N'::bpchar,
-  CONSTRAINT foldertypes_indexes_pkey PRIMARY KEY (foldertype_id, field_name)
 )
 WITH (OIDS=FALSE);
 
@@ -1228,7 +1149,6 @@ CREATE TABLE res_letterbox
   relation bigint,
   doc_date timestamp without time zone,
   docserver_id character varying(32) NOT NULL,
-  folders_system_id bigint,
   path character varying(255) DEFAULT NULL::character varying,
   filename character varying(255) DEFAULT NULL::character varying,
   offset_doc character varying(255) DEFAULT NULL::character varying,
@@ -1563,10 +1483,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.modification_date,
     r.relation,
     r.docserver_id,
-    r.folders_system_id,
-    f.folder_id,
-    f.destination AS folder_destination,
-    f.is_frozen AS folder_is_frozen,
     r.path,
     r.filename,
     r.fingerprint,
@@ -1622,50 +1538,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.custom_f3 AS doc_custom_f3,
     r.custom_f4 AS doc_custom_f4,
     r.custom_f5 AS doc_custom_f5,
-    f.foldertype_id,
-    ft.foldertype_label,
-    f.custom_t1 AS fold_custom_t1,
-    f.custom_t2 AS fold_custom_t2,
-    f.custom_t3 AS fold_custom_t3,
-    f.custom_t4 AS fold_custom_t4,
-    f.custom_t5 AS fold_custom_t5,
-    f.custom_t6 AS fold_custom_t6,
-    f.custom_t7 AS fold_custom_t7,
-    f.custom_t8 AS fold_custom_t8,
-    f.custom_t9 AS fold_custom_t9,
-    f.custom_t10 AS fold_custom_t10,
-    f.custom_t11 AS fold_custom_t11,
-    f.custom_t12 AS fold_custom_t12,
-    f.custom_t13 AS fold_custom_t13,
-    f.custom_t14 AS fold_custom_t14,
-    f.custom_t15 AS fold_custom_t15,
-    f.custom_d1 AS fold_custom_d1,
-    f.custom_d2 AS fold_custom_d2,
-    f.custom_d3 AS fold_custom_d3,
-    f.custom_d4 AS fold_custom_d4,
-    f.custom_d5 AS fold_custom_d5,
-    f.custom_d6 AS fold_custom_d6,
-    f.custom_d7 AS fold_custom_d7,
-    f.custom_d8 AS fold_custom_d8,
-    f.custom_d9 AS fold_custom_d9,
-    f.custom_d10 AS fold_custom_d10,
-    f.custom_n1 AS fold_custom_n1,
-    f.custom_n2 AS fold_custom_n2,
-    f.custom_n3 AS fold_custom_n3,
-    f.custom_n4 AS fold_custom_n4,
-    f.custom_n5 AS fold_custom_n5,
-    f.custom_f1 AS fold_custom_f1,
-    f.custom_f2 AS fold_custom_f2,
-    f.custom_f3 AS fold_custom_f3,
-    f.custom_f4 AS fold_custom_f4,
-    f.custom_f5 AS fold_custom_f5,
-    f.is_complete AS fold_complete,
-    f.status AS fold_status,
-    f.subject AS fold_subject,
-    f.parent_id AS fold_parent_id,
-    f.folder_level,
-    f.folder_name,
-    f.creation_date AS fold_creation_date,
     r.initiator,
     r.destination,
     r.dest_user,
@@ -1708,27 +1580,13 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     doctypes_second_level dsl,
     res_letterbox r
      LEFT JOIN entities en ON r.destination::text = en.entity_id::text
-     LEFT JOIN folders f ON r.folders_system_id = f.folders_system_id
      LEFT JOIN cases_res cr ON r.res_id = cr.res_id
      LEFT JOIN mlb_coll_ext mlb ON mlb.res_id = r.res_id
-     LEFT JOIN foldertypes ft ON f.foldertype_id = ft.foldertype_id AND f.status::text <> 'DEL'::text
      LEFT JOIN cases ca ON cr.case_id = ca.case_id
      LEFT JOIN contacts_v2 cont ON mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id
      LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
   WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
   
-
--- View folders
-DROP VIEW IF EXISTS view_folders;
-CREATE VIEW view_folders AS 
-SELECT folders.folders_system_id, folders.folder_id, folders.foldertype_id, foldertypes.foldertype_label, (folders.folder_id || ':') || folders.folder_name AS folder_full_label, folders.parent_id, folders.folder_name, folders.subject, folders.description, folders.author, folders.typist, folders.status, folders.folder_level, 
-folders.creation_date, folders.destination, folders.dest_user, 
-folders.folder_out_id, folders.custom_t1, folders.custom_n1, folders.custom_f1, folders.custom_d1, folders.custom_t2, folders.custom_n2, folders.custom_f2, folders.custom_d2, folders.custom_t3, folders.custom_n3, folders.custom_f3, folders.custom_d3, folders.custom_t4, folders.custom_n4, folders.custom_f4, folders.custom_d4, folders.custom_t5, folders.custom_n5, folders.custom_f5, folders.custom_d5, folders.custom_t6, folders.custom_d6, folders.custom_t7, folders.custom_d7, folders.custom_t8, folders.custom_d8, folders.custom_t9, folders.custom_d9, folders.custom_t10, folders.custom_d10, folders.custom_t11, folders.custom_d11, folders.custom_t12, folders.custom_d12, folders.custom_t13, folders.custom_d13, folders.custom_t14, folders.custom_d14, folders.custom_t15, folders.is_complete, folders.is_folder_out, folders.last_modified_date, folders.video_status, COALESCE(r.count_document, 0::bigint) AS count_document
-   FROM foldertypes, folders
-   LEFT JOIN ( SELECT res_letterbox.folders_system_id, count(res_letterbox.folders_system_id) AS count_document
-           FROM res_letterbox
-          GROUP BY res_letterbox.folders_system_id) r ON r.folders_system_id = folders.folders_system_id
-  WHERE folders.foldertype_id = foldertypes.foldertype_id;
 
 -- View fileplan
 CREATE OR REPLACE VIEW fp_view_fileplan AS 
@@ -1787,7 +1645,6 @@ CREATE TABLE res_version_attachments
   relation bigint,
   doc_date timestamp without time zone,
   docserver_id character varying(32) NOT NULL,
-  folders_system_id bigint,
   path character varying(255) DEFAULT NULL::character varying,
   filename character varying(255) DEFAULT NULL::character varying,
   offset_doc character varying(255) DEFAULT NULL::character varying,
@@ -1878,13 +1735,13 @@ WITH (OIDS=FALSE);
 DROP VIEW IF EXISTS res_view_attachments;
 CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,
   filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, in_send_attach, signatory_user_serial_id
   FROM res_version_attachments
   UNION ALL
   SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,
   filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, in_send_attach, signatory_user_serial_id
   FROM res_attachments;
