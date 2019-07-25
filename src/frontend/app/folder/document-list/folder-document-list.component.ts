@@ -13,6 +13,7 @@ import { HeaderService } from '../../../service/header.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { PanelListComponent } from '../../list/panel/panel-list.component';
 import { AppService } from '../../../service/app.service';
+import { ThrowStmt } from '@angular/compiler';
 
 
 declare function $j(selector: any): any;
@@ -63,7 +64,6 @@ export class FolderDocumentListComponent implements OnInit {
     resultsLength = 0;
     isLoadingResults = true;
     listProperties: any = {};
-    currentBasketInfo: any = {};
     currentChrono: string = '';
     currentMode: string = '';
 
@@ -72,6 +72,9 @@ export class FolderDocumentListComponent implements OnInit {
     selectedRes: number[] = [];
     allResInBasket: number[] = [];
     selectedDiffusionTab: number = 0;
+    folderInfo: any = {
+        id: 0
+    };
 
     private destroy$ = new Subject<boolean>();
 
@@ -109,13 +112,7 @@ export class FolderDocumentListComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.destroy$.next(true);
 
-            this.basketUrl = '../../rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
-
-            this.currentBasketInfo = {
-                ownerId: params['userSerialId'],
-                groupId: params['groupSerialId'],
-                basketId: params['basketId']
-            };
+            this.basketUrl = '../../rest/folders/' + params['folderId'];
             this.selectedRes = [];
             this.sidenavRight.close();
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
@@ -149,14 +146,20 @@ export class FolderDocumentListComponent implements OnInit {
                     return this.resultListDatabase!.getRepoIssues(
                         this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl);
                 }),
+                map(data => data.folder),
                 map(data => {
+                    this.folderInfo = 
+                    {
+                        "id": data.id,
+                        "label": data.label
+
+                    };
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
-                    this.resultsLength = data.count;
-                    this.allResInBasket = data.allResources;
-                    this.currentBasketInfo.basket_id = data.basket_id;
-                    this.headerService.setHeader(data.basketLabel);
+                    this.resultsLength = data.countResources;
+                    //this.allResInBasket = data.countResources;
+                    this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
                     return data.resources;
                 }),
                 catchError((err: any) => {
@@ -274,12 +277,9 @@ export class FolderDocumentListComponent implements OnInit {
     }
 }
 export interface BasketList {
+    folder: any;
     resources: any[];
-    count: number;
-    basketLabel: string,
-    basket_id: string,
-    defaultAction: any;
-    allResources: number[]
+    countResources: number
 }
 
 export class ResultListHttpDao {

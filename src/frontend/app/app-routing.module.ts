@@ -11,6 +11,7 @@ import { SignatureBookComponent }           from './signature-book.component';
 import { SaveNumericPackageComponent }      from './save-numeric-package.component';
 import { PrintSeparatorComponent }          from './separator/print-separator/print-separator.component';
 import { AppGuard }                         from '../service/app.guard';
+import { FolderDocumentListComponent } from './folder/document-list/folder-document-list.component';
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import { AppGuard }                         from '../service/app.guard';
             { path: 'about-us', canActivate: [AppGuard], component: AboutUsComponent },
             { path: 'home', canActivate: [AppGuard],  component: HomeComponent },
             { path: 'basketList/users/:userSerialId/groups/:groupSerialId/baskets/:basketId', canActivate: [AppGuard], component: BasketListComponent },
+            { path: 'folders/:folderId', canActivate: [AppGuard], component: FolderDocumentListComponent },
             { path: 'saveNumericPackage', canActivate: [AppGuard], component: SaveNumericPackageComponent },
             { path: 'separators/print', canActivate: [AppGuard], component: PrintSeparatorComponent },
             { path: 'signatureBook/users/:userId/groups/:groupId/baskets/:basketId/resources/:resId', canActivate: [AppGuard],component: SignatureBookComponent },

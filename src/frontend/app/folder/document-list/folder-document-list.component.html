@@ -5,9 +5,9 @@
         <header-panel [snavLeft]="snav"></header-panel>
         <menu-shortcut></menu-shortcut>
         <menu-nav></menu-nav>
-        <basket-home *ngIf="homeData" #basketHome [homeData]="homeData" [snavL]="snav"
-            [currentBasketInfo]="currentBasketInfo"></basket-home>
+        <basket-home *ngIf="homeData" #basketHome [homeData]="homeData" [snavL]="snav"></basket-home>
         <mat-divider></mat-divider>
+        <panel-folder *ngIf="folderInfo.id > 0" [selectedId]="folderInfo.id"></panel-folder>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;"><img style="max-height: 100vh;" src="{{thumbnailUrl}}" /></mat-card>
@@ -42,8 +42,8 @@
                     </div>
                     <div class="table-head-tool">
                         <span>
-                            <app-tools-list #actionsList [selectedRes]="selectedRes"
-                                [currentBasketInfo]="currentBasketInfo"></app-tools-list>
+                            <!--<app-tools-list #actionsList [selectedRes]="selectedRes"
+                                [currentBasketInfo]="currentBasketInfo"></app-tools-list>-->
                         </span>
                         <span>
                             <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="10"

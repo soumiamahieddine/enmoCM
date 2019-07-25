@@ -8,6 +8,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener, MatDialog, MatDialogRef } from
 import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
+import { Router } from '@angular/router';
 
 declare function $j(selector: any): any;
 /**
@@ -95,7 +96,8 @@ export class FolderTreeComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private router: Router,
     ) { }
 
     ngOnInit(): void {
@@ -147,6 +149,7 @@ export class FolderTreeComponent implements OnInit {
             element.selected = false;
         });
         node.selected = true;
+        this.router.navigate(['/folders/'+node.id]);
     }
 
     showAction(node: any) {

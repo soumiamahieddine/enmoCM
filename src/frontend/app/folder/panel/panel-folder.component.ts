@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { LANG } from '../../translate.component';
 
 declare function $j(selector: any): any;
@@ -12,6 +12,8 @@ export class PanelFolderComponent implements OnInit {
 
     lang: any = LANG;
 
+    @Input('selectedId') id: number;
+    
     constructor() { }
 
     ngOnInit(): void { }
