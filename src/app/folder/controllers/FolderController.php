@@ -35,8 +35,30 @@ class FolderController
     {
         $folders = FolderController::getScopeFolders(['login' => $GLOBALS['userId']]);
 
+        $userEntities = EntityModel::getEntitiesByUserId([
+            'select'  => ['entities.id'],
+            'user_id' => $GLOBALS['userId']
+        ]);
+
+        $userEntities = array_column($userEntities, 'id');
+        if (empty($userEntities)) {
+            $userEntities = 0;
+        }
+
+        $foldersWithResources = FolderModel::getWithEntitiesAndResources([
+            'select'   => ['COUNT(resources_folders.folder_id)', 'resources_folders.folder_id'],
+            'where'    => ['(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
+            'data'     => [$userEntities, $GLOBALS['id']],
+            'groupBy'  => ['resources_folders.folder_id']
+        ]);
+
         $tree = [];
         foreach ($folders as $folder) {
+            $key = array_keys(array_column($foldersWithResources, 'folder_id'), $folder['id']);
+            $count = 0;
+            if (isset($key[0])) {
+                $count = $foldersWithResources[$key[0]]['count'];
+            }
             $insert = [
                 'name'       => $folder['label'],
                 'id'         => $folder['id'],
@@ -45,6 +67,7 @@ class FolderController
                 'user_id'    => $folder['user_id'],
                 'parent_id'  => $folder['parent_id'],
                 'level'      => $folder['level'],
+                'countResources' => $count
             ];
             if ($folder['level'] == 0) {
                 $tree[] = $insert;
@@ -196,7 +219,7 @@ class FolderController
             'level'     => $level
         ]);
 
-        if ($public) {
+        if ($public && !empty($data['parent_id'])) {
             $entitiesSharing = EntityFolderModel::getByFolderId(['folder_id' => $data['parent_id']]);
             foreach ($entitiesSharing as $entity) {
                 EntityFolderModel::create([
