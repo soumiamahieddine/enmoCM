@@ -105,16 +105,11 @@ class CoreController
             ['id' => 'home']
         ];
 
-        if ($GLOBALS['userId'] == 'superadmin') {
+        if (ServiceModel::hasService(['id' => 'admin', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
             $shortcuts[] = ['id' => 'administration'];
+        }
+        if (ServiceModel::hasService(['id' => 'adv_search_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
             $shortcuts[] = ['id' => 'search'];
-        } else {
-            if (ServiceModel::hasService(['id' => 'admin', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
-                $shortcuts[] = ['id' => 'administration'];
-            }
-            if (ServiceModel::hasService(['id' => 'adv_search_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
-                $shortcuts[] = ['id' => 'search'];
-            }
         }
 
         $indexingGroups = [];
