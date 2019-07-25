@@ -1048,4 +1048,6 @@ export const LANG_EN = {
     "keywordDeleted" : "Keyword deleted",
     "actionsInfo" : "Only actions with \"simple confirmation\" and \"close mail\" will be displayed",
     "eventList" : "Open page",
+    "folderAdded" : "Folder added",
+    "folderDeleted" : "Folder deleted",
 };

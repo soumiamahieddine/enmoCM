@@ -1085,4 +1085,6 @@ export const LANG_FR = {
     "eventProcessDoc" : "Fiche de traitement",
     "eventViewDoc" : "Visionneuse de document",
     "eventList" : "Ouverture de la page",
+    "folderAdded" : "Dossier ajouté",
+    "folderDeleted" : "Dossier supprimé",
 };

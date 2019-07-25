@@ -1,18 +1,38 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { AppService } from '../../service/app.service';
-import { map } from 'rxjs/operators';
+import { map, tap, catchError, filter, exhaustMap } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { trigger, transition, style, animate, state } from '@angular/animations';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { MatTreeFlatDataSource, MatTreeFlattener, MatDialog, MatDialogRef } from '@angular/material';
+import { BehaviorSubject, of } from 'rxjs';
+import { NotificationService } from '../notification.service';
+import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 
 declare function $j(selector: any): any;
+/**
+ * Node for to-do item
+ */
+export class ItemNode {
+    id: number;
+    children: ItemNode[];
+    label: string;
+    parent_id: number;
+}
 
+/** Flat to-do item node with expandable and level information */
+export class ItemFlatNode {
+    id: number;
+    label: string;
+    parent_id: number;
+    level: number;
+    expandable: boolean;
+}
 @Component({
     selector: 'folder-tree',
     templateUrl: "folder-tree.component.html",
     styleUrls: ['folder-tree.component.scss'],
+    providers: [NotificationService],
     animations: [
         trigger('hideShow', [
             transition(
@@ -34,15 +54,30 @@ export class FolderTreeComponent implements OnInit {
 
     lang: any = LANG;
     TREE_DATA: any[] = [];
+    dialogRef: MatDialogRef<any>;
+    dataChange = new BehaviorSubject<ItemNode[]>([]);
 
-    private transformer = (node: any, level: number) => {
-        return {
-            expandable: !!node.children && node.children.length > 0,
-            id: node.id,
-            parent: node.parent_id,
-            label: node.label,
-            level: level,
-        };
+    get data(): ItemNode[] { return this.dataChange.value; }
+
+    /** Map from flat node to nested node. This helps us finding the nested node to be modified */
+    flatNodeMap = new Map<ItemFlatNode, ItemNode>();
+
+    /** Map from nested node to flattened node. This helps us to keep the same object for selection */
+    nestedNodeMap = new Map<ItemNode, ItemFlatNode>();
+
+    private transformer = (node: ItemNode, level: number) => {
+        const existingNode = this.nestedNodeMap.get(node);
+        const flatNode = existingNode && existingNode.label === node.label
+            ? existingNode
+            : new ItemFlatNode();
+        flatNode.label = node.label;
+        flatNode.parent_id = node.parent_id;
+        flatNode.id = node.id;
+        flatNode.level = level;
+        flatNode.expandable = !!node.children;
+        this.flatNodeMap.set(flatNode, node);
+        this.nestedNodeMap.set(node, flatNode);
+        return flatNode;
     }
 
     treeControl = new FlatTreeControl<any>(
@@ -57,34 +92,46 @@ export class FolderTreeComponent implements OnInit {
 
     constructor(
         public http: HttpClient,
-        public appService: AppService
-    ) {
+        private notify: NotificationService,
+        private dialog: MatDialog
+    ) { }
 
+    ngOnInit(): void {
+        this.getFolders();
+    }
+
+    getFolders() {
         this.http.get("../../rest/folders").pipe(
-            map((data: any) => {
-
-                data = this.flatToNestedObject(data.folders);
-                this.TREE_DATA = data;
-                this.dataSource.data = this.TREE_DATA;
-                let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(3);
-                this.treeControl.dataNodes[indexSelectedFolder].selected = true;
-
-                while (indexSelectedFolder != -1) {
-                    indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(this.treeControl.dataNodes[indexSelectedFolder].parent);
-                    if (indexSelectedFolder != -1) {
-                        this.treeControl.expand(this.treeControl.dataNodes[indexSelectedFolder]);
-                    }
-                }
-                return data;
-            }),
+            map((data: any) => this.flatToNestedObject(data.folders)),
+            filter((data: any) => data.length > 0),
+            tap((data) => this.initTree(data)),
+            //tap(() => this.openTree(3))
         ).subscribe();
     }
 
-    ngOnInit(): void {
+    initTree(data: any) {
+        this.dataChange.next(data);
+        this.dataChange.subscribe(data => {
+            this.dataSource.data = data;
+        });
+    }
 
+    openTree(id: number) {
+        let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(id);
+        //this.treeControl.dataNodes[indexSelectedFolder].selected = true;
+        console.log(indexSelectedFolder);
+
+        while (indexSelectedFolder != -1) {
+            indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(this.treeControl.dataNodes[indexSelectedFolder].parent_id);
+            if (indexSelectedFolder != -1) {
+                this.treeControl.expand(this.treeControl.dataNodes[indexSelectedFolder]);
+            }
+        }
     }
 
     hasChild = (_: number, node: any) => node.expandable;
+
+    hasNoContent = (_: number, _nodeData: any) => _nodeData.label === '';
 
     selectFolder(node: any) {
         this.treeControl.dataNodes.forEach(element => {
@@ -106,7 +153,7 @@ export class FolderTreeComponent implements OnInit {
 
     flatToNestedObject(data: any) {
         const nested = data.reduce((initial: any, value: any, index: any, original: any) => {
-            if (value.parent_id === null) {
+            if (value.parent_id === 0) {
                 if (initial.left.length) this.checkLeftOvers(initial.left, value)
                 delete value.parent_id
                 value.root = true;
@@ -155,5 +202,112 @@ export class FolderTreeComponent implements OnInit {
             }
         }
         return found;
+    }
+
+    addNewItem(node: any) {
+        const currentNode = this.flatNodeMap.get(node);
+        if (currentNode.children === undefined) {
+            currentNode['children'] = [];
+        }
+        currentNode.children.push({ label: '', parent_id: currentNode.id } as ItemNode);
+        this.dataChange.next(this.data);
+
+        this.treeControl.expand(node);
+    }
+
+    addNewItemRoot(node: any) {
+        const parentNode = this.getParentNode(node);
+        if (parentNode !== null) {
+            if (parentNode.children === undefined) {
+                parentNode['children'] = [];
+            }
+            parentNode.children.push({ label: '', parent_id: parentNode.id } as ItemNode);
+        } else {
+            this.data.push({ label: '', parent_id: 0 } as ItemNode);
+        }
+        
+        this.dataChange.next(this.data);
+
+        this.treeControl.expand(node);
+    }
+
+    saveNode(node: any, value: any) {
+        console.log(node);
+        this.http.post("../../rest/folders", { label: value, parent_id: node.parent_id }).pipe(
+            tap((data: any) => {
+                const nestedNode = this.flatNodeMap.get(node);
+                nestedNode.label = value;
+                nestedNode.id = data.folder;
+                this.dataChange.next(this.data);
+            }),
+            tap(() => this.notify.success(this.lang.folderAdded)),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    createRoot(value: any) {
+        this.http.post("../../rest/folders", { label: value }).pipe(
+            tap(() => {
+                this.getFolders();
+            }),
+            tap(() => this.notify.success(this.lang.folderAdded)),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    deleteNode(node: any) {
+
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete("../../rest/folders/" + node.id)),
+            tap(() => {
+                const parentNode = this.getParentNode(node);
+
+                if (parentNode !== null) {
+                    const index = parentNode.children.map(node => node.id).indexOf(node.id);
+
+                    if (index !== -1) {
+                        parentNode.children.splice(index, 1);
+                    }
+                } else {
+                    const index = this.data.map(node => node.id).indexOf(node.id);
+                    if (index !== -1) {
+                        this.data.splice(index, 1);
+                    }
+                }
+                this.flatNodeMap.delete(node);
+                this.dataChange.next(this.data);
+
+            }),
+            tap(() => this.notify.success(this.lang.folderDeleted)),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    private getParentNode(node: any) {
+        const currentLevel = node.level;
+        if (currentLevel < 1) {
+            return null;
+        }
+        const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+        for (let i = startIndex; i >= 0; i--) {
+            const currentNode = this.treeControl.dataNodes[i];
+            if (currentNode.level < currentLevel) {
+                const nestedNode = this.flatNodeMap.get(currentNode);
+                return nestedNode;
+            }
+        }
+        return null;
     }
 }
