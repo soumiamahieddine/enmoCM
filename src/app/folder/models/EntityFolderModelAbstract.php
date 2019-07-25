@@ -33,7 +33,7 @@ class EntityFolderModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['folder_id', 'entity_id', 'edition']);
+        ValidatorModel::notEmpty($aArgs, ['folder_id', 'entity_id']);
         ValidatorModel::intVal($aArgs, ['entity_id', 'folder_id']);
         ValidatorModel::boolType($aArgs, ['edition']);
 

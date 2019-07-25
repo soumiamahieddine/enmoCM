@@ -14,25 +14,25 @@
 
 namespace Folder\controllers;
 
+use Entity\models\EntityModel;
 use Folder\models\EntityFolderModel;
 use Folder\models\FolderModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use User\models\UserModel;
 
 class FolderController
 {
     public function get(Request $request, Response $response)
     {
-        //TODO Check rights
-        $folders = FolderModel::get(['order_by' => ['level']]);
+        $folders = FolderController::getScopeFolders(['login' => $GLOBALS['userId']]);
 
         $tree = [];
         foreach ($folders as $folder) {
             $insert = [
                 'name'       => $folder['label'],
-                'expandable' => false,
                 'id'         => $folder['id'],
                 'label'      => $folder['label'],
                 'public'     => $folder['public'],
@@ -47,7 +47,6 @@ class FolderController
                 foreach ($tree as $key => $branch) {
                     if ($branch['id'] == $folder['parent_id']) {
                         array_splice($tree, $key + 1, 0, [$insert]);
-                        $tree[$key]['expandable'] = true;
                         $found = true;
                         break;
                     }
@@ -67,24 +66,22 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
         }
 
-        //TODO Check rights
-
-        $folder = FolderModel::getById(['id' => $aArgs['id']]);
-        if (empty($folder)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Folder not found']);
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id']]);
+        if (empty($folder[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
         }
 
-        $folder['sharing']['entities'] = [];
-        if ($folder['public']) {
+        $folder[0]['sharing']['entities'] = [];
+        if ($folder[0]['public']) {
             $entitiesFolder = EntityFolderModel::getByFolderId(['folder_id' => $aArgs['id']]);
             foreach ($entitiesFolder as $value) {
-                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition']];
+                $folder[0]['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition']];
             }
         }
 
         //TODO Get resources
 
-        return $response->withJson(['folder' => $folder]);
+        return $response->withJson(['folder' => $folder[0]]);
     }
 
     public function create(Request $request, Response $response)
@@ -98,18 +95,19 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
         }
 
-        //TODO Check rights
-
         if (empty($data['parent_id'])) {
             $data['parent_id'] = 0;
-            $level  = 0;
             $owner  = $GLOBALS['id'];
             $public = false;
+            $level  = 0;
         } else {
-            $folder = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['user_id', 'public', 'level']]);
-            $owner  = $folder['user_id'];
-            $public = $folder['public'];
-            $level  = $folder['level'] + 1;
+            $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $data['parent_id'], 'edition' => true]);
+            if (empty($folder[0])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parent Folder not found or out of your perimeter']);
+            }
+            $owner  = $folder[0]['user_id'];
+            $public = $folder[0]['public'];
+            $level  = $folder[0]['level'] + 1;
         }
 
         $id = FolderModel::create([
@@ -157,14 +155,20 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
         }
 
-        //TODO Check rights
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
+        if (empty($folder[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
+        }
 
         if (empty($data['parent_id'])) {
             $data['parent_id'] = 0;
-            $level  = 0;
+            $level = 0;
         } else {
-            $folder = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['level']]);
-            $level  = $folder['level'] + 1;
+            $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $data['parent_id']]);
+            if (empty($folder[0])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parent Folder not found or out of your perimeter']);
+            }
+            $level = $folder[0]['level'] + 1;
         }
 
         FolderModel::update([
@@ -199,8 +203,15 @@ class FolderController
         if (!Validator::boolVal()->validate($data['public'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
         }
+        if ($data['public'] && !isset($data['sharing']['entities'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body sharing/entities does not exists']);
+        }
 
-        //TODO Check rights
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
+        if (empty($folder[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
+        }
+        //TODO Check sub folder rights
 
         FolderModel::update([
             'set' => [
@@ -244,9 +255,12 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
         }
 
-        //TODO Check rights
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
+        if (empty($folder[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
+        }
 
-        $folder = FolderModel::getById(['id' => $aArgs['id'], 'select' => ['label']]);
+        //TODO Check sub folder rights
 
         FolderModel::delete(['id' => $aArgs['id']]);
         EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
@@ -258,11 +272,52 @@ class FolderController
             'tableName' => 'folder',
             'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
-            'info'      => _FOLDER_SUPPRESSION . " : {$folder['label']}",
+            'info'      => _FOLDER_SUPPRESSION . " : {$folder[0]['label']}",
             'moduleId'  => 'folder',
             'eventId'   => 'folderSuppression',
         ]);
 
         return $response->withStatus(200);
+    }
+
+    // login (string) : Login of user connected
+    // folderId (integer) : Check specific folder
+    // edition (boolean) : whether user can edit or not
+    private static function getScopeFolders($aArgs = [])
+    {
+        $login = $aArgs['login'];
+        $userEntities = EntityModel::getEntitiesByUserId([
+            'select'  => ['entities.id'],
+            'user_id' => $login
+        ]);
+
+        $userEntities = array_column($userEntities, 'id');
+        if (empty($userEntities)) {
+            $userEntities = 0;
+        }
+
+        $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
+
+        $where = ['user_id = ? OR entity_id in (?)'];
+        $data = [$user['id'], $userEntities];
+
+        if (!empty($aArgs['folderId'])) {
+            $where[] = 'folders.id = ?';
+            $data[] = $aArgs['folderId'];
+        }
+
+        if ($aArgs['edition']) {
+            $where[] = 'entities_folders.edition in (?)';
+            $data[] = [true, null];
+        }
+
+        $folders = FolderModel::get([
+            'select'   => ['folders.*'],
+            'where'    => $where,
+            'data'     => $data,
+            'order_by' => ['level']
+        ]);
+
+        return $folders;
     }
 }
