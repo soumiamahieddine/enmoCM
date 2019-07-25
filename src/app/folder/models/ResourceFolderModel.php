@@ -1,0 +1,35 @@
+<?php
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   FolderModelAbstract
+* @author  dev <dev@maarch.org>
+* @ingroup core
+*/
+
+namespace Folder\models;
+
+use SrcCore\models\ValidatorModel;
+use SrcCore\models\DatabaseModel;
+
+class ResourceFolderModel
+{
+    public static function get(array $aArgs)
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
+
+        $resourcesFolders = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['resources_folders'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
+        return $resourcesFolders;
+    }
+}
