@@ -17,6 +17,7 @@ namespace Folder\controllers;
 use Entity\models\EntityModel;
 use Folder\models\EntityFolderModel;
 use Folder\models\FolderModel;
+use Folder\models\ResourceFolderModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -304,6 +305,7 @@ class FolderController
 
         FolderModel::delete(['where' => ['id = ?'], 'data' => [$aArgs['folderId']]]);
         EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['folderId']]);
+        ResourceFolderModel::delete(['where' => ['folder_id = ?'], 'data' => [$aArgs['folderId']]]);
 
         $folderChild = FolderModel::getChild(['id' => $aArgs['folderId'], 'select' => ['id']]);
         if (!empty($folderChild)) {
@@ -336,9 +338,9 @@ class FolderController
         $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
 
         if ($aArgs['edition']) {
-            $edition = [true];
+            $edition = [1];
         } else {
-            $edition = ['false', 'true', null];
+            $edition = [0, 1, null];
         }
 
         $where = ['(user_id = ? OR (entity_id in (?) AND entities_folders.edition in (?)))'];

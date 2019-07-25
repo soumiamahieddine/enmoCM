@@ -4,7 +4,7 @@
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
 
-* @brief   FolderModelAbstract
+* @brief   ResourceFolderModel
 * @author  dev <dev@maarch.org>
 * @ingroup core
 */
@@ -31,5 +31,19 @@ class ResourceFolderModel
         ]);
 
         return $resourcesFolders;
+    }
+
+    public static function delete(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'resources_folders',
+            'where' => $args['where'],
+            'data'  => $args['data']
+        ]);
+
+        return true;
     }
 }
