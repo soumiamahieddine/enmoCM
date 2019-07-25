@@ -62,3 +62,14 @@
         padding-left: 0px;
     }
 }
+
+form {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.treeLabel {
+    white-space: pre;
+    color: $primary;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { map, tap, catchError, filter, exhaustMap } from 'rxjs/operators';
@@ -57,6 +57,8 @@ export class FolderTreeComponent implements OnInit {
     dialogRef: MatDialogRef<any>;
     dataChange = new BehaviorSubject<ItemNode[]>([]);
 
+    @Input('selectedId') seletedId: number;
+
     get data(): ItemNode[] { return this.dataChange.value; }
 
     /** Map from flat node to nested node. This helps us finding the nested node to be modified */
@@ -105,7 +107,9 @@ export class FolderTreeComponent implements OnInit {
             map((data: any) => this.flatToNestedObject(data.folders)),
             filter((data: any) => data.length > 0),
             tap((data) => this.initTree(data)),
-            //tap(() => this.openTree(3))
+            filter(() => this.seletedId !== undefined),
+            tap(() => this.openTree(this.seletedId)),
+            tap(() => this.selectTree(this.seletedId))
         ).subscribe();
     }
 
@@ -127,6 +131,11 @@ export class FolderTreeComponent implements OnInit {
                 this.treeControl.expand(this.treeControl.dataNodes[indexSelectedFolder]);
             }
         }
+    }
+
+    selectTree(id: number) {
+        let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(id);
+        this.treeControl.dataNodes[indexSelectedFolder].selected = true;
     }
 
     hasChild = (_: number, node: any) => node.expandable;
@@ -215,22 +224,6 @@ export class FolderTreeComponent implements OnInit {
         this.treeControl.expand(node);
     }
 
-    addNewItemRoot(node: any) {
-        const parentNode = this.getParentNode(node);
-        if (parentNode !== null) {
-            if (parentNode.children === undefined) {
-                parentNode['children'] = [];
-            }
-            parentNode.children.push({ label: '', parent_id: parentNode.id } as ItemNode);
-        } else {
-            this.data.push({ label: '', parent_id: 0 } as ItemNode);
-        }
-        
-        this.dataChange.next(this.data);
-
-        this.treeControl.expand(node);
-    }
-
     saveNode(node: any, value: any) {
         console.log(node);
         this.http.post("../../rest/folders", { label: value, parent_id: node.parent_id }).pipe(
@@ -239,6 +232,8 @@ export class FolderTreeComponent implements OnInit {
                 nestedNode.label = value;
                 nestedNode.id = data.folder;
                 this.dataChange.next(this.data);
+                this.treeControl.collapseAll();
+                this.openTree(nestedNode.id);
             }),
             tap(() => this.notify.success(this.lang.folderAdded)),
             catchError((err) => {

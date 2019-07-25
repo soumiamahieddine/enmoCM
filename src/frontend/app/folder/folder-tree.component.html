@@ -1,14 +1,16 @@
-<mat-list *ngIf="dataSource.data.length === 0" role="list">
+<mat-list role="list">
     <mat-list-item role="listitem">
-        <mat-form-field>
-            <input matInput #itemValue placeholder="Nouveau dossier...">
-        </mat-form-field>
-        <button mat-icon-button (click)="createRoot(itemValue.value)" [disabled]="itemValue.value === ''">
-            <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
-        </button>
+        <form>
+            <mat-form-field floatLabel="never" style="width: 100%;">
+                <input matInput #itemValue placeholder="Nouveau dossier...">
+            </mat-form-field>
+            <button type="submit" mat-icon-button (click)="createRoot(itemValue.value);itemValue.value = ''"
+                [disabled]="itemValue.value === ''">
+                <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
+            </button>
+        </form>
     </mat-list-item>
 </mat-list>
-
 <mat-nav-list>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <!-- This is the tree node template for leaf nodes -->
@@ -18,7 +20,7 @@
             <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseenter)="showAction(node)"
                 (mouseleave)="hideAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
-                    <span style="white-space: pre;" [title]="node.label">
+                    <span class="treeLabel" [title]="node.label">
                         {{node.label}}
                     </span>
                 </span>
@@ -30,7 +32,6 @@
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="addNewItemRoot(node)">Nouveau dossier racine</button>
                     <button mat-menu-item (click)="addNewItem(node)">Nouveau sous-dossier</button>
                     <button mat-menu-item (click)="deleteNode(node)">Supprimer</button>
                 </mat-menu>
@@ -38,12 +39,15 @@
         </mat-tree-node>
         <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding
             matTreeNodePaddingIndent="45px">
-            <mat-form-field style="width: 100%;">
-                <input matInput #itemValue placeholder="Nouveau dossier...">
-            </mat-form-field>
-            <button mat-icon-button (click)="saveNode(node, itemValue.value)" [disabled]="itemValue.value === ''">
-                <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
-            </button>
+            <form>
+                <mat-form-field floatLabel="never" style="width: 100%;">
+                    <input matInput #itemValue placeholder="Nouveau dossier...">
+                </mat-form-field>
+                <button type="submit" mat-icon-button (click)="saveNode(node, itemValue.value)"
+                    [disabled]="itemValue.value === ''">
+                    <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
+                </button>
+            </form>
         </mat-tree-node>
         <!-- This is the tree node template for expandable nodes -->
         <mat-tree-node [@hideShow] *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding
@@ -56,7 +60,7 @@
             <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseleave)="hideAction(node)"
                 (mouseenter)="showAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
-                    <span style="white-space: pre;" [title]="node.label">
+                    <span class="treeLabel" [title]="node.label">
                         {{node.label}}
                     </span>
                 </span>
@@ -68,7 +72,6 @@
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="addNewItemRoot(node)">Nouveau dossier racine</button>
                     <button mat-menu-item (click)="addNewItem(node)">Nouveau sous-dossier</button>
                     <button mat-menu-item (click)="deleteNode(node)">Supprimer</button>
                 </mat-menu>
