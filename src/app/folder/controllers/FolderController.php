@@ -21,6 +21,7 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\DatabaseModel;
 use User\models\UserModel;
 
 class FolderController
@@ -207,35 +208,13 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body sharing/entities does not exists']);
         }
 
-        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
-        if (empty($folder[0])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
+        DatabaseModel::beginTransaction();
+        $sharing = FolderController::folderSharing(['folderId' => $aArgs['id'], 'public' => $data['public'], 'sharing' => $data['sharing']]);
+        if (!$sharing) {
+            DatabaseModel::rollbackTransaction();
+            return $response->withStatus(400)->withJson(['errors' => 'Can not share/unshare folder because almost one folder is out of your perimeter']);
         }
-        //TODO Check sub folder rights
-
-        FolderModel::update([
-            'set' => [
-                'public' => empty($data['public']) ? 'false' : 'true',
-            ],
-            'where' => ['id = ?'],
-            'data' => [$aArgs['id']]
-        ]);
-
-        EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
-        // TODO unshare subfolders
-
-        if ($data['public'] && !empty($data['sharing']['entities'])) {
-            //TODO check entities exists
-
-            foreach ($data['sharing']['entities'] as $entity) {
-                EntityFolderModel::create([
-                    'folder_id' => $aArgs['id'],
-                    'entity_id' => $entity['entity_id'],
-                    'edition'   => $entity['edition'],
-                ]);
-            }
-            // TODO share subfolders
-        }
+        DatabaseModel::commitTransaction();
 
         HistoryController::add([
             'tableName' => 'folders',
@@ -249,6 +228,45 @@ class FolderController
         return $response->withStatus(200);
     }
 
+    public function folderSharing($aArgs = [])
+    {
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['folderId'], 'edition' => true]);
+        if (empty($folder[0])) {
+            return false;
+        }
+
+        FolderModel::update([
+            'set' => [
+                'public' => empty($aArgs['public']) ? 'false' : 'true',
+            ],
+            'where' => ['id = ?'],
+            'data' => [$aArgs['folderId']]
+        ]);
+
+        EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['folderId']]);
+
+        if ($aArgs['public'] && !empty($aArgs['sharing']['entities'])) {
+            foreach ($aArgs['sharing']['entities'] as $entity) {
+                EntityFolderModel::create([
+                    'folder_id' => $aArgs['folderId'],
+                    'entity_id' => $entity['entity_id'],
+                    'edition'   => $entity['edition'],
+                ]);
+            }
+        }
+
+        $folderChild = FolderModel::getChild(['id' => $aArgs['folderId'], 'select' => ['id']]);
+        if (!empty($folderChild)) {
+            foreach ($folderChild as $child) {
+                $sharing = FolderController::folderSharing(['folderId' => $child['id'], 'public' => $aArgs['public'], 'sharing' => $aArgs['sharing']]);
+                if (!$sharing) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public function delete(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::numeric()->notEmpty()->validate($aArgs['id'])) {
@@ -256,17 +274,14 @@ class FolderController
         }
 
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
-        if (empty($folder[0])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
-        }
-
-        //TODO Check sub folder rights
-
-        FolderModel::delete(['where' => ['id = ?'], 'data' => [$aArgs['id']]]);
-        EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
         
-        //TODO Delete sub folders
-        //TODO Delete resources folders
+        DatabaseModel::beginTransaction();
+        $deletion = FolderController::folderDeletion(['folderId' => $aArgs['id']]);
+        if (!$deletion) {
+            DatabaseModel::rollbackTransaction();
+            return $response->withStatus(400)->withJson(['errors' => 'Can not delete because almost one folder is out of your perimeter']);
+        }
+        DatabaseModel::commitTransaction();
 
         HistoryController::add([
             'tableName' => 'folder',
@@ -278,6 +293,28 @@ class FolderController
         ]);
 
         return $response->withStatus(200);
+    }
+
+    public function folderDeletion($aArgs = [])
+    {
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['folderId'], 'edition' => true]);
+        if (empty($folder[0])) {
+            return false;
+        }
+
+        FolderModel::delete(['where' => ['id = ?'], 'data' => [$aArgs['folderId']]]);
+        EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['folderId']]);
+
+        $folderChild = FolderModel::getChild(['id' => $aArgs['folderId'], 'select' => ['id']]);
+        if (!empty($folderChild)) {
+            foreach ($folderChild as $child) {
+                $deletion = FolderController::folderDeletion(['folderId' => $child['id']]);
+                if (!$deletion) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // login (string) : Login of user connected
@@ -298,21 +335,22 @@ class FolderController
 
         $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
 
-        $where = ['user_id = ? OR entity_id in (?)'];
-        $data = [$user['id'], $userEntities];
+        if ($aArgs['edition']) {
+            $edition = [true];
+        } else {
+            $edition = ['false', 'true', null];
+        }
+
+        $where = ['(user_id = ? OR (entity_id in (?) AND entities_folders.edition in (?)))'];
+        $data = [$user['id'], $userEntities, $edition];
 
         if (!empty($aArgs['folderId'])) {
             $where[] = 'folders.id = ?';
-            $data[] = $aArgs['folderId'];
-        }
-
-        if ($aArgs['edition']) {
-            $where[] = 'entities_folders.edition in (?)';
-            $data[] = [true, null];
+            $data[]  = $aArgs['folderId'];
         }
 
         $folders = FolderModel::get([
-            'select'   => ['folders.*'],
+            'select'   => ['distinct (folders.id)', 'folders.*'],
             'where'    => $where,
             'data'     => $data,
             'order_by' => ['level']

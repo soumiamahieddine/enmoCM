@@ -52,6 +52,21 @@ class FolderModelAbstract
         return $folder[0];
     }
 
+    public static function getChild(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+
+        $folders = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['folders'],
+            'where'     => ['parent_id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        return $folders;
+    }
+
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['user_id', 'label']);
