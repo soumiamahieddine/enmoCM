@@ -48,7 +48,8 @@ if (isset($_REQUEST['origin']) && !empty($_REQUEST['origin'])) {
 }
 
 if (empty($origin) || $origin != 'folder') {
-    $right = \Resource\controllers\ResController::hasRightByResId(['resId' => [$identifier], 'userId' => $_SESSION['user']['UserId']]);
+    $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+    $right = \Resource\controllers\ResController::hasRightByResId(['resId' => [$identifier], 'userId' => $user['id']]);
     if (!$right) {
         exit(_NO_RIGHT_TXT);
     }

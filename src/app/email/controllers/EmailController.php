@@ -67,9 +67,7 @@ class EmailController
         ValidatorModel::intVal($args, ['userId']);
         ValidatorModel::arrayType($args, ['data', 'options']);
 
-        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
-
-        $check = EmailController::controlCreateEmail(['login' => $user['user_id'], 'data' => $args['data']]);
+        $check = EmailController::controlCreateEmail(['userId' => $args['userId'], 'data' => $args['data']]);
         if (!empty($check['errors'])) {
             return ['errors' => $check['errors'], 'code' => $check['code']];
         }
@@ -121,13 +119,13 @@ class EmailController
 
     public static function getById(array $args)
     {
-        ValidatorModel::notEmpty($args, ['id']);
-        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::notEmpty($args, ['id', 'userId']);
+        ValidatorModel::intVal($args, ['id', 'userId']);
         
-        $emailArray  = EmailModel::getById(['id' => $args['id']]);
-        $document      = (array)json_decode($emailArray['document']);
+        $emailArray = EmailModel::getById(['id' => $args['id']]);
+        $document   = (array)json_decode($emailArray['document']);
 
-        if (!ResController::hasRightByResId(['resId' => [$document['id']], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$document['id']], 'userId' => $args['userId']])) {
             return ['errors' => 'Document out of perimeter', 'code' => 403];
         }
 
@@ -182,9 +180,7 @@ class EmailController
         ValidatorModel::intVal($args, ['userId', 'emailId']);
         ValidatorModel::arrayType($args, ['data', 'options']);
 
-        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
-
-        $check = EmailController::controlCreateEmail(['login' => $user['user_id'], 'data' => $args['data']]);
+        $check = EmailController::controlCreateEmail(['userId' => $args['userId'], 'data' => $args['data']]);
         if (!empty($check['errors'])) {
             return ['errors' => $check['errors'], 'code' => $check['code']];
         }
@@ -413,8 +409,8 @@ class EmailController
 
     private static function controlCreateEmail(array $args)
     {
-        ValidatorModel::notEmpty($args, ['login']);
-        ValidatorModel::stringType($args, ['login']);
+        ValidatorModel::notEmpty($args, ['userId']);
+        ValidatorModel::intVal($args, ['userId']);
         ValidatorModel::arrayType($args, ['data']);
 
         if (!Validator::arrayType()->notEmpty()->validate($args['data']['sender']) || !Validator::stringType()->notEmpty()->validate($args['data']['sender']['email'])) {
@@ -427,6 +423,8 @@ class EmailController
             return ['errors' => 'Data status is not a string or empty', 'code' => 400];
         }
 
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+
         if (!empty($args['data']['document'] && !empty($args['data']['document']['id']))) {
             $check = Validator::intVal()->notEmpty()->validate($args['data']['document']['id']);
             $check = $check && Validator::boolType()->validate($args['data']['document']['isLinked']);
@@ -434,7 +432,7 @@ class EmailController
             if (!$check) {
                 return ['errors' => 'Data document errors', 'code' => 400];
             }
-            if (!ResController::hasRightByResId(['resId' => [$args['data']['document']['id']], 'userId' => $args['login']])) {
+            if (!ResController::hasRightByResId(['resId' => [$args['data']['document']['id']], 'userId' => $args['userId']])) {
                 return ['errors' => 'Document out of perimeter', 'code' => 403];
             }
             if (!empty($args['data']['document']['attachments'])) {
@@ -467,7 +465,7 @@ class EmailController
                         return ['errors' => 'Note out of perimeter', 'code' => 403];
                     }
 
-                    $rawUserEntities = EntityModel::getByLogin(['login' => $args['login'], 'select' => ['entity_id']]);
+                    $rawUserEntities = EntityModel::getByLogin(['login' => $user['user_id'], 'select' => ['entity_id']]);
                     $userEntities = [];
                     foreach ($rawUserEntities as $rawUserEntity) {
                         $userEntities[] = $rawUserEntity['entity_id'];

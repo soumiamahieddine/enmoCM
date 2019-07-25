@@ -38,7 +38,7 @@ class NoteController
             return $response->withStatus(400)->withJson(['errors' => 'resId is empty or not an integer']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -65,7 +65,7 @@ class NoteController
             return $response->withStatus(400)->withJson(['errors' => 'Data note_text is empty or not a string']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         
@@ -140,7 +140,7 @@ class NoteController
         $query = $request->getQueryParams();
 
         if (!empty($query['resId']) && is_numeric($query['resId'])) {
-            if (!ResController::hasRightByResId(['resId' => [$query['resId']], 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$query['resId']], 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
 

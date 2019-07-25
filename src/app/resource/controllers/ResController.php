@@ -25,6 +25,7 @@ use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Docserver\models\ResDocserverModel;
 use Entity\models\ListInstanceModel;
+use Folder\models\FolderModel;
 use Group\controllers\GroupController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
@@ -219,7 +220,7 @@ class ResController
             if (empty($document)) {
                 return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
             }
-            if (!ResController::hasRightByResId(['resId' => [$document['res_id']], 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$document['res_id']], 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
     
@@ -240,7 +241,7 @@ class ResController
 
     public function getFileContent(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -404,7 +405,7 @@ class ResController
 
     public function getOriginalFileContent(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -483,7 +484,7 @@ class ResController
         }
 
         $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
-        if (ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
                 'select'    => ['docserver_id', 'path', 'filename'],
                 'resId'     => $aArgs['resId'],
@@ -570,7 +571,7 @@ class ResController
             if (empty($document)) {
                 return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
             }
-            if (!ResController::hasRightByResId(['resId' => [$document['res_id']], 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$document['res_id']], 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
             $externalId = json_decode($document['external_id'], true);
@@ -666,23 +667,25 @@ class ResController
         return ['encodedDocument' => $encodedDocument, 'fileName' => $fileName];
     }
 
-    public static function hasRightByResId(array $aArgs)
+    public static function hasRightByResId(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-        ValidatorModel::arrayType($aArgs, ['resId']);
+        ValidatorModel::notEmpty($args, ['resId', 'userId']);
+        ValidatorModel::intVal($args, ['userId']);
+        ValidatorModel::arrayType($args, ['resId']);
 
-        $aArgs['resId'] = array_unique($aArgs['resId']);
-        $nbResId = count($aArgs['resId']);
+        $resources = array_unique($args['resId']);
+        $resourcesNumber = count($resources);
 
-        if ($aArgs['userId'] == 'superadmin') {
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+
+        if ($user['user_id'] == 'superadmin') {
             return true;
         }
-        $groups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
         $groupsClause = '';
         foreach ($groups as $key => $group) {
             if (!empty($group['where_clause'])) {
-                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'login' => $aArgs['userId']]);
+                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'login' => $user['user_id']]);
                 if ($key > 0) {
                     $groupsClause .= ' or ';
                 }
@@ -691,25 +694,24 @@ class ResController
         }
 
         if (!empty($groupsClause)) {
-            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$groupsClause})"], 'data' => [$aArgs['resId']]]);
-            if (!empty($res) && count($res) == $nbResId) {
+            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$groupsClause})"], 'data' => [$resources]]);
+            if (!empty($res) && count($res) == $resourcesNumber) {
                 return true;
             }
         }
 
-        $baskets = BasketModel::getBasketsByLogin(['login' => $aArgs['userId']]);
+        $baskets = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
         $basketsClause = '';
         foreach ($baskets as $basket) {
             if (!empty($basket['basket_clause'])) {
-                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $aArgs['userId']]);
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
                 if (!empty($basketsClause)) {
                     $basketsClause .= ' or ';
                 }
                 $basketsClause .= "({$basketClause})";
             }
         }
-        $user = UserModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['id']]);
-        $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
+        $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $args['userId']]);
         foreach ($assignedBaskets as $basket) {
             if (!empty($basket['basket_clause'])) {
                 $basketOwner = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
@@ -723,13 +725,25 @@ class ResController
 
         if (!empty($basketsClause)) {
             try {
-                $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$basketsClause})"], 'data' => [$aArgs['resId']]]);
-                if (!empty($res) && count($res) == $nbResId) {
+                $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$basketsClause})"], 'data' => [$resources]]);
+                if (!empty($res) && count($res) == $resourcesNumber) {
                     return true;
                 }
             } catch (\Exception $e) {
                 return false;
             }
+        }
+
+        $entities = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $entities = array_column($entities, 'id');
+
+        $foldersWithResources = FolderModel::getWithEntitiesAndResources([
+            'select'    => ['DISTINCT(resources_folders.res_id)'],
+            'where'     => ['resources_folders.res_id in (?)', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
+            'data'      => [$resources, $entities, $args['userId']]
+        ]);
+        if (!empty($foldersWithResources) && count($foldersWithResources) == $resourcesNumber) {
+            return true;
         }
 
         return false;
@@ -838,7 +852,7 @@ class ResController
 
     public function isAllowedForCurrentUser(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withJson(['isAllowed' => false]);
         }
 

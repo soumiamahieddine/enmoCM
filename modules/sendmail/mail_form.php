@@ -605,7 +605,8 @@ if ($mode == 'add') {
 } elseif ($mode == 'up' || $mode == 'transfer') {
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
         $id = $_REQUEST['id'];
-        $emailArray = \Email\controllers\EmailController::getById(['id' => $id]);
+        $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+        $emailArray = \Email\controllers\EmailController::getById(['id' => $id, 'userId' => $user['id']]);
 
         //Check if mail exists
         if (count($emailArray) > 0) {
@@ -1014,7 +1015,8 @@ if ($mode == 'add') {
         if ($formContent == 'messageExchange') {
             $emailArray = ReadMessageExchangeController::getMessageExchange(['id' => $id]);
         } else {
-            $emailArray = \Email\controllers\EmailController::getById(['id' => $id]);
+            $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+            $emailArray = \Email\controllers\EmailController::getById(['id' => $id, 'userId' => $user['id']]);
         }
 
         //Check if mail exists

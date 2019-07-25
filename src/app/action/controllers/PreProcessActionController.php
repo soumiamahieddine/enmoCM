@@ -215,7 +215,7 @@ class PreProcessActionController
                 continue;
             }
 
-            if (!ResController::hasRightByResId(['resId' => [$resId], 'userId' => $GLOBALS['userId']])) {
+            if (!ResController::hasRightByResId(['resId' => [$resId], 'userId' => $GLOBALS['id']])) {
                 $noSendAR['number'] += 1;
                 $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _DOCUMENT_OUT_PERIMETER ];
                 continue;
@@ -376,7 +376,7 @@ class PreProcessActionController
         $data = $request->getParsedBody();
 
         $data['resources'] = array_slice($data['resources'], 0, 500);
-        if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -565,7 +565,7 @@ class PreProcessActionController
         $data = $request->getParsedBody();
 
         $data['resources'] = array_slice($data['resources'], 0, 500);
-        if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -660,7 +660,7 @@ class PreProcessActionController
         }
 
         $data['resources'] = array_slice($data['resources'], 0, 500);
-        if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => $data['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -815,7 +815,7 @@ class PreProcessActionController
 
     public function isDestinationChanging(Request $request, Response $response, array $args)
     {
-        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 

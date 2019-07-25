@@ -262,7 +262,7 @@ class FolderController
 
         //TODO Check sub folder rights
 
-        FolderModel::delete(['id' => $aArgs['id']]);
+        FolderModel::delete(['where' => ['id = ?'], 'data' => [$aArgs['id']]]);
         EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['id']]);
         
         //TODO Delete sub folders

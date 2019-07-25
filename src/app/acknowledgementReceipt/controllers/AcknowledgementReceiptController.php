@@ -50,7 +50,7 @@ class AcknowledgementReceiptController
             $resourcesInBasket[] = $acknowledgement['res_id'];
         }
 
-        if (!ResController::hasRightByResId(['resId' => $resourcesInBasket, 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => $resourcesInBasket, 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Documents out of perimeter']);
         }
 
@@ -95,7 +95,7 @@ class AcknowledgementReceiptController
 
     public function getAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 

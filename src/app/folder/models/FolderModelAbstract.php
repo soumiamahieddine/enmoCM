@@ -45,6 +45,10 @@ class FolderModelAbstract
             'data'      => [$aArgs['id']]
         ]);
 
+        if (empty($folder[0])) {
+            return [];
+        }
+
         return $folder[0];
     }
 
@@ -60,12 +64,12 @@ class FolderModelAbstract
         DatabaseModel::insert([
             'table'     => 'folders',
             'columnsValues'     => [
-                'id'         => $nextSequenceId,
-                'label'      => $aArgs['label'],
-                'public'     => empty($aArgs['public']) ? 'false' : 'true',
-                'user_id'    => $aArgs['user_id'],
-                'parent_id'  => $aArgs['parent_id'],
-                'level'  => $aArgs['level']
+                'id'        => $nextSequenceId,
+                'label'     => $aArgs['label'],
+                'public'    => empty($aArgs['public']) ? 'false' : 'true',
+                'user_id'   => $aArgs['user_id'],
+                'parent_id' => $aArgs['parent_id'],
+                'level'     => $aArgs['level']
             ]
         ]);
 
@@ -87,17 +91,36 @@ class FolderModelAbstract
         return true;
     }
 
-    public static function delete(array $aArgs)
+    public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'folders',
-            'where' => ['id = ?'],
-            'data'  => [$aArgs['id']]
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;
+    }
+
+    public static function getWithEntitiesAndResources(array $args = [])
+    {
+        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
+
+        $where = ['folders.id = entities_folders.folder_id', 'folders.id = resources_folders.folder_id'];
+        if (!empty($args['where'])) {
+            $where = array_merge($where, $args['where']);
+        }
+
+        $folders = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['folders, entities_folders, resources_folders'],
+            'where'     => $where,
+            'data'      => empty($args['data']) ? [] : $args['data']
+        ]);
+
+        return $folders;
     }
 }
