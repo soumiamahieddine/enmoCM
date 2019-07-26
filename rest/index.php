@@ -184,6 +184,7 @@ $app->get('/folders/{id}', \Folder\controllers\FolderController::class . ':getBy
 $app->put('/folders/{id}', \Folder\controllers\FolderController::class . ':update');
 $app->delete('/folders/{id}', \Folder\controllers\FolderController::class . ':delete');
 $app->get('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':getResourcesById');
+$app->post('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':addResourcesById');
 $app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
 
 //Groups

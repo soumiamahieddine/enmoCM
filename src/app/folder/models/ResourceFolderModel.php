@@ -33,6 +33,22 @@ class ResourceFolderModel
         return $resourcesFolders;
     }
 
+    public static function create(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['folder_id', 'res_id']);
+        ValidatorModel::intVal($args, ['folder_id', 'res_id']);
+
+        DatabaseModel::insert([
+            'table'         => 'resources_folders',
+            'columnsValues' => [
+                'folder_id' => $args['folder_id'],
+                'res_id'    => $args['res_id'],
+            ]
+        ]);
+
+        return true;
+    }
+
     public static function delete(array $args)
     {
         ValidatorModel::notEmpty($args, ['where', 'data']);
