@@ -1,7 +1,7 @@
 <mat-nav-list>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <!-- This is the tree node template for leaf nodes -->
-        <mat-tree-node cdkDropList [id]="'folder-list-'+node.id" cdkDropListConnectedTo="list-1" (cdkDropListDropped)="drop($event, node)"
+        <mat-tree-node cdkDropList [id]="'folder-list-'+node.id" cdkDropListConnectedTo="['document-list','folder-list']" (cdkDropListDropped)="drop($event, node)"
             (cdkDropListEntered)="dragEnter(node)" (cdkDropListExited)="node.drag=false" [@hideShow] *matTreeNodeDef="let node"
             matTreeNodePadding matTreeNodePaddingIndent="20px">
             <!-- use a disabled button to provide padding for tree leaf -->

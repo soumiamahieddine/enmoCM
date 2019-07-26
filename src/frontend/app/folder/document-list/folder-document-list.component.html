@@ -7,7 +7,7 @@
         <menu-nav></menu-nav>
         <basket-home *ngIf="homeData" #basketHome [homeData]="homeData" [snavL]="snav"></basket-home>
         <mat-divider></mat-divider>
-        <panel-folder *ngIf="folderInfo.id > 0" [selectedId]="folderInfo.id"></panel-folder>
+        <panel-folder #panelFolder [selectedId]="folderInfo.id"></panel-folder>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;"><img style="max-height: 100vh;" src="{{thumbnailUrl}}" /></mat-card>
@@ -42,6 +42,9 @@
                     </div>
                     <div class="table-head-tool">
                         <span>
+                            <button mat-raised-button color="primary" (click)="unclassify();" *ngIf="selectedRes.length > 0">
+                                Enlever du dossier
+                            </button>
                             <!--<app-tools-list #actionsList [selectedRes]="selectedRes"
                                 [currentBasketInfo]="currentBasketInfo"></app-tools-list>-->
                         </span>
@@ -52,7 +55,7 @@
                     </div>
                 </div>
                 <div style="height:90%;overflow:auto;position:absolute;width:100%;">
-                    <table #tableBasketListSort="matSort" mat-table [dataSource]="data" matSort
+                    <table #tableBasketListSort="matSort" cdkDropList id="folder-list" [cdkDropListConnectedTo]="panelFolder.getDragIds()" [cdkDropListData]="data" mat-table [dataSource]="data" matSort
                         matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;">
 
                         <ng-container matColumnDef="res_id">
@@ -64,6 +67,14 @@
                                         <mat-checkbox color="primary" [checked]="row.checked"
                                             (change)="toggleRes($event,row)" (click)="$event.stopPropagation();">
                                         </mat-checkbox>
+                                    </span>
+                                    <span *ngIf="!appService.getViewMode()" style="cursor:pointer;" class="main-info-status" (click)="launch(defaultAction,row);">
+                                        <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}" [ngStyle]="{'color': row.priorityColor}" color="primary"
+                                            class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
+                                        </mat-icon>
+                                        <span *ngIf="row.confidentiality === 'Y'" class="watermark">{{lang.confidential}}</span>
+                                        <mat-icon *ngIf="row.isLocked === true" title="{{lang.warnLockResInProgress}} : {{row.locker}}" style="color: red;" class="fa fa-lock fa-2x">
+                                        </mat-icon>
                                     </span>
                                     <span *ngIf="!appService.getViewMode()" class="main-info-data" style="width:200px;text-align:center;cursor:pointer;">
                                         <ng-container
@@ -108,7 +119,10 @@
                             </td>
                         </ng-container>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"
-                            (contextmenu)="open($event,row);"></tr>
+                                (contextmenu)="open($event,row);" class="rowData" [class.locked]="row.isLocked == true" cdkDrag  [cdkDragData]="row" >
+                                <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                                <div class="dragPreview" *cdkDragPreview><i class="fas fa-envelope-open-text fa-2x"></i><br/>Classer <b>{{row.alt_identifier}}</b> dans un dossier</div>
+                            </tr>
                     </table>
                 </div>
                 <div class="table-head">

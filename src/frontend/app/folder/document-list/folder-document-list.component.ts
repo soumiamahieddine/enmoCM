@@ -6,14 +6,14 @@ import { NotificationService } from '../../notification.service';
 import { MatDialog, MatSidenav, MatPaginator, MatSort } from '@angular/material';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { startWith, switchMap, map, catchError, takeUntil } from 'rxjs/operators';
+import { startWith, switchMap, map, catchError, takeUntil, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../../service/header.service';
 
 import { Overlay } from '@angular/cdk/overlay';
 import { PanelListComponent } from '../../list/panel/panel-list.component';
 import { AppService } from '../../../service/app.service';
-import { ThrowStmt } from '@angular/compiler';
+import { PanelFolderComponent } from '../panel/panel-folder.component';
 
 
 declare function $j(selector: any): any;
@@ -84,6 +84,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('tableBasketListSort') sort: MatSort;
+    @ViewChild('panelFolder') panelFolder: PanelFolderComponent;
 
     constructor(
         private router: Router, 
@@ -112,7 +113,13 @@ export class FolderDocumentListComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.destroy$.next(true);
 
-            this.basketUrl = '../../rest/folders/' + params['folderId'];
+            this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
+            this.folderInfo = 
+            {
+                "id": params['folderId'],
+                "label": 'test'
+
+            };
             this.selectedRes = [];
             this.sidenavRight.close();
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
@@ -146,20 +153,13 @@ export class FolderDocumentListComponent implements OnInit {
                     return this.resultListDatabase!.getRepoIssues(
                         this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl);
                 }),
-                map(data => data.folder),
                 map(data => {
-                    this.folderInfo = 
-                    {
-                        "id": data.id,
-                        "label": data.label
-
-                    };
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
-                    this.resultsLength = data.countResources;
-                    //this.allResInBasket = data.countResources;
-                    this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
+                    this.resultsLength = data.count;
+                    //this.allResInBasket = data.count;
+                    //this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
                     return data.resources;
                 }),
                 catchError((err: any) => {
@@ -275,11 +275,17 @@ export class FolderDocumentListComponent implements OnInit {
             });
         }
     }
+
+    unclassify() {
+        this.http.request('DELETE', '../../rest/folders/' + this.folderInfo.id + '/resources', { body: { resources: this.selectedRes } }).pipe(
+            tap(() => this.notify.success('Courriers classés'))
+        ).subscribe();
+    }
 }
 export interface BasketList {
     folder: any;
     resources: any[];
-    countResources: number
+    count: number
 }
 
 export class ResultListHttpDao {

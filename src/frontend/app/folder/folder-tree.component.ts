@@ -146,7 +146,9 @@ export class FolderTreeComponent implements OnInit {
 
     selectTree(id: number) {
         let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(id);
-        this.treeControl.dataNodes[indexSelectedFolder].selected = true;
+        if (indexSelectedFolder != -1) {
+            this.treeControl.dataNodes[indexSelectedFolder].selected = true;
+        }
     }
 
     hasChild = (_: number, node: any) => node.expandable;
@@ -158,7 +160,7 @@ export class FolderTreeComponent implements OnInit {
             element.selected = false;
         });
         node.selected = true;
-        this.router.navigate(['/folders/'+node.id]);
+        this.router.navigate(['/folders/' + node.id]);
     }
 
     showAction(node: any) {
@@ -321,13 +323,42 @@ export class FolderTreeComponent implements OnInit {
     }
 
     drop(ev: any, node: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: 'Classer '+ ev.item.data.alt_identifier, msg: 'Voulez-vous classer <b>'+ ev.item.data.alt_identifier+'</b> dans <b>' + node.label+ '</b> ?'} });
+        console.log(ev.previousContainer.id);
+        this.classifyDocument(ev, node);
+        /*if (ev.previousContainer.id === 'folder-list') {
+            this.moveFolder(ev, node);
+        } else {
+            this.classifyDocument(ev, node);
+        }*/
+    }
+
+    moveFolder(ev: any, node: any) {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: 'Déplacer ' + ev.item.data.alt_identifier, msg: 'Voulez-vous déplacer <b>' + ev.item.data.alt_identifier + '</b> dans <b>' + node.label + '</b> ?' } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             //exhaustMap(() => this.http.post("../../rest/folders/" + node.id)),
-            tap(() => {     
+            tap(() => {
                 node.countResources = node.countResources + 1;
+            }),
+            tap(() => this.notify.success('Courrier déplacé')),
+            tap(() => this.getFolders()),
+            finalize(() => node.drag = false),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    classifyDocument(ev: any, node: any) {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: 'Classer ' + ev.item.data.alt_identifier, msg: 'Voulez-vous classer <b>' + ev.item.data.alt_identifier + '</b> dans <b>' + node.label + '</b> ?' } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.post('../../rest/folders/' + node.id + '/resources', { resources: [ev.item.data.res_id] })),
+            tap((data: any) => {
+                node.countResources = data.countResources;
             }),
             tap(() => this.notify.success('Courrier classé')),
             finalize(() => node.drag = false),
@@ -338,17 +369,19 @@ export class FolderTreeComponent implements OnInit {
         ).subscribe();
     }
 
+
+
     dragEnter(node: any) {
-        node.drag=true;
+        node.drag = true;
     }
 
     getDragIds() {
         if (this.treeControl.dataNodes !== undefined) {
-            return this.treeControl.dataNodes.map(node => 'folder-list-'+node.id);
+            return this.treeControl.dataNodes.map(node => 'folder-list-' + node.id);
         } else {
             return [];
         }
-        
+
     }
 
     toggleInput() {
