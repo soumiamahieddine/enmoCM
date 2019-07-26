@@ -1,26 +1,15 @@
-<mat-list role="list">
-    <mat-list-item role="listitem">
-        <form>
-            <mat-form-field floatLabel="never" style="width: 100%;">
-                <input matInput #itemValue placeholder="Nouveau dossier...">
-            </mat-form-field>
-            <button type="submit" mat-icon-button (click)="createRoot(itemValue.value);itemValue.value = ''"
-                [disabled]="itemValue.value === ''">
-                <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
-            </button>
-        </form>
-    </mat-list-item>
-</mat-list>
 <mat-nav-list>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <!-- This is the tree node template for leaf nodes -->
-        <mat-tree-node [@hideShow] *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="20px">
+        <mat-tree-node cdkDropList [id]="'folder-list-'+node.id" cdkDropListConnectedTo="list-1" (cdkDropListDropped)="drop($event, node)"
+            (cdkDropListEntered)="dragEnter(node)" (cdkDropListExited)="node.drag=false" [@hideShow] *matTreeNodeDef="let node"
+            matTreeNodePadding matTreeNodePaddingIndent="20px">
             <!-- use a disabled button to provide padding for tree leaf -->
             <button class="expandButton" mat-icon-button disabled></button>
             <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseenter)="showAction(node)"
                 (mouseleave)="hideAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
-                    <span class="treeLabel" [title]="node.label">
+                    <span class="treeLabel" [class.private]="!node.public" [title]="node.label" [class.drag]="node.drag">
                         {{node.label}}
                     </span>
                 </span>
@@ -28,54 +17,70 @@
                     [disabled]="!node.showAction">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
                     <span *ngIf="!node.showAction">
-                        4
+                        {{node.countRes}}
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="addNewItem(node)">Nouveau sous-dossier</button>
+                    <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">Nouveau sous-dossier</button>
                     <button mat-menu-item (click)="deleteNode(node)">Supprimer</button>
                 </mat-menu>
             </a>
         </mat-tree-node>
-        <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding
-            matTreeNodePaddingIndent="45px">
+        <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding matTreeNodePaddingIndent="45px">
             <form>
                 <mat-form-field floatLabel="never" style="width: 100%;">
-                    <input matInput #itemValue placeholder="Nouveau dossier...">
+                    <input matInput id="itemValue" #itemValue placeholder="Nouveau dossier...">
+                    <button type="submit" matSuffix mat-icon-button (click)="saveNode(node, itemValue.value)"
+                        [disabled]="itemValue.value === ''">
+                        <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
+                    </button>
                 </mat-form-field>
-                <button type="submit" mat-icon-button (click)="saveNode(node, itemValue.value)"
-                    [disabled]="itemValue.value === ''">
-                    <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
-                </button>
             </form>
         </mat-tree-node>
         <!-- This is the tree node template for expandable nodes -->
-        <mat-tree-node [@hideShow] *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding
-            matTreeNodePaddingIndent="20px">
-            <button class="expandButton" mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
-                <mat-icon
-                    class="mat-icon-rtl-mirror fa {{treeControl.isExpanded(node) ? 'fa-chevron-down' : 'fa-chevron-right'}}">
+        <mat-tree-node cdkDropList [id]="'folder-list-'+node.id" cdkDropListConnectedTo="list-1" (cdkDropListDropped)="drop($event, node)"
+            (cdkDropListEntered)="dragEnter(node)" (cdkDropListExited)="node.drag=false" [@hideShow] *matTreeNodeDef="let node;when: hasChild"
+            matTreeNodePadding matTreeNodePaddingIndent="20px">
+            <button class="expandButton" [class.private]="!node.public" mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                <mat-icon class="mat-icon-rtl-mirror fa {{treeControl.isExpanded(node) ? 'fa-chevron-down' : 'fa-chevron-right'}}">
                 </mat-icon>
             </button>
             <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseleave)="hideAction(node)"
                 (mouseenter)="showAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
-                    <span class="treeLabel" [title]="node.label">
+                    <span class="treeLabel" [class.private]="!node.public" [title]="node.label" [class.drag]="node.drag">
                         {{node.label}}
                     </span>
                 </span>
-                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();"
-                    [disabled]="!node.showAction">
+                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();" [disabled]="!node.showAction">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
                     <span *ngIf="!node.showAction">
-                        4
+                        {{node.countRes}}
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="addNewItem(node)">Nouveau sous-dossier</button>
+                    <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">Nouveau sous-dossier</button>
                     <button mat-menu-item (click)="deleteNode(node)">Supprimer</button>
                 </mat-menu>
             </a>
         </mat-tree-node>
     </mat-tree>
 </mat-nav-list>
+<mat-nav-list>
+    <mat-list-item role="listitem" disableRipple (click)="toggleInput()" class="more">
+        <mat-icon class="fa {{createRootNode ? 'fa-chevron-up' : 'fa-chevron-down'}}"></mat-icon>&nbsp;{{createRootNode ? 'Moins' : 'Plus'}}
+    </mat-list-item>
+</mat-nav-list>
+<mat-list *ngIf="createRootNode">
+    <mat-list-item role="listitem">
+        <form>
+            <mat-form-field floatLabel="never" style="width: 100%;">
+                <input matInput id="itemValue" #itemValue placeholder="Nouveau dossier racine...">
+                <button type="submit" matSuffix mat-icon-button (click)="createRoot(itemValue.value);createRootNode = !createRootNode"
+                    [disabled]="itemValue.value === ''">
+                    <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
+                </button>
+            </mat-form-field>
+        </form>
+    </mat-list-item>
+</mat-list>

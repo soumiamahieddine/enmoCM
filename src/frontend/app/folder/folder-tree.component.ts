@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Renderer2 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { map, tap, catchError, filter, exhaustMap } from 'rxjs/operators';
+import { map, tap, catchError, filter, exhaustMap, finalize } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { MatTreeFlatDataSource, MatTreeFlattener, MatDialog, MatDialogRef } from '@angular/material';
+import { MatTreeFlatDataSource, MatTreeFlattener, MatDialog, MatDialogRef, MatInput } from '@angular/material';
 import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
@@ -19,6 +19,8 @@ export class ItemNode {
     children: ItemNode[];
     label: string;
     parent_id: number;
+    public: boolean;
+    countRes: number;
 }
 
 /** Flat to-do item node with expandable and level information */
@@ -26,7 +28,9 @@ export class ItemFlatNode {
     id: number;
     label: string;
     parent_id: number;
+    countRes: number;
     level: number;
+    public: boolean;
     expandable: boolean;
 }
 @Component({
@@ -56,9 +60,13 @@ export class FolderTreeComponent implements OnInit {
     lang: any = LANG;
     TREE_DATA: any[] = [];
     dialogRef: MatDialogRef<any>;
+    createRootNode: boolean = false;
+    createItemNode: boolean = false;
     dataChange = new BehaviorSubject<ItemNode[]>([]);
 
     @Input('selectedId') seletedId: number;
+    @ViewChild('itemValue') itemValue: MatInput;
+
 
     get data(): ItemNode[] { return this.dataChange.value; }
 
@@ -74,6 +82,8 @@ export class FolderTreeComponent implements OnInit {
             ? existingNode
             : new ItemFlatNode();
         flatNode.label = node.label;
+        flatNode.countRes = node.countRes;
+        flatNode.public = node.public;
         flatNode.parent_id = node.parent_id;
         flatNode.id = node.id;
         flatNode.level = level;
@@ -98,6 +108,7 @@ export class FolderTreeComponent implements OnInit {
         private notify: NotificationService,
         private dialog: MatDialog,
         private router: Router,
+        private renderer: Renderer2
     ) { }
 
     ngOnInit(): void {
@@ -124,8 +135,6 @@ export class FolderTreeComponent implements OnInit {
 
     openTree(id: number) {
         let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(id);
-        //this.treeControl.dataNodes[indexSelectedFolder].selected = true;
-        console.log(indexSelectedFolder);
 
         while (indexSelectedFolder != -1) {
             indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(this.treeControl.dataNodes[indexSelectedFolder].parent_id);
@@ -217,6 +226,7 @@ export class FolderTreeComponent implements OnInit {
     }
 
     addNewItem(node: any) {
+        this.createItemNode = true;
         const currentNode = this.flatNodeMap.get(node);
         if (currentNode.children === undefined) {
             currentNode['children'] = [];
@@ -225,10 +235,10 @@ export class FolderTreeComponent implements OnInit {
         this.dataChange.next(this.data);
 
         this.treeControl.expand(node);
+        this.renderer.selectRootElement('#itemValue').focus();
     }
 
     saveNode(node: any, value: any) {
-        console.log(node);
         this.http.post("../../rest/folders", { label: value, parent_id: node.parent_id }).pipe(
             tap((data: any) => {
                 const nestedNode = this.flatNodeMap.get(node);
@@ -237,6 +247,7 @@ export class FolderTreeComponent implements OnInit {
                 this.dataChange.next(this.data);
                 this.treeControl.collapseAll();
                 this.openTree(nestedNode.id);
+                this.createItemNode = false;
             }),
             tap(() => this.notify.success(this.lang.folderAdded)),
             catchError((err) => {
@@ -307,5 +318,45 @@ export class FolderTreeComponent implements OnInit {
             }
         }
         return null;
+    }
+
+    drop(ev: any, node: any) {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: 'Classer '+ ev.item.data.alt_identifier, msg: 'Voulez-vous classer <b>'+ ev.item.data.alt_identifier+'</b> dans <b>' + node.label+ '</b> ?'} });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            //exhaustMap(() => this.http.post("../../rest/folders/" + node.id)),
+            tap(() => {     
+                node.countRes = node.countRes + 1;
+            }),
+            tap(() => this.notify.success('Courrier classé')),
+            finalize(() => node.drag = false),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    dragEnter(node: any) {
+        node.drag=true;
+    }
+
+    getDragIds() {
+        if (this.treeControl.dataNodes !== undefined) {
+            return this.treeControl.dataNodes.map(node => 'folder-list-'+node.id);
+        } else {
+            return [];
+        }
+        
+    }
+
+    toggleInput() {
+        this.createRootNode = !this.createRootNode;
+        if (this.createRootNode) {
+            setTimeout(() => {
+                this.renderer.selectRootElement('#itemValue').focus();
+            }, 0);
+        }
     }
 }

@@ -73,3 +73,17 @@ form {
     white-space: pre;
     color: $primary;
 }
+
+.drag {
+    color: $secondary;
+}
+
+.more {
+    ::ng-deep.mat-list-item-content {
+        justify-content: center;
+    }
+}
+
+.private {
+    color: $warn;
+}

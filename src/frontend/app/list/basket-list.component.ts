@@ -17,6 +17,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { BasketHomeComponent } from '../basket/basket-home.component';
 import { PanelListComponent } from './panel/panel-list.component';
 import { AppService } from '../../service/app.service';
+import { PanelFolderComponent } from '../folder/panel/panel-folder.component';
 
 
 declare function $j(selector: any): any;
@@ -87,6 +88,7 @@ export class BasketListComponent implements OnInit {
     @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
     @ViewChild('appPanelList') appPanelList: PanelListComponent;
     @ViewChild('basketHome') basketHome: BasketHomeComponent;
+    @ViewChild('panelFolder') panelFolder: PanelFolderComponent;
 
     currentSelectedChrono: string = '';
 
@@ -173,6 +175,10 @@ export class BasketListComponent implements OnInit {
                     this.currentBasketInfo.basket_id = data.basket_id;
                     this.defaultAction = data.defaultAction;
                     this.headerService.setHeader(data.basketLabel);
+                    setTimeout(() => {
+                        console.log(this.panelFolder.getDragIds());
+                    }, 400);
+                    
                     return data.resources;
                 }),
                 catchError((err: any) => {
