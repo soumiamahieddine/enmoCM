@@ -17,7 +17,7 @@
                     [disabled]="!node.showAction">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
                     <span *ngIf="!node.showAction">
-                        {{node.countRes}}
+                        {{node.countResources}}
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">
@@ -55,7 +55,7 @@
                 <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();" [disabled]="!node.showAction">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
                     <span *ngIf="!node.showAction">
-                        {{node.countRes}}
+                        {{node.countResources}}
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">

@@ -20,7 +20,7 @@ export class ItemNode {
     label: string;
     parent_id: number;
     public: boolean;
-    countRes: number;
+    countResources: number;
 }
 
 /** Flat to-do item node with expandable and level information */
@@ -28,7 +28,7 @@ export class ItemFlatNode {
     id: number;
     label: string;
     parent_id: number;
-    countRes: number;
+    countResources: number;
     level: number;
     public: boolean;
     expandable: boolean;
@@ -82,7 +82,7 @@ export class FolderTreeComponent implements OnInit {
             ? existingNode
             : new ItemFlatNode();
         flatNode.label = node.label;
-        flatNode.countRes = node.countRes;
+        flatNode.countResources = node.countResources;
         flatNode.public = node.public;
         flatNode.parent_id = node.parent_id;
         flatNode.id = node.id;
@@ -327,7 +327,7 @@ export class FolderTreeComponent implements OnInit {
             filter((data: string) => data === 'ok'),
             //exhaustMap(() => this.http.post("../../rest/folders/" + node.id)),
             tap(() => {     
-                node.countRes = node.countRes + 1;
+                node.countResources = node.countResources + 1;
             }),
             tap(() => this.notify.success('Courrier classé')),
             finalize(() => node.drag = false),
