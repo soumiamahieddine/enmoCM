@@ -453,6 +453,10 @@ class FolderController
         }
 
         $resourcesToClassify = array_diff($body['resources'], $foldersResources);
+        if (empty($resourcesToClassify)) {
+            return $response->withJson(['countResources' => count($foldersResources)]);
+        }
+
         if (!ResController::hasRightByResId(['resId' => $resourcesToClassify, 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Resources out of perimeter']);
         }
@@ -462,6 +466,40 @@ class FolderController
         }
 
         return $response->withJson(['countResources' => count($foldersResources) + count($resourcesToClassify)]);
+    }
+
+    public function removeResourcesById(Request $request, Response $response, array $args)
+    {
+        if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
+        }
+
+        $foldersResources = ResourceFolderModel::get(['select' => ['res_id'], 'where' => ['folder_id = ?'], 'data' => [$args['id']]]);
+        $foldersResources = array_column($foldersResources, 'res_id');
+
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $resourcesToUnclassify = array_intersect($foldersResources, $body['resources']);
+        if (empty($resourcesToUnclassify)) {
+            return $response->withJson(['countResources' => count($foldersResources)]);
+        }
+
+        if (!ResController::hasRightByResId(['resId' => $resourcesToUnclassify, 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resources out of perimeter']);
+        }
+
+        foreach ($resourcesToUnclassify as $value) {
+            ResourceFolderModel::delete(['where' => ['folder_id = ?', 'res_id = ?'], 'data' => [$args['id'], $value]]);
+        }
+
+        return $response->withJson(['countResources' => count($foldersResources) - count($resourcesToUnclassify)]);
     }
 
     // login (string) : Login of user connected
