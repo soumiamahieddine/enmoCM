@@ -172,6 +172,20 @@ $app->put('/entities/{id}/status', \Entity\controllers\EntityController::class .
 $app->get('/entityTypes', \Entity\controllers\EntityController::class . ':getTypes');
 $app->post('/entitySeparators', \Entity\controllers\EntitySeparatorController::class . ':create');
 
+//ExternalSignatoryBook
+$app->get('/xParaphWorkflow', \ExternalSignatoryBook\controllers\XParaphController::class . ':getWorkflow');
+$app->post('/xParaphAccount', \ExternalSignatoryBook\controllers\XParaphController::class . ':createXparaphAccount');
+$app->delete('/xParaphAccount', \ExternalSignatoryBook\controllers\XParaphController::class . ':deleteXparaphAccount');
+
+//Folders
+$app->get('/folders', \Folder\controllers\FolderController::class . ':get');
+$app->post('/folders', \Folder\controllers\FolderController::class . ':create');
+$app->get('/folders/{id}', \Folder\controllers\FolderController::class . ':getById');
+$app->put('/folders/{id}', \Folder\controllers\FolderController::class . ':update');
+$app->delete('/folders/{id}', \Folder\controllers\FolderController::class . ':delete');
+$app->get('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':getResourcesById');
+$app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
+
 //Groups
 $app->get('/groups', \Group\controllers\GroupController::class . ':get');
 $app->post('/groups', \Group\controllers\GroupController::class . ':create');
@@ -183,14 +197,6 @@ $app->get('/groups/{id}/indexing', \Group\controllers\GroupController::class . '
 $app->put('/groups/{id}/indexing', \Group\controllers\GroupController::class . ':updateIndexingInformations');
 $app->put('/groups/{id}/services/{serviceId}', \Group\controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
-
-//Folders
-$app->get('/folders', \Folder\controllers\FolderController::class . ':get');
-$app->post('/folders', \Folder\controllers\FolderController::class . ':create');
-$app->get('/folders/{id}', \Folder\controllers\FolderController::class . ':getById');
-$app->put('/folders/{id}', \Folder\controllers\FolderController::class . ':update');
-$app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
-$app->delete('/folders/{id}', \Folder\controllers\FolderController::class . ':delete');
 
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
@@ -257,7 +263,7 @@ $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class
 $app->get('/sortedPriorities', \Priority\controllers\PriorityController::class . ':getSorted');
 $app->put('/sortedPriorities', \Priority\controllers\PriorityController::class . ':updateSort');
 
-// Reconciliation
+//Reconciliation
 $app->post('/reconciliation/add', \Attachment\controllers\ReconciliationController::class . ':create');
 $app->get('/reconciliation/check', \Attachment\controllers\ReconciliationController::class . ':checkAttachment');
 
@@ -398,9 +404,5 @@ $app->post('/saveMessageExchangeReturn', \Sendmail\Controllers\ReceiveMessageExc
 $app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
 
 $app->get('/maarchParapheur/user/{id}/picture', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getUserPicture');
-
-$app->get('/xParaphWorkflow', \ExternalSignatoryBook\controllers\XParaphController::class . ':getWorkflow');
-$app->post('/xParaphAccount', \ExternalSignatoryBook\controllers\XParaphController::class . ':createXparaphAccount');
-$app->delete('/xParaphAccount', \ExternalSignatoryBook\controllers\XParaphController::class . ':deleteXparaphAccount');
 
 $app->run();

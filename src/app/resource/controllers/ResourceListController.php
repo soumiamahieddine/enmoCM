@@ -980,7 +980,6 @@ class ResourceListController
 
     public static function getIdsWithOffsetAndLimit(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resources']);
         ValidatorModel::arrayType($args, ['resources']);
         ValidatorModel::intVal($args, ['offset', 'limit']);
 

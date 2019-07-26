@@ -27,6 +27,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
 class FolderController
@@ -109,78 +110,6 @@ class FolderController
                 $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition']];
             }
         }
-
-        $foldersResources = ResourceFolderModel::get(['select' => ['res_id'], 'where' => ['folder_id = ?'], 'data' => [$args['id']]]);
-        $foldersResources = array_column($foldersResources, 'res_id');
-
-        $queryParams = $request->getQueryParams();
-        $queryParams['offset'] = (empty($queryParams['offset']) || !is_numeric($queryParams['offset']) ? 0 : (int)$queryParams['offset']);
-        $queryParams['limit'] = (empty($queryParams['limit']) || !is_numeric($queryParams['limit']) ? 10 : (int)$queryParams['limit']);
-
-        $allQueryData = ResourceListController::getResourcesListQueryData(['data' => $queryParams]);
-        if (!empty($allQueryData['order'])) {
-            $data['order'] = $allQueryData['order'];
-        }
-
-        $rawResources = ResourceListModel::getOnView([
-            'select'    => ['res_id'],
-            'table'     => $allQueryData['table'],
-            'leftJoin'  => $allQueryData['leftJoin'],
-            'where'     => array_merge(['res_id in (?)'], $allQueryData['where']),
-            'data'      => array_merge([$foldersResources], $allQueryData['queryData']),
-            'orderBy'   => empty($data['order']) ? ['creation_date'] : [$data['order']]
-        ]);
-
-        $resIds = ResourceListController::getIdsWithOffsetAndLimit(['resources' => $rawResources, 'offset' => $queryParams['offset'], 'limit' => $queryParams['limit']]);
-
-        $formattedResources = [];
-        if (!empty($resIds)) {
-            $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-            if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
-                $excludeAttachmentTypes[] = 'document_with_notes';
-            }
-
-            $attachments = AttachmentModel::getOnView([
-                'select'    => ['COUNT(res_id)', 'res_id_master'],
-                'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
-                'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['userId'], 'TMP'],
-                'groupBy'   => ['res_id_master']
-            ]);
-
-            $select = [
-                'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'mlb_coll_ext.alt_identifier',
-                'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"'
-            ];
-            $tableFunction = ['status', 'mlb_coll_ext'];
-            $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id'];
-
-            $order = 'CASE res_letterbox.res_id ';
-            foreach ($resIds as $key => $resId) {
-                $order .= "WHEN {$resId} THEN {$key} ";
-            }
-            $order .= 'END';
-
-            $resources = ResourceListModel::getOnResource([
-                'select'    => $select,
-                'table'     => $tableFunction,
-                'leftJoin'  => $leftJoinFunction,
-                'where'     => ['res_letterbox.res_id in (?)'],
-                'data'      => [$resIds],
-                'orderBy'   => [$order]
-            ]);
-
-            $formattedResources = ResourceListController::getFormattedResources([
-                'resources'     => $resources,
-                'userId'        => $GLOBALS['id'],
-                'attachments'   => $attachments,
-                'checkLocked'   => false
-            ]);
-        }
-
-        $folder['resources'] = $formattedResources;
-        $folder['countResources'] = count($rawResources);
-
-        //TODO Get default action
 
         return $response->withJson(['folder' => $folder]);
     }
@@ -418,6 +347,92 @@ class FolderController
         return true;
     }
 
+    public function getResourcesById(Request $request, Response $response, array $args)
+    {
+        if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
+        }
+
+        $foldersResources = ResourceFolderModel::get(['select' => ['res_id'], 'where' => ['folder_id = ?'], 'data' => [$args['id']]]);
+        $foldersResources = array_column($foldersResources, 'res_id');
+
+        $formattedResources = [];
+        $count = 0;
+        if (!empty($foldersResources)) {
+            $queryParams = $request->getQueryParams();
+            $queryParams['offset'] = (empty($queryParams['offset']) || !is_numeric($queryParams['offset']) ? 0 : (int)$queryParams['offset']);
+            $queryParams['limit'] = (empty($queryParams['limit']) || !is_numeric($queryParams['limit']) ? 10 : (int)$queryParams['limit']);
+
+            $allQueryData = ResourceListController::getResourcesListQueryData(['data' => $queryParams]);
+            if (!empty($allQueryData['order'])) {
+                $data['order'] = $allQueryData['order'];
+            }
+
+            $rawResources = ResourceListModel::getOnView([
+                'select'    => ['res_id'],
+                'table'     => $allQueryData['table'],
+                'leftJoin'  => $allQueryData['leftJoin'],
+                'where'     => array_merge(['res_id in (?)'], $allQueryData['where']),
+                'data'      => array_merge([$foldersResources], $allQueryData['queryData']),
+                'orderBy'   => empty($data['order']) ? ['creation_date'] : [$data['order']]
+            ]);
+
+            $resIds = ResourceListController::getIdsWithOffsetAndLimit(['resources' => $rawResources, 'offset' => $queryParams['offset'], 'limit' => $queryParams['limit']]);
+
+            $formattedResources = [];
+            if (!empty($resIds)) {
+                $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
+                if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
+                    $excludeAttachmentTypes[] = 'document_with_notes';
+                }
+
+                $attachments = AttachmentModel::getOnView([
+                    'select'    => ['COUNT(res_id)', 'res_id_master'],
+                    'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
+                    'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['userId'], 'TMP'],
+                    'groupBy'   => ['res_id_master']
+                ]);
+
+                $select = [
+                    'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'mlb_coll_ext.alt_identifier',
+                    'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"'
+                ];
+                $tableFunction = ['status', 'mlb_coll_ext', 'priorities'];
+                $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id', 'res_letterbox.priority = priorities.id'];
+
+                $order = 'CASE res_letterbox.res_id ';
+                foreach ($resIds as $key => $resId) {
+                    $order .= "WHEN {$resId} THEN {$key} ";
+                }
+                $order .= 'END';
+
+                $resources = ResourceListModel::getOnResource([
+                    'select'    => $select,
+                    'table'     => $tableFunction,
+                    'leftJoin'  => $leftJoinFunction,
+                    'where'     => ['res_letterbox.res_id in (?)'],
+                    'data'      => [$resIds],
+                    'orderBy'   => [$order]
+                ]);
+
+                $formattedResources = ResourceListController::getFormattedResources([
+                    'resources'     => $resources,
+                    'userId'        => $GLOBALS['id'],
+                    'attachments'   => $attachments,
+                    'checkLocked'   => false
+                ]);
+            }
+
+            $count = count($rawResources);
+        }
+
+        return $response->withJson(['resources' => $formattedResources, 'count' => $count]);
+    }
+
     // login (string) : Login of user connected
     // folderId (integer) : Check specific folder
     // edition (boolean) : whether user can edit or not
@@ -458,5 +473,33 @@ class FolderController
         ]);
 
         return $folders;
+    }
+
+    private static function hasFolder(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id', 'userId']);
+        ValidatorModel::intVal($args, ['id', 'userId']);
+
+
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+
+        $entities = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $entities = array_column($entities, 'id');
+
+        if (empty($entities)) {
+            $entities = [0];
+        }
+
+        $folders = FolderModel::getWithEntities([
+            'select'   => [1],
+            'where'    => ['folders.id = ?', '(user_id = ? OR entity_id in (?))'],
+            'data'     => [$args['id'], $args['userId'], $entities]
+        ]);
+
+        if (empty($folders)) {
+            return false;
+        }
+
+        return true;
     }
 }

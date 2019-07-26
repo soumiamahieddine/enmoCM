@@ -120,6 +120,21 @@ class FolderModelAbstract
         return true;
     }
 
+    public static function getWithEntities(array $args = [])
+    {
+        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
+
+        $folders = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['folders', 'entities_folders'],
+            'left_join' => ['folders.id = entities_folders.folder_id'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+        ]);
+
+        return $folders;
+    }
+
     public static function getWithEntitiesAndResources(array $args = [])
     {
         ValidatorModel::arrayType($args, ['select', 'where', 'data']);
