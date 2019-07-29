@@ -59,7 +59,7 @@ class AttachmentController
             foreach ($mandatoryColumns as $columnKey => $column) {
                 if ($column == $value['column'] && !empty($value['value'])) {
                     if ($column == 'res_id_master') {
-                        if (!ResController::hasRightByResId(['resId' => [$value['value']], 'userId' => $GLOBALS['userId']])) {
+                        if (!ResController::hasRightByResId(['resId' => [$value['value']], 'userId' => $GLOBALS['id']])) {
                             return $response->withStatus(403)->withJson(['errors' => 'ResId master out of perimeter']);
                         }
                         $resId = $value['value'];
@@ -128,7 +128,7 @@ class AttachmentController
 
     public function getByResId(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -188,7 +188,7 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -208,7 +208,7 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['userId']])) {
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -219,7 +219,7 @@ class AttachmentController
 
     public function getThumbnailContent(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -288,7 +288,7 @@ class AttachmentController
     
     public function getFileContent(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -426,7 +426,7 @@ class AttachmentController
 
     public function getOriginalFileContent(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['userId']])) {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -688,7 +688,9 @@ class AttachmentController
 
     public static function isMailingAttach(array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $aArgs['userId']])) {
+        $user = UserModel::getByLogin(['login' => $aArgs['login'], 'select' => ['id']]);
+
+        if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $user['id']])) {
             return ['errors' => 'Document out of perimeter'];
         }
 

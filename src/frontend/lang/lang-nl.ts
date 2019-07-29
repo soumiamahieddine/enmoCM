@@ -1074,4 +1074,6 @@ export const LANG_NL = {
     "keywordDeleted" : "Keyword deleted", //_TO_TRANSLATE
     "actionsInfo" : "Only actions with \"simple confirmation\" and \"close mail\" will be displayed", //_TO_TRANSLATE
     "eventList" : "Open page", //_TO_TRANSLATE
+    "folderAdded" : "Folder added", //_TO_TRANSLATE
+    "folderDeleted" : "Folder deleted", //_TO_TRANSLATE
 };

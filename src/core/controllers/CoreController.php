@@ -101,29 +101,19 @@ class CoreController
 
     public function getShortcuts(Request $request, Response $response)
     {
-        $userGroups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
-
         $shortcuts = [
             ['id' => 'home']
         ];
 
-        if ($GLOBALS['userId'] == 'superadmin') {
-            $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
-            $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
-            $menu = array_merge($menu, $menuModules);
-        } else {
-            $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+        if (ServiceModel::hasService(['id' => 'admin', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+            $shortcuts[] = ['id' => 'administration'];
         }
-
-        foreach ($menu as $value) {
-            if ($value['id'] == 'admin') {
-                $shortcuts[] = ['id' => 'administration'];
-            } elseif ($value['id'] == 'adv_search_mlb') {
-                $shortcuts[] = ['id' => 'search'];
-            }
+        if (ServiceModel::hasService(['id' => 'adv_search_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+            $shortcuts[] = ['id' => 'search'];
         }
 
         $indexingGroups = [];
+        $userGroups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
         foreach ($userGroups as $group) {
             if ($group['can_index']) {
                 $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
@@ -136,9 +126,7 @@ class CoreController
             ];
         }
 
-        return $response->withJson([
-            'shortcuts' => $shortcuts
-        ]);
+        return $response->withJson(['shortcuts' => $shortcuts]);
     }
 
     public function getAdministration(Request $request, Response $response)

@@ -144,7 +144,8 @@ if ($stmt->rowCount() <= 0) {
 }
 
 $_SESSION['doc_id'] = $s_id;
-$right = $security->test_right_doc($coll_id, $s_id);
+$user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+$right = \Resource\controllers\ResController::hasRightByResId(['resId' => [$s_id], 'userId' => $user['id']]);
 
 $stmt = $db->query('SELECT typist, creation_date, filename FROM '.$table.' WHERE res_id = ?', array($s_id));
 $info_mail = $stmt->fetchObject();

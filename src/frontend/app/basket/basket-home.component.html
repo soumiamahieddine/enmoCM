@@ -10,7 +10,7 @@
         <input matInput placeholder="{{lang.filterBy}}" #listFilter>
     </mat-form-field>
     <ng-container *ngFor="let regroupedBasket of homeData.regroupedBaskets">
-        <mat-icon *ngIf="regroupedBasket.baskets[0]" color="primary" mat-list-icon class="fa fa-users" style="margin-left:10px;"></mat-icon> <span *ngIf="regroupedBasket.baskets[0]" color="primary" style="font-weight:bold;">{{regroupedBasket.groupDesc}}</span>
+        <mat-icon *ngIf="regroupedBasket.baskets[0]" color="primary" mat-list-icon class="fa fa-users" style="margin-left:10px;"></mat-icon> <span *ngIf="regroupedBasket.baskets[0]" class="basketGroupTitle">{{regroupedBasket.groupDesc}}</span>
         <mat-divider *ngIf="regroupedBasket.baskets[0]"></mat-divider>
         <mat-nav-list>
             <ng-container *ngFor="let basket of regroupedBasket.baskets | filterList:listFilter.value:'basket_name'">

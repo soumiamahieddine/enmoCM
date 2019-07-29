@@ -95,7 +95,7 @@ if (isset($_GET['num'])) {
             readfile($loc);
             exit();
         } else {
-            echo '<br/><br/><div class="error" style="display:block">'._PROBLEM_LOADING_FILE_TMP_DIR.'.</div>';
+            echo '<br/><br/><div class="error" style="display:block">'._PROBLEM_LOADING_FILE_TMP_DIR. " : {$return['errors']}" .'.</div>';
             exit();
         }
         $extension = explode('.', $_SESSION['upfile'][$num]['name']);

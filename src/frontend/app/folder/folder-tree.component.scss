@@ -1,0 +1,89 @@
+@import '../../css/vars.scss';
+
+
+.selectedFolder {
+    border-left: solid 5px $primary;
+    background: rgba($primary, 0.14);
+}
+
+.mat-icon-rtl-mirror {
+    opacity: 0.5;
+}
+
+.folderAction {
+    color: #666;
+}
+
+.mat-form-field-appearance-outline {
+    font-size: 11px;
+}
+
+/deep/.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: $primary;
+}
+
+.example-tree-invisible {
+    display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+}
+
+.example-tree-node {
+    display: block;
+}
+
+.example-tree-node .example-tree-node {
+    padding-left: 40px;
+}
+
+.expandButton {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+}
+
+.mat-list-item {
+    color: rgb(102, 102, 102);
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+}
+
+.mat-tree-node {
+    min-height: 0px;
+    height: 30px;
+
+    ::ng-deep.mat-list-item-content {
+        padding-left: 0px;
+    }
+}
+
+form {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.treeLabel {
+    white-space: pre;
+    color: $primary;
+}
+
+.drag {
+    color: $secondary !important;
+}
+
+.more {
+    ::ng-deep.mat-list-item-content {
+        justify-content: center;
+    }
+}
+
+.private {
+    color: $warn;
+}

@@ -35,8 +35,8 @@ export class HeaderRightComponent implements OnInit {
     ngOnInit(): void {}
 
     gotToMenu(shortcut:any) {
-        if (shortcut.id == 'index_mlb' && this.headerService.user.indexingGroups.length > 1) {
-            this.config = { data: { indexingGroups:this.headerService.user.indexingGroups, link:shortcut.servicepage } };
+        if (shortcut.id == 'indexing' && shortcut.groups.length > 1) {
+            this.config = { data: { indexingGroups: shortcut.groups, link:shortcut.servicepage } };
             this.dialogRef = this.dialog.open(IndexingGroupModalComponent, this.config);
         } else if (shortcut.angular == 'true') {
             this.router.navigate([shortcut.servicepage]);

@@ -10,6 +10,8 @@
 require_once 'vendor/autoload.php';
 
 $userId = 'superadmin';
+$userInfo = \User\models\UserModel::getByLogin(['login' => $userId, 'select' => ['id']]);
+$id = $userInfo['id'];
 
 $language = \SrcCore\models\CoreConfigModel::getLanguage();
 require_once("src/core/lang/lang-{$language}.php");

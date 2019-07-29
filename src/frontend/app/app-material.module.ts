@@ -85,7 +85,7 @@ import {
     MatBottomSheetModule
 } from '@angular/material';
 
-import { CdkTableModule } from '@angular/cdk/table';
+import {MatTreeModule} from '@angular/material/tree';
 import { getFrenchPaginatorIntl } from './french-paginator-intl';
 
 @NgModule({
@@ -122,6 +122,7 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatSliderModule,
         MatBadgeModule,
         MatBottomSheetModule,
+        MatTreeModule,
         DndModule.forRoot()
     ],
     exports: [
@@ -157,6 +158,7 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatSliderModule,
         MatBadgeModule,
         MatBottomSheetModule,
+        MatTreeModule,
         DndModule
     ],
     providers: [

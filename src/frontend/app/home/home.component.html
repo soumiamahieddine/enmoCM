@@ -7,6 +7,7 @@
         <menu-nav></menu-nav>
         <basket-home *ngIf="homeData" #basketHome [homeData]="homeData" [snavL]="snav"></basket-home>
         <mat-divider></mat-divider>
+        <panel-folder></panel-folder>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;"><img

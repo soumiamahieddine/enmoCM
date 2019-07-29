@@ -22,7 +22,11 @@ class FolderModelAbstract
 
         $folders = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'  => ['folders']
+            'table'  => ['folders', 'entities_folders'],
+            'left_join' => ['folders.id = entities_folders.folder_id'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by' => empty($aArgs['order_by']) ? ['label'] : $aArgs['order_by']
         ]);
 
         return $folders;
@@ -35,19 +39,39 @@ class FolderModelAbstract
 
         $folder = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['folders'],
+            'table'     => ['folders', 'entities_folders'],
+            'left_join' => ['folders.id = entities_folders.folder_id'],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
         ]);
 
+        if (empty($folder[0])) {
+            return [];
+        }
+
         return $folder[0];
+    }
+
+    public static function getChild(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+
+        $folders = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['folders'],
+            'where'     => ['parent_id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        return $folders;
     }
 
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['user_id', 'label']);
         ValidatorModel::stringType($aArgs, ['label']);
-        ValidatorModel::intVal($aArgs, ['user_id', 'parent_id']);
+        ValidatorModel::intVal($aArgs, ['user_id', 'parent_id', 'level']);
         ValidatorModel::boolType($aArgs, ['public']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'folders_id_seq']);
@@ -55,11 +79,12 @@ class FolderModelAbstract
         DatabaseModel::insert([
             'table'     => 'folders',
             'columnsValues'     => [
-                'id'         => $nextSequenceId,
-                'label'      => $aArgs['label'],
-                'public'     => empty($aArgs['public']) ? 'false' : 'true',
-                'user_id'    => $aArgs['user_id'],
-                'parent_id'  => $aArgs['parent_id']
+                'id'        => $nextSequenceId,
+                'label'     => $aArgs['label'],
+                'public'    => empty($aArgs['public']) ? 'false' : 'true',
+                'user_id'   => $aArgs['user_id'],
+                'parent_id' => $aArgs['parent_id'],
+                'level'     => $aArgs['level']
             ]
         ]);
 
@@ -81,17 +106,48 @@ class FolderModelAbstract
         return true;
     }
 
-    public static function delete(array $aArgs)
+    public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'folders',
-            'where' => ['id = ?'],
-            'data'  => [$aArgs['id']]
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;
+    }
+
+    public static function getWithEntities(array $args = [])
+    {
+        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
+
+        $folders = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['folders', 'entities_folders'],
+            'left_join' => ['folders.id = entities_folders.folder_id'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+        ]);
+
+        return $folders;
+    }
+
+    public static function getWithEntitiesAndResources(array $args = [])
+    {
+        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
+
+        $folders = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['folders', 'entities_folders', 'resources_folders'],
+            'left_join' => ['folders.id = entities_folders.folder_id', 'folders.id = resources_folders.folder_id'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'groupBy'   => empty($args['groupBy']) ? [] : $args['groupBy']
+        ]);
+
+        return $folders;
     }
 }

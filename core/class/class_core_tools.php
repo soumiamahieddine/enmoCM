@@ -526,6 +526,20 @@ class core_tools extends functions
             }
         }
 
+        $userGroups = \User\models\UserModel::getGroupsByLogin(['login' => $_SESSION['user']['UserId']]);
+        $indexingGroups = [];
+        foreach ($userGroups as $group) {
+            if ($group['can_index']) {
+                $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
+            }
+        }
+        if (!empty($indexingGroups)) {
+            echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">';
+            echo '<a style="display:flex;align-items:center;" onClick="">';
+            echo '<i style="width:40px;text-align:center;" class="fa fa-file-medical fa-2x"></i>';
+            echo '<span>'._INDEXING_MLB.'</span></a></li>';
+        }
+
         // Menu items always displayed
         if ($myProfil) {
             echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">';

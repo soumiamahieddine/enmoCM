@@ -437,7 +437,7 @@ abstract class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aEntities = DatabaseModel::select([
-            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
+            'select'    => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
             'table'     => ['users_entities, entities'],
             'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?'],
             'data'      => [$aArgs['userId']],

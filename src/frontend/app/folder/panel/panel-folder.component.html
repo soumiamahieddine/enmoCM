@@ -1,0 +1,8 @@
+<mat-expansion-panel class="folderList" expanded>
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            {{lang.folders}}
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <folder-tree #folderTree [selectedId]="id"></folder-tree>
+</mat-expansion-panel>

@@ -11,6 +11,7 @@ declare function $j(selector: any) : any;
 
 @Component({
     templateUrl: "group-administration.component.html",
+    styleUrls: ['group-administration.component.scss'],
     providers   : [NotificationService, AppService]
 })
 export class GroupAdministrationComponent implements OnInit {

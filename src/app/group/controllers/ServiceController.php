@@ -4,6 +4,7 @@ namespace Group\controllers;
 
 use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 class ServiceController
 {
@@ -23,6 +24,22 @@ class ServiceController
             $menu = ServiceModel::getApplicationServicesByUserServices(['userServices' => $servicesStoredInDB, 'type' => 'menu']);
             $menuModules = ServiceModel::getModulesServicesByUserServices(['userServices' => $servicesStoredInDB, 'type' => 'menu']);
             $menu = array_merge($menu, $menuModules);
+        }
+
+        $userGroups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
+        $indexingGroups = [];
+        foreach ($userGroups as $group) {
+            if ($group['can_index']) {
+                $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
+            }
+        }
+        if (!empty($indexingGroups)) {
+            $menu[] = [
+                'id'        => 'indexing',
+                'style'     => 'fa fa-file-medical',
+                'name'      => _INDEXING_MLB,
+                'groups'    => $indexingGroups
+            ];
         }
 
         return $menu;

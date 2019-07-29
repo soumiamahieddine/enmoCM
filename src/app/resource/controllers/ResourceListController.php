@@ -46,9 +46,7 @@ class ResourceListController
 {
     public function get(Request $request, Response $response, array $aArgs)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-
-        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $GLOBALS['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
@@ -76,16 +74,8 @@ class ResourceListController
         ]);
         $count = count($rawResources);
 
-        $resIds = [];
-        if (!empty($rawResources[$data['offset']])) {
-            $start = $data['offset'];
-            $i = 0;
-            while ($i < $data['limit'] && !empty($rawResources[$start])) {
-                $resIds[] = $rawResources[$start]['res_id'];
-                ++$start;
-                ++$i;
-            }
-        }
+        $resIds = ResourceListController::getIdsWithOffsetAndLimit(['resources' => $rawResources, 'offset' => $data['offset'], 'limit' => $data['limit']]);
+
         $allResources = [];
         foreach ($rawResources as $resource) {
             $allResources[] = $resource['res_id'];
@@ -151,80 +141,13 @@ class ResourceListController
                 'orderBy'   => [$order]
             ]);
 
-            foreach ($resources as $key => $resource) {
-                $formattedResources[$key]['res_id']             = $resource['res_id'];
-                $formattedResources[$key]['alt_identifier']     = $resource['alt_identifier'];
-                $formattedResources[$key]['barcode']            = $resource['barcode'];
-                $formattedResources[$key]['subject']            = $resource['subject'];
-                $formattedResources[$key]['confidentiality']    = $resource['confidentiality'];
-                $formattedResources[$key]['statusLabel']        = $resource['status.label_status'];
-                $formattedResources[$key]['statusImage']        = $resource['status.img_filename'];
-                $formattedResources[$key]['priorityColor']      = $resource['priorities.color'];
-                $formattedResources[$key]['closing_date']       = $resource['closing_date'];
-                $formattedResources[$key]['countAttachments']   = 0;
-                foreach ($attachments as $attachment) {
-                    if ($attachment['res_id_master'] == $resource['res_id']) {
-                        $formattedResources[$key]['countAttachments'] = $attachment['count'];
-                        break;
-                    }
-                }
-                $formattedResources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $GLOBALS['userId']]);
-                $isLocked = true;
-                if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
-                    $isLocked = false;
-                } elseif ($resource['locker_user_id'] == $currentUser['id']) {
-                    $isLocked = false;
-                } elseif (strtotime($resource['locker_time']) < time()) {
-                    $isLocked = false;
-                }
-                if ($isLocked) {
-                    $formattedResources[$key]['locker'] = UserModel::getLabelledUserById(['id' => $resource['locker_user_id']]);
-                }
-                $formattedResources[$key]['isLocked'] = $isLocked;
-
-                $display = [];
-                foreach ($listDisplay as $value) {
-                    $value = (array)$value;
-                    if ($value['value'] == 'getPriority') {
-                        $value['displayValue'] = $resource['priorities.label'];
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getCategory') {
-                        $value['displayValue'] = $resource['category_id'];
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getDoctype') {
-                        $value['displayValue'] = $resource['doctypes.description'];
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getAssignee') {
-                        $value['displayValue'] = ResourceListController::getAssignee(['resId' => $resource['res_id']]);
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getSenders') {
-                        $value['displayValue'] = ResourceListController::getSenders(['resId' => $resource['res_id']]);
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getRecipients') {
-                        $value['displayValue'] = ResourceListController::getRecipients(['resId' => $resource['res_id']]);
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getVisaWorkflow') {
-                        $value['displayValue'] = ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]);
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getSignatories') {
-                        $value['displayValue'] = ResourceListController::getSignatories(['resId' => $resource['res_id']]);
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getParallelOpinionsNumber') {
-                        $value['displayValue'] = ResourceListController::getParallelOpinionsNumber(['resId' => $resource['res_id']]);
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
-                        $value['displayValue'] = ['creationDate' => $resource['creation_date'], 'processLimitDate' => $resource['process_limit_date']];
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getModificationDate') {
-                        $value['displayValue'] = $resource['modification_date'];
-                        $display[] = $value;
-                    } elseif ($value['value'] == 'getOpinionLimitDate') {
-                        $value['displayValue'] = $resource['opinion_limit_date'];
-                        $display[] = $value;
-                    }
-                }
-                $formattedResources[$key]['display'] = $display;
-            }
+            $formattedResources = ResourceListController::getFormattedResources([
+                'resources'     => $resources,
+                'userId'        => $GLOBALS['id'],
+                'attachments'   => $attachments,
+                'checkLocked'   => true,
+                'listDisplay'   => $listDisplay
+            ]);
 
             $defaultAction['component'] = $groupBasket[0]['list_event'];
         }
@@ -460,14 +383,16 @@ class ResourceListController
 
     public static function getResourcesListQueryData(array $args)
     {
-        ValidatorModel::notEmpty($args, ['basketClause', 'login']);
         ValidatorModel::stringType($args, ['basketClause', 'login']);
         ValidatorModel::arrayType($args, ['data']);
 
         $table = [];
         $leftJoin = [];
-        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $args['basketClause'], 'login' => $args['login']]);
-        $where = [$whereClause];
+        $where = [];
+        if (!empty($args['basketClause'])) {
+            $whereClause = PreparedClauseController::getPreparedClause(['clause' => $args['basketClause'], 'login' => $args['login']]);
+            $where = [$whereClause];
+        }
         $queryData = [];
         $order = null;
 
@@ -1051,5 +976,122 @@ class ResourceListController
         $notes = NoteModel::get(['select' => ['count(1)'], 'where' => ['identifier = ?', 'note_text like ?'], 'data' => [$args['resId'], '[avis%']]);
 
         return $notes[0]['count'];
+    }
+
+    public static function getIdsWithOffsetAndLimit(array $args)
+    {
+        ValidatorModel::arrayType($args, ['resources']);
+        ValidatorModel::intVal($args, ['offset', 'limit']);
+
+        $ids = [];
+        if (!empty($args['resources'][$args['offset']])) {
+            $start = $args['offset'];
+            $i = 0;
+            while ($i < $args['limit'] && !empty($args['resources'][$start])) {
+                $ids[] = $args['resources'][$start]['res_id'];
+                ++$start;
+                ++$i;
+            }
+        }
+
+        return $ids;
+    }
+
+    public static function getFormattedResources(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resources', 'userId']);
+        ValidatorModel::arrayType($args, ['resources', 'attachments', 'listDisplay']);
+        ValidatorModel::intVal($args, ['userId']);
+        ValidatorModel::boolType($args, ['checkLocked']);
+
+        $formattedResources = [];
+
+        $resources = $args['resources'];
+        $attachments = $args['attachments'];
+
+        $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+
+        foreach ($resources as $key => $resource) {
+            $formattedResources[$key]['res_id']             = $resource['res_id'];
+            $formattedResources[$key]['alt_identifier']     = $resource['alt_identifier'];
+            $formattedResources[$key]['barcode']            = $resource['barcode'];
+            $formattedResources[$key]['subject']            = $resource['subject'];
+            $formattedResources[$key]['confidentiality']    = $resource['confidentiality'];
+            $formattedResources[$key]['statusLabel']        = $resource['status.label_status'];
+            $formattedResources[$key]['statusImage']        = $resource['status.img_filename'];
+            $formattedResources[$key]['priorityColor']      = $resource['priorities.color'];
+            $formattedResources[$key]['closing_date']       = $resource['closing_date'];
+            $formattedResources[$key]['countAttachments']   = 0;
+            foreach ($attachments as $attachment) {
+                if ($attachment['res_id_master'] == $resource['res_id']) {
+                    $formattedResources[$key]['countAttachments'] = $attachment['count'];
+                    break;
+                }
+            }
+            $formattedResources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $currentUser['user_id']]);
+
+            if (!empty($args['checkLocked'])) {
+                $isLocked = true;
+                if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                    $isLocked = false;
+                } elseif ($resource['locker_user_id'] == $args['userId']) {
+                    $isLocked = false;
+                } elseif (strtotime($resource['locker_time']) < time()) {
+                    $isLocked = false;
+                }
+                if ($isLocked) {
+                    $formattedResources[$key]['locker'] = UserModel::getLabelledUserById(['id' => $resource['locker_user_id']]);
+                }
+                $formattedResources[$key]['isLocked'] = $isLocked;
+            }
+
+            if (isset($args['listDisplay'])) {
+                $display = [];
+                foreach ($args['listDisplay'] as $value) {
+                    $value = (array)$value;
+                    if ($value['value'] == 'getPriority') {
+                        $value['displayValue'] = $resource['priorities.label'];
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getCategory') {
+                        $value['displayValue'] = $resource['category_id'];
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getDoctype') {
+                        $value['displayValue'] = $resource['doctypes.description'];
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getAssignee') {
+                        $value['displayValue'] = ResourceListController::getAssignee(['resId' => $resource['res_id']]);
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getSenders') {
+                        $value['displayValue'] = ResourceListController::getSenders(['resId' => $resource['res_id']]);
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getRecipients') {
+                        $value['displayValue'] = ResourceListController::getRecipients(['resId' => $resource['res_id']]);
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getVisaWorkflow') {
+                        $value['displayValue'] = ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]);
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getSignatories') {
+                        $value['displayValue'] = ResourceListController::getSignatories(['resId' => $resource['res_id']]);
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getParallelOpinionsNumber') {
+                        $value['displayValue'] = ResourceListController::getParallelOpinionsNumber(['resId' => $resource['res_id']]);
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
+                        $value['displayValue'] = ['creationDate' => $resource['creation_date'], 'processLimitDate' => $resource['process_limit_date']];
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getModificationDate') {
+                        $value['displayValue'] = $resource['modification_date'];
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getOpinionLimitDate') {
+                        $value['displayValue'] = $resource['opinion_limit_date'];
+                        $display[] = $value;
+                    }
+                }
+
+                $formattedResources[$key]['display'] = $display;
+            }
+        }
+
+        return $formattedResources;
     }
 }

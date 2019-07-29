@@ -439,4 +439,23 @@ abstract class BasketModelAbstract
 
         return $count[0]['count'];
     }
+
+    public static function getWithPreferences(array $args)
+    {
+        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
+
+        $where = ['baskets.basket_id = users_baskets_preferences.basket_id'];
+        if (!empty($args['where'])) {
+            $where = array_merge($where, $args['where']);
+        }
+
+        $baskets = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['baskets, users_baskets_preferences'],
+            'where'     => $where,
+            'data'      => empty($args['data']) ? [] : $args['data']
+        ]);
+
+        return $baskets;
+    }
 }

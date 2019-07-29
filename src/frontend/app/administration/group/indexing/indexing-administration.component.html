@@ -8,7 +8,7 @@
         </div>
         <button *ngIf="indexingInfo.canIndex" color="warn" mat-raised-button (click)="toggleIndex(!indexingInfo.canIndex)">{{lang.disableIndex}}</button>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8" style="margin-top:20px;">
         <div class="formType">
             <div class="formType-title">
                 {{lang.actionChosen}}
@@ -31,7 +31,7 @@
             </mat-list>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4" style="margin-top:20px;">
         <div class="formType jstreeEntities">
             <div class="formType-title">
                 {{lang.authorizedEntities}}
