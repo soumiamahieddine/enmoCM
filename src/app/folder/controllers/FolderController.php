@@ -42,10 +42,7 @@ class FolderController
     {
         $folders = FolderController::getScopeFolders(['login' => $GLOBALS['userId']]);
 
-        $userEntities = EntityModel::getEntitiesByUserId([
-            'select'  => ['entities.id'],
-            'user_id' => $GLOBALS['userId']
-        ]);
+        $userEntities = EntityModel::getWithUserEntities(['select'  => ['entities.id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['userId']]]);
 
         $userEntities = array_column($userEntities, 'id');
         if (empty($userEntities)) {
@@ -564,10 +561,7 @@ class FolderController
     private static function getScopeFolders(array $aArgs)
     {
         $login = $aArgs['login'];
-        $userEntities = EntityModel::getEntitiesByUserId([
-            'select'  => ['entities.id'],
-            'user_id' => $login
-        ]);
+        $userEntities = EntityModel::getWithUserEntities(['select'  => ['entities.id'], 'where' => ['user_id = ?'], 'data' => [$login]]);
 
         $userEntities = array_column($userEntities, 'id');
         if (empty($userEntities)) {

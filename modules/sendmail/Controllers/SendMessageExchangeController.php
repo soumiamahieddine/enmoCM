@@ -36,7 +36,8 @@ class SendMessageExchangeController
         // }
 
         /***************** GET MAIL INFOS *****************/
-        $AllUserEntities = \Entity\models\EntityModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
+        $AllUserEntities = \Entity\models\EntityModel::getWithUserEntities(['where' => ['user_id = ?', 'business_id != \'\''], 'data' => [$_SESSION['user']['UserId']]]);
+
         foreach ($AllUserEntities as $value) {
             if ($value['entity_id'] == $aArgs['sender_email']) {
                 $TransferringAgencyInformations = $value;

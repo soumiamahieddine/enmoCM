@@ -169,7 +169,7 @@ if ($mode == 'add') {
             }
         }
     } else {
-        $userEntitiesMails = \Entity\models\EntityModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
+        $userEntitiesMails = \Entity\models\EntityModel::getWithUserEntities(['where' => ['user_id = ?'], 'data' => [$_SESSION['user']['UserId']]);
         if (empty($userEntitiesMails)) {
             $content .= '<option value="" >'._NO_SENDER.'</option>';
         } else {
