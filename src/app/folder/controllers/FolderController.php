@@ -260,7 +260,7 @@ class FolderController
             'eventId'   => 'folderModification',
         ]);
 
-        return $response->withStatus(200);
+        return $response->withStatus(204);
     }
 
     public function folderSharing($aArgs = [])
@@ -327,7 +327,7 @@ class FolderController
             'eventId'   => 'folderSuppression',
         ]);
 
-        return $response->withStatus(200);
+        return $response->withStatus(204);
     }
 
     public static function folderDeletion(array $aArgs = [])
@@ -445,17 +445,17 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
         if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
         $foldersResources = ResourceFolderModel::get(['select' => ['res_id'], 'where' => ['folder_id = ?'], 'data' => [$args['id']]]);
         $foldersResources = array_column($foldersResources, 'res_id');
-
-        $body = $request->getParsedBody();
-        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
-        }
 
         $resourcesToClassify = array_diff($body['resources'], $foldersResources);
         if (empty($resourcesToClassify)) {
@@ -514,12 +514,12 @@ class FolderController
         }
 
         if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
         $foldersResource = ResourceFolderModel::get(['select' => [1], 'where' => ['folder_id = ?', 'res_id = ?'], 'data' => [$args['id'], $args['resId']]]);
         if (empty($foldersResource)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Resource out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
         }
 
         $baskets = BasketModel::getWithPreferences([

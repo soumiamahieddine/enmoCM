@@ -175,10 +175,7 @@ export class BasketListComponent implements OnInit {
                     this.currentBasketInfo.basket_id = data.basket_id;
                     this.defaultAction = data.defaultAction;
                     this.headerService.setHeader(data.basketLabel);
-                    setTimeout(() => {
-                        console.log(this.panelFolder.getDragIds());
-                    }, 400);
-                    
+
                     return data.resources;
                 }),
                 catchError((err: any) => {
