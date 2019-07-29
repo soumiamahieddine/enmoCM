@@ -48,10 +48,6 @@ class DoctypeControllerTest extends TestCase
         $response          = $firstLevelController->initDoctypes($request, new \Slim\Http\Response());
         $responseBody      = json_decode((string)$response->getBody());
 
-        $this->assertNotNull($responseBody->folderTypes);
-        $this->assertNotNull($responseBody->folderTypes[0]->foldertype_id);
-        $this->assertNotNull($responseBody->folderTypes[0]->foldertype_label);
-
         $this->assertNotNull($responseBody->firstLevel);
         $this->assertNotNull($responseBody->firstLevel[0]->doctypes_first_level_id);
         $this->assertNotNull($responseBody->firstLevel[0]->doctypes_first_level_label);
@@ -76,7 +72,6 @@ class DoctypeControllerTest extends TestCase
 
         $aArgs = [
             'doctypes_first_level_label' => 'testTUfirstlevel',
-            'foldertype_id'              => [1],
             'css_style'                    => '#99999',
             'enabled'                    => 'Y',
         ];
@@ -92,7 +87,6 @@ class DoctypeControllerTest extends TestCase
         // CREATE FAIL
         $aArgs = [
             'doctypes_first_level_label' => '',
-            'foldertype_id'              => [],
             'css_style'                  => '#7777',
             'enabled'                    => 'gaz',
         ];
@@ -102,7 +96,6 @@ class DoctypeControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Invalid doctypes_first_level_label', $responseBody->errors[0]);
-        $this->assertSame('Invalid foldertype_id', $responseBody->errors[1]);
     }
 
     public function testCreateSecondLevel()
@@ -247,7 +240,6 @@ class DoctypeControllerTest extends TestCase
 
         $aArgs = [
             'doctypes_first_level_label' => 'testTUfirstlevelUPDATE',
-            'foldertype_id'              => [1],
             'css_style'                  => '#7777',
             'enabled'                    => 'Y',
         ];
@@ -263,7 +255,6 @@ class DoctypeControllerTest extends TestCase
         // UPDATE FAIL
         $aArgs = [
             'doctypes_first_level_label' => '',
-            'foldertype_id'              => [],
             'css_style'                  => '#7777',
             'enabled'                    => 'gaz',
         ];
@@ -275,7 +266,6 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame('Id is not a numeric', $responseBody->errors[0]);
         $this->assertSame('Id gaz does not exists', $responseBody->errors[1]);
         $this->assertSame('Invalid doctypes_first_level_label', $responseBody->errors[2]);
-        $this->assertSame('Invalid foldertype_id', $responseBody->errors[3]);
     }
 
     public function testUpdateSecondLevel()
@@ -430,8 +420,6 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame('testTUfirstlevelUPDATE', $responseBody->firstLevel->doctypes_first_level_label);
         $this->assertSame('#7777', $responseBody->firstLevel->css_style);
         $this->assertSame(true, $responseBody->firstLevel->enabled);
-        $this->assertNotNull($responseBody->firstLevel->foldertype_id);
-        $this->assertNotNull($responseBody->folderTypes);
 
         // READ FIRST LEVEL FAIL
         $response          = $firstLevelController->getById($request, new \Slim\Http\Response(), ["id" => 'GAZ']);

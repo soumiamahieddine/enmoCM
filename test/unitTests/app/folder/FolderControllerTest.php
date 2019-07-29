@@ -148,7 +148,7 @@ class FolderControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response       = $folderController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
 
-        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(204, $response->getStatusCode());
 
         //  DELETE ERROR
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);

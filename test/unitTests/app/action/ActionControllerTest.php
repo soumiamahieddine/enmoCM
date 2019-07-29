@@ -28,8 +28,7 @@ class ActionsControllerTest extends TestCase
             'label_action'  => 'TEST-LABEL',
             'id_status'     => '_NOSTATUS_',
             'actionPageId'  => 'close_mail',
-            'history'       => true,
-            'origin'        => 'apps',
+            'history'       => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -46,8 +45,7 @@ class ActionsControllerTest extends TestCase
             'label_action'     => '',
             'id_status'        => '',
             'actionPageId'     => 'close_mail',
-            'history'          => true,
-            'origin'           => 'apps',
+            'history'          => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -75,10 +73,8 @@ class ActionsControllerTest extends TestCase
         $this->assertSame('TEST-LABEL', $responseBody->action->label_action);
         $this->assertSame('_NOSTATUS_', $responseBody->action->id_status);
         $this->assertSame(false, $responseBody->action->is_system);
-        $this->assertSame('Y', $responseBody->action->enabled);
         $this->assertSame('close_mail', $responseBody->action->action_page);
         $this->assertSame(true, $responseBody->action->history);
-        $this->assertSame('apps', $responseBody->action->origin);
 
         // FAIL READ
         $actionController = new \Action\controllers\ActionController();
@@ -109,8 +105,7 @@ class ActionsControllerTest extends TestCase
             'label_action'     => 'TEST-LABEL_UPDATED',
             'id_status'        => 'COU',
             'actionPageId'     => 'close_mail',
-            'history'          => false,
-            'origin'           => 'apps',
+            'history'          => false
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -126,8 +121,7 @@ class ActionsControllerTest extends TestCase
             'label_action'     => 'TEST-LABEL_UPDATED',
             'id_status'        => 'COU',
             'actionPageId'     => 'close_mail',
-            'history'          => false,
-            'origin'           => 'apps',
+            'history'          => false
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 

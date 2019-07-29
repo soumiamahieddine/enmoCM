@@ -112,7 +112,6 @@ class GroupControllerTest extends TestCase
         $this->assertSame(self::$id, $responseBody->group->id);
         $this->assertSame('TEST-JusticeLeague', $responseBody->group->group_id);
         $this->assertSame('Beyond the darkness #2', $responseBody->group->group_desc);
-        $this->assertSame('Y', $responseBody->group->enabled);
 
         // ERROR
         $response     = $groupController->getById($request, new \Slim\Http\Response(), ['id' => '123456789']);

@@ -102,7 +102,7 @@ class BasketControllerTest extends TestCase
             'list_display'  => [],
             'groupActions'  => [
                 [
-                    'id'                    => '112',
+                    'id'                    => '1',
                     'where_clause'          => '1=2',
                     'used_in_basketlist'    => false,
                     'used_in_action_page'   => true,
@@ -142,8 +142,8 @@ class BasketControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody->groups[0]->groupActions);
         $this->assertNotNull($responseBody->groups[0]->groupActions);
         foreach ($responseBody->groups[0]->groupActions as $groupAction) {
-            if ($groupAction->id == 112) {
-                $this->assertSame(112, $groupAction->id);
+            if ($groupAction->id == 1) {
+                $this->assertSame(1, $groupAction->id);
                 $this->assertSame('1=2', $groupAction->where_clause);
                 $this->assertSame('N', $groupAction->used_in_basketlist);
                 $this->assertSame('Y', $groupAction->used_in_action_page);

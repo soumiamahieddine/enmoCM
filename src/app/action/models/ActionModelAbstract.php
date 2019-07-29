@@ -172,11 +172,6 @@ abstract class ActionModelAbstract
                 } else {
                     $label = constant((string) $actionPage->LABEL);
                 }
-                if (!empty((string) $actionPage->MODULE)) {
-                    $origin = (string) $actionPage->MODULE;
-                } else {
-                    $origin = 'apps';
-                }
                 if (!empty((string) $actionPage->DESC)) {
                     $desc = constant((string) $actionPage->DESC);
                 } else {
@@ -189,8 +184,7 @@ abstract class ActionModelAbstract
                     'label'     => $label,
                     'name'      => (string)$actionPage->NAME,
                     'component' => $component,
-                    'desc'      => $desc,
-                    'origin'    => ucfirst($origin)
+                    'desc'      => $desc
                 ];
             }
         }
@@ -199,9 +193,11 @@ abstract class ActionModelAbstract
             array_map(
                 function ($element) {
                     return $element['label'];
-                }, $actionsPages
+                },
+                $actionsPages
             ),
-            SORT_ASC, $actionsPages
+            SORT_ASC,
+            $actionsPages
         );
 
         return $actionsPages;
