@@ -278,7 +278,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     unclassify() {
         this.http.request('DELETE', '../../rest/folders/' + this.folderInfo.id + '/resources', { body: { resources: this.selectedRes } }).pipe(
-            tap(() => this.notify.success('Courriers classés'))
+            tap(() => this.notify.success(this.lang.removedFromFolder))
         ).subscribe();
     }
 }

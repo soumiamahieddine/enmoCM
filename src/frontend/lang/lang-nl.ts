@@ -1076,4 +1076,7 @@ export const LANG_NL = {
     "eventList" : "Open page", //_TO_TRANSLATE
     "folderAdded" : "Folder added", //_TO_TRANSLATE
     "folderDeleted" : "Folder deleted", //_TO_TRANSLATE
+    "removedFromFolder" : "Mail removed from folder", //_TO_TRANSLATE
+    "removeFromFolder" : "Remove from folder", //_TO_TRANSLATE
+    "classifyInFolder" : "Classify this mail in a folder", //_TO_TRANSLATE
 };

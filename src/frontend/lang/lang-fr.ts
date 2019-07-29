@@ -1087,4 +1087,7 @@ export const LANG_FR = {
     "eventList" : "Ouverture de la page",
     "folderAdded" : "Dossier ajouté",
     "folderDeleted" : "Dossier supprimé",
+    "removedFromFolder" : "Le courrier a été retiré du dossier",
+    "removeFromFolder" : "Retirer du dossier",
+    "classifyInFolder" : "Placer le courrier suivant dans un dossier",
 };

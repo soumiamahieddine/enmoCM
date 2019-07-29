@@ -1050,4 +1050,7 @@ export const LANG_EN = {
     "eventList" : "Open page",
     "folderAdded" : "Folder added",
     "folderDeleted" : "Folder deleted",
+    "removedFromFolder" : "Mail removed from folder",
+    "removeFromFolder" : "Remove from folder",
+    "classifyInFolder" : "Classify this mail in a folder",
 };
