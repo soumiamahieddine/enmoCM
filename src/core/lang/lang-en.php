@@ -502,3 +502,5 @@ define("_FOLDER_CREATION", "Folder creation");
 define("_FOLDER_MODIFICATION", "Folder modification");
 define("_FOLDER_SUPPRESSION", "Folder suppression");
 define("_FOLDER_SHARING_MODIFICATION", "Folder sharing modification");
+
+define('_NOT_EXISTS', "doesn't exist");

@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
 
 class StatusControllerTest extends TestCase
 {
+
+    private static $id = null;
+
     public function testCreate()
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -30,6 +33,7 @@ class StatusControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType("int", $responseBody->status->identifier);
+        self::$id = $responseBody->status->identifier;
 
         unset($responseBody->status->identifier);
 
@@ -110,20 +114,15 @@ class StatusControllerTest extends TestCase
             $this->assertInternalType("int", $value->identifier);
         }
 
-        $elem = $responseBody->statuses;
-        end($elem);
-        $key = key($elem);
-        $lastIdentifier = $elem[$key]->identifier;
-
         ########## GETBYIDENTIFIER ##########
-        $response     = $status->getByIdentifier($request, new \Slim\Http\Response(), ['identifier' => $lastIdentifier]);
+        $response     = $status->getByIdentifier($request, new \Slim\Http\Response(), ['identifier' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->status);
         $this->assertNotNull($responseBody->statusImages);
 
         $compare = [
-            'identifier'       => $lastIdentifier,
+            'identifier'       => self::$id,
             'id'               => 'TEST',
             'label_status'     => 'TEST',
             'is_system'        => 'N',
@@ -154,12 +153,12 @@ class StatusControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response = $status->update($fullRequest, new \Slim\Http\Response(), ['identifier' => $lastIdentifier]);
+        $response = $status->update($fullRequest, new \Slim\Http\Response(), ['identifier' => self::$id]);
 
         $responseBody = json_decode((string)$response->getBody());
 
         $compare = [
-            'identifier'       => $lastIdentifier,
+            'identifier'       => self::$id,
             'id'               => 'TEST',
             'label_status'     => 'TEST AFTER UP',
             'is_system'        => 'N',
@@ -192,7 +191,7 @@ class StatusControllerTest extends TestCase
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response = $status->delete($request, new \Slim\Http\Response(), ['identifier'=> $lastIdentifier]);
+        $response = $status->delete($request, new \Slim\Http\Response(), ['identifier'=> self::$id]);
 
         $this->assertRegexp('/statuses/', (string)$response->getBody());
     }

@@ -362,7 +362,7 @@ class TemplateControllerTest extends TestCase
 
         $this->assertSame("success", $responseBody->success);
 
-        ########## DELETE ACKNOLEDGEMENT RECEIPT ##########
+        ########## DELETE ACKNOWLEDGEMENT RECEIPT ##########
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -372,6 +372,11 @@ class TemplateControllerTest extends TestCase
         $this->assertSame("success", $responseBody->success);
 
         //Delete entity
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'users_entities',
+            'where' => ['user_id = ?', 'entity_id = ?'],
+            'data'  => ['bbain', 'TST_AR']
+        ]);
         $entityController = new \Entity\controllers\EntityController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);

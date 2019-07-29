@@ -14,7 +14,6 @@
 
 namespace SrcCore\controllers;
 
-use Basket\models\GroupBasketModel;
 use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use Slim\Http\Request;
