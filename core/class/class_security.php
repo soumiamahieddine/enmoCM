@@ -752,63 +752,8 @@ class security extends Database
      */
     public function test_right_doc($coll_id, $s_id)
     {
-        if (empty($coll_id) || empty($s_id)) {
-            return false;
-        }
-        $view = $this->retrieve_view_from_coll_id($coll_id);
-        if (empty($view)) {
-            $view = $this->retrieve_table_from_coll($coll_id);
-        }
-        $entitiesTab = $this->getEntitiesForCurrentUser();
-        $where_clause = $this->get_where_clause_from_coll_id($coll_id);
-        $query = 'select res_id from '.$view.' where res_id = ?';
-        if (!empty($entitiesTab)) {
-            if (!empty($where_clause)) {
-                $query .= ' and ('.$where_clause.' or folder_destination in (?)) ';
-            }
-            $stmt = $this->query($query, array($s_id, $entitiesTab));
-        } else {
-            if (!empty($where_clause)) {
-                $query .= ' and ('.$where_clause.') ';
-            }
-            $stmt = $this->query($query, array($s_id));
-        }
-        if ($stmt->rowCount() < 1) {
-            //NOT IN THE DOC PERIMETER SO TEST IT IN THE BASKETS
-            $basketQuery = '';
-            for (
-                $ind_bask = 0;
-                $ind_bask < count($_SESSION['user']['baskets']);
-                ++$ind_bask
-            ) {
-                if (
-                    $_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id
-                ) {
-                    if (
-                        isset($_SESSION['user']['baskets'][$ind_bask]['clause'])
-                        && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) != ''
-                    ) {
-                        $basketQuery .= ' or ('
-                            .$_SESSION['user']['baskets'][$ind_bask]['clause']
-                            .')';
-                    }
-                }
-            }
-            if ($basketQuery != '') {
-                $basketQuery = preg_replace('/^ or/', '', $basketQuery);
-                $query = 'select res_id from '
-                    .$view.' where ('.$basketQuery.') and res_id = ?';
-                $stmt = $this->query($query, array($s_id));
-                if ($stmt->rowCount() < 1) {
-                    return false;
-                } else {
-                    return true;
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
+        $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+
+        return \Resource\controllers\ResController::hasRightByResId(['resId' => [$s_id], 'userId' => $user['id']]);
     }
 }
