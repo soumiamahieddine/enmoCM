@@ -140,7 +140,7 @@ export class ListAdministrationComponent implements OnInit {
         },        
         {
             id: 'eventProcessDoc',
-            value: 'processDoc'
+            value: 'processDocument'
         },
         {
             id: 'eventViewDoc',
