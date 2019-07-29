@@ -584,11 +584,11 @@ class FolderController
             $data[]  = $aArgs['folderId'];
         }
 
-        $folders = FolderModel::get([
-            'select'   => ['distinct (folders.id)', 'folders.*'],
-            'where'    => $where,
-            'data'     => $data,
-            'order_by' => ['level']
+        $folders = FolderModel::getWithEntities([
+            'select'    => ['distinct (folders.id)', 'folders.*'],
+            'where'     => $where,
+            'data'      => $data,
+            'orderBy'   => ['level']
         ]);
 
         return $folders;

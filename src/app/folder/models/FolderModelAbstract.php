@@ -16,22 +16,6 @@ use SrcCore\models\DatabaseModel;
 
 class FolderModelAbstract
 {
-    public static function get(array $aArgs = [])
-    {
-        ValidatorModel::arrayType($aArgs, ['select']);
-
-        $folders = DatabaseModel::select([
-            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'  => ['folders', 'entities_folders'],
-            'left_join' => ['folders.id = entities_folders.folder_id'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
-            'order_by' => empty($aArgs['order_by']) ? ['label'] : $aArgs['order_by']
-        ]);
-
-        return $folders;
-    }
-
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -122,7 +106,7 @@ class FolderModelAbstract
 
     public static function getWithEntities(array $args = [])
     {
-        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
 
         $folders = DatabaseModel::select([
             'select'    => empty($args['select']) ? ['*'] : $args['select'],
@@ -130,6 +114,7 @@ class FolderModelAbstract
             'left_join' => ['folders.id = entities_folders.folder_id'],
             'where'     => empty($args['where']) ? [] : $args['where'],
             'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy']
         ]);
 
         return $folders;
