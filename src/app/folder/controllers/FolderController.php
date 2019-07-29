@@ -15,18 +15,23 @@
 namespace Folder\controllers;
 
 use Attachment\models\AttachmentModel;
+use Basket\models\BasketModel;
+use Basket\models\GroupBasketModel;
 use Entity\models\EntityModel;
 use Folder\models\EntityFolderModel;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
+use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
+use Resource\models\ResModel;
 use Resource\models\ResourceListModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -500,6 +505,57 @@ class FolderController
         }
 
         return $response->withJson(['countResources' => count($foldersResources) - count($resourcesToUnclassify)]);
+    }
+
+    public function getEventsFromFolder(Request $request, Response $response, array $args)
+    {
+        if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
+        }
+
+        $foldersResource = ResourceFolderModel::get(['select' => [1], 'where' => ['folder_id = ?', 'res_id = ?'], 'data' => [$args['id'], $args['resId']]]);
+        if (empty($foldersResource)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource out of perimeter']);
+        }
+
+        $baskets = BasketModel::getWithPreferences([
+            'select'    => ['baskets.id', 'baskets.basket_id', 'baskets.basket_clause', 'users_baskets_preferences.group_serial_id'],
+            'where'     => ['users_baskets_preferences.user_serial_id = ?'],
+            'data'      => [$GLOBALS['id']]
+        ]);
+        $events = [];
+        $inCheckedBaskets = [];
+        $outCheckedBaskets = [];
+        foreach ($baskets as $basket) {
+            if (in_array($basket['id'], $outCheckedBaskets)) {
+                continue;
+            } else {
+                if (!in_array($basket['id'], $inCheckedBaskets)) {
+                    $preparedClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $GLOBALS['userId']]);
+                    $resource = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$preparedClause})"], 'data' => [$args['resId']]]);
+                    if (empty($resource)) {
+                        $outCheckedBaskets[] = $basket['id'];
+                        continue;
+                    }
+                }
+                $inCheckedBaskets[] = $basket['id'];
+                $group = GroupModel::getById(['id' => $basket['group_serial_id'], 'select' => ['group_id']]);
+                $groupBasket = GroupBasketModel::get([
+                    'select'    => ['list_event'],
+                    'where'     => ['group_id = ?', 'basket_id = ?'],
+                    'data'      => [$group['group_id'], $basket['basket_id']]
+                ]);
+                if (!empty($groupBasket[0]['list_event'])) {
+                    $events[] = ['groupId' => $basket['group_serial_id'], 'basketId' => $basket['id'], 'event' => $groupBasket[0]['list_event']];
+                }
+            }
+        }
+
+        return $response->withJson(['events' => $events]);
     }
 
     // login (string) : Login of user connected

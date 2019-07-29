@@ -186,6 +186,7 @@ $app->delete('/folders/{id}', \Folder\controllers\FolderController::class . ':de
 $app->get('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':getResourcesById');
 $app->post('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':addResourcesById');
 $app->delete('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':removeResourcesById');
+$app->get('/folders/{id}/resources/{resId}/events', \Folder\controllers\FolderController::class . ':getEventsFromFolder');
 $app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
 
 //Groups
