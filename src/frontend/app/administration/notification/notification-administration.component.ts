@@ -7,7 +7,7 @@ import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
 
-declare function $j(selector: any): any;
+declare var $j: any;
 
 @Component({
     templateUrl: "notification-administration.component.html",
@@ -119,5 +119,7 @@ export class NotificationAdministrationComponent implements OnInit {
             });
     }
 
-    isNumber(val:any) { return typeof val === 'number'; }
+    isNumber(val: any) {
+        return $j.isNumeric(val);
+    }
 }
