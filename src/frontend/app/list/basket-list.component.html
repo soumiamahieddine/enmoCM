@@ -171,7 +171,7 @@
                             <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"
                                 (contextmenu)="open($event,row);" class="rowData" [class.locked]="row.isLocked == true" cdkDrag  [cdkDragData]="row" >
                                 <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-                                <div class="dragPreview" *cdkDragPreview><i class="fas fa-envelope-open-text fa-2x"></i><br/>Classer <b>{{row.alt_identifier}}</b> dans un dossier</div>
+                                <div class="dragPreview" *cdkDragPreview><i class="fas fa-envelope-open-text fa-2x"></i><br/>{{lang.classifyInFolder}} : <b>{{row.alt_identifier}}</b></div>
                             </tr>
                         </table>
                     </div>

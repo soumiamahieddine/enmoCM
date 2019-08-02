@@ -40,7 +40,13 @@
         <div class="container" [class.fullContainer]="appService.getViewMode()">
             <div class="container-content">
                 <mat-tab-group>
-                    <mat-tab label="{{lang.myLastResources}}">
+                    <mat-tab *ngIf="homeData !== undefined && homeData.isLinkedToMaarchParapheur">
+                        <ng-template matTabLabel>
+                            <span [class.noDoc]="nbMpDocs === 0" matBadge="{{nbMpDocs}}" matBadgeOverlap="false">{{lang.maarchParapheurDocuments}}</span>
+                        </ng-template>
+                        <app-maarch-parapheur-list (triggerEvent)="updateNbMpDocs($event)"></app-maarch-parapheur-list>
+                    </mat-tab>
+                    <mat-tab label="{{lang.myLastResources}}" *ngIf="homeData !== undefined">
                         <div *ngIf="loading" style="display:flex;height:100%;">
                             <mat-spinner style="margin:auto;"></mat-spinner>
                         </div>
@@ -115,12 +121,6 @@
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToDetail(row);"
                                 style="cursor:pointer;"></tr>
                         </table>
-                    </mat-tab>
-                    <mat-tab *ngIf="homeData !== undefined && homeData.isLinkedToMaarchParapheur">
-                        <ng-template matTabLabel>
-                            <span [class.noDoc]="nbMpDocs === 0" matBadge="{{nbMpDocs}}" matBadgeOverlap="false">{{lang.maarchParapheurDocuments}}</span>
-                        </ng-template>
-                        <app-maarch-parapheur-list (triggerEvent)="updateNbMpDocs($event)"></app-maarch-parapheur-list>
                     </mat-tab>
                 </mat-tab-group>
             </div>

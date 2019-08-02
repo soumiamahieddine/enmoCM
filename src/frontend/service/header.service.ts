@@ -16,7 +16,7 @@ export class HeaderService {
         administration: 'fa fa-cogs',
         search: 'fa fa-search',
         indexing: 'fa fa-file-medical',
-    }
+    };
     lang: any = LANG;
 
     constructor(public http: HttpClient) { }

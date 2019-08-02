@@ -14,6 +14,8 @@ class ResourceListControllerTest extends TestCase
     public function testGet()
     {
         $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
         $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
 
         $resListController = new \Resource\controllers\ResourceListController();
@@ -105,11 +107,15 @@ class ResourceListControllerTest extends TestCase
         $this->assertSame('Basket out of perimeter', $responseBody->errors);
 
         $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 
     public function testGetFilters()
     {
         $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
         $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
 
         $resListController = new \Resource\controllers\ResourceListController();
@@ -176,11 +182,15 @@ class ResourceListControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody->entitiesChildren);
 
         $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 
     public function testGetActions()
     {
         $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
         $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
 
         $resListController = new \Resource\controllers\ResourceListController();
@@ -196,5 +206,7 @@ class ResourceListControllerTest extends TestCase
         $this->assertNotNull($responseBody->actions);
 
         $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 }

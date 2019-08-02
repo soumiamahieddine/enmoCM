@@ -501,3 +501,5 @@ define("_FOLDER_CREATION", "Dossier créé");
 define("_FOLDER_MODIFICATION", "Dossier modifié");
 define("_FOLDER_SUPPRESSION", "Dossier supprimé");
 define("_FOLDER_SHARING_MODIFICATION", "Partage de dossier modifié");
+
+define("_NOT_EXISTS", "n'existe pas");

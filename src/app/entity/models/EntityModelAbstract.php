@@ -194,20 +194,19 @@ abstract class EntityModelAbstract
         return $aEntities;
     }
 
-    public static function getEntitiesByUserId(array $aArgs = [])
+    public static function getWithUserEntities(array $args = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['user_id']);
-        ValidatorModel::stringType($aArgs, ['user_id']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
 
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+        $entities = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['users_entities', 'entities'],
             'left_join' => ['users_entities.entity_id = entities.entity_id'],
-            'where'     => ['user_id = ?', 'business_id <> \'\''],
-            'data'      => [$aArgs['user_id']]
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data']
         ]);
 
-        return $aReturn;
+        return $entities;
     }
 
     public static function getEntityRootById(array $aArgs = [])

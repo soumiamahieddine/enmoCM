@@ -506,3 +506,5 @@ define("_FOLDER_CREATION", "Folder creation_TO_TRANSLATE");
 define("_FOLDER_MODIFICATION", "Folder modification_TO_TRANSLATE");
 define("_FOLDER_SUPPRESSION", "Folder suppression_TO_TRANSLATE");
 define("_FOLDER_SHARING_MODIFICATION", "Folder sharing modification_TO_TRANSLATE");
+
+define('_NOT_EXISTS', 'bestaat niet');

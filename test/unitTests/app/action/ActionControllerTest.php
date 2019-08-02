@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 class ActionsControllerTest extends TestCase
 {
-
     private static $id = null;
 
     public function testCreate()
@@ -28,9 +27,8 @@ class ActionsControllerTest extends TestCase
             'keyword'       => 'indexing',
             'label_action'  => 'TEST-LABEL',
             'id_status'     => '_NOSTATUS_',
-            'actionPageId'  => 'index_mlb',
-            'history'       => true,
-            'origin'        => 'apps',
+            'actionPageId'  => 'close_mail',
+            'history'       => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -46,9 +44,8 @@ class ActionsControllerTest extends TestCase
             'keyword'          => 'indexing',
             'label_action'     => '',
             'id_status'        => '',
-            'actionPageId'     => 'index_mlb',
-            'history'          => true,
-            'origin'           => 'apps',
+            'actionPageId'     => 'close_mail',
+            'history'          => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -68,7 +65,7 @@ class ActionsControllerTest extends TestCase
 
         $actionController = new \Action\controllers\ActionController();
         $response         = $actionController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
-        $responseBody     = json_decode((string)$response->getBody());   
+        $responseBody     = json_decode((string)$response->getBody());
 
         $this->assertInternalType('int', self::$id);
         $this->assertSame(self::$id, $responseBody->action->id);
@@ -76,10 +73,8 @@ class ActionsControllerTest extends TestCase
         $this->assertSame('TEST-LABEL', $responseBody->action->label_action);
         $this->assertSame('_NOSTATUS_', $responseBody->action->id_status);
         $this->assertSame(false, $responseBody->action->is_system);
-        $this->assertSame('Y', $responseBody->action->enabled);
-        $this->assertSame('index_mlb', $responseBody->action->action_page);
+        $this->assertSame('close_mail', $responseBody->action->action_page);
         $this->assertSame(true, $responseBody->action->history);
-        $this->assertSame('apps', $responseBody->action->origin);
 
         // FAIL READ
         $actionController = new \Action\controllers\ActionController();
@@ -95,9 +90,9 @@ class ActionsControllerTest extends TestCase
 
         $actionController = new \Action\controllers\ActionController();
         $response         = $actionController->get($request, new \Slim\Http\Response());
-        $responseBody     = json_decode((string)$response->getBody());  
+        $responseBody     = json_decode((string)$response->getBody());
 
-        $this->assertNotNull($responseBody->actions); 
+        $this->assertNotNull($responseBody->actions);
     }
 
     public function testUpdate()
@@ -109,9 +104,8 @@ class ActionsControllerTest extends TestCase
             'keyword'          => '',
             'label_action'     => 'TEST-LABEL_UPDATED',
             'id_status'        => 'COU',
-            'actionPageId'     => 'process',
-            'history'          => false,
-            'origin'           => 'apps',
+            'actionPageId'     => 'close_mail',
+            'history'          => false
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -119,16 +113,15 @@ class ActionsControllerTest extends TestCase
         $response         = $actionController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody     = json_decode((string)$response->getBody());
 
-        $this->assertSame('success', $responseBody->success);
+        $this->assertSame(200, $response->getStatusCode());
 
         // UPDATE FAIL
         $aArgs = [
             'keyword'          => '',
             'label_action'     => 'TEST-LABEL_UPDATED',
             'id_status'        => 'COU',
-            'actionPageId'     => 'process',
-            'history'          => false,
-            'origin'           => 'apps',
+            'actionPageId'     => 'close_mail',
+            'history'          => false
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 

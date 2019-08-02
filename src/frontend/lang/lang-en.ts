@@ -1020,7 +1020,7 @@ export const LANG_EN = {
     "newLoginInMaarchParapheur" : "New Maarch Parapheur Login",
     "loginAlreadyExistsInMaarchParapheur" : "Login already exists in Maarch Parapheur",
     "maarchParapheurLinkbroken" : "Maarch Parapheur link is broken",
-    "maarchParapheurDocuments" : "Last Maarch Parapheur document(s)",
+    "maarchParapheurDocuments" : "Maarch Parapheur document(s)",
     "to_visa" : "To approve",
     "to_sign" : "To sign",
     "to_note" : "To note",
@@ -1050,4 +1050,7 @@ export const LANG_EN = {
     "eventList" : "Open page",
     "folderAdded" : "Folder added",
     "folderDeleted" : "Folder deleted",
+    "removedFromFolder" : "Mail removed from folder",
+    "removeFromFolder" : "Remove from folder",
+    "classifyInFolder" : "Classify this mail in a folder",
 };

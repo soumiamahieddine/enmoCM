@@ -55,7 +55,6 @@ class CoreControllerTest extends TestCase
         $this->assertSame("ADMIN", $responseBody->user->lastname);
         $this->assertInternalType('array', $responseBody->user->groups);
         $this->assertInternalType('array', $responseBody->user->entities);
-        $this->assertInternalType('array', $responseBody->user->indexingGroups);
         $this->assertNotEmpty($responseBody->menu);
 
         foreach ($responseBody->menu as $value) {

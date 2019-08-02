@@ -1053,7 +1053,7 @@ export const LANG_FR = {
     "newLoginInMaarchParapheur" : "Nouvel identifiant Maarch Parapheur",
     "loginAlreadyExistsInMaarchParapheur" : "Ce login existe déjà dans Maarch Parapheur",
     "maarchParapheurLinkbroken" : "L'utilisateur n'existe plus dans Maarch Parapheur.",
-    "maarchParapheurDocuments" : "Mes derniers documents Maarch Parapheur",
+    "maarchParapheurDocuments" : "Mes courriers dans Maarch Parapheur",
     "to_visa" : "À viser",
     "to_sign" : "À signer",
     "to_note" : "À annoter",
@@ -1087,4 +1087,7 @@ export const LANG_FR = {
     "eventList" : "Ouverture de la page",
     "folderAdded" : "Dossier ajouté",
     "folderDeleted" : "Dossier supprimé",
+    "removedFromFolder" : "Le courrier a été retiré du dossier",
+    "removeFromFolder" : "Retirer du dossier",
+    "classifyInFolder" : "Placer le courrier suivant dans un dossier",
 };

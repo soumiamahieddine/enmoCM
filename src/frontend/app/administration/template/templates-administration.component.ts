@@ -10,14 +10,14 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "templates-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 
 export class TemplatesAdministrationComponent implements OnInit {
     /*HEADER*/
     @ViewChild('snav') public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2') public sidenavRight  : MatSidenav;
-    
+
     lang: any = LANG;
     search: string = null;
 
@@ -46,8 +46,8 @@ export class TemplatesAdministrationComponent implements OnInit {
     }
 
     constructor(
-        public http: HttpClient, 
-        private notify: NotificationService, 
+        public http: HttpClient,
+        private notify: NotificationService,
         private headerService: HeaderService,
         public appService: AppService
     ) {
@@ -68,9 +68,8 @@ export class TemplatesAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.templates);
                     this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;                    
+                    this.dataSource.sort = this.sort;
                 }, 0);
-                
             }, (err) => {
                 console.log(err);
                 location.href = "index.php";

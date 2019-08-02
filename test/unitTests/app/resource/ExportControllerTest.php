@@ -30,6 +30,8 @@ class ExportControllerTest extends TestCase
     public function testUpdateExport()
     {
         $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
 
         $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
         $ExportController = new \Resource\controllers\ExportController();
@@ -68,11 +70,11 @@ class ExportControllerTest extends TestCase
                     "label" => "Lien page détaillé",
                     "isFunction" => true
                 ],
-                [
-                    "value" => "getParentFolder",
-                    "label" => "Dossier",
-                    "isFunction" => true
-                ],
+                // [
+                //     "value" => "getParentFolder",
+                //     "label" => "Dossier",
+                //     "isFunction" => true
+                // ],
                 [
                     "value" => "getInitiatorEntity",
                     "label" => "Entité initiatrice",
@@ -170,5 +172,7 @@ class ExportControllerTest extends TestCase
         $this->assertSame('Data format is empty or not a string between [\'pdf\', \'csv\']', $responseBody->errors);
 
         $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 }

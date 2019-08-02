@@ -216,24 +216,17 @@ abstract class entities_Abstract extends functions
                 }
             }
             //to delete duplicates entries due to array_merge_recursive fonction when digital key in an array
-            foreach ($_SESSION['user']['redirect_groupbasket_by_group'] as $aBasketKey => $aBasketContent) {
-                foreach ($aBasketContent as $aGroupKey => $aGroupContent) {
-                    $cptCtrl = 1;
-                    foreach ($aGroupContent as $aActionKey => $aActionContent) {
-                        if ($cptCtrl % 2 == 0) {
-                            unset($_SESSION['user']['redirect_groupbasket_by_group'][$aBasketKey][$aGroupKey][$aActionKey]);
-                        }
-                        $cptCtrl++;
-                    }
-                }
-            }
-            // echo '<pre>';
-            // print_r($_SESSION['user']['redirect_groupbasket']);
-            // echo '</pre>';
-            // echo '<pre>';
-            // print_r($_SESSION['user']['redirect_groupbasket_by_group']);
-            // echo '</pre>';
-            // exit;
+            // foreach ($_SESSION['user']['redirect_groupbasket_by_group'] as $aBasketKey => $aBasketContent) {
+            //     foreach ($aBasketContent as $aGroupKey => $aGroupContent) {
+            //         $cptCtrl = 1;
+            //         foreach ($aGroupContent as $aActionKey => $aActionContent) {
+            //             if ($cptCtrl % 2 == 0) {
+            //                 unset($_SESSION['user']['redirect_groupbasket_by_group'][$aBasketKey][$aGroupKey][$aActionKey]);
+            //             }
+            //             $cptCtrl++;
+            //         }
+            //     }
+            // }
         }
     }
 
@@ -848,16 +841,7 @@ abstract class entities_Abstract extends functions
         }
         for ($i = 0; $i < count($baskAbs); $i ++) {
             if ($baskAbs[$i]['abs_basket']) {
-                $stmt = $db->query(
-                    "select uc.group_id from " . USERGROUP_CONTENT_TABLE
-                    . " uc , " . USERGROUPS_TABLE . " u where uc.user_id = ? and u.group_id = "
-                    . "uc.group_id and u.enabled= 'Y' and "
-                    . "uc.primary_group = 'Y'",
-                    array($baskAbs[$i]['basket_owner'])
-                );
-                //$db->show();
-                $res = $stmt->fetchObject();
-                $primaryGroup = $res->group_id;
+                $primaryGroup = $baskAbs[$i]['group_id'];
                 $tmpBasketId = preg_replace(
                     '/_' . $baskAbs[$i]['basket_owner'] . '$/',
                     '',
@@ -904,16 +888,7 @@ abstract class entities_Abstract extends functions
         }
         for ($i = 0; $i < count($baskAbs); $i ++) {
             if ($baskAbs[$i]['abs_basket']) {
-                $stmt = $db->query(
-                    "select uc.group_id from " . USERGROUP_CONTENT_TABLE
-                    . " uc , " . USERGROUPS_TABLE . " u where uc.user_id = ? and u.group_id = "
-                    . "uc.group_id and u.enabled= 'Y' and "
-                    . "uc.primary_group = 'Y'",
-                    array($baskAbs[$i]['basket_owner'])
-                );
-                //$db->show();
-                $res = $stmt->fetchObject();
-                $primaryGroup = $res->group_id;
+                $primaryGroup = $baskAbs[$i]['group_id'];
                 $tmpBasketId = preg_replace(
                     '/_' . $baskAbs[$i]['basket_owner'] . '$/',
                     '',

@@ -18,7 +18,6 @@ use Respect\Validation\Validator;
 use Doctype\models\FirstLevelModel;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
-use Folder\models\FolderTypeModel;
 use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -35,8 +34,8 @@ class FirstLevelController
     public static function getTreeFunction()
     {
         $firstLevels = FirstLevelModel::get([
-            'where'    => ['enabled = ?'], 
-            'data'     => ['Y'], 
+            'where'    => ['enabled = ?'],
+            'data'     => ['Y'],
             'orderBy'  => ['doctypes_first_level_label asc']]);
         $secondLevels = SecondLevelModel::get([
             'where'    => ['enabled = ?'],
@@ -97,23 +96,13 @@ class FirstLevelController
             } else {
                 $obj['firstLevel']['enabled'] = false;
             }
-
-            $folderTypesSelected = FolderTypeModel::getFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $aArgs['id']]);
-            $aFolderTypesSelected = [];
-            foreach ($folderTypesSelected as $folderType) {
-                $aFolderTypesSelected[] = $folderType['foldertype_id'];
-            }
-            $obj['firstLevel']['foldertype_id'] = $aFolderTypesSelected;
         }
-
-        $obj['folderTypes'] = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
 
         return $response->withJson($obj);
     }
 
     public function initDoctypes(Request $request, Response $response)
     {
-        $obj['folderTypes'] = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
         $obj['firstLevel'] = FirstLevelModel::get([
             'select'    => ['doctypes_first_level_id', 'doctypes_first_level_label'],
             'where'     => ['enabled = ?'],
@@ -147,16 +136,8 @@ class FirstLevelController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        $folderTypeId = $data['foldertype_id'];
         unset($data['foldertype_id']);
         $firstLevelId = FirstLevelModel::create($data);
-
-        foreach ($folderTypeId as $value) {
-            FolderTypeModel::createFolderTypeDocTypeFirstLevel([
-                'doctypes_first_level_id' => $firstLevelId,
-                'foldertype_id' => $value,
-            ]);
-        }
 
         HistoryController::add([
             'tableName' => 'doctypes_first_level',
@@ -189,17 +170,8 @@ class FirstLevelController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        $folderTypeId = $obj['foldertype_id'];
         unset($obj['foldertype_id']);
         FirstLevelModel::update($obj);
-
-        FolderTypeModel::deleteFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $obj['doctypes_first_level_id']]);
-        foreach ($folderTypeId as $value) {
-            FolderTypeModel::createFolderTypeDocTypeFirstLevel([
-                'doctypes_first_level_id' => $obj['doctypes_first_level_id'],
-                'foldertype_id' => $value,
-            ]);
-        }
 
         HistoryController::add([
             'tableName' => 'doctypes_first_level',
@@ -228,7 +200,6 @@ class FirstLevelController
         FirstLevelModel::update(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
         SecondLevelModel::disabledFirstLevel(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
         DoctypeModel::disabledFirstLevel(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
-        FolderTypeModel::deleteFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $aArgs['id']]);
         $firstLevel = FirstLevelModel::getById(['id' => $aArgs['id']]);
 
         HistoryController::add([
@@ -264,10 +235,6 @@ class FirstLevelController
         if (!Validator::notEmpty()->validate($aArgs['doctypes_first_level_label']) ||
             !Validator::length(1, 255)->validate($aArgs['doctypes_first_level_label'])) {
             $errors[] = 'Invalid doctypes_first_level_label';
-        }
-
-        if (!Validator::notEmpty()->validate($aArgs['foldertype_id'])) {
-            $errors[] = 'Invalid foldertype_id';
         }
 
         if (empty($aArgs['enabled'])) {

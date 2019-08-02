@@ -14,6 +14,8 @@ class SummarySheetControllerTest extends TestCase
     public function testCreateList()
     {
         $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
         $myBasket = \Basket\models\BasketModel::getByBasketId(['basketId' => 'MyBasket', 'select' => ['id']]);
 
         $summarySheetController = new \Resource\controllers\SummarySheetController();
@@ -55,5 +57,7 @@ class SummarySheetControllerTest extends TestCase
         $this->assertSame('Resources is not set or empty', $responseBody->errors);
 
         $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 }

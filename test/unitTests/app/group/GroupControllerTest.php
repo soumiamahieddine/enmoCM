@@ -35,7 +35,7 @@ class GroupControllerTest extends TestCase
         $response     = $groupController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        self::$id = $responseBody->group . '';
+        self::$id = $responseBody->group;
 
         $this->assertInternalType('int', $responseBody->group);
 
@@ -47,7 +47,6 @@ class GroupControllerTest extends TestCase
 
         $this->assertSame('TEST-JusticeLeague', $responseBody->group->group_id);
         $this->assertSame('Beyond the darkness', $responseBody->group->group_desc);
-        $this->assertSame('Y', $responseBody->group->enabled);
         $this->assertSame('1=2', $responseBody->group->security->where_clause);
         $this->assertSame('commentateur du dimanche', $responseBody->group->security->maarch_comment);
         $this->assertInternalType('array', $responseBody->group->users);
@@ -68,8 +67,8 @@ class GroupControllerTest extends TestCase
         $aArgs = [
             'description' => 'Beyond the darkness #2',
             'security'  => [
-                'where_clause'  => '1=3',
-                'maarch_comment'    => 'commentateur du dimanche #2'
+                'where_clause'   => '1=3',
+                'maarch_comment' => 'commentateur du dimanche #2'
             ]
         ];
 
@@ -88,7 +87,6 @@ class GroupControllerTest extends TestCase
 
         $this->assertSame('TEST-JusticeLeague', $responseBody->group->group_id);
         $this->assertSame('Beyond the darkness #2', $responseBody->group->group_desc);
-        $this->assertSame('Y', $responseBody->group->enabled);
         $this->assertSame('1=3', $responseBody->group->security->where_clause);
         $this->assertSame('commentateur du dimanche #2', $responseBody->group->security->maarch_comment);
         $this->assertInternalType('array', $responseBody->group->users);
@@ -111,10 +109,9 @@ class GroupControllerTest extends TestCase
 
         $this->assertNotEmpty($responseBody->group);
 
-        $this->assertSame(self::$id, (string)$responseBody->group->id);
+        $this->assertSame(self::$id, $responseBody->group->id);
         $this->assertSame('TEST-JusticeLeague', $responseBody->group->group_id);
         $this->assertSame('Beyond the darkness #2', $responseBody->group->group_desc);
-        $this->assertSame('Y', $responseBody->group->enabled);
 
         // ERROR
         $response     = $groupController->getById($request, new \Slim\Http\Response(), ['id' => '123456789']);

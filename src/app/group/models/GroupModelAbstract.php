@@ -122,7 +122,7 @@ abstract class GroupModelAbstract
     public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
 
         $group = GroupModel::getById(['id' => $aArgs['id'], 'select' => ['group_id']]);
 
