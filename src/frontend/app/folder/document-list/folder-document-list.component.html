@@ -35,7 +35,7 @@
                             [checked]="selectedRes.length == allResInBasket.length && selectedRes.length > 0"
                             [indeterminate]="selectedRes.length > 0 && selectedRes.length < allResInBasket.length"
                             style="margin: 10px;padding-right: 10px;" title="{{lang.selectAllResInBasket}}"
-                            (change)="toggleAllRes($event)"></mat-checkbox>&nbsp;{{allResInBasket.length}}
+                            (change)="toggleAllRes($event)"></mat-checkbox>&nbsp;{{resultsLength}}
                         {{lang.records | ucfirst}}&nbsp;<small
                             *ngIf="selectedRes.length > 0">({{selectedRes.length}}
                             {{lang.selected}})</small>

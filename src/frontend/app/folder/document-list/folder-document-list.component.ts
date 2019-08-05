@@ -69,7 +69,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     thumbnailUrl: string = '';
 
-    selectedRes: number[] = [];
+    selectedRes: Array<number> = [];
     allResInBasket: number[] = [];
     selectedDiffusionTab: number = 0;
     folderInfo: any = {
@@ -157,7 +157,7 @@ export class FolderDocumentListComponent implements OnInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
-                    this.resultsLength = data.count;
+                    this.resultsLength = data.countResources;
                     //this.allResInBasket = data.count;
                     //this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
                     return data.resources;
@@ -240,12 +240,9 @@ export class FolderDocumentListComponent implements OnInit {
                 }
             });
 
-            if (this.selectedRes.indexOf(element['res_id']) === -1) {
-                element['checked'] = false;
-            } else {
-                element['checked'] = true;
-            }
+            element['checked'] = this.selectedRes.indexOf(element['res_id']) !== -1;
         });
+
         return data;
     }
 
@@ -278,14 +275,22 @@ export class FolderDocumentListComponent implements OnInit {
 
     unclassify() {
         this.http.request('DELETE', '../../rest/folders/' + this.folderInfo.id + '/resources', { body: { resources: this.selectedRes } }).pipe(
-            tap(() => this.notify.success(this.lang.removedFromFolder))
+            tap((data: any) => {
+                this.notify.success(this.lang.removedFromFolder);
+                this.resultsLength = data.countResources;
+                this.data.forEach((resource: any, key: number) => {
+                    if (this.selectedRes.indexOf(resource.res_id) != -1) {
+                        this.data.splice(key, 1);
+                    }
+                });
+            })
         ).subscribe();
     }
 }
 export interface BasketList {
     folder: any;
     resources: any[];
-    count: number
+    countResources: number;
 }
 
 export class ResultListHttpDao {

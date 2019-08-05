@@ -11,7 +11,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "print-separator.component.html",
     styleUrls: ['print-separator.component.scss'],
-    providers: [NotificationService],
+    providers: [NotificationService, AppService],
 })
 export class PrintSeparatorComponent implements OnInit {
 
@@ -29,7 +29,7 @@ export class PrintSeparatorComponent implements OnInit {
         type : 'qrcode',
         target: 'entities',
         entities: []
-    }
+    };
 
     @ViewChild('snav') sidenavLeft: MatSidenav;
     @ViewChild('snav2') sidenavRight: MatSidenav;
