@@ -120,6 +120,12 @@ export class ListAdministrationComponent implements OnInit {
             'cssClasses': ['align_leftData'],
             'icon': 'fa-comment-alt'
         },
+        {
+            'value': 'getFolders',
+            'label': 'Afficher les dossiers',
+            'sample': '',
+            'cssClasses': ['align_leftData']
+        }
     ];
     availableDataClone: any = [];
 

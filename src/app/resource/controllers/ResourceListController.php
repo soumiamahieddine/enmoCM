@@ -24,6 +24,7 @@ use Basket\models\RedirectBasketModel;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use Folder\models\FolderModel;
 use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use Note\models\NoteModel;
@@ -978,6 +979,29 @@ class ResourceListController
         return $notes[0]['count'];
     }
 
+    private static function getFolders(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId', 'userId']);
+        ValidatorModel::intVal($args, ['resId', 'userId']);
+
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+
+        $entities = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $entities = array_column($entities, 'id');
+
+        if (empty($entities)) {
+            $entities = [0];
+        }
+
+        $folders = FolderModel::getWithEntitiesAndResources([
+            'select'    => ['folders.id', 'folders.label'],
+            'where'     => ['res_id = ?', '(user_id = ? OR entity_id in (?))'],
+            'data'      => [$args['resId'], $args['userId'], $entities]
+        ]);
+
+        return $folders;
+    }
+
     public static function getIdsWithOffsetAndLimit(array $args)
     {
         ValidatorModel::arrayType($args, ['resources']);
@@ -1085,9 +1109,11 @@ class ResourceListController
                     } elseif ($value['value'] == 'getOpinionLimitDate') {
                         $value['displayValue'] = $resource['opinion_limit_date'];
                         $display[] = $value;
+                    } elseif ($value['value'] == 'getFolders') {
+                        $value['displayValue'] = ResourceListController::getFolders(['resId' => $resource['res_id'], 'userId' => $args['userId']]);
+                        $display[] = $value;
                     }
                 }
-
                 $formattedResources[$key]['display'] = $display;
             }
         }
