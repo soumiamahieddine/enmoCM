@@ -302,14 +302,6 @@ if ($core_tools->is_module_loaded('entities')) {
     'id' => 'initiatorServices', 'options' => $arr_tmp, ));
 }
 
-// Folder
-if ($core_tools->is_module_loaded('folder')) {
-    $arr_tmp2 = array('label' => _MARKET, 'type' => 'input_text', 'param' => array('field_label' => _MARKET, 'other' => $size));
-    $param['market'] = $arr_tmp2;
-    $arr_tmp2 = array('label' => _PROJECT, 'type' => 'input_text', 'param' => array('field_label' => _PROJECT, 'other' => $size));
-    $param['project'] = $arr_tmp2;
-}
-
 // Reference courrier externe
 $arr_tmp2 = array('label' => _REFERENCE_MAIL, 'type' => 'input_text', 'param' => array('field_label' => _REFERENCE_MAIL, 'other' => $size));
 $param['external_reference'] = $arr_tmp2;
