@@ -108,6 +108,19 @@ CREATE TABLE entities_folders
 )
 WITH (OIDS=FALSE);
 
+/* CUSTOM FIELDS */
+DROP TABLE IF EXISTS custom_fields;
+CREATE TABLE custom_fields
+(
+  id serial NOT NULL,
+  label character varying(256) NOT NULL,
+  type character varying(256) NOT NULL,
+  values jsonb,
+  CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
+  CONSTRAINT custom_fields_unique_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
 /* REFACTORING DATA */
 DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
 DELETE FROM usergroups_reports WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');

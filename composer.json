@@ -10,6 +10,7 @@
             "Contact\\"                 : "src/app/contact/",
             "ContentManagement\\"       : "src/app/contentManagement/",
             "Convert\\"                 : "src/app/convert/",
+            "CustomField\\"             : "src/app/customField/",
             "Docserver\\"               : "src/app/docserver/",
             "Doctype\\"                 : "src/app/doctype/",
             "Email\\"                   : "src/app/email/",
