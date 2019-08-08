@@ -1,0 +1,66 @@
+<?php
+
+require '../../vendor/autoload.php';
+
+chdir('../..');
+
+$migrated = 0;
+$customs =  scandir('custom');
+
+foreach ($customs as $custom) {
+    if ($custom == 'custom.xml' || $custom == '.' || $custom == '..') {
+        continue;
+    }
+
+    $natures = [];
+    $migrated = 0;
+    $path = "custom/{$custom}/apps/maarch_entreprise/xml/index_letterbox.xml";
+    if (file_exists($path)) {
+        if (!is_readable($path) || !is_writable($path)) {
+            continue;
+        }
+        $loadedXml = simplexml_load_file($path);
+        
+        if ($loadedXml) {
+            $i = 0;
+            foreach ($loadedXml->INDEX as $value) {
+                $label = (string)$value->label;
+                $type = (string)$value->type;
+
+                $values = [];
+                if (!empty($value->values_list)) {
+                    foreach ($value->values_list->value as $valueList) {
+                        $values[] = (string)$valueList->label;
+                    }
+                }
+                if (!empty($value->table) && !empty($value->table->table_name) && !empty($value->table->foreign_label)) {
+
+                    $tableName    = (string)$value->table->table_name;
+                    $foreignLabel = (string)$value->table->foreign_label;
+                    $whereClause  = (string)$value->table->where_clause;
+                    $order        = (string)$value->table->order;
+
+                    $customValues = \SrcCore\models\DatabaseModel::select([
+                        'select'   => [$foreignLabel],
+                        'table'    => [$tableName],
+                        'where'    => empty($whereClause) ? [] : [$whereClause],
+                        'order_by' => [str_ireplace("order by", "", $order)]
+                    ]);
+
+                    foreach ($customValues as $valueList) {
+                        $values[] = $valueList[$foreignLabel];
+                    }
+                }
+
+                \CustomField\models\CustomFieldModel::create([
+                    'label'     => $label,
+                    'type'      => $type,
+                    'values'    => empty($values) ? null : json_encode($values)
+                ]);
+                $migrated++;
+            }
+        }
+    }
+
+    printf("Migration Champs Custom (CUSTOM {$custom}) : " . $migrated . " Champs custom trouvé(s) et migré(s).\n");
+}

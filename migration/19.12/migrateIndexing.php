@@ -4,7 +4,6 @@ require '../../vendor/autoload.php';
 
 chdir('../..');
 
-$migrated = 0;
 $customs =  scandir('custom');
 foreach ($customs as $custom) {
     if ($custom == 'custom.xml' || $custom == '.' || $custom == '..') {
@@ -16,6 +15,7 @@ foreach ($customs as $custom) {
 
     $groupBasket = \Basket\models\GroupBasketModel::get(['select' => ['group_id'], 'where' => ['basket_id = ?'], 'data' => ['IndexingBasket']]);
 
+    $migrated = 0;
     foreach ($groupBasket as $value) {
         $hasService = \SrcCore\models\DatabaseModel::select([
             'select'    => [1],

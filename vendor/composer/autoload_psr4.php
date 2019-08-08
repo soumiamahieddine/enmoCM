@@ -65,6 +65,7 @@ return array(
     'Email\\' => array($baseDir . '/src/app/email'),
     'Doctype\\' => array($baseDir . '/src/app/doctype'),
     'Docserver\\' => array($baseDir . '/src/app/docserver'),
+    'CustomField\\' => array($baseDir . '/src/app/customField'),
     'Convert\\' => array($baseDir . '/src/app/convert'),
     'ContentManagement\\' => array($baseDir . '/src/app/contentManagement'),
     'Contact\\' => array($baseDir . '/src/app/contact'),

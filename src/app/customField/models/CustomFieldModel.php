@@ -59,8 +59,7 @@ class CustomFieldModel
     public static function create(array $args)
     {
         ValidatorModel::notEmpty($args, ['label', 'type']);
-        ValidatorModel::stringType($args, ['label', 'type']);
-        ValidatorModel::arrayType($args, ['values']);
+        ValidatorModel::stringType($args, ['label', 'type', 'values']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'custom_fields_id_seq']);
 

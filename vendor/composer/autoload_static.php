@@ -138,6 +138,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         ),
         'C' => 
         array (
+            'CustomField\\' => 12,
             'Convert\\' => 8,
             'ContentManagement\\' => 18,
             'Contact\\' => 8,
@@ -395,6 +396,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Docserver\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/docserver',
+        ),
+        'CustomField\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/customField',
         ),
         'Convert\\' => 
         array (
