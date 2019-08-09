@@ -67,7 +67,7 @@ class MaarchParapheurController
 
         $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
         if (empty($adrMainInfo['docserver_id'])) {
-            return ['error' => 'Document ' . $resId . ' is not converted in pdf'];
+            return ['error' => 'Document ' . $aArgs['resIdMaster'] . ' is not converted in pdf'];
         }
         $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
         if (empty($docserverMainInfo['path_template'])) {
@@ -366,7 +366,7 @@ class MaarchParapheurController
             unlink($zipFilename);
             return $base64;
         } else {
-            echo 'Impossible de créer l\'archive;';
+            return 'Impossible de créer l\'archive;';
         }
     }
 
