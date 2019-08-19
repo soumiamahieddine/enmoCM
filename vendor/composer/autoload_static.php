@@ -96,6 +96,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'I' => 
         array (
             'Interop\\Container\\' => 18,
+            'IndexingModel\\' => 14,
         ),
         'H' => 
         array (
@@ -299,6 +300,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Interop\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
+        ),
+        'IndexingModel\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/indexingModel',
         ),
         'Http\\Promise\\' => 
         array (
