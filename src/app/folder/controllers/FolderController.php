@@ -296,6 +296,7 @@ class FolderController
                 }
             }
         }
+
         return true;
     }
 
