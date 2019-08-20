@@ -26,6 +26,33 @@ use Slim\Http\Response;
 
 class IndexingModelController
 {
+    public function get(Request $request, Response $response, array $args)
+    {
+        $models = IndexingModelModel::get(['where' => ['owner = ? OR private = ?'], 'data' => [$GLOBALS['id'], false]]);
+
+        foreach ($models as $key => $model) {
+            $fields = IndexingModelFieldModel::get(['select' => ['label', 'mandatory', 'value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$model['id']]]);
+            $models[$key]['fields'] = $fields;
+        }
+
+        return $response->withJson(['indexingModels' => $models]);
+    }
+
+    public function getById(Request $request, Response $response, array $args)
+    {
+        $model = IndexingModelModel::getById(['id' => $args['id']]);
+        if (empty($model)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
+        } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
+         }
+
+        $fields = IndexingModelFieldModel::get(['select' => ['label', 'mandatory', 'value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
+        $model['fields'] = $fields;
+
+        return $response->withJson(['indexingModel' => $model]);
+    }
+
     public function create(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
@@ -51,7 +78,7 @@ class IndexingModelController
                 'model_id'  => $modelId,
                 'label'     => $field['label'],
                 'mandatory' => empty($field['mandatory']) ? 'false' : 'true',
-                'value'     => empty($field['value']) ? null : $field['value'],
+                'value'     => $field['value'] ?? null,
                 'unit'      => empty($field['unit']) ? null : $field['unit']
             ]);
         }
@@ -91,7 +118,7 @@ class IndexingModelController
                 'model_id'  => $args['id'],
                 'label'     => $field['label'],
                 'mandatory' => empty($field['mandatory']) ? 'false' : 'true',
-                'value'     => empty($field['value']) ? null : $field['value'],
+                'value'     => $field['value'] ?? null,
                 'unit'      => empty($field['unit']) ? null : $field['unit']
             ]);
         }
