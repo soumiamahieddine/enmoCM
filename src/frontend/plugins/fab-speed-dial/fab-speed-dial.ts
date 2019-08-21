@@ -1,22 +1,6 @@
 
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    ViewEncapsulation,
-    AfterContentInit,
-    ElementRef,
-    Renderer,
-    Inject,
-    forwardRef,
-    ContentChildren,
-    QueryList,
-    ContentChild,
-    HostBinding,
-    HostListener
-} from "@angular/core";
-import {MatButton} from "@angular/material";
+import { Component, Input, Output, EventEmitter, ViewEncapsulation, AfterContentInit, ElementRef, Inject, forwardRef, ContentChildren, QueryList, ContentChild, HostBinding, HostListener, Renderer2 } from "@angular/core";
+import { MatButton } from "@angular/material/button";
 
 const Z_INDEX_ITEM: number = 23;
 
@@ -57,7 +41,7 @@ export class SmdFabSpeedDialActions implements AfterContentInit {
 
     @ContentChildren(MatButton) _buttons: QueryList<MatButton>;
 
-    constructor(@Inject(forwardRef(() => SmdFabSpeedDialComponent)) private _parent: SmdFabSpeedDialComponent, private renderer: Renderer) {
+    constructor(@Inject(forwardRef(() => SmdFabSpeedDialComponent)) private _parent: SmdFabSpeedDialComponent, private renderer: Renderer2) {
     }
 
     ngAfterContentInit(): void {
@@ -71,7 +55,7 @@ export class SmdFabSpeedDialActions implements AfterContentInit {
 
     private initButtonStates() {
         this._buttons.toArray().forEach((button, i) => {
-            this.renderer.setElementClass(button._getHostElement(), 'smd-fab-action-item', true);
+            this.renderer.addClass(button._getHostElement(), 'smd-fab-action-item');
             this.changeElementStyle(button._getHostElement(), 'z-index', '' + (Z_INDEX_ITEM - i));
         })
     }
@@ -124,7 +108,8 @@ export class SmdFabSpeedDialActions implements AfterContentInit {
 
     private changeElementStyle(elem: any, style: string, value: string) {
         // FIXME - Find a way to create a "wrapper" around the action button(s) provided by the user, so we don't change it's style tag
-        this.renderer.setElementStyle(elem, style, value);
+        // FIXME - Find a way to create a "wrapper" around the action button(s) provided by the user, so we don't change it's style tag
+this.renderer.setStyle(elem, style, value);
     }
 }
 
@@ -212,9 +197,9 @@ export class SmdFabSpeedDialComponent implements AfterContentInit {
 
     @Output() openChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @ContentChild(SmdFabSpeedDialActions) _childActions: SmdFabSpeedDialActions;
+    @ContentChild(SmdFabSpeedDialActions, { static: true }) _childActions: SmdFabSpeedDialActions;
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer) {
+    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
     }
 
     ngAfterContentInit(): void {
@@ -247,6 +232,6 @@ export class SmdFabSpeedDialComponent implements AfterContentInit {
     }
 
     private _setElementClass(elemClass:string , isAdd:boolean) {
-        this.renderer.setElementClass(this.elementRef.nativeElement, `smd-${elemClass}`, isAdd);
+        isAdd ? this.renderer.addClass(this.elementRef.nativeElement, `smd-${elemClass}`) : this.renderer.removeClass(this.elementRef.nativeElement, `smd-${elemClass}`);
     }
 }

@@ -3,7 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { merge, Observable, of as observableOf, Subject  } from 'rxjs';
 import { NotificationService } from '../../notification.service';
-import { MatDialog, MatSidenav, MatPaginator, MatSort } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError, takeUntil, tap } from 'rxjs/operators';
@@ -41,8 +44,8 @@ export class FolderDocumentListComponent implements OnInit {
 
     filtersChange = new EventEmitter();
 
-    @ViewChild('snav') sidenavLeft: MatSidenav;
-    @ViewChild('snav2') sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     displayedColumnsBasket: string[] = ['res_id'];
 
@@ -69,7 +72,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     thumbnailUrl: string = '';
 
-    selectedRes: number[] = [];
+    selectedRes: Array<number> = [];
     allResInBasket: number[] = [];
     selectedDiffusionTab: number = 0;
     folderInfo: any = {
@@ -78,13 +81,13 @@ export class FolderDocumentListComponent implements OnInit {
 
     private destroy$ = new Subject<boolean>();
 
-    @ViewChild('appPanelList') appPanelList: PanelListComponent;
+    @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
 
     currentSelectedChrono: string = '';
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild('tableBasketListSort') sort: MatSort;
-    @ViewChild('panelFolder') panelFolder: PanelFolderComponent;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
+    @ViewChild('panelFolder', { static: true }) panelFolder: PanelFolderComponent;
 
     constructor(
         private router: Router, 
@@ -157,7 +160,7 @@ export class FolderDocumentListComponent implements OnInit {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
-                    this.resultsLength = data.count;
+                    this.resultsLength = data.countResources;
                     //this.allResInBasket = data.count;
                     //this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
                     return data.resources;
@@ -240,12 +243,9 @@ export class FolderDocumentListComponent implements OnInit {
                 }
             });
 
-            if (this.selectedRes.indexOf(element['res_id']) === -1) {
-                element['checked'] = false;
-            } else {
-                element['checked'] = true;
-            }
+            element['checked'] = this.selectedRes.indexOf(element['res_id']) !== -1;
         });
+
         return data;
     }
 
@@ -278,14 +278,22 @@ export class FolderDocumentListComponent implements OnInit {
 
     unclassify() {
         this.http.request('DELETE', '../../rest/folders/' + this.folderInfo.id + '/resources', { body: { resources: this.selectedRes } }).pipe(
-            tap(() => this.notify.success(this.lang.removedFromFolder))
+            tap((data: any) => {
+                this.notify.success(this.lang.removedFromFolder);
+                this.resultsLength = data.countResources;
+                this.data.forEach((resource: any, key: number) => {
+                    if (this.selectedRes.indexOf(resource.res_id) != -1) {
+                        this.data.splice(key, 1);
+                    }
+                });
+            })
         ).subscribe();
     }
 }
 export interface BasketList {
     folder: any;
     resources: any[];
-    count: number
+    countResources: number;
 }
 
 export class ResultListHttpDao {

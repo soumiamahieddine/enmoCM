@@ -1,7 +1,11 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
@@ -17,8 +21,8 @@ declare function $j(selector: any): any;
 })
 export class BasketAdministrationComponent implements OnInit {
 
-    @ViewChild('snav') public sidenavLeft: MatSidenav;
-    @ViewChild('snav2') public sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     dialogRef: MatDialogRef<any>;
 
@@ -48,8 +52,8 @@ export class BasketAdministrationComponent implements OnInit {
     dataSource: any;
 
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
@@ -346,7 +350,7 @@ export class BasketAdministrationSettingsModalComponent {
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
     }
 
-    @ViewChild('statusInput') statusInput: ElementRef;
+    @ViewChild('statusInput', { static: true }) statusInput: ElementRef;
 
     ngOnInit(): void {
         this.http.get("../../rest/entities")

@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild }  from '@angular/core';
 import { HttpClient }                                       from '@angular/common/http';
-import { MatPaginator, MatTableDataSource, MatSort, MatSidenav }        from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { LANG }                                             from '../../translate.component';
 import { HeaderService }        from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
@@ -13,8 +16,8 @@ declare function $j(selector: any): any;
 })
 export class HistoryAdministrationComponent implements OnInit {
 
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     lang                            : any       = LANG;
     loading                         : boolean   = false;
@@ -38,10 +41,10 @@ export class HistoryAdministrationComponent implements OnInit {
     accessHistory                   : boolean   = true;
 
 
-    @ViewChild('paginator') paginator: MatPaginator;
-    @ViewChild('batchPaginator') batchPaginator: MatPaginator;
-    @ViewChild('sort') sort: MatSort;
-    @ViewChild('batchSort') batchSort: MatSort;
+    @ViewChild('paginator', { static: true }) paginator: MatPaginator;
+    @ViewChild('batchPaginator', { static: true }) batchPaginator: MatPaginator;
+    @ViewChild('sort', { static: true }) sort: MatSort;
+    @ViewChild('batchSort', { static: true }) batchSort: MatSort;
     applyFilter(filterValue: string, historyType : string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

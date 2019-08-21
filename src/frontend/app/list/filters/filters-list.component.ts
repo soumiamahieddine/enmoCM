@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { FiltersListService } from '../../../service/filtersList.service';
-import { MatSelectionList, MatExpansionPanel, MatInput } from '@angular/material';
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { MatInput } from '@angular/material/input';
+import { MatSelectionList } from '@angular/material/list';
 
 declare function $j(selector: any): any;
 

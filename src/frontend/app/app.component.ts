@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, Testability } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MatIconRegistry } from '@angular/material';
-import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material';
+import { MatIconRegistry } from '@angular/material/icon';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { HeaderService } from '../service/header.service';
 import { AppService } from '../service/app.service';
 

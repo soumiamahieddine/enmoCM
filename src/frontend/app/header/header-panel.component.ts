@@ -1,7 +1,8 @@
 import { Component, OnInit, Input }    from '@angular/core';
 import { LANG }                 from '../translate.component';
 import { HeaderService }        from '../../service/header.service';
-import { MatDialogRef, MatSidenav }         from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../service/app.service';
 
 @Component({

@@ -96,6 +96,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'I' => 
         array (
             'Interop\\Container\\' => 18,
+            'IndexingModel\\' => 14,
         ),
         'H' => 
         array (
@@ -138,6 +139,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         ),
         'C' => 
         array (
+            'CustomField\\' => 12,
             'Convert\\' => 8,
             'ContentManagement\\' => 18,
             'Contact\\' => 8,
@@ -299,6 +301,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
         ),
+        'IndexingModel\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/indexingModel',
+        ),
         'Http\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-http/promise/src',
@@ -395,6 +401,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Docserver\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/docserver',
+        ),
+        'CustomField\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/customField',
         ),
         'Convert\\' => 
         array (

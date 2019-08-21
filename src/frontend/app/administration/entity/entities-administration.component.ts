@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmModalComponent } from '../../confirmModal.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
@@ -18,8 +22,8 @@ declare function $j(selector: any): any;
 export class EntitiesAdministrationComponent implements OnInit {
     /*HEADER*/
     titleHeader                              : string;
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     dialogRef                       : MatDialogRef<any>;
 
@@ -43,10 +47,10 @@ export class EntitiesAdministrationComponent implements OnInit {
     displayedColumnsTemplates   = ['template_label', 'template_target'];
 
 
-    @ViewChild('paginatorUsers') paginatorUsers: MatPaginator;
-    @ViewChild('paginatorTemplates') paginatorTemplates: MatPaginator;
-    @ViewChild('tableUsers') sortUsers: MatSort;
-    @ViewChild('tableTemplates') sortTemplates: MatSort;
+    @ViewChild('paginatorUsers', { static: true }) paginatorUsers: MatPaginator;
+    @ViewChild('paginatorTemplates', { static: true }) paginatorTemplates: MatPaginator;
+    @ViewChild('tableUsers', { static: true }) sortUsers: MatSort;
+    @ViewChild('tableTemplates', { static: true }) sortTemplates: MatSort;
     applyFilterUsers(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

@@ -160,16 +160,16 @@
     height: 35px;
   }
 
-  /deep/ .mat-form-field-appearance-outline.mat-form-field-disabled .mat-form-field-outline {
+  ::ng-deep .mat-form-field-appearance-outline.mat-form-field-disabled .mat-form-field-outline {
     background: inherit;
   }
 
-  /deep/ .mat-form-field-outline {
+  ::ng-deep .mat-form-field-outline {
     background: white;
   }
 }
 
-/deep/ .mat-option-text {
+::ng-deep .mat-option-text {
   display: flex !important;
 
   .dataIcon {

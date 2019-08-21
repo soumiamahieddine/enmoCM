@@ -126,6 +126,11 @@ $app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . 
 $app->get('/contactsFilling', \Contact\controllers\ContactController::class . ':getFilling');
 $app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':updateFilling');
 
+//CustomFields
+$app->post('/customFields', \CustomField\controllers\CustomFieldController::class . ':create');
+$app->put('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':update');
+$app->delete('/customFields/{id}', \Contact\controllers\ContactController::class . ':delete');
+
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
 $app->post('/docservers', \Docserver\controllers\DocserverController::class . ':create');

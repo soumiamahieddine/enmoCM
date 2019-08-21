@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MatSidenav, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
 
@@ -18,8 +19,8 @@ declare var tinymce: any;
 export class TemplateAdministrationComponent implements OnInit {
 
     /*HEADER*/
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     lang                    : any = LANG;
     loading                 : boolean = false;

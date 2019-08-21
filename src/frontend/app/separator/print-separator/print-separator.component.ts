@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { HeaderService } from '../../../service/header.service';
 import { NotificationService } from '../../notification.service';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
@@ -11,7 +11,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "print-separator.component.html",
     styleUrls: ['print-separator.component.scss'],
-    providers: [NotificationService],
+    providers: [NotificationService, AppService],
 })
 export class PrintSeparatorComponent implements OnInit {
 
@@ -29,10 +29,10 @@ export class PrintSeparatorComponent implements OnInit {
         type : 'qrcode',
         target: 'entities',
         entities: []
-    }
+    };
 
-    @ViewChild('snav') sidenavLeft: MatSidenav;
-    @ViewChild('snav2') sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     constructor(
         public http: HttpClient, 

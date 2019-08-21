@@ -108,6 +108,44 @@ CREATE TABLE entities_folders
 )
 WITH (OIDS=FALSE);
 
+/* CUSTOM FIELDS */
+DROP TABLE IF EXISTS custom_fields;
+CREATE TABLE custom_fields
+(
+  id serial NOT NULL,
+  label character varying(256) NOT NULL,
+  type character varying(256) NOT NULL,
+  values jsonb,
+  CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
+  CONSTRAINT custom_fields_unique_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
+/* INDEXING MODELS */
+DROP TABLE IF EXISTS indexing_models;
+CREATE TABLE indexing_models
+(
+  id SERIAL NOT NULL,
+  label character varying(256) NOT NULL,
+  "default" BOOLEAN NOT NULL,
+  owner INTEGER NOT NULL,
+  private BOOLEAN NOT NULL,
+  CONSTRAINT indexing_models_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+DROP TABLE IF EXISTS indexing_models_fields;
+CREATE TABLE indexing_models_fields
+(
+  id SERIAL NOT NULL,
+  model_id INTEGER NOT NULL,
+  label character varying(256) NOT NULL,
+  mandatory BOOLEAN NOT NULL,
+  value text,
+  unit INTEGER,
+  CONSTRAINT indexing_models_fields_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
 /* REFACTORING DATA */
 DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
 DELETE FROM usergroups_reports WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');

@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSidenav } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
@@ -17,8 +21,8 @@ declare var angularGlobals: any;
 })
 export class UsersAdministrationComponent implements OnInit {
 
-    @ViewChild('snav') public sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight : MatSidenav;
+    @ViewChild('snav', { static: true }) public sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight : MatSidenav;
 
     dialogRef                               : MatDialogRef<any>;
 
@@ -39,8 +43,8 @@ export class UsersAdministrationComponent implements OnInit {
     displayedColumns    = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
 
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

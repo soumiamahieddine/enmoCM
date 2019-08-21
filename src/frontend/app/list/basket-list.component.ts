@@ -3,7 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { merge, Observable, of as observableOf, Subject  } from 'rxjs';
 import { NotificationService } from '../notification.service';
-import { MatDialog, MatSidenav, MatPaginator, MatSort } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError, takeUntil } from 'rxjs/operators';
@@ -45,8 +48,8 @@ export class BasketListComponent implements OnInit {
 
     filtersChange = new EventEmitter();
 
-    @ViewChild('snav') sidenavLeft: MatSidenav;
-    @ViewChild('snav2') sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     displayedColumnsBasket: string[] = ['res_id'];
 
@@ -84,16 +87,16 @@ export class BasketListComponent implements OnInit {
 
     private destroy$ = new Subject<boolean>();
 
-    @ViewChild('actionsListContext') actionsList: ActionsListComponent;
-    @ViewChild('filtersTool') filtersTool: FiltersToolComponent;
-    @ViewChild('appPanelList') appPanelList: PanelListComponent;
-    @ViewChild('basketHome') basketHome: BasketHomeComponent;
-    @ViewChild('panelFolder') panelFolder: PanelFolderComponent;
+    @ViewChild('actionsListContext', { static: true }) actionsList: ActionsListComponent;
+    @ViewChild('filtersTool', { static: true }) filtersTool: FiltersToolComponent;
+    @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
+    @ViewChild('basketHome', { static: true }) basketHome: BasketHomeComponent;
+    @ViewChild('panelFolder', { static: true }) panelFolder: PanelFolderComponent;
 
     currentSelectedChrono: string = '';
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild('tableBasketListSort') sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
 
     constructor(
         private router: Router, 

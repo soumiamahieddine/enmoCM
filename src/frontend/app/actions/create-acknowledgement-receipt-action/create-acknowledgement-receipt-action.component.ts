@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 
@@ -24,7 +24,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
         sendList : []
     };
 
-    @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
+    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
     loadingExport: boolean;
     
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<CreateAcknowledgementReceiptActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }

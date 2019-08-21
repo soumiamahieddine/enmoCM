@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild }    from '@angular/core';
 import { HttpClient }           from '@angular/common/http';
 import { LANG }                 from '../translate.component';
 import { HeaderService }        from '../../service/header.service';
-import { MatDialog, MatDialogRef, MatInput } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatInput } from '@angular/material/input';
 import { IndexingGroupModalComponent } from '../menu/menu-shortcut.component';
 import { Router } from '@angular/router';
 import { AppService } from '../../service/app.service';
@@ -23,7 +24,7 @@ export class HeaderRightComponent implements OnInit {
 
     hideSearch : boolean = true;
 
-    @ViewChild('searchInput') searchInput: MatInput;
+    @ViewChild('searchInput', { static: true }) searchInput: MatInput;
 
     constructor(
         public http: HttpClient, 

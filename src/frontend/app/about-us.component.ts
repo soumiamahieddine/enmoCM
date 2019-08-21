@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
 import { HeaderService }        from '../service/header.service';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../service/app.service';
 
 declare function $j(selector: any): any;
@@ -16,8 +16,8 @@ declare var angularGlobals: any;
 })
 export class AboutUsComponent implements OnInit {
 
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     applicationVersion              : string;
     lang: any = LANG;

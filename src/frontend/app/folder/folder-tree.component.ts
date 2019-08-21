@@ -4,7 +4,9 @@ import { LANG } from '../translate.component';
 import { map, tap, catchError, filter, exhaustMap, finalize } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { MatTreeFlatDataSource, MatTreeFlattener, MatDialog, MatDialogRef, MatInput } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatInput } from '@angular/material/input';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
@@ -65,7 +67,7 @@ export class FolderTreeComponent implements OnInit {
     dataChange = new BehaviorSubject<ItemNode[]>([]);
 
     @Input('selectedId') seletedId: number;
-    @ViewChild('itemValue') itemValue: MatInput;
+    @ViewChild('itemValue', { static: true }) itemValue: MatInput;
 
 
     get data(): ItemNode[] { return this.dataChange.value; }
@@ -91,7 +93,7 @@ export class FolderTreeComponent implements OnInit {
         this.flatNodeMap.set(flatNode, node);
         this.nestedNodeMap.set(node, flatNode);
         return flatNode;
-    }
+    };
 
     treeControl = new FlatTreeControl<any>(
         node => node.level, node => node.expandable);
@@ -101,7 +103,7 @@ export class FolderTreeComponent implements OnInit {
 
     dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    @ViewChild('tree') tree: any;
+    @ViewChild('tree', { static: true }) tree: any;
 
     constructor(
         public http: HttpClient,
@@ -177,8 +179,10 @@ export class FolderTreeComponent implements OnInit {
     flatToNestedObject(data: any) {
         const nested = data.reduce((initial: any, value: any, index: any, original: any) => {
             if (value.parent_id === 0) {
-                if (initial.left.length) this.checkLeftOvers(initial.left, value)
-                delete value.parent_id
+                if (initial.left.length) {
+                    this.checkLeftOvers(initial.left, value);
+                }
+                delete value.parent_id;
                 value.root = true;
                 initial.nested.push(value)
             }
@@ -191,7 +195,7 @@ export class FolderTreeComponent implements OnInit {
                 }
             }
             return index < original.length - 1 ? initial : initial.nested
-        }, { nested: [], left: [] })
+        }, { nested: [], left: [] });
         return nested;
     }
 
@@ -208,7 +212,7 @@ export class FolderTreeComponent implements OnInit {
     }
 
     findParent(possibleParents: any, possibleChild: any): any {
-        let found = false
+        let found = false;
         for (let i = 0; i < possibleParents.length; i++) {
             if (possibleParents[i].id === possibleChild.parent_id) {
                 found = true;
@@ -315,8 +319,7 @@ export class FolderTreeComponent implements OnInit {
         for (let i = startIndex; i >= 0; i--) {
             const currentNode = this.treeControl.dataNodes[i];
             if (currentNode.level < currentLevel) {
-                const nestedNode = this.flatNodeMap.get(currentNode);
-                return nestedNode;
+                return this.flatNodeMap.get(currentNode);
             }
         }
         return null;

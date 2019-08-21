@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
