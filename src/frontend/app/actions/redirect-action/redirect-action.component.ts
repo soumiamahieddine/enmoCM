@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
 import { FormControl } from '@angular/forms';
@@ -43,8 +43,8 @@ export class RedirectActionComponent implements OnInit {
     filteredUserRedirect: Observable<any[]>;
     isDestinationChanging: boolean = false;
 
-    @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
-    @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
+    @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
+    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<RedirectActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 

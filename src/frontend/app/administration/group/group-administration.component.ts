@@ -4,7 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatSidenav} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any) : any;
@@ -16,8 +19,8 @@ declare function $j(selector: any) : any;
 })
 export class GroupAdministrationComponent implements OnInit {
     /*HEADER*/
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
 
     lang                            : any       = LANG;
     loading                         : boolean   = false;
@@ -33,10 +36,10 @@ export class GroupAdministrationComponent implements OnInit {
     basketsDataSource               : any;
 
 
-    @ViewChild('paginatorBaskets') paginatorBaskets: MatPaginator;
-    @ViewChild('sortBaskets') sortBaskets: MatSort;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild('sortUsers') sortUsers: MatSort;
+    @ViewChild('paginatorBaskets', { static: false }) paginatorBaskets: MatPaginator;
+    @ViewChild('sortBaskets', { static: false }) sortBaskets: MatSort;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild('sortUsers', { static: false }) sortUsers: MatSort;
 
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 
 declare function $j(selector: any): any;
@@ -225,7 +225,7 @@ export class ExportComponent implements OnInit {
     ];
     dataAvailableClone: any[] = [];
 
-    @ViewChild('listFilter') private listFilter: any;
+    @ViewChild('listFilter', { static: false }) private listFilter: any;
 
 
     constructor(public http: HttpClient, private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any, private sortPipe: SortPipe) { }

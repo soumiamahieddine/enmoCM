@@ -3,7 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { merge, Observable, of as observableOf, Subject  } from 'rxjs';
 import { NotificationService } from '../../notification.service';
-import { MatDialog, MatSidenav, MatPaginator, MatSort } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError, takeUntil, tap } from 'rxjs/operators';
@@ -41,8 +44,8 @@ export class FolderDocumentListComponent implements OnInit {
 
     filtersChange = new EventEmitter();
 
-    @ViewChild('snav') sidenavLeft: MatSidenav;
-    @ViewChild('snav2') sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: false }) sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: false }) sidenavRight: MatSidenav;
 
     displayedColumnsBasket: string[] = ['res_id'];
 
@@ -78,13 +81,13 @@ export class FolderDocumentListComponent implements OnInit {
 
     private destroy$ = new Subject<boolean>();
 
-    @ViewChild('appPanelList') appPanelList: PanelListComponent;
+    @ViewChild('appPanelList', { static: false }) appPanelList: PanelListComponent;
 
     currentSelectedChrono: string = '';
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild('tableBasketListSort') sort: MatSort;
-    @ViewChild('panelFolder') panelFolder: PanelFolderComponent;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild('tableBasketListSort', { static: false }) sort: MatSort;
+    @ViewChild('panelFolder', { static: false }) panelFolder: PanelFolderComponent;
 
     constructor(
         private router: Router, 

@@ -4,7 +4,12 @@ import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
 import { HeaderService }        from '../service/header.service';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MatSidenav, MatExpansionPanel } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
@@ -73,8 +78,8 @@ export class ProfileComponent implements OnInit {
     selectedIndexContactsGrp: number = 0;
     loadingSign : boolean = false;
 
-    @ViewChild('snav2') sidenavRight: MatSidenav;
-    @ViewChild('snav') sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: false }) sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: false }) sidenavLeft: MatSidenav;
 
     //Redirect Baskets
     selectionBaskets = new SelectionModel<Element>(true, []);
@@ -97,8 +102,8 @@ export class ProfileComponent implements OnInit {
     contactsGroups: any[] = [];
     displayedColumnsGroupsList: string[] = ['label', 'description','nbContacts','public', 'actions'];
     dataSourceGroupsList: any;
-    @ViewChild('paginatorGroupsList') paginatorGroupsList: MatPaginator;
-    @ViewChild('tableGroupsListSort') sortGroupsList: MatSort;
+    @ViewChild('paginatorGroupsList', { static: false }) paginatorGroupsList: MatPaginator;
+    @ViewChild('tableGroupsListSort', { static: false }) sortGroupsList: MatSort;
     applyFilterGroupsList(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
@@ -117,7 +122,7 @@ export class ProfileComponent implements OnInit {
     contactTypes: string[] = [];
     displayedColumnsContactsListAutocomplete: string[] = ['select', 'contact', 'address'];
     dataSourceContactsListAutocomplete: any;
-    @ViewChild('paginatorGroupsListAutocomplete') paginatorGroupsListAutocomplete: MatPaginator;
+    @ViewChild('paginatorGroupsListAutocomplete', { static: false }) paginatorGroupsListAutocomplete: MatPaginator;
     selection = new SelectionModel<Element>(true, []);
     masterToggle(event: any) {
         if (event.checked) {
@@ -137,8 +142,8 @@ export class ProfileComponent implements OnInit {
     contactsList: any[] = [];
     displayedColumnsContactsList: string[] = ['contact', 'address', 'actions'];
     dataSourceContactsList: any;
-    @ViewChild('paginatorContactsList') paginatorContactsList: MatPaginator;
-    @ViewChild('tableContactsListSort') sortContactsList: MatSort;
+    @ViewChild('paginatorContactsList', { static: false }) paginatorContactsList: MatPaginator;
+    @ViewChild('tableContactsListSort', { static: false }) sortContactsList: MatSort;
     applyFilterContactsList(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
@@ -148,8 +153,8 @@ export class ProfileComponent implements OnInit {
     //History
     displayedColumns = ['event_date', 'info'];
     dataSource: any;
-    @ViewChild('paginatorHistory') paginatorHistory: MatPaginator;
-    @ViewChild('tableHistorySort') sortHistory: MatSort;
+    @ViewChild('paginatorHistory', { static: false }) paginatorHistory: MatPaginator;
+    @ViewChild('tableHistorySort', { static: false }) sortHistory: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

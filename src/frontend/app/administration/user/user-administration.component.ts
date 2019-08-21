@@ -2,7 +2,11 @@ import { Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
-import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
@@ -19,8 +23,8 @@ declare function $j(selector: any): any;
     providers: [NotificationService, AppService]
 })
 export class UserAdministrationComponent implements OnInit {
-    @ViewChild('snav') public sidenavLeft: MatSidenav;
-    @ViewChild('snav2') public sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: false }) public sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: false }) public sidenavRight: MatSidenav;
 
     lang: any = LANG;
     loading: boolean = false;
@@ -79,8 +83,8 @@ export class UserAdministrationComponent implements OnInit {
     selectedTabIndex: number = 0;
     maarchParapheurConnectionStatus = true;
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

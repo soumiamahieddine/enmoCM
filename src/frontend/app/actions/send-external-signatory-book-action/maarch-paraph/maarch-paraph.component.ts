@@ -25,7 +25,7 @@ export class MaarchParaphComponent implements OnInit {
         editable: true
     };
    
-    @ViewChild('appVisaWorkflow') appVisaWorkflow: VisaWorkflowComponent;
+    @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
     
     @Input('additionalsInfos') additionalsInfos: any;
     @Input('externalSignatoryBookDatas') externalSignatoryBookDatas: any;

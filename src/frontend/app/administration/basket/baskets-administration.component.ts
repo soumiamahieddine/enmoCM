@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { MatSidenav, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
@@ -14,8 +17,8 @@ declare function $j(selector: any): any;
 })
 export class BasketsAdministrationComponent implements OnInit {
 
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
 
     lang                            : any       = LANG;
     loading                         : boolean   = false;
@@ -26,8 +29,8 @@ export class BasketsAdministrationComponent implements OnInit {
     displayedColumns    = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
     dataSource          : any;
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

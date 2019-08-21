@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { XParaphComponent } from './x-paraph/x-paraph.component';
@@ -30,10 +30,10 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     };
     errors: any;
 
-    @ViewChild('noteEditor') noteEditor: NoteEditorComponent;
+    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
     
-    @ViewChild('xParaph') xParaph: XParaphComponent;
-    @ViewChild('maarchParapheur') maarchParapheur: MaarchParaphComponent;
+    @ViewChild('xParaph', { static: false }) xParaph: XParaphComponent;
+    @ViewChild('maarchParapheur', { static: false }) maarchParapheur: MaarchParaphComponent;
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalSignatoryBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 

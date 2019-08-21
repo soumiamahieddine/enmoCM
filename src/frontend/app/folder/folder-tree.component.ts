@@ -4,7 +4,9 @@ import { LANG } from '../translate.component';
 import { map, tap, catchError, filter, exhaustMap, finalize } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { MatTreeFlatDataSource, MatTreeFlattener, MatDialog, MatDialogRef, MatInput } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatInput } from '@angular/material/input';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
@@ -65,7 +67,7 @@ export class FolderTreeComponent implements OnInit {
     dataChange = new BehaviorSubject<ItemNode[]>([]);
 
     @Input('selectedId') seletedId: number;
-    @ViewChild('itemValue') itemValue: MatInput;
+    @ViewChild('itemValue', { static: false }) itemValue: MatInput;
 
 
     get data(): ItemNode[] { return this.dataChange.value; }
@@ -101,7 +103,7 @@ export class FolderTreeComponent implements OnInit {
 
     dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    @ViewChild('tree') tree: any;
+    @ViewChild('tree', { static: false }) tree: any;
 
     constructor(
         public http: HttpClient,

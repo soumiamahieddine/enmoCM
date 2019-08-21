@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
@@ -15,8 +15,8 @@ declare var $j: any;
 })
 export class NotificationAdministrationComponent implements OnInit {
 
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
     
     creationMode: boolean; 
     notification: any = {

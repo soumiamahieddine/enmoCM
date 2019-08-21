@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { MatSidenav, MatAutocompleteTrigger, MatDialog } from '@angular/material';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import { Observable } from 'rxjs';
 import { ExportComponent } from '../export/export.component';
 import { SummarySheetComponent } from '../summarySheet/summary-sheet.component';
@@ -23,7 +25,7 @@ export class ToolsListComponent implements OnInit {
     lang: any = LANG;
 
 
-    @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
+    @ViewChild(MatAutocompleteTrigger, { static: false }) autocomplete: MatAutocompleteTrigger;
 
     priorities: any[] = [];
     categories: any[] = [];

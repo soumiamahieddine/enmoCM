@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { MatSidenav, MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatDialog } from '@angular/material';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import { FiltersListService } from '../../../service/filtersList.service';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -43,7 +45,7 @@ export class FiltersToolComponent implements OnInit {
         { 'id': 'type_label' }
     ];
 
-    @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
+    @ViewChild(MatAutocompleteTrigger, { static: false }) autocomplete: MatAutocompleteTrigger;
 
     priorities: any[] = [];
     categories: any[] = [];

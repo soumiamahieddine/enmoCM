@@ -1,6 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { LANG }                 from '../translate.component';
-import { MatSidenav, MatDialog, MatDialogRef }           from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import { HttpClient }           from '@angular/common/http';
 import { Router }               from '@angular/router';
 import { IndexingGroupModalComponent }  from './menu-shortcut.component';

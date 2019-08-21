@@ -2,7 +2,8 @@ import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angu
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatDialog, MatMenuTrigger } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
 import { EnabledBasketPersistenceActionComponent } from './enabled-basket-persistence-action/enabled-basket-persistence-action.component';
@@ -32,7 +33,7 @@ export class ActionsListComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
-    @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+    @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
     @Output() triggerEvent = new EventEmitter<string>();
 
     contextMenuPosition = { x: '0px', y: '0px' };

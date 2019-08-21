@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
 
@@ -14,8 +14,8 @@ declare function $j(selector: any): any;
 })
 export class ReportsAdministrationComponent implements OnInit {
     /*HEADER*/
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
     
     lang: any = LANG;
 

@@ -6,7 +6,10 @@ import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
-import { MatPaginator, MatSort, MatTableDataSource, MatSidenav } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AppService } from '../../../service/app.service';
 
@@ -18,8 +21,8 @@ declare function $j(selector: any): any;
 })
 export class ContactsGroupAdministrationComponent implements OnInit {
 
-    @ViewChild('snav') public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2') public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
 
     lang: any = LANG;
 
@@ -55,11 +58,11 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         }
     }
 
-    @ViewChild('paginatorContactList') paginator: MatPaginator;
-    //@ViewChild('tableContactList') sortContactList: MatSort;
+    @ViewChild('paginatorContactList', { static: false }) paginator: MatPaginator;
+    //@ViewChild('tableContactList', { static: false }) sortContactList: MatSort;
 
-    @ViewChild('paginatorAdded') paginatorAdded: MatPaginator;
-    @ViewChild('tableAdded') sortAdded: MatSort;
+    @ViewChild('paginatorAdded', { static: false }) paginatorAdded: MatPaginator;
+    @ViewChild('tableAdded', { static: false }) sortAdded: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

@@ -5,7 +5,7 @@ import { NotificationService } from '../../../notification.service';
 import { tap } from 'rxjs/internal/operators/tap';
 import { map, catchError, filter, exhaustMap, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 import { HeaderService } from '../../../../service/header.service';
 

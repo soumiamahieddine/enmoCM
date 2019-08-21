@@ -34,7 +34,7 @@ export class PluginAutocomplete implements OnInit {
     @Input('subInfoKey') subInfoKey: string;
     @Output('triggerEvent') selectedOpt = new EventEmitter();
 
-    @ViewChild('autoCompleteInput') autoCompleteInput: ElementRef;
+    @ViewChild('autoCompleteInput', { static: false }) autoCompleteInput: ElementRef;
 
     filteredOptions: Observable<string[]>;
 

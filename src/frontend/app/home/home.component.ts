@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild, QueryList, ViewChildren } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { MatDialog, MatSidenav, MatExpansionPanel, MatTableDataSource } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from '../notification.service';
 import { HeaderService }        from '../../service/header.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -31,8 +34,8 @@ export class HomeComponent implements OnInit {
     public innerHtml    : SafeHtml;
     displayedColumns    : string[] = ['res_id', 'subject', 'creation_date'];
 
-    @ViewChild('snav') snav: MatSidenav;
-    @ViewChild('snav2') sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: false }) snav: MatSidenav;
+    @ViewChild('snav2', { static: false }) sidenavRight: MatSidenav;
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
 
     constructor(

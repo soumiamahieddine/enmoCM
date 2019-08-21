@@ -14,7 +14,7 @@ export class PanelFolderComponent implements OnInit {
     lang: any = LANG;
 
     @Input('selectedId') id: number;
-    @ViewChild('folderTree') folderTree: FolderTreeComponent;
+    @ViewChild('folderTree', { static: false }) folderTree: FolderTreeComponent;
     
     constructor() { }
 

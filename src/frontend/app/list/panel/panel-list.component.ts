@@ -32,11 +32,11 @@ export class PanelListComponent implements OnInit {
     @Output('refreshBadgeNotes') refreshBadgeNotes = new EventEmitter<string>();
     @Output('refreshBadgeAttachments') refreshBadgeAttachments = new EventEmitter<string>();
 
-    @ViewChild('appDiffusionsList') appDiffusionsList: DiffusionsListComponent;
-    @ViewChild('appVisaWorkflow') appVisaWorkflow: VisaWorkflowComponent;
-    @ViewChild('appAvisWorkflow') appAvisWorkflow: AvisWorkflowComponent;
-    @ViewChild('appNotesList') appNotesList: NotesListComponent;
-    @ViewChild('appAttachmentsList') appAttachmentsList: AttachmentsListComponent;
+    @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
+    @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
+    @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;
+    @ViewChild('appNotesList', { static: false }) appNotesList: NotesListComponent;
+    @ViewChild('appAttachmentsList', { static: false }) appAttachmentsList: AttachmentsListComponent;
 
     constructor() { }
 

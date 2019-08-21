@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LANG } from '../../translate.component';
-import { MatSidenav, MatBottomSheet } from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatSidenav } from '@angular/material/sidenav';
 import { HeaderService } from "../../../service/header.service";
 import { TechnicalAdministrationComponent } from "../technical/technical-administration.component";
 import { AppService } from '../../../service/app.service';
@@ -24,8 +25,8 @@ export class AdministrationComponent implements OnInit {
     classementServices              : any[]     = [];
     supervisionServices             : any[]     = [];
 
-    @ViewChild('snav') public sidenavLeft: MatSidenav;
-    @ViewChild('snav2') public sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: false }) public sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: false }) public sidenavRight: MatSidenav;
 
     constructor(
         public http: HttpClient, 
