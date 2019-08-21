@@ -22,8 +22,8 @@ declare function $j(selector: any): any;
 export class EntitiesAdministrationComponent implements OnInit {
     /*HEADER*/
     titleHeader                              : string;
-    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     dialogRef                       : MatDialogRef<any>;
 
@@ -47,10 +47,10 @@ export class EntitiesAdministrationComponent implements OnInit {
     displayedColumnsTemplates   = ['template_label', 'template_target'];
 
 
-    @ViewChild('paginatorUsers', { static: false }) paginatorUsers: MatPaginator;
-    @ViewChild('paginatorTemplates', { static: false }) paginatorTemplates: MatPaginator;
-    @ViewChild('tableUsers', { static: false }) sortUsers: MatSort;
-    @ViewChild('tableTemplates', { static: false }) sortTemplates: MatSort;
+    @ViewChild('paginatorUsers', { static: true }) paginatorUsers: MatPaginator;
+    @ViewChild('paginatorTemplates', { static: true }) paginatorTemplates: MatPaginator;
+    @ViewChild('tableUsers', { static: true }) sortUsers: MatSort;
+    @ViewChild('tableTemplates', { static: true }) sortTemplates: MatSort;
     applyFilterUsers(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

@@ -18,8 +18,8 @@ declare function $j(selector: any): any;
 
 export class ContactsGroupsAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
     
     lang: any = LANG;
     search: string = null;
@@ -31,8 +31,8 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
 
     displayedColumns = ['label', 'description', 'nbContacts', 'public', 'owner', 'actions',];
     dataSource = new MatTableDataSource(this.contactsGroups);
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

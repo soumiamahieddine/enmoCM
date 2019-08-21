@@ -14,13 +14,17 @@ export class PanelFolderComponent implements OnInit {
     lang: any = LANG;
 
     @Input('selectedId') id: number;
-    @ViewChild('folderTree', { static: false }) folderTree: FolderTreeComponent;
+    @ViewChild('folderTree', { static: true }) folderTree: FolderTreeComponent;
     
     constructor() { }
 
     ngOnInit(): void { }
 
     getDragIds() {
-        return this.folderTree.getDragIds();
+        if (this.folderTree !== undefined) {
+            return this.folderTree.getDragIds();
+        } else {
+            return [];
+        }
     }
 }

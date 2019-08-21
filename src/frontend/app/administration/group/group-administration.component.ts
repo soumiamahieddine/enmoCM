@@ -19,8 +19,8 @@ declare function $j(selector: any) : any;
 })
 export class GroupAdministrationComponent implements OnInit {
     /*HEADER*/
-    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     lang                            : any       = LANG;
     loading                         : boolean   = false;
@@ -36,10 +36,10 @@ export class GroupAdministrationComponent implements OnInit {
     basketsDataSource               : any;
 
 
-    @ViewChild('paginatorBaskets', { static: false }) paginatorBaskets: MatPaginator;
-    @ViewChild('sortBaskets', { static: false }) sortBaskets: MatSort;
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild('sortUsers', { static: false }) sortUsers: MatSort;
+    @ViewChild('paginatorBaskets', { static: true }) paginatorBaskets: MatPaginator;
+    @ViewChild('sortBaskets', { static: true }) sortBaskets: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild('sortUsers', { static: true }) sortUsers: MatSort;
 
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();

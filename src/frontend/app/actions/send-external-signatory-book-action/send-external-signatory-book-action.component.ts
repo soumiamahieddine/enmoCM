@@ -30,10 +30,10 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     };
     errors: any;
 
-    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
+    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
     
-    @ViewChild('xParaph', { static: false }) xParaph: XParaphComponent;
-    @ViewChild('maarchParapheur', { static: false }) maarchParapheur: MaarchParaphComponent;
+    @ViewChild('xParaph', { static: true }) xParaph: XParaphComponent;
+    @ViewChild('maarchParapheur', { static: true }) maarchParapheur: MaarchParaphComponent;
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalSignatoryBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 

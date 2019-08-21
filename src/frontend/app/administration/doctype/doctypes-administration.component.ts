@@ -19,8 +19,8 @@ declare function $j(selector: any): any;
 
 export class DoctypesAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     dialogRef: MatDialogRef<any>;
     config: any = {};
@@ -44,8 +44,8 @@ export class DoctypesAdministrationComponent implements OnInit {
 
     displayedColumns = ['label','use', 'mandatory', 'column'];
     dataSource = new MatTableDataSource(this.currentType.indexes);
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
 
     constructor(
         public http: HttpClient, 

@@ -48,8 +48,8 @@ export class BasketListComponent implements OnInit {
 
     filtersChange = new EventEmitter();
 
-    @ViewChild('snav', { static: false }) sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: false }) sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     displayedColumnsBasket: string[] = ['res_id'];
 
@@ -87,16 +87,16 @@ export class BasketListComponent implements OnInit {
 
     private destroy$ = new Subject<boolean>();
 
-    @ViewChild('actionsListContext', { static: false }) actionsList: ActionsListComponent;
-    @ViewChild('filtersTool', { static: false }) filtersTool: FiltersToolComponent;
-    @ViewChild('appPanelList', { static: false }) appPanelList: PanelListComponent;
-    @ViewChild('basketHome', { static: false }) basketHome: BasketHomeComponent;
-    @ViewChild('panelFolder', { static: false }) panelFolder: PanelFolderComponent;
+    @ViewChild('actionsListContext', { static: true }) actionsList: ActionsListComponent;
+    @ViewChild('filtersTool', { static: true }) filtersTool: FiltersToolComponent;
+    @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
+    @ViewChild('basketHome', { static: true }) basketHome: BasketHomeComponent;
+    @ViewChild('panelFolder', { static: true }) panelFolder: PanelFolderComponent;
 
     currentSelectedChrono: string = '';
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild('tableBasketListSort', { static: false }) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
 
     constructor(
         private router: Router, 

@@ -15,7 +15,7 @@ export class UpdateAcknowledgementSendDateActionComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
-    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
+    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
 
     acknowledgementSendDate    : Date      = new Date();
     acknowledgementSendDateEnd : Date      = new Date();

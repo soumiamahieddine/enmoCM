@@ -17,8 +17,8 @@ declare function $j(selector: any): any;
 })
 export class NotificationsAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     notifications: any[] = [];
     loading: boolean = false;
@@ -47,8 +47,8 @@ export class NotificationsAdministrationComponent implements OnInit {
 
     displayedColumns = ['notification_id', 'description', 'is_enabled', 'notifications'];
     dataSource = new MatTableDataSource(this.notifications);
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

@@ -34,8 +34,8 @@ export class HomeComponent implements OnInit {
     public innerHtml    : SafeHtml;
     displayedColumns    : string[] = ['res_id', 'subject', 'creation_date'];
 
-    @ViewChild('snav', { static: false }) snav: MatSidenav;
-    @ViewChild('snav2', { static: false }) sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) snav: MatSidenav;
+    @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
 
     constructor(

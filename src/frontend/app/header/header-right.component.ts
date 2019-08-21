@@ -24,7 +24,7 @@ export class HeaderRightComponent implements OnInit {
 
     hideSearch : boolean = true;
 
-    @ViewChild('searchInput', { static: false }) searchInput: MatInput;
+    @ViewChild('searchInput', { static: true }) searchInput: MatInput;
 
     constructor(
         public http: HttpClient, 

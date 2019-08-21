@@ -15,8 +15,8 @@ declare function $j(selector: any): any;
 })
 export class SendmailAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: false }) public sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     lang: any = LANG;
     loading: boolean = false;

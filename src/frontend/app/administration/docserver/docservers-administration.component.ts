@@ -17,8 +17,8 @@ declare function $j(selector: any): any;
 
 export class DocserversAdministrationComponent implements OnInit {
     /*HEADER*/
-    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     lang                : any = LANG;
     loading             : boolean = false;
@@ -28,8 +28,8 @@ export class DocserversAdministrationComponent implements OnInit {
     docserversClone     : any = [];
     docserversTypes     : any = {};
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     
     constructor(
         public http: HttpClient, 

@@ -21,8 +21,8 @@ declare function $j(selector: any): any;
 })
 export class BasketAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: false }) public sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     dialogRef: MatDialogRef<any>;
 
@@ -52,8 +52,8 @@ export class BasketAdministrationComponent implements OnInit {
     dataSource: any;
 
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
@@ -350,7 +350,7 @@ export class BasketAdministrationSettingsModalComponent {
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
     }
 
-    @ViewChild('statusInput', { static: false }) statusInput: ElementRef;
+    @ViewChild('statusInput', { static: true }) statusInput: ElementRef;
 
     ngOnInit(): void {
         this.http.get("../../rest/entities")

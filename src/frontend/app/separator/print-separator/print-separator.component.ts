@@ -31,8 +31,8 @@ export class PrintSeparatorComponent implements OnInit {
         entities: []
     };
 
-    @ViewChild('snav', { static: false }) sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: false }) sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     constructor(
         public http: HttpClient, 

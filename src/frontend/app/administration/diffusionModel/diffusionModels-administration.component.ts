@@ -18,8 +18,8 @@ declare function $j(selector: any): any;
 })
 export class DiffusionModelsAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     dialogRef                       : MatDialogRef<any>;
 
@@ -34,8 +34,8 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
     dataSource          = new MatTableDataSource(this.listTemplates);
 
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

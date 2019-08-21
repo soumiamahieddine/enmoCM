@@ -21,8 +21,8 @@ declare function $j(selector: any): any;
 })
 export class ContactsGroupAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
 
     lang: any = LANG;
 
@@ -58,11 +58,11 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         }
     }
 
-    @ViewChild('paginatorContactList', { static: false }) paginator: MatPaginator;
-    //@ViewChild('tableContactList', { static: false }) sortContactList: MatSort;
+    @ViewChild('paginatorContactList', { static: true }) paginator: MatPaginator;
+    //@ViewChild('tableContactList', { static: true }) sortContactList: MatSort;
 
-    @ViewChild('paginatorAdded', { static: false }) paginatorAdded: MatPaginator;
-    @ViewChild('tableAdded', { static: false }) sortAdded: MatSort;
+    @ViewChild('paginatorAdded', { static: true }) paginatorAdded: MatPaginator;
+    @ViewChild('tableAdded', { static: true }) sortAdded: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

@@ -16,8 +16,8 @@ declare function $j(selector: any): any;
 export class PriorityAdministrationComponent implements OnInit {
 
     /*HEADER*/
-    @ViewChild('snav', { static: false }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
     
     id              : string;
     creationMode    : boolean;

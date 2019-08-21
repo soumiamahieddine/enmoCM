@@ -44,8 +44,8 @@ export class FolderDocumentListComponent implements OnInit {
 
     filtersChange = new EventEmitter();
 
-    @ViewChild('snav', { static: false }) sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: false }) sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     displayedColumnsBasket: string[] = ['res_id'];
 
@@ -81,13 +81,13 @@ export class FolderDocumentListComponent implements OnInit {
 
     private destroy$ = new Subject<boolean>();
 
-    @ViewChild('appPanelList', { static: false }) appPanelList: PanelListComponent;
+    @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
 
     currentSelectedChrono: string = '';
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild('tableBasketListSort', { static: false }) sort: MatSort;
-    @ViewChild('panelFolder', { static: false }) panelFolder: PanelFolderComponent;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
+    @ViewChild('panelFolder', { static: true }) panelFolder: PanelFolderComponent;
 
     constructor(
         private router: Router, 

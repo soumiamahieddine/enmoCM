@@ -225,7 +225,7 @@ export class ExportComponent implements OnInit {
     ];
     dataAvailableClone: any[] = [];
 
-    @ViewChild('listFilter', { static: false }) private listFilter: any;
+    @ViewChild('listFilter', { static: true }) private listFilter: any;
 
 
     constructor(public http: HttpClient, private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any, private sortPipe: SortPipe) { }

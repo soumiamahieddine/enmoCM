@@ -25,8 +25,8 @@ export class AdministrationComponent implements OnInit {
     classementServices              : any[]     = [];
     supervisionServices             : any[]     = [];
 
-    @ViewChild('snav', { static: false }) public sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight: MatSidenav;
+    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     constructor(
         public http: HttpClient, 

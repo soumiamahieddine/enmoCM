@@ -67,7 +67,7 @@ export class FolderTreeComponent implements OnInit {
     dataChange = new BehaviorSubject<ItemNode[]>([]);
 
     @Input('selectedId') seletedId: number;
-    @ViewChild('itemValue', { static: false }) itemValue: MatInput;
+    @ViewChild('itemValue', { static: true }) itemValue: MatInput;
 
 
     get data(): ItemNode[] { return this.dataChange.value; }
@@ -103,7 +103,7 @@ export class FolderTreeComponent implements OnInit {
 
     dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    @ViewChild('tree', { static: false }) tree: any;
+    @ViewChild('tree', { static: true }) tree: any;
 
     constructor(
         public http: HttpClient,

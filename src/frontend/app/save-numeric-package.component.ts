@@ -28,7 +28,7 @@ export class SaveNumericPackageComponent implements OnInit {
 
     loading                     : boolean   = false;
 
-    @ViewChild('snav', { static: false }) sidenavLeft: MatSidenav;
+    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
 
     constructor(
         public http: HttpClient, 

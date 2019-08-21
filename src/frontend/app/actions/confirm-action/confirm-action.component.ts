@@ -15,7 +15,7 @@ export class ConfirmActionComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
-    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
+    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
     
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<ConfirmActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 

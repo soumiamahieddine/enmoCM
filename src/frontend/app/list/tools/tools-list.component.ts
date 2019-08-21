@@ -25,7 +25,7 @@ export class ToolsListComponent implements OnInit {
     lang: any = LANG;
 
 
-    @ViewChild(MatAutocompleteTrigger, { static: false }) autocomplete: MatAutocompleteTrigger;
+    @ViewChild(MatAutocompleteTrigger, { static: true }) autocomplete: MatAutocompleteTrigger;
 
     priorities: any[] = [];
     categories: any[] = [];

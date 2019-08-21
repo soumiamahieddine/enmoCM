@@ -21,8 +21,8 @@ declare var angularGlobals: any;
 })
 export class UsersAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: false }) public sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: false }) public sidenavRight : MatSidenav;
+    @ViewChild('snav', { static: true }) public sidenavLeft   : MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight : MatSidenav;
 
     dialogRef                               : MatDialogRef<any>;
 
@@ -43,8 +43,8 @@ export class UsersAdministrationComponent implements OnInit {
     displayedColumns    = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
 
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

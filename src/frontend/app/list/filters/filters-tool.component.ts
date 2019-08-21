@@ -45,7 +45,7 @@ export class FiltersToolComponent implements OnInit {
         { 'id': 'type_label' }
     ];
 
-    @ViewChild(MatAutocompleteTrigger, { static: false }) autocomplete: MatAutocompleteTrigger;
+    @ViewChild(MatAutocompleteTrigger, { static: true }) autocomplete: MatAutocompleteTrigger;
 
     priorities: any[] = [];
     categories: any[] = [];
