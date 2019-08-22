@@ -1079,4 +1079,6 @@ export const LANG_NL = {
     "removedFromFolder" : "Mail removed from folder", //_TO_TRANSLATE
     "removeFromFolder" : "Remove from folder", //_TO_TRANSLATE
     "classifyInFolder" : "Classify this mail in a folder", //_TO_TRANSLATE
+    "getFolders" : "Folders (fixed postion)", //_TO_TRANSLATE
+    "getFoldersSample" : "Litigation", //_TO_TRANSLATE
 };

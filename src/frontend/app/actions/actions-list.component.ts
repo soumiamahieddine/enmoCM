@@ -33,7 +33,7 @@ export class ActionsListComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
-    @ViewChild(MatMenuTrigger, { static: true }) contextMenu: MatMenuTrigger;
+    @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
     @Output() triggerEvent = new EventEmitter<string>();
 
     contextMenuPosition = { x: '0px', y: '0px' };

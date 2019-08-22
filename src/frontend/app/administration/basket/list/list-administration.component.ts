@@ -122,9 +122,10 @@ export class ListAdministrationComponent implements OnInit {
         },
         {
             'value': 'getFolders',
-            'label': 'Afficher les dossiers',
-            'sample': '',
-            'cssClasses': ['align_leftData']
+            'label': this.lang.getFolders,
+            'sample': this.lang.getFoldersSample,
+            'cssClasses': ['align_leftData'],
+            'icon': 'fa-folder'
         }
     ];
     availableDataClone: any = [];
@@ -213,7 +214,7 @@ export class ListAdministrationComponent implements OnInit {
     }
 
     addData(event: any) {
-        if (this.displayedSecondaryData.length >= 7) {
+        if (this.displayedSecondaryData.filter((data: any) => data.value !== 'getFolders').length >= 7 && event.option.value.value !== 'getFolders') {
             this.dataControl.setValue('');
             alert(this.lang.warnMaxDataList);
         } else {
@@ -299,5 +300,13 @@ export class ListAdministrationComponent implements OnInit {
             this.availableData.splice(indexData, 1);
         });
         this.dataControl.setValue('');
+    }
+
+    hasFolder() {
+        if (this.displayedSecondaryData.map((data: any) => data.value).indexOf('getFolders') > -1) {
+            return true
+        } else {
+            return false;
+        }
     }
 }
