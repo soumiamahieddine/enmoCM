@@ -93,13 +93,13 @@ class CustomFieldModel
 
     public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::notEmpty($args, ['where']);
         ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'custom_fields',
             'where' => $args['where'],
-            'data'  => $args['data']
+            'data'  => $args['data'] ?? []
         ]);
 
         return true;

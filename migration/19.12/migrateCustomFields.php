@@ -12,6 +12,11 @@ foreach ($customs as $custom) {
         continue;
     }
 
+    \SrcCore\models\DatabasePDO::reset();
+    new \SrcCore\models\DatabasePDO(['customId' => $custom]);
+
+    \CustomField\models\CustomFieldModel::delete(['where' => ['1=1']]);
+
     $natures = [];
     $migrated = 0;
     $path = "custom/{$custom}/apps/maarch_entreprise/xml/index_letterbox.xml";
