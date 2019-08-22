@@ -108,6 +108,7 @@ CREATE TABLE entities_folders
 )
 WITH (OIDS=FALSE);
 
+
 /* CUSTOM FIELDS */
 DROP TABLE IF EXISTS custom_fields;
 CREATE TABLE custom_fields
@@ -121,6 +122,7 @@ CREATE TABLE custom_fields
 )
 WITH (OIDS=FALSE);
 
+
 /* INDEXING MODELS */
 DROP TABLE IF EXISTS indexing_models;
 CREATE TABLE indexing_models
@@ -133,6 +135,7 @@ CREATE TABLE indexing_models
   CONSTRAINT indexing_models_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
 DROP TABLE IF EXISTS indexing_models_fields;
 CREATE TABLE indexing_models_fields
 (
@@ -145,6 +148,7 @@ CREATE TABLE indexing_models_fields
   CONSTRAINT indexing_models_fields_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
 
 /* REFACTORING DATA */
 DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
