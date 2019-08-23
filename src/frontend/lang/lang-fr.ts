@@ -1092,4 +1092,5 @@ export const LANG_FR = {
     "classifyInFolder" : "Placer le courrier suivant dans un dossier",
     "getFolders" : "Dossiers (emplacement fixe)",
     "getFoldersSample" : "Litiges",
+    "classifyIn" : "Classer dans ...",
 };

@@ -1055,4 +1055,5 @@ export const LANG_EN = {
     "classifyInFolder" : "Classify this mail in a folder",
     "getFolders" : "Folders (fixed postion)",
     "getFoldersSample" : "Litigation",
+    "classifyIn" : "Classify in ...",
 };

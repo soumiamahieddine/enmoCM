@@ -1081,4 +1081,5 @@ export const LANG_NL = {
     "classifyInFolder" : "Classify this mail in a folder", //_TO_TRANSLATE
     "getFolders" : "Folders (fixed postion)", //_TO_TRANSLATE
     "getFoldersSample" : "Litigation", //_TO_TRANSLATE
+    "classifyIn" : "Classify in ...", //_TO_TRANSLATE
 };

@@ -13,4 +13,6 @@
         mat-menu-item (click)="launchEvent(action);">
         <span>{{action.label_action}}</span>
     </button>
+    <mat-divider></mat-divider>
+    <folder-menu [resIds]="selectedRes" (refreshList)="refreshList()"></folder-menu>
 </mat-menu>

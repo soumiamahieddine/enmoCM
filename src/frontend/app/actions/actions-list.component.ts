@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angu
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
@@ -21,6 +21,8 @@ import { Router } from '@angular/router';
 import { ViewDocActionComponent } from './view-doc-action/view-doc-action.component';
 import { RedirectActionComponent } from './redirect-action/redirect-action.component';
 import { SendShippingActionComponent } from './send-shipping-action/send-shipping-action.component';
+import { map, tap } from 'rxjs/operators';
+import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 
 @Component({
     selector: 'app-actions-list',
@@ -51,8 +53,12 @@ export class ActionsListComponent implements OnInit {
     @Input('contextMode') contextMode: boolean;
     @Input('currentBasketInfo') currentBasketInfo: any;
 
+    @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
+
     constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private router: Router) { }
 
+    dialogRef: MatDialogRef<any>;
+    
     ngOnInit(): void { }
 
     open(x: number, y: number, row: any) {
@@ -489,5 +495,9 @@ export class ActionsListComponent implements OnInit {
     unlockRest() {
         this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/unlock', { resources: this.arrRes })
             .subscribe((data: any) => { }, (err: any) => { });
+    }
+
+    refreshList() {
+        this.refreshEvent.emit();
     }
 }

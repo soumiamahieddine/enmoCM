@@ -1,0 +1,18 @@
+@import '../../../css/vars.scss';
+
+.folderAction {
+    font-style: italic;
+
+    .mat-icon {
+        font-size:20px;
+        color: $primary;
+    }
+}
+
+.labelFolder {
+    color: $primary;
+}
+
+.private {
+    color: $warn;
+}
