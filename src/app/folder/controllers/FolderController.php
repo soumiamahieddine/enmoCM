@@ -365,6 +365,7 @@ class FolderController
         $foldersResources = array_column($foldersResources, 'res_id');
 
         $formattedResources = [];
+        $allResources = [];
         $count = 0;
         if (!empty($foldersResources)) {
             $queryParams = $request->getQueryParams();
@@ -386,6 +387,10 @@ class FolderController
             ]);
 
             $resIds = ResourceListController::getIdsWithOffsetAndLimit(['resources' => $rawResources, 'offset' => $queryParams['offset'], 'limit' => $queryParams['limit']]);
+
+            foreach ($rawResources as $resource) {
+                $allResources[] = $resource['res_id'];
+            }
 
             $formattedResources = [];
             if (!empty($resIds)) {
@@ -434,7 +439,7 @@ class FolderController
             $count = count($rawResources);
         }
 
-        return $response->withJson(['resources' => $formattedResources, 'countResources' => $count]);
+        return $response->withJson(['resources' => $formattedResources, 'countResources' => $count, 'allResources' => $allResources]);
     }
 
     public function addResourcesById(Request $request, Response $response, array $args)
