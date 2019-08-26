@@ -2010,6 +2010,7 @@ CREATE TABLE custom_fields
   label character varying(256) NOT NULL,
   type character varying(256) NOT NULL,
   values jsonb,
+  default_value text,
   CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
   CONSTRAINT custom_fields_unique_key UNIQUE (label)
 )
