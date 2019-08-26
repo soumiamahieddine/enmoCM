@@ -32,8 +32,8 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
     
-    @ViewChild('xParaph', { static: true }) xParaph: XParaphComponent;
-    @ViewChild('maarchParapheur', { static: true }) maarchParapheur: MaarchParaphComponent;
+    @ViewChild('xParaph', { static: false }) xParaph: XParaphComponent;
+    @ViewChild('maarchParapheur', { static: false }) maarchParapheur: MaarchParaphComponent;
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalSignatoryBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
@@ -48,7 +48,6 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
                 }  
                 this.errors = data.errors;
                 this.loading = false;
-                console.log(data);
             }, (err: any) => {
                 this.notify.handleErrors(err);
                 this.loading = false;
