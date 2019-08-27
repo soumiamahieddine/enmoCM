@@ -27,4 +27,8 @@ export class PanelFolderComponent implements OnInit {
             return [];
         }
     }
+
+    initTree() {
+        this.folderTree.openTree(this.id);
+    }
 }

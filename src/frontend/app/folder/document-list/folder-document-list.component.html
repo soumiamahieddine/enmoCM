@@ -7,7 +7,7 @@
         <menu-nav></menu-nav>
         <basket-home *ngIf="homeData" #basketHome [homeData]="homeData" [snavL]="snav"></basket-home>
         <mat-divider></mat-divider>
-        <panel-folder #panelFolder [selectedId]="folderInfo.id"></panel-folder>
+        <panel-folder #panelFolder *ngIf="folderInfo.id !== '' && folderInfo.id !== undefined" [selectedId]="folderInfo.id"></panel-folder>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;"><img style="max-height: 100vh;" src="{{thumbnailUrl}}" /></mat-card>
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div style="height:90%;overflow:auto;position:absolute;width:100%;">
-                    <table #tableBasketListSort="matSort" cdkDropList id="folder-list" [cdkDropListConnectedTo]="panelFolder.getDragIds()" [cdkDropListData]="data" mat-table [dataSource]="data" matSort
+                    <table #tableBasketListSort="matSort" cdkDropList id="folder-list" [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data" mat-table [dataSource]="data" matSort
                         matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;">
 
                         <ng-container matColumnDef="res_id">
@@ -70,7 +70,10 @@
                                     </span>
                                     <span *ngIf="!appService.getViewMode()" style="cursor:pointer;" class="main-info-status" (click)="launch(defaultAction,row);">
                                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}" [ngStyle]="{'color': row.priorityColor}" color="primary"
-                                            class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
+                                            class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x statusIcon">
+                                        </mat-icon>
+                                        <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}" [ngStyle]="{'color': row.priorityColor}" color="primary"
+                                            class="fa fa-folder-open fa-2x">
                                         </mat-icon>
                                         <span *ngIf="row.confidentiality === 'Y'" class="watermark">{{lang.confidential}}</span>
                                         <mat-icon *ngIf="row.isLocked === true" title="{{lang.warnLockResInProgress}} : {{row.locker}}" style="color: red;" class="fa fa-lock fa-2x">

@@ -122,9 +122,11 @@ export class FolderTreeComponent implements OnInit {
             map((data: any) => this.flatToNestedObject(data.folders)),
             filter((data: any) => data.length > 0),
             tap((data) => this.initTree(data)),
-            filter(() => this.seletedId !== undefined),
-            tap(() => this.openTree(this.seletedId)),
-            tap(() => this.selectTree(this.seletedId))
+            //filter(() => this.seletedId !== undefined),
+            tap(() => {
+                this.openTree(this.seletedId);
+                this.selectTree(this.seletedId);
+            })
         ).subscribe();
     }
 
@@ -135,8 +137,8 @@ export class FolderTreeComponent implements OnInit {
         });
     }
 
-    openTree(id: number) {
-        let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(id);
+    openTree(id: any) {
+        let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(parseInt(id));
 
         while (indexSelectedFolder != -1) {
             indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(this.treeControl.dataNodes[indexSelectedFolder].parent_id);
@@ -146,8 +148,8 @@ export class FolderTreeComponent implements OnInit {
         }
     }
 
-    selectTree(id: number) {
-        let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(id);
+    selectTree(id: any) {
+        let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(parseInt(id));
         if (indexSelectedFolder != -1) {
             this.treeControl.dataNodes[indexSelectedFolder].selected = true;
         }
