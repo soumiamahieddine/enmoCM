@@ -50,7 +50,7 @@ class FolderController
         }
 
         $foldersWithResources = FolderModel::getWithEntitiesAndResources([
-            'select'   => ['COUNT(resources_folders.folder_id)', 'resources_folders.folder_id'],
+            'select'   => ['COUNT(DISTINCT resources_folders.res_id)', 'resources_folders.folder_id'],
             'where'    => ['(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
             'data'     => [$userEntities, $GLOBALS['id']],
             'groupBy'  => ['resources_folders.folder_id']
