@@ -436,7 +436,19 @@
     <id>admin_indexing_models</id>
     <name>_ADMIN_INDEXING_MODELS</name>
     <comment>_ADMIN_INDEXING_MODELS</comment>
-    <servicepage>/administration/users</servicepage>
+    <servicepage>/administration/indexing-models</servicepage>
+    <servicetype>admin</servicetype>
+    <category>organisation</category>
+    <system_service>false</system_service>
+    <style>fa fa-user</style>
+    <enabled>true</enabled>
+    <angular>true</angular>
+  </SERVICE>
+  <SERVICE>
+    <id>admin_custom_fields</id>
+    <name>_ADMIN_CUSTOM_FIELDS</name>
+    <comment>_ADMIN_CUSTOM_FIELDS</comment>
+    <servicepage>/administration/custom_fields</servicepage>
     <servicetype>admin</servicetype>
     <category>organisation</category>
     <system_service>false</system_service>
