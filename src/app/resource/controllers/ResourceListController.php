@@ -994,7 +994,7 @@ class ResourceListController
         }
 
         $folders = FolderModel::getWithEntitiesAndResources([
-            'select'    => ['folders.id', 'folders.label'],
+            'select'    => ['DISTINCT(folders.id)', 'folders.label'],
             'where'     => ['res_id = ?', '(user_id = ? OR entity_id in (?))'],
             'data'      => [$args['resId'], $args['userId'], $entities]
         ]);
