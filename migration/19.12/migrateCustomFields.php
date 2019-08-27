@@ -12,6 +12,11 @@ foreach ($customs as $custom) {
         continue;
     }
 
+    \SrcCore\models\DatabasePDO::reset();
+    new \SrcCore\models\DatabasePDO(['customId' => $custom]);
+
+    \CustomField\models\CustomFieldModel::delete(['where' => ['1=1']]);
+
     $natures = [];
     $migrated = 0;
     $path = "custom/{$custom}/apps/maarch_entreprise/xml/index_letterbox.xml";
@@ -24,6 +29,16 @@ foreach ($customs as $custom) {
         if ($loadedXml) {
             $i = 0;
             foreach ($loadedXml->INDEX as $value) {
+                $customExists = \SrcCore\models\DatabaseModel::select([
+                        'select' => [1],
+                        'table'  => ['doctypes_indexes'],
+                        'where'  => ['field_name = ?'],
+                        'data'   => [(string)$value->column]
+                ]);
+                if (empty($customExists)) {
+                    continue;
+                }
+
                 $label = (string)$value->label;
                 $type = (string)$value->type;
 
@@ -62,5 +77,5 @@ foreach ($customs as $custom) {
         }
     }
 
-    printf("Migration Champs Custom (CUSTOM {$custom}) : " . $migrated . " Champs custom trouvé(s) et migré(s).\n");
+    printf("Migration Champs Custom (CUSTOM {$custom}) : " . $migrated . " Champs custom utilisé(s) et migré(s).\n");
 }

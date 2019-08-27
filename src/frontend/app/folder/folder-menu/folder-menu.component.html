@@ -1,0 +1,7 @@
+<button mat-menu-item [matMenuTriggerFor]="folders" class="folderAction" (menuOpened)="getFolders()">
+    <mat-icon class="fa fa-folder fa-2x"></mat-icon>
+    <span>{{lang.classifyIn}}</span>
+</button>
+<mat-menu #folders="matMenu">
+    <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder" [class.private]="!folder.public" (click)="classifyDocuments(folder)" [title]="folder.label">{{folder.label}}</button>
+</mat-menu>

@@ -47,7 +47,7 @@
                         </div>
                         <div class="table-head-tool">
                             <span>
-                                <app-actions-list #actionsList (triggerEvent)="refreshDaoAfterAction()"
+                                <app-actions-list #actionsList (refreshEvent)="refreshDao()"
                                     [contextMode]="false" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
                                     [currentBasketInfo]="currentBasketInfo"></app-actions-list>
                             </span>
@@ -166,6 +166,9 @@
                                             </button>
                                         </span>
                                     </div>
+                                    <div *ngIf="row.folders !== undefined && row.folders.length > 0" class="folder-info">
+                                        <span class="badge badge-folder" *ngFor="let folder of row.folders" routerLink="/folders/{{folder.id}}" title="Accéder au dossier : {{folder.label}}"><i class="fa fa-folder"></i> {{folder.label}}</span>
+                                    </div>
                                 </td>
                             </ng-container>
                             <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"
@@ -196,6 +199,6 @@
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>
-    <app-actions-list (triggerEvent)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true"
+    <app-actions-list (refreshEvent)="refreshDao()" #actionsListContext [contextMode]="true"
         [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo">
     </app-actions-list>

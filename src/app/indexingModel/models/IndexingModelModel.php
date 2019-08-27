@@ -69,7 +69,7 @@ class IndexingModelModel
             'columnsValues' => [
                 'id'        => $nextSequenceId,
                 'label'     => $args['label'],
-                'default'   => $args['default'],
+                '"default"' => $args['default'],
                 'owner'     => $args['owner'],
                 'private'   => $args['private']
             ]

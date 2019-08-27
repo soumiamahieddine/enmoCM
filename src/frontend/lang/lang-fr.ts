@@ -1090,4 +1090,7 @@ export const LANG_FR = {
     "removedFromFolder" : "Le courrier a été retiré du dossier",
     "removeFromFolder" : "Retirer du dossier",
     "classifyInFolder" : "Placer le courrier suivant dans un dossier",
+    "getFolders" : "Dossiers (emplacement fixe)",
+    "getFoldersSample" : "Litiges",
+    "classifyIn" : "Classer dans ...",
 };

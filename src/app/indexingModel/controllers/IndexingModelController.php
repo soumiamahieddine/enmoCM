@@ -26,12 +26,14 @@ use Slim\Http\Response;
 
 class IndexingModelController
 {
-    public function get(Request $request, Response $response, array $args)
+    const FIELDS_TYPES = ['standard', 'custom'];
+
+    public function get(Request $request, Response $response)
     {
-        $models = IndexingModelModel::get(['where' => ['owner = ? OR private = ?'], 'data' => [$GLOBALS['id'], false]]);
+        $models = IndexingModelModel::get(['where' => ['owner = ? OR private = ?'], 'data' => [$GLOBALS['id'], 'false']]);
 
         foreach ($models as $key => $model) {
-            $fields = IndexingModelFieldModel::get(['select' => ['label', 'mandatory', 'value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$model['id']]]);
+            $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$model['id']]]);
             $models[$key]['fields'] = $fields;
         }
 
@@ -47,7 +49,7 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
          }
 
-        $fields = IndexingModelFieldModel::get(['select' => ['label', 'mandatory', 'value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
+        $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
         $model['fields'] = $fields;
 
         return $response->withJson(['indexingModel' => $model]);
@@ -60,6 +62,14 @@ class IndexingModelController
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
+        foreach ($body['fields'] as $key => $field) {
+            if (!Validator::stringType()->notEmpty()->validate($field['type']) || !in_array($field['type'], IndexingModelController::FIELDS_TYPES)) {
+                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] type is empty or not a validate type"]);
+            } elseif (!Validator::intVal()->notEmpty()->validate($field['identifier'])) {
+                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not an integer"]);
+            }
+        }
+
         if (ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             $body['private'] = empty($body['private']) ? 'false' : 'true';
         } else {
@@ -74,16 +84,22 @@ class IndexingModelController
         ]);
 
         foreach ($body['fields'] as $field) {
+            if ($field['type'] == 'custom') {
+                $unit = $field['unit'] ?? null;
+            } else {
+                $unit = null;
+            }
             IndexingModelFieldModel::create([
-                'model_id'  => $modelId,
-                'label'     => $field['label'],
-                'mandatory' => empty($field['mandatory']) ? 'false' : 'true',
-                'value'     => $field['value'] ?? null,
-                'unit'      => empty($field['unit']) ? null : $field['unit']
+                'model_id'      => $modelId,
+                'type'          => $field['type'],
+                'identifier'    => $field['identifier'],
+                'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
+                'value'         => $field['value'] ?? null,
+                'unit'          => $unit
             ]);
         }
 
-        return $response->withStatus(204);
+        return $response->withJson(['id' => $modelId]);
     }
 
     public function update(Request $request, Response $response, array $args)
@@ -92,6 +108,13 @@ class IndexingModelController
 
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        }
+        foreach ($body['fields'] as $key => $field) {
+            if (!Validator::stringType()->notEmpty()->validate($field['type']) || !in_array($field['type'], IndexingModelController::FIELDS_TYPES)) {
+                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] type is empty or not a validate type"]);
+            } elseif (!Validator::intVal()->notEmpty()->validate($field['identifier'])) {
+                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not an integer"]);
+            }
         }
 
         $model = IndexingModelModel::getById(['select' => ['owner', 'private'], 'id' => $args['id']]);
@@ -105,7 +128,7 @@ class IndexingModelController
 
         IndexingModelModel::update([
             'set'   => [
-                'label'     => $body['label']
+                'label' => $body['label']
             ],
             'where' => ['id = ?'],
             'data'  => [$args['id']]
@@ -114,12 +137,18 @@ class IndexingModelController
         IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$args['id']]]);
 
         foreach ($body['fields'] as $field) {
+            if ($field['type'] == 'custom') {
+                $unit = $field['unit'] ?? null;
+            } else {
+                $unit = null;
+            }
             IndexingModelFieldModel::create([
-                'model_id'  => $args['id'],
-                'label'     => $field['label'],
-                'mandatory' => empty($field['mandatory']) ? 'false' : 'true',
-                'value'     => $field['value'] ?? null,
-                'unit'      => empty($field['unit']) ? null : $field['unit']
+                'model_id'      => $args['id'],
+                'type'          => $field['type'],
+                'identifier'    => $field['identifier'],
+                'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
+                'value'         => $field['value'] ?? null,
+                'unit'          => $unit
             ]);
         }
 

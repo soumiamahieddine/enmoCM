@@ -1110,8 +1110,7 @@ class ResourceListController
                         $value['displayValue'] = $resource['opinion_limit_date'];
                         $display[] = $value;
                     } elseif ($value['value'] == 'getFolders') {
-                        $value['displayValue'] = ResourceListController::getFolders(['resId' => $resource['res_id'], 'userId' => $args['userId']]);
-                        $display[] = $value;
+                        $formattedResources[$key]['folders'] = ResourceListController::getFolders(['resId' => $resource['res_id'], 'userId' => $args['userId']]);
                     }
                 }
                 $formattedResources[$key]['display'] = $display;

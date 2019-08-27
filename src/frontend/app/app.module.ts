@@ -26,6 +26,7 @@ import { ActionsListComponent }                 from './actions/actions-list.com
 import { FolderTreeComponent }                 from './folder/folder-tree.component';
 import { FolderDocumentListComponent }                 from './folder/document-list/folder-document-list.component';
 import { PanelFolderComponent }                 from './folder/panel/panel-folder.component';
+import { FolderMenuComponent }                 from './folder/folder-menu/folder-menu.component';
 
 /*ACTIONS PAGES */
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
@@ -117,7 +118,8 @@ import { PrintSeparatorComponent }                        from './separator/prin
         PrintSeparatorComponent,
         FolderTreeComponent,
         PanelFolderComponent,
-        FolderDocumentListComponent
+        FolderDocumentListComponent,
+        FolderMenuComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,

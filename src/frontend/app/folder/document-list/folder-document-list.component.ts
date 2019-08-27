@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { merge, Observable, of as observableOf, Subject  } from 'rxjs';
+import { merge, Observable, of as observableOf, Subject, of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { startWith, switchMap, map, catchError, takeUntil, tap } from 'rxjs/operators';
+import { startWith, switchMap, map, catchError, takeUntil, tap, exhaustMap, filter } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../../service/header.service';
 
@@ -17,6 +17,8 @@ import { Overlay } from '@angular/cdk/overlay';
 import { PanelListComponent } from '../../list/panel/panel-list.component';
 import { AppService } from '../../../service/app.service';
 import { PanelFolderComponent } from '../panel/panel-folder.component';
+import { BasketHomeComponent } from '../../basket/basket-home.component';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
 
 declare function $j(selector: any): any;
@@ -35,7 +37,7 @@ export class FolderDocumentListComponent implements OnInit {
     public innerHtml: SafeHtml;
     basketUrl: string;
     homeData: any;
-    
+
     injectDatasParam = {
         resId: 0,
         editable: false
@@ -43,6 +45,8 @@ export class FolderDocumentListComponent implements OnInit {
     currentResource: any = {};
 
     filtersChange = new EventEmitter();
+
+    dialogRef: MatDialogRef<any>;
 
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
@@ -87,20 +91,21 @@ export class FolderDocumentListComponent implements OnInit {
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
-    @ViewChild('panelFolder', { static: true }) panelFolder: PanelFolderComponent;
+    @ViewChild('panelFolder', { static: false }) panelFolder: PanelFolderComponent;
+    @ViewChild('basketHome', { static: true }) basketHome: BasketHomeComponent;
 
     constructor(
-        private router: Router, 
-        private route: ActivatedRoute, 
-        public http: HttpClient, 
-        public dialog: MatDialog, 
-        private sanitizer: DomSanitizer, 
-        private headerService: HeaderService, 
-        private notify: NotificationService, 
-        public overlay: Overlay, 
+        private router: Router,
+        private route: ActivatedRoute,
+        public http: HttpClient,
+        public dialog: MatDialog,
+        private sanitizer: DomSanitizer,
+        private headerService: HeaderService,
+        private notify: NotificationService,
+        public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
         public appService: AppService) {
-            $j("link[href='merged_css.php']").remove();
+        $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
@@ -116,13 +121,17 @@ export class FolderDocumentListComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.destroy$.next(true);
 
-            this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
-            this.folderInfo = 
-            {
-                "id": params['folderId'],
-                "label": 'test'
+            this.http.get('../../rest/folders/' + params['folderId'])
+                .subscribe((data: any) => {
+                    this.folderInfo =
+                        {
+                            'id': params['folderId'],
+                            'label': data.folder.label
+                        };
 
-            };
+                    this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
+                });
+            this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
             this.selectedRes = [];
             this.sidenavRight.close();
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
@@ -161,7 +170,7 @@ export class FolderDocumentListComponent implements OnInit {
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
                     this.resultsLength = data.countResources;
-                    //this.allResInBasket = data.count;
+                    this.allResInBasket = data.allResources;
                     //this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
                     return data.resources;
                 }),
@@ -192,13 +201,13 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     togglePanel(mode: string, row: any) {
-        let thisSelect = { checked : true };
-        let thisDeselect = { checked : false };
+        let thisSelect = { checked: true };
+        let thisDeselect = { checked: false };
         row.checked = true;
         this.toggleAllRes(thisDeselect);
         this.toggleRes(thisSelect, row);
 
-        if(this.currentResource.res_id == row.res_id && this.sidenavRight.opened && this.currentMode == mode) {
+        if (this.currentResource.res_id == row.res_id && this.sidenavRight.opened && this.currentMode == mode) {
             this.sidenavRight.close();
         } else {
             this.currentMode = mode;
@@ -210,7 +219,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     refreshBadgeNotes(nb: number) {
         this.currentResource.countNotes = nb;
-    }                                     
+    }
 
     refreshBadgeAttachments(nb: number) {
         this.currentResource.countAttachments = nb;
@@ -219,6 +228,14 @@ export class FolderDocumentListComponent implements OnInit {
     refreshDao() {
         this.paginator.pageIndex = this.listProperties.page;
         this.filtersChange.emit();
+    }
+
+    refreshDaoAfterAction() {
+        this.sidenavRight.close();
+        this.refreshDao();
+        this.basketHome.refreshBasketHome();
+        const e: any = { checked: false };
+        this.toggleAllRes(e);
     }
 
     viewThumbnail(row: any) {
@@ -277,7 +294,11 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     unclassify() {
-        this.http.request('DELETE', '../../rest/folders/' + this.folderInfo.id + '/resources', { body: { resources: this.selectedRes } }).pipe(
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: 'Voulez-vous enlever <b>' + this.selectedRes.length + '</b> document(s) du classement ?' } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.request('DELETE', '../../rest/folders/' + this.folderInfo.id + '/resources', { body: { resources: this.selectedRes } })),
             tap((data: any) => {
                 this.notify.success(this.lang.removedFromFolder);
                 this.resultsLength = data.countResources;
@@ -286,14 +307,24 @@ export class FolderDocumentListComponent implements OnInit {
                         this.data.splice(key, 1);
                     }
                 });
+                this.refreshDaoAfterAction();
             })
         ).subscribe();
+    }
+
+    listTodrag() {
+        if (this.panelFolder !== undefined) {
+            return this.panelFolder.getDragIds();
+        } else {
+            return [];
+        }
     }
 }
 export interface BasketList {
     folder: any;
     resources: any[];
     countResources: number;
+    allResources: number[];
 }
 
 export class ResultListHttpDao {

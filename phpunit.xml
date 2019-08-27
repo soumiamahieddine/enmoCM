@@ -11,12 +11,14 @@
             <file>test/unitTests/app/contact/ContactControllerTest.php</file>
             <file>test/unitTests/app/contact/ContactGroupControllerTest.php</file>
             <file>test/unitTests/app/contact/ContactTypeControllerTest.php</file>
+            <file>test/unitTests/app/customField/CustomFieldControllerTest.php</file>
             <file>test/unitTests/core/CoreControllerTest.php</file>
             <file>test/unitTests/app/docserver/DocserverControllerTest.php</file>
             <file>test/unitTests/app/doctype/DoctypeControllerTest.php</file>
             <file>test/unitTests/app/entity/EntityControllerTest.php</file>
             <file>test/unitTests/app/group/GroupControllerTest.php</file>
             <file>test/unitTests/app/entity/ListTemplateControllerTest.php</file>
+            <file>test/unitTests/app/indexingModel/IndexingModelControllerTest.php</file>
             <file>test/unitTests/app/notification/NotificationControllerTest.php</file>
             <file>test/unitTests/app/notification/NotificationScheduleControllerTest.php</file>
             <file>test/unitTests/app/parameter/ParameterControllerTest.php</file>

@@ -18,6 +18,8 @@
 namespace CustomField\controllers;
 
 use CustomField\models\CustomFieldModel;
+use Group\models\ServiceModel;
+use IndexingModel\models\IndexingModelFieldModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -26,9 +28,9 @@ class CustomFieldController
 {
     public function create(Request $request, Response $response)
     {
-//        if (!ServiceModel::hasService(['id' => 'admin_parameters', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $body = $request->getParsedBody();
 
@@ -56,9 +58,9 @@ class CustomFieldController
 
     public function update(Request $request, Response $response, array $args)
     {
-//        if (!ServiceModel::hasService(['id' => 'admin_parameters', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $field = CustomFieldModel::getById(['select' => [1], 'id' => $args['id']]);
         if (empty($field)) {
@@ -92,16 +94,18 @@ class CustomFieldController
 
     public function delete(Request $request, Response $response, array $args)
     {
-//        if (!ServiceModel::hasService(['id' => 'admin_parameters', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        IndexingModelFieldModel::delete(['where' => ['type = ?', 'identifier = ?'], 'data' => ['custom', $args['id']]]);
+
+        //TODO Suppression des valeurs liés aux courriers ?
 
         CustomFieldModel::delete([
             'where' => ['id = ?'],
             'data'  => [$args['id']]
         ]);
-
-        //TODO Suppression des valeurs liés aux courriers ?
 
         return $response->withStatus(204);
     }

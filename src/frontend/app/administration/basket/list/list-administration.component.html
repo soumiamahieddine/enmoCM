@@ -6,7 +6,7 @@
         </mat-option>
     </mat-select>
 </mat-form-field>
-<hr/>
+<hr />
 <mat-toolbar class="editorTool">
     <span>
         <button color="primary" *ngIf="displayMode=='label'" mat-icon-button (click)="toggleData()"
@@ -47,52 +47,55 @@
     <ng-container *ngIf="(displayedSecondaryData.length > 0 && displayMode=='sample') || displayMode=='label'">
         <mat-toolbar class="secondaryInformations example-list" cdkDropListOrientation="horizontal" cdkDropList
             [cdkDropListData]="displayedSecondaryData" (cdkDropListDropped)="drop($event)">
-            <span class="example-box" *ngFor="let item of displayedSecondaryData;let itData=index" cdkDrag>
-                <button *ngIf="displayMode=='label'" color="primary" mat-icon-button [matMenuTriggerFor]="menu">
-                    <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v fa-2x"></mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="removeData(item,itData)">
-                        <mat-icon class="secondaryInformations_icon" color="warn" fontSet="fas"
-                            fontIcon="fa-trash fa-2x"></mat-icon>
-                        <span>{{lang.delete}}</span>
+            <ng-container *ngFor="let item of displayedSecondaryData;let itData=index">
+                <span class="example-box" *ngIf="item.value != 'getFolders'" cdkDrag>
+                    <button *ngIf="displayMode=='label'" color="primary" mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v fa-2x"></mat-icon>
                     </button>
-                    <mat-divider></mat-divider>
-                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('boldFontData') > -1" mat-menu-item
-                        (click)="setStyle(item,'boldFontData')">
-                        <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-bold fa-2x"></mat-icon>
-                        <span>{{lang.fontBold}}</span>
-                    </button>
-                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_leftData') > -1" mat-menu-item
-                        (click)="setStyle(item,'align_leftData')">
-                        <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-left fa-2x">
-                        </mat-icon>
-                        <span>{{lang.alignLeft}}</span>
-                    </button>
-                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_centerData') > -1" mat-menu-item
-                        (click)="setStyle(item,'align_centerData')">
-                        <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-center fa-2x">
-                        </mat-icon>
-                        <span>{{lang.alignCenter}}</span>
-                    </button>
-                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_rightData') > -1" mat-menu-item
-                        (click)="setStyle(item,'align_rightData')">
-                        <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-right fa-2x">
-                        </mat-icon>
-                        <span>{{lang.alignRight}}</span>
-                    </button>
-                    <button [class.isSelectedMenu]="item.cssClasses.indexOf('bigFontData') > -1" mat-menu-item
-                        (click)="setStyle(item,'bigFontData')">
-                        <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-text-height fa-2x">
-                        </mat-icon>
-                        <span>{{lang.fontBig}}</span>
-                    </button>
-                </mat-menu>
-                <span style="width:100%;" [class]="item.cssClasses.join(' ')">
-                    <i class="fa {{item.icon}}"></i>&nbsp;
-                    <span class="secondaryInformations_label" [innerHTML]="item[displayMode]"></span>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="removeData(item,itData)">
+                            <mat-icon class="secondaryInformations_icon" color="warn" fontSet="fas"
+                                fontIcon="fa-trash fa-2x"></mat-icon>
+                            <span>{{lang.delete}}</span>
+                        </button>
+                        <mat-divider></mat-divider>
+                        <button [class.isSelectedMenu]="item.cssClasses.indexOf('boldFontData') > -1" mat-menu-item
+                            (click)="setStyle(item,'boldFontData')">
+                            <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-bold fa-2x">
+                            </mat-icon>
+                            <span>{{lang.fontBold}}</span>
+                        </button>
+                        <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_leftData') > -1" mat-menu-item
+                            (click)="setStyle(item,'align_leftData')">
+                            <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-left fa-2x">
+                            </mat-icon>
+                            <span>{{lang.alignLeft}}</span>
+                        </button>
+                        <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_centerData') > -1" mat-menu-item
+                            (click)="setStyle(item,'align_centerData')">
+                            <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-center fa-2x">
+                            </mat-icon>
+                            <span>{{lang.alignCenter}}</span>
+                        </button>
+                        <button [class.isSelectedMenu]="item.cssClasses.indexOf('align_rightData') > -1" mat-menu-item
+                            (click)="setStyle(item,'align_rightData')">
+                            <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-align-right fa-2x">
+                            </mat-icon>
+                            <span>{{lang.alignRight}}</span>
+                        </button>
+                        <button [class.isSelectedMenu]="item.cssClasses.indexOf('bigFontData') > -1" mat-menu-item
+                            (click)="setStyle(item,'bigFontData')">
+                            <mat-icon class="secondaryInformations_icon" fontSet="fas" fontIcon="fa-text-height fa-2x">
+                            </mat-icon>
+                            <span>{{lang.fontBig}}</span>
+                        </button>
+                    </mat-menu>
+                    <span style="width:100%;" [class]="item.cssClasses.join(' ')">
+                        <i class="fa {{item.icon}}"></i>&nbsp;
+                        <span class="secondaryInformations_label" [innerHTML]="item[displayMode]"></span>
+                    </span>
                 </span>
-            </span>
+            </ng-container>
         </mat-toolbar>
     </ng-container>
     <div class="resultRow newRow">
@@ -123,6 +126,22 @@
                 <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
             </button>
         </mat-button-toggle-group>
+    </div>
+    <div *ngFor="let item of displayedSecondaryData;let itData=index" class="folder-info">
+        <ng-container *ngIf="item.value=='getFolders'">
+            <button *ngIf="displayMode=='label'" color="primary" mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v fa-2x"></mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="removeData(item,itData)">
+                    <mat-icon class="secondaryInformations_icon" color="warn" fontSet="fas" fontIcon="fa-trash fa-2x">
+                    </mat-icon>
+                    <span>{{lang.delete}}</span>
+                </button>
+            </mat-menu>
+            <span class="badge badge-folder"><i class="fa fa-folder"></i>
+                {{item[displayMode]}}</span>
+        </ng-container>
     </div>
 </mat-card>
 <div class="row">

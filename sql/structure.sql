@@ -2010,6 +2010,7 @@ CREATE TABLE custom_fields
   label character varying(256) NOT NULL,
   type character varying(256) NOT NULL,
   values jsonb,
+  default_value text,
   CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
   CONSTRAINT custom_fields_unique_key UNIQUE (label)
 )
@@ -2026,14 +2027,17 @@ CREATE TABLE indexing_models
 )
 WITH (OIDS=FALSE);
 
+CREATE TYPE indexing_models_fields_type AS ENUM ('standard', 'custom');
+
 CREATE TABLE indexing_models_fields
 (
-  id SERIAL NOT NULL,
-  model_id INTEGER NOT NULL,
-  label character varying(256) NOT NULL,
-  mandatory BOOLEAN NOT NULL,
-  value text,
-  unit INTEGER,
-  CONSTRAINT indexing_models_fields_pkey PRIMARY KEY (id)
+    id SERIAL NOT NULL,
+    model_id INTEGER NOT NULL,
+    type indexing_models_fields_type NOT NULL,
+    identifier INTEGER NOT NULL,
+    mandatory BOOLEAN NOT NULL,
+    value text,
+    unit INTEGER,
+    CONSTRAINT indexing_models_fields_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

@@ -1053,4 +1053,7 @@ export const LANG_EN = {
     "removedFromFolder" : "Mail removed from folder",
     "removeFromFolder" : "Remove from folder",
     "classifyInFolder" : "Classify this mail in a folder",
+    "getFolders" : "Folders (fixed postion)",
+    "getFoldersSample" : "Litigation",
+    "classifyIn" : "Classify in ...",
 };
