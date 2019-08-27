@@ -199,7 +199,7 @@ define('_SECURITIES', 'Sécurités');
 define('_EMAILSERVER_PARAM', 'Serveur e-mail');
 define('_EMAILSERVER_PARAM_DESC', 'Connecter votre serveur e-mail à Maarch Courrier afin de pouvoir envoyer des courriels.');
 define('_ADMIN_INDEXING_MODELS', 'Administration des modèles d\'indexation');
-define('_ADMIN_CUSTOM_FIELDS', 'Administration des champs customisés');
+define('_ADMIN_CUSTOM_FIELDS', 'Administration des champs personnalisés');
 
 // SERVICES
 define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');

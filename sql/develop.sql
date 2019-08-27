@@ -137,10 +137,9 @@ CREATE TABLE indexing_models
 )
 WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS indexing_models_fields;
 DROP TYPE IF EXISTS indexing_models_fields_type;
 CREATE TYPE indexing_models_fields_type AS ENUM ('standard', 'custom');
-
-DROP TABLE IF EXISTS indexing_models_fields;
 CREATE TABLE indexing_models_fields
 (
   id SERIAL NOT NULL,
