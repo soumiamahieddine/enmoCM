@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Renderer2, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { map, tap, catchError, filter, exhaustMap, finalize } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { Router } from '@angular/router';
+import { FolderUpdateComponent } from './folder-update/folder-update.component';
 
 declare function $j(selector: any): any;
 /**
@@ -104,6 +105,8 @@ export class FolderTreeComponent implements OnInit {
     dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
     @ViewChild('tree', { static: true }) tree: any;
+    
+    @Output('refreshDocList') refreshDocList = new EventEmitter<string>();
 
     constructor(
         public http: HttpClient,
@@ -365,7 +368,10 @@ export class FolderTreeComponent implements OnInit {
             tap((data: any) => {
                 node.countResources = data.countResources;
             }),
-            tap(() => this.notify.success('Courrier classé')),
+            tap(() => {
+                this.notify.success('Courrier classé');
+                this.refreshDocList.emit();
+            }),
             finalize(() => node.drag = false),
             catchError((err) => {
                 this.notify.handleErrors(err);
@@ -373,8 +379,6 @@ export class FolderTreeComponent implements OnInit {
             })
         ).subscribe();
     }
-
-
 
     dragEnter(node: any) {
         node.drag = true;
@@ -386,7 +390,6 @@ export class FolderTreeComponent implements OnInit {
         } else {
             return [];
         }
-
     }
 
     toggleInput() {
@@ -397,4 +400,13 @@ export class FolderTreeComponent implements OnInit {
             }, 0);
         }
     }
+
+    openFolderAdmin(node: any) {
+        console.log(node);
+        this.dialogRef = this.dialog.open(FolderUpdateComponent, { autoFocus: false, data: { folderId: node.id } });
+
+        this.dialogRef.afterClosed().pipe(
+     
+        ).subscribe();
+    }    
 }

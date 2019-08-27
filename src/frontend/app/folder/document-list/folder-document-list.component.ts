@@ -46,6 +46,8 @@ export class FolderDocumentListComponent implements OnInit {
 
     filtersChange = new EventEmitter();
 
+    dragInit: boolean = true;
+
     dialogRef: MatDialogRef<any>;
 
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
@@ -119,6 +121,7 @@ export class FolderDocumentListComponent implements OnInit {
         this.isLoadingResults = false;
 
         this.route.params.subscribe(params => {
+            this.dragInit = true;
             this.destroy$.next(true);
 
             this.http.get('../../rest/folders/' + params['folderId'])
@@ -137,6 +140,9 @@ export class FolderDocumentListComponent implements OnInit {
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(null);
 
+            setTimeout(() => {
+                this.dragInit = false;
+            }, 1000);
             this.initResultList();
 
         },

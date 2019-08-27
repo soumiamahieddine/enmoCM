@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { FolderTreeComponent } from '../folder-tree.component';
 
@@ -16,6 +16,8 @@ export class PanelFolderComponent implements OnInit {
     @Input('selectedId') id: number;
     @ViewChild('folderTree', { static: true }) folderTree: FolderTreeComponent;
     
+    @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
+    
     constructor() { }
 
     ngOnInit(): void { }
@@ -30,5 +32,9 @@ export class PanelFolderComponent implements OnInit {
 
     initTree() {
         this.folderTree.openTree(this.id);
+    }
+
+    refreshDocList() {
+        this.refreshEvent.emit();
     }
 }
