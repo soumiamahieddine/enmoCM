@@ -432,4 +432,16 @@
     <enabled>true</enabled>
     <angular>true</angular>
   </SERVICE>
+  <SERVICE>
+    <id>admin_indexing_models</id>
+    <name>_ADMIN_INDEXING_MODELS</name>
+    <comment>_ADMIN_INDEXING_MODELS</comment>
+    <servicepage>/administration/users</servicepage>
+    <servicetype>admin</servicetype>
+    <category>organisation</category>
+    <system_service>false</system_service>
+    <style>fa fa-user</style>
+    <enabled>true</enabled>
+    <angular>true</angular>
+  </SERVICE>
 </root>

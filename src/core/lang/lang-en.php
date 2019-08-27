@@ -198,6 +198,7 @@ define('_ADMIN_TEMPLATES_DESC', 'Manage templates for attachments, notifications
 define('_SECURITIES', 'Securities');
 define('_EMAILSERVER_PARAM', 'Mail server');
 define('_EMAILSERVER_PARAM_DESC', 'Link your mail serveur with application in order to send emails.');
+define('_ADMIN_INDEXING_MODELS', 'Indexing models administration');
 
 // SERVICES
 define('_REDIRECT_TO_ACTION', 'Redirect to an action');

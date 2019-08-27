@@ -198,6 +198,7 @@ define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces 
 define('_SECURITIES', 'Sécurités');
 define('_EMAILSERVER_PARAM', 'Serveur e-mail');
 define('_EMAILSERVER_PARAM_DESC', 'Connecter votre serveur e-mail à Maarch Courrier afin de pouvoir envoyer des courriels.');
+define('_ADMIN_INDEXING_MODELS', 'Administration des modèles d\'indexation');
 
 // SERVICES
 define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
