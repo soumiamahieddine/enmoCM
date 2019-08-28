@@ -28,7 +28,7 @@ export class StatusesAdministrationComponent implements OnInit {
     displayedColumns = ['img_filename', 'id', 'label_status', 'identifier'];
     dataSource = new MatTableDataSource(this.statuses);
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace

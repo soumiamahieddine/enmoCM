@@ -31,7 +31,7 @@ export class ActionsAdministrationComponent implements OnInit {
 
     displayedColumns = ['id', 'label_action', 'history', 'actions'];
     dataSource = new MatTableDataSource(this.actions);
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
