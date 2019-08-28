@@ -13,7 +13,7 @@
                         {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="Dossier partagé"></i>
                     </span>
                 </span>
-                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();showAction(node);"
+                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();showAction(node);checkRights(node);"
                     [disabled]="!node.showAction">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
                     <span *ngIf="!node.showAction" class="countResources">
@@ -22,8 +22,8 @@
                 </button>
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">Nouveau sous-dossier</button>
-                    <button mat-menu-item (click)="deleteNode(node)">Supprimer</button>
-                    <button mat-menu-item (click)="openFolderAdmin(node)">Modifier</button>
+                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">Supprimer</button>
+                    <button mat-menu-item (click)="openFolderAdmin(node)" [disabled]="!node.edition">Modifier</button>
                 </mat-menu>
             </a>
         </mat-tree-node>
@@ -53,7 +53,7 @@
                         {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="Dossier partagé"></i>
                     </span>
                 </span>
-                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();" [disabled]="!node.showAction">
+                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();checkRights(node);" [disabled]="!node.showAction">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
                     <span *ngIf="!node.showAction" class="countResources">
                         {{node.countResources}}
@@ -61,8 +61,8 @@
                 </button>
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">Nouveau sous-dossier</button>
-                    <button mat-menu-item (click)="deleteNode(node)">Supprimer</button>
-                    <button mat-menu-item (click)="openFolderAdmin(node)">Modifier</button>
+                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">Supprimer</button>
+                    <button mat-menu-item (click)="openFolderAdmin(node)" [disabled]="!node.edition">Modifier</button>
                 </mat-menu>
             </a>
         </mat-tree-node>

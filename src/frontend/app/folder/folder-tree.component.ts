@@ -406,5 +406,21 @@ export class FolderTreeComponent implements OnInit {
         this.dialogRef.afterClosed().pipe(
      
         ).subscribe();
-    }    
+    }
+
+    checkRights(node: any) {
+        let userEntities: any[] = [];
+        let currentUserId: number = 0;
+        this.http.get("../../rest/currentUser/profile").pipe(
+            tap((data: any) => {
+                userEntities = data.entities.map((info: any) => info.id);
+                currentUserId = data.id;
+            }),
+            exhaustMap(() => this.http.get("../../rest/folders/" + node.id)),
+            tap((data: any) => {
+                const compare = data.folder.sharing.entities.map((data: any) => data.entity_id).filter((item: any) => userEntities.indexOf(item) > -1);
+                node.edition = (compare.length > 0 || data.folder.user_id === currentUserId) ? true : false;
+            }),
+        ).subscribe();
+    }
 }
