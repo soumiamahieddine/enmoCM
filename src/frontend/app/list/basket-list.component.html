@@ -42,8 +42,8 @@
                                 style="margin: 10px;padding-right: 10px;" title="{{lang.selectAllResInBasket}}"
                                 (change)="toggleAllRes($event)"></mat-checkbox>&nbsp;{{allResInBasket.length}}
                             {{lang.records | ucfirst}}&nbsp;<small
-                                *ngIf="selectedRes.length > 0">({{selectedRes.length}}
-                                {{lang.selected}})</small>
+                                *ngIf="selectedRes.length > 0">- {{selectedRes.length}}
+                                {{lang.selected}}</small>
                         </div>
                         <div class="table-head-tool">
                             <span>

@@ -233,7 +233,7 @@ class FolderController
         if (!Validator::numeric()->notEmpty()->validate($aArgs['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
         }
-        if (!Validator::boolVal()->validate($data['public'])) {
+        if (!Validator::boolType()->validate($data['public'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
         }
         if ($data['public'] && !isset($data['sharing']['entities'])) {

@@ -24,7 +24,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
         sendList : []
     };
 
-    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
+    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
     loadingExport: boolean;
     
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<CreateAcknowledgementReceiptActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }

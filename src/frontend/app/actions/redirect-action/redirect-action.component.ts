@@ -43,8 +43,8 @@ export class RedirectActionComponent implements OnInit {
     filteredUserRedirect: Observable<any[]>;
     isDestinationChanging: boolean = false;
 
-    @ViewChild('appDiffusionsList', { static: true }) appDiffusionsList: DiffusionsListComponent;
-    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
+    @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
+    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<RedirectActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
