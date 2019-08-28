@@ -37,4 +37,8 @@ export class PanelFolderComponent implements OnInit {
     refreshDocList() {
         this.refreshEvent.emit();
     }
+
+    refreshFoldersTree() {
+        this.folderTree.getFolders();
+    }
 }

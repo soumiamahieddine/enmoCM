@@ -49,7 +49,7 @@
                             <span>
                                 <app-actions-list #actionsList (refreshEvent)="refreshDao()"
                                     [contextMode]="false" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
-                                    [currentBasketInfo]="currentBasketInfo"></app-actions-list>
+                                    [currentBasketInfo]="currentBasketInfo" (refreshPanelFolders)="panelFolder.refreshFoldersTree()"></app-actions-list>
                             </span>
                             <span>
                                 <app-tools-list #actionsList [selectedRes]="selectedRes"
@@ -200,5 +200,5 @@
         </mat-sidenav>
     </mat-sidenav-container>
     <app-actions-list (refreshEvent)="refreshDao()" #actionsListContext [contextMode]="true"
-        [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo">
+        [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo" (refreshPanelFolders)="panelFolder.refreshFoldersTree()">
     </app-actions-list>

@@ -239,7 +239,6 @@ export class FolderDocumentListComponent implements OnInit {
     refreshDaoAfterAction() {
         this.sidenavRight.close();
         this.refreshDao();
-        this.basketHome.refreshBasketHome();
         const e: any = { checked: false };
         this.toggleAllRes(e);
     }
