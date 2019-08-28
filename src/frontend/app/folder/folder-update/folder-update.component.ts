@@ -60,11 +60,72 @@ export class FolderUpdateComponent implements OnInit {
             tap((data: any) => {
                 this.initEntitiesTree(data.entities);
             }),
+            exhaustMap(() => this.http.get('../../rest/folders')),
+            map((data: any) => {
+                data.folders.forEach((element: any) => {
+                    element['state'] = {
+                        opened: true
+                    }
+                    if (element.parent_id === 0) {
+                        element.parent_id = '#';
+                    }
+
+                    if (element.id === this.folder.parent_id) {
+                        element['state'].selected = true;
+                    }
+
+                    if (element.id === this.folder.id) {
+                        element['state'].disabled = true; 
+                    }
+                    element.parent = element.parent_id;
+                    element.text = element.label;
+                });
+                return data;
+            }),
+            tap((data: any) => {
+                this.initFoldersTree(data.folders);
+            }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
             })
         ).subscribe();
+    }
+
+    initFoldersTree(folders: any) {
+        $j('#jstreeFolders').jstree({
+            "checkbox": {
+                'deselect_all': true,
+                "three_state": false //no cascade selection
+            },
+            'core': {
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                },
+                'multiple': false,
+                'data': folders
+            },
+            "plugins": ["checkbox", "search"]
+        });
+        $j('#jstreeFolders')
+            // listen for event
+            .on('select_node.jstree', (e: any, data: any) => {
+                this.folder.parent_id = data.node.original.id;
+
+            }).on('deselect_node.jstree', (e: any, data: any) => {
+                this.folder.parent_id = '';
+            })
+            // create the instance
+            .jstree();
+        var to: any = false;
+        $j('#jstree_searchFolders').keyup(function () {
+            if (to) { clearTimeout(to); }
+            to = setTimeout(function () {
+                var v = $j('#jstree_searchFolders').val();
+                $j('#jstreeFolders').jstree(true).search(v);
+            }, 250);
+        });
     }
 
     initEntitiesTree(entities: any) {
@@ -104,8 +165,8 @@ export class FolderUpdateComponent implements OnInit {
     selectEntity(newEntity: any) {
         this.folder.sharing.entities.push(
             {
-                entity_id : newEntity.serialId,
-                edition : false
+                entity_id: newEntity.serialId,
+                edition: false
             }
         );
     }
@@ -135,5 +196,21 @@ export class FolderUpdateComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    initService(ev: any) {
+        if (ev.index == 1) {
+            this.initEntitiesTree(this.entities);
+        }
+    }
+
+    toggleAdmin(entity: any, ev: any) {
+        const index = this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId);
+        this.folder.sharing.entities[index].edition = ev.checked;
+    }
+
+    isAdminEnabled(entity: any) {
+        const index = this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId);
+        return this.folder.sharing.entities[index].edition;
     }
 }

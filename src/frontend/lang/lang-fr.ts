@@ -1093,4 +1093,8 @@ export const LANG_FR = {
     "getFolders" : "Dossiers (emplacement fixe)",
     "getFoldersSample" : "Litiges",
     "classifyIn" : "Classer dans ...",
+    "setInParentFolder" : "Imbriquer le dossier dans ...",
+    "searchFolder" : "Recherche un dossier",
+    "shareToEntities" : "Partager aux entités ...",
+    "canManageFolder" : "Droit de modification / suppression du dossier",
 };

@@ -331,7 +331,6 @@ export class FolderTreeComponent implements OnInit {
     }
 
     drop(ev: any, node: any) {
-        console.log(ev.previousContainer.id);
         this.classifyDocument(ev, node);
         /*if (ev.previousContainer.id === 'folder-list') {
             this.moveFolder(ev, node);
@@ -402,7 +401,6 @@ export class FolderTreeComponent implements OnInit {
     }
 
     openFolderAdmin(node: any) {
-        console.log(node);
         this.dialogRef = this.dialog.open(FolderUpdateComponent, { autoFocus: false, data: { folderId: node.id } });
 
         this.dialogRef.afterClosed().pipe(

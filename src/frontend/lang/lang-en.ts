@@ -1056,4 +1056,8 @@ export const LANG_EN = {
     "getFolders" : "Folders (fixed postion)",
     "getFoldersSample" : "Litigation",
     "classifyIn" : "Classify in ...",
+    "setInParentFolder" : "Set in parent folder ...",
+    "searchFolder" : "Search folder",
+    "shareToEntities" : "Share to entities ...",
+    "canManageFolder" : "Can manage this folder",
 };

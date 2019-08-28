@@ -1082,4 +1082,8 @@ export const LANG_NL = {
     "getFolders" : "Folders (fixed postion)", //_TO_TRANSLATE
     "getFoldersSample" : "Litigation", //_TO_TRANSLATE
     "classifyIn" : "Classify in ...", //_TO_TRANSLATE
+    "setInParentFolder" : "Set in parent folder ...", //_TO_TRANSLATE
+    "searchFolder" : "Search folder", //_TO_TRANSLATE
+    "shareToEntities" : "Share to entities ...", //_TO_TRANSLATE
+    "canManageFolder" : "Can manage this folder", //_TO_TRANSLATE
 };
