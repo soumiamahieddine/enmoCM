@@ -168,6 +168,9 @@ DELETE FROM actions_categories WHERE action_id in (SELECT id FROM actions WHERE 
 DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE enabled = 'N');
 DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
 DELETE FROM actions WHERE enabled = 'N';
+DELETE FROM usergroups_services WHERE service_id = 'admin_fileplan';
+DELETE FROM usergroups_services WHERE service_id = 'put_doc_in_fileplan';
+DELETE FROM usergroups_services WHERE service_id = 'fileplan';
 
 
 /* REFACTORING MODIFICATION */
@@ -203,3 +206,4 @@ ALTER TABLE actions DROP COLUMN IF EXISTS enabled;
 ALTER TABLE actions DROP COLUMN IF EXISTS origin;
 ALTER TABLE actions DROP COLUMN IF EXISTS create_id;
 ALTER TABLE actions DROP COLUMN IF EXISTS category_id;
+DROP VIEW IF EXISTS fp_view_fileplan;
