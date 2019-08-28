@@ -172,7 +172,8 @@ export class FolderUpdateComponent implements OnInit {
     }
 
     deselectEntity(entity: any) {
-        let index = this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.id);
+
+        let index = this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId);
         this.folder.sharing.entities.splice(index, 1);
     }
 
