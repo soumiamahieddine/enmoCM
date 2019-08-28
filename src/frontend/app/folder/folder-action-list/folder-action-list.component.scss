@@ -1,0 +1,25 @@
+@import '../../../css/vars.scss';
+
+.mat-icon {
+    height: auto;
+}
+
+.mat-stroked-button {
+    border-radius: 20px;
+    border-color: #135F7F;
+    color: #135F7F;
+}
+
+::ng-deep.actionListMenu {
+    .mat-menu-content {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.folderAction {
+    .mat-icon {
+        font-size:20px;
+        color: $warn;
+    }
+}

@@ -1,5 +1,5 @@
-<button mat-menu-item [matMenuTriggerFor]="folders" class="folderAction" (menuOpened)="getFolders()">
-    <mat-icon class="fa fa-folder fa-2x"></mat-icon>
+<button mat-menu-item [matMenuTriggerFor]="folders" class="folderAction" (menuOpened)="getFolders()" [disabled]="resIds.length === 0">
+    <mat-icon class="fa fa-folder-open fa-2x"></mat-icon>
     <span>{{lang.classifyIn}}</span>
 </button>
 <mat-menu #folders="matMenu">

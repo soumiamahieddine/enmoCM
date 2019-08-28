@@ -19,6 +19,7 @@ import { AppService } from '../../../service/app.service';
 import { PanelFolderComponent } from '../panel/panel-folder.component';
 import { BasketHomeComponent } from '../../basket/basket-home.component';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { FolderActionListComponent } from '../folder-action-list/folder-action-list.component';
 
 
 declare function $j(selector: any): any;
@@ -87,6 +88,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     private destroy$ = new Subject<boolean>();
 
+    @ViewChild('actionsListContext', { static: true }) actionsList: FolderActionListComponent;
     @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
 
     currentSelectedChrono: string = '';
@@ -298,23 +300,19 @@ export class FolderDocumentListComponent implements OnInit {
         }
     }
 
-    unclassify() {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: 'Voulez-vous enlever <b>' + this.selectedRes.length + '</b> document(s) du classement ?' } });
+    open({ x, y }: MouseEvent, row: any) {
+        
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        if ( row.checked === false) {
+            row.checked = true;
+            this.toggleAllRes(thisDeselect);
+            this.toggleRes(thisSelect, row);
+        }
+        this.actionsList.open(x, y, row)
 
-        this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.request('DELETE', '../../rest/folders/' + this.folderInfo.id + '/resources', { body: { resources: this.selectedRes } })),
-            tap((data: any) => {
-                this.notify.success(this.lang.removedFromFolder);
-                this.resultsLength = data.countResources;
-                this.data.forEach((resource: any, key: number) => {
-                    if (this.selectedRes.indexOf(resource.res_id) != -1) {
-                        this.data.splice(key, 1);
-                    }
-                });
-                this.refreshDaoAfterAction();
-            })
-        ).subscribe();
+        // prevents default
+        return false;
     }
 
     listTodrag() {
