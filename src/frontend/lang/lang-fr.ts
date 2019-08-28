@@ -400,7 +400,6 @@ export const LANG_FR = {
     "fieldNature"                           : "Nature champ",
     "fieldType"                             : "Type champ",
     "fileDoesNotExists"                     : "Le fichier n'existe pas",
-    "fileplan"                              : "Plan de classement personnel",
     "filterBy"                              : "Filtrer",
     "filteredFrom"                          : "filtré sur un ensemble de",
     "filters"                               : "Filtres",

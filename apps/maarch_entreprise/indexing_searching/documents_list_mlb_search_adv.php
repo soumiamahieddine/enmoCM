@@ -919,36 +919,6 @@ if ($nbTab > 0) {
     //Toolbar
         $paramsTab['tools'] = array();                                                  //Icones dans la barre d'outils
 
-        //Fileplan
-    if ($core_tools->test_service('fileplan', 'fileplan', false)) {
-        if ($mode == 'normal') {
-            require_once 'modules'.DIRECTORY_SEPARATOR.'fileplan'.DIRECTORY_SEPARATOR
-                    .'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-            $fileplan = new fileplan();
-            if (
-                    count($fileplan->getUserFileplan()) > 0
-                    || (
-                        count($fileplan->getEntitiesFileplan()) > 0
-                        && $core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)
-                        )
-                ) {
-                $paramsTab['bool_checkBox'] = true;
-                $paramsTab['bool_standaloneForm'] = true;
-                $positions = array(
-                            'script' => "showFileplanList('".$_SESSION['config']['businessappurl']
-                                                    .'index.php?display=true&module=fileplan&page=fileplan_ajax_script'
-                                                    .'&mode=setPosition&origin=search&coll_id='.$_SESSION['collection_id_choice']
-                                                    .$parameters."', 'formList', '600px', '510px', '"
-                                                    ._CHOOSE_ONE_DOC."')",
-                            'icon' => 'bookmark',
-                            'tooltip' => _FILEPLAN,
-                            'disabledRules' => $nbTab.' == 0 || '.$selectedTemplate." == 'cases_list_search_adv'",
-                            );
-                array_push($paramsTab['tools'], $positions);
-            }
-        }
-    }
-
     if ($saveTool) {
         $save = array(
                     'script' => "createModal(form_txt);window.location.href='#top';",

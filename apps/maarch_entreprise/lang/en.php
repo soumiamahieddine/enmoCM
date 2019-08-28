@@ -1180,7 +1180,7 @@ if (!defined('_MANAGE_STRUCTURE')) {
     define('_MANAGE_STRUCTURE', 'Manage the sub-folders');
 }
 if (!defined('_MANAGE_STRUCTURE_DESC')) {
-    define('_MANAGE_STRUCTURE_DESC', 'Administer the folders. Those ones are the higher element of the fileplan. If the module Folder is connected, you can associate a folder type to a file plan.');
+    define('_MANAGE_STRUCTURE_DESC', 'Administer the folders.');
 }
 if (!defined('_MANAGE_SUBFOLDER')) {
     define('_MANAGE_SUBFOLDER', 'Manage the sub-folders');

@@ -391,7 +391,6 @@ export const LANG_NL = {
     "fieldNature"                           : "Aard veld",
     "fieldType"                             : "Type veld",
     "fileDoesNotExists"                     : "File does not exists", //_TO_TRANSLATE
-    "fileplan"                              : "Persoonlijk klasseringsplan",
     "filterBy"                              : "Filteren",
     "filteredFrom"                          : "gefilterd op een geheel van",
     "filters"                               : "_TO_TRANSLATE",

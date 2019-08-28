@@ -246,10 +246,6 @@
         <comment>_ENTITIES_COMMENT</comment>
     </MODULES>
     <MODULES>
-        <moduleid>fileplan</moduleid>
-        <comment>_FILEPLAN_COMMENT</comment>
-    </MODULES>
-    <MODULES>
         <moduleid>folder</moduleid>
         <comment>_FOLDERS_COMMENT</comment>
     </MODULES>

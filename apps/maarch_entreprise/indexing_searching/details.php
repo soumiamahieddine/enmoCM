@@ -1142,41 +1142,7 @@ if ($stmt->rowCount() == 0) {
 
             /*****************/
         }
-
-        if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1) && $fileplanLabel != '') {
-            //Requete pour récupérer position_label
-            $stmt = $db->query('SELECT position_label FROM fp_fileplan_positions INNER JOIN fp_res_fileplan_positions 
-                                        ON fp_fileplan_positions.position_id = fp_res_fileplan_positions.position_id
-                                        WHERE fp_res_fileplan_positions.res_id=?', array($idCourrier));
-
-            while ($res_fileplan = $stmt->fetchObject()) {
-                if (!isset($positionLabel)) {
-                    $positionLabel = $res_fileplan->position_label;
-                } else {
-                    $positionLabel = $positionLabel.' / '.$res_fileplan->position_label;
-                }
-            }
-
-            //Requete pour récuperer fileplan_label
-            $stmt = $db->query('SELECT fileplan_label FROM fp_fileplan INNER JOIN fp_res_fileplan_positions
-                                        ON fp_fileplan.fileplan_id = fp_res_fileplan_positions.fileplan_id
-                                        WHERE fp_res_fileplan_positions.res_id=? AND fp_fileplan.user_id = ?', array($idCourrier, $_SESSION['user']['UserId']));
-            $res2 = $stmt->fetchObject();
-            $fileplanLabel = $res2->fileplan_label;
-            $planClassement = $fileplanLabel.' / '.$positionLabel; ?>
-                                <tr class="col">
-                                    <th align="left" class="picto">
-                                        <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN; ?>"></i>
-                                    </th>
-                                    <td align="left" width="200px">
-                                        <?php echo _FILEPLAN; ?> :
-                                    </td>
-                                    <td colspan="6">
-                                        <input type="text" class="readonly" readonly="readonly" style="width:95%;" value="<?php functions::xecho($planClassement); ?>" size="110"  />
-                                    </td>
-                                </tr>
-                        <?php
-        } ?>
+        ?>
                 </table>
             </div>
             <?php

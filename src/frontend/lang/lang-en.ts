@@ -383,7 +383,6 @@ export const LANG_EN = {
     "fieldNature"                           : "Field nature",
     "fieldType"                             : "Field type",
     "fileDoesNotExists"                     : "File does not exists",
-    "fileplan"                              : "Fileplan",
     "filterBy"                              : "Filter by",
     "filters"                               : "Filters",
     "fingerprint"                           : "Digital fingerprint",

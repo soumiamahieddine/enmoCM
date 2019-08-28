@@ -78,9 +78,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'priv
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'tag_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', '_print_sep');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'physical_archive_print_sep_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin_fileplan');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'put_doc_in_fileplan');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'fileplan');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'save_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
@@ -116,8 +113,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'put_doc_in_fileplan');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'fileplan');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_thesaurus_to_res');
@@ -151,8 +146,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'put_doc_in_fileplan');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'fileplan');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_thesaurus_to_res');
@@ -194,8 +187,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'a
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'put_doc_in_fileplan');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'fileplan');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_thesaurus_to_res');
@@ -265,9 +256,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', '_print_sep');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'physical_archive_print_sep_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'physical_archive_batch_manage');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_fileplan');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'put_doc_in_fileplan');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'fileplan');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_life_cycle');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_thesaurus');
@@ -287,8 +275,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'vi
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'avis_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'put_doc_in_fileplan');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'fileplan');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'export_seda_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'add_thesaurus_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MAARCHTOGEC', 'save_numeric_package');
