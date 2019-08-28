@@ -71,7 +71,7 @@ form {
 
 .treeLabel {
     white-space: pre;
-    color: $primary;
+    color: rgb(102, 102, 102);
 }
 
 .drag {
@@ -85,5 +85,14 @@ form {
 }
 
 .private {
-    color: $warn;
+    color: $secondary;
+}
+
+.countResources {
+    color: $primary;
+    font-weight: bold;
+}
+
+button:disabled {
+    opacity: 1;
 }

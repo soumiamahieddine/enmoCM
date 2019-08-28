@@ -3,16 +3,16 @@
 <mat-expansion-panel class="basketList" expanded *ngIf="homeData.regroupedBaskets.length > 0 || homeData.assignedBaskets.length > 0">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            {{lang.myBaskets}}
+            <i class="fa fa-inbox"></i>&nbsp;{{lang.myBaskets}}
         </mat-panel-title>
     </mat-expansion-panel-header>
-    <mat-form-field floatLabel="never" style="padding-left:20px;padding-right:20px;">
+    <mat-form-field floatLabel="never" appearance="outline" class="basketsFilter" style="padding-left:20px;padding-right:20px;font-size: 11px;">
         <input matInput placeholder="{{lang.filterBy}}" #listFilter>
     </mat-form-field>
     <ng-container *ngFor="let regroupedBasket of homeData.regroupedBaskets">
-        <mat-icon *ngIf="regroupedBasket.baskets[0]" color="primary" mat-list-icon class="fa fa-users" style="margin-left:10px;"></mat-icon> <span *ngIf="regroupedBasket.baskets[0]" class="basketGroupTitle">{{regroupedBasket.groupDesc}}</span>
-        <mat-divider *ngIf="regroupedBasket.baskets[0]"></mat-divider>
-        <mat-nav-list>
+        <span *ngIf="regroupedBasket.baskets[0]" class="basketGroupTitle">{{regroupedBasket.groupDesc}}</span>
+        <mat-divider *ngIf="regroupedBasket.baskets[0]" style="width: 80%;"></mat-divider>
+        <mat-nav-list style="padding-bottom: 10px;">
             <ng-container *ngFor="let basket of regroupedBasket.baskets | filterList:listFilter.value:'basket_name'">
                 <a mat-list-item *ngIf="basket.redirected" disableRipple="true" style="cursor:not-allowed;">
                     <mat-icon [ngStyle]="{'color': basket.color}" *ngIf="basket.redirected && !appService.getViewMode()" mat-list-icon class="fa fa-share"></mat-icon>

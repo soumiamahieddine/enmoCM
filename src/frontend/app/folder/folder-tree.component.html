@@ -9,14 +9,14 @@
             <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseenter)="showAction(node)"
                 (mouseleave)="hideAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
-                    <span class="treeLabel" [class.private]="!node.public" [title]="node.label" [class.drag]="node.drag">
-                        {{node.label}}
+                    <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
+                        {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="Dossier partagé"></i>
                     </span>
                 </span>
                 <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();showAction(node);"
                     [disabled]="!node.showAction">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
-                    <span *ngIf="!node.showAction">
+                    <span *ngIf="!node.showAction" class="countResources">
                         {{node.countResources}}
                     </span>
                 </button>
@@ -42,20 +42,20 @@
         <mat-tree-node cdkDropList [id]="'folder-list-'+node.id" cdkDropListConnectedTo="list-1" (cdkDropListDropped)="drop($event, node)"
             (cdkDropListEntered)="dragEnter(node)" (cdkDropListExited)="node.drag=false" [@hideShow] *matTreeNodeDef="let node;when: hasChild"
             matTreeNodePadding matTreeNodePaddingIndent="20px">
-            <button class="expandButton" [class.private]="!node.public" mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+            <button class="expandButton" mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
                 <mat-icon class="mat-icon-rtl-mirror fa {{treeControl.isExpanded(node) ? 'fa-chevron-down' : 'fa-chevron-right'}}">
                 </mat-icon>
             </button>
             <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseleave)="hideAction(node)"
                 (mouseenter)="showAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
-                    <span class="treeLabel" [class.private]="!node.public" [title]="node.label" [class.drag]="node.drag">
-                        {{node.label}}
+                    <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
+                        {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="Dossier partagé"></i>
                     </span>
                 </span>
                 <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();" [disabled]="!node.showAction">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
-                    <span *ngIf="!node.showAction">
+                    <span *ngIf="!node.showAction" class="countResources">
                         {{node.countResources}}
                     </span>
                 </button>

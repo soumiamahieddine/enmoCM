@@ -1,6 +1,7 @@
 @import '../../css/vars.scss';
 
 .basketList {
+    border-radius: 0px;
     box-shadow:none;
 
     ::ng-deep.mat-expansion-panel-body {
@@ -8,7 +9,10 @@
     }
 
     .mat-expansion-panel-header-title {
-        color: rgba(0,0,0,0.54);
+        color: #135F7F;
+        font-weight: bold !important;
+        display: flex;
+        align-items: center;
         font-size: 14px;
         font-weight: 500;
     }
@@ -41,7 +45,15 @@
 }
 
 .basketGroupTitle {
-    color: rgba(0, 0, 0, 0.54);
+    color: $primary;
     font-size: 14px;
     font-weight: 500;
+    padding-left: 10px;
+}
+
+.basketsFilter {
+    ::ng-deep.mat-form-field-infix {
+        padding : 0px;
+        padding-bottom: 5px;
+    }
 }
