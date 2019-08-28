@@ -181,6 +181,7 @@ export class FolderUpdateComponent implements OnInit {
             exhaustMap(() => this.http.put('../../rest/folders/' + this.folder.id + '/sharing', { public: this.folder.sharing.entities.length > 0, sharing: this.folder.sharing })),
             tap((data: any) => {
                 this.notify.success('Dossier modifié');
+                window.location.reload();
                 this.dialogRef.close();
             }),
             catchError((err: any) => {
