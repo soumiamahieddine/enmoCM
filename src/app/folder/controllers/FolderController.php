@@ -187,6 +187,9 @@ class FolderController
         if (!empty($data['parent_id']) &&!Validator::intval()->validate($data['parent_id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
         }
+        if ($data['parent_id'] == $aArgs['id']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Parent_id and id can not be the same']);
+        }
 
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
         if (empty($folder[0])) {
