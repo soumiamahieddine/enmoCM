@@ -1,5 +1,6 @@
 #!/bin/sh
 php ./migrateCustomFields.php
+php ./migrateFileplans.php
 php ./migrateFullText.php
 php ./migrateIndexing.php
 php ./migrateServicesEntities.php

@@ -17,7 +17,6 @@ foreach ($customs as $custom) {
 
     \CustomField\models\CustomFieldModel::delete(['where' => ['1=1']]);
 
-    $natures = [];
     $migrated = 0;
     $path = "custom/{$custom}/apps/maarch_entreprise/xml/index_letterbox.xml";
     if (file_exists($path)) {
