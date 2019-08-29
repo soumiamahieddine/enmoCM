@@ -555,7 +555,6 @@
     <xi:include href="../../../../modules/basket/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/content_management/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/entities/xml/IVS/requests_definitions.xml"/>
-    <xi:include href="../../../../modules/folder/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/ldap/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/life_cycle/xml/IVS/requests_definitions.xml"/>
     <xi:include href="../../../../modules/notes/xml/IVS/requests_definitions.xml"/>
@@ -583,7 +582,6 @@
     <xi:include href="../../../../modules/basket/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/content_management/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/entities/xml/IVS/validation_rules.xml"/>
-    <xi:include href="../../../../modules/folder/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/ldap/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/life_cycle/xml/IVS/validation_rules.xml"/>
     <xi:include href="../../../../modules/notes/xml/IVS/validation_rules.xml"/>
@@ -611,7 +609,6 @@
     <xi:include href="../../../../modules/basket/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/content_management/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/entities/xml/IVS/data_types.xml"/>
-    <xi:include href="../../../../modules/folder/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/ldap/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/life_cycle/xml/IVS/data_types.xml"/>
     <xi:include href="../../../../modules/notes/xml/IVS/data_types.xml"/>
