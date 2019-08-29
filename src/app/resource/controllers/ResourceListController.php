@@ -171,215 +171,11 @@ class ResourceListController
         $where = [$whereClause];
         $queryData = [];
 
-        $data = $request->getQueryParams();
-        if (!empty($data['delayed']) && $data['delayed'] == 'true') {
-            $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
-        }
-        if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
-            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike translate(?, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\'))';
-            $queryData[] = "%{$data['search']}%";
-            $queryData[] = "%{$data['search']}%";
-        }
+        $queryParams = $request->getQueryParams();
 
-        $wherePriorities = $where;
-        $whereCategories = $where;
-        $whereStatuses   = $where;
-        $whereEntities   = $where;
-        $dataPriorities  = $queryData;
-        $dataCategories  = $queryData;
-        $dataStatuses    = $queryData;
-        $dataEntities    = $queryData;
+        $filters = ResourceListController::getFormattedFilters(['where' => $where, 'queryData' => $queryData, 'queryParams' => $queryParams]);
 
-        if (isset($data['priorities'])) {
-            if (empty($data['priorities'])) {
-                $tmpWhere = 'priority is null';
-            } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['priorities']);
-                $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['priorities']) {
-                    $tmpWhere = '(priority is null OR priority in (?))';
-                } else {
-                    $tmpWhere = 'priority in (?)';
-                }
-                $dataCategories[] = explode(',', $replace);
-                $dataStatuses[]   = explode(',', $replace);
-                $dataEntities[]   = explode(',', $replace);
-            }
-
-            $whereCategories[] = $tmpWhere;
-            $whereStatuses[]   = $tmpWhere;
-            $whereEntities[]   = $tmpWhere;
-        }
-        if (isset($data['categories'])) {
-            if (empty($data['categories'])) {
-                $tmpWhere = 'category_id is null';
-            } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['categories']);
-                $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['categories']) {
-                    $tmpWhere = '(category_id is null OR category_id in (?))';
-                } else {
-                    $tmpWhere = 'category_id in (?)';
-                }
-                $dataPriorities[] = explode(',', $replace);
-                $dataStatuses[]   = explode(',', $replace);
-                $dataEntities[]   = explode(',', $replace);
-            }
-
-            $wherePriorities[] = $tmpWhere;
-            $whereStatuses[]   = $tmpWhere;
-            $whereEntities[]   = $tmpWhere;
-        }
-        if (!empty($data['statuses'])) {
-            $wherePriorities[] = 'status in (?)';
-            $dataPriorities[]  = explode(',', $data['statuses']);
-            $whereCategories[] = 'status in (?)';
-            $dataCategories[]  = explode(',', $data['statuses']);
-            $whereEntities[]   = 'status in (?)';
-            $dataEntities[]    = explode(',', $data['statuses']);
-        }
-        if (isset($data['entities'])) {
-            if (empty($data['entities'])) {
-                $tmpWhere = 'destination is null';
-            } else {
-                $replace = preg_replace('/(^,)|(,$)/', '', $data['entities']);
-                $replace = preg_replace('/(,,)/', ',', $replace);
-                if ($replace != $data['entities']) {
-                    $tmpWhere = '(destination is null OR destination in (?))';
-                } else {
-                    $tmpWhere = 'destination in (?)';
-                }
-                $dataPriorities[] = explode(',', $replace);
-                $dataCategories[] = explode(',', $replace);
-                $dataStatuses[] = explode(',', $replace);
-            }
-
-            $wherePriorities[] = $tmpWhere;
-            $whereCategories[] = $tmpWhere;
-            $whereStatuses[]   = $tmpWhere;
-        }
-        if (!empty($data['entitiesChildren'])) {
-            $entities = explode(',', $data['entitiesChildren']);
-            $entitiesChildren = [];
-            foreach ($entities as $entity) {
-                $children = EntityModel::getEntityChildren(['entityId' => $entity]);
-                $entitiesChildren = array_merge($entitiesChildren, $children);
-            }
-            if (!empty($entitiesChildren)) {
-                $wherePriorities[] = 'destination in (?)';
-                $dataPriorities[]  = $entitiesChildren;
-                $whereCategories[] = 'destination in (?)';
-                $dataCategories[]  = $entitiesChildren;
-                $whereStatuses[]   = 'destination in (?)';
-                $dataStatuses[]    = $entitiesChildren;
-            }
-        }
-
-        $priorities = [];
-        $rawPriorities = ResModel::getOnView([
-            'select'    => ['count(res_id)', 'priority'],
-            'where'     => $wherePriorities,
-            'data'      => $dataPriorities,
-            'groupBy'   => ['priority']
-        ]);
-        
-        foreach ($rawPriorities as $key => $value) {
-            $priority = null;
-            if (!empty($value['priority'])) {
-                $priority = PriorityModel::getById(['select' => ['label'], 'id' => $value['priority']]);
-            }
-            $priorities[] = [
-                'id'        => empty($value['priority']) ? null : $value['priority'],
-                'label'     => empty($priority['label']) ? '_UNDEFINED' : $priority['label'],
-                'count'     => $value['count']
-            ];
-        }
-
-        $categories = [];
-        $allCategories = ResModel::getCategories();
-        $rawCategories = ResModel::getOnView([
-            'select'    => ['count(res_id)', 'category_id'],
-            'where'     => $whereCategories,
-            'data'      => $dataCategories,
-            'groupBy'   => ['category_id']
-        ]);
-        foreach ($rawCategories as $key => $value) {
-            $label = null;
-            if (!empty($value['category_id'])) {
-                foreach ($allCategories as $category) {
-                    if ($value['category_id'] == $category['id']) {
-                        $label = $category['label'];
-                    }
-                }
-            }
-            $categories[] = [
-                'id'        => empty($value['category_id']) ? null : $value['category_id'],
-                'label'     => empty($label) ? '_UNDEFINED' : $label,
-                'count'     => $value['count']
-            ];
-        }
-
-        $statuses = [];
-        $rawStatuses = ResModel::getOnView([
-            'select'    => ['count(res_id)', 'status'],
-            'where'     => $whereStatuses,
-            'data'      => $dataStatuses,
-            'groupBy'   => ['status']
-        ]);
-        foreach ($rawStatuses as $key => $value) {
-            $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
-            $statuses[] = [
-                'id'        => $value['status'],
-                'label'     => empty($status['label_status']) ? '_UNDEFINED' : $status['label_status'],
-                'count'     => $value['count']
-            ];
-        }
-
-        $entities = [];
-        $rawEntities = ResModel::getOnView([
-            'select'    => ['count(res_id)', 'destination'],
-            'where'     => $whereEntities,
-            'data'      => $dataEntities,
-            'groupBy'   => ['destination']
-        ]);
-        foreach ($rawEntities as $key => $value) {
-            $entity = null;
-            if (!empty($value['destination'])) {
-                $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
-            }
-            $entities[] = [
-                'entityId'  => empty($value['destination']) ? null : $value['destination'],
-                'label'     => empty($entity['entity_label']) ? '_UNDEFINED' : $entity['entity_label'],
-                'count'     => $value['count']
-            ];
-        }
-
-        $priorities = (count($priorities) >= 2) ? $priorities : [];
-        $categories = (count($categories) >= 2) ? $categories : [];
-        $statuses   = (count($statuses) >= 2) ? $statuses : [];
-        $entities   = (count($entities) >= 2) ? $entities : [];
-
-        $entitiesChildren = [];
-        foreach ($entities as $entity) {
-            if (!empty($entity['entityId'])) {
-                $children = EntityModel::getEntityChildren(['entityId' => $entity['entityId']]);
-                $count = 0;
-                foreach ($entities as $value) {
-                    if (in_array($value['entityId'], $children)) {
-                        $count += $value['count'];
-                    }
-                }
-            } else {
-                $count = $entity['count'];
-            }
-            $entitiesChildren[] = [
-                'entityId'  => $entity['entityId'],
-                'label'     => $entity['label'],
-                'count'     => $count
-            ];
-        }
-
-        return $response->withJson(['entities' => $entities, 'priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses, 'entitiesChildren' => $entitiesChildren]);
+        return $response->withJson($filters);
     }
 
     public static function getResourcesListQueryData(array $args)
@@ -1118,5 +914,224 @@ class ResourceListController
         }
 
         return $formattedResources;
+    }
+
+    public static function getFormattedFilters(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where']);
+        ValidatorModel::arrayType($args, ['where', 'queryData', 'queryParams']);
+
+        $data = $args['queryParams'];
+        $where = $args['where'];
+        $queryData = $args['queryData'];
+
+        if (!empty($data['delayed']) && $data['delayed'] == 'true') {
+            $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
+        }
+        if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
+            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike translate(?, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\'))';
+            $queryData[] = "%{$data['search']}%";
+            $queryData[] = "%{$data['search']}%";
+        }
+
+        $wherePriorities = $where;
+        $whereCategories = $where;
+        $whereStatuses   = $where;
+        $whereEntities   = $where;
+        $dataPriorities  = $queryData;
+        $dataCategories  = $queryData;
+        $dataStatuses    = $queryData;
+        $dataEntities    = $queryData;
+
+        if (isset($data['priorities'])) {
+            if (empty($data['priorities'])) {
+                $tmpWhere = 'priority is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['priorities']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $data['priorities']) {
+                    $tmpWhere = '(priority is null OR priority in (?))';
+                } else {
+                    $tmpWhere = 'priority in (?)';
+                }
+                $dataCategories[] = explode(',', $replace);
+                $dataStatuses[]   = explode(',', $replace);
+                $dataEntities[]   = explode(',', $replace);
+            }
+
+            $whereCategories[] = $tmpWhere;
+            $whereStatuses[]   = $tmpWhere;
+            $whereEntities[]   = $tmpWhere;
+        }
+        if (isset($data['categories'])) {
+            if (empty($data['categories'])) {
+                $tmpWhere = 'category_id is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['categories']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $data['categories']) {
+                    $tmpWhere = '(category_id is null OR category_id in (?))';
+                } else {
+                    $tmpWhere = 'category_id in (?)';
+                }
+                $dataPriorities[] = explode(',', $replace);
+                $dataStatuses[]   = explode(',', $replace);
+                $dataEntities[]   = explode(',', $replace);
+            }
+
+            $wherePriorities[] = $tmpWhere;
+            $whereStatuses[]   = $tmpWhere;
+            $whereEntities[]   = $tmpWhere;
+        }
+        if (!empty($data['statuses'])) {
+            $wherePriorities[] = 'status in (?)';
+            $dataPriorities[]  = explode(',', $data['statuses']);
+            $whereCategories[] = 'status in (?)';
+            $dataCategories[]  = explode(',', $data['statuses']);
+            $whereEntities[]   = 'status in (?)';
+            $dataEntities[]    = explode(',', $data['statuses']);
+        }
+        if (isset($data['entities'])) {
+            if (empty($data['entities'])) {
+                $tmpWhere = 'destination is null';
+            } else {
+                $replace = preg_replace('/(^,)|(,$)/', '', $data['entities']);
+                $replace = preg_replace('/(,,)/', ',', $replace);
+                if ($replace != $data['entities']) {
+                    $tmpWhere = '(destination is null OR destination in (?))';
+                } else {
+                    $tmpWhere = 'destination in (?)';
+                }
+                $dataPriorities[] = explode(',', $replace);
+                $dataCategories[] = explode(',', $replace);
+                $dataStatuses[] = explode(',', $replace);
+            }
+
+            $wherePriorities[] = $tmpWhere;
+            $whereCategories[] = $tmpWhere;
+            $whereStatuses[]   = $tmpWhere;
+        }
+        if (!empty($data['entitiesChildren'])) {
+            $entities = explode(',', $data['entitiesChildren']);
+            $entitiesChildren = [];
+            foreach ($entities as $entity) {
+                $children = EntityModel::getEntityChildren(['entityId' => $entity]);
+                $entitiesChildren = array_merge($entitiesChildren, $children);
+            }
+            if (!empty($entitiesChildren)) {
+                $wherePriorities[] = 'destination in (?)';
+                $dataPriorities[]  = $entitiesChildren;
+                $whereCategories[] = 'destination in (?)';
+                $dataCategories[]  = $entitiesChildren;
+                $whereStatuses[]   = 'destination in (?)';
+                $dataStatuses[]    = $entitiesChildren;
+            }
+        }
+
+        $priorities = [];
+        $rawPriorities = ResModel::getOnView([
+            'select'    => ['count(res_id)', 'priority'],
+            'where'     => $wherePriorities,
+            'data'      => $dataPriorities,
+            'groupBy'   => ['priority']
+        ]);
+
+        foreach ($rawPriorities as $key => $value) {
+            $priority = null;
+            if (!empty($value['priority'])) {
+                $priority = PriorityModel::getById(['select' => ['label'], 'id' => $value['priority']]);
+            }
+            $priorities[] = [
+                'id'        => empty($value['priority']) ? null : $value['priority'],
+                'label'     => empty($priority['label']) ? '_UNDEFINED' : $priority['label'],
+                'count'     => $value['count']
+            ];
+        }
+
+        $categories = [];
+        $allCategories = ResModel::getCategories();
+        $rawCategories = ResModel::getOnView([
+            'select'    => ['count(res_id)', 'category_id'],
+            'where'     => $whereCategories,
+            'data'      => $dataCategories,
+            'groupBy'   => ['category_id']
+        ]);
+        foreach ($rawCategories as $key => $value) {
+            $label = null;
+            if (!empty($value['category_id'])) {
+                foreach ($allCategories as $category) {
+                    if ($value['category_id'] == $category['id']) {
+                        $label = $category['label'];
+                    }
+                }
+            }
+            $categories[] = [
+                'id'        => empty($value['category_id']) ? null : $value['category_id'],
+                'label'     => empty($label) ? '_UNDEFINED' : $label,
+                'count'     => $value['count']
+            ];
+        }
+
+        $statuses = [];
+        $rawStatuses = ResModel::getOnView([
+            'select'    => ['count(res_id)', 'status'],
+            'where'     => $whereStatuses,
+            'data'      => $dataStatuses,
+            'groupBy'   => ['status']
+        ]);
+        foreach ($rawStatuses as $key => $value) {
+            $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
+            $statuses[] = [
+                'id'        => $value['status'],
+                'label'     => empty($status['label_status']) ? '_UNDEFINED' : $status['label_status'],
+                'count'     => $value['count']
+            ];
+        }
+
+        $entities = [];
+        $rawEntities = ResModel::getOnView([
+            'select'    => ['count(res_id)', 'destination'],
+            'where'     => $whereEntities,
+            'data'      => $dataEntities,
+            'groupBy'   => ['destination']
+        ]);
+        foreach ($rawEntities as $key => $value) {
+            $entity = null;
+            if (!empty($value['destination'])) {
+                $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
+            }
+            $entities[] = [
+                'entityId'  => empty($value['destination']) ? null : $value['destination'],
+                'label'     => empty($entity['entity_label']) ? '_UNDEFINED' : $entity['entity_label'],
+                'count'     => $value['count']
+            ];
+        }
+
+        $priorities = (count($priorities) >= 2) ? $priorities : [];
+        $categories = (count($categories) >= 2) ? $categories : [];
+        $statuses   = (count($statuses) >= 2) ? $statuses : [];
+        $entities   = (count($entities) >= 2) ? $entities : [];
+
+        $entitiesChildren = [];
+        foreach ($entities as $entity) {
+            if (!empty($entity['entityId'])) {
+                $children = EntityModel::getEntityChildren(['entityId' => $entity['entityId']]);
+                $count = 0;
+                foreach ($entities as $value) {
+                    if (in_array($value['entityId'], $children)) {
+                        $count += $value['count'];
+                    }
+                }
+            } else {
+                $count = $entity['count'];
+            }
+            $entitiesChildren[] = [
+                'entityId'  => $entity['entityId'],
+                'label'     => $entity['label'],
+                'count'     => $count
+            ];
+        }
+
+        return ['entities' => $entities, 'priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses, 'entitiesChildren' => $entitiesChildren];
     }
 }

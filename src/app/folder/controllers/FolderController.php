@@ -564,6 +564,32 @@ class FolderController
         return $response->withJson(['events' => $events]);
     }
 
+    public function getFilters(Request $request, Response $response, array $args)
+    {
+        if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
+        }
+
+        $foldersResources = ResourceFolderModel::get(['select' => ['res_id'], 'where' => ['folder_id = ?'], 'data' => [$args['id']]]);
+        $foldersResources = array_column($foldersResources, 'res_id');
+
+        if (empty($foldersResources)) {
+            return $response->withJson(['entities' => [], 'priorities' => [], 'categories' => [], 'statuses' => [], 'entitiesChildren' => []]);
+        }
+
+        $where = ['(res_id in (?))'];
+        $queryData = [$foldersResources];
+        $queryParams = $request->getQueryParams();
+
+        $filters = ResourceListController::getFormattedFilters(['where' => $where, 'queryData' => $queryData, 'queryParams' => $queryParams]);
+
+        return $response->withJson($filters);
+    }
+
     // login (string) : Login of user connected
     // folderId (integer) : Check specific folder
     // edition (boolean) : whether user can edit or not
