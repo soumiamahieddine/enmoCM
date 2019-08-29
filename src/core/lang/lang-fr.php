@@ -148,7 +148,6 @@ define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'Liste des courriers avec avis');
 define('_DOCUMENTS_LIST_COPIES', 'Liste des copies');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Liste des courriers avec signataire');
-define('_FOLDERS_LIST', 'Liste de dossiers');
 
 // ADMINISTRATION
 define('_USERS', 'Utilisateurs');
@@ -229,7 +228,6 @@ define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Imprimer les fiches de liaison depuis 
 define('_ATTACHMENTS_COMMENT', 'Gestion des pièces jointes');
 define('_BASKETS_COMMENT', 'Bannettes');
 define('_ENTITIES_COMMENT', 'Entités');
-define('_FOLDERS_COMMENT', 'Dossiers');
 define('_NOTES_COMMENT', 'Annotations');
 define('_NOTIFICATIONS_COMMENT', 'Notifications');
 define('_TEMPLATES_COMMENT', 'Modèles de document');
@@ -248,7 +246,6 @@ define('_VIEW_BASKETS', 'Mes bannettes');
 define('_PRINT_SEPS', 'Impression des séparateurs');
 define('_CREATE_FOLDER', 'Créer un dossier');
 define('_FOLDER_SEARCH', 'Rechercher un dossier');
-define('_VIEW_FOLDER_TREE', 'Consulter un dossier');
 define('_SAVE_NUMERIC_PACKAGE', 'Enregistrer un pli numérique');
 define("_SELECT_FOLDER", "Sélection Dossier");
 define("_FOLDER_HISTORY", "Historique dossier");

@@ -605,13 +605,7 @@ if ($stmt->rowCount() == 0) {
                 echo '<tr class="col">';
             }
             $folder_id = '';
-            if ($key == 'folder' && $data[$key]['show_value'] != '') {
-                $folderTmp = $data[$key]['show_value'];
-                $find1 = strpos($folderTmp, '(');
-                $folder_id = substr($folderTmp, $find1, strlen($folderTmp));
-                $folder_id = str_replace('(', '', $folder_id);
-                $folder_id = str_replace(')', '', $folder_id);
-            }
+
             //GET DATA ICON
             echo '<th align="center" class="picto" >';
 
@@ -896,20 +890,8 @@ if ($stmt->rowCount() == 0) {
                     echo "<input type='radio' name='{$key}' id='{$key}_{$inputId}' value='{$inputId}' class='{$disabledClass}' {$disabledAttr} {$inputAttr}/>{$inputValue}";
                 }
             } elseif ($data[$key]['field_type'] == 'autocomplete') {
-                if ($key == 'folder' && $core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder', false) == 1)) {
-                    $inputValue = $data['folder']['show_value'];
-
-                    echo '<div class="typeahead__container" style="width:206px">
-                    	     <div class="typeahead__field">
-                                <input type="text" name="folder" id="folder" value="'.$inputValue.'" class="folderSearch '.$disabledClass.'" '.$disabledAttr.' autocomplete="off" style="font-size: small;"/>
-                    	     </div>
-                         </div>';
-
-                    echo '<script type="text/javascript">loadTypeahead(\'.folderSearch\', \'desc\', true, \'index.php?display=true&module=folder&page=autocomplete_folders&mode=folder\');</script>';
-                } else {
-                    $inputValue = $data['folder']['show_value'];
-                    echo "<input type='text' name='folder' id='folder' class='readonly' onblur='' value='{$inputValue}' readonly='readonly'/>";
-                }
+                $inputValue = $data['folder']['show_value'];
+                echo "<input type='text' name='folder' id='folder' class='readonly' onblur='' value='{$inputValue}' readonly='readonly'/>";
             } elseif ($data[$key]['display'] == 'textinput') {
                 $inputValue = $data[$key]['show_value'];
                 echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";

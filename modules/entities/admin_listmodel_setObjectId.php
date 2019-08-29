@@ -137,28 +137,6 @@ case 'type_id':
     
     break;
     
-case 'foldertype_id':
-    require_once 'core/class/class_db.php';
-    require_once 'modules/folder/folder_tables.php';
-    $db = new Database();
-    $stmt = $db->query("SELECT foldertype_id, foldertype_label FROM  " . FOLD_FOLDERTYPES_TABLE);
-    while($foldertype = $stmt->fetchObject()) {
-        $foldertype_id = $foldertype->foldertype_id;
-        $existinglist = 
-            $difflist->get_listmodel(
-                'foldertype_id',
-                $foldertype_id
-            );
-        if(!$existinglist) {
-            $foldertypes[$foldertype_id] = $foldertype->foldertype_label; 
-        }
-    }
-    if(count($foldertypes) > 0)
-        echo asSelect($foldertypes, $objectId);
-    else    
-        echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
-    break;
-    
 case 'user_defined_id':
 default:
     if(!$objectId) 

@@ -854,63 +854,6 @@ if ($core->is_module_loaded('entities')) {
     );
 }
 
-if ($core->is_module_loaded('folder')) {
-    //Folder (incoming)
-    $_ENV['categories']['incoming']['other_cases']['folder'] = array(
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _FOLDER,
-        'table' => 'none',
-        'img' => 'folder',
-        'modify' => true,
-        'form_show' => 'autocomplete',
-    );
-    //Folder (outgoing)
-    $_ENV['categories']['outgoing']['other_cases']['folder'] = array(
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _FOLDER,
-        'table' => 'none',
-        'img' => 'folder',
-        'modify' => true,
-        'form_show' => 'autocomplete',
-    );
-    //Folder (internal)
-    $_ENV['categories']['internal']['other_cases']['folder'] = array(
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _FOLDER,
-        'table' => 'none',
-        'img' => 'folder',
-        'modify' => true,
-        'form_show' => 'autocomplete',
-    );
-    //Folder (folder_document)
-    $_ENV['categories']['folder_document']['other_cases']['folder'] = array(
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _FOLDER,
-        'table' => 'none',
-        'img' => 'folder',
-        'modify' => true,
-        'form_show' => 'autocomplete',
-    );
-    //Folder (ged_doc)
-    $_ENV['categories']['ged_doc']['other_cases']['folder'] = array(
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _FOLDER,
-        'table' => 'none',
-        'img' => 'folder',
-        'modify' => true,
-        'form_show' => 'autocomplete',
-    );
-}
 /************************* END *************************************************************/
 
 /**
@@ -1141,30 +1084,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
         $arr[] = 'resourceContact';
     }
 
-    // Folder
-    if (isset($_ENV['categories'][$cat_id]['other_cases']['folder']) && count($_ENV['categories'][$cat_id]['other_cases']['folder']) > 0 && (!isset($params['show_folder']) || $params['show_folder'] == true)) {
-        $fields .= 'folders_system_id,';
-
-        array_push($arr, 'folder');
-        if ($mode == 'full' || $mode == 'form') {
-            $data['folder'] = array(
-                'value' => '',
-                'show_value' => '',
-                'label' => $_ENV['categories'][$cat_id]['other_cases']['folder']['label'],
-                'display' => 'textinput',
-                'img' => $_ENV['categories'][$cat_id]['other_cases']['folder']['img'],
-            );
-
-            $data['folder']['readonly'] = true;
-            if ($mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['folder']['modify']) {
-                $data['folder']['field_type'] = $_ENV['categories'][$cat_id]['other_cases']['folder']['form_show'];
-                $data['folder']['readonly'] = false;
-            }
-        } else {
-            $data['folder'] = '';
-        }
-    }
-
     if ($mode == 'full' || $mode == 'form') {
         $fields = preg_replace('/,$/', ',type_label', $fields);
     } else {
@@ -1181,7 +1100,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
             if (isset($line->{$arr[$i]})) {
                 $data[$arr[$i]]['value'] = $line->{$arr[$i]};
             }
-            if ($arr[$i] != 'folder' || $arr[$i] <> 'description') {
+            if ($arr[$i] <> 'description') {
                 $data[$arr[$i]]['show_value'] = functions::show_string($data[$arr[$i]]['value']);
             }
             if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
@@ -1366,18 +1285,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                 }
 
             }
-            // Folder
-            elseif ($arr[$i] == 'folder' && isset($line->folders_system_id) && $line->folders_system_id != '') {
-                $stmt2 = $db->query('SELECT folder_id, folder_name, subject, folders_system_id, parent_id FROM '
-                    .$_SESSION['tablename']['fold_folders']
-                    ." WHERE status <> 'FOLDDEL' and folders_system_id = ?",
-                     array($line->folders_system_id));
-
-                if ($stmt2->rowCount() > 0) {
-                    $res = $stmt2->fetchObject();
-                    $data['folder']['show_value'] = $res->folder_id.', '.$res->folder_name.' ('.$res->folders_system_id.')';
-                }
-            }
         } else { // 'mimimal' mode
             // Normal cases
             $data[$arr[$i]] = $line->{$arr[$i]};
@@ -1440,16 +1347,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                     $data['type_contact'] = 'multi_external';
                 }
                 unset($data[$arr[$i]]);
-            }
-            // Folder
-            elseif ($arr[$i] == 'folder' && isset($line->folders_system_id) && $line->folders_system_id != '') {
-                $stmt2 = $db->query('SELECT folder_id, folder_name, subject, folders_system_id, parent_id FROM '
-                .$_SESSION['tablename']['fold_folders']
-                ." WHERE status <> 'FOLDDEL' and folders_system_id = ?",
-                    array($line->folders_system_id));
-
-                $res = $stmt2->fetchObject();
-                $data['folder'] = $res->folder_id.', '.$res->folder_name.' ('.$res->folders_system_id.')';
             }
         }
     }

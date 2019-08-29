@@ -197,27 +197,6 @@ function updateProcessDate(path_manage_script)
     }
 }
 
-function displayFatherFolder(select)
-{
-    if ($(select) && $j('#parentFolderSpan') && $j('#parentFolderTr')) {
-        var tmpParSpan = $j('#parentFolderSpan');
-        var tmpParTr = $j('#parentFolderTr');
-        var selectFolders = $(select);
-    } else {
-        return ;
-    }
-
-    for (var i = 0; i < selectFolders.options.length; i++) {
-        if (selectFolders.options[i].getAttribute('value') == selectFolders.options[selectFolders.selectedIndex].getAttribute('parent')) {
-            tmpParTr.css("display","block");
-
-            tmpParSpan.html( "Dossier Parent : " + selectFolders.options[i].label);
-            return;
-        }
-    }
-    tmpParTr.css("display","none");
-}
-
 function checkRealDate(arg) {
 
     var cat = $('category_id').options[$('category_id').selectedIndex].value
@@ -1966,9 +1945,6 @@ function saveIndexingModel() {
         }
         if ($j('#destination').val() != '') {
             obj['destination'] = $j('#destination').val();
-        }
-        if ($j('#folder').val() != '') {
-            obj['folder'] = $j('#folder').val();
         }
         if ($j('#thesaurus').length) {
             obj['thesaurus'] = [];

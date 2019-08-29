@@ -113,14 +113,6 @@ if (isset($_REQUEST['origin']) && !empty($_REQUEST['origin'])) {
         $list_origin = "loadList('".$_SESSION['config']['businessappurl']
                 ."index.php?display=true&module=notes&page=notes&identifier="
                 .$identifier."&origin=document".$parameters."', 'divList', true);";
-    } elseif ($_REQUEST['origin'] == "folder") {
-        
-        //From folders
-        $collId = 'folders';
-        $table = $_SESSION['tablename']['fold_folders'];
-        $list_origin = "loadList('".$_SESSION['config']['businessappurl']
-                    ."index.php?display=true&module=notes&page=notes&identifier="
-                    .$identifier."&origin=folder".$parameters."', 'divList', true);";
     }
 }
 
@@ -242,14 +234,9 @@ switch ($mode) {
                 
                 //Add notes
                 $notes = $_REQUEST['notes'];
-
                 $userId = $_SESSION['user']['UserId'];
+                $type = 'resource';
 
-                if (empty($_REQUEST['origin']) || $_REQUEST['origin'] != 'folder') {
-                    $type = 'resource';
-                } else {
-                    $type = 'folder';
-                }
                 $db->query(
                     "INSERT INTO " . NOTES_TABLE . "(identifier, note_text, creation_date, user_id, type) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?)",
                     array($identifier, $notes, $userId, $type)

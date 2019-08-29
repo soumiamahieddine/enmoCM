@@ -137,14 +137,6 @@ if (isset($_REQUEST['origin']) && !empty($_REQUEST['origin'])) {
         $list_origin = "window.parent.loadList('".$_SESSION['config']['businessappurl']
                 ."index.php?display=true&module=sendmail&page=sendmail&identifier="
                 .$identifier."&origin=document".$parameters."', 'divList', true);";
-    } elseif ($_REQUEST['origin'] == "folder") {
-        
-        //From folders
-        $collId = 'folders';
-        $table = $_SESSION['tablename']['fold_folders'];
-        $list_origin = "window.parent.loadList('".$_SESSION['config']['businessappurl']
-                    ."index.php?display=true&module=sendmail&page=sendmail&identifier="
-                    .$identifier."&origin=folder".$parameters."', 'divList', true);";
     }
 }
 

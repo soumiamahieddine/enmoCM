@@ -47,7 +47,7 @@ if (isset($_REQUEST['origin']) && !empty($_REQUEST['origin'])) {
     $origin = $_REQUEST['origin'];
 }
 
-if (empty($origin) || $origin != 'folder') {
+if (empty($origin)) {
     $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
     $right = \Resource\controllers\ResController::hasRightByResId(['resId' => [$identifier], 'userId' => $user['id']]);
     if (!$right) {
@@ -130,11 +130,7 @@ if (isset($_REQUEST['load'])) {
         $where_tab[] = "type = ?";
         $where_tab[] = "notes.id in (select notes.id from notes left join note_entities on notes.id = note_entities.note_id where item_id IS NULL OR item_id = '".$_SESSION['user']['primaryentity']['id']."' or notes.user_id = '".$_SESSION['user']['UserId']."')";
         $arrayPDO = array($identifier);
-        if (empty($origin) || $origin != 'folder') {
-            $arrayPDO[] = 'resource';
-        } else {
-            $arrayPDO[] = 'folder';
-        }
+        $arrayPDO[] = 'resource';
 
         //Build where
         $where = implode(' and ', $where_tab);

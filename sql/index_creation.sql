@@ -2,7 +2,6 @@
 CREATE INDEX type_id_idx ON res_letterbox (type_id);
 CREATE INDEX typist_idx ON res_letterbox (typist);
 CREATE INDEX doc_date_idx ON res_letterbox (doc_date);
-CREATE INDEX folders_system_id_idx ON res_letterbox (folders_system_id);
 CREATE INDEX status_idx ON res_letterbox (status);
 CREATE INDEX destination_idx ON res_letterbox (destination);
 CREATE INDEX dest_user_idx ON res_letterbox (dest_user);
@@ -60,15 +59,6 @@ CREATE INDEX description_idx ON doctypes (description);
 CREATE INDEX entity_label_idx ON entities (entity_label);
 CREATE INDEX entity_id_idx ON entities (entity_id);
 CREATE INDEX entity_folder_import_idx ON entities (folder_import);
-
--- folders
-CREATE INDEX folders_system_id_folders_idx ON folders (folders_system_id);
-CREATE INDEX parent_id_folders_idx ON folders (parent_id);
-CREATE INDEX folder_name_idx ON folders (folder_name);
-CREATE INDEX subject_idx ON folders (subject);
-
--- foldertypes
-CREATE INDEX foldertype_id_foldertypes_idx ON foldertypes (foldertype_id);
 
 -- groupbasket_redirect
 CREATE INDEX groupbasket_redirect_group_id_idx ON groupbasket_redirect (group_id);

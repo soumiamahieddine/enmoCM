@@ -4,8 +4,6 @@ Select setval('res_id_mlb_seq', (select max(res_id)+1 from res_letterbox), false
 Select setval('user_signatures_seq', (select max(id)+1 from user_signatures), false);
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
 Select setval('tag_id_seq', (select max(tag_id)+1 from tags), false);
-Select setval('folders_system_id_seq', (select max(folders_system_id)+1 from folders), false);
-Select setval('foldertype_id_id_seq', (select max(foldertype_id)+1 from foldertypes), false);
 Select setval('groupbasket_status_system_id_seq', (select max(system_id)+1 from groupbasket_status), false);
 Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 from groupbasket_redirect), false);
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);

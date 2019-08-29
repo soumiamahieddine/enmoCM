@@ -258,10 +258,6 @@ if ($mode == 'normal') {
         'filename',
         'res_id as real_dest'
     );
-    //Folder
-    if ($core_tools->is_module_loaded('folder')) {
-        array_push($select[$view], 'folders_system_id', 'folder_name');
-    }
 //Where clause
     $where_tab = array();
     $arrayPDO = array();

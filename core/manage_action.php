@@ -125,13 +125,10 @@ if ($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST
             $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
             $result .= $arr_id[$i].'#';
             if (trim($_POST['new_status']) <> '' && is_numeric($arr_id[$i])) {
-                if ($_POST['table'] == 'folders') {
-                    $query_str = "update " . $_POST['table']
-                        .  " set status = ? where folders_system_id = ?";
-                } else {
-                    $query_str = "update " . $_POST['table']
-                        . " set status = ? where res_id = ?";
-                }
+                
+                $query_str = "update " . $_POST['table']
+                    . " set status = ? where res_id = ?";
+                
                 $stmt = $db->query($query_str, array($_POST['new_status'], $arr_id[$i]));
                 if (!$stmt) {
                     $_SESSION['action_error'] = _SQL_ERROR.' : '.$query_str;
@@ -200,13 +197,10 @@ elseif (empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
                 $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
                 $result .= $arr_id[$i].'#';
                 if (trim($status) <> '') {
-                    if ($_POST['table'] == 'folders') {
-                        $query_str = "update " . $_POST['table']
-                            .  " set status = ? where folders_system_id = ?";
-                    } else {
+                    
                         $query_str = "update " . $_POST['table']
                             .  " set status = ? where res_id = ?";
-                    }
+                    
                     $stmt = $db->query($query_str, array($status, $arr_id[$i]));
                     if (!$stmt) {
                         $_SESSION['action_error'] = _SQL_ERROR . ' : ' . $query_str;

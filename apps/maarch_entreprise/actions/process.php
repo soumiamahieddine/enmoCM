@@ -276,7 +276,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<table width="95%" align="left" border="0">';
     // Displays the document indexes
     foreach (array_keys($data) as $key) {
-        if (!in_array($key, ['is_multicontacts', 'barcode', 'external_id','folder']) || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y') || (in_array($key, ['barcode', 'external_id']) && !empty($data[$key]['value']))) {
+        if (!in_array($key, ['is_multicontacts', 'barcode', 'external_id']) || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y') || (in_array($key, ['barcode', 'external_id']) && !empty($data[$key]['value']))) {
             $frm_str .= '<tr>';
             $frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
                 .$data[$key]['label'].' :</span>';
@@ -441,59 +441,6 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     //TAGS
     if ($core_tools->is_module_loaded('tags') && ($core_tools->test_service('tag_view', 'tags', false) == 1)) {
         include_once 'modules'.DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'process'.DIRECTORY_SEPARATOR.'index.php';
-    }
-
-    //FOLDERS
-    if ($core_tools->is_module_loaded('folder') && ($core->test_service('view_folder_tree', 'folder', false))) {
-        require_once 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-        $folders = new folder();
-        $folder_info = $folders->get_folders_tree('0');
-        $folder = '';
-        $folder_id = '';
-
-        if (isset($data['folder']) && !empty($data['folder'])) {
-            $folder = $data['folder']['show_value'];
-            $folder_id = str_replace(')', '', substr($folder, strrpos($folder, '(') + 1));
-        }
-
-        $frm_str .= '<tr>';
-        $frm_str .= '<td colspan="2">'._FOLDER.'</td>';
-        $frm_str .= '</tr>';
-        $frm_str .= '<tr>';
-        $frm_str .= '<td class="indexing_field"><select id="folder" name="folder"';
-
-        if (!$core->test_service('associate_folder', 'folder', false)) {
-            $frm_str .= ' disabled="disabled"';
-        }
-
-        $frm_str .= ' onchange="displayFatherFolder(\'folder\')" style="width:95%;"><option value="">'._SELECT_FOLDER_TITLE.'</option>';
-        foreach ($folder_info as $key => $value) {
-            if ($value['folders_system_id'] == $folder_id) {
-                $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'" parent="'.$value['parent_id'].'">'.$value['folder_name'].'</option>';
-            } else {
-                $frm_str .= '<option value="'.$value['folders_system_id'].'" parent="'.$value['parent_id'].'">'.$value['folder_name'].'</option>';
-            }
-        }
-
-        $frm_str .= '</select></td>';
-        if ($core->test_service('create_folder', 'folder', false) == 1 && $core->test_service('associate_folder', 'folder', false)) {
-            $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?page=create_folder_form_iframe&module=folder&display=false';
-
-            $frm_str .= '<td style="width:5px;"> <a href="#" id="create_folder" title="'._CREATE_FOLDER
-                .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._CREATE_FOLDER.'\',\''.$pathScriptTab.'\',\'folders\');return false;" '
-                .'style="display:inline;" ><i class="fa fa-plus-circle" title="'
-                ._CREATE_FOLDER.'"></i></a></td>';
-        }
-        $frm_str .= '</tr>';
-        $frm_str .= '<tr id="parentFolderTr" style="display: none"><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
-        $frm_str .= '<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="'.$res_id.'" />';
-
-        //script
-        $frm_str .= '<script>';
-        $frm_str .= '$j("#folder").chosen({width: "100%", disable_search_threshold: 10, search_contains: true});displayFatherFolder(\'folder\');';
-
-        $frm_str .= '</script>';
     }
 
 	//AUTRES INFORMATIONS
@@ -806,43 +753,6 @@ function check_form($form_id, $values)
     $folder_id = '';
     $foldertype_id = '';
 
-    if ($core->is_module_loaded('folder')) {
-        if (!empty($folder)) {
-            $folder_id = $folder;
-            $stmt = $db->query('SELECT folders_system_id FROM '.$_SESSION['tablename']['fold_folders'].' WHERE folders_system_id = ?', array($folder_id));
-            if ($stmt->rowCount() == 0) {
-                $_SESSION['action_error'] = _FOLDER.' '.$folder_id.' '._UNKNOWN;
-
-                return false;
-            }
-        }
-
-        if (!empty($res_id) && !empty($coll_id) && !empty($folder_id)) {
-            require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
-            $sec = new security();
-            $table = $sec->retrieve_table_from_coll($coll_id);
-            if (empty($table)) {
-                $_SESSION['action_error'] .= _COLLECTION.' '._UNKNOWN;
-
-                return false;
-            }
-            $stmt = $db->query('SELECT type_id FROM '.$table.' WHERE res_id = ?', array($res_id));
-            $res = $stmt->fetchObject();
-            $type_id = $res->type_id;
-            $stmt = $db->query('SELECT foldertype_id FROM '.$_SESSION['tablename']['fold_folders'].' WHERE folders_system_id = ?', array($folder_id));
-            $res = $stmt->fetchObject();
-            $foldertype_id = $res->foldertype_id;
-            $stmt = $db->query('SELECT fdl.foldertype_id FROM '.$_SESSION['tablename']['fold_foldertypes_doctypes_level1']
-                .' fdl, '.$_SESSION['tablename']['doctypes']
-                .' d WHERE d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ? and d.type_id = ?', array($foldertype_id, $type_id));
-            if ($stmt->rowCount() == 0) {
-                $_SESSION['action_error'] .= _ERROR_COMPATIBILITY_FOLDER;
-
-                return false;
-            }
-        }
-    }
-
     return $check;
 }
 
@@ -880,9 +790,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $thesaurusList = '';
 
     for ($j = 0; $j < count($values_form); ++$j) {
-        if ($values_form[$j]['ID'] == 'folder') {
-            $folder = $values_form[$j]['VALUE'];
-        }
         if ($values_form[$j]['ID'] == "description") {
             $description = $values_form[$j]['VALUE'];
         }
@@ -915,35 +822,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $thesaurus->updateResThesaurusList($thesaurusList, $arr_id[0]);
     }
 
-    //FOLDERS
-    if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder', false) == 1)) {
-        $folder_id = '';
-        $old_folder_id = '';
-
-        //get old folder ID
-        $stmt = $db->query('SELECT folders_system_id FROM '.$res_table.' WHERE res_id = ?', array($arr_id[0]));
-        $res = $stmt->fetchObject();
-        $old_folder_id = $res->folders_system_id;
-
-        if (!empty($folder)) {
-            $folder_id = $folder;
-
-            if ($folder_id != $old_folder_id && $_SESSION['history']['folderup']) {
-                require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php';
-
-                $hist = new history();
-
-                $hist->add($_SESSION['tablename']['fold_folders'], $folder_id, 'UP', 'folderup', _DOC_NUM.$arr_id[0]._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'], 'apps');
-                if (isset($old_folder_id) && !empty($old_folder_id)) {
-                    $hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, 'UP', 'folderup', _DOC_NUM.$arr_id[0]._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'], 'apps');
-                }
-            }
-
-            $db->query('UPDATE '.$res_table.' SET folders_system_id = ? WHERE res_id = ? ', array($folder_id, $arr_id[0]));
-        } elseif (empty($folder) && !empty($old_folder_id)) { //Delete folder reference in res_X
-            $db->query('UPDATE '.$res_table.' SET folders_system_id = NULL WHERE res_id = ?', array($arr_id[0]));
-        }
-    }
     //DIFFLIST
     if ($core->is_module_loaded('entities') && (empty($_SESSION['redirect']['diff_list']) || !is_array($_SESSION['redirect']['diff_list']) || count($_SESSION['redirect']['diff_list']) == 0)) {
         require_once 'modules/entities/class/class_manage_listdiff.php';

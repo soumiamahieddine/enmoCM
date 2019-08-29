@@ -246,26 +246,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
             }
-            // FOLDER : MARKET
-            elseif ($tab_id_fields[$j] == 'market' && !empty($_REQUEST['market'])) {
-                $json_txt .= " 'market' : ['".addslashes(trim($_REQUEST['market']))."'],";
-                $market = $func->wash($_REQUEST['market'], "no", _MARKET, "no");
-                $where_request .= " (lower(folder_name) like lower(:referenceNumber) or folder_id like :referenceNumber ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$market."%"));
-            }
-            // FOLDER : PROJECT
-            elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project'])) {
-                $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
-                $project = $func->wash($_REQUEST['project'], "no", _MARKET, "no");
-                $where_request .= " (lower(folder_name) like lower(:project) or folder_id like :project "
-                    ."or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower(:project) or folder_id like :project)) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":project" => "%".$project."%"));
-            } elseif ($tab_id_fields[$j] == 'folder_name' && !empty($_REQUEST['folder_name'])) {
-                $json_txt .= " 'folder_name' : ['".addslashes(trim($_REQUEST['folder_name']))."'],";
-                $folder_name = $func->wash($_REQUEST['folder_name'], "no", _FOLDER_NAME, "no");
-                $where_request .= " (lower(folder_name) like lower(:folderName) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":folderName" => "%".$folder_name."%"));
-            }
             // GED NUM
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged'])) {
                 $json_txt .= " 'numged' : ['".addslashes(trim($_REQUEST['numged']))."'],";

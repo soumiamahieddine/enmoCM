@@ -242,10 +242,6 @@
         <comment>_ENTITIES_COMMENT</comment>
     </MODULES>
     <MODULES>
-        <moduleid>folder</moduleid>
-        <comment>_FOLDERS_COMMENT</comment>
-    </MODULES>
-    <MODULES>
         <moduleid>notes</moduleid>
         <comment>_NOTES_COMMENT</comment>
     </MODULES>

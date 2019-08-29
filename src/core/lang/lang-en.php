@@ -148,7 +148,6 @@ define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'List of mails with recommendation');
 define('_DOCUMENTS_LIST_COPIES', 'List of copies');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Mails list with signatory');
-define('_FOLDERS_LIST', 'folders list');
 
 // ADMINISTRATION
 define('_USERS', 'Users');
@@ -229,7 +228,6 @@ define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Print the liaison sheets from the sear
 define('_ATTACHMENTS_COMMENT', 'Attachments management');
 define('_BASKETS_COMMENT', 'Baskets');
 define('_ENTITIES_COMMENT', 'Departments');
-define('_FOLDERS_COMMENT', 'Folders');
 define('_NOTES_COMMENT', 'Notes');
 define('_NOTIFICATIONS_COMMENT', 'Notifications');
 define('_TEMPLATES_COMMENT', 'Templates');
@@ -248,7 +246,6 @@ define('_VIEW_BASKETS', 'My baskets');
 define('_PRINT_SEPS', 'Limiters printing');
 define('_CREATE_FOLDER', 'Create a folder');
 define('_FOLDER_SEARCH', 'Search a folder');
-define('_VIEW_FOLDER_TREE', 'Read a folder');
 define('_SAVE_NUMERIC_PACKAGE', 'Save numeric package');
 define("_SELECT_FOLDER", "Folder selection");
 define("_FOLDER_HISTORY", "Folder's history");

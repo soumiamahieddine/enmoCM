@@ -147,7 +147,6 @@ define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Lijst met filters en antwoorden');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'Lijst van de documenten met berichten');
 define('_DOCUMENTS_LIST_COPIES', 'Lijst van de kopieën');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Lijst van de documenten met ondertekenaar');
-define('_FOLDERS_LIST', 'Lijst van de mappen');
 
 // ADMINISTRATION
 define('_USERS', 'Gebruikers');
@@ -228,7 +227,6 @@ define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'De verbindingsfiche vanuit de zoekopdr
 define('_ATTACHMENTS_COMMENT', 'Beheer van de bijlagen');
 define('_BASKETS_COMMENT', 'Bakjes');
 define('_ENTITIES_COMMENT', 'Eenheden');
-define('_FOLDERS_COMMENT', 'Mappen');
 define('_NOTES_COMMENT', 'Opmerkingen');
 define('_NOTIFICATIONS_COMMENT', 'Meldingen');
 define('_TEMPLATES_COMMENT', 'Documentmodellen');
@@ -247,7 +245,6 @@ define('_VIEW_BASKETS', 'Mijn bakjes');
 define('_PRINT_SEPS', 'Afdrukken van de separatoren');
 define('_CREATE_FOLDER', 'Een map aanmaken');
 define('_FOLDER_SEARCH', 'Een map zoeken');
-define('_VIEW_FOLDER_TREE', 'Een map raadplegen');
 define('_SAVE_NUMERIC_PACKAGE', 'Een digitale brief bewaren');
 define('_SELECT_FOLDER', 'Selectie van de Map');
 define('_FOLDER_HISTORY', 'Historiek map');

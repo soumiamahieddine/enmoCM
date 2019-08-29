@@ -195,10 +195,6 @@ abstract class chrono_Abstract
                     $chronoArray[$i]['VALUE'] = $this->execute_chrono_by_res_id(
                         $phpVar['res_id']
                     );
-                } else if ($chronoArray[$i]['VALUE'] == "chr_by_folder") {
-                   $chronoArray[$i]['VALUE'] = $this->execute_chrono_by_folder(
-                       $phpVar['folder_id']
-                   );
                 }
             }
         }
@@ -286,26 +282,6 @@ abstract class chrono_Abstract
 
     }
 
-    public function execute_chrono_by_folder($folder)
-    {
-        $db = new Database();
-        $folders_system_id = $_SESSION['folderId'];
-        //Get the crono key for this folder
-        $stmt = $db->query(
-                "SELECT param_value_int FROM " . PARAM_TABLE
-            . " WHERE id = ? ",
-            array('chrono_folder_' . $folders_system_id)
-        );
-        if ($stmt->rowCount() == 0) {
-                $chrono = $this->_createNewChronoForFolder($db, $folder);
-        } else {
-                $fetch = $stmt->fetchObject();
-                $chrono = $fetch->param_value_int;
-        }
-        $this->_updateChronoForFolder($chrono, $db, $folder);
-        return $chrono;
-    }
-
     protected function _executeCategoryChar($phpVar)
     {
         if (! $phpVar['category_id']) {
@@ -382,25 +358,6 @@ abstract class chrono_Abstract
         return 1;
     }
     
-    // For specific chrono => folder
-    protected function _updateChronoForFolder($actualChrono, $db, $folder)
-    {
-        $actualChrono++;
-        $db->query(
-                "UPDATE " . PARAM_TABLE . " SET param_value_int = ?  WHERE id = ? ",
-            array($actualChrono, 'chrono_folder_' . $folder)
-        );
-    }
-    
-    protected function _createNewChronoForFolder($db, $folder)
-    {
-        $db->query(
-                "INSERT INTO " . PARAM_TABLE . " (id, param_value_int) VALUES "
-            . "(?, '1')",
-            array('chrono_folder_' . $folder)
-        );
-        return 1;
-    }
     public function generate_chrono($chronoId, $phpVar='false', $form='false')
     {
         $tmp = $this->get_structure($chronoId);

@@ -711,35 +711,7 @@ abstract class business_app_tools_Abstract extends Database
         if (! isset($name) || empty($name)) {
             return false;
         }
-        if ($name == 'structures' || $name == 'structures_list_by_name'
-            || $name == 'structure_up' || $name == 'structure_del'
-        ) {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
-                  . 'architecture' . DIRECTORY_SEPARATOR . 'structures'
-                  . DIRECTORY_SEPARATOR . $name . '.php';
-            return $path;
-        } else if ($name == 'subfolders' || $name == 'subfolders_list_by_name'
-            || $name == 'subfolder_up' || $name == 'subfolder_del'
-        ) {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
-                  . 'architecture' . DIRECTORY_SEPARATOR . 'subfolders'
-                  . DIRECTORY_SEPARATOR . $name . '.php';
-            return $path;
-        } else if ($name == 'types' || $name == 'types_up'
-            || $name == 'types_up_db' || $name == 'types_add'
-            || $name == 'types_del' || $name == 'get_index'
-            || $name == 'choose_index' || $name == 'choose_coll'
-            || $name == 'types_list_by_name'
-        ) {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
-                  . 'architecture' . DIRECTORY_SEPARATOR . 'types'
-                  . DIRECTORY_SEPARATOR . $name . '.php';
-
-            return $path;
-        } else if ($name == 'contact_types' || $name == 'contact_types_list_by_name'
+        if ($name == 'contact_types' || $name == 'contact_types_list_by_name'
             || $name == 'contact_types_up' || $name == 'contact_types_del'
         ) {
             $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
