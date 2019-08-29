@@ -181,8 +181,6 @@ DELETE FROM usergroups_services WHERE service_id = 'join_res_case_in_process';
 DELETE FROM usergroups_services WHERE service_id = 'close_case';
 DELETE FROM usergroups_services WHERE service_id = 'add_cases';
 DELETE FROM usergroups_services WHERE service_id IN ('folder_search', 'view_folder_tree', 'select_folder', 'show_history_folder', 'modify_folder', 'associate_folder', 'delete_folder', 'admin_foldertypes', 'create_folder', 'folder_freeze', 'close_folder');
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS folders_system_id;
 DELETE FROM notes WHERE origin = 'folder';
 
 /* REFACTORING MODIFICATION */
@@ -219,6 +217,8 @@ ALTER TABLE actions DROP COLUMN IF EXISTS origin;
 ALTER TABLE actions DROP COLUMN IF EXISTS create_id;
 ALTER TABLE actions DROP COLUMN IF EXISTS category_id;
 DROP VIEW IF EXISTS fp_view_fileplan;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS folders_system_id;
 
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
