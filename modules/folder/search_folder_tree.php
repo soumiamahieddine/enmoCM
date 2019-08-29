@@ -356,12 +356,6 @@ $_SESSION['origin'] = 'search_folder_tree';
                     for (var i = 0; i <= docs.length; i++) {
 
                         var style = 'style="margin-left:35px;"';
-                        $('' + id_folder).innerHTML +=
-                            '<ul class="doc" style="margin-top:10px;margin-left:10px;' + style + '"><b>' +
-                            docs[i].type_label +
-                            '</b> <a onclick=\'updateContent("index.php?dir=indexing_searching&page=little_details_invoices&display=true&value=' +
-                            docs[i].res_id + '", "docView");\'>' + docs[i].res_id + ' - ' + docs[i].subject +
-                            '</a></ul>';
 
                         $('' + id_folder).addClassName('mt_fopened');
                         $('' + id_folder).style.listStyleImage = 'url(static.php?filename=folderopen.gif)';
@@ -428,11 +422,6 @@ $_SESSION['origin'] = 'search_folder_tree';
                                     '<li style="margin-bottom:10px;margin-top:10px;margin-left:50px;"><b>' +
                                     mail + '</b></li>';
                                 for (var i = 0; i < docs[subarray][mail].length; i++) {
-                                    $('' + folders_system_id).innerHTML +=
-                                        '<li style="margin-bottom:5px;margin-left:80px;"><a onclick=\'updateContent("index.php?dir=indexing_searching&page=little_details_invoices&display=true&value=' +
-                                        docs[subarray][mail][i].res_id + '", "docView");\'>(' + docs[
-                                            subarray][mail][i].res_id + ') ' + docs[subarray][mail][i].type_label +
-                                        ' - ' + docs[subarray][mail][i].subject + '</li>';
                                     $('' + folders_system_id).addClassName('mt_fopened');
                                     $('' + folders_system_id).removeClassName('mt_fclosed');
                                     $('' + folders_system_id).addClassName('link_open');

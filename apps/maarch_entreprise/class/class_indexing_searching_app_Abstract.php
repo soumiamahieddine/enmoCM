@@ -163,7 +163,7 @@ abstract class indexing_searching_app_Abstract extends Database
             $cat_id = 'empty';
         }
         $checkEmptyMultiContact = false;
-        // Simple cases
+        // Simple case
         foreach (array_keys($post) as $key) {
             //save_contact
             if (isset($_SESSION['adresses']) && !empty($_SESSION['adresses']['contactid'])) {
@@ -247,7 +247,7 @@ abstract class indexing_searching_app_Abstract extends Database
             $data_res = $type->fill_data_array($type_id, $coll_id, $val_indexes, $data_res);
         }
 
-        ///////////////////////// Other cases
+        ///////////////////////// Other case
         //process date
         if (
             isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date'])

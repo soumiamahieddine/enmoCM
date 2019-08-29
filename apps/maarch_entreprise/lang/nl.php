@@ -1261,7 +1261,6 @@ if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS')) { define('_DOCUMENTS_LIST_WITH
 if (!defined('_DOCUMENTS_LIST_COPIES')) { define('_DOCUMENTS_LIST_COPIES', 'Lijst van de kopieën');}
 if (!defined('_DOCUMENTS_LIST_EXTEND')) { define('_DOCUMENTS_LIST_EXTEND', 'Uitgebreide lijst');}
 if (!defined('_DOCUMENTS_LIST')) { define('_DOCUMENTS_LIST', 'Eenvoudige lijst');}
-if (!defined('_CASES_LIST')) { define('_CASES_LIST', 'Lijst van de zaken');}
 if (!defined('_DOCUMENTS_LIST_SEARCH')) { define('_DOCUMENTS_LIST_SEARCH', 'Uitgebreide lijst');}
 if (!defined('_CLICK_ICON_TO_TOGGLE')) { define('_CLICK_ICON_TO_TOGGLE', 'Klik op de icoon voor Weergeven / Verbergen');}
 if (!defined('_SHOW')) { define('_SHOW', 'Weergeven');}

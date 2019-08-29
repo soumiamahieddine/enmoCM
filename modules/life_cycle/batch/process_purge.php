@@ -426,13 +426,6 @@ while ($GLOBALS['state'] <> "END") {
                         $resourcesArray[$cptRes]["res_id"]
                     )
                 );
-
-                $deleteCasesQuery = "DELETE FROM cases_res "
-                   . " WHERE res_id = ? ";
-                $stmt = Bt_doQuery(
-                    $GLOBALS['db'], 
-                    $deleteCasesQuery, 
-                    array($resourcesArray[$cptRes]["res_id"]));
             }
 
             fclose($DeletedFiles);

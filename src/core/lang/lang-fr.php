@@ -147,7 +147,6 @@ define('_NOTE_ADDED', 'Annotation ajoutée');
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'Liste des courriers avec avis');
 define('_DOCUMENTS_LIST_COPIES', 'Liste des copies');
-define('_CASES_LIST', 'Liste des affaires');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Liste des courriers avec signataire');
 define('_FOLDERS_LIST', 'Liste de dossiers');
 
@@ -229,7 +228,6 @@ define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche d
 define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Imprimer les fiches de liaison depuis la recherche');
 define('_ATTACHMENTS_COMMENT', 'Gestion des pièces jointes');
 define('_BASKETS_COMMENT', 'Bannettes');
-define('_CASES_COMMENT', 'Affaires');
 define('_ENTITIES_COMMENT', 'Entités');
 define('_FOLDERS_COMMENT', 'Dossiers');
 define('_NOTES_COMMENT', 'Annotations');
@@ -351,11 +349,6 @@ define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Permet de définir le circuit di
 define("_AVIS_ANSWERS", "Donner son avis");
 define("_AVIS_ANSWERS_DESC", "Permet à ce groupe d'apparaître dans la liste des personnes Conseillers (circuit d'avis)");
 define("_VIEW_BASKETS_DESC", "Mes bannettes");
-define("_UPDATE_CASE", "Mise à jour d'affaires");
-define("_JOIN_RES_CASE", "Attacher des courriers aux affaires");
-define("_JOIN_RES_CASE_IN_PROCESS", "Attacher des courriers aux affaires (bannette de traitement)");
-define("_CLOSE_CASE", "Clôturer des affaires");
-define("_ADD_CASES", "Créer des affaires");
 define('_CHOOSE_ENTITY', 'Choisissez une entité');
 define('_EDIT_RECIPIENT_IN_PROCESS', 'Modifier l\'attributaire dans le traitement');
 define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', "Modifier l'attributaire dans la liste de diffusion (hors traitement)");

@@ -132,9 +132,6 @@ export const LANG_NL = {
     "canNotUpdateApplication"               : "Some files are modified. Can not update application", // TO TRANSLATE
     "cantMoveDoctype"                       : "Het documenttype kan enkel in een submap verplaatst worden",
     "cantMoveFirstLevel"                    : "De submap kan enkel in een map verplaatst worden",
-    "case"                                  : "Zaak",
-    "caseLabel"                             : "_TO_TRANSLATE",
-    "cases"                                 : "Zaken",
     "categories"                            : "_TO_TRANSLATE",
     "category_id"                           : "_TO_TRANSLATE",
     "changeMyPassword"                      : "Mijn wachtwoord wijzigen",

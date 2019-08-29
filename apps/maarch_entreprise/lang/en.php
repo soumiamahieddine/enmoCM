@@ -3853,9 +3853,6 @@ if (!defined('_DOCUMENTS_LIST_EXTEND')) {
 if (!defined('_DOCUMENTS_LIST')) {
     define('_DOCUMENTS_LIST', 'Simple list');
 } //template
-if (!defined('_CASES_LIST')) {
-    define('_CASES_LIST', 'Cases list');
-} //template
 if (!defined('_DOCUMENTS_LIST_SEARCH')) {
     define('_DOCUMENTS_LIST_SEARCH', 'Expanded list');
 } //template

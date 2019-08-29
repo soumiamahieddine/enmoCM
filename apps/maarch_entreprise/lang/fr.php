@@ -3891,9 +3891,6 @@ if (!defined('_DOCUMENTS_LIST_EXTEND')) {
 if (!defined('_DOCUMENTS_LIST')) {
     define('_DOCUMENTS_LIST', 'Liste simple');
 } //template
-if (!defined('_CASES_LIST')) {
-    define('_CASES_LIST', 'Liste des affaires');
-} //template
 if (!defined('_DOCUMENTS_LIST_SEARCH')) {
     define('_DOCUMENTS_LIST_SEARCH', 'Liste étendue');
 } //template

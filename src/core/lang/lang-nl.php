@@ -146,7 +146,6 @@ define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Lijst met filters en antwoorden');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'Lijst van de documenten met berichten');
 define('_DOCUMENTS_LIST_COPIES', 'Lijst van de kopieën');
-define('_CASES_LIST', 'Lijst van de zaken');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Lijst van de documenten met ondertekenaar');
 define('_FOLDERS_LIST', 'Lijst van de mappen');
 
@@ -228,7 +227,6 @@ define('_PRINT_DETAILS_SERVICE', 'De verbindingsfiche vanuit de detailfiche afdr
 define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'De verbindingsfiche vanuit de zoekopdracht afdrukken');
 define('_ATTACHMENTS_COMMENT', 'Beheer van de bijlagen');
 define('_BASKETS_COMMENT', 'Bakjes');
-define('_CASES_COMMENT', 'Zaken');
 define('_ENTITIES_COMMENT', 'Eenheden');
 define('_FOLDERS_COMMENT', 'Mappen');
 define('_NOTES_COMMENT', 'Opmerkingen');
@@ -349,11 +347,6 @@ define('_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC', 'Om het circuit rechtstreeks vanu
 define('_AVIS_ANSWERS', 'Zijn mening geven');
 define('_AVIS_ANSWERS_DESC', 'Laat deze groep verschijnen in de lijst van de Consultants (berichtencircuit)');
 define('_VIEW_BASKETS_DESC', 'Mijn bakjes');
-define('_UPDATE_CASE', 'Zaken bijwerken');
-define('_JOIN_RES_CASE', 'Brieven aan de zaken koppelen');
-define('_JOIN_RES_CASE_IN_PROCESS', 'Brieven aan de zaken koppelen (verwerkingsbakje)');
-define('_CLOSE_CASE', 'Zaken afsluiten');
-define('_ADD_CASES', 'Zaken aanmaken');
 define('_CHOOSE_ENTITY', 'Kies een eenheid');
 define('_EDIT_RECIPIENT_IN_PROCESS', '_TO_TRANSLATE in de verwerking');
 define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', '_TO_TRANSLATE in de verdelingslijst verbieden');

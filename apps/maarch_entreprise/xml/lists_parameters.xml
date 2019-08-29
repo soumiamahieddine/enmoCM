@@ -174,38 +174,6 @@
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
         <TEMPLATE>
-            <ID>cases_list</ID>
-            <LABEL>_CASES_LIST</LABEL>
-            <IMG>fa fa-briefcase fa-2x</IMG>
-            <NAME>group_cases_for_basket</NAME>
-            <ORIGIN>module</ORIGIN>
-            <MODULE>cases</MODULE>
-            <GOTOLIST>
-                    <ID>list_cases</ID>
-                    <LABEL>_CASES_LIST</LABEL>
-                    <NAME>cases_list</NAME>
-                    <ORIGIN>module</ORIGIN>
-                    <MODULE>cases</MODULE>
-            </GOTOLIST>
-            <ENABLED>true</ENABLED>
-        </TEMPLATE>
-        <TEMPLATE>
-            <ID>cases_list_search_adv</ID>
-            <LABEL>_CASES_LIST</LABEL>
-            <IMG>fa fa-briefcase fa-2x</IMG>
-            <NAME>group_cases</NAME>
-            <ORIGIN>module</ORIGIN>
-            <MODULE>cases</MODULE>
-            <GOTOLIST>
-                    <ID>list_cases</ID>
-                    <LABEL>_CASES_LIST</LABEL>
-                    <NAME>cases_list_search_adv</NAME>
-                    <ORIGIN>module</ORIGIN>
-                    <MODULE>cases</MODULE>
-            </GOTOLIST>
-            <ENABLED>true</ENABLED>
-        </TEMPLATE>
-        <TEMPLATE>
             <ID>folder_documents_list</ID>
             <LABEL>_FOLDER_DOCUMENTS_LIST</LABEL>
             <IMG>fa fa-list-ul fa-2x</IMG>

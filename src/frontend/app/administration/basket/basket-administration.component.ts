@@ -39,7 +39,6 @@ export class BasketAdministrationComponent implements OnInit {
     allGroups: any[] = [];
     basketIdAvailable: boolean;
     actionsList: any[] = [];
-    resultPages: any[] = [];
     list_display: any[] = [];
     creationMode: boolean;
 
@@ -140,7 +139,6 @@ export class BasketAdministrationComponent implements OnInit {
                                     });
                                 });
                                 this.basketGroups = data.groups;
-                                this.resultPages = data.pages;
 
                                 this.loading = false;
                             }, () => {
@@ -154,7 +152,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     openSettings(group: any, action: any) {
-        this.config = { data: { group: group, action: action, pages: this.resultPages } };
+        this.config = { data: { group: group, action: action } };
         this.dialogRef = this.dialog.open(BasketAdministrationSettingsModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {

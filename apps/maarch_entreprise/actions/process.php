@@ -729,24 +729,6 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=load_toolbar_attachments&resId='.$res_id.'&collId='.$coll_id;
         $frm_str .= '<script>loadToolbarBadge(\'attachments_tab\',\''.$toolbarBagde_script.'\');</script>';
     }
-    //CASES
-    if ($core_tools->is_module_loaded('cases')) {
-        $frm_str .= '<td>';
-
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                    .'index.php?display=true&page=show_case_tab&module=cases&resId='.$res_id.'&collId='.$coll_id;
-        $frm_str .= '<span onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_CASE).'\',\''.$pathScriptTab.'\',\'cases\');return false;" '
-            .'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-
-        $frm_str .= '<span id="cases_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span><b>&nbsp;'
-                .'<i id="cases_tab_img" class="fa fa-suitcase fa-2x" title="'._CASE.'"></i><span id="cases_tab_badge"></span>';
-        $frm_str .= '</span>';
-        $frm_str .= '</td>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$res_id.'&collId='.$coll_id;
-        $frm_str .= '<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
-    }
 
     //PRINT FOLDER
     if ($core_tools->test_service('print_folder_doc', 'visa', false)) {

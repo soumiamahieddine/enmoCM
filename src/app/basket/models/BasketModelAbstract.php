@@ -377,28 +377,6 @@ abstract class BasketModelAbstract
         return $baskets;
     }
 
-    public static function getBasketPages(array $aArgs = [])
-    {
-        ValidatorModel::arrayType($aArgs, ['unneeded']);
-
-        $basketPages = [];
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/basket/xml/basketpage.xml']);
-        if ($loadedXml) {
-            foreach ($loadedXml->BASKETPAGE as $value) {
-                if (empty($aArgs['unneeded']) || !in_array((string)$value->ID, $aArgs['unneeded'])) {
-                    $basketPages[] = [
-                        'id'    => (string)$value->ID,
-                        'label' => constant((string)$value->LABEL),
-                        'name'  => (string)$value->NAME
-                    ];
-                }
-            }
-        }
-
-        return $basketPages;
-    }
-
     public static function getDefaultActionIdByBasketId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['basketId', 'groupId']);

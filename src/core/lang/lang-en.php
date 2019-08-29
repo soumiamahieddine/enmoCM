@@ -147,7 +147,6 @@ define('_NOTE_ADDED', 'Note added');
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'List of mails with recommendation');
 define('_DOCUMENTS_LIST_COPIES', 'List of copies');
-define('_CASES_LIST', 'Cases list');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Mails list with signatory');
 define('_FOLDERS_LIST', 'folders list');
 
@@ -229,7 +228,6 @@ define('_PRINT_DETAILS_SERVICE', 'Print the liaison sheet from the detail sheet'
 define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Print the liaison sheets from the search');
 define('_ATTACHMENTS_COMMENT', 'Attachments management');
 define('_BASKETS_COMMENT', 'Baskets');
-define('_CASES_COMMENT', 'Cases');
 define('_ENTITIES_COMMENT', 'Departments');
 define('_FOLDERS_COMMENT', 'Folders');
 define('_NOTES_COMMENT', 'Notes');
@@ -351,11 +349,6 @@ define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Allows to define the workflow di
 define("_AVIS_ANSWERS", "Give oneself's opinion");
 define("_AVIS_ANSWERS_DESC", "Allows to this group to appear in the counsellor's list (recommendation workflow)");
 define("_VIEW_BASKETS_DESC", "My baskets");
-define("_UPDATE_CASE", "Cases updates");
-define("_JOIN_RES_CASE", "Attach mails to cases");
-define("_JOIN_RES_CASE_IN_PROCESS", "Link mails to cases (handling basket)");
-define("_CLOSE_CASE", "Enclose cases");
-define("_ADD_CASES", "Create cases");
 define('_CHOOSE_ENTITY', 'Choose a department');
 define('_EDIT_RECIPIENT_IN_PROCESS', 'Edit recipient in the handling');
 define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', 'Edit recipient on the diffusion list');

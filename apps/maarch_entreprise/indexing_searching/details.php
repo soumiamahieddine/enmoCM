@@ -240,15 +240,11 @@ if ($stmt->rowCount() > 0) {
         }
     }
 }
-$case_sql_complementary = '';
-if ($core->is_module_loaded('cases') == true) {
-    $case_sql_complementary = ' , case_id';
-}
 $stmt = $db->query(
     'SELECT status, format, typist, creation_date, fingerprint, filesize, '
     .'res_id, destination, source, '
     .'description, closing_date, alt_identifier, initiator, entity_label '.$comp_fields
-    .$case_sql_complementary.' FROM '.$table.' WHERE res_id = ?',
+    .' FROM '.$table.' WHERE res_id = ?',
     array($s_id)
 );
 $res = $stmt->fetchObject();
@@ -311,14 +307,6 @@ if ($stmt->rowCount() == 0) {
         $typistLabel = $resultUser->firstname.' '.$resultUser->lastname;
     } else {
         $typistLabel = $typist;
-    }
-
-    if ($core->is_module_loaded('cases') == true) {
-        require_once 'modules/cases/class/class_modules_tools.php';
-        $case = new cases();
-        if ($res->case_id != '') {
-            $case_properties = $case->get_case_info($res->case_id);
-        }
     }
 
     foreach (array_keys($indexes) as $key) {
@@ -434,21 +422,6 @@ if ($stmt->rowCount() == 0) {
         $sendmail .= '<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
 
         echo $sendmail;
-    }
-
-    //CASES TAB
-    if ($core->is_module_loaded('cases') == true) {
-        $case_frame = '';
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-            .'index.php?display=true&page=show_case_tab&module=cases&collId='.$coll_id.'&resId='.$s_id;
-        $case_frame .= '<div id="cases_tab" class="fa fa-suitcase DetailsTabFunc" title="'._CASE.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'cases_tab\',true);"> <sup id="cases_tab_badge"></sup>';
-        $case_frame .= '</div>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
-        $case_frame .= '<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-        echo $case_frame;
     }
 
     //NOTES TAB

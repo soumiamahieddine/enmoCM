@@ -101,9 +101,6 @@ if ($mode == 'normal') {
     }
     $template_list = array();
     array_push($template_list, 'documents_list_search_adv');
-    if ($core_tools->is_module_loaded('cases')) {
-        array_push($template_list, 'cases_list_search_adv');
-    }
 
     //For status icon
     $extension_icon = '';
@@ -261,10 +258,6 @@ if ($mode == 'normal') {
         'filename',
         'res_id as real_dest'
     );
-    //Cases
-    if ($core_tools->is_module_loaded('cases') == true) {
-        array_push($select[$view], 'case_id', 'case_label', 'case_description');
-    }
     //Folder
     if ($core_tools->is_module_loaded('folder')) {
         array_push($select[$view], 'folders_system_id', 'folder_name');
@@ -758,27 +751,6 @@ if ($mode == 'normal') {
                     }
                 }
 
-                if ($tab[$i][$j][$value] == 'case_id' && $core_tools->is_module_loaded('cases') == true) {
-                    $tab[$i][$j]['label'] = _CASE_NUM;
-                    $tab[$i][$j]['size'] = '10';
-                    $tab[$i][$j]['label_align'] = 'left';
-                    $tab[$i][$j]['align'] = 'left';
-                    $tab[$i][$j]['valign'] = 'bottom';
-                    $tab[$i][$j]['show'] = false;
-                    $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['value'] = "<a href='".$_SESSION['config']['businessappurl'].'index.php?page=details_cases&module=cases&id='.$tab[$i][$j]['value']."'>".$tab[$i][$j]['value'].'</a>';
-                    $tab[$i][$j]['order'] = 'case_id';
-                }
-                if ($tab[$i][$j][$value] == 'case_label' && $core_tools->is_module_loaded('cases') == true) {
-                    $tab[$i][$j]['label'] = _CASE_LABEL;
-                    $tab[$i][$j]['size'] = '10';
-                    $tab[$i][$j]['label_align'] = 'left';
-                    $tab[$i][$j]['align'] = 'left';
-                    $tab[$i][$j]['valign'] = 'bottom';
-                    $tab[$i][$j]['show'] = true;
-                    $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['order'] = 'case_id';
-                }
                 if ($tab[$i][$j][$value] == 'folder_name') {
                     $tab[$i][$j]['label'] = _FOLDER;
                     $tab[$i][$j]['size'] = '10';
