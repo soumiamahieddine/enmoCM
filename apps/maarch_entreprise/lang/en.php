@@ -667,12 +667,6 @@ if (!defined('_WORDING')) {
 if (!defined('_COLLECTION')) {
     define('_COLLECTION', 'Collection');
 }
-if (!defined('_VIEW_TREE_DOCTYPES')) {
-    define('_VIEW_TREE_DOCTYPES', 'File plan tree view');
-}
-if (!defined('_VIEW_TREE_DOCTYPES_DESC')) {
-    define('_VIEW_TREE_DOCTYPES_DESC', 'See file plan tree view (Folders types, folder, sub-folder, and document types)');
-}
 
 /************************* Administration ***********************************/
 
@@ -1173,21 +1167,7 @@ if (!defined('_INFOS')) {
 }
 
 /************** Manage structure **************/
-if (!defined('_ADMIN_ARCHI')) {
-    define('_ADMIN_ARCHI', 'File plan administration');
-}
-if (!defined('_MANAGE_STRUCTURE')) {
-    define('_MANAGE_STRUCTURE', 'Manage the sub-folders');
-}
-if (!defined('_MANAGE_STRUCTURE_DESC')) {
-    define('_MANAGE_STRUCTURE_DESC', 'Administer the folders.');
-}
-if (!defined('_MANAGE_SUBFOLDER')) {
-    define('_MANAGE_SUBFOLDER', 'Manage the sub-folders');
-}
-if (!defined('_MANAGE_SUBFOLDER_DESC')) {
-    define('_MANAGE_SUBFOLDER_DESC', 'Manage the sub-folders inside the folders.');
-}
+
 if (!defined('_ARCHITECTURE')) {
     define('_ARCHITECTURE', 'File plan');
 }
@@ -3255,9 +3235,6 @@ if (!defined('_WHERE_CLAUSE_TARGET')) {
 }
 if (!defined('_WHERE_TARGET')) {
     define('_WHERE_TARGET', 'Target');
-}
-if (!defined('_CLASS_SCHEME')) {
-    define('_CLASS_SCHEME', 'File plan');
 }
 if (!defined('_DOCS')) {
     define('_DOCS', 'Documents');

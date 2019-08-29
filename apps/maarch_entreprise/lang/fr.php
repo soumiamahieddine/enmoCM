@@ -659,12 +659,6 @@ if (!defined('_WORDING')) {
 if (!defined('_COLLECTION')) {
     define('_COLLECTION', 'Collection');
 }
-if (!defined('_VIEW_TREE_DOCTYPES')) {
-    define('_VIEW_TREE_DOCTYPES', 'Arborescence du plan de classement');
-}
-if (!defined('_VIEW_TREE_DOCTYPES_DESC')) {
-    define('_VIEW_TREE_DOCTYPES_DESC', "Voir l'arborescence du plan de classement (types de dossiers, chemises, sous-chemises et types de document)");
-}
 
 /************************* Administration ***********************************/
 
@@ -1174,21 +1168,6 @@ if (!defined('_INFOS')) {
 }
 
 /************** Admin de l'architecture  (plan de classement) **************/
-if (!defined('_ADMIN_ARCHI')) {
-    define('_ADMIN_ARCHI', 'Administration du plan de classement');
-}
-if (!defined('_MANAGE_STRUCTURE')) {
-    define('_MANAGE_STRUCTURE', 'Gérer les chemises');
-}
-if (!defined('_MANAGE_STRUCTURE_DESC')) {
-    define('_MANAGE_STRUCTURE_DESC', "Administrer les chemises. Celles-ci constituent l'élément le plus haut du plan de classement. Si le module Folder est connecté, vous pouvez associer un type de dossier à un plan de classement.");
-}
-if (!defined('_MANAGE_SUBFOLDER')) {
-    define('_MANAGE_SUBFOLDER', 'Gérer les sous-chemises');
-}
-if (!defined('_MANAGE_SUBFOLDER_DESC')) {
-    define('_MANAGE_SUBFOLDER_DESC', "Gérer les sous-chemises à l'intérieur des chemises.");
-}
 if (!defined('_ARCHITECTURE')) {
     define('_ARCHITECTURE', 'Plan de classement');
 }
@@ -3281,9 +3260,6 @@ if (!defined('_WHERE_CLAUSE_TARGET')) {
 }
 if (!defined('_WHERE_TARGET')) {
     define('_WHERE_TARGET', 'Cible');
-}
-if (!defined('_CLASS_SCHEME')) {
-    define('_CLASS_SCHEME', 'Plan de classement');
 }
 if (!defined('_DOCS')) {
     define('_DOCS', 'Documents');

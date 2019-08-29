@@ -129,7 +129,7 @@ class FolderController
         }
 
         if (empty($data['parent_id'])) {
-            $data['parent_id'] = 0;
+            $data['parent_id'] = null;
             $owner  = $GLOBALS['id'];
             $public = false;
             $level  = 0;
@@ -184,7 +184,7 @@ class FolderController
         if (!Validator::stringType()->notEmpty()->validate($data['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
-        if (!empty($data['parent_id']) &&!Validator::intval()->validate($data['parent_id'])) {
+        if (!empty($data['parent_id']) && !Validator::intval()->validate($data['parent_id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
         }
         if ($data['parent_id'] == $aArgs['id']) {
@@ -197,7 +197,7 @@ class FolderController
         }
 
         if (empty($data['parent_id'])) {
-            $data['parent_id'] = 0;
+            $data['parent_id'] = null;
             $level = 0;
         } else {
             $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $data['parent_id']]);

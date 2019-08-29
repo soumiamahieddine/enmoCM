@@ -22,7 +22,7 @@ export class FolderUpdateComponent implements OnInit {
         label: '',
         public: true,
         user_id: 0,
-        parent_id: 0,
+        parent_id: null,
         level: 0,
         sharing: {
             entities: []
@@ -66,7 +66,7 @@ export class FolderUpdateComponent implements OnInit {
                     element['state'] = {
                         opened: true
                     }
-                    if (element.parent_id === 0) {
+                    if (element.parent_id === null) {
                         element.parent_id = '#';
                     }
 

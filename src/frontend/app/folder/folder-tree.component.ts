@@ -183,7 +183,7 @@ export class FolderTreeComponent implements OnInit {
 
     flatToNestedObject(data: any) {
         const nested = data.reduce((initial: any, value: any, index: any, original: any) => {
-            if (value.parent_id === 0) {
+            if (value.parent_id === null) {
                 if (initial.left.length) {
                     this.checkLeftOvers(initial.left, value);
                 }

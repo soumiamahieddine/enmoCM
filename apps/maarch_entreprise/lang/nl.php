@@ -218,8 +218,6 @@ if (!defined('_VIEW_HISTORY2')) { define('_VIEW_HISTORY2', 'Weergave van de gesc
 if (!defined('_VIEW_HISTORY_BATCH2')) { define('_VIEW_HISTORY_BATCH2', 'Weergave van de geschiedenis van de batches');}
 if (!defined('_WORDING')) { define('_WORDING', 'Omschrijving');}
 if (!defined('_COLLECTION')) { define('_COLLECTION', 'Verzameling');}
-if (!defined('_VIEW_TREE_DOCTYPES')) { define('_VIEW_TREE_DOCTYPES', 'Boomstructuur van het klasseringsplan');}
-if (!defined('_VIEW_TREE_DOCTYPES_DESC')) { define('_VIEW_TREE_DOCTYPES_DESC', 'De boomstructuur van het klasseringsplan (type mappen, submappen en documenttypes) bekijken');}
 if (!defined('_GROUPS_LIST')) { define('_GROUPS_LIST', 'Groepslijst');}
 if (!defined('_ADMIN_GROUP')) { define('_ADMIN_GROUP', 'Beheergroep');}
 if (!defined('_ADD_GROUP')) { define('_ADD_GROUP', 'Groep toevoegen');}
@@ -376,11 +374,6 @@ if (!defined('_TOTAL_PROCESSED')) { define('_TOTAL_PROCESSED', 'Verwerkte docume
 if (!defined('_TOTAL_ERRORS')) { define('_TOTAL_ERRORS', 'Documenten met fouten');}
 if (!defined('_ONLY_ERRORS')) { define('_ONLY_ERRORS', 'Enkel met fouten');}
 if (!defined('_INFOS')) { define('_INFOS', 'Informatie');}
-if (!defined('_ADMIN_ARCHI')) { define('_ADMIN_ARCHI', 'Beheer van het klasseringsplan');}
-if (!defined('_MANAGE_STRUCTURE')) { define('_MANAGE_STRUCTURE', 'Mappen beheren');}
-if (!defined('_MANAGE_STRUCTURE_DESC')) { define('_MANAGE_STRUCTURE_DESC', 'Mappen beheren Deze zijn het hoogste element van het klasseringsplan. Indien de Directorymodule verbonden is, kunt u een dossiertype aan een klasseringsplan koppelen.');}
-if (!defined('_MANAGE_SUBFOLDER')) { define('_MANAGE_SUBFOLDER', 'De submappen beheren');}
-if (!defined('_MANAGE_SUBFOLDER_DESC')) { define('_MANAGE_SUBFOLDER_DESC', 'De submappen binnen de mappen beheren.');}
 if (!defined('_ARCHITECTURE')) { define('_ARCHITECTURE', 'Klasseringsplan');}
 if (!defined('_MORE_INFOS')) { define('_MORE_INFOS', 'Neem contact op met uw beheerder voor meer informatie');}
 if (!defined('_ALREADY_EXISTS')) { define('_ALREADY_EXISTS', 'bestaat reeds');}
@@ -1042,7 +1035,6 @@ if (!defined('_SSO_LOGIN')) { define('_SSO_LOGIN', 'Login via SSO');}
 if (!defined('_LDAP')) { define('_LDAP', 'LDAP directory');}
 if (!defined('_WHERE_CLAUSE_TARGET')) { define('_WHERE_CLAUSE_TARGET', 'Doel van de WHERE clause');}
 if (!defined('_WHERE_TARGET')) { define('_WHERE_TARGET', 'Doel');}
-if (!defined('_CLASS_SCHEME')) { define('_CLASS_SCHEME', 'Klasseringsplan');}
 if (!defined('_DOCS')) { define('_DOCS', 'Documenten');}
 if (!defined('_GO_MANAGE_USER')) { define('_GO_MANAGE_USER', 'Wijzigen');}
 if (!defined('_GO_MANAGE_DOCSERVER')) { define('_GO_MANAGE_DOCSERVER', 'Wijzigen');}
