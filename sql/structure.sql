@@ -381,42 +381,6 @@ CONSTRAINT redirected_baskets_unique_key UNIQUE (owner_user_id, basket_id, group
 )
 WITH (OIDS=FALSE);
 
--- modules/cases/sql/structure/cases.postgresql.sql
-
-CREATE SEQUENCE case_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-
-CREATE TABLE cases
-(
-  case_id integer NOT NULL DEFAULT nextval('case_id_seq'::regclass),
-  case_label character varying(255) NOT NULL DEFAULT ''::bpchar,
-  case_description character varying(255),
-  case_type character varying(32),
-  case_closing_date timestamp without time zone,
-  case_last_update_date timestamp without time zone NOT NULL,
-  case_creation_date timestamp without time zone NOT NULL,
-  case_typist character varying(128) NOT NULL DEFAULT ''::bpchar,
-  case_parent integer,
-  case_custom_t1 character varying(255),
-  case_custom_t2 character varying(255),
-  case_custom_t3 character varying(255),
-  case_custom_t4 character varying(255),
-  CONSTRAINT cases_pkey PRIMARY KEY (case_id)
-);
-
-CREATE TABLE cases_res
-(
-  case_id integer NOT NULL,
-  res_id integer NOT NULL,
-  CONSTRAINT cases_res_pkey PRIMARY KEY (case_id,res_id)
-);
-
-
-
 -- modules/entities/sql/structure/entities.postgresql.sql
 
 
@@ -1534,9 +1498,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.priority,
     r.locker_user_id,
     r.locker_time,
-    ca.case_id,
-    ca.case_label,
-    ca.case_description,
     en.entity_label,
     en.entity_type AS entitytype,
     cont.contact_id,
@@ -1550,9 +1511,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     doctypes_second_level dsl,
     res_letterbox r
      LEFT JOIN entities en ON r.destination::text = en.entity_id::text
-     LEFT JOIN cases_res cr ON r.res_id = cr.res_id
      LEFT JOIN mlb_coll_ext mlb ON mlb.res_id = r.res_id
-     LEFT JOIN cases ca ON cr.case_id = ca.case_id
      LEFT JOIN contacts_v2 cont ON mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id
      LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
   WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
