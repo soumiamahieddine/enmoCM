@@ -28,7 +28,7 @@ export class ParametersAdministrationComponent implements OnInit {
 
     displayedColumns = ['id', 'description', 'value', 'actions'];
     dataSource: any;
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
 
 

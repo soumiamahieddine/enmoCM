@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef, ApplicationRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { merge, Observable, of as observableOf, Subject  } from 'rxjs';
@@ -47,6 +47,8 @@ export class BasketListComponent implements OnInit {
     currentResource: any = {};
 
     filtersChange = new EventEmitter();
+
+    dragInit: boolean = true;
 
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
@@ -124,6 +126,7 @@ export class BasketListComponent implements OnInit {
         this.isLoadingResults = false;
 
         this.route.params.subscribe(params => {
+            this.dragInit = true;
             this.destroy$.next(true);
 
             this.basketUrl = '../../rest/resourcesList/users/' + params['userSerialId'] + '/groups/' + params['groupSerialId'] + '/baskets/' + params['basketId'];
@@ -139,8 +142,12 @@ export class BasketListComponent implements OnInit {
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(null);
 
-            this.listProperties = this.filtersListService.initListsProperties(this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId);
+            this.listProperties = this.filtersListService.initListsProperties(this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, 'basket');
 
+
+            setTimeout(() => {
+                this.dragInit = false;
+            }, 1000);
             this.initResultList();
 
         },
@@ -178,7 +185,6 @@ export class BasketListComponent implements OnInit {
                     this.currentBasketInfo.basket_id = data.basket_id;
                     this.defaultAction = data.defaultAction;
                     this.headerService.setHeader(data.basketLabel);
-
                     return data.resources;
                 }),
                 catchError((err: any) => {
@@ -397,6 +403,14 @@ export class BasketListComponent implements OnInit {
         }
     }
 
+    selectSpecificRes(row: any) {
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
+    }
+
     open({ x, y }: MouseEvent, row: any) {
         
         let thisSelect = { checked : true };
@@ -422,7 +436,14 @@ export class BasketListComponent implements OnInit {
         setTimeout(() => {
             this.actionsList.launchEvent(action, row);
         }, 200);
-        
+    }
+
+    listTodrag() {
+        if (this.panelFolder !== undefined) {
+            return this.panelFolder.getDragIds();
+        } else {
+            return [0];
+        }
     }
 }
 export interface BasketList {

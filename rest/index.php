@@ -192,6 +192,7 @@ $app->get('/folders/{id}/resources', \Folder\controllers\FolderController::class
 $app->post('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':addResourcesById');
 $app->delete('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':removeResourcesById');
 $app->get('/folders/{id}/resources/{resId}/events', \Folder\controllers\FolderController::class . ':getEventsFromFolder');
+$app->get('/folders/{id}/filters', \Folder\controllers\FolderController::class . ':getFilters');
 $app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
 
 //Groups

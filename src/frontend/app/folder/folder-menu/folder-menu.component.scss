@@ -10,9 +10,15 @@
 }
 
 .labelFolder {
-    color: $primary;
+    color: rgb(102, 102, 102);
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .private {
-    color: $warn;
+    color: $secondary;
+}
+
+::ng-deep.folderListMenu {
+    width: 200px;
 }

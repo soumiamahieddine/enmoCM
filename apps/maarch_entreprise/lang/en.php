@@ -119,16 +119,6 @@ if (!defined('_NO_RIGHTS_ON')) {
 if (!defined('_NO_LABEL_FOUND')) {
     define('_NO_LABEL_FOUND', 'No found label for this department');
 }
-
-if (!defined('_FOLDERTYPES_LIST')) {
-    define('_FOLDERTYPES_LIST', 'folder types list');
-}
-if (!defined('_FOLDERTYPE_ADDED')) {
-    define('_FOLDERTYPE_ADDED', 'Added new file');
-}
-if (!defined('_FOLDERTYPE_DELETION')) {
-    define('_FOLDERTYPE_DELETION', 'Deleted folder');
-}
 if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) {
     define('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', "Warning : Maarch's datas model must be updated...");
 }
@@ -667,12 +657,6 @@ if (!defined('_WORDING')) {
 if (!defined('_COLLECTION')) {
     define('_COLLECTION', 'Collection');
 }
-if (!defined('_VIEW_TREE_DOCTYPES')) {
-    define('_VIEW_TREE_DOCTYPES', 'File plan tree view');
-}
-if (!defined('_VIEW_TREE_DOCTYPES_DESC')) {
-    define('_VIEW_TREE_DOCTYPES_DESC', 'See file plan tree view (Folders types, folder, sub-folder, and document types)');
-}
 
 /************************* Administration ***********************************/
 
@@ -922,42 +906,8 @@ if (!defined('_FIELD_VALUES')) {
 }
 
 /************** structures : List + Form**************/
-if (!defined('_STRUCTURE_LIST')) {
-    define('_STRUCTURE_LIST', 'Sub-folders list');
-}
-if (!defined('_STRUCTURES')) {
-    define('_STRUCTURES', 'sub-folder(s)');
-}
 if (!defined('_STRUCTURE')) {
     define('_STRUCTURE', 'Sub-folder');
-}
-if (!defined('_ALL_STRUCTURES')) {
-    define('_ALL_STRUCTURES', 'All the sub-folders');
-}
-
-if (!defined('_THE_STRUCTURE')) {
-    define('_THE_STRUCTURE', ' The sub-folder');
-}
-if (!defined('_STRUCTURE_MODIF')) {
-    define('_STRUCTURE_MODIF', 'Sub-folder modification');
-}
-if (!defined('_ID_STRUCTURE_PB')) {
-    define('_ID_STRUCTURE_PB', 'There is a problem with the sub-folder ID');
-}
-if (!defined('_NEW_STRUCTURE_ADDED')) {
-    define('_NEW_STRUCTURE_ADDED', 'Add a new sub-folder');
-}
-if (!defined('_NEW_STRUCTURE')) {
-    define('_NEW_STRUCTURE', 'New sub-folder');
-}
-if (!defined('_DESC_STRUCTURE_MISSING')) {
-    define('_DESC_STRUCTURE_MISSING', "It's missing sub-folder description");
-}
-if (!defined('_STRUCTURE_DEL')) {
-    define('_STRUCTURE_DEL', 'Sub-folder deletion');
-}
-if (!defined('_DELETED_STRUCTURE')) {
-    define('_DELETED_STRUCTURE', 'Deleted sub-folder');
 }
 if (!defined('_FONT_COLOR')) {
     define('_FONT_COLOR', 'Font colour');
@@ -1020,15 +970,6 @@ if (!defined('_PURPLE')) {
 }
 
 /************** Sub-folders : List + Form**************/
-if (!defined('_SUBFOLDER_LIST')) {
-    define('_SUBFOLDER_LIST', 'Sub-folder list');
-}
-if (!defined('_SUBFOLDERS')) {
-    define('_SUBFOLDERS', 'Sub-folder(s)');
-}
-if (!defined('_ALL_SUBFOLDERS')) {
-    define('_ALL_SUBFOLDERS', 'All the sub-folders');
-}
 if (!defined('_SUBFOLDER')) {
     define('_SUBFOLDER', 'sub-folder');
 }
@@ -1173,21 +1114,7 @@ if (!defined('_INFOS')) {
 }
 
 /************** Manage structure **************/
-if (!defined('_ADMIN_ARCHI')) {
-    define('_ADMIN_ARCHI', 'File plan administration');
-}
-if (!defined('_MANAGE_STRUCTURE')) {
-    define('_MANAGE_STRUCTURE', 'Manage the sub-folders');
-}
-if (!defined('_MANAGE_STRUCTURE_DESC')) {
-    define('_MANAGE_STRUCTURE_DESC', 'Administer the folders. Those ones are the higher element of the fileplan. If the module Folder is connected, you can associate a folder type to a file plan.');
-}
-if (!defined('_MANAGE_SUBFOLDER')) {
-    define('_MANAGE_SUBFOLDER', 'Manage the sub-folders');
-}
-if (!defined('_MANAGE_SUBFOLDER_DESC')) {
-    define('_MANAGE_SUBFOLDER_DESC', 'Manage the sub-folders inside the folders.');
-}
+
 if (!defined('_ARCHITECTURE')) {
     define('_ARCHITECTURE', 'File plan');
 }
@@ -3256,9 +3183,6 @@ if (!defined('_WHERE_CLAUSE_TARGET')) {
 if (!defined('_WHERE_TARGET')) {
     define('_WHERE_TARGET', 'Target');
 }
-if (!defined('_CLASS_SCHEME')) {
-    define('_CLASS_SCHEME', 'File plan');
-}
 if (!defined('_DOCS')) {
     define('_DOCS', 'Documents');
 }
@@ -3852,9 +3776,6 @@ if (!defined('_DOCUMENTS_LIST_EXTEND')) {
 } //liste + template
 if (!defined('_DOCUMENTS_LIST')) {
     define('_DOCUMENTS_LIST', 'Simple list');
-} //template
-if (!defined('_CASES_LIST')) {
-    define('_CASES_LIST', 'Cases list');
 } //template
 if (!defined('_DOCUMENTS_LIST_SEARCH')) {
     define('_DOCUMENTS_LIST_SEARCH', 'Expanded list');

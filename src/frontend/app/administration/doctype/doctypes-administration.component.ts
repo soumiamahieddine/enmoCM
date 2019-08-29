@@ -44,7 +44,7 @@ export class DoctypesAdministrationComponent implements OnInit {
 
     displayedColumns = ['label','use', 'mandatory', 'column'];
     dataSource = new MatTableDataSource(this.currentType.indexes);
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
 
     constructor(

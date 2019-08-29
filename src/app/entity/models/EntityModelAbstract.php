@@ -330,9 +330,10 @@ abstract class EntityModelAbstract
             $entitiesAllowed = EntityModel::getAllEntitiesByUserId(['userId' => $aArgs['userId']]);
         }
 
-        $allEntities = EntityModel::get(['select' => ['entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['parent_entity_id']]);
+        $allEntities = EntityModel::get(['select' => ['id', 'entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['parent_entity_id']]);
 
         foreach ($allEntities as $key => $value) {
+            $allEntities[$key]['serialId'] = $value['id'];
             $allEntities[$key]['id'] = $value['entity_id'];
             if (empty($value['parent_entity_id'])) {
                 $allEntities[$key]['parent'] = '#';

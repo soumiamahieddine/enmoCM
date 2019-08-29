@@ -36,7 +36,7 @@ export class SendShippingActionComponent implements OnInit {
 
     mailsNotSend: any[] = []
 
-    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
+    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendShippingActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 

@@ -129,7 +129,7 @@ class FolderController
         }
 
         if (empty($data['parent_id'])) {
-            $data['parent_id'] = 0;
+            $data['parent_id'] = null;
             $owner  = $GLOBALS['id'];
             $public = false;
             $level  = 0;
@@ -184,8 +184,11 @@ class FolderController
         if (!Validator::stringType()->notEmpty()->validate($data['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
-        if (!empty($data['parent_id']) &&!Validator::intval()->validate($data['parent_id'])) {
+        if (!empty($data['parent_id']) && !Validator::intval()->validate($data['parent_id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
+        }
+        if ($data['parent_id'] == $aArgs['id']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Parent_id and id can not be the same']);
         }
 
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
@@ -194,7 +197,7 @@ class FolderController
         }
 
         if (empty($data['parent_id'])) {
-            $data['parent_id'] = 0;
+            $data['parent_id'] = null;
             $level = 0;
         } else {
             $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $data['parent_id']]);
@@ -233,7 +236,7 @@ class FolderController
         if (!Validator::numeric()->notEmpty()->validate($aArgs['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
         }
-        if (!Validator::boolVal()->validate($data['public'])) {
+        if (!Validator::boolType()->validate($data['public'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
         }
         if ($data['public'] && !isset($data['sharing']['entities'])) {
@@ -559,6 +562,32 @@ class FolderController
         }
 
         return $response->withJson(['events' => $events]);
+    }
+
+    public function getFilters(Request $request, Response $response, array $args)
+    {
+        if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
+        }
+
+        $foldersResources = ResourceFolderModel::get(['select' => ['res_id'], 'where' => ['folder_id = ?'], 'data' => [$args['id']]]);
+        $foldersResources = array_column($foldersResources, 'res_id');
+
+        if (empty($foldersResources)) {
+            return $response->withJson(['entities' => [], 'priorities' => [], 'categories' => [], 'statuses' => [], 'entitiesChildren' => []]);
+        }
+
+        $where = ['(res_id in (?))'];
+        $queryData = [$foldersResources];
+        $queryParams = $request->getQueryParams();
+
+        $filters = ResourceListController::getFormattedFilters(['where' => $where, 'queryData' => $queryData, 'queryParams' => $queryParams]);
+
+        return $response->withJson($filters);
     }
 
     // login (string) : Login of user connected

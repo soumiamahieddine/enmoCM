@@ -29,7 +29,7 @@ export class BasketsAdministrationComponent implements OnInit {
     displayedColumns    = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
     dataSource          : any;
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace

@@ -28,7 +28,7 @@ export class DocserversAdministrationComponent implements OnInit {
     docserversClone     : any = [];
     docserversTypes     : any = {};
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     
     constructor(

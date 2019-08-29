@@ -29,7 +29,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     displayedColumns            = ['label', 'delays', 'working_days', 'default_priority', 'actions'];
 
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace

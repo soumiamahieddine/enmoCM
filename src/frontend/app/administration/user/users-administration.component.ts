@@ -43,7 +43,7 @@ export class UsersAdministrationComponent implements OnInit {
     displayedColumns    = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
 
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace

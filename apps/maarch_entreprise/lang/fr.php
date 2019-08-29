@@ -115,15 +115,6 @@ if (!defined('_NO_LABEL_FOUND')) {
     define('_NO_LABEL_FOUND', 'Aucun label trouvé pour ce service');
 }
 
-if (!defined('_FOLDERTYPES_LIST')) {
-    define('_FOLDERTYPES_LIST', 'Liste des types de dossier');
-}
-if (!defined('_FOLDERTYPE_ADDED')) {
-    define('_FOLDERTYPE_ADDED', 'Nouveau dossier ajouté');
-}
-if (!defined('_FOLDERTYPE_DELETION')) {
-    define('_FOLDERTYPE_DELETION', 'Dossier supprimé');
-}
 if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) {
     define('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Attention: Le modèle de données de Maarch doit être mis à jour...');
 }
@@ -659,12 +650,6 @@ if (!defined('_WORDING')) {
 if (!defined('_COLLECTION')) {
     define('_COLLECTION', 'Collection');
 }
-if (!defined('_VIEW_TREE_DOCTYPES')) {
-    define('_VIEW_TREE_DOCTYPES', 'Arborescence du plan de classement');
-}
-if (!defined('_VIEW_TREE_DOCTYPES_DESC')) {
-    define('_VIEW_TREE_DOCTYPES_DESC', "Voir l'arborescence du plan de classement (types de dossiers, chemises, sous-chemises et types de document)");
-}
 
 /************************* Administration ***********************************/
 
@@ -916,42 +901,9 @@ if (!defined('_FIELD_VALUES')) {
 }
 
 /************** structures : Liste + Formulaire**************/
-if (!defined('_STRUCTURE_LIST')) {
-    define('_STRUCTURE_LIST', 'Liste des chemises');
-}
-if (!defined('_STRUCTURES')) {
-    define('_STRUCTURES', 'chemise(s)');
-}
+
 if (!defined('_STRUCTURE')) {
     define('_STRUCTURE', 'Chemise');
-}
-if (!defined('_ALL_STRUCTURES')) {
-    define('_ALL_STRUCTURES', 'Toutes les chemises');
-}
-
-if (!defined('_THE_STRUCTURE')) {
-    define('_THE_STRUCTURE', 'La chemise');
-}
-if (!defined('_STRUCTURE_MODIF')) {
-    define('_STRUCTURE_MODIF', 'Modification de la chemise');
-}
-if (!defined('_ID_STRUCTURE_PB')) {
-    define('_ID_STRUCTURE_PB', "Il y a un problème avec l'identifiant de la chemise");
-}
-if (!defined('_NEW_STRUCTURE_ADDED')) {
-    define('_NEW_STRUCTURE_ADDED', "Ajout d'une nouvelle chemise");
-}
-if (!defined('_NEW_STRUCTURE')) {
-    define('_NEW_STRUCTURE', 'Nouvelle chemise');
-}
-if (!defined('_DESC_STRUCTURE_MISSING')) {
-    define('_DESC_STRUCTURE_MISSING', 'Il manque la description de la chemise');
-}
-if (!defined('_STRUCTURE_DEL')) {
-    define('_STRUCTURE_DEL', 'Suppression de la chemise');
-}
-if (!defined('_DELETED_STRUCTURE')) {
-    define('_DELETED_STRUCTURE', 'Chemise supprimée');
 }
 if (!defined('_FONT_COLOR')) {
     define('_FONT_COLOR', 'Couleur de la police');
@@ -1014,15 +966,6 @@ if (!defined('_PURPLE')) {
 }
 
 /************** sous-dossiers : Liste + Formulaire**************/
-if (!defined('_SUBFOLDER_LIST')) {
-    define('_SUBFOLDER_LIST', 'Liste des sous-chemises');
-}
-if (!defined('_SUBFOLDERS')) {
-    define('_SUBFOLDERS', 'sous-chemise(s)');
-}
-if (!defined('_ALL_SUBFOLDERS')) {
-    define('_ALL_SUBFOLDERS', 'Toutes les sous-chemises');
-}
 if (!defined('_SUBFOLDER')) {
     define('_SUBFOLDER', 'sous-chemise');
 }
@@ -1174,21 +1117,6 @@ if (!defined('_INFOS')) {
 }
 
 /************** Admin de l'architecture  (plan de classement) **************/
-if (!defined('_ADMIN_ARCHI')) {
-    define('_ADMIN_ARCHI', 'Administration du plan de classement');
-}
-if (!defined('_MANAGE_STRUCTURE')) {
-    define('_MANAGE_STRUCTURE', 'Gérer les chemises');
-}
-if (!defined('_MANAGE_STRUCTURE_DESC')) {
-    define('_MANAGE_STRUCTURE_DESC', "Administrer les chemises. Celles-ci constituent l'élément le plus haut du plan de classement. Si le module Folder est connecté, vous pouvez associer un type de dossier à un plan de classement.");
-}
-if (!defined('_MANAGE_SUBFOLDER')) {
-    define('_MANAGE_SUBFOLDER', 'Gérer les sous-chemises');
-}
-if (!defined('_MANAGE_SUBFOLDER_DESC')) {
-    define('_MANAGE_SUBFOLDER_DESC', "Gérer les sous-chemises à l'intérieur des chemises.");
-}
 if (!defined('_ARCHITECTURE')) {
     define('_ARCHITECTURE', 'Plan de classement');
 }
@@ -3282,9 +3210,6 @@ if (!defined('_WHERE_CLAUSE_TARGET')) {
 if (!defined('_WHERE_TARGET')) {
     define('_WHERE_TARGET', 'Cible');
 }
-if (!defined('_CLASS_SCHEME')) {
-    define('_CLASS_SCHEME', 'Plan de classement');
-}
 if (!defined('_DOCS')) {
     define('_DOCS', 'Documents');
 }
@@ -3890,9 +3815,6 @@ if (!defined('_DOCUMENTS_LIST_EXTEND')) {
 } //liste + template
 if (!defined('_DOCUMENTS_LIST')) {
     define('_DOCUMENTS_LIST', 'Liste simple');
-} //template
-if (!defined('_CASES_LIST')) {
-    define('_CASES_LIST', 'Liste des affaires');
 } //template
 if (!defined('_DOCUMENTS_LIST_SEARCH')) {
     define('_DOCUMENTS_LIST_SEARCH', 'Liste étendue');

@@ -255,17 +255,6 @@ abstract class list_show_with_template_Abstract extends list_show
         return $return;
     }
 
-    //Load view_doc if this parameters is loaded in list_show and list_show_with_template
-    public function tmplt_func_bool_detail_cases($actual_string, $theline, $result, $key)
-    {
-        if ($this->bool_detail == true) {
-            $return = "<a href='".$_SESSION['config']['businessappurl'].'index.php?page=details_cases&module=cases&amp;id='.$result[$theline][0]['case_id']."' title='"._DETAILS_CASES."'>
-            <i class='fa fa-info-circle fa-2x' title='"._DETAILS."'></i></a>";
-
-            return $return;
-        }
-    }
-
     //Load check form if this parameters is loaded in list_show and list_show_with_template
     public function tmplt_func_bool_view_doc($actual_string, $theline, $result, $key)
     {
@@ -422,8 +411,6 @@ abstract class list_show_with_template_Abstract extends list_show
             $my_var = $this->tmplt_include_by_module($actual_string, $theline, $result, $key, $include_by_module);
         } elseif (preg_match("/^func_load_external_script\|/", $actual_string)) {
             $my_var = $this->tmplt_load_external_script($actual_string, $theline, $result, $key, $include_by_module);
-        } elseif (preg_match('/^func_bool_detail_case$/', $actual_string)) {
-            $my_var = $this->tmplt_func_bool_detail_cases($actual_string, $theline, $result, $key, $include_by_module);
         } elseif (preg_match('/^func_bool_see_attachments$/', $actual_string)) {
             $my_var = $this->tmplt_func_bool_see_attachments($actual_string, $theline, $result, $key, $include_by_module);
         } elseif (preg_match('/^func_bool_see_items$/', $actual_string)) {
@@ -550,29 +537,6 @@ abstract class list_show_with_template_Abstract extends list_show
             $file = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.$actual_template.'.html';
         }
 
-        //To load including values template Use for case by exemple
-        //##############################################################
-        if ($core_tools->is_module_loaded('cases') == true) {
-            $case_file = 'modules'.DIRECTORY_SEPARATOR.'cases'.DIRECTORY_SEPARATOR.'template_addon'.DIRECTORY_SEPARATOR.$actual_template.'.html';
-            if (file_exists($case_file)) {
-                $addon_list_trait = $this->get_template($case_file);
-                $addon_tmp = explode('#!#', $addon_list_trait);
-                foreach ($addon_tmp as $including_file) {
-                    if (substr($including_file, 0, 5) == 'TABLE') {
-                        $including_table = substr($including_file, 5);
-                    }
-                    if (substr($including_file, 0, 4) == 'HEAD') {
-                        $including_head = substr($including_file, 4);
-                    }
-                    if (substr($including_file, 0, 6) == 'RESULT') {
-                        $including_result = substr($including_file, 6);
-                    }
-                    if (substr($including_file, 0, 6) == 'FOOTER') {
-                        $including_footer = substr($including_file, 6);
-                    }
-                }
-            }
-        }
         //##############################################################
         $list_trait = $this->get_template($file);
         $tmp = explode('#!#', $list_trait);

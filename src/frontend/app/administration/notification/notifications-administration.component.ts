@@ -47,7 +47,7 @@ export class NotificationsAdministrationComponent implements OnInit {
 
     displayedColumns = ['notification_id', 'description', 'is_enabled', 'notifications'];
     dataSource = new MatTableDataSource(this.notifications);
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace

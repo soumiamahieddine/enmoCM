@@ -29,7 +29,6 @@
 * @ingroup apps
 */
 
-$_SESSION['FOLDER']['SEARCH'] = array();
 
 $core_tools = new core_tools();
 $_SESSION['location_bar']['level2']['path']	= "";

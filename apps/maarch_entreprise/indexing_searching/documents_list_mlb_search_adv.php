@@ -101,9 +101,6 @@ if ($mode == 'normal') {
     }
     $template_list = array();
     array_push($template_list, 'documents_list_search_adv');
-    if ($core_tools->is_module_loaded('cases')) {
-        array_push($template_list, 'cases_list_search_adv');
-    }
 
     //For status icon
     $extension_icon = '';
@@ -261,14 +258,6 @@ if ($mode == 'normal') {
         'filename',
         'res_id as real_dest'
     );
-    //Cases
-    if ($core_tools->is_module_loaded('cases') == true) {
-        array_push($select[$view], 'case_id', 'case_label', 'case_description');
-    }
-    //Folder
-    if ($core_tools->is_module_loaded('folder')) {
-        array_push($select[$view], 'folders_system_id', 'folder_name');
-    }
 //Where clause
     $where_tab = array();
     $arrayPDO = array();
@@ -758,27 +747,6 @@ if ($mode == 'normal') {
                     }
                 }
 
-                if ($tab[$i][$j][$value] == 'case_id' && $core_tools->is_module_loaded('cases') == true) {
-                    $tab[$i][$j]['label'] = _CASE_NUM;
-                    $tab[$i][$j]['size'] = '10';
-                    $tab[$i][$j]['label_align'] = 'left';
-                    $tab[$i][$j]['align'] = 'left';
-                    $tab[$i][$j]['valign'] = 'bottom';
-                    $tab[$i][$j]['show'] = false;
-                    $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['value'] = "<a href='".$_SESSION['config']['businessappurl'].'index.php?page=details_cases&module=cases&id='.$tab[$i][$j]['value']."'>".$tab[$i][$j]['value'].'</a>';
-                    $tab[$i][$j]['order'] = 'case_id';
-                }
-                if ($tab[$i][$j][$value] == 'case_label' && $core_tools->is_module_loaded('cases') == true) {
-                    $tab[$i][$j]['label'] = _CASE_LABEL;
-                    $tab[$i][$j]['size'] = '10';
-                    $tab[$i][$j]['label_align'] = 'left';
-                    $tab[$i][$j]['align'] = 'left';
-                    $tab[$i][$j]['valign'] = 'bottom';
-                    $tab[$i][$j]['show'] = true;
-                    $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['order'] = 'case_id';
-                }
                 if ($tab[$i][$j][$value] == 'folder_name') {
                     $tab[$i][$j]['label'] = _FOLDER;
                     $tab[$i][$j]['size'] = '10';
@@ -918,36 +886,6 @@ if ($nbTab > 0) {
     $paramsTab['start'] = $_SESSION['save_list']['start'];
     //Toolbar
         $paramsTab['tools'] = array();                                                  //Icones dans la barre d'outils
-
-        //Fileplan
-    if ($core_tools->test_service('fileplan', 'fileplan', false)) {
-        if ($mode == 'normal') {
-            require_once 'modules'.DIRECTORY_SEPARATOR.'fileplan'.DIRECTORY_SEPARATOR
-                    .'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-            $fileplan = new fileplan();
-            if (
-                    count($fileplan->getUserFileplan()) > 0
-                    || (
-                        count($fileplan->getEntitiesFileplan()) > 0
-                        && $core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)
-                        )
-                ) {
-                $paramsTab['bool_checkBox'] = true;
-                $paramsTab['bool_standaloneForm'] = true;
-                $positions = array(
-                            'script' => "showFileplanList('".$_SESSION['config']['businessappurl']
-                                                    .'index.php?display=true&module=fileplan&page=fileplan_ajax_script'
-                                                    .'&mode=setPosition&origin=search&coll_id='.$_SESSION['collection_id_choice']
-                                                    .$parameters."', 'formList', '600px', '510px', '"
-                                                    ._CHOOSE_ONE_DOC."')",
-                            'icon' => 'bookmark',
-                            'tooltip' => _FILEPLAN,
-                            'disabledRules' => $nbTab.' == 0 || '.$selectedTemplate." == 'cases_list_search_adv'",
-                            );
-                array_push($paramsTab['tools'], $positions);
-            }
-        }
-    }
 
     if ($saveTool) {
         $save = array(

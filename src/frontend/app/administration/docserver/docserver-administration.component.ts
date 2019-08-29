@@ -28,7 +28,7 @@ export class DocserverAdministrationComponent implements OnInit {
     docserver    : any = {coll_id:"letterbox_coll", docserver_type_id:"DOC", limitSizeFormatted :"50"};
     docserversTypes : any = [];
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     
     constructor(

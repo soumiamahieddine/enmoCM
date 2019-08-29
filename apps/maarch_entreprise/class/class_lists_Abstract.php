@@ -360,24 +360,6 @@ abstract class lists_Abstract extends Database
                 $filters .= '<script> $j("#isViewed").chosen({width:"150px", disable_search: true, allow_single_deselect: true});</script>';
             break;
 
-            case 'folder':
-                if (isset($_SESSION['filters']['folder']['VALUE']) && !empty($_SESSION['filters']['folder']['VALUE'])) {
-                    $folder = $_SESSION['filters']['folder']['VALUE'];
-                } else {
-                    $folder = '['._FOLDER.']';
-                }
-                $filters .= '<input type="text" name="folder_id" id="folder_id" placeholder="'.$folder.'" size="40" '
-                            .'onfocus="if(this.value==\'['._FOLDER.']\'){this.value=\'\';}'
-                            .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13) loadList(\''.$this->link
-                            .'&filter=folder&value=\' + this.value, \''.$this->divListId.'\', '
-                            .$this->modeReturn.');" />&nbsp;';
-                //Autocompletion script and div
-                $filters .= '<div id="folderListByName" class="autocomplete"></div>';
-                $filters .= '<script type="text/javascript">initList(\'folder_id\', \'folderListByName\', \''
-                            .$_SESSION['config']['businessappurl'].'index.php?display=true&module='
-                            .'folder&page=folders_list_by_name\', \'folder\', \'2\');</script>';
-            break;
-
             case 'contact':
                 //if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
                     require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php';
@@ -419,51 +401,6 @@ abstract class lists_Abstract extends Database
                     //$filters .= '<script>new c($(\'contact_id_list\'),{width: "150px",max_shown_results: "10"});</script>';
                     $filters .= '<script> $j("#contact_id_list").chosen({width:"150px",max_shown_results: "10"});</script>';
 
-                    /*if (is_numeric($_SESSION['filters']['contact']['VALUE'])) {
-                        $query = "SELECT society, lastname, firstname, is_corporate_person, society_short FROM "
-                            . $_SESSION['tablename']['contacts_v2'] . " WHERE contact_id = ?";
-
-                        $stmt = $db->query($query, array($_SESSION['filters']['contact']['VALUE']));
-                        $line = $stmt->fetchObject();
-
-                        if($line->is_corporate_person == 'N'){
-                            $contact = functions::show_string($line->lastname)." ".functions::show_string($line->firstname);
-                            if($line->society <> ''){
-                                $contact .= ' ('.$line->society.')';
-                            }
-                        } else {
-                            $contact .= $line->society;
-                            if($line->society_short <> ''){
-                                $contact .= ' ('.$line->society_short.')';
-                            }
-                        }
-                    } else {
-                        $query = "SELECT lastname, firstname FROM users WHERE user_id = ?";
-
-                        $stmt = $db->query($query, array($_SESSION['filters']['contact']['VALUE']));
-                        $line = $stmt->fetchObject();
-
-                        $contact .= functions::show_string($line->firstname) . " " . functions::show_string($line->lastname);
-                    }
-
-                } else {
-                    $contact = '['._CONTACT.']';
-                }
-                $filters .='<input type="text" name="contact_id" id="contact_id" placeholder="'.$contact.'" size="25" '
-                            .'onfocus="if(this.value==\'['._CONTACT.']\'){this.value=\'\';}" '
-                            .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
-                            .'&filter=contact&value=\' + $(\'contactidFilters\').value, \''.$this->divListId.'\', '
-                            .$this->modeReturn.');" />&nbsp;';
-                //Autocompletion script and div
-                $filters .='<div id="contactListByName" class="autocomplete"></div>';
-                $filters .='<script type="text/javascript">initList_hidden_input(\'contact_id\', \'contactListByName\', \''
-                            .$_SESSION['config']['businessappurl'].'index.php?display=true&page='
-                            .'contacts_v2_list_by_name_filters&dir=indexing_searching\', \'what\', \'2\', \'contactidFilters\');</script>';
-                $filters .= '<input type="hidden" id="contactidFilters" name="contactidFilters" ';
-                if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
-                    $filters .= 'value="'.$_SESSION['filters']['contact']['VALUE'].'"';
-                }
-                $filters .='/>';*/
             break;
 
             case 'res_id':
@@ -516,21 +453,6 @@ abstract class lists_Abstract extends Database
                 }
                 $filters .= '</select>&nbsp;';
                 $filters .= '<script> $j("#subjectFilters").chosen({width:"150px",max_shown_results: "10"});</script>';
-                /*$subject = '['._SUBJECT.']';
-                $filters .='<input type="text" name="subject" id="subject" placeholder="'.$subject.'" size="40" '
-                            .'onChange="myFunction(), loadList(\''.$this->link
-                            .'&filter=subject&value=\' + $(\'subjectFilters\').value, \''.$this->divListId.'\', '
-                            .$this->modeReturn.');" />&nbsp;';
-                //Autocompletion script and div
-                $filters .='<script type="text/javascript">function myFunction() {';
-                $filters .='var x = document.getElementById("subject").value;';
-                $filters .='document.getElementById("subjectFilters").value = x;';
-                $filters .='}</script>';
-                $filters .= '<input type="hidden" id="subjectFilters" name="subjectFilters" ';
-                if(isset($_SESSION['filters']['subject']['VALUE']) && !empty($_SESSION['filters']['subject']['VALUE'])) {
-                    $filters .= 'value="'.$_SESSION['filters']['subject']['VALUE'].'"';
-                }
-                $filters .='/>';*/
             break;
 
             case 'type':
@@ -788,11 +710,6 @@ abstract class lists_Abstract extends Database
                         } else {
                             $_SESSION['filters']['contact']['CLAUSE'] = "(exp_user_id = '".$_SESSION['filters']['contact']['VALUE']."' or dest_user_id = '".$_SESSION['filters']['contact']['VALUE']."')";
                         }
-                    } elseif ($_REQUEST['filter'] == 'folder') {
-                        $folderId = $this->protect_string_db(str_replace(')', '',
-                            substr($_SESSION['filters']['folder']['VALUE'],
-                            strrpos($_SESSION['filters']['folder']['VALUE'], '(') + 1)));
-                        $_SESSION['filters']['folder']['CLAUSE'] = "folder_id = '".$folderId."'";
                     } elseif ($_REQUEST['filter'] == 'identifier') {
                         $_SESSION['filters']['identifier']['CLAUSE'] = "alt_identifier ilike ('%".$_SESSION['filters']['identifier']['VALUE']."%')";
                     } elseif ($_REQUEST['filter'] == 'type') {
@@ -1384,20 +1301,6 @@ abstract class lists_Abstract extends Database
         }
     }
 
-    protected function _tmplt_func_load_case_status($resultTheLine)
-    {
-        $db = new Database();
-        $stmt = $db->query('SELECT count(*) as total FROM cases WHERE case_closing_date is not NULL and case_id = ?',
-                                [$resultTheLine[0]['case_id']]);
-        $result = $stmt->fetchObject();
-        if ($result->total > 0) {
-            return '<i class="fa fa-briefcase fa-2x" title="'._CLOSED.'"><sup> <i class="fa fa-lock" aria-hidden="true" style="color:red;font-size:10px;"></i></sup></i>';
-        } else {
-            return '<i class="fa fa-briefcase fa-2x"></i>';
-        }
-        var_dump($resultTheLine[0]);
-    }
-
     protected function _tmplt_showActionAdvResultFA($parameter, $resultTheLine)
     {
         $my_explode = explode('|', $parameter);
@@ -1883,8 +1786,6 @@ abstract class lists_Abstract extends Database
         } elseif (preg_match('/^func_isConfidential$/', $parameter)) {
             $var = $this->_tmplt_func_isConfidential($resultTheLine);
             //#showActionIcon## : show action icon
-        } elseif (preg_match('/^func_load_case_status$/', $parameter)) {
-            $var = $this->_tmplt_func_load_case_status($resultTheLine);
         } else {
             $var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
         }

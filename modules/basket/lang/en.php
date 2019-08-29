@@ -133,10 +133,6 @@ if (!defined("_DEFAULT_ACTION_LIST"))
 if (!defined("_NO_ACTION_DEFINED"))
     define("_NO_ACTION_DEFINED", "No defined action");
 //BASKETS
-if (!defined("_PROCESS_FOLDER_LIST"))
-    define("_PROCESS_FOLDER_LIST", "Processed folders list");
-if (!defined("_INCOMPLETE_FOLDERS_LIST"))
-    define("_INCOMPLETE_FOLDERS_LIST", "Incomplete folders list");
 if (!defined("_WAITING_VAL_LIST"))
     define("_WAITING_VAL_LIST", "Validation files list on hold");
 if (!defined("_WAITING_QUAL_LIST"))

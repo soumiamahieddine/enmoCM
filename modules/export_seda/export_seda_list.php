@@ -506,30 +506,6 @@ if (count($template_list) > 0) {                                                
 $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
-//Fileplan
-if ($core_tools->test_service('fileplan', 'fileplan', false)) {
-    include_once 'modules'.DIRECTORY_SEPARATOR.'fileplan'.DIRECTORY_SEPARATOR
-        .'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-    $fileplan = new fileplan();
-    if (count($fileplan->getUserFileplan()) > 0
-        || (count($fileplan->getEntitiesFileplan()) > 0
-        && $core_tools->test_service('put_doc_in_fileplan', 'fileplan', false))
-    ) {
-        $paramsTab['bool_checkBox'] = true;
-        $paramsTab['bool_standaloneForm'] = true;
-        $positions = array(
-                'script' => "showFileplanList('".$_SESSION['config']['businessappurl']
-                                        .'index.php?display=true&module=fileplan&page=fileplan_ajax_script'
-                                        .'&mode=setPosition&origin=basket&coll_id='.$_SESSION['current_basket']['coll_id']
-                                        .$parameters."', 'formList', '600px', '510px', '"
-                                        ._CHOOSE_ONE_DOC."')",
-                'icon' => 'bookmark',
-                'tooltip' => _FILEPLAN,
-                'disabledRules' => count($tab).' == 0',
-                );
-        array_push($paramsTab['tools'], $positions);
-    }
-}
 if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
     $save = array(
             'script' => "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",

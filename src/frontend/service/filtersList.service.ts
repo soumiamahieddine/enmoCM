@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 interface listProperties {
     'id': number,
     'groupId': number,
-    'basketId': number,
+    'targetId': number,
     'page': string,
     'order': string,
     'orderDir': string,
@@ -22,19 +22,21 @@ export class FiltersListService {
     listsProperties: any[] = [];
     listsPropertiesIndex: number = 0;
     filterMode: boolean = false;
+    mode: string = 'basket';
 
-    constructor() {
-        this.listsProperties = JSON.parse(sessionStorage.getItem('propertyList'));
-    }
+    constructor() { }
 
-    initListsProperties(userId: number, groupId: number, basketId: number) {
+    initListsProperties(userId: number, groupId: number, targetId: number, mode: string) {
+
+        this.listsProperties = JSON.parse(sessionStorage.getItem('propertyList' + mode));
 
         this.listsPropertiesIndex = 0;
+        this.mode = mode;
         let listProperties: listProperties;
 
         if (this.listsProperties != null) {
             this.listsProperties.forEach((element, index) => {
-                if (element.id == userId && element.groupId == groupId && element.basketId == basketId) {
+                if (element.id == userId && element.groupId == groupId && element.targetId == targetId) {
                     this.listsPropertiesIndex = index;
                     listProperties = element;
                 }
@@ -47,7 +49,7 @@ export class FiltersListService {
             listProperties = {
                 'id': userId,
                 'groupId': groupId,
-                'basketId': basketId,
+                'targetId': targetId,
                 'page': '0',
                 'order': '',
                 'orderDir': 'DESC',
@@ -81,7 +83,7 @@ export class FiltersListService {
     }
 
     saveListsProperties() {
-        sessionStorage.setItem('propertyList', JSON.stringify(this.listsProperties));
+        sessionStorage.setItem('propertyList' + this.mode, JSON.stringify(this.listsProperties));
     }
 
     getUrlFilters() {

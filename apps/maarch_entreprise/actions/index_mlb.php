@@ -34,9 +34,6 @@ $contacts_v2 = new contacts_v2();
 if ($core->is_module_loaded('entities')) {
     require_once 'modules/entities/entities_tables.php';
 }
-if ($core->is_module_loaded('folder')) {
-    require_once 'modules/folder/folder_tables.php';
-}
 require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
     .DIRECTORY_SEPARATOR.'apps_tables.php';
 /**
@@ -904,37 +901,6 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
 
-    /*** Folder ***/
-    if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder', false) == 1)) {
-        require_once 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-
-        $folders = new folder();
-
-        $folder_info = $folders->get_folders_tree('0');
-
-        $frmStr .= '<tr id="folder_tr" style="display:'.$displayValue.';">';
-        $frmStr .= '<td><label for="folder" class="form_title" >'._FOLDER_OR_SUBFOLDER.'</label></td>';
-        $frmStr .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">'._SELECT_FOLDER_TITLE.'</option>';
-
-        foreach ($folder_info as $key => $value) {
-            $frmStr .= '<option value="'.$value['folders_system_id'].'" parent="'.$value['parent_id'].'">'.$value['folder_name'].'</option>';
-        }
-        $frmStr .= '</select></td>';
-        if ($core->test_service('create_folder', 'folder', false) == 1) {
-            $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?page=create_folder_form_iframe&module=folder&display=false';
-
-            $frmStr .= '<td style="width:5%;"> <a href="#" id="create_folder" title="'._CREATE_FOLDER
-                .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._CREATE_FOLDER.'\',\''.$pathScriptTab.'\',\'folders\');return false;" '
-                .'style="display:inline;" ><i class="fa fa-plus-circle" title="'
-                ._CREATE_FOLDER.'"></i></a></td>';
-        }
-        $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
-        $frmStr .= '</tr>';
-        $frmStr .= '<tr id="parentFolderTr" style="display: none;text-align:center;"><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
-        $frmStr .= '<script>$j("#folder").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
-    }
-
     /*** Thesaurus ***/
     if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
         require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
@@ -1427,46 +1393,6 @@ function process_category_check($catId, $values)
             }
         }
     }
-    if ($core->is_module_loaded('folder')) {
-        $folderId = '';
-        $foldertypeId = '';
-
-        $folderId = get_value_fields($values, 'folder');
-
-        if (isset($_ENV['categories'][$catId]['other_cases']['folder'])
-            && $_ENV['categories'][$catId]['other_cases']['folder']['mandatory'] == true
-        ) {
-            if (empty($folderId)) {
-                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['folder']['label']
-                    .' '._IS_EMPTY;
-
-                return false;
-            }
-        }
-
-        if (!empty($typeId) && !empty($folderId)) {
-            $stmt = $db->query(
-                'SELECT foldertype_id FROM '.FOLD_FOLDERS_TABLE
-                .' WHERE folders_system_id = ?',
-                array($folderId)
-            );
-
-            $res = $stmt->fetchObject();
-            $foldertypeId = $res->foldertype_id;
-            $stmt = $db->query(
-                'SELECT fdl.foldertype_id FROM '
-                .FOLD_FOLDERTYPES_DOCTYPES_LEVEL1_TABLE.' fdl, '
-                .DOCTYPES_TABLE.' d WHERE d.doctypes_first_level_id = '
-                .'fdl.doctypes_first_level_id and fdl.foldertype_id = ? and d.type_id = ?',
-                array($foldertypeId, $typeId)
-            );
-            if ($stmt->rowCount() == 0) {
-                $_SESSION['action_error'] .= _ERROR_COMPATIBILITY_FOLDER;
-
-                return false;
-            }
-        }
-    }
 
     //For specific case => chrono number
     $chronoOut = get_value_fields($values, 'chrono_number');
@@ -1796,21 +1722,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
     }
 
-    if ($core->is_module_loaded('folder')) {
-        $folderId = get_value_fields($formValues, 'folder');
-
-        if (!empty($folderId)) {
-            array_push(
-                $_SESSION['data'],
-                array(
-                    'column' => 'folders_system_id',
-                    'value' => $folderId,
-                    'type' => 'integer',
-                )
-            );
-        }
-    }
-
     if ($core->is_module_loaded('entities')) {
         // Diffusion list
         $loadListDiff = false;
@@ -2005,20 +1916,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                    .' values '.$queryExtValues;
 
         $db->query($queryExt, $arrayPDO);
-        if ($core->is_module_loaded('folder') && !empty($folderId)
-            && $_SESSION['history']['folderup']
-        ) {
-            $hist = new history();
-            $hist->add(
-                $_SESSION['tablename']['fold_folders'],
-                $folderId,
-                'UP',
-                'folderup',
-                _DOC_NUM.$resId._ADDED_TO_FOLDER,
-                $_SESSION['config']['databasetype'],
-                'apps'
-            );
-        }
 
         if ($core->is_module_loaded('entities')) {
             if ($loadListDiff) {

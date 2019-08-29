@@ -19,6 +19,8 @@ import { AppService } from '../../../service/app.service';
 import { PanelFolderComponent } from '../panel/panel-folder.component';
 import { BasketHomeComponent } from '../../basket/basket-home.component';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { FolderActionListComponent } from '../folder-action-list/folder-action-list.component';
+import { FiltersListService } from '../../../service/filtersList.service';
 
 
 declare function $j(selector: any): any;
@@ -45,6 +47,8 @@ export class FolderDocumentListComponent implements OnInit {
     currentResource: any = {};
 
     filtersChange = new EventEmitter();
+
+    dragInit: boolean = true;
 
     dialogRef: MatDialogRef<any>;
 
@@ -85,6 +89,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     private destroy$ = new Subject<boolean>();
 
+    @ViewChild('actionsListContext', { static: true }) actionsList: FolderActionListComponent;
     @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
 
     currentSelectedChrono: string = '';
@@ -101,6 +106,7 @@ export class FolderDocumentListComponent implements OnInit {
         public dialog: MatDialog,
         private sanitizer: DomSanitizer,
         private headerService: HeaderService,
+        public filtersListService: FiltersListService, 
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
@@ -119,6 +125,7 @@ export class FolderDocumentListComponent implements OnInit {
         this.isLoadingResults = false;
 
         this.route.params.subscribe(params => {
+            this.dragInit = true;
             this.destroy$.next(true);
 
             this.http.get('../../rest/folders/' + params['folderId'])
@@ -132,11 +139,17 @@ export class FolderDocumentListComponent implements OnInit {
                     this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
                 });
             this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
+            this.filtersListService.filterMode = false;
             this.selectedRes = [];
             this.sidenavRight.close();
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(null);
 
+            this.listProperties = this.filtersListService.initListsProperties(this.headerService.user.id, 0, params['folderId'], 'folder');
+
+            setTimeout(() => {
+                this.dragInit = false;
+            }, 1000);
             this.initResultList();
 
         },
@@ -150,7 +163,7 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     initResultList() {
-        this.resultListDatabase = new ResultListHttpDao(this.http);
+        this.resultListDatabase = new ResultListHttpDao(this.http, this.filtersListService);
         // If the user changes the sort order, reset back to the first page.
         this.paginator.pageIndex = this.listProperties.page;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -163,7 +176,7 @@ export class FolderDocumentListComponent implements OnInit {
                 switchMap(() => {
                     this.isLoadingResults = true;
                     return this.resultListDatabase!.getRepoIssues(
-                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl);
+                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl, this.filtersListService.getUrlFilters());
                 }),
                 map(data => {
                     // Flip flag to show that loading has finished.
@@ -184,6 +197,7 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     goTo(row: any) {
+        this.filtersListService.filterMode = false;
         if (this.docUrl == '../../rest/res/' + row.res_id + '/content' && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
@@ -233,7 +247,6 @@ export class FolderDocumentListComponent implements OnInit {
     refreshDaoAfterAction() {
         this.sidenavRight.close();
         this.refreshDao();
-        this.basketHome.refreshBasketHome();
         const e: any = { checked: false };
         this.toggleAllRes(e);
     }
@@ -293,23 +306,27 @@ export class FolderDocumentListComponent implements OnInit {
         }
     }
 
-    unclassify() {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: 'Voulez-vous enlever <b>' + this.selectedRes.length + '</b> document(s) du classement ?' } });
+    selectSpecificRes(row: any) {
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
+    }
 
-        this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.request('DELETE', '../../rest/folders/' + this.folderInfo.id + '/resources', { body: { resources: this.selectedRes } })),
-            tap((data: any) => {
-                this.notify.success(this.lang.removedFromFolder);
-                this.resultsLength = data.countResources;
-                this.data.forEach((resource: any, key: number) => {
-                    if (this.selectedRes.indexOf(resource.res_id) != -1) {
-                        this.data.splice(key, 1);
-                    }
-                });
-                this.refreshDaoAfterAction();
-            })
-        ).subscribe();
+    open({ x, y }: MouseEvent, row: any) {
+        
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        if ( row.checked === false) {
+            row.checked = true;
+            this.toggleAllRes(thisDeselect);
+            this.toggleRes(thisSelect, row);
+        }
+        this.actionsList.open(x, y, row)
+
+        // prevents default
+        return false;
     }
 
     listTodrag() {
@@ -329,11 +346,12 @@ export interface BasketList {
 
 export class ResultListHttpDao {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private filtersListService: FiltersListService) { }
 
-    getRepoIssues(sort: string, order: string, page: number, href: string): Observable<BasketList> {
+    getRepoIssues(sort: string, order: string, page: number, href: string, filters: string): Observable<BasketList> {
+        this.filtersListService.updateListsPropertiesPage(page);
         let offset = page * 10;
-        const requestUrl = `${href}?limit=10&offset=${offset}`;
+        const requestUrl = `${href}?limit=10&offset=${offset}${filters}`;
 
         return this.http.get<BasketList>(requestUrl);
     }

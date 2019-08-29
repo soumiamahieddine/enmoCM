@@ -240,15 +240,11 @@ if ($stmt->rowCount() > 0) {
         }
     }
 }
-$case_sql_complementary = '';
-if ($core->is_module_loaded('cases') == true) {
-    $case_sql_complementary = ' , case_id';
-}
 $stmt = $db->query(
     'SELECT status, format, typist, creation_date, fingerprint, filesize, '
     .'res_id, destination, source, '
     .'description, closing_date, alt_identifier, initiator, entity_label '.$comp_fields
-    .$case_sql_complementary.' FROM '.$table.' WHERE res_id = ?',
+    .' FROM '.$table.' WHERE res_id = ?',
     array($s_id)
 );
 $res = $stmt->fetchObject();
@@ -311,14 +307,6 @@ if ($stmt->rowCount() == 0) {
         $typistLabel = $resultUser->firstname.' '.$resultUser->lastname;
     } else {
         $typistLabel = $typist;
-    }
-
-    if ($core->is_module_loaded('cases') == true) {
-        require_once 'modules/cases/class/class_modules_tools.php';
-        $case = new cases();
-        if ($res->case_id != '') {
-            $case_properties = $case->get_case_info($res->case_id);
-        }
     }
 
     foreach (array_keys($indexes) as $key) {
@@ -434,21 +422,6 @@ if ($stmt->rowCount() == 0) {
         $sendmail .= '<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
 
         echo $sendmail;
-    }
-
-    //CASES TAB
-    if ($core->is_module_loaded('cases') == true) {
-        $case_frame = '';
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-            .'index.php?display=true&page=show_case_tab&module=cases&collId='.$coll_id.'&resId='.$s_id;
-        $case_frame .= '<div id="cases_tab" class="fa fa-suitcase DetailsTabFunc" title="'._CASE.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'cases_tab\',true);"> <sup id="cases_tab_badge"></sup>';
-        $case_frame .= '</div>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$s_id.'&collId='.$coll_id;
-        $case_frame .= '<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
-
-        echo $case_frame;
     }
 
     //NOTES TAB
@@ -632,13 +605,7 @@ if ($stmt->rowCount() == 0) {
                 echo '<tr class="col">';
             }
             $folder_id = '';
-            if ($key == 'folder' && $data[$key]['show_value'] != '') {
-                $folderTmp = $data[$key]['show_value'];
-                $find1 = strpos($folderTmp, '(');
-                $folder_id = substr($folderTmp, $find1, strlen($folderTmp));
-                $folder_id = str_replace('(', '', $folder_id);
-                $folder_id = str_replace(')', '', $folder_id);
-            }
+
             //GET DATA ICON
             echo '<th align="center" class="picto" >';
 
@@ -923,20 +890,8 @@ if ($stmt->rowCount() == 0) {
                     echo "<input type='radio' name='{$key}' id='{$key}_{$inputId}' value='{$inputId}' class='{$disabledClass}' {$disabledAttr} {$inputAttr}/>{$inputValue}";
                 }
             } elseif ($data[$key]['field_type'] == 'autocomplete') {
-                if ($key == 'folder' && $core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder', false) == 1)) {
-                    $inputValue = $data['folder']['show_value'];
-
-                    echo '<div class="typeahead__container" style="width:206px">
-                    	     <div class="typeahead__field">
-                                <input type="text" name="folder" id="folder" value="'.$inputValue.'" class="folderSearch '.$disabledClass.'" '.$disabledAttr.' autocomplete="off" style="font-size: small;"/>
-                    	     </div>
-                         </div>';
-
-                    echo '<script type="text/javascript">loadTypeahead(\'.folderSearch\', \'desc\', true, \'index.php?display=true&module=folder&page=autocomplete_folders&mode=folder\');</script>';
-                } else {
-                    $inputValue = $data['folder']['show_value'];
-                    echo "<input type='text' name='folder' id='folder' class='readonly' onblur='' value='{$inputValue}' readonly='readonly'/>";
-                }
+                $inputValue = $data['folder']['show_value'];
+                echo "<input type='text' name='folder' id='folder' class='readonly' onblur='' value='{$inputValue}' readonly='readonly'/>";
             } elseif ($data[$key]['display'] == 'textinput') {
                 $inputValue = $data[$key]['show_value'];
                 echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";
@@ -1142,41 +1097,7 @@ if ($stmt->rowCount() == 0) {
 
             /*****************/
         }
-
-        if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1) && $fileplanLabel != '') {
-            //Requete pour récupérer position_label
-            $stmt = $db->query('SELECT position_label FROM fp_fileplan_positions INNER JOIN fp_res_fileplan_positions 
-                                        ON fp_fileplan_positions.position_id = fp_res_fileplan_positions.position_id
-                                        WHERE fp_res_fileplan_positions.res_id=?', array($idCourrier));
-
-            while ($res_fileplan = $stmt->fetchObject()) {
-                if (!isset($positionLabel)) {
-                    $positionLabel = $res_fileplan->position_label;
-                } else {
-                    $positionLabel = $positionLabel.' / '.$res_fileplan->position_label;
-                }
-            }
-
-            //Requete pour récuperer fileplan_label
-            $stmt = $db->query('SELECT fileplan_label FROM fp_fileplan INNER JOIN fp_res_fileplan_positions
-                                        ON fp_fileplan.fileplan_id = fp_res_fileplan_positions.fileplan_id
-                                        WHERE fp_res_fileplan_positions.res_id=? AND fp_fileplan.user_id = ?', array($idCourrier, $_SESSION['user']['UserId']));
-            $res2 = $stmt->fetchObject();
-            $fileplanLabel = $res2->fileplan_label;
-            $planClassement = $fileplanLabel.' / '.$positionLabel; ?>
-                                <tr class="col">
-                                    <th align="left" class="picto">
-                                        <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN; ?>"></i>
-                                    </th>
-                                    <td align="left" width="200px">
-                                        <?php echo _FILEPLAN; ?> :
-                                    </td>
-                                    <td colspan="6">
-                                        <input type="text" class="readonly" readonly="readonly" style="width:95%;" value="<?php functions::xecho($planClassement); ?>" size="110"  />
-                                    </td>
-                                </tr>
-                        <?php
-        } ?>
+        ?>
                 </table>
             </div>
             <?php

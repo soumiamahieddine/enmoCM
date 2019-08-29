@@ -165,12 +165,6 @@ if (!defined('_DEFAULT_ACTION_LIST')) {
 if (!defined('_NO_ACTION_DEFINED')) {
     define('_NO_ACTION_DEFINED', 'Geen actie gedefinieerd');
 }
-if (!defined('_PROCESS_FOLDER_LIST')) {
-    define('_PROCESS_FOLDER_LIST', 'Lijst van de verwerkte mappen');
-}
-if (!defined('_INCOMPLETE_FOLDERS_LIST')) {
-    define('_INCOMPLETE_FOLDERS_LIST', 'Lijst van de onvolledige mappen');
-}
 if (!defined('_WAITING_VAL_LIST')) {
     define('_WAITING_VAL_LIST', 'Lijst van de stukken die op bevestiging wachten');
 }

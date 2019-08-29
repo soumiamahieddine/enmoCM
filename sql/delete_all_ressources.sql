@@ -1,10 +1,5 @@
 /* Warning : This script erase all data in the application Maarch. It keeps in database parameters */
 
-TRUNCATE TABLE cases;
-ALTER SEQUENCE case_id_seq restart WITH 1;
-
-TRUNCATE TABLE cases_res;
-
 /*TRUNCATE TABLE contacts_v2;
 ALTER SEQUENCE contact_v2_id_seq restart WITH 1;
 

@@ -18,6 +18,7 @@ export class FolderMenuComponent implements OnInit {
     foldersList: any[] = [];
     @Input('resIds') resIds: number[];
 
+    @Output('refreshFolders') refreshFolders = new EventEmitter<string>();
     @Output('refreshList') refreshList = new EventEmitter<string>();
 
     constructor(
@@ -40,6 +41,7 @@ export class FolderMenuComponent implements OnInit {
 
         this.http.post('../../rest/folders/' + folder.id + '/resources', { resources: this.resIds }).pipe(
             tap(() => {
+                this.refreshFolders.emit();
                 this.refreshList.emit();
                 this.notify.success('Courrier classé');
             }),

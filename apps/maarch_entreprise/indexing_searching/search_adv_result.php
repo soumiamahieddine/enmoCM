@@ -72,7 +72,6 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'frame') {
 }
 $where_request = "";
 $arrayPDO = array();
-$case_view = false;
  $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 $json_txt = '{';
 
@@ -156,31 +155,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":multifield" => "%".$multifield."%"));
                 
                 $where_request .=" and  ";
-            } elseif ($tab_id_fields[$j] == 'numcase' && !empty($_REQUEST['numcase'])) {
-                // CASE_NUMBER
-                $json_txt .= "'numcase' : ['".addslashes(trim($_REQUEST['numcase']))."'],";
-                //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-                $where_request .= " ".$_SESSION['collections'][0]['view'].".case_id = :numCase and ";
-                $arrayPDO = array_merge($arrayPDO, array(":numCase" => $_REQUEST['numcase']));
-                $case_view=true;
-
-                if (!is_numeric($_REQUEST['numcase'])) {
-                    $_SESSION['error_search'] = _CASE_NUMBER_ERROR;
-                }
-            } elseif ($tab_id_fields[$j] == 'labelcase' && !empty($_REQUEST['labelcase'])) {
-                // CASE_LABEL
-                $json_txt .= "'labelcase' : ['".addslashes(trim($_REQUEST['labelcase']))."'],";
-                //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-                $where_request .= " lower(translate(".$_SESSION['collections'][0]['view'].".case_label,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:labelCase) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":labelCase" => "%".$func->wash($_REQUEST['labelcase'], "no", _CASE_LABEL, "no")."%"));
-                $case_view=true;
-            } elseif ($tab_id_fields[$j] == 'descriptioncase' && !empty($_REQUEST['descriptioncase'])) {
-                // CASE_DESCRIPTION
-                $json_txt .= "'descriptioncase' : ['".addslashes(trim($_REQUEST['descriptioncase']))."'],";
-                //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-                $where_request .= " lower(translate(".$_SESSION['collections'][0]['view'].".case_description,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:descriptionCase) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":descriptionCase" => "%".$func->wash($_REQUEST['descriptioncase'], "no", _CASE_DESCRIPTION, "no")."%"));
-                $case_view=true;
             } elseif ($tab_id_fields[$j] == 'chrono' && !empty($_REQUEST['chrono'])) {
                 $json_txt .= " 'chrono' : ['".addslashes(trim($_REQUEST['chrono']))."'],";
                 $chrono = $func->wash($_REQUEST['chrono'], "no", _CHRONO_NUMBER, "no");
@@ -271,26 +245,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
                 $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
-            }
-            // FOLDER : MARKET
-            elseif ($tab_id_fields[$j] == 'market' && !empty($_REQUEST['market'])) {
-                $json_txt .= " 'market' : ['".addslashes(trim($_REQUEST['market']))."'],";
-                $market = $func->wash($_REQUEST['market'], "no", _MARKET, "no");
-                $where_request .= " (lower(folder_name) like lower(:referenceNumber) or folder_id like :referenceNumber ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$market."%"));
-            }
-            // FOLDER : PROJECT
-            elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project'])) {
-                $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
-                $project = $func->wash($_REQUEST['project'], "no", _MARKET, "no");
-                $where_request .= " (lower(folder_name) like lower(:project) or folder_id like :project "
-                    ."or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower(:project) or folder_id like :project)) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":project" => "%".$project."%"));
-            } elseif ($tab_id_fields[$j] == 'folder_name' && !empty($_REQUEST['folder_name'])) {
-                $json_txt .= " 'folder_name' : ['".addslashes(trim($_REQUEST['folder_name']))."'],";
-                $folder_name = $func->wash($_REQUEST['folder_name'], "no", _FOLDER_NAME, "no");
-                $where_request .= " (lower(folder_name) like lower(:folderName) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":folderName" => "%".$folder_name."%"));
             }
             // GED NUM
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged'])) {
@@ -879,27 +833,12 @@ if (!empty($_SESSION['error_search'])) {
     $_SESSION['searching']['where_request'] = $where_request;
     $_SESSION['searching']['where_request_parameters'] = $arrayPDO;
 }
-if (isset($_REQUEST['specific_case'])
-    && $_REQUEST['specific_case'] == "attach_to_case"
-) {
-    $page = 'list_results_mlb_frame'; ?>
-<script type="text/javascript">
-    window.top.location.href = '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&load&searched_item='. $_REQUEST['searched_item'] .'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template']; ?>';
-</script>
-<?php
-    exit();
-}
 if (empty($_SESSION['error_search'])) {
-    //specific string for search_adv cases
-    $extend_link_case = "";
-    if ($case_view == true) {
-        $extend_link_case = "&template=group_case";
-    }
     //##################
     $page = 'list_results_mlb'; ?>
 <script type="text/javascript">
     window.top.location.href = '<?php if ($mode == 'normal') {
-        echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching&load'.$extend_link_case;
+        echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching&load';
     } elseif ($mode=='frame' || $mode == 'popup') {
         echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&modulename='.$_REQUEST['modulename'];
     }

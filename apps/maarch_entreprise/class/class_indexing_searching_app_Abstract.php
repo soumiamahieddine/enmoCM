@@ -163,7 +163,7 @@ abstract class indexing_searching_app_Abstract extends Database
             $cat_id = 'empty';
         }
         $checkEmptyMultiContact = false;
-        // Simple cases
+        // Simple case
         foreach (array_keys($post) as $key) {
             //save_contact
             if (isset($_SESSION['adresses']) && !empty($_SESSION['adresses']['contactid'])) {
@@ -247,7 +247,7 @@ abstract class indexing_searching_app_Abstract extends Database
             $data_res = $type->fill_data_array($type_id, $coll_id, $val_indexes, $data_res);
         }
 
-        ///////////////////////// Other cases
+        ///////////////////////// Other case
         //process date
         if (
             isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date'])
@@ -296,81 +296,6 @@ abstract class indexing_searching_app_Abstract extends Database
                 'type'      => $srType,
                 'mode'      => $srMode
             ]);
-        }
-
-        if ($core->is_module_loaded('folder')) {
-            $stmt = $db->query('SELECT folders_system_id FROM '.$table.' WHERE res_id = ?', array($id_to_update));
-            $res = $stmt->fetchObject();
-            $old_folder_id = $res->folders_system_id;
-            $market = '';
-            if (isset($post['folder'])) {
-                $market = $post['folder'];
-            }
-            $project_id = '';
-            $market_id = '';
-            if (isset($_ENV['categories'][$cat_id]['other_cases']['folder']) && $_ENV['categories'][$cat_id]['other_cases']['folder']['mandatory'] == true) {
-                if (empty($market)) {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['folder']['label'].' '._IS_EMPTY;
-                }
-            }
-            if (!empty($market)) {
-                if (!preg_match('/\([0-9]+\)$/', $market)) {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['folder']['label'].' '._WRONG_FORMAT.'. '._USE_AUTOCOMPLETION;
-                } else {
-                    $market_id = str_replace(')', '', substr($market, strrpos($market, '(') + 1));
-                    $stmt = $db->query('SELECT folders_system_id FROM '.$_SESSION['tablename']['fold_folders'].' WHERE folders_system_id = ?', array($market_id));
-                    if ($stmt->rowCount() == 0) {
-                        $_SESSION['error'] .= _MARKET.' '.$market_id.' '._UNKNOWN;
-                    }
-                }
-            }
-            $project = '';
-            if (isset($post['project'])) {
-                $project = $post['project'];
-            }
-            if (isset($_ENV['categories'][$cat_id]['other_cases']['project']) && $_ENV['categories'][$cat_id]['other_cases']['project']['mandatory'] == true) {
-                if (empty($project)) {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['project']['label'].' '._IS_EMPTY;
-                }
-            }
-            if (!empty($project)) {
-                if (!preg_match('/\([0-9]+\)$/', $project)) {
-                    $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['project']['label'].' '._WRONG_FORMAT;
-                }
-                $project_id = str_replace(')', '', substr($project, strrpos($project, '(') + 1));
-                $stmt = $db->query('SELECT folders_system_id FROM '.$_SESSION['tablename']['fold_folders'].' WHERE folders_system_id = ?', array($project_id));
-                if ($stmt->rowCount() == 0) {
-                    $_SESSION['error'] .= _MARKET.' '.$project_id.' '._UNKNOWN;
-                }
-            }
-            if (!empty($project_id) && !empty($market_id)) {
-                $stmt = $db->query('SELECT folders_system_id FROM '.$_SESSION['tablename']['fold_folders'].' WHERE folders_system_id = ? and parent_id = ?', array($market_id, $project_id));
-                if ($stmt->rowCount() == 0) {
-                    $_SESSION['error'] .= _INCOMPATIBILITY_MARKET_PROJECT;
-                }
-            }
-
-            if (empty($_SESSION['error'])) {
-                $folder_id = '';
-                if (!empty($market_id)) {
-                    $folder_id = $market_id;
-                } elseif (!empty($project_id)) {
-                    $folder_id = $project_id;
-                }
-                if (!empty($folder_id)) {
-                    array_push($data_res, array('column' => 'folders_system_id', 'value' => $folder_id, 'type' => 'integer'));
-                } else {
-                    array_push($data_res, array('column' => 'folders_system_id', 'value' => 'NULL', 'type' => 'integer'));
-                }
-                if ($folder_id != $old_folder_id && $_SESSION['history']['folderup']) {
-                    require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php';
-                    $hist = new history();
-                    $hist->add($_SESSION['tablename']['fold_folders'], $folder_id, 'UP', 'folderup', _DOC_NUM.$id_to_update._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'], 'apps');
-                    if (isset($old_folder_id) && !empty($old_folder_id)) {
-                        $hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, 'UP', 'folderup', _DOC_NUM.$id_to_update._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'], 'apps');
-                    }
-                }
-            }
         }
 
         if ($core->is_module_loaded('entities') && $_SESSION['details']['diff_list']['key_value'] == md5($res_id)) {

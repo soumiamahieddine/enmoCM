@@ -1,0 +1,22 @@
+<button *ngIf="!contextMode" mat-stroked-button [matMenuTriggerFor]="menu">{{lang.actionsAlt}}<mat-icon matSuffix
+        class="fa fa-caret-down"></mat-icon>
+</button>
+<span *ngIf="contextMode" [matMenuTriggerFor]="menu" #menu2 style="position: absolute;"
+    [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"></span>
+
+<mat-menu #menu="matMenu" [class]="'actionListMenu'">
+    <div *ngIf="contextMode && this.selectedRes.length == 1"
+        style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
+        {{this.contextMenuTitle}}
+    </div>
+    <!--<button *ngFor="let action of actionsList" [disabled]="action.component == '' || this.selectedRes.length == 0"
+        mat-menu-item (click)="launchEvent(action);">
+        <span>{{action.label_action}}</span>
+    </button>
+    <mat-divider></mat-divider>-->
+    <button mat-menu-item class="folderAction" (click)="unclassify()" [disabled]="selectedRes.length === 0">
+        <mat-icon class="fa fa-folder-minus fa-2x"></mat-icon>
+        <span>Retirer du dossier</span>
+    </button>
+    <folder-menu [resIds]="selectedRes" (refreshFolders)="refreshFolders()"></folder-menu>
+</mat-menu>

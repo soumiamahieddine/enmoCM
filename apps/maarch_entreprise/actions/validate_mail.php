@@ -1115,50 +1115,6 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<table width="100%" align="center" border="0" '
         .'id="indexing_fields" style="display:table;">';
 
-    /*** Folder  ***/
-    if ($core_tools->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder', false) == 1)) {
-        //DECLARATIONS
-        require_once 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-
-        //INSTANTIATE
-        $folders = new folder();
-
-        //INITIALIZE
-        $folder_info = $folders->get_folders_tree('0');
-        $folder = '';
-        $folder_id = '';
-
-        if (isset($data['folder']) && !empty($data['folder'])) {
-            $folder = $data['folder'];
-            $folder_id = str_replace(')', '', substr($folder, strrpos($folder, '(') + 1));
-        }
-        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
-        $frm_str .= '<td><label for="folder" class="form_title" >'._FOLDER_OR_SUBFOLDER.'</label></td>';
-        $frm_str .= '<td class="indexing_field" style="text-align:right;"><select id="folder" name="folder" onchange="displayFatherFolder(\'folder\')"><option value="">'._SELECT_FOLDER_TITLE.'</option>';
-
-        foreach ($folder_info as $key => $value) {
-            if ($value['folders_system_id'] == $folder_id) {
-                $frm_str .= '<option selected="selected" value="'.$value['folders_system_id'].'" parent="'.$value['parent_id'].'">'.$value['folder_name'].'</option>';
-            } else {
-                $frm_str .= '<option value="'.$value['folders_system_id'].'" parent="'.$value['parent_id'].'">'.$value['folder_name'].'</option>';
-            }
-        }
-        $frm_str .= '</select>';
-        $frm_str .= '</td>';
-        if ($core->test_service('create_folder', 'folder', false) == 1) {
-            $pathScriptTab = $_SESSION['config']['businessappurl']
-                    .'index.php?page=create_folder_form_iframe&module=folder&display=false';
-
-            $frm_str .= '<td style="width:5%;"> <a href="#" id="create_folder" title="'._CREATE_FOLDER
-                    .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._CREATE_FOLDER.'\',\''.$pathScriptTab.'\',\'folders\');return false;" '
-                    .'style="display:inline;" ><i class="fa fa-plus-circle" title="'
-                    ._CREATE_FOLDER.'"></i></a></td>';
-        }
-        $frm_str .= '</tr>';
-        $frm_str .= '<tr id="parentFolderTr" style="display: none"><td>&nbsp;</td><td colspan="2"><span id="parentFolderSpan" style="font-style: italic;font-size: 10px"></span></td></tr>';
-        $frm_str .= '<script>$j("#folder").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
-    }
-
     /*** Thesaurus ***/
     if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
         //DECLARATIONS
@@ -1343,25 +1299,6 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
     $frm_str .= '</td>';
 
-    //CASES
-    if ($core_tools->is_module_loaded('cases')) {
-        $frm_str .= '<td>';
-
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=show_case_tab&module=cases&resId='.$res_id.'&collId='.$coll_id;
-
-        $frm_str .= '<span onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_CASE).'\',\''.$pathScriptTab.'\',\'cases\');return false;" '
-            .'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="cases_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span><b>&nbsp;'
-            .'<i id="cases_tab_img" class="fa fa-suitcase fa-2x" title="'._CASE.'"></i><span id="cases_tab_badge"></span>';
-        $frm_str .= '</span>';
-        $frm_str .= '</td>';
-
-        //LOAD TOOLBAR BADGE
-        $toolbarBagde_script = $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=load_toolbar_cases&resId='.$res_id.'&collId='.$coll_id;
-        $frm_str .= '<script>loadToolbarBadge(\'cases_tab\',\''.$toolbarBagde_script.'\');</script>';
-    }
-
     //END TOOLBAR
     $frm_str .= '</table>';
     $frm_str .= '</div>';
@@ -1376,7 +1313,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '</div>';
 
     /*** Extra javascript ***/
-    $frm_str .= '<script type="text/javascript">$j(\'#validright\').css(\'display\',\'block\');displayFatherFolder(\'folder\');window.scrollTo(0,0);';
+    $frm_str .= '<script type="text/javascript">$j(\'#validright\').css(\'display\',\'block\');window.scrollTo(0,0);';
 
     $frm_str .= 'init_validation(\''.$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \''
@@ -1686,33 +1623,6 @@ function process_category_check($cat_id, $values)
             }
         }
     }
-    if ($core->is_module_loaded('folder')) {
-        $folder_id = '';
-        $foldertype_id = '';
-
-        $folder_id = get_value_fields($values, 'folder');
-
-        if (isset($_ENV['categories'][$cat_id]['other_cases']['folder']) && $_ENV['categories'][$cat_id]['other_cases']['folder']['mandatory'] == true) {
-            if (empty($folder)) {
-                $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['folder']['label'].' '._IS_EMPTY;
-
-                return false;
-            }
-        }
-        if (!empty($type_id) && !empty($folder_id)) {
-            $stmt = $db->query('SELECT foldertype_id FROM '.$_SESSION['tablename']['fold_folders'].' WHERE folders_system_id = ?', array($folder_id));
-            $res = $stmt->fetchObject();
-            $foldertype_id = $res->foldertype_id;
-            $stmt = $db->query('SELECT fdl.foldertype_id FROM '
-                .$_SESSION['tablename']['fold_foldertypes_doctypes_level1'].' fdl, '
-                .$_SESSION['tablename']['doctypes'].' d WHERE d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ? and d.type_id = '.$type_id, array($foldertype_id));
-            if ($stmt->rowCount() == 0) {
-                $_SESSION['action_error'] .= _ERROR_COMPATIBILITY_FOLDER;
-
-                return false;
-            }
-        }
-    }
 
     return true;
 }
@@ -1971,32 +1881,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             'type'      => $srType,
             'mode'      => $srMode
         ]);
-    }
-
-    if ($core->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder', false) == 1)) {
-        $folder_id = get_value_fields($values_form, 'folder');
-
-        $stmt = $db->query('SELECT folders_system_id FROM '.$table.' WHERE res_id = ?', array($res_id));
-        $res = $stmt->fetchObject();
-        $old_folder_id = $res->folders_system_id;
-
-        if (!empty($folder_id)) {
-            $query_res .= ', folders_system_id = ?';
-            $arrayPDOres = array_merge($arrayPDOres, array($folder_id));
-        } elseif (empty($folder_id) && !empty($old_folder_id)) {
-            $query_res .= ', folders_system_id = NULL';
-        }
-
-        if ($folder_id != $old_folder_id && $_SESSION['history']['folderup']) {
-            require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php';
-
-            $hist = new history();
-
-            $hist->add($_SESSION['tablename']['fold_folders'], $folder_id, 'UP', 'folderup', _DOC_NUM.$res_id._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'], 'apps');
-            if (isset($old_folder_id) && !empty($old_folder_id)) {
-                $hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, 'UP', 'folderup', _DOC_NUM.$res_id._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'], 'apps');
-            }
-        }
     }
 
     if ($core->is_module_loaded('entities') && $_SESSION['ListDiffFromRedirect'] == false) {

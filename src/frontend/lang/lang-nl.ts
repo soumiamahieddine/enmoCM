@@ -132,9 +132,6 @@ export const LANG_NL = {
     "canNotUpdateApplication"               : "Some files are modified. Can not update application", // TO TRANSLATE
     "cantMoveDoctype"                       : "Het documenttype kan enkel in een submap verplaatst worden",
     "cantMoveFirstLevel"                    : "De submap kan enkel in een map verplaatst worden",
-    "case"                                  : "Zaak",
-    "caseLabel"                             : "_TO_TRANSLATE",
-    "cases"                                 : "Zaken",
     "categories"                            : "_TO_TRANSLATE",
     "category_id"                           : "_TO_TRANSLATE",
     "changeMyPassword"                      : "Mijn wachtwoord wijzigen",
@@ -391,7 +388,6 @@ export const LANG_NL = {
     "fieldNature"                           : "Aard veld",
     "fieldType"                             : "Type veld",
     "fileDoesNotExists"                     : "File does not exists", //_TO_TRANSLATE
-    "fileplan"                              : "Persoonlijk klasseringsplan",
     "filterBy"                              : "Filteren",
     "filteredFrom"                          : "gefilterd op een geheel van",
     "filters"                               : "_TO_TRANSLATE",
@@ -1082,4 +1078,15 @@ export const LANG_NL = {
     "getFolders" : "Folders (fixed postion)", //_TO_TRANSLATE
     "getFoldersSample" : "Litigation", //_TO_TRANSLATE
     "classifyIn" : "Classify in ...", //_TO_TRANSLATE
+    "setInParentFolder" : "Set in parent folder ...", //_TO_TRANSLATE
+    "searchFolder" : "Search folder", //_TO_TRANSLATE
+    "shareToEntities" : "Share to entities ...", //_TO_TRANSLATE
+    "canManageFolder" : "Can manage this folder", //_TO_TRANSLATE
+    "searchMailInFolder" : "Search mails in folder", //_TO_TRANSLATE
+    "addSubFolder" : "Add subfolder", //_TO_TRANSLATE
+    "sharedFolder" : "Shared folder", //_TO_TRANSLATE
+    "addFolder" : "Add folder", //_TO_TRANSLATE
+    "more" : "More", //_TO_TRANSLATE
+    "less" : "Less", //_TO_TRANSLATE
+    "actionsAlt": "Actions", //_TO_TRANSLATE
 };

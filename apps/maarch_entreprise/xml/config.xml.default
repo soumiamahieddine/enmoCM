@@ -238,20 +238,8 @@
         <comment>_BASKETS_COMMENT</comment>
     </MODULES>
     <MODULES>
-        <moduleid>cases</moduleid>
-        <comment>_CASES_COMMENT</comment>
-    </MODULES>
-    <MODULES>
         <moduleid>entities</moduleid>
         <comment>_ENTITIES_COMMENT</comment>
-    </MODULES>
-    <MODULES>
-        <moduleid>fileplan</moduleid>
-        <comment>_FILEPLAN_COMMENT</comment>
-    </MODULES>
-    <MODULES>
-        <moduleid>folder</moduleid>
-        <comment>_FOLDERS_COMMENT</comment>
     </MODULES>
     <MODULES>
         <moduleid>notes</moduleid>

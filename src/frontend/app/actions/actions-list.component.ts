@@ -54,6 +54,7 @@ export class ActionsListComponent implements OnInit {
     @Input('currentBasketInfo') currentBasketInfo: any;
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
+    @Output('refreshPanelFolders') refreshPanelFolders = new EventEmitter<string>();
 
     constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private router: Router) { }
 
@@ -499,5 +500,9 @@ export class ActionsListComponent implements OnInit {
 
     refreshList() {
         this.refreshEvent.emit();
+    }
+
+    refreshFolders() {
+        this.refreshPanelFolders.emit();  
     }
 }

@@ -35,7 +35,7 @@ export class GroupsAdministrationComponent implements OnInit {
     dataSource          = new MatTableDataSource(this.groups);
 
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();

@@ -290,9 +290,7 @@ class BasketController
             $groups[$key]['groupActions'] = $actionsForGroup;
         }
 
-        $basketPages = BasketModel::getBasketPages(['unneeded' => ['redirect_to_action']]);
-
-        return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages]);
+        return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups]);
     }
 
     public function createGroup(Request $request, Response $response, array $aArgs)

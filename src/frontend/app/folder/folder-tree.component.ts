@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Renderer2, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { map, tap, catchError, filter, exhaustMap, finalize } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { Router } from '@angular/router';
+import { FolderUpdateComponent } from './folder-update/folder-update.component';
 
 declare function $j(selector: any): any;
 /**
@@ -104,6 +105,8 @@ export class FolderTreeComponent implements OnInit {
     dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
     @ViewChild('tree', { static: true }) tree: any;
+    
+    @Output('refreshDocList') refreshDocList = new EventEmitter<string>();
 
     constructor(
         public http: HttpClient,
@@ -180,7 +183,7 @@ export class FolderTreeComponent implements OnInit {
 
     flatToNestedObject(data: any) {
         const nested = data.reduce((initial: any, value: any, index: any, original: any) => {
-            if (value.parent_id === 0) {
+            if (value.parent_id === null) {
                 if (initial.left.length) {
                     this.checkLeftOvers(initial.left, value);
                 }
@@ -328,7 +331,6 @@ export class FolderTreeComponent implements OnInit {
     }
 
     drop(ev: any, node: any) {
-        console.log(ev.previousContainer.id);
         this.classifyDocument(ev, node);
         /*if (ev.previousContainer.id === 'folder-list') {
             this.moveFolder(ev, node);
@@ -365,7 +367,10 @@ export class FolderTreeComponent implements OnInit {
             tap((data: any) => {
                 node.countResources = data.countResources;
             }),
-            tap(() => this.notify.success('Courrier classé')),
+            tap(() => {
+                this.notify.success('Courrier classé');
+                this.refreshDocList.emit();
+            }),
             finalize(() => node.drag = false),
             catchError((err) => {
                 this.notify.handleErrors(err);
@@ -373,8 +378,6 @@ export class FolderTreeComponent implements OnInit {
             })
         ).subscribe();
     }
-
-
 
     dragEnter(node: any) {
         node.drag = true;
@@ -386,7 +389,6 @@ export class FolderTreeComponent implements OnInit {
         } else {
             return [];
         }
-
     }
 
     toggleInput() {
@@ -396,5 +398,29 @@ export class FolderTreeComponent implements OnInit {
                 this.renderer.selectRootElement('#itemValue').focus();
             }, 0);
         }
+    }
+
+    openFolderAdmin(node: any) {
+        this.dialogRef = this.dialog.open(FolderUpdateComponent, { autoFocus: false, data: { folderId: node.id } });
+
+        this.dialogRef.afterClosed().pipe(
+     
+        ).subscribe();
+    }
+
+    checkRights(node: any) {
+        let userEntities: any[] = [];
+        let currentUserId: number = 0;
+        this.http.get("../../rest/currentUser/profile").pipe(
+            tap((data: any) => {
+                userEntities = data.entities.map((info: any) => info.id);
+                currentUserId = data.id;
+            }),
+            exhaustMap(() => this.http.get("../../rest/folders/" + node.id)),
+            tap((data: any) => {
+                const compare = data.folder.sharing.entities.map((data: any) => data.entity_id).filter((item: any) => userEntities.indexOf(item) > -1);
+                node.edition = (compare.length > 0 || data.folder.user_id === currentUserId) ? true : false;
+            }),
+        ).subscribe();
     }
 }
