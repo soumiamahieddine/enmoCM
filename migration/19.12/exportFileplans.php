@@ -57,5 +57,5 @@ foreach ($customs as $custom) {
         fclose($file);
     }
 
-    printf("Export Plans de Classements (CUSTOM {$custom}) : " . $migrated . " Plan(s) de classement public exportée(s) dans le fichier fileplans_{$custom}.csv\n");
+    printf("Export Plans de Classements (CUSTOM {$custom}) : " . $migrated . " Plan(s) de classement public exporté(s) dans le fichier fileplans_{$custom}.csv\n");
 }
