@@ -12,3 +12,6 @@ DROP TABLE IF EXISTS cases_res;
 DROP TABLE IF EXISTS fp_fileplan;
 DROP TABLE IF EXISTS fp_fileplan_positions;
 DROP TABLE IF EXISTS fp_res_fileplan_positions;
+
+DROP TABLE IF EXISTS folder_tmp;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS folders_system_id;

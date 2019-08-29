@@ -180,8 +180,15 @@ DELETE FROM usergroups_services WHERE service_id = 'join_res_case';
 DELETE FROM usergroups_services WHERE service_id = 'join_res_case_in_process';
 DELETE FROM usergroups_services WHERE service_id = 'close_case';
 DELETE FROM usergroups_services WHERE service_id = 'add_cases';
+
+/* OLD FOLDERS */
+DROP VIEW IF EXISTS view_folders;
 DELETE FROM usergroups_services WHERE service_id IN ('folder_search', 'view_folder_tree', 'select_folder', 'show_history_folder', 'modify_folder', 'associate_folder', 'delete_folder', 'admin_foldertypes', 'create_folder', 'folder_freeze', 'close_folder');
 DELETE FROM notes WHERE origin = 'folder';
+DROP TABLE IF EXISTS foldertypes;
+DROP TABLE IF EXISTS foldertypes_doctypes;
+DROP TABLE IF EXISTS foldertypes_doctypes_level1;
+DROP TABLE IF EXISTS foldertypes_indexes;
 
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
@@ -345,3 +352,17 @@ FROM doctypes d,
          LEFT JOIN contacts_v2 cont ON mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id
          LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
 WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
+
+DROP VIEW IF EXISTS res_view_attachments;
+CREATE VIEW res_view_attachments AS
+  SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, in_send_attach, signatory_user_serial_id
+  FROM res_version_attachments
+  UNION ALL
+  SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, in_send_attach, signatory_user_serial_id
+  FROM res_attachments;
