@@ -18,3 +18,7 @@
 .private {
     color: $secondary;
 }
+
+::ng-deep.folderListMenu {
+    width: 200px;
+}

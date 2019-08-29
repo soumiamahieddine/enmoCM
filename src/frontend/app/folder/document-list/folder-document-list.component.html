@@ -75,7 +75,7 @@
                                         </mat-checkbox>
                                     </span>
                                     <span *ngIf="!appService.getViewMode()" style="cursor:pointer;"
-                                        class="main-info-status" (click)="open($event,row);">
+                                        class="main-info-status">
                                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
                                             [ngStyle]="{'color': row.priorityColor}" color="primary"
                                             class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x statusIcon">
@@ -104,8 +104,7 @@
                                         </ng-container>
                                     </span>
                                     <span class="main-info-data" style="font-weight:bold;flex:1;cursor:pointer;"
-                                        [class.undefined]="row.subject == lang.undefined" title="{{row.subject}}"
-                                        (click)="open($event,row);">{{row.subject | shorten: 150: '...'}}</span>
+                                        [class.undefined]="row.subject == lang.undefined" title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
                                     <span class="main-info-action">
                                         <button mat-icon-button title="{{lang.notes}}"
                                             (click)="$event.stopPropagation();togglePanel('note',row)"
@@ -139,7 +138,7 @@
                             </td>
                         </ng-container>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"
-                            (contextmenu)="open($event,row);" class="rowData" [class.locked]="row.isLocked == true"
+                            (contextmenu)="open($event,row);" (click)="open($event,row);" class="rowData"  style="cursor: pointer;" [class.locked]="row.isLocked == true"
                             cdkDrag (cdkDragStarted)="selectSpecificRes(row);" [cdkDragData]="row">
                             <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
                             <div class="dragPreview" *cdkDragPreview><i

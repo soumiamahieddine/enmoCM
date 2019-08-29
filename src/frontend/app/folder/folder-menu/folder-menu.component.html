@@ -2,6 +2,6 @@
     <mat-icon class="fa fa-folder-open fa-2x"></mat-icon>
     <span>{{lang.classifyIn}}</span>
 </button>
-<mat-menu #folders="matMenu">
+<mat-menu #folders="matMenu" [class]="'folderListMenu'">
     <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder" (click)="classifyDocuments(folder)" [title]="folder.label">{{folder.label}} <i class="fa fa-users private" *ngIf="folder.public" title="{{lang.sharedFolder}}"></i></button>
 </mat-menu>
