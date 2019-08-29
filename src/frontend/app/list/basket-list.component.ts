@@ -403,6 +403,14 @@ export class BasketListComponent implements OnInit {
         }
     }
 
+    selectSpecificRes(row: any) {
+        let thisSelect = { checked : true };
+        let thisDeselect = { checked : false };
+        
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
+    }
+
     open({ x, y }: MouseEvent, row: any) {
         
         let thisSelect = { checked : true };

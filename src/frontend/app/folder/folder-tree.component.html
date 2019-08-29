@@ -6,7 +6,7 @@
             matTreeNodePadding matTreeNodePaddingIndent="20px">
             <!-- use a disabled button to provide padding for tree leaf -->
             <button class="expandButton" mat-icon-button disabled></button>
-            <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseenter)="showAction(node)"
+            <a mat-list-item disableRipple [class.selectedFolder]="node.selected" [class.empty]="node.countResources === 0" (mouseenter)="showAction(node)"
                 (mouseleave)="hideAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
                     <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
@@ -46,7 +46,7 @@
                 <mat-icon class="mat-icon-rtl-mirror fa {{treeControl.isExpanded(node) ? 'fa-chevron-down' : 'fa-chevron-right'}}">
                 </mat-icon>
             </button>
-            <a mat-list-item disableRipple [class.selectedFolder]="node.selected" (mouseleave)="hideAction(node)"
+            <a mat-list-item disableRipple [class.selectedFolder]="node.selected" [class.empty]="node.countResources === 0" (mouseleave)="hideAction(node)"
                 (mouseenter)="showAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
                     <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">

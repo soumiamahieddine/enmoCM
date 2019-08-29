@@ -3,5 +3,5 @@
     <span>{{lang.classifyIn}}</span>
 </button>
 <mat-menu #folders="matMenu">
-    <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder" [class.private]="!folder.public" (click)="classifyDocuments(folder)" [title]="folder.label">{{folder.label}}</button>
+    <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder" (click)="classifyDocuments(folder)" [title]="folder.label">{{folder.label}} <i class="fa fa-users private" *ngIf="folder.public" title="{{lang.sharedFolder}}"></i></button>
 </mat-menu>
