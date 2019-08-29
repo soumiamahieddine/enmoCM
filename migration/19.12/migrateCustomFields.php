@@ -4,7 +4,6 @@ require '../../vendor/autoload.php';
 
 chdir('../..');
 
-$migrated = 0;
 $customs =  scandir('custom');
 
 foreach ($customs as $custom) {
