@@ -7,6 +7,8 @@ export class AppService {
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
 
+    currentUser: any;
+
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();

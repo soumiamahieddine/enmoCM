@@ -145,7 +145,7 @@ export class FolderDocumentListComponent implements OnInit {
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(null);
 
-            this.listProperties = this.filtersListService.initListsProperties(this.headerService.user.id, 0, this.folderInfo.id, 'folder');
+            this.listProperties = this.filtersListService.initListsProperties(this.headerService.user.id, 0, params['folderId'], 'folder');
 
             setTimeout(() => {
                 this.dragInit = false;
@@ -163,7 +163,7 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     initResultList() {
-        this.resultListDatabase = new ResultListHttpDao(this.http);
+        this.resultListDatabase = new ResultListHttpDao(this.http, this.filtersListService);
         // If the user changes the sort order, reset back to the first page.
         this.paginator.pageIndex = this.listProperties.page;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -176,7 +176,7 @@ export class FolderDocumentListComponent implements OnInit {
                 switchMap(() => {
                     this.isLoadingResults = true;
                     return this.resultListDatabase!.getRepoIssues(
-                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl);
+                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl, this.filtersListService.getUrlFilters());
                 }),
                 map(data => {
                     // Flip flag to show that loading has finished.
@@ -197,6 +197,7 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     goTo(row: any) {
+        this.filtersListService.filterMode = false;
         if (this.docUrl == '../../rest/res/' + row.res_id + '/content' && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
@@ -337,11 +338,12 @@ export interface BasketList {
 
 export class ResultListHttpDao {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private filtersListService: FiltersListService) { }
 
-    getRepoIssues(sort: string, order: string, page: number, href: string): Observable<BasketList> {
+    getRepoIssues(sort: string, order: string, page: number, href: string, filters: string): Observable<BasketList> {
+        this.filtersListService.updateListsPropertiesPage(page);
         let offset = page * 10;
-        const requestUrl = `${href}?limit=10&offset=${offset}`;
+        const requestUrl = `${href}?limit=10&offset=${offset}${filters}`;
 
         return this.http.get<BasketList>(requestUrl);
     }
