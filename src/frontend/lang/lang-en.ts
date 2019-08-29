@@ -1056,4 +1056,5 @@ export const LANG_EN = {
     "searchFolder" : "Search folder",
     "shareToEntities" : "Share to entities ...",
     "canManageFolder" : "Can manage this folder",
+    "searchMailInFolder" : "Search mails in folder",
 };

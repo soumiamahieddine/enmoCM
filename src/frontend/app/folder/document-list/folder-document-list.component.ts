@@ -20,6 +20,7 @@ import { PanelFolderComponent } from '../panel/panel-folder.component';
 import { BasketHomeComponent } from '../../basket/basket-home.component';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { FolderActionListComponent } from '../folder-action-list/folder-action-list.component';
+import { FiltersListService } from '../../../service/filtersList.service';
 
 
 declare function $j(selector: any): any;
@@ -105,6 +106,7 @@ export class FolderDocumentListComponent implements OnInit {
         public dialog: MatDialog,
         private sanitizer: DomSanitizer,
         private headerService: HeaderService,
+        public filtersListService: FiltersListService, 
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
@@ -137,10 +139,13 @@ export class FolderDocumentListComponent implements OnInit {
                     this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
                 });
             this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
+            this.filtersListService.filterMode = false;
             this.selectedRes = [];
             this.sidenavRight.close();
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(null);
+
+            this.listProperties = this.filtersListService.initListsProperties(this.headerService.user.id, 0, this.folderInfo.id, 'folder');
 
             setTimeout(() => {
                 this.dragInit = false;

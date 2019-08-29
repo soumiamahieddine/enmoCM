@@ -59,8 +59,9 @@ export class FiltersToolComponent implements OnInit {
     isLoading: boolean = false;
 
     @Input('listProperties') listProperties: any;
-    @Input('currentBasketInfo') currentBasketInfo: any;
 
+    @Input('title') title: string;
+    @Input('routeDatas') routeDatas: string;
     @Input('snavR') sidenavRight: MatSidenav;
     @Input('selectedRes') selectedRes: any;
     @Input('totalRes') totalRes: number;
@@ -197,7 +198,7 @@ export class FiltersToolComponent implements OnInit {
             },
         ];
 
-        this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/filters?init' + this.filtersListService.getUrlFilters())
+        this.http.get('../..' + this.routeDatas + '?init' + this.filtersListService.getUrlFilters())
             .subscribe((data: any) => {
                 data.categories.forEach((element: any) => {
                     if (this.listProperties.categories.map((category: any) => (category.id)).indexOf(element.id) === -1) {

@@ -23,7 +23,11 @@
                 </div>
             </div>
             <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
-
+                <app-filters-tool style="flex:1;overflow-x: auto;overflow-y: hidden;" #filtersTool
+                    [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
+                    [selectedRes]="selectedRes" [routeDatas]="'/rest/folders/' + folderInfo.id + '/resources/filters'" (toggleAllRes)="toggleAllRes($event)"
+                    (refreshEventAfterAction)="refreshDaoAfterAction()" (refreshEvent)="refreshDao()" [title]="lang.searchMailInFolder">
+                </app-filters-tool>
             </div>
         </div>
         <div class="container" [class.fullContainer]="appService.getViewMode()">
@@ -73,7 +77,7 @@
                                         </mat-checkbox>
                                     </span>
                                     <span *ngIf="!appService.getViewMode()" style="cursor:pointer;"
-                                        class="main-info-status" (click)="launch(defaultAction,row);">
+                                        class="main-info-status" (click)="open($event,row);">
                                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
                                             [ngStyle]="{'color': row.priorityColor}" color="primary"
                                             class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x statusIcon">
@@ -103,7 +107,7 @@
                                     </span>
                                     <span class="main-info-data" style="font-weight:bold;flex:1;cursor:pointer;"
                                         [class.undefined]="row.subject == lang.undefined" title="{{row.subject}}"
-                                        (click)="launch(defaultAction,row);">{{row.subject | shorten: 150: '...'}}</span>
+                                        (click)="open($event,row);">{{row.subject | shorten: 150: '...'}}</span>
                                     <span class="main-info-action">
                                         <button mat-icon-button title="{{lang.notes}}"
                                             (click)="$event.stopPropagation();togglePanel('note',row)"

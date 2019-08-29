@@ -1093,4 +1093,5 @@ export const LANG_FR = {
     "searchFolder" : "Recherche un dossier",
     "shareToEntities" : "Partager aux entités ...",
     "canManageFolder" : "Droit de modification / suppression du dossier",
+    "searchMailInFolder" : "Rechercher des courriers dans le dossier",
 };

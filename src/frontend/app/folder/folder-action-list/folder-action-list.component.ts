@@ -49,7 +49,7 @@ export class FolderActionListComponent implements OnInit {
 
     open(x: number, y: number, row: any) {
 
-        //this.loadActionList();
+        //this.loadActionList(row.res_id);
 
         // Adjust the menu anchor position
         this.contextMenuPosition.x = x + 'px';
@@ -114,33 +114,17 @@ export class FolderActionListComponent implements OnInit {
                 });
         }
 
+    } */
+
+    loadActionList(resId: number) {
+        this.http.get('../../rest/folders/' + this.currentFolderInfo.id + '/resources/' + resId + '/events').pipe(
+            tap((data) => {
+                console.log(data);
+            })
+        ).subscribe();
     }
 
-    loadActionList() {
-
-        if (JSON.stringify(this.basketInfo) != JSON.stringify(this.currentBasketInfo)) {
-
-            this.basketInfo = JSON.parse(JSON.stringify(this.currentBasketInfo));
-
-            this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/actions')
-                .subscribe((data: any) => {
-                    if (data.actions.length > 0) {
-                        this.actionsList = data.actions;
-                    } else {
-                        this.actionsList = [{
-                            id: 0,
-                            label_action: this.lang.noAction,
-                            component: ''
-                        }];
-                    }
-                    this.loading = false;
-                }, (err: any) => {
-                    this.notify.handleErrors(err);
-                });
-        }
-    }
-
-    lock() {
+    /* lock() {
         this.currentLock = setInterval(() => {
             this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
                 .subscribe((data: any) => { }, (err: any) => { });

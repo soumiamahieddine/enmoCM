@@ -1,7 +1,7 @@
 <div class="filtersContent">
     <form [formGroup]="stateForm" class="filterTool">
         <mat-form-field floatLabel="never" class="basket-search">
-            <input class="metaSearch" type="text" matInput placeholder="{{lang.searchMailInBasket}}"
+            <input class="metaSearch" type="text" matInput placeholder="{{title}}"
                 formControlName="stateGroup" [matAutocomplete]="autoGroup" (focus)="initFilters()"
                 (keyup.enter)="metaSearch($event);">
             <button mat-icon-button matPrefix>
