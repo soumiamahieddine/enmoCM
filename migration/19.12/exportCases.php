@@ -43,5 +43,5 @@ foreach ($customs as $custom) {
         fclose($file);
     }
 
-    printf("Export Affaires (CUSTOM {$custom}) : " . $migrated . " Affaires exportée(s) dans le fichier cases_{$custom}.csv\n");
+    printf("Export Affaires (CUSTOM {$custom}) : " . $migrated . " Affaire(s) exportée(s) dans le fichier cases_{$custom}.csv\n");
 }
