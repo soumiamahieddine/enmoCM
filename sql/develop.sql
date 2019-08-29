@@ -180,6 +180,8 @@ DELETE FROM usergroups_services WHERE service_id = 'join_res_case';
 DELETE FROM usergroups_services WHERE service_id = 'join_res_case_in_process';
 DELETE FROM usergroups_services WHERE service_id = 'close_case';
 DELETE FROM usergroups_services WHERE service_id = 'add_cases';
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS folders_system_id;
 
 
 /* REFACTORING MODIFICATION */
