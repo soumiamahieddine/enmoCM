@@ -1057,4 +1057,10 @@ export const LANG_EN = {
     "shareToEntities" : "Share to entities ...",
     "canManageFolder" : "Can manage this folder",
     "searchMailInFolder" : "Search mails in folder",
+    "addSubFolder" : "Add subfolder",
+    "sharedFolder" : "Shared folder",
+    "addFolder" : "Add folder",
+    "more" : "More",
+    "less" : "Less",
+    "actionsAlt": "Actions",
 };

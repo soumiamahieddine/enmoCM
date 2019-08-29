@@ -10,7 +10,7 @@
                 (mouseleave)="hideAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
                     <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
-                        {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="Dossier partagé"></i>
+                        {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="{{lang.sharedFolder}}"></i>
                     </span>
                 </span>
                 <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();showAction(node);checkRights(node);"
@@ -21,16 +21,16 @@
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">Nouveau sous-dossier</button>
-                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">Supprimer</button>
-                    <button mat-menu-item (click)="openFolderAdmin(node)" [disabled]="!node.edition">Modifier</button>
+                    <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
+                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">{{lang.delete}}</button>
+                    <button mat-menu-item (click)="openFolderAdmin(node)" [disabled]="!node.edition">{{lang.update}}</button>
                 </mat-menu>
             </a>
         </mat-tree-node>
         <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding matTreeNodePaddingIndent="45px">
             <form>
                 <mat-form-field floatLabel="never" style="width: 100%;">
-                    <input matInput id="itemValue" #itemValue placeholder="Nouveau dossier...">
+                    <input matInput id="itemValue" #itemValue placeholder="{{lang.addFolder}}...">
                     <button type="submit" matSuffix mat-icon-button (click)="saveNode(node, itemValue.value)"
                         [disabled]="itemValue.value === ''">
                         <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
@@ -50,7 +50,7 @@
                 (mouseenter)="showAction(node)" (click)="selectFolder(node)">
                 <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
                     <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
-                        {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="Dossier partagé"></i>
+                        {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="{{lang.sharedFolder}}"></i>
                     </span>
                 </span>
                 <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();checkRights(node);" [disabled]="!node.showAction">
@@ -60,9 +60,9 @@
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">Nouveau sous-dossier</button>
-                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">Supprimer</button>
-                    <button mat-menu-item (click)="openFolderAdmin(node)" [disabled]="!node.edition">Modifier</button>
+                    <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
+                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">{{lang.delete}}</button>
+                    <button mat-menu-item (click)="openFolderAdmin(node)" [disabled]="!node.edition">{{lang.update}}</button>
                 </mat-menu>
             </a>
         </mat-tree-node>
@@ -70,14 +70,14 @@
 </mat-nav-list>
 <mat-nav-list>
     <mat-list-item role="listitem" disableRipple (click)="toggleInput()" class="more">
-        <mat-icon class="fa {{createRootNode ? 'fa-chevron-up' : 'fa-chevron-down'}}"></mat-icon>&nbsp;{{createRootNode ? 'Moins' : 'Plus'}}
+        <mat-icon class="fa {{createRootNode ? 'fa-chevron-up' : 'fa-chevron-down'}}"></mat-icon>&nbsp;{{createRootNode ? lang.less : lang.more}}
     </mat-list-item>
 </mat-nav-list>
 <mat-list *ngIf="createRootNode">
     <mat-list-item role="listitem">
         <form>
             <mat-form-field floatLabel="never" style="width: 100%;">
-                <input matInput id="itemValue" #itemValue placeholder="Nouveau dossier racine...">
+                <input matInput id="itemValue" #itemValue placeholder="{{lang.addFolder}} racine...">
                 <button type="submit" matSuffix mat-icon-button (click)="createRoot(itemValue.value);createRootNode = !createRootNode"
                     [disabled]="itemValue.value === ''">
                     <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>

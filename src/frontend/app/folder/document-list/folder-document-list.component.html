@@ -51,8 +51,6 @@
                                 [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
                                 (refreshPanelFolders)="panelFolder.refreshFoldersTree()">
                             </app-folder-action-list>
-                            <!--<app-tools-list #actionsList [selectedRes]="selectedRes"
-                                [currentBasketInfo]="currentBasketInfo"></app-tools-list>-->
                         </span>
                         <span>
                             <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="10"

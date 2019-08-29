@@ -1,4 +1,4 @@
-<button *ngIf="!contextMode" mat-stroked-button [matMenuTriggerFor]="menu">Actions <mat-icon matSuffix
+<button *ngIf="!contextMode" mat-stroked-button [matMenuTriggerFor]="menu">{{lang.actionsAlt}}<mat-icon matSuffix
         class="fa fa-caret-down"></mat-icon>
 </button>
 <span *ngIf="contextMode" [matMenuTriggerFor]="menu" #menu2 style="position: absolute;"

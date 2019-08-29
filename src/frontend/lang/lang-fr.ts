@@ -1094,4 +1094,10 @@ export const LANG_FR = {
     "shareToEntities" : "Partager aux entités ...",
     "canManageFolder" : "Droit de modification / suppression du dossier",
     "searchMailInFolder" : "Rechercher des courriers dans le dossier",
+    "addSubFolder" : "Nouveau sous-dossier",
+    "sharedFolder" : "Dossier partagé",
+    "addFolder" : "Nouveau dossier",
+    "more" : "Plus",
+    "less" : "Moins",
+    "actionsAlt": "Actions",
 };
