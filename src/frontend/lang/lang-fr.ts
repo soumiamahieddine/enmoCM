@@ -1100,4 +1100,5 @@ export const LANG_FR = {
     "more" : "Plus",
     "less" : "Moins",
     "actionsAlt": "Actions",
+    "addRootFolder": "Nouveau dossier racine",
 };

@@ -61,7 +61,7 @@
                 <div style="height:90%;overflow:auto;position:absolute;width:100%;">
                     <table #tableBasketListSort="matSort" cdkDropList id="folder-list"
                         [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data"
-                        [cdkDropListDisabled]="dragInit" mat-table [dataSource]="data" matSort matSortActive="res_id"
+                        [cdkDropListDisabled]="dragInit || appService.getViewMode()" mat-table [dataSource]="data" matSort matSortActive="res_id"
                         matSortDisableClear matSortDirection="asc" style="width:100%;">
 
                         <ng-container matColumnDef="res_id">

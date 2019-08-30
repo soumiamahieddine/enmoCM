@@ -1089,4 +1089,5 @@ export const LANG_NL = {
     "more" : "More", //_TO_TRANSLATE
     "less" : "Less", //_TO_TRANSLATE
     "actionsAlt": "Actions", //_TO_TRANSLATE
+    "addRootFolder": "Add root folder", //_TO_TRANSLATE
 };

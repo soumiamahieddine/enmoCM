@@ -255,6 +255,7 @@ export class FolderTreeComponent implements OnInit {
                 const nestedNode = this.flatNodeMap.get(node);
                 nestedNode.label = value;
                 nestedNode.id = data.folder;
+                nestedNode.countResources = 0;
                 this.dataChange.next(this.data);
                 this.treeControl.collapseAll();
                 this.openTree(nestedNode.id);
