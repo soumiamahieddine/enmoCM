@@ -184,7 +184,7 @@ export class BasketListComponent implements OnInit {
                     this.allResInBasket = data.allResources;
                     this.currentBasketInfo.basket_id = data.basket_id;
                     this.defaultAction = data.defaultAction;
-                    this.headerService.setHeader(data.basketLabel);
+                    this.headerService.setHeader(data.basketLabel, '', 'fa fa-inbox');
                     return data.resources;
                 }),
                 catchError((err: any) => {
