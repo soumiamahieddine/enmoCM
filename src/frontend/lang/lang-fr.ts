@@ -1101,4 +1101,9 @@ export const LANG_FR = {
     "less" : "Moins",
     "actionsAlt": "Actions",
     "addRootFolder": "Nouveau dossier racine",
+    "folderUpdated" : "Dossier modifié",
+    "in" : "dans",
+    "classifyQuestion" : "Voulez-vous classer",
+    "moveQuestion" : "Voulez-vous déplacer",
+    "classify" : "Classer",
 };

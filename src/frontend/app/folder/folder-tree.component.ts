@@ -342,7 +342,7 @@ export class FolderTreeComponent implements OnInit {
     }
 
     moveFolder(ev: any, node: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: 'Déplacer ' + ev.item.data.alt_identifier, msg: 'Voulez-vous déplacer <b>' + ev.item.data.alt_identifier + '</b> dans <b>' + node.label + '</b> ?' } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.move + ' ' + ev.item.data.alt_identifier, msg: this.lang.moveQuestion + ' <b>' + ev.item.data.alt_identifier + '</b> ' + this.lang.in + ' <b>' + node.label + '</b>&nbsp;?' } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -361,7 +361,7 @@ export class FolderTreeComponent implements OnInit {
     }
 
     classifyDocument(ev: any, node: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: 'Classer ' + ev.item.data.alt_identifier, msg: 'Voulez-vous classer <b>' + ev.item.data.alt_identifier + '</b> dans <b>' + node.label + '</b> ?' } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.classify + ' ' + ev.item.data.alt_identifier, msg: this.lang.classifyQuestion + ' <b>' + ev.item.data.alt_identifier + '</b> ' + this.lang.in + ' <b>' + node.label + '</b>&nbsp;?' } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

@@ -1090,4 +1090,9 @@ export const LANG_NL = {
     "less" : "Less", //_TO_TRANSLATE
     "actionsAlt": "Actions", //_TO_TRANSLATE
     "addRootFolder": "Add root folder", //_TO_TRANSLATE
+    "folderUpdated" : "Folder updated", //_TO_TRANSLATE
+    "in" : "in", //_TO_TRANSLATE
+    "classifyQuestion" : "Do you want classify", //_TO_TRANSLATE
+    "moveQuestion" : "Do you want move", //_TO_TRANSLATE
+    "classify" : "Classify", //_TO_TRANSLATE
 };
