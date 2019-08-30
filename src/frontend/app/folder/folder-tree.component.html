@@ -6,17 +6,17 @@
             matTreeNodePadding matTreeNodePaddingIndent="20px">
             <!-- use a disabled button to provide padding for tree leaf -->
             <button class="expandButton" mat-icon-button disabled></button>
-            <a mat-list-item disableRipple [class.selectedFolder]="node.selected" [class.empty]="node.countResources === 0" (mouseenter)="showAction(node)"
+            <a mat-list-item disableRipple class="folderTreeItem" [class.selectedFolder]="node.selected" (mouseenter)="showAction(node)"
                 (mouseleave)="hideAction(node)" (click)="selectFolder(node)">
-                <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
+                <span style="width: 90%;overflow: hidden;text-overflow: ellipsis;">
                     <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
                         {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="{{lang.sharedFolder}}"></i>
                     </span>
                 </span>
                 <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();showAction(node);checkRights(node);"
-                    [disabled]="!node.showAction">
+                    [disabled]="!node.showAction" style="position: absolute;right:0px;">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
-                    <span *ngIf="!node.showAction" class="countResources">
+                    <span *ngIf="!node.showAction" class="countResources" [class.empty]="node.countResources === 0">
                         {{node.countResources}}
                     </span>
                 </button>
@@ -46,16 +46,16 @@
                 <mat-icon class="mat-icon-rtl-mirror fa {{treeControl.isExpanded(node) ? 'fa-chevron-down' : 'fa-chevron-right'}}">
                 </mat-icon>
             </button>
-            <a mat-list-item disableRipple [class.selectedFolder]="node.selected" [class.empty]="node.countResources === 0" (mouseleave)="hideAction(node)"
+            <a mat-list-item disableRipple class="folderTreeItem" [class.selectedFolder]="node.selected" (mouseleave)="hideAction(node)"
                 (mouseenter)="showAction(node)" (click)="selectFolder(node)">
-                <span style="flex:1;overflow: hidden;text-overflow: ellipsis;">
+                <span style="width: 90%;overflow: hidden;text-overflow: ellipsis;">
                     <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
                         {{node.label}} <i class="fa fa-users private" *ngIf="node.public" title="{{lang.sharedFolder}}"></i>
                     </span>
                 </span>
-                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();checkRights(node);" [disabled]="!node.showAction">
+                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation();checkRights(node);" [disabled]="!node.showAction" style="position: absolute;right:0px;">
                     <mat-icon *ngIf="node.showAction" class="folderAction fa fa-ellipsis-v"></mat-icon>
-                    <span *ngIf="!node.showAction" class="countResources">
+                    <span *ngIf="!node.showAction" class="countResources" [class.empty]="node.countResources === 0">
                         {{node.countResources}}
                     </span>
                 </button>
