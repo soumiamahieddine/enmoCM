@@ -107,6 +107,7 @@ export class FolderTreeComponent implements OnInit {
     @ViewChild('tree', { static: true }) tree: any;
     
     @Output('refreshDocList') refreshDocList = new EventEmitter<string>();
+    @Output('refreshFolderList') refreshFolderList = new EventEmitter<string>();
 
     constructor(
         public http: HttpClient,
@@ -405,7 +406,11 @@ export class FolderTreeComponent implements OnInit {
         this.dialogRef = this.dialog.open(FolderUpdateComponent, { autoFocus: false, data: { folderId: node.id } });
 
         this.dialogRef.afterClosed().pipe(
-     
+            tap((data) => {
+                if (data !== undefined) {
+                    this.getFolders();
+                }                
+            })
         ).subscribe();
     }
 
