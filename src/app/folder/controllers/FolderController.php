@@ -85,6 +85,8 @@ class FolderController
                     }
                 }
                 if (!$found) {
+                    $insert['level'] = 0;
+                    $insert['parent_id'] = null;
                     $tree[] = $insert;
                 }
             }

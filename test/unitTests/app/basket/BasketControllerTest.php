@@ -162,8 +162,6 @@ class BasketControllerTest extends TestCase
 
         $this->assertInternalType('array', $responseBody->allGroups);
         $this->assertNotNull($responseBody->allGroups);
-        $this->assertInternalType('array', $responseBody->pages);
-        $this->assertNotNull($responseBody->pages);
 
         $users = \Group\models\GroupModel::getUsersByGroupId(['select' => ['id'], 'groupId' => 'AGENT']);
         $group = \Group\models\GroupModel::getByGroupId(['select' => ['id'], 'groupId' => 'AGENT']);

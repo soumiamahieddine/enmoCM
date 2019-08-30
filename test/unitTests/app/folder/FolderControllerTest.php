@@ -102,7 +102,7 @@ class FolderControllerTest extends TestCase
         $this->assertSame(self::$id, $responseBody->folder->id);
         $this->assertSame('Mon deuxieme dossier renomme', $responseBody->folder->label);
         $this->assertSame(false, $responseBody->folder->public);
-        $this->assertSame(0, $responseBody->folder->parent_id);
+        $this->assertSame(null, $responseBody->folder->parent_id);
         $this->assertSame(0, $responseBody->folder->level);
         $this->assertInternalType('array', $responseBody->folder->sharing->entities);
         $this->assertInternalType('integer', $responseBody->folder->user_id);
@@ -133,7 +133,9 @@ class FolderControllerTest extends TestCase
             $this->assertNotEmpty($value->label);
             $this->assertInternalType("boolean", $value->public);
             $this->assertInternalType("integer", $value->user_id);
-            $this->assertInternalType("integer", $value->parent_id);
+            if (!empty($value->parent_id)) {
+                $this->assertInternalType("integer", $value->parent_id);
+            }
             $this->assertInternalType("integer", $value->level);
             $this->assertInternalType("integer", $value->countResources);
         }
