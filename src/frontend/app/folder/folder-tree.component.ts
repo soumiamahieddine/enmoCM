@@ -419,8 +419,19 @@ export class FolderTreeComponent implements OnInit {
             }),
             exhaustMap(() => this.http.get("../../rest/folders/" + node.id)),
             tap((data: any) => {
-                const compare = data.folder.sharing.entities.map((data: any) => data.entity_id).filter((item: any) => userEntities.indexOf(item) > -1);
-                node.edition = (compare.length > 0 || data.folder.user_id === currentUserId) ? true : false;
+                let canAdmin = false;
+                
+                const compare = data.folder.sharing.entities.filter((item: any) => userEntities.indexOf(item) > -1);
+
+                const entitiesCompare = data.folder.sharing.entities.filter((item: any) => compare.indexOf(item.id));
+
+                entitiesCompare.forEach((element: any) => {
+                    if (element.edition === true) {
+                        canAdmin = true;
+                    }
+                });
+
+                node.edition = (canAdmin || data.folder.user_id === currentUserId) ? true : false;
             }),
         ).subscribe();
     }
