@@ -63,7 +63,7 @@
                     </div>
                     <div style="height:90%;overflow:auto;position:absolute;width:100%;">
                         <table cdkDropList id="document-list" [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data" #tableBasketListSort="matSort" mat-table [dataSource]="data" matSort
-                            matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;" [cdkDropListDisabled]="dragInit">
+                            matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;" [cdkDropListDisabled]="dragInit || appService.getViewMode()">
 
                             <ng-container matColumnDef="res_id">
                                 <td mat-cell *matCellDef="let row"

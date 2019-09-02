@@ -1063,4 +1063,11 @@ export const LANG_EN = {
     "more" : "More",
     "less" : "Less",
     "actionsAlt": "Actions",
+    "addRootFolder": "Add root folder",
+    "folderUpdated" : "Folder updated",
+    "in" : "in",
+    "classifyQuestion" : "Do you want classify",
+    "moveQuestion" : "Do you want move",
+    "classify" : "Classify",
+    "mailClassified" : "Mail(s) classified",
 };

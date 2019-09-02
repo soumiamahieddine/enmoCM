@@ -16,6 +16,20 @@ use SrcCore\models\DatabaseModel;
 
 class FolderModelAbstract
 {
+    public static function get(array $aArgs)
+    {
+
+        $folders = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['folders'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? ['label'] : $aArgs['orderBy']
+        ]);
+
+        return $folders;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -25,7 +39,7 @@ class FolderModelAbstract
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['folders', 'entities_folders'],
             'left_join' => ['folders.id = entities_folders.folder_id'],
-            'where'     => ['id = ?'],
+            'where'     => ['folders.id = ?'],
             'data'      => [$aArgs['id']]
         ]);
 

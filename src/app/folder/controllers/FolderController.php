@@ -85,6 +85,8 @@ class FolderController
                     }
                 }
                 if (!$found) {
+                    $insert['level'] = 0;
+                    $insert['parent_id'] = null;
                     $tree[] = $insert;
                 }
             }
@@ -189,6 +191,9 @@ class FolderController
         }
         if ($data['parent_id'] == $aArgs['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Parent_id and id can not be the same']);
+        }
+        if (FolderController::isParentFolder(['parent_id' => $data['parent_id'], 'id' => $aArgs['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Id is a parent of parent_id']);
         }
 
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
@@ -593,7 +598,7 @@ class FolderController
     // login (string) : Login of user connected
     // folderId (integer) : Check specific folder
     // edition (boolean) : whether user can edit or not
-    private static function getScopeFolders(array $aArgs)
+    public static function getScopeFolders(array $aArgs)
     {
         $login = $aArgs['login'];
         $userEntities = EntityModel::getWithUserEntities(['select'  => ['entities.id'], 'where' => ['user_id = ?'], 'data' => [$login]]);
@@ -655,5 +660,16 @@ class FolderController
         }
 
         return true;
+    }
+
+    private static function isParentFolder(array $args)
+    {
+        $parentInfo = FolderModel::getById(['id' => $args['parent_id'], 'select' => ['folders.id', 'parent_id']]);
+        if (empty($parentInfo) || $parentInfo['id'] == $args['id']) {
+            return true;
+        } elseif (!empty($parentInfo['parent_id'])) {
+            return FolderController::isParentFolder(['parent_id' => $parentInfo['parent_id'], 'id' => $args['id']]);
+        }
+        return false;
     }
 }

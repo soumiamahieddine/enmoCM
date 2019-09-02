@@ -17,24 +17,24 @@ foreach ($customs as $custom) {
 
 
     $cases = \SrcCore\models\DatabaseModel::select([
-        'select' => ['*'],
+        'select' => ['case_id', 'case_label', 'case_closing_date'],
         'table'  => ['cases']
     ]);
 
     if (!empty($cases)) {
         $file = fopen("migration/19.12/cases_{$custom}.csv", 'w+');
-        $csvHead = ['Identifiant affaire', 'Libellé affaire', 'Date de cloture', 'Identifiant courrier', 'Sujet courrier'];
+        $csvHead = ['Identifiant affaire', 'Libellé affaire', 'Date de cloture', 'Identifiant courrier', 'Numéro chrono', 'Sujet courrier'];
         fputcsv($file, $csvHead, ',');
 
         foreach ($cases as $case) {
             $resources = \SrcCore\models\DatabaseModel::select([
-                'select'    => ['res_letterbox.res_id', 'res_letterbox.subject'],
-                'table'     => ['cases_res, res_letterbox'],
-                'where'     => ['cases_res.res_id = res_letterbox.res_id', 'case_id = ?'],
+                'select'    => ['r.res_id', 'r.subject', 'mlb.alt_identifier'],
+                'table'     => ['cases_res c, res_letterbox r, mlb_coll_ext mlb'],
+                'where'     => ['c.res_id = r.res_id', 'r.res_id = mlb.res_id', 'case_id = ?', 'r.status <> \'DEL\''],
                 'data'      => [$case['case_id']]
             ]);
             foreach ($resources as $resource) {
-                $csvContent = [$case['case_id'], $case['case_label'], $case['case_closing_date'], $resource['res_id'], $resource['subject']];
+                $csvContent = [$case['case_id'], $case['case_label'], $case['case_closing_date'], $resource['res_id'], $resource['alt_identifier'], $resource['subject']];
                 fputcsv($file, $csvContent, ',');
             }
             ++$migrated;

@@ -24,6 +24,7 @@ export class PluginAutocomplete implements OnInit {
         entity : 'fa-sitemap'
     }
 
+    @Input('size') size: string;
     @Input('singleMode') singleMode: boolean;
     @Input('required') required: boolean;
     @Input('datas') options: any;
@@ -46,6 +47,7 @@ export class PluginAutocomplete implements OnInit {
     ngOnInit() {
         this.optGroupLabel = this.optGroupLabel === undefined ? this.lang.availableValues : this.optGroupLabel;
         this.placeholder = this.placeholder === undefined ? this.lang.chooseValue : this.placeholder;
+        this.size = this.size === undefined ? 'default' : 'small';
 
         if (this.routeDatas !== undefined) {
             this.initAutocompleteRoute();

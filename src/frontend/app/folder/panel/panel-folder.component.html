@@ -4,6 +4,6 @@
             <i class="fa fa-folder"></i>&nbsp;{{lang.folders}}
         </mat-panel-title>
     </mat-expansion-panel-header>
-    <plugin-autocomplete [labelPlaceholder]="lang.search" [labelList]="lang.search" [routeDatas]="['/rest/folders']" [targetSearchKey]="'label'"></plugin-autocomplete>
+    <plugin-autocomplete [size]="'small'" [labelPlaceholder]="lang.searchFolder" [routeDatas]="['/rest/autocomplete/folders']" [targetSearchKey]="'idToDisplay'" (triggerEvent)="goTo($event)"></plugin-autocomplete>
     <folder-tree #folderTree [selectedId]="id" (refreshDocList)="refreshDocList()"></folder-tree>
 </mat-expansion-panel>

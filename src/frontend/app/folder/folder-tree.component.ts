@@ -107,6 +107,7 @@ export class FolderTreeComponent implements OnInit {
     @ViewChild('tree', { static: true }) tree: any;
     
     @Output('refreshDocList') refreshDocList = new EventEmitter<string>();
+    @Output('refreshFolderList') refreshFolderList = new EventEmitter<string>();
 
     constructor(
         public http: HttpClient,
@@ -255,6 +256,7 @@ export class FolderTreeComponent implements OnInit {
                 const nestedNode = this.flatNodeMap.get(node);
                 nestedNode.label = value;
                 nestedNode.id = data.folder;
+                nestedNode.countResources = 0;
                 this.dataChange.next(this.data);
                 this.treeControl.collapseAll();
                 this.openTree(nestedNode.id);
@@ -340,7 +342,7 @@ export class FolderTreeComponent implements OnInit {
     }
 
     moveFolder(ev: any, node: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: 'Déplacer ' + ev.item.data.alt_identifier, msg: 'Voulez-vous déplacer <b>' + ev.item.data.alt_identifier + '</b> dans <b>' + node.label + '</b> ?' } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.move + ' ' + ev.item.data.alt_identifier, msg: this.lang.moveQuestion + ' <b>' + ev.item.data.alt_identifier + '</b> ' + this.lang.in + ' <b>' + node.label + '</b>&nbsp;?' } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -359,7 +361,7 @@ export class FolderTreeComponent implements OnInit {
     }
 
     classifyDocument(ev: any, node: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: 'Classer ' + ev.item.data.alt_identifier, msg: 'Voulez-vous classer <b>' + ev.item.data.alt_identifier + '</b> dans <b>' + node.label + '</b> ?' } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.classify + ' ' + ev.item.data.alt_identifier, msg: this.lang.classifyQuestion + ' <b>' + ev.item.data.alt_identifier + '</b> ' + this.lang.in + ' <b>' + node.label + '</b>&nbsp;?' } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -368,7 +370,7 @@ export class FolderTreeComponent implements OnInit {
                 node.countResources = data.countResources;
             }),
             tap(() => {
-                this.notify.success('Courrier classé');
+                this.notify.success(this.lang.mailClassified);
                 this.refreshDocList.emit();
             }),
             finalize(() => node.drag = false),
@@ -404,7 +406,11 @@ export class FolderTreeComponent implements OnInit {
         this.dialogRef = this.dialog.open(FolderUpdateComponent, { autoFocus: false, data: { folderId: node.id } });
 
         this.dialogRef.afterClosed().pipe(
-     
+            tap((data) => {
+                if (data !== undefined) {
+                    this.getFolders();
+                }                
+            })
         ).subscribe();
     }
 
@@ -418,8 +424,19 @@ export class FolderTreeComponent implements OnInit {
             }),
             exhaustMap(() => this.http.get("../../rest/folders/" + node.id)),
             tap((data: any) => {
-                const compare = data.folder.sharing.entities.map((data: any) => data.entity_id).filter((item: any) => userEntities.indexOf(item) > -1);
-                node.edition = (compare.length > 0 || data.folder.user_id === currentUserId) ? true : false;
+                let canAdmin = false;
+                
+                const compare = data.folder.sharing.entities.filter((item: any) => userEntities.indexOf(item) > -1);
+
+                const entitiesCompare = data.folder.sharing.entities.filter((item: any) => compare.indexOf(item.id));
+
+                entitiesCompare.forEach((element: any) => {
+                    if (element.edition === true) {
+                        canAdmin = true;
+                    }
+                });
+
+                node.edition = (canAdmin || data.folder.user_id === currentUserId) ? true : false;
             }),
         ).subscribe();
     }

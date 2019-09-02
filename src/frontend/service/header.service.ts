@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class HeaderService {
+    headerMessageIcon: string = "";
     headerMessage: string = "";
     subHeaderMessage: string = "";
     user: any = { firstname: "", lastname: "" };
@@ -102,8 +103,9 @@ export class HeaderService {
         );
     }
 
-    setHeader(maintTitle: string, subTitle: any = '') {
+    setHeader(maintTitle: string, subTitle: any = '', icon = '') {
         this.headerMessage = maintTitle;
         this.subHeaderMessage = subTitle;
+        this.headerMessageIcon = icon;
     }
 }

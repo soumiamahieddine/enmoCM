@@ -136,7 +136,7 @@ export class FolderDocumentListComponent implements OnInit {
                             'label': data.folder.label
                         };
 
-                    this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
+                    this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');
                 });
             this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
             this.filtersListService.filterMode = false;

@@ -43,7 +43,7 @@ export class FolderMenuComponent implements OnInit {
             tap(() => {
                 this.refreshFolders.emit();
                 this.refreshList.emit();
-                this.notify.success('Courrier classé');
+                this.notify.success(this.lang.mailClassified);
             }),
             catchError((err) => {
                 this.notify.handleErrors(err);
