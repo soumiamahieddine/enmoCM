@@ -21,7 +21,7 @@
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
+                    <button mat-menu-item [disabled]="createItemNode || !node.canAdd" (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
                     <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">{{lang.delete}}</button>
                     <button mat-menu-item (click)="openFolderAdmin(node)" [disabled]="!node.edition">{{lang.update}}</button>
                 </mat-menu>
@@ -60,7 +60,7 @@
                     </span>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item [disabled]="createItemNode" (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
+                    <button mat-menu-item [disabled]="createItemNode || !node.canAdd" (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
                     <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">{{lang.delete}}</button>
                     <button mat-menu-item (click)="openFolderAdmin(node)" [disabled]="!node.edition">{{lang.update}}</button>
                 </mat-menu>
@@ -74,7 +74,7 @@
     </mat-list-item>
 </mat-nav-list>
 <mat-list *ngIf="createRootNode">
-    <mat-list-item role="listitem">
+    <mat-list-item role="listitem" class="rootFolder">
         <form>
             <mat-form-field floatLabel="never" style="width: 100%;">
                 <input matInput id="itemValue" #itemValue placeholder="{{lang.addRootFolder}}">

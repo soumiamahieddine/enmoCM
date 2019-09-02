@@ -81,11 +81,16 @@ form {
 
 .more {
     width: 100%;
-
+    opacity: 0.6;
     ::ng-deep.mat-list-item-content {
         justify-content: center;
     }
 }
+
+.rootFolder {
+    width: 100%;
+}
+
 
 .private {
     margin-left: 5px;
