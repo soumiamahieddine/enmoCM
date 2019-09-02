@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { FolderTreeComponent } from '../folder-tree.component';
+import { Router } from '@angular/router';
 
 declare function $j(selector: any): any;
 
@@ -18,7 +19,7 @@ export class PanelFolderComponent implements OnInit {
     
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     
-    constructor() { }
+    constructor(private router: Router) { }
 
     ngOnInit(): void { }
 
@@ -40,5 +41,9 @@ export class PanelFolderComponent implements OnInit {
 
     refreshFoldersTree() {
         this.folderTree.getFolders();
+    }
+
+    goTo(folder: any) {
+        this.router.navigate(["/folders/" + folder.id]);
     }
 }

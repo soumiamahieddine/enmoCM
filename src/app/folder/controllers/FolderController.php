@@ -598,7 +598,7 @@ class FolderController
     // login (string) : Login of user connected
     // folderId (integer) : Check specific folder
     // edition (boolean) : whether user can edit or not
-    private static function getScopeFolders(array $aArgs)
+    public static function getScopeFolders(array $aArgs)
     {
         $login = $aArgs['login'];
         $userEntities = EntityModel::getWithUserEntities(['select'  => ['entities.id'], 'where' => ['user_id = ?'], 'data' => [$login]]);

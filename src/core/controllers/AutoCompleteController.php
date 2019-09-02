@@ -28,6 +28,8 @@ use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use User\models\UserModel;
+use Folder\models\FolderModel;
+use Folder\controllers\FolderController;
 
 class AutoCompleteController
 {
@@ -672,5 +674,38 @@ class AutoCompleteController
         }
 
         return ['contact' => $contact];
+    }
+
+    public static function getFolders(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['search']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $scopedFolders = FolderController::getScopeFolders(['login' => $GLOBALS['userId']]);
+
+        $getScopedFoldersIds = function ($value) {
+            return $value['id'];
+        };
+
+        $arrScopedFoldersIds = array_map($getScopedFoldersIds, $scopedFolders);
+
+        $selectedFolders = FolderModel::get([
+            'where'    => ['label ilike ? AND id IN(?)'],
+            'data'     => [ '%'.$data['search'].'%', $arrScopedFoldersIds],
+            'orderBy'  => ['label']
+        ]);
+
+        $getFomatedFolders = function ($value) {
+            return $return = [
+                'id' => $value['id'],
+                'idToDisplay' => $value['label'],
+                'otherInfo' => ''
+            ];
+        };
+        return $response->withJson(array_map($getFomatedFolders, $selectedFolders));
     }
 }
