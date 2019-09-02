@@ -192,7 +192,7 @@ class FolderController
         if ($data['parent_id'] == $aArgs['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Parent_id and id can not be the same']);
         }
-        if (FolderController::isParentFolder(['parent_id' => $data['parent_id'], 'id' => $aArgs['id']])) {
+        if (!empty($data['parent_id']) && FolderController::isParentFolder(['parent_id' => $data['parent_id'], 'id' => $aArgs['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Id is a parent of parent_id']);
         }
 
