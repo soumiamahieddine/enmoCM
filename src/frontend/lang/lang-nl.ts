@@ -1095,4 +1095,5 @@ export const LANG_NL = {
     "classifyQuestion" : "Do you want classify", //_TO_TRANSLATE
     "moveQuestion" : "Do you want move", //_TO_TRANSLATE
     "classify" : "Classify", //_TO_TRANSLATE
+    "mailClassified" : "Mail(s) classified", //_TO_TRANSLATE
 };

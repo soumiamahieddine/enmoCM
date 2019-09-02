@@ -370,7 +370,7 @@ export class FolderTreeComponent implements OnInit {
                 node.countResources = data.countResources;
             }),
             tap(() => {
-                this.notify.success('Courrier classé');
+                this.notify.success(this.lang.mailClassified);
                 this.refreshDocList.emit();
             }),
             finalize(() => node.drag = false),

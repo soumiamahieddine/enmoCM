@@ -1069,4 +1069,5 @@ export const LANG_EN = {
     "classifyQuestion" : "Do you want classify",
     "moveQuestion" : "Do you want move",
     "classify" : "Classify",
+    "mailClassified" : "Mail(s) classified",
 };

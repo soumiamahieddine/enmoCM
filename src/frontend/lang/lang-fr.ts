@@ -1083,7 +1083,7 @@ export const LANG_FR = {
     "eventList" : "Ouverture de la page",
     "folderAdded" : "Dossier ajouté",
     "folderDeleted" : "Dossier supprimé",
-    "removedFromFolder" : "Le courrier a été retiré du dossier",
+    "removedFromFolder" : "Courrier(s) retiré(s)",
     "removeFromFolder" : "Retirer du dossier",
     "classifyInFolder" : "Placer le courrier suivant dans un dossier",
     "getFolders" : "Dossiers (emplacement fixe)",
@@ -1106,4 +1106,5 @@ export const LANG_FR = {
     "classifyQuestion" : "Voulez-vous classer",
     "moveQuestion" : "Voulez-vous déplacer",
     "classify" : "Classer",
+    "mailClassified" : "Courrier(s) classé(s)",
 };
