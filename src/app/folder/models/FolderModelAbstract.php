@@ -25,7 +25,7 @@ class FolderModelAbstract
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['folders', 'entities_folders'],
             'left_join' => ['folders.id = entities_folders.folder_id'],
-            'where'     => ['id = ?'],
+            'where'     => ['folders.id = ?'],
             'data'      => [$aArgs['id']]
         ]);
 
