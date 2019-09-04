@@ -630,7 +630,7 @@ class FolderController
             'select'    => ['distinct (folders.id)', 'folders.*'],
             'where'     => $where,
             'data'      => $data,
-            'orderBy'   => ['level']
+            'orderBy'   => ['level', 'label']
         ]);
 
         return $folders;

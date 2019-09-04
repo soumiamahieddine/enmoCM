@@ -687,11 +687,7 @@ class AutoCompleteController
 
         $scopedFolders = FolderController::getScopeFolders(['login' => $GLOBALS['userId']]);
 
-        $getScopedFoldersIds = function ($value) {
-            return $value['id'];
-        };
-
-        $arrScopedFoldersIds = array_map($getScopedFoldersIds, $scopedFolders);
+        $arrScopedFoldersIds = array_column($scopedFolders, 'id');
 
         $selectedFolders = FolderModel::get([
             'where'    => ['label ilike ? AND id IN(?)'],
