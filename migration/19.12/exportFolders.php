@@ -18,7 +18,8 @@ foreach ($customs as $custom) {
     $folders = \SrcCore\models\DatabaseModel::select([
         'select'   => ['f.folders_system_id', 'f.folder_name', 'f.status', 'r.res_id', 'mlb.alt_identifier', 'r.subject'],
         'table'    => ['folder_tmp f, res_letterbox r, mlb_coll_ext mlb'],
-        'where'     => ['f.folders_system_id = r.folders_system_id', 'r.res_id = mlb.res_id', 'f.destination is null', 'f.status <> \'DEL\'', 'r.status <> \'DEL\'']
+        'where'    => ['f.folders_system_id = r.folders_system_id', 'r.res_id = mlb.res_id', '(f.destination is null or f.destination = \'\')', 'f.status <> \'DEL\'', 'r.status <> \'DEL\''],
+        'order_by' => ['f.folder_name']
     ]);
 
     if (!empty($folders)) {
