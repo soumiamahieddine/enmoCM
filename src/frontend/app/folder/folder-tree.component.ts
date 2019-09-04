@@ -445,4 +445,8 @@ export class FolderTreeComponent implements OnInit {
             }),
         ).subscribe();
     }
+
+    goTo(folder: any) {
+        this.router.navigate(["/folders/" + folder.id]);
+    }
 }
