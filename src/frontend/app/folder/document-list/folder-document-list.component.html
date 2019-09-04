@@ -11,8 +11,9 @@
             [selectedId]="folderInfo.id"></panel-folder>
     </mat-sidenav>
     <mat-sidenav-content>
-        <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;"><img
-                style="max-height: 100vh;" src="{{thumbnailUrl}}" /></mat-card>
+        <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;">
+            <img style="max-height: 100vh;" src="{{thumbnailUrl}}" />
+        </mat-card>
         <div class="bg-head">
             <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
                 <div class="bg-head-title-label">
@@ -22,12 +23,37 @@
                     <header-right></header-right>
                 </div>
             </div>
-            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
+            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()" style="padding-bottom: 20px;">
                 <app-filters-tool style="flex:1;overflow-x: auto;overflow-y: hidden;" #filtersTool
                     [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
-                    [selectedRes]="selectedRes" [routeDatas]="'/rest/folders/' + folderInfo.id + '/filters'" (toggleAllRes)="toggleAllRes($event)"
-                    (refreshEventAfterAction)="refreshDaoAfterAction()" (refreshEvent)="refreshDao()" [title]="lang.searchMailInFolder">
+                    [selectedRes]="selectedRes" [routeDatas]="'/rest/folders/' + folderInfo.id + '/filters'"
+                    (toggleAllRes)="toggleAllRes($event)" (refreshEventAfterAction)="refreshDaoAfterAction()"
+                    (refreshEvent)="refreshDao()" [title]="lang.searchMailInFolder">
                 </app-filters-tool>
+            </div>
+            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
+                <div class="banner">
+                    <div class="banner-title">
+                        {{lang.informations}} du dossier
+                        <div class="banner-title-divider"></div>
+                    </div>
+                    <div class="banner-content">
+                        <div class="banner-content-item">
+                            Propriétaire :<br /><b>{{folderInfo.ownerDisplayName}}</b>
+                        </div>
+                        <div *ngIf="folderInfo.entitiesSharing.length === 0" class="banner-content-item private">
+                            Dossier privé
+                        </div>
+                        <div *ngIf="folderInfo.entitiesSharing.length > 0" class="banner-content-item">
+                            Visible par :<br />
+                            <div style="max-height: 100px;overflow: auto;">
+                                <div *ngFor="let entity of folderInfo.entitiesSharing | sortBy">
+                                    <b color="secondary">{{entity}}</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="container" [class.fullContainer]="appService.getViewMode()">
@@ -48,7 +74,8 @@
                     <div class="table-head-tool">
                         <span>
                             <app-folder-action-list #actionsList [contextMode]="false" [currentFolderInfo]="folderInfo"
-                                [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
+                                [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
+                                (refreshEvent)="refreshDaoAfterAction()"
                                 (refreshPanelFolders)="panelFolder.refreshFoldersTree()">
                             </app-folder-action-list>
                         </span>
@@ -61,8 +88,8 @@
                 <div style="height:90%;overflow:auto;position:absolute;width:100%;">
                     <table #tableBasketListSort="matSort" cdkDropList id="folder-list"
                         [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data"
-                        [cdkDropListDisabled]="dragInit || appService.getViewMode()" mat-table [dataSource]="data" matSort matSortActive="res_id"
-                        matSortDisableClear matSortDirection="asc" style="width:100%;">
+                        [cdkDropListDisabled]="dragInit || appService.getViewMode()" mat-table [dataSource]="data"
+                        matSort matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;">
 
                         <ng-container matColumnDef="res_id">
                             <td mat-cell *matCellDef="let row"
@@ -78,11 +105,7 @@
                                         class="main-info-status">
                                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
                                             [ngStyle]="{'color': row.priorityColor}" color="primary"
-                                            class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x statusIcon">
-                                        </mat-icon>
-                                        <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
-                                            [ngStyle]="{'color': row.priorityColor}" color="primary"
-                                            class="fa fa-folder-open fa-2x">
+                                            class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
                                         </mat-icon>
                                         <span *ngIf="row.confidentiality === 'Y'"
                                             class="watermark">{{lang.confidential}}</span>
@@ -95,8 +118,8 @@
                                         style="width:200px;text-align:center;cursor:pointer;">
                                         <ng-container
                                             *ngIf="row.alt_identifier == lang.undefined && row.barcode != lang.undefined">
-                                            <span style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
-                                                    title="{{lang.barcode}}" class="fas fa-barcode"></i>
+                                            <span style="color: rgba(0,0,0,0.4);font-size: 90%;">
+                                                <i title="{{lang.barcode}}" class="fas fa-barcode"></i>
                                                 {{row.barcode}}</span>
                                         </ng-container>
                                         <ng-container *ngIf="row.barcode == lang.undefined">
@@ -104,7 +127,8 @@
                                         </ng-container>
                                     </span>
                                     <span class="main-info-data" style="font-weight:bold;flex:1;cursor:pointer;"
-                                        [class.undefined]="row.subject == lang.undefined" title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
+                                        [class.undefined]="row.subject == lang.undefined"
+                                        title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
                                     <span class="main-info-action">
                                         <button mat-icon-button title="{{lang.notes}}"
                                             (click)="$event.stopPropagation();togglePanel('note',row)"
@@ -138,12 +162,15 @@
                             </td>
                         </ng-container>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"
-                            (contextmenu)="open($event,row);" (click)="open($event,row);" class="rowData"  style="cursor: pointer;" [class.locked]="row.isLocked == true"
-                            cdkDrag (cdkDragStarted)="selectSpecificRes(row);" [cdkDragData]="row">
+                            (contextmenu)="open($event,row);" (click)="open($event,row);" class="rowData"
+                            style="cursor: pointer;" [class.locked]="row.isLocked == true" cdkDrag
+                            (cdkDragStarted)="selectSpecificRes(row);" [cdkDragData]="row">
                             <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-                            <div class="dragPreview" *cdkDragPreview><i
-                                    class="fas fa-envelope-open-text fa-2x"></i><br />{{lang.classifyInFolder}} :
-                                <b>{{row.alt_identifier}}</b></div>
+                            <div class="dragPreview" *cdkDragPreview><i class="fas fa-envelope-open-text fa-2x"></i>
+                                <br />
+                                {{lang.classifyInFolder}} :
+                                <b>{{row.alt_identifier}}</b>
+                            </div>
                         </tr>
                     </table>
                 </div>
@@ -168,6 +195,7 @@
         <mat-divider></mat-divider>
     </mat-sidenav>
 </mat-sidenav-container>
-<app-folder-action-list #actionsListContext [contextMode]="true" [currentFolderInfo]="folderInfo" [totalRes]="allResInBasket.length"
-    [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()" (refreshPanelFolders)="panelFolder.refreshFoldersTree()">
+<app-folder-action-list #actionsListContext [contextMode]="true" [currentFolderInfo]="folderInfo"
+    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
+    (refreshPanelFolders)="panelFolder.refreshFoldersTree()">
 </app-folder-action-list>
