@@ -84,7 +84,10 @@ export class FolderDocumentListComponent implements OnInit {
     allResInBasket: number[] = [];
     selectedDiffusionTab: number = 0;
     folderInfo: any = {
-        id: 0
+        id: 0,
+        'label': '',
+        'ownerDisplayName': '',
+        'entitiesSharing': []
     };
 
     private destroy$ = new Subject<boolean>();
@@ -115,6 +118,7 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.appService.openBasketMenu(false);
         this.loading = false;
 
         this.http.get("../../rest/home")

@@ -447,6 +447,8 @@ export class FolderTreeComponent implements OnInit {
     }
 
     goTo(folder: any) {
+        this.seletedId = folder.id;
+        this.getFolders();
         this.router.navigate(["/folders/" + folder.id]);
     }
 }

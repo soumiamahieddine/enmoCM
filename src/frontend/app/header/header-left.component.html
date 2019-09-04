@@ -2,5 +2,5 @@
     <button *ngIf="!snavLeft.opened" mat-icon-button (click)="snavLeft.open()" style="font-size:20px;">
         <mat-icon class="fa fa-stream"></mat-icon>
     </button>
-    <i *ngIf="headerService.headerMessageIcon !== ''" class="{{headerService.headerMessageIcon}}"></i> {{headerService.headerMessage}} <span class="admin-toolbar-title-small">{{headerService.subHeaderMessage}}</span>
+    <i *ngIf="headerService.headerMessageIcon !== ''" class="{{headerService.headerMessageIcon}} headerIcon"></i> {{headerService.headerMessage}} <span class="admin-toolbar-title-small">{{headerService.subHeaderMessage}}</span>
 </div>
