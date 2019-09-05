@@ -1070,4 +1070,5 @@ export const LANG_EN = {
     "moveQuestion" : "Do you want move",
     "classify" : "Classify",
     "mailClassified" : "Mail(s) classified",
+    "noAvailableFolder" : "No available folder",
 };

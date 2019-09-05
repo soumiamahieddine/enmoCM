@@ -45,6 +45,7 @@ export class ActionsListComponent implements OnInit {
     contextResId = 0;
     currentLock: any = null;
     arrRes: any[] = [];
+    folderList: any [] = [];
 
     actionsList: any[] = [];
 
@@ -71,6 +72,8 @@ export class ActionsListComponent implements OnInit {
 
         this.contextMenuTitle = row.alt_identifier;
         this.contextResId = row.res_id;
+
+        this.folderList = row.folders !== undefined ? row.folders : [];
 
         // Opens the menu
         this.contextMenu.openMenu();

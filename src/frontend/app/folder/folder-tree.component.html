@@ -1,4 +1,4 @@
-<div class="folderTools">
+<div *ngIf="dataSource.data.length > 0" class="folderTools">
     <div class="filter">
         <plugin-autocomplete [size]="'small'" [labelPlaceholder]="lang.searchFolder"
             [routeDatas]="['/rest/autocomplete/folders']" [targetSearchKey]="'idToDisplay'"
@@ -9,6 +9,9 @@
             <mat-icon class="fa fa-plus"></mat-icon>
         </button>
     </div>
+</div>
+<div *ngIf="dataSource.data.length === 0" class="noFolder">
+    {{lang.noAvailableFolder}}<br/><a (click)="toggleInput()">{{lang.addFolder}}</a>
 </div>
 <mat-list *ngIf="createRootNode">
     <mat-list-item role="listitem" class="rootFolder">
@@ -24,7 +27,7 @@
         </form>
     </mat-list-item>
 </mat-list>
-<mat-nav-list>
+<mat-nav-list *ngIf="dataSource.data.length > 0">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <!-- This is the tree node template for leaf nodes -->
         <mat-tree-node cdkDropList [id]="'folder-list-'+node.id"

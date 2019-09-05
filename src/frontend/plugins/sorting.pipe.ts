@@ -10,7 +10,7 @@ export class SortPipe {
 	transform(array: Array<string>, args: string): Array<string> {
 		let normA = '';
 		let normB = '';
-		if (array !== undefined) {
+		if (array !== undefined && array.length > 0) {
 			array.sort((a: any, b: any) => {
 				if (args === undefined) {
 					normA = this.latinisePipe.transform(a).toLocaleLowerCase();

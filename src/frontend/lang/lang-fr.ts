@@ -1107,4 +1107,5 @@ export const LANG_FR = {
     "moveQuestion" : "Voulez-vous déplacer",
     "classify" : "Classer",
     "mailClassified" : "Courrier(s) classé(s)",
+    "noAvailableFolder" : "Aucun dossier disponible",
 };
