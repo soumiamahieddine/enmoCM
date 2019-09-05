@@ -26,7 +26,7 @@ export class FiltersListService {
 
     constructor() { }
 
-    initListsProperties(userId: number, groupId: number, targetId: number, mode: string) {
+    initListsProperties(userId: number, groupId: number, targetId: number, mode: string, specificChrono: string = '') {
 
         this.listsProperties = JSON.parse(sessionStorage.getItem('propertyList' + mode));
 
@@ -45,7 +45,7 @@ export class FiltersListService {
             this.listsProperties = [];
         }
 
-        if (!listProperties) {
+        if (!listProperties || specificChrono !== '') {
             listProperties = {
                 'id': userId,
                 'groupId': groupId,
@@ -53,7 +53,7 @@ export class FiltersListService {
                 'page': '0',
                 'order': '',
                 'orderDir': 'DESC',
-                'search': '',
+                'search': specificChrono,
                 'delayed': false,
                 'categories': [],
                 'priorities': [],

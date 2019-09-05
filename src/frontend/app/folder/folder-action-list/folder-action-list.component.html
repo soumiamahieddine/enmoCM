@@ -9,11 +9,20 @@
         style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
         {{this.contextMenuTitle}}
     </div>
-    <!--<button *ngFor="let action of actionsList" [disabled]="action.component == '' || this.selectedRes.length == 0"
-        mat-menu-item (click)="launchEvent(action);">
-        <span>{{action.label_action}}</span>
+    <button *ngIf="selectedRes.length == 1" mat-menu-item [matMenuTriggerFor]="baskets" (menuOpened)="getBaskets()">
+        <span>Accéder à la bannette...</span>
     </button>
-    <mat-divider></mat-divider>-->
+    <mat-menu #baskets="matMenu" [class]="'folderListMenu'">
+        <ng-container *ngFor="let group of basketList.groups | sortBy : 'groupName'">
+            <div class="basketGroupName">{{group.groupName}}</div>
+            <ng-container *ngFor="let basket of basketList.list | sortBy : 'basketName'">
+                <button mat-menu-item *ngIf="basket.groupId === group.groupId" class="labelBasket" (click)="goTo(basket)"
+                    title="{{basket.basketName}}">{{basket.basketName}}
+                </button>
+            </ng-container>
+        </ng-container>
+    </mat-menu>
+    <mat-divider></mat-divider>
     <button mat-menu-item class="folderAction" (click)="unclassify()" [disabled]="selectedRes.length === 0">
         <mat-icon class="fa fa-folder-minus fa-2x"></mat-icon>
         <span>{{lang.removeFromFolder}}</span>

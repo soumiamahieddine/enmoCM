@@ -86,6 +86,7 @@ export class BasketListComponent implements OnInit {
     selectedRes: number[] = [];
     allResInBasket: number[] = [];
     selectedDiffusionTab: number = 0;
+    specificChrono: string = '';
 
     private destroy$ = new Subject<boolean>();
 
@@ -102,6 +103,7 @@ export class BasketListComponent implements OnInit {
 
     constructor(
         private router: Router, 
+        private _activatedRoute: ActivatedRoute,
         private route: ActivatedRoute, 
         public http: HttpClient, 
         public dialog: MatDialog, 
@@ -112,6 +114,10 @@ export class BasketListComponent implements OnInit {
         public overlay: Overlay, 
         public viewContainerRef: ViewContainerRef,
         public appService: AppService) {
+            _activatedRoute.queryParams.subscribe(
+                params => this.specificChrono = params.chrono
+            );
+
             $j("link[href='merged_css.php']").remove();
     }
 
@@ -126,6 +132,7 @@ export class BasketListComponent implements OnInit {
         this.isLoadingResults = false;
 
         this.route.params.subscribe(params => {
+
             this.dragInit = true;
             this.destroy$.next(true);
 
@@ -142,7 +149,7 @@ export class BasketListComponent implements OnInit {
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(null);
 
-            this.listProperties = this.filtersListService.initListsProperties(this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, 'basket');
+            this.listProperties = this.filtersListService.initListsProperties(this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, 'basket', this.specificChrono);
 
 
             setTimeout(() => {

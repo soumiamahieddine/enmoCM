@@ -7,7 +7,8 @@ import { MatMenuTrigger } from '@angular/material/menu';
 
 import { Router } from '@angular/router';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
-import { filter, exhaustMap, tap } from 'rxjs/operators';
+import { filter, exhaustMap, tap, map } from 'rxjs/operators';
+import { HeaderService } from '../../../service/header.service';
 
 @Component({
     selector: 'app-folder-action-list',
@@ -32,6 +33,10 @@ export class FolderActionListComponent implements OnInit {
     arrRes: any[] = [];
 
     actionsList: any[] = [];
+    basketList: any = {
+        groups: [],
+        list: []
+    };
 
     @Input('selectedRes') selectedRes: any;
     @Input('totalRes') totalRes: number;
@@ -41,7 +46,13 @@ export class FolderActionListComponent implements OnInit {
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     @Output('refreshPanelFolders') refreshPanelFolders = new EventEmitter<string>();
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private router: Router) { }
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        public dialog: MatDialog, 
+        private router: Router,
+        private headerService: HeaderService
+        ) { }
 
     dialogRef: MatDialogRef<any>;
     
@@ -160,5 +171,19 @@ export class FolderActionListComponent implements OnInit {
                 this.refreshDaoAfterAction();
             })
         ).subscribe();
+    }
+
+    getBaskets() {
+        this.http.get('../../rest/folders/' + this.currentFolderInfo.id + '/resources/' + this.selectedRes + '/events').pipe(
+            tap((data: any) => {
+                this.basketList.groups = data.events.filter((x: any, i: any, a: any) => x && a.map((info: any) => info.groupId).indexOf(x.groupId) === i);
+                this.basketList.list = data.events;
+            })
+        ).subscribe();
+    }
+
+
+    goTo(basket: any) {
+        this.router.navigate(['/basketList/users/' + this.headerService.user.id + '/groups/' + basket.groupId + '/baskets/' + basket.basketId], { queryParams: { chrono: '"' + this.contextMenuTitle + '"' } });
     }
 }

@@ -422,14 +422,14 @@ abstract class BasketModelAbstract
     {
         ValidatorModel::arrayType($args, ['select', 'where', 'data']);
 
-        $where = ['baskets.basket_id = users_baskets_preferences.basket_id'];
+        $where = ['(baskets.basket_id = users_baskets_preferences.basket_id AND users_baskets_preferences.group_serial_id = usergroups.id)'];
         if (!empty($args['where'])) {
             $where = array_merge($where, $args['where']);
         }
 
         $baskets = DatabaseModel::select([
             'select'    => empty($args['select']) ? ['*'] : $args['select'],
-            'table'     => ['baskets, users_baskets_preferences'],
+            'table'     => ['baskets, users_baskets_preferences, usergroups'],
             'where'     => $where,
             'data'      => empty($args['data']) ? [] : $args['data']
         ]);
