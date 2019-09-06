@@ -1,9 +1,9 @@
 <mat-divider *ngIf="homeData.regroupedBaskets.length > 0 || homeData.assignedBaskets.length > 0">
 </mat-divider>
-<mat-expansion-panel class="basketList" expanded *ngIf="homeData.regroupedBaskets.length > 0 || homeData.assignedBaskets.length > 0">
+<mat-expansion-panel class="basketList" [expanded]="appService.getStateBasketMenu()" *ngIf="homeData.regroupedBaskets.length > 0 || homeData.assignedBaskets.length > 0">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <i class="fa fa-inbox"></i>&nbsp;{{lang.myBaskets}}
+            <i class="fa fa-inbox panelIconMenu"></i>&nbsp;{{lang.myBaskets}}
         </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-form-field floatLabel="never" appearance="outline" class="basketsFilter" style="padding-left:20px;padding-right:20px;font-size: 11px;">

@@ -62,6 +62,7 @@ export class FolderUpdateComponent implements OnInit {
             }),
             exhaustMap(() => this.http.get('../../rest/folders')),
             map((data: any) => {
+                let currentParentId = 0;
                 data.folders.forEach((element: any) => {
                     element['state'] = {
                         opened: true
@@ -74,7 +75,9 @@ export class FolderUpdateComponent implements OnInit {
                         element['state'].selected = true;
                     }
 
-                    if (element.id === this.folder.id) {
+                    if (element.id === this.folder.id || currentParentId === element.parent_id) {
+                        currentParentId = element.id;
+                        element['state'].opened = false; 
                         element['state'].disabled = true; 
                     }
                     element.parent = element.parent_id;

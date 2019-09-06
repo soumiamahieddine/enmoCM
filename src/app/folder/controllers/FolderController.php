@@ -107,12 +107,14 @@ class FolderController
         }
 
         $folder = $folder[0];
+        $ownerInfo = UserModel::getById(['select' => ['firstname', 'lastname'], 'id' => $folder['user_id']]);
+        $folder['ownerDisplayName'] = $ownerInfo['firstname'] . ' ' . $ownerInfo['lastname'];
 
         $folder['sharing']['entities'] = [];
         if ($folder['public']) {
-            $entitiesFolder = EntityFolderModel::getByFolderId(['folder_id' => $args['id']]);
+            $entitiesFolder = EntityFolderModel::getByFolderId(['folder_id' => $args['id'], 'select' => ['entities_folders.entity_id', 'entities_folders.edition', 'entities.entity_label']]);
             foreach ($entitiesFolder as $value) {
-                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition']];
+                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'label' => $value['entity_label']];
             }
         }
 
@@ -192,8 +194,8 @@ class FolderController
         if ($data['parent_id'] == $aArgs['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Parent_id and id can not be the same']);
         }
-        if (FolderController::isParentFolder(['parent_id' => $data['parent_id'], 'id' => $aArgs['id']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Id is a parent of parent_id']);
+        if (!empty($data['parent_id']) && FolderController::isParentFolder(['parent_id' => $data['parent_id'], 'id' => $aArgs['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'parent_id does not exist or Id is a parent of parent_id']);
         }
 
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
@@ -534,7 +536,7 @@ class FolderController
         }
 
         $baskets = BasketModel::getWithPreferences([
-            'select'    => ['baskets.id', 'baskets.basket_id', 'baskets.basket_clause', 'users_baskets_preferences.group_serial_id'],
+            'select'    => ['baskets.id', 'baskets.basket_id', 'baskets.basket_name', 'baskets.basket_clause', 'users_baskets_preferences.group_serial_id', 'usergroups.group_desc'],
             'where'     => ['users_baskets_preferences.user_serial_id = ?'],
             'data'      => [$GLOBALS['id']]
         ]);
@@ -561,7 +563,7 @@ class FolderController
                     'data'      => [$group['group_id'], $basket['basket_id']]
                 ]);
                 if (!empty($groupBasket[0]['list_event'])) {
-                    $events[] = ['groupId' => $basket['group_serial_id'], 'basketId' => $basket['id'], 'event' => $groupBasket[0]['list_event']];
+                    $events[] = ['groupId' => $basket['group_serial_id'], 'groupName' => $basket['group_desc'], 'basketId' => $basket['id'], 'basketName' => $basket['basket_name'], 'event' => $groupBasket[0]['list_event']];
                 }
             }
         }
@@ -628,7 +630,7 @@ class FolderController
             'select'    => ['distinct (folders.id)', 'folders.*'],
             'where'     => $where,
             'data'      => $data,
-            'orderBy'   => ['level']
+            'orderBy'   => ['level', 'label']
         ]);
 
         return $folders;

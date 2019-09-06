@@ -86,7 +86,7 @@ class FolderControllerTest extends TestCase
         $response     = $folderController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('Parent Folder not found or out of your perimeter', $responseBody->errors);
+        $this->assertSame('parent_id does not exist or Id is a parent of parent_id', $responseBody->errors);
     }
 
     public function testGetById()
@@ -106,6 +106,8 @@ class FolderControllerTest extends TestCase
         $this->assertSame(0, $responseBody->folder->level);
         $this->assertInternalType('array', $responseBody->folder->sharing->entities);
         $this->assertInternalType('integer', $responseBody->folder->user_id);
+        $this->assertNotEmpty($responseBody->folder->user_id);
+        $this->assertNotEmpty($responseBody->folder->ownerDisplayName);
 
         // ERROR
         $response     = $folderController->getById($request, new \Slim\Http\Response(), ['id' => '123456789']);

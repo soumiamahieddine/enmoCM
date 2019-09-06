@@ -22,6 +22,7 @@ export class BasketHomeComponent implements OnInit {
         basketId: ''
     };
     @Input() snavL: MatSidenav;
+    @Input('opened') opened: boolean;
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
 
     constructor(

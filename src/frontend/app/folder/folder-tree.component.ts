@@ -243,7 +243,7 @@ export class FolderTreeComponent implements OnInit {
         if (currentNode.children === undefined) {
             currentNode['children'] = [];
         }
-        currentNode.children.push({ label: '', parent_id: currentNode.id } as ItemNode);
+        currentNode.children.push({ label: '', parent_id: currentNode.id, public : currentNode.public } as ItemNode);
         this.dataChange.next(this.data);
 
         this.treeControl.expand(node);
@@ -425,6 +425,8 @@ export class FolderTreeComponent implements OnInit {
             exhaustMap(() => this.http.get("../../rest/folders/" + node.id)),
             tap((data: any) => {
                 let canAdmin = false;
+
+                let canAdd = true;
                 
                 const compare = data.folder.sharing.entities.filter((item: any) => userEntities.indexOf(item) > -1);
 
@@ -435,9 +437,18 @@ export class FolderTreeComponent implements OnInit {
                         canAdmin = true;
                     }
                 });
-
+                if (data.folder.user_id !== currentUserId && node.public) {
+                    canAdd = false;
+                }
+                node.canAdd = canAdd;
                 node.edition = (canAdmin || data.folder.user_id === currentUserId) ? true : false;
             }),
         ).subscribe();
+    }
+
+    goTo(folder: any) {
+        this.seletedId = folder.id;
+        this.getFolders();
+        this.router.navigate(["/folders/" + folder.id]);
     }
 }

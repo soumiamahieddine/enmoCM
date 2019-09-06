@@ -159,19 +159,29 @@ WITH (OIDS=FALSE);
 
 
 /* REFACTORING DATA */
-DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
-DELETE FROM usergroups_reports WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
-DELETE FROM usergroups_services WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
-DELETE FROM security WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
-DELETE FROM groupbasket WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
-DELETE FROM groupbasket_redirect WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
-DELETE FROM groupbasket_status WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
-DELETE FROM users_baskets_preferences WHERE group_serial_id in (SELECT id FROM usergroups WHERE enabled = 'N');
-DELETE FROM usergroups WHERE enabled = 'N';
-DELETE FROM actions_categories WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
-DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE enabled = 'N');
-DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
-DELETE FROM actions WHERE enabled = 'N';
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN
+    DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM usergroups_reports WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM usergroups_services WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM security WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM groupbasket WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM groupbasket_redirect WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM groupbasket_status WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM users_baskets_preferences WHERE group_serial_id in (SELECT id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM usergroups WHERE enabled = 'N';
+  END IF;
+END$$;
+
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'actions') AND attname = 'enabled') THEN
+    DELETE FROM actions_categories WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
+    DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE enabled = 'N');
+    DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
+    DELETE FROM actions WHERE enabled = 'N';
+  END IF;
+END$$;
+
 DELETE FROM usergroups_services WHERE service_id = 'admin_fileplan';
 DELETE FROM usergroups_services WHERE service_id = 'put_doc_in_fileplan';
 DELETE FROM usergroups_services WHERE service_id = 'fileplan';
@@ -184,7 +194,6 @@ DELETE FROM usergroups_services WHERE service_id = 'add_cases';
 /* OLD FOLDERS */
 DROP VIEW IF EXISTS view_folders;
 DELETE FROM usergroups_services WHERE service_id IN ('folder_search', 'view_folder_tree', 'select_folder', 'show_history_folder', 'modify_folder', 'associate_folder', 'delete_folder', 'admin_foldertypes', 'create_folder', 'folder_freeze', 'close_folder');
-DELETE FROM notes WHERE origin = 'folder';
 DROP TABLE IF EXISTS foldertypes;
 DROP TABLE IF EXISTS foldertypes_doctypes;
 DROP TABLE IF EXISTS foldertypes_doctypes_level1;

@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { HttpClient } from '@angular/common/http';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap, catchError, filter, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'folder-menu',
@@ -17,13 +19,17 @@ export class FolderMenuComponent implements OnInit {
 
     foldersList: any[] = [];
     @Input('resIds') resIds: number[];
+    @Input('currentFolders') currentFoldersList: any[];
 
     @Output('refreshFolders') refreshFolders = new EventEmitter<string>();
     @Output('refreshList') refreshList = new EventEmitter<string>();
 
+    dialogRef: MatDialogRef<any>;
+    
     constructor(
         public http: HttpClient,
-        private notify: NotificationService
+        private notify: NotificationService,
+        public dialog: MatDialog
     ) { }
 
     ngOnInit(): void { }
@@ -52,4 +58,17 @@ export class FolderMenuComponent implements OnInit {
         ).subscribe();
     }
 
+    unclassifyDocuments(folder: any) {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: 'Voulez-vous enlever <b>' + this.resIds.length + '</b> document(s) du classement ?' } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.request('DELETE', '../../rest/folders/' + folder.id + '/resources', { body: { resources: this.resIds } })),
+            tap((data: any) => {
+                this.notify.success(this.lang.removedFromFolder);
+                this.refreshFolders.emit();
+                this.refreshList.emit();
+            })
+        ).subscribe();
+    }
 }

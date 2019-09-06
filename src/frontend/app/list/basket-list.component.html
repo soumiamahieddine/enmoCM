@@ -167,7 +167,7 @@
                                         </span>
                                     </div>
                                     <div *ngIf="row.folders !== undefined && row.folders.length > 0" class="folder-info">
-                                        <span class="badge badge-folder" *ngFor="let folder of row.folders" routerLink="/folders/{{folder.id}}" title="Accéder au dossier : {{folder.label}}"><i class="fa fa-folder"></i> {{folder.label}}</span>
+                                        <span class="badge badge-folder" *ngFor="let folder of row.folders | sortBy : 'label'" routerLink="/folders/{{folder.id}}" title="Accéder au dossier : {{folder.label}}"><i class="fa fa-folder"></i> {{folder.label}}</span>
                                     </div>
                                 </td>
                             </ng-container>

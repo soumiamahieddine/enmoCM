@@ -23,7 +23,8 @@ class EntityFolderModelAbstract
 
         $entitiesFolder = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['entities_folders'],
+            'table'     => ['entities_folders', 'entities'],
+            'left_join' => ['entities_folders.entity_id = entities.id'],
             'where'     => ['folder_id = ?'],
             'data'      => [$aArgs['folder_id']]
         ]);

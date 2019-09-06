@@ -197,9 +197,15 @@ class ResourceListController
             $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
         }
         if (!empty($args['data']['search']) && mb_strlen($args['data']['search']) >= 2) {
-            $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike translate(?, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\'))';
-            $queryData[] = "%{$args['data']['search']}%";
-            $queryData[] = "%{$args['data']['search']}%";
+            if (preg_match('/^"([^"]+)"$/', $args['data']['search'], $cleanSearch)) {
+                $where[] = '(alt_identifier like ? OR subject like ?)';
+                $queryData[] = "{$cleanSearch[1]}";
+                $queryData[] = "{$cleanSearch[1]}";
+            } else {
+                $where[] = '(alt_identifier ilike ? OR translate(subject, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\') ilike translate(?, \'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ\', \'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr\'))';
+                $queryData[] = "%{$args['data']['search']}%";
+                $queryData[] = "%{$args['data']['search']}%";
+            }
         }
         if (isset($args['data']['priorities'])) {
             if (empty($args['data']['priorities'])) {
