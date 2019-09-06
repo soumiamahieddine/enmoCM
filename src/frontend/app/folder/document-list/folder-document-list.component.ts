@@ -21,6 +21,7 @@ import { BasketHomeComponent } from '../../basket/basket-home.component';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { FolderActionListComponent } from '../folder-action-list/folder-action-list.component';
 import { FiltersListService } from '../../../service/filtersList.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 
 declare function $j(selector: any): any;
@@ -28,7 +29,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "folder-document-list.component.html",
     styleUrls: ['folder-document-list.component.scss'],
-    providers: [NotificationService, AppService],
+    providers: [NotificationService, AppService]
 })
 export class FolderDocumentListComponent implements OnInit {
 
@@ -89,6 +90,7 @@ export class FolderDocumentListComponent implements OnInit {
         'ownerDisplayName': '',
         'entitiesSharing': []
     };
+    folderInfoOpened: boolean = false;
 
     private destroy$ = new Subject<boolean>();
 
@@ -129,6 +131,7 @@ export class FolderDocumentListComponent implements OnInit {
         this.isLoadingResults = false;
 
         this.route.params.subscribe(params => {
+            this.folderInfoOpened = false;
             this.dragInit = true;
             this.destroy$.next(true);
 
