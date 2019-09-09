@@ -1071,4 +1071,6 @@ export const LANG_EN = {
     "classify" : "Classify",
     "mailClassified" : "Mail(s) classified",
     "noAvailableFolder" : "No available folder",
+    "unclassifyQuestion" : "Do you want to unclassify",
+    "mailsInFolder" : "mail(s) in folder",
 };

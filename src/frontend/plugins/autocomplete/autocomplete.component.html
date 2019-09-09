@@ -1,16 +1,20 @@
 <form>
-  <mat-form-field [class.smallInput]="size === 'small'" [appearance]="singleMode !== undefined ? 'standard' : 'outline'">
+  <mat-form-field [class.smallInput]="size === 'small'"
+    [appearance]="singleMode !== undefined ? 'standard' : 'outline'">
     <mat-label *ngIf="singleMode !== undefined">{{placeholder}}</mat-label>
     <mat-icon *ngIf="size === 'default'" color="primary" class="fa fa-search" matPrefix></mat-icon>
-    <input type="text" #autoCompleteInput [placeholder]="singleMode !== undefined ? '' : placeholder" aria-label="Number" matInput [formControl]="myControl"
-      [matAutocomplete]="auto" (click)="$event.stopPropagation()" (focus)="resetAutocomplete()" [required]="required">
+    <input type="text" #autoCompleteInput [placeholder]="singleMode !== undefined ? '' : placeholder"
+      aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" (click)="$event.stopPropagation()"
+      (focus)="resetAutocomplete()" [required]="required">
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOpt($event)">
-      <mat-optgroup [label]="optGroupLabel" *ngIf="options.length > 0 && !loading">
+      <ng-container *ngIf="options.length > 0 && !loading">
         <mat-option *ngFor="let option of filteredOptions | async | sortBy: key" [value]="option">
-          <mat-icon *ngIf="type[option['type']]" class="autcompleteIcon fas {{type[option['type']]}}" color="primary"></mat-icon>&nbsp;<span color="primary">{{option[key]}}</span>&nbsp;<small>{{option[subInfoKey]}}</small>
+          <mat-icon *ngIf="type[option['type']]" class="autcompleteIcon fas {{type[option['type']]}}" color="primary">
+          </mat-icon>&nbsp;<span color="primary">{{option[key]}}</span>&nbsp;<small>{{option[subInfoKey]}}</small>
         </mat-option>
-      </mat-optgroup>
-      <mat-option *ngIf="options.length === 0 && !loading" disabled [innerHTML]="listInfo">
+      </ng-container>
+      <mat-option *ngIf="options.length === 0 && !loading" [class.smallInputInfo]="size === 'small'" disabled
+        [innerHTML]="listInfo">
       </mat-option>
       <mat-option *ngIf="loading" disabled>
         <mat-spinner diameter="20"></mat-spinner>

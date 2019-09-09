@@ -1097,4 +1097,6 @@ export const LANG_NL = {
     "classify" : "Classify", //_TO_TRANSLATE
     "mailClassified" : "Mail(s) classified", //_TO_TRANSLATE
     "noAvailableFolder" : "No available folder", //_TO_TRANSLATE
+    "unclassifyQuestion" : "Do you want to unclassify", //_TO_TRANSLATE
+    "mailsInFolder" : "mail(s) in folder", //_TO_TRANSLATE
 };

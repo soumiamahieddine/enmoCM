@@ -1108,4 +1108,6 @@ export const LANG_FR = {
     "classify" : "Classer",
     "mailClassified" : "Courrier(s) classé(s)",
     "noAvailableFolder" : "Aucun dossier disponible",
+    "unclassifyQuestion" : "Voulez-vous retirer",
+    "mailsInFolder" : "élément(s) du dossier",
 };

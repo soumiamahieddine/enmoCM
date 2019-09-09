@@ -10,6 +10,9 @@
     <span>{{lang.classifyIn}}</span>
 </button>
 <mat-menu #folders="matMenu" [class]="'folderListMenu'">
+        <plugin-autocomplete [labelPlaceholder]="lang.searchFolder" [size]="'small'"
+        [routeDatas]="['/rest/autocomplete/folders']" [targetSearchKey]="'idToDisplay'"
+        (triggerEvent)="classifyDocuments($event)"></plugin-autocomplete>
     <button *ngIf="foldersList.length === 0" mat-menu-item class="noFolder" disabled>{{lang.noAvailableFolder}}</button>
     <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder" (click)="classifyDocuments(folder)" [title]="folder.label"><i class="fa fa-users private" *ngIf="folder.public" title="{{lang.sharedFolder}}"></i> {{folder.label}}</button>
 </mat-menu>
