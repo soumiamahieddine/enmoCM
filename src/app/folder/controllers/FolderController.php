@@ -207,12 +207,14 @@ class FolderController
             $data['parent_id'] = null;
             $level = 0;
         } else {
-            $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $data['parent_id']]);
-            if (empty($folder[0])) {
+            $folderParent = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $data['parent_id']]);
+            if (empty($folderParent[0])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Parent Folder not found or out of your perimeter']);
             }
-            $level = $folder[0]['level'] + 1;
+            $level = $folderParent[0]['level'] + 1;
         }
+
+        $this->updateChildren($aArgs['id'], $level);
 
         FolderModel::update([
             'set' => [
@@ -673,5 +675,28 @@ class FolderController
             return FolderController::isParentFolder(['parent_id' => $parentInfo['parent_id'], 'id' => $args['id']]);
         }
         return false;
+    }
+
+    private function updateChildren($parentId, $levelParent)
+    {
+        $folderChild = FolderModel::getChild(['id' => $parentId]);
+        if (!empty($folderChild)) {
+
+            $level = -1;
+            foreach ($folderChild as $child) {
+                $level = $levelParent + 1;
+                $this->updateChildren($child['id'], $level);
+            }
+
+            $idsChildren = array_column($folderChild, 'id');
+
+            FolderModel::update([
+                'set' => [
+                    'level' => $level
+                ],
+                'where' => ['id in (?)'],
+                'data' => [$idsChildren]
+            ]);
+        }
     }
 }
