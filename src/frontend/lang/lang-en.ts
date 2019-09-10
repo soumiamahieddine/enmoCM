@@ -1073,4 +1073,12 @@ export const LANG_EN = {
     "noAvailableFolder" : "No available folder",
     "unclassifyQuestion" : "Do you want to unclassify",
     "mailsInFolder" : "mail(s) in folder",
+    "customFields" : "custom field(s)",
+    "avaiblableCustomFieldsTypes" : "Available(s) custom type(s)",
+    "customField" : "custom field",
+    "stringInput" : "String input",
+    "selectInput" : "Select input",
+    "dateInput" : "Date input",
+    "radioInput" : "Radio input",
+    "checkboxInput" : "Checbox input",
 };

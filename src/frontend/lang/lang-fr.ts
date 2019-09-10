@@ -1110,4 +1110,12 @@ export const LANG_FR = {
     "noAvailableFolder" : "Aucun dossier disponible",
     "unclassifyQuestion" : "Voulez-vous retirer",
     "mailsInFolder" : "élément(s) du dossier",
+    "customFields" : "champ(s) personnalisé(s)",
+    "avaiblableCustomFieldsTypes" : "Type(s) de champ(s) disponible(s)",
+    "customField" : "champ personnalisé",
+    "stringInput" : "Chaine de caractère",
+    "selectInput" : "Liste déroulante",
+    "dateInput" : "Champ date",
+    "radioInput" : "Liste à choix unique",
+    "checkboxInput" : "Liste à choix multiple",
 };
