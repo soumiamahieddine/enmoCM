@@ -47,13 +47,13 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Custom field with this label already exists']);
         }
 
-        CustomFieldModel::create([
+        $id = CustomFieldModel::create([
             'label'     => $body['label'],
             'type'      => $body['type'],
             'values'    => empty($body['values']) ? null : json_encode($body['values'])
         ]);
 
-        return $response->withStatus(204);
+        return $response->withStatus(204)->withJson(['customFieldId' => $id]);
     }
 
     public function update(Request $request, Response $response, array $args)

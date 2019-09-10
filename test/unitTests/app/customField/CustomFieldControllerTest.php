@@ -30,17 +30,11 @@ class CustomFieldControllerTest extends TestCase
 
         $response     = $customFieldController->create($fullRequest, new \Slim\Http\Response());
         $this->assertSame(204, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody());
 
-        $field = \CustomField\models\CustomFieldModel::get([
-            'select' => ['id'], 'where' => ['label = ?'], 'data' => ['mon custom'], 'limit' => 1, 'orderBy' => ['id DESC']
-        ]);
+        $this->assertInternalType('int', $responseBody->customFieldId);
 
-        self::$id = $field[0]['id'];
-
-        $field = \CustomField\models\CustomFieldModel::getById(['id' => self::$id]);
-        $this->assertSame('mon custom', $field['label']);
-        $this->assertSame('select', $field['type']);
-
+        self::$id = $responseBody->customFieldId;
 
         //  Errors
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
