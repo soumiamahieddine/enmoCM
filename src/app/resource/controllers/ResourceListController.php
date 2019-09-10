@@ -911,10 +911,9 @@ class ResourceListController
                     } elseif ($value['value'] == 'getOpinionLimitDate') {
                         $value['displayValue'] = $resource['opinion_limit_date'];
                         $display[] = $value;
-                    } elseif ($value['value'] == 'getFolders') {
-                        $formattedResources[$key]['folders'] = ResourceListController::getFolders(['resId' => $resource['res_id'], 'userId' => $args['userId']]);
                     }
                 }
+                $formattedResources[$key]['folders'] = ResourceListController::getFolders(['resId' => $resource['res_id'], 'userId' => $args['userId']]);
                 $formattedResources[$key]['display'] = $display;
             }
         }

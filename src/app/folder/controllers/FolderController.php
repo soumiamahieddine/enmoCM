@@ -523,7 +523,7 @@ class FolderController
         return $response->withJson(['countResources' => count($foldersResources) - count($resourcesToUnclassify)]);
     }
 
-    public function getEventsFromFolder(Request $request, Response $response, array $args)
+    public function getBasketsFromFolder(Request $request, Response $response, array $args)
     {
         if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
@@ -539,11 +539,11 @@ class FolderController
         }
 
         $baskets = BasketModel::getWithPreferences([
-            'select'    => ['baskets.id', 'baskets.basket_id', 'baskets.basket_name', 'baskets.basket_clause', 'users_baskets_preferences.group_serial_id', 'usergroups.group_desc'],
+            'select'    => ['baskets.id', 'baskets.basket_name', 'baskets.basket_clause', 'users_baskets_preferences.group_serial_id', 'usergroups.group_desc'],
             'where'     => ['users_baskets_preferences.user_serial_id = ?'],
             'data'      => [$GLOBALS['id']]
         ]);
-        $events = [];
+        $groupsBaskets = [];
         $inCheckedBaskets = [];
         $outCheckedBaskets = [];
         foreach ($baskets as $basket) {
@@ -559,19 +559,11 @@ class FolderController
                     }
                 }
                 $inCheckedBaskets[] = $basket['id'];
-                $group = GroupModel::getById(['id' => $basket['group_serial_id'], 'select' => ['group_id']]);
-                $groupBasket = GroupBasketModel::get([
-                    'select'    => ['list_event'],
-                    'where'     => ['group_id = ?', 'basket_id = ?'],
-                    'data'      => [$group['group_id'], $basket['basket_id']]
-                ]);
-                if (!empty($groupBasket[0]['list_event'])) {
-                    $events[] = ['groupId' => $basket['group_serial_id'], 'groupName' => $basket['group_desc'], 'basketId' => $basket['id'], 'basketName' => $basket['basket_name'], 'event' => $groupBasket[0]['list_event']];
-                }
+                $groupsBaskets[] = ['groupId' => $basket['group_serial_id'], 'groupName' => $basket['group_desc'], 'basketId' => $basket['id'], 'basketName' => $basket['basket_name']];
             }
         }
 
-        return $response->withJson(['events' => $events]);
+        return $response->withJson(['groupsBaskets' => $groupsBaskets]);
     }
 
     public function getFilters(Request $request, Response $response, array $args)
