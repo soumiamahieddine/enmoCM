@@ -54,6 +54,18 @@ class CustomFieldControllerTest extends TestCase
         $this->assertSame('Custom field with this label already exists', $responseBody->errors);
     }
 
+    public function testReadList()
+    {
+        $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request      = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $customFieldController = new \CustomField\controllers\CustomFieldController();
+        $response         = $customFieldController->get($request, new \Slim\Http\Response());
+        $responseBody     = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->customFields);
+    }
+
     public function testUpdate()
     {
         $customFieldController = new \CustomField\controllers\CustomFieldController();

@@ -26,6 +26,21 @@ use Slim\Http\Response;
 
 class CustomFieldController
 {
+    public function get(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $customFields = CustomFieldModel::get();
+
+        foreach ($customFields as $key => $customField) {
+            $customFields[$key]['values'] = json_decode($customField['values'], true);
+        }
+
+        return $response->withJson(['customFields' => $customFields]);
+    }
+
     public function create(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {

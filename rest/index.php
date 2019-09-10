@@ -128,6 +128,7 @@ $app->get('/contactsFilling', \Contact\controllers\ContactController::class . ':
 $app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':updateFilling');
 
 //CustomFields
+$app->get('/customFields', \CustomField\controllers\CustomFieldController::class . ':get');
 $app->post('/customFields', \CustomField\controllers\CustomFieldController::class . ':create');
 $app->put('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':update');
 $app->delete('/customFields/{id}', \Contact\controllers\ContactController::class . ':delete');
