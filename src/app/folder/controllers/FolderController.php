@@ -74,7 +74,6 @@ class FolderController
                 'countResources' => $count
             ];
             if ($folder['level'] == 0) {
-//                $tree[] = $insert;
                 array_splice($tree, 0, 0, [$insert]);
             } else {
                 $found = false;
@@ -215,7 +214,7 @@ class FolderController
             $level = $folderParent[0]['level'] + 1;
         }
 
-        $this->updateChildren($aArgs['id'], $level);
+        FolderController::updateChildren($aArgs['id'], $level);
 
         FolderModel::update([
             'set' => [
@@ -670,7 +669,7 @@ class FolderController
         return false;
     }
 
-    private function updateChildren($parentId, $levelParent)
+    private static function updateChildren($parentId, $levelParent)
     {
         $folderChild = FolderModel::getChild(['id' => $parentId]);
         if (!empty($folderChild)) {
@@ -678,7 +677,7 @@ class FolderController
             $level = -1;
             foreach ($folderChild as $child) {
                 $level = $levelParent + 1;
-                $this->updateChildren($child['id'], $level);
+                FolderController::updateChildren($child['id'], $level);
             }
 
             $idsChildren = array_column($folderChild, 'id');
