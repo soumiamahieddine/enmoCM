@@ -74,7 +74,8 @@ class FolderController
                 'countResources' => $count
             ];
             if ($folder['level'] == 0) {
-                $tree[] = $insert;
+//                $tree[] = $insert;
+                array_splice($tree, 0, 0, [$insert]);
             } else {
                 $found = false;
                 foreach ($tree as $key => $branch) {
@@ -632,7 +633,7 @@ class FolderController
             'select'    => ['distinct (folders.id)', 'folders.*'],
             'where'     => $where,
             'data'      => $data,
-            'orderBy'   => ['level', 'label']
+            'orderBy'   => ['level', 'label desc']
         ]);
 
         return $folders;
