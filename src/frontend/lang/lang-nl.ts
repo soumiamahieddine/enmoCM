@@ -1123,4 +1123,8 @@ export const LANG_NL = {
     "chooseDate" : "Choose a date", //_TO_TRANSLATE
     "selectedValue" : "Selected value", //_TO_TRANSLATE
     "choice" : "Choice", //_TO_TRANSLATE
+    "owner" : "Owner", //_TO_TRANSLATE
+    "privateFolder" : "Private folder", //_TO_TRANSLATE
+    "visibleBy" : "Visible by", //_TO_TRANSLATE
+    "folderInformations" : "Folder Informations", //_TO_TRANSLATE
 };

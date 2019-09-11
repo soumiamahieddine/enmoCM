@@ -26,18 +26,18 @@
             <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()" style="padding-bottom: 20px;">
                 <div [class.banner-opened]="folderInfoOpened" [class.banner-closed]="!folderInfoOpened">
                     <div class="title" style="cursor:pointer;" (click)="folderInfoOpened = !folderInfoOpened">
-                        <i class="far" [class.fa-plus-square]="!folderInfoOpened" [class.fa-minus-square]="folderInfoOpened" style="cursor:pointer;margin-left: 10px;" (click)="folderInfoOpened = !folderInfoOpened"></i>&nbsp;{{lang.informations}} du dossier
+                        <i class="far" [class.fa-plus-square]="!folderInfoOpened" [class.fa-minus-square]="folderInfoOpened" style="cursor:pointer;margin-left: 10px;"></i>&nbsp;{{lang.folderInformations}}
                         <div *ngIf="folderInfoOpened" class="title-divider"></div>
                     </div>
                     <div *ngIf="folderInfoOpened" class="content">
                         <div class="content-item">
-                            Propriétaire :<br /><b>{{folderInfo.ownerDisplayName}}</b>
+                            {{lang.owner}} :<br /><b>{{folderInfo.ownerDisplayName}}</b>
                         </div>
                         <div *ngIf="folderInfo.entitiesSharing.length === 0" class="content-item private">
-                            Dossier privé
+                            {{lang.privateFolder}}
                         </div>
                         <div *ngIf="folderInfo.entitiesSharing.length > 0" class="content-item">
-                            Visible par :<br />
+                            {{lang.visibleBy}} :<br />
                             <div style="max-height: 100px;overflow: auto;">
                                 <div *ngFor="let entity of folderInfo.entitiesSharing | sortBy">
                                     <b color="secondary">{{entity}}</b>

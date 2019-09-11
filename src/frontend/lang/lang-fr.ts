@@ -1134,4 +1134,8 @@ export const LANG_FR = {
     "chooseDate" : "Choisisser une date",
     "selectedValue" : "Valeur sélectionnée",
     "choice" : "Choix",
+    "owner" : "Propriétaire",
+    "privateFolder" : "Dossier privé",
+    "visibleBy" : "Visible par",
+    "folderInformations" : "Informations du dossier",
 };

@@ -1097,4 +1097,8 @@ export const LANG_EN = {
     "chooseDate" : "Choose a date",
     "selectedValue" : "Selected value",
     "choice" : "Choice",
+    "owner" : "Owner",
+    "privateFolder" : "Private folder",
+    "visibleBy" : "Visible by",
+    "folderInformations" : "Folder Informations",
 };
