@@ -87,6 +87,7 @@ export class BasketListComponent implements OnInit {
     allResInBasket: number[] = [];
     selectedDiffusionTab: number = 0;
     specificChrono: string = '';
+    displayFolderTags: boolean = false;
 
     private destroy$ = new Subject<boolean>();
 
@@ -191,6 +192,7 @@ export class BasketListComponent implements OnInit {
                     this.allResInBasket = data.allResources;
                     this.currentBasketInfo.basket_id = data.basket_id;
                     this.defaultAction = data.defaultAction;
+                    this.displayFolderTags = data.displayFolderTags;
                     this.headerService.setHeader(data.basketLabel, '', 'fa fa-inbox');
                     return data.resources;
                 }),
@@ -454,6 +456,7 @@ export class BasketListComponent implements OnInit {
     }
 }
 export interface BasketList {
+    displayFolderTags: boolean;
     resources: any[];
     count: number;
     basketLabel: string,

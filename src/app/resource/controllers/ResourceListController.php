@@ -84,6 +84,7 @@ class ResourceListController
 
         $formattedResources = [];
         $defaultAction = [];
+        $displayFolderTags = false;
         if (!empty($resIds)) {
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
             if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
@@ -151,9 +152,13 @@ class ResourceListController
             ]);
 
             $defaultAction['component'] = $groupBasket[0]['list_event'];
+
+            if (in_array('getFolders', array_column($listDisplay, 'value'))) {
+                $displayFolderTags = true;
+            }
         }
 
-        return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'basket_id' => $basket['basket_id'], 'allResources' => $allResources, 'defaultAction' => $defaultAction]);
+        return $response->withJson(['resources' => $formattedResources, 'count' => $count, 'basketLabel' => $basket['basket_name'], 'basket_id' => $basket['basket_id'], 'allResources' => $allResources, 'defaultAction' => $defaultAction, 'displayFolderTags' => $displayFolderTags]);
     }
 
     public function getFilters(Request $request, Response $response, array $aArgs)
