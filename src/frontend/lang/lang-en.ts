@@ -860,7 +860,7 @@ export const LANG_EN = {
     "statusModification"                    : "Status modification",
     "statusName"                            : "Status name",
     "statusUpdated"                         : "Status updated",
-    "string"                                : "String",
+    "stringInput"                           : "String",
     "subEntities"                           : "Entities (and sub-entities)",
     "subject"                               : "Subject",
     "summarySheet"                          : "Summary sheet",

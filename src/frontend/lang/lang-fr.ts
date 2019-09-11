@@ -893,7 +893,7 @@ export const LANG_FR = {
     "statusModification"                    : "Modification du statut",
     "statusName"                            : "Nom du statut",
     "statusUpdated"                         : "Statut mis à jour",
-    "string"                                : "Chaine de caractères",
+    "stringInput"                           : "Chaine de caractères",
     "subEntities"                           : "Entités (et sous-entités)",
     "subject"                               : "Objet",
     "summarySheet"                          : "Fiche de liaison",

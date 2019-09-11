@@ -888,7 +888,7 @@ export const LANG_NL = {
     "statusModification"                    : "Wijziging van status",
     "statusName"                            : "Statusnaam",
     "statusUpdated"                         : "Bijgewerkte status",
-    "string"                                : "Karakterreeks",
+    "stringInput"                           : "Karakterreeks",
     "subEntities"                           : "_TO_TRANSLATE",
     "subject"                               : "_TO_TRANSLATE",
     "summarySheet"                          : "_TO_TRANSLATE",
