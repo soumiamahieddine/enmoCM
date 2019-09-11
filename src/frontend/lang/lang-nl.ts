@@ -1107,4 +1107,20 @@ export const LANG_NL = {
     "dateInput" : "Date input", //_TO_TRANSLATE
     "radioInput" : "Radio input", //_TO_TRANSLATE
     "checkboxInput" : "Checbox input", //_TO_TRANSLATE
+    "newField" : "New field", //_TO_TRANSLATE
+    "newValue" : "New value", //_TO_TRANSLATE
+    "customFieldAdded" : "Custom field added", //_TO_TRANSLATE
+    "customFieldUpdated" : "Custom field updated", //_TO_TRANSLATE
+    "customFieldDeleted" : "Custom field deleted", //_TO_TRANSLATE
+    "usableFields" : "Usable field(s)", //_TO_TRANSLATE
+    "noCustomFieldInfo" : "<b>No custom field</b> available, choose avaiblable custom fields types on <b>right panel</b> in order to create new custom fields.", //_TO_TRANSLATE
+    "defaultValue" : "Default value", //_TO_TRANSLATE
+    "valuesList" : "List of values", //_TO_TRANSLATE
+    "addValue" : "Add a value", //_TO_TRANSLATE
+    "orderValues" : "Order values", //_TO_TRANSLATE
+    "customFieldsTypesAvailable" : "Custom fields types available", //_TO_TRANSLATE
+    "typeValue" : "Type a value", //_TO_TRANSLATE
+    "chooseDate" : "Choose a date", //_TO_TRANSLATE
+    "selectedValue" : "Selected value", //_TO_TRANSLATE
+    "choice" : "Choice", //_TO_TRANSLATE
 };
