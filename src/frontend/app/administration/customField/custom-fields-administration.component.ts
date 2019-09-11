@@ -166,7 +166,9 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
         // TO FIX DATA BINDING SIMPLE ARRAY VALUES
         const customFieldToUpdate = { ...customField };
-        customFieldToUpdate.values = customField.values.map((data: any) => data.label)
+        if (customField.values != null) {
+            customFieldToUpdate.values = customField.values.map((data: any) => data.label)
+        }
 
         this.http.put('../../rest/customFields/' + customField.id, customFieldToUpdate).pipe(
             tap(() => {
