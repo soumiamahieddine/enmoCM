@@ -134,7 +134,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     addValue(indexCustom: number) {
         this.customFields[indexCustom].values.push(
             {
-                label: this.lang.newValue
+                label: ''
             }
         );
     }
@@ -162,6 +162,8 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     updateCustomField(customField: any, indexCustom: number) {
 
+        customField.values = customField.values.filter((x: any, i: any, a: any) => a.map((info: any) => info.label).indexOf(x.label) == i);
+
         // TO FIX DATA BINDING SIMPLE ARRAY VALUES
         const customFieldToUpdate = { ...customField };
         
@@ -175,7 +177,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
         this.http.put('../../rest/customFields/' + customField.id, customFieldToUpdate).pipe(
             tap(() => {
-                this.customFieldsClone[indexCustom] = customField;
+                this.customFieldsClone[indexCustom] = JSON.parse(JSON.stringify(customField));
                 this.notify.success(this.lang.customFieldUpdated);
             }),
             catchError((err: any) => {
@@ -190,7 +192,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     }
 
     isModified(customField: any, indexCustomField: number) {
-        if (JSON.stringify(customField) === JSON.stringify(this.customFieldsClone[indexCustomField])) {
+        if (JSON.stringify(customField) === JSON.stringify(this.customFieldsClone[indexCustomField]) || customField.label === '') {
             return true;
         } else {
             return false;
