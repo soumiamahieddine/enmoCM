@@ -29,7 +29,7 @@ class CustomFieldControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
 
         $response     = $customFieldController->create($fullRequest, new \Slim\Http\Response());
-        $this->assertSame(204, $response->getStatusCode());
+        $this->assertSame(201, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('int', $responseBody->customFieldId);

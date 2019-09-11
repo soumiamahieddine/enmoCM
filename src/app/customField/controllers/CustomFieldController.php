@@ -69,7 +69,7 @@ class CustomFieldController
             'default_value' => $body['default_value']
         ]);
 
-        return $response->withStatus(204)->withJson(['customFieldId' => $id]);
+        return $response->withStatus(201)->withJson(['customFieldId' => $id]);
     }
 
     public function update(Request $request, Response $response, array $args)
