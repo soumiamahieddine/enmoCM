@@ -1,0 +1,188 @@
+<div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
+    <mat-sidenav-container autosize class="admin-sidenav-container">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
+            [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+            [opened]="appService.getViewMode() ? false : true">
+            <menu-shortcut></menu-shortcut>
+            <menu-nav></menu-nav>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading" class="card-app-content">
+                <mat-tab-group>
+                    <mat-tab label="Champ(s) utilisable">
+                        <div class="alert-message alert-message-info" role="alert"
+                            style="margin-top: 30px;max-width: 100%;" *ngIf="customFields.length === 0"
+                            [innerHTML]="'<b>Aucun champ personnalisé</b> n\'est défini, sélectionner des élément disponible sur le <b>panneau de droite</b> afin de créer de nouveaux champs.'">
+                        </div>
+                        <mat-accordion>
+                            <mat-expansion-panel *ngFor="let custom of customFields;index as indexCustom" (opened)="initCustomFieldCheck(custom)">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title color="primary">
+                                        {{custom.label}}
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                        {{lang[custom.type + 'Input']}}
+                                    </mat-panel-description>
+                                </mat-expansion-panel-header>
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <input matInput name="label" [(ngModel)]="custom.label" placeholder="Nom"
+                                            [value]="custom.label">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <input matInput name="default_value" placeholder="Valeur par défaut"
+                                            [(ngModel)]="custom.default_value" [value]="custom.default_value" [disabled]="custom.type === 'date'">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-12"
+                                    *ngIf="['select', 'radio', 'checkbox'].indexOf(custom.type) > -1">
+                                    <mat-expansion-panel class="customFieldValues" opened>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Liste de valeurs
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <button mat-raised-button color="primary" (click)="addValue(indexCustom)"> Ajouter
+                                            une valeur</button>
+                                        <button mat-raised-button color="primary" (click)="sortValues(custom)"> Trier</button>
+                                        <div class="col-md-12">
+                                            <mat-form-field *ngFor="let value of custom.values;let i=index;">
+                                                <input matInput [(ngModel)]="value.label">
+                                                <button color="warn" mat-icon-button matSuffix [title]="lang.delete"
+                                                    (click)="removeValue(custom, i)">
+                                                    <mat-icon class="fa fa-trash"></mat-icon>
+                                                </button>
+                                            </mat-form-field>
+                                        </div>
+                                    </mat-expansion-panel>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <button mat-raised-button color="primary"
+                                        (click)="updateCustomField(custom)" [disabled]="isModified(custom)">{{lang.update}}</button>
+                                    <button mat-raised-button color="warn"
+                                        (click)="removeCustomField(indexCustom)">{{lang.delete}}</button>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card>
+
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'"
+            [fixedInViewport]="appService.getViewMode()" fixedTopGap="56" position='end' opened
+            class="col-md-4 col-sm-12 customFielsdPanel">
+            <mat-tab-group>
+                <mat-tab label="Types de champs disponibles">
+                    <div style="display:flex;" *ngFor="let customField of customFieldsTypes">
+                        <div style="justify-content: center;display: flex;align-items: center;width:60px;">
+                            <button mat-icon-button color="primary" (click)="addCustomField(customField)">
+                                <mat-icon class="fas fa-plus-circle fa-2x"></mat-icon>
+                            </button>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="color: rgba(0,0,0,0.54);">{{customField.label}} :</div>
+                            <ng-container *ngIf="customField.type === 'string'">
+                                <mat-form-field class="input-form" floatLabel="never">
+                                    <textarea matInput placeholder="Saisisser une valeur" matTextareaAutosize
+                                        matAutosizeMinRows="1" cdkAutosizeMaxRows="6"></textarea>
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-container *ngIf="customField.type === 'select'">
+                                <mat-form-field class="input-form" floatLabel="never">
+                                    <mat-select placeholder="selectionner une valeur">
+                                        <mat-option value="1">
+                                            option 1
+                                        </mat-option>
+                                        <mat-option value="2">
+                                            option 2
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-container *ngIf="customField.type === 'date'">
+                                <mat-form-field class="input-form" floatLabel="never">
+                                    <input matInput [matDatepicker]="picker" placeholder="Selectionner une date"
+                                        (click)="picker.open()">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-container *ngIf="customField.type === 'radio'">
+                                <mat-radio-group class="radio-form" color="primary">
+                                    <mat-radio-button value="1">
+                                        choix 1
+                                    </mat-radio-button>
+                                    <mat-radio-button value="2">
+                                        choix 2
+                                    </mat-radio-button>
+                                    <mat-radio-button value="3">
+                                        choix 3
+                                    </mat-radio-button>
+                                    <mat-radio-button value="4">
+                                        choix 4
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </ng-container>
+                            <ng-container *ngIf="customField.type === 'checkbox'">
+                                <div class="input-form checkbox-form">
+                                    <mat-selection-list #shoes class="div-list">
+                                        <mat-list-option checkboxPosition="before">
+                                            option 1
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 2
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 3
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 4
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 5
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 6
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 7
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 8
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 9
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 10
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 11
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 12
+                                        </mat-list-option>
+                                        <mat-list-option checkboxPosition="before">
+                                            option 13
+                                        </mat-list-option>
+                                    </mat-selection-list>
+                                </div>
+                                <mat-chip-list class="checkbox-selected-list">
+                                    <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
+                                        valeur slectionnée
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </ng-container>
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-sidenav>
+    </mat-sidenav-container>
+</div>
