@@ -156,11 +156,11 @@ class FolderController
         ]);
 
         if ($public && !empty($data['parent_id'])) {
-            $entitiesSharing = EntityFolderModel::getByFolderId(['folder_id' => $data['parent_id']]);
+            $entitiesSharing = EntityFolderModel::getByFolderId(['folder_id' => $data['parent_id'], 'select' => ['entities.id', 'entities_folders.edition']]);
             foreach ($entitiesSharing as $entity) {
                 EntityFolderModel::create([
                     'folder_id' => $id,
-                    'entity_id' => $entity['entity_id'],
+                    'entity_id' => $entity['id'],
                     'edition'   => $entity['edition'],
                 ]);
             }
@@ -673,8 +673,6 @@ class FolderController
     {
         $folderChild = FolderModel::getChild(['id' => $parentId]);
         if (!empty($folderChild)) {
-
-            $level = -1;
             foreach ($folderChild as $child) {
                 $level = $levelParent + 1;
                 FolderController::updateChildren($child['id'], $level);
