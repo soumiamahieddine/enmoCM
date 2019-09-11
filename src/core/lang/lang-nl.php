@@ -193,8 +193,8 @@ define('_ADMIN_TEMPLATES_DESC', 'De modellen die voor de bijlagen gebruikt worde
 define('_SECURITIES', 'Veiligheden');
 define('_EMAILSERVER_PARAM', '_TO_TRANSLATE');
 define('_EMAILSERVER_PARAM_DESC', '_TO_TRANSLATE');
-define('_ADMIN_INDEXING_MODELS', 'Indexing models administration'); // translate
-define('_ADMIN_CUSTOM_FIELDS', 'Custom fields administration'); // translate
+define('_ADMIN_INDEXING_MODELS', 'Indexing models'); // translate
+define('_ADMIN_CUSTOM_FIELDS', 'Custom fields'); // translate
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Doorsturen naar een andere actie');

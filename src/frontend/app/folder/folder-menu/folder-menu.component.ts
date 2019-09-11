@@ -59,7 +59,7 @@ export class FolderMenuComponent implements OnInit {
     }
 
     unclassifyDocuments(folder: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: 'Voulez-vous enlever <b>' + this.resIds.length + '</b> document(s) du classement ?' } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.unclassifyQuestion + ' <b>' + this.resIds.length + '</b>&nbsp;' + this.lang.mailsInFolder + ' ?' } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

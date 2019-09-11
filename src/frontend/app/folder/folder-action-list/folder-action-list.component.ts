@@ -60,8 +60,6 @@ export class FolderActionListComponent implements OnInit {
 
     open(x: number, y: number, row: any) {
 
-        //this.loadActionList(row.res_id);
-
         // Adjust the menu anchor position
         this.contextMenuPosition.x = x + 'px';
         this.contextMenuPosition.y = y + 'px';
@@ -75,81 +73,6 @@ export class FolderActionListComponent implements OnInit {
         // prevents default
         return false;
     }
-
-    /*launchEvent(action: any, row: any) {
-        this.arrRes = [];
-        this.currentAction = action;
-
-        this.arrRes = this.selectedRes;
-
-
-        if (this.contextMode && this.selectedRes.length > 1) {
-            this.contextMenuTitle = '';
-            this.contextResId = 0;
-        }
-        
-        if (row !== undefined){
-            this.contextMenuTitle = row.alt_identifier;
-        }
-
-        if (action.component == 'v1Action' && this.arrRes.length > 1) {
-            alert(this.lang.actionMassForbidden);
-        } else if (action.component !== null) {
-            
-            this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
-                .subscribe((data: any) => {
-                    try {
-                        let msgWarn = this.lang.warnLockRes + ' : ' + data.lockers.join(', ');
-
-                        if (data.lockedResources != this.arrRes.length) {
-                            msgWarn += this.lang.warnLockRes2 + '.';
-                        }
-
-                        if (data.lockedResources > 0) {
-                            alert(data.lockedResources + ' ' + msgWarn);
-                        }
-
-                        if (data.lockedResources != this.arrRes.length) {
-                            this.lock();
-                            this[action.component]();
-                        }
-                    }
-                    catch (error) {
-                        console.log(error);
-                        console.log(action.component);
-                        alert(this.lang.actionNotExist);
-                    }
-                    this.loading = false;
-                }, (err: any) => {
-                    this.notify.handleErrors(err);
-                });
-        }
-
-    } */
-
-    loadActionList(resId: number) {
-        this.http.get('../../rest/folders/' + this.currentFolderInfo.id + '/resources/' + resId + '/events').pipe(
-            tap((data) => {
-                console.log(data);
-            })
-        ).subscribe();
-    }
-
-    /* lock() {
-        this.currentLock = setInterval(() => {
-            this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
-                .subscribe((data: any) => { }, (err: any) => { });
-        }, 50000);
-    }
-
-    unlock() {
-        clearInterval(this.currentLock);
-    }
-
-    unlockRest() {
-        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/unlock', { resources: this.arrRes })
-            .subscribe((data: any) => { }, (err: any) => { });
-    }*/
 
     refreshFolders() {
         this.refreshPanelFolders.emit();  
@@ -174,16 +97,20 @@ export class FolderActionListComponent implements OnInit {
     }
 
     getBaskets() {
-        this.http.get('../../rest/folders/' + this.currentFolderInfo.id + '/resources/' + this.selectedRes + '/events').pipe(
+        this.http.get('../../rest/folders/' + this.currentFolderInfo.id + '/resources/' + this.selectedRes + '/baskets').pipe(
             tap((data: any) => {
-                this.basketList.groups = data.events.filter((x: any, i: any, a: any) => x && a.map((info: any) => info.groupId).indexOf(x.groupId) === i);
-                this.basketList.list = data.events;
+                this.basketList.groups = data.groupsBaskets.filter((x: any, i: any, a: any) => x && a.map((info: any) => info.groupId).indexOf(x.groupId) === i);
+                this.basketList.list = data.groupsBaskets;
             })
         ).subscribe();
     }
 
 
     goTo(basket: any) {
-        this.router.navigate(['/basketList/users/' + this.headerService.user.id + '/groups/' + basket.groupId + '/baskets/' + basket.basketId], { queryParams: { chrono: '"' + this.contextMenuTitle + '"' } });
+        if (this.contextMenuTitle !== this.lang.undefined) {
+            this.router.navigate(['/basketList/users/' + this.headerService.user.id + '/groups/' + basket.groupId + '/baskets/' + basket.basketId], { queryParams: { chrono: '"' + this.contextMenuTitle + '"' } });
+        } else {
+            this.router.navigate(['/basketList/users/' + this.headerService.user.id + '/groups/' + basket.groupId + '/baskets/' + basket.basketId]);
+        }
     }
 }

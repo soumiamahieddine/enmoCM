@@ -29,18 +29,12 @@ class CustomFieldControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
 
         $response     = $customFieldController->create($fullRequest, new \Slim\Http\Response());
-        $this->assertSame(204, $response->getStatusCode());
+        $this->assertSame(201, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody());
 
-        $field = \CustomField\models\CustomFieldModel::get([
-            'select' => ['id'], 'where' => ['label = ?'], 'data' => ['mon custom'], 'limit' => 1, 'orderBy' => ['id DESC']
-        ]);
+        $this->assertInternalType('int', $responseBody->customFieldId);
 
-        self::$id = $field[0]['id'];
-
-        $field = \CustomField\models\CustomFieldModel::getById(['id' => self::$id]);
-        $this->assertSame('mon custom', $field['label']);
-        $this->assertSame('select', $field['type']);
-
+        self::$id = $responseBody->customFieldId;
 
         //  Errors
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -58,6 +52,18 @@ class CustomFieldControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Custom field with this label already exists', $responseBody->errors);
+    }
+
+    public function testReadList()
+    {
+        $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request      = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $customFieldController = new \CustomField\controllers\CustomFieldController();
+        $response         = $customFieldController->get($request, new \Slim\Http\Response());
+        $responseBody     = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->customFields);
     }
 
     public function testUpdate()

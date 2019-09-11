@@ -37,6 +37,7 @@ import { SecuritiesAdministrationComponent }            from './security/securit
 import { SendmailAdministrationComponent }              from './sendmail/sendmail-administration.component';
 import { ShippingsAdministrationComponent }             from './shipping/shippings-administration.component';
 import { ShippingAdministrationComponent }              from './shipping/shipping-administration.component';
+import { CustomFieldsAdministrationComponent }              from './customField/custom-fields-administration.component';
 import { AppGuard } from '../../service/app.guard';
 
 @NgModule({
@@ -90,6 +91,7 @@ import { AppGuard } from '../../service/app.guard';
             { path: 'administration/shippings', canActivate: [AppGuard], component: ShippingsAdministrationComponent },
             { path: 'administration/shippings/new', canActivate: [AppGuard], component: ShippingAdministrationComponent },
             { path: 'administration/shippings/:id', canActivate: [AppGuard], component: ShippingAdministrationComponent },
+            { path: 'administration/customFields', canActivate: [AppGuard], component: CustomFieldsAdministrationComponent },
         ]),
     ],
     exports: [

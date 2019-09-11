@@ -26,6 +26,21 @@ use Slim\Http\Response;
 
 class CustomFieldController
 {
+    public function get(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $customFields = CustomFieldModel::get();
+
+        foreach ($customFields as $key => $customField) {
+            $customFields[$key]['values'] = json_decode($customField['values'], true);
+        }
+
+        return $response->withJson(['customFields' => $customFields]);
+    }
+
     public function create(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
@@ -47,13 +62,14 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Custom field with this label already exists']);
         }
 
-        CustomFieldModel::create([
-            'label'     => $body['label'],
-            'type'      => $body['type'],
-            'values'    => empty($body['values']) ? null : json_encode($body['values'])
+        $id = CustomFieldModel::create([
+            'label'         => $body['label'],
+            'type'          => $body['type'],
+            'values'        => empty($body['values']) ? '[]' : json_encode($body['values']),
+            'default_value' => $body['default_value']
         ]);
 
-        return $response->withStatus(204);
+        return $response->withStatus(201)->withJson(['customFieldId' => $id]);
     }
 
     public function update(Request $request, Response $response, array $args)
@@ -82,8 +98,9 @@ class CustomFieldController
 
         CustomFieldModel::update([
             'set'   => [
-                'label'     => $body['label'],
-                'values'    => empty($body['values']) ? null : json_encode($body['values'])
+                'label'         => $body['label'],
+                'values'        => empty($body['values']) ? '[]' : json_encode($body['values']),
+                'default_value' => $body['default_value']
             ],
             'where' => ['id = ?'],
             'data'  => [$args['id']]

@@ -9,7 +9,7 @@
     color: $primary;
 }
 
-.banner {
+.banner-opened {
     display: flex;
     flex-direction: column;
     margin: 10px;
@@ -20,7 +20,7 @@
     background: lighten($primary, 10%);
     width: 100%;
 
-    &-title {
+    .title {
         white-space: pre;
         overflow: hidden;
         max-width: 85%;
@@ -46,7 +46,7 @@
         }
     }
 
-    &-content { 
+    .content { 
         display: flex;
         font-size: 16px;
 
@@ -62,5 +62,30 @@
             justify-content: flex-end;
             align-items: center;
         }
+    }
+}
+
+.banner-closed {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    position: relative;
+    width: 100%;
+
+    .title {
+        white-space: pre;
+        overflow: hidden;
+        max-width: 85%;
+        text-overflow: ellipsis;
+        z-index: 1;
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        position: absolute;
+        top: -18px;
+        left: 20px;
+        padding: 0px;
+        margin: 0px;
+        color: white;
     }
 }

@@ -128,9 +128,10 @@ $app->get('/contactsFilling', \Contact\controllers\ContactController::class . ':
 $app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':updateFilling');
 
 //CustomFields
+$app->get('/customFields', \CustomField\controllers\CustomFieldController::class . ':get');
 $app->post('/customFields', \CustomField\controllers\CustomFieldController::class . ':create');
 $app->put('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':update');
-$app->delete('/customFields/{id}', \Contact\controllers\ContactController::class . ':delete');
+$app->delete('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':delete');
 
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
@@ -192,7 +193,7 @@ $app->delete('/folders/{id}', \Folder\controllers\FolderController::class . ':de
 $app->get('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':getResourcesById');
 $app->post('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':addResourcesById');
 $app->delete('/folders/{id}/resources', \Folder\controllers\FolderController::class . ':removeResourcesById');
-$app->get('/folders/{id}/resources/{resId}/events', \Folder\controllers\FolderController::class . ':getEventsFromFolder');
+$app->get('/folders/{id}/resources/{resId}/baskets', \Folder\controllers\FolderController::class . ':getBasketsFromFolder');
 $app->get('/folders/{id}/filters', \Folder\controllers\FolderController::class . ':getFilters');
 $app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
 

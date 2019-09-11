@@ -49,6 +49,7 @@ import { TechnicalAdministrationComponent }             from './technical/techni
 import { ListAdministrationComponent }                  from './basket/list/list-administration.component';
 import { ShippingsAdministrationComponent }              from './shipping/shippings-administration.component';
 import { ShippingAdministrationComponent }              from './shipping/shipping-administration.component';
+import { CustomFieldsAdministrationComponent }              from './customField/custom-fields-administration.component';
 
 @NgModule({
     imports:      [
@@ -107,7 +108,8 @@ import { ShippingAdministrationComponent }              from './shipping/shippin
         TemplateAdministrationCheckEntitiesModalComponent,
         ShippingsAdministrationComponent,
         ShippingAdministrationComponent,
-        AccountLinkComponent
+        AccountLinkComponent,
+        CustomFieldsAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,

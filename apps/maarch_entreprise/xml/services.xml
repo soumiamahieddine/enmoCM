@@ -448,11 +448,11 @@
     <id>admin_custom_fields</id>
     <name>_ADMIN_CUSTOM_FIELDS</name>
     <comment>_ADMIN_CUSTOM_FIELDS</comment>
-    <servicepage>/administration/custom_fields</servicepage>
+    <servicepage>/administration/customFields</servicepage>
     <servicetype>admin</servicetype>
     <category>organisation</category>
     <system_service>false</system_service>
-    <style>fa fa-user</style>
+    <style>fas fa-code</style>
     <enabled>true</enabled>
     <angular>true</angular>
   </SERVICE>
