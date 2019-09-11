@@ -1,18 +1,30 @@
-<button mat-menu-item [matMenuTriggerFor]="currentFolders" *ngIf="currentFoldersList !== undefined && currentFoldersList.length > 0" class="folderAction">
+<button mat-menu-item [matMenuTriggerFor]="currentFolders"
+    *ngIf="currentFoldersList !== undefined && currentFoldersList.length > 0" class="folderAction">
     <mat-icon color="warn" class="fa fa-folder-minus fa-2x"></mat-icon>
     <span>{{lang.removeFromFolder}}...</span>
 </button>
 <mat-menu #currentFolders="matMenu" [class]="'folderListMenu'">
-    <button mat-menu-item *ngFor="let currentfolder of currentFoldersList | sortBy : 'label'" class="labelFolder" (click)="unclassifyDocuments(currentfolder)" [title]="currentfolder.label"><i class="fa fa-users private" *ngIf="currentfolder.public" title="{{lang.sharedFolder}}"></i> {{currentfolder.label}}</button>
+    <button mat-menu-item *ngFor="let currentfolder of currentFoldersList | sortBy : 'label'" class="labelFolder"
+        (click)="unclassifyDocuments(currentfolder)" [title]="currentfolder.label"><i class="fa fa-users private"
+            *ngIf="currentfolder.public" title="{{lang.sharedFolder}}"></i> {{currentfolder.label}}</button>
 </mat-menu>
-<button mat-menu-item [matMenuTriggerFor]="folders" class="folderAction" (menuOpened)="getFolders()" [disabled]="resIds.length === 0">
+<button mat-menu-item [matMenuTriggerFor]="folders" class="folderAction" (menuOpened)="initFolderMenu()"
+    [disabled]="resIds.length === 0">
     <mat-icon color="primary" class="fa fa-folder-open fa-2x"></mat-icon>
     <span>{{lang.classifyIn}}</span>
 </button>
-<mat-menu #folders="matMenu" [class]="'folderListMenu'">
-        <plugin-autocomplete [labelPlaceholder]="lang.searchFolder" [size]="'small'"
+<mat-menu #folders="matMenu" [class]="'folderListMenu'" restoreFocus="false">
+    <ng-template matMenuContent>
+        <mat-form-field floatLabel="never" appearance="outline" class="smallInput"  (click)="$event.stopPropagation();">
+            <input matInput id="searchTerm" placeholder="{{lang.searchFolder}}" [formControl]="searchTerm" autocomplete="off" (click)="$event.stopPropagation();" (keydown)="$event.stopPropagation()">
+        </mat-form-field>
+        <!--<plugin-autocomplete [labelPlaceholder]="lang.searchFolder" [size]="'small'"
         [routeDatas]="['/rest/autocomplete/folders']" [targetSearchKey]="'idToDisplay'"
-        (triggerEvent)="classifyDocuments($event)"></plugin-autocomplete>
-    <button *ngIf="foldersList.length === 0" mat-menu-item class="noFolder" disabled>{{lang.noAvailableFolder}}</button>
-    <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder" (click)="classifyDocuments(folder)" [title]="folder.label"><i class="fa fa-users private" *ngIf="folder.public" title="{{lang.sharedFolder}}"></i> {{folder.label}}</button>
+        (triggerEvent)="classifyDocuments($event)"></plugin-autocomplete>-->
+        <button *ngIf="foldersList.length === 0" mat-menu-item class="noFolder"
+            disabled>{{lang.noAvailableFolder}}</button>
+        <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder"
+            (click)="classifyDocuments(folder)" [title]="folder.label"><i class="fa fa-users private"
+                *ngIf="folder.public" title="{{lang.sharedFolder}}"></i> {{folder.label}}</button>
+    </ng-template>
 </mat-menu>
