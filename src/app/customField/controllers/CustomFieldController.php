@@ -65,7 +65,7 @@ class CustomFieldController
         $id = CustomFieldModel::create([
             'label'         => $body['label'],
             'type'          => $body['type'],
-            'values'        => empty($body['values']) ? null : json_encode($body['values']),
+            'values'        => empty($body['values']) ? '[]' : json_encode($body['values']),
             'default_value' => $body['default_value']
         ]);
 
@@ -99,7 +99,7 @@ class CustomFieldController
         CustomFieldModel::update([
             'set'   => [
                 'label'         => $body['label'],
-                'values'        => empty($body['values']) ? null : json_encode($body['values']),
+                'values'        => empty($body['values']) ? '[]' : json_encode($body['values']),
                 'default_value' => $body['default_value']
             ],
             'where' => ['id = ?'],

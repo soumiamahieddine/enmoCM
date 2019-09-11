@@ -1081,4 +1081,5 @@ export const LANG_EN = {
     "dateInput" : "Date input",
     "radioInput" : "Radio input",
     "checkboxInput" : "Checbox input",
+    "customFieldAlreadyExists" : "Custom fields already exists with this name"
 };

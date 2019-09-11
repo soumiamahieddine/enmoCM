@@ -1118,4 +1118,5 @@ export const LANG_FR = {
     "dateInput" : "Champ date",
     "radioInput" : "Liste à choix unique",
     "checkboxInput" : "Liste à choix multiple",
+    "customFieldAlreadyExists" : "Un champ personnalisé existe déjà avec ce nom"
 };

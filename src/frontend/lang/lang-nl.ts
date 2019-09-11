@@ -1107,4 +1107,5 @@ export const LANG_NL = {
     "dateInput" : "Date input", //_TO_TRANSLATE
     "radioInput" : "Radio input", //_TO_TRANSLATE
     "checkboxInput" : "Checbox input", //_TO_TRANSLATE
+    "customFieldAlreadyExists" : "Custom fields already exists with this name" //_TO_TRANSLATE
 };

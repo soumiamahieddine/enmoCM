@@ -170,6 +170,12 @@ export class CustomFieldsAdministrationComponent implements OnInit {
             customFieldToUpdate.values = customField.values.map((data: any) => data.label)
         }
 
+        const alreadyExists = this.customFields.filter(customField => customField.label == customFieldToUpdate.label );
+        if (alreadyExists.length > 1) {
+            this.notify.handleErrors(this.lang.customFieldAlreadyExists);
+            return of(false);
+        }
+
         this.http.put('../../rest/customFields/' + customField.id, customFieldToUpdate).pipe(
             tap(() => {
                 this.notify.success(this.lang.customFieldUpdated);
