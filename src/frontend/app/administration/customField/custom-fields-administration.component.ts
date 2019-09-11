@@ -112,9 +112,8 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
-            tap((data: any) => {
+            tap(() => {
                 newCustomField = {
-                    id: data.customFieldId,
                     label: 'Nouveau champ',
                     type: customFieldType.type,
                     values: [],
@@ -122,7 +121,8 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                 }
             }),
             exhaustMap((data) => this.http.post('../../rest/customFields', newCustomField)),
-            tap(() => {
+            tap((data: any) => {
+                newCustomField.id = data.customFieldId
                 this.customFields.push(newCustomField);
                 this.notify.success(this.lang.customFieldAdded);
             }),

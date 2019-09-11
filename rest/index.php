@@ -131,7 +131,7 @@ $app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':
 $app->get('/customFields', \CustomField\controllers\CustomFieldController::class . ':get');
 $app->post('/customFields', \CustomField\controllers\CustomFieldController::class . ':create');
 $app->put('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':update');
-$app->delete('/customFields/{id}', \Contact\controllers\ContactController::class . ':delete');
+$app->delete('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':delete');
 
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
