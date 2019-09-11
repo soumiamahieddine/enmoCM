@@ -1076,7 +1076,6 @@ export const LANG_EN = {
     "customFields" : "custom field(s)",
     "avaiblableCustomFieldsTypes" : "Available(s) custom type(s)",
     "customField" : "custom field",
-    "stringInput" : "String input",
     "selectInput" : "Select input",
     "dateInput" : "Date input",
     "radioInput" : "Radio input",

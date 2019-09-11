@@ -28,10 +28,6 @@ class CustomFieldController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         $customFields = CustomFieldModel::get();
 
         foreach ($customFields as $key => $customField) {
@@ -89,6 +85,10 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         } elseif (!empty($body['values']) && !Validator::arrayType()->notEmpty()->validate($body['values'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body values is not an array']);
+        }
+
+        if (count(array_unique($body['values'])) < count($body['values'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Some values have the same name']);
         }
 
         $fields = CustomFieldModel::get(['select' => [1], 'where' => ['label = ?', 'id != ?'], 'data' => [$body['label'], $args['id']]]);

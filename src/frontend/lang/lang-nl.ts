@@ -1102,7 +1102,6 @@ export const LANG_NL = {
     "customFields" : "custom field(s)", //_TO_TRANSLATE
     "avaiblableCustomFieldsTypes" : "Available(s) custom type(s)", //_TO_TRANSLATE
     "customField" : "custom field", //_TO_TRANSLATE
-    "stringInput" : "String input", //_TO_TRANSLATE
     "selectInput" : "Select input", //_TO_TRANSLATE
     "dateInput" : "Date input", //_TO_TRANSLATE
     "radioInput" : "Radio input", //_TO_TRANSLATE

@@ -30,7 +30,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     customFieldsTypes: any[] = [
         {
-            label: this.lang.stringInput,
+            label: this.lang.string,
             type: 'string'
         },
         {
