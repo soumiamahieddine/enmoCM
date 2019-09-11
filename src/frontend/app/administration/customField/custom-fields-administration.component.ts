@@ -27,7 +27,6 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     lang: any = LANG;
 
     loading: boolean = false;
-    creationMode: any = false;
 
     customFieldsTypes: any[] = [
         {
@@ -51,17 +50,13 @@ export class CustomFieldsAdministrationComponent implements OnInit {
             type: 'checkbox'
         }
     ]
-    customFields: any[] = [
-        {
-            id: 4,
-            label: 'Nouveau champ',
-            type: 'select',
-            values: [],
-            default_value: ''
-        }
-    ];
+    customFields: any[] = [];
+    customFieldsClone: any[] = [];
 
-    customFieldClone: any;
+    incrementCreation: number = 1;
+
+    sampleIncrement: number[] = [1,2,3,4];
+
 
     dialogRef: MatDialogRef<any>;
 
@@ -85,18 +80,18 @@ export class CustomFieldsAdministrationComponent implements OnInit {
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES
             map((data: any) => {
                 data.customFields.forEach((element: any) => {
-                    if (element.values != null) {
-                        element.values = element.values.map((info: any) => {
-                            return {
-                                label: info
-                            }
-                        });
-                    }
+                    element.values = element.values.map((info: any) => {
+                        return {
+                            label: info
+                        }
+                    });
+
                 });
                 return data;
             }),
             tap((data: any) => {
                 this.customFields = data.customFields;
+                this.customFieldsClone = JSON.parse(JSON.stringify(this.customFields));
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -116,7 +111,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
             filter((data: string) => data === 'ok'),
             tap(() => {
                 newCustomField = {
-                    label: 'Nouveau champ',
+                    label: this.lang.newField + ' ' + this.incrementCreation,
                     type: customFieldType.type,
                     values: [],
                     default_value: ''
@@ -127,6 +122,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                 newCustomField.id = data.customFieldId
                 this.customFields.push(newCustomField);
                 this.notify.success(this.lang.customFieldAdded);
+                this.incrementCreation++;
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -138,7 +134,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     addValue(indexCustom: number) {
         this.customFields[indexCustom].values.push(
             {
-                label: 'Nouvelle donnée'
+                label: this.lang.newValue
             }
         );
     }
@@ -152,8 +148,10 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete('../../rest/customFields/' + this.customFields[indexCustom].id)),
             tap(() => {
                 this.customFields.splice(indexCustom, 1);
+                this.notify.success(this.lang.customFieldDeleted);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -162,13 +160,12 @@ export class CustomFieldsAdministrationComponent implements OnInit {
         ).subscribe();
     }
 
-    updateCustomField(customField: any) {
+    updateCustomField(customField: any, indexCustom: number) {
 
         // TO FIX DATA BINDING SIMPLE ARRAY VALUES
         const customFieldToUpdate = { ...customField };
-        if (customField.values != null) {
-            customFieldToUpdate.values = customField.values.map((data: any) => data.label)
-        }
+        
+        customFieldToUpdate.values = customField.values.map((data: any) => data.label)
 
         const alreadyExists = this.customFields.filter(customField => customField.label == customFieldToUpdate.label );
         if (alreadyExists.length > 1) {
@@ -178,6 +175,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
         this.http.put('../../rest/customFields/' + customField.id, customFieldToUpdate).pipe(
             tap(() => {
+                this.customFieldsClone[indexCustom] = customField;
                 this.notify.success(this.lang.customFieldUpdated);
             }),
             catchError((err: any) => {
@@ -191,13 +189,8 @@ export class CustomFieldsAdministrationComponent implements OnInit {
         customField.values = this.sortPipe.transform(customField.values, 'label');
     }
 
-    initCustomFieldCheck(customField: any) {
-        console.log('init');
-        this.customFieldClone = JSON.parse(JSON.stringify(customField));
-    }
-
-    isModified(customField: any) {
-        if (JSON.stringify(customField) === JSON.stringify(this.customFieldClone)) {
+    isModified(customField: any, indexCustomField: number) {
+        if (JSON.stringify(customField) === JSON.stringify(this.customFieldsClone[indexCustomField])) {
             return true;
         } else {
             return false;
