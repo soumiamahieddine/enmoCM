@@ -29,11 +29,12 @@ class CoreController
     public function initialize(Request $request, Response $response)
     {
         $aInit = [];
-        $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
-        $aInit['applicationName'] = CoreConfigModel::getApplicationName();
+        $aInit['coreUrl']            = str_replace('rest/', '', \Url::coreurl());
+        $aInit['applicationName']    = CoreConfigModel::getApplicationName();
         $aInit['applicationVersion'] = CoreConfigModel::getApplicationVersion();
-        $aInit['lang'] = CoreConfigModel::getLanguage();
-        $aInit['user'] = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        $aInit['lang']               = CoreConfigModel::getLanguage();
+        $aInit['user']               = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        $aInit['customLanguage']     = CoreConfigModel::getCustomLanguage(['lang' => $aInit['lang']]);
 
         $aInit['scriptsToinject'] = [];
         $aInit['scriptsInjected'] = [];
