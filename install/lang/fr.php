@@ -99,6 +99,9 @@ if (!defined('_UNOCONV_NOT_INSTALLED')) {
 if (!defined('_PGSQL')) {
     define('_PGSQL', 'Librairie pgsql');
 }
+if (!defined('_PDO_PGSQL')) {
+    define('_PDO_PGSQL', 'Librairie pdo_pgsql');
+}
 if (!defined('_GD')) {
     define('_GD', 'Librairie gd');
 }

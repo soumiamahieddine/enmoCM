@@ -114,6 +114,9 @@ class Install extends functions
         if (!$this->isUnoconvInstalled()) {
             return false;
         }
+        if (!$this->isPhpRequirements('pdo_pgsql')) {
+            return false;
+        }
         if (!$this->isPhpRequirements('pgsql')) {
             return false;
         }
@@ -129,30 +132,15 @@ class Install extends functions
         if (!$this->isPhpRequirements('gd')) {
             return false;
         }
-        // if (!$this->isPhpRequirements('imagick')) {
-        //     return false;
-        // }
-        /*if (!$this->isPhpRequirements('ghostscript')) {
-            return false;
-        }*/
         if (!$this->isPearRequirements('System.php')) {
             return false;
         }
-        // if (!$this->isPearRequirements('MIME/Type.php')) {
-        //     return false;
-        // }
-        /*if (!$this-&gt;isIniErrorRepportingRequirements()) {
-            return false;
-        }*/
         if (!$this->isIniDisplayErrorRequirements()) {
             return false;
         }
         if (!$this->isIniShortOpenTagRequirements()) {
             return false;
         }
-        // if (!$this->isIniMagicQuotesGpcRequirements()) {
-        //     return false;
-        // }
 
         if (DIRECTORY_SEPARATOR != '/' && !$this->isPhpRequirements('fileinfo')) {
             return false;
@@ -236,15 +224,6 @@ class Install extends functions
             return true;
         }
     }
-
-    // public function isIniMagicQuotesGpcRequirements()
-    // {
-    //     if (strtoupper(ini_get('magic_quotes_gpc')) ==  'ON') {
-    //         return false;
-    //     } else {
-    //         return true;
-    //     }
-    // }
 
     public function getProgress(
         $stepNb,
@@ -414,17 +393,10 @@ class Install extends functions
             }
 
             $rest = substr($chemin, $pos + 1);    // contient le nom de l'appli (le nom du dossier où se situe l'appli)
-            // var_dump($rest);
 
-            // $cheminCustom = realpath('.')."/custom";
-            // // var_dump($cheminCustom);
-            // mkdir($cheminCustom, 0755);
             $filename = realpath('.').'/custom/custom.xml';
-            //var_dump(file_exists($filename));
             if (file_exists($filename)) {
-                //var_dump('dans if');
                 $xmlCustom = simplexml_load_file(realpath('.').'/custom/custom.xml');
-                //$xmlCustom->addChild('custom');
                 $custom = $xmlCustom->addChild('custom');
                 $custom->addChild('custom_id', 'cs_'.$databasename);
                 $custom->addChild('ip');
@@ -522,14 +494,7 @@ class Install extends functions
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
                 $cmd = 'ln -s '.realpath('.')."/ cs_$databasename";
                 exec($cmd);
-            }/*elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
-                $cmd = "mklink cs_$databasename ".realpath('.');
-                var_dump($cmd);
-                var_dump(exec($cmd));
-                exit;
-                exec($cmd);
-            }*/
-            // Création du lien symbolique sous windows mais il faut être en administrateur pour lancer la commande : mklink nomDuCustom cheminDeLAPPLI
+            }
         }
 
         return true;
@@ -542,8 +507,6 @@ class Install extends functions
         $connect .= 'user='.$_SESSION['config']['databaseuser'].' ';
         $connect .= 'password='.$_SESSION['config']['databasepassword'].' ';
         $connect .= 'dbname=postgres';
-
-        //var_dump($connect);
 
         if (!@pg_connect($connect)) {
             return false;
@@ -559,15 +522,12 @@ class Install extends functions
         }
 
         while ($row = pg_fetch_row($result)) {
-            //echo "datname: $row[0] ";
             if ($row[0]) {
                 return false;
             }
         }
 
         return true;
-
-        //var_dump($execute);
     }
 
     public function verifCustom($databasename)
@@ -591,11 +551,6 @@ class Install extends functions
             return false;
             exit;
         }
-
-        // if (!$this->setConfigXmlVisa()) {
-        //     return false;
-        //     exit;
-        // }
 
         if (!$this->setScriptNotificationSendmailSh()) {
             return false;
@@ -684,11 +639,6 @@ class Install extends functions
             exit;
         }
 
-        // if (!$this->setConfigXmlVisa()) {
-        //     return false;
-        //     exit;
-        // }
-
         if (!$this->setScriptNotificationSendmailSh()) {
             return false;
             exit;
@@ -729,11 +679,6 @@ class Install extends functions
             exit;
         }
 
-        /*if (!$this->setDatasourcesXsd()) {
-             return false;
-             exit;
-         }*/
-
         return true;
     }
 
@@ -746,13 +691,10 @@ class Install extends functions
 
     private function setConfigCron()
     {
-        //mkdir(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/conf_cron/");
         $output = shell_exec('crontab -l');
-        //var_dump($output);
         $pathfile = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/cron_'.$_SESSION['config']['databasename'];
         $file = fopen('custom/cs_'.$_SESSION['config']['databasename'].'/cron_'.$_SESSION['config']['databasename'], 'w+');
         fwrite($file, $output);
-        //ftruncate($file,0);
         $cron = '
 
 ####################################################################################
@@ -784,10 +726,6 @@ class Install extends functions
         exec('cat ' . $pathfile . ' | crontab');
 
         $output = exec('crontab -l');
-        //$fileCrontab = fopen("custom/cs_".$_SESSION['config']['databasename']."/crontabL_".$_SESSION['config']['databasename'], "a+");
-
-        // fwrite($fileCrontab,$output);
-        // fclose($fileCrontab);
         return true;
     }
 
@@ -820,7 +758,7 @@ class Install extends functions
     private function setConfigXml()
     {
         $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/config.xml.default');
-        //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
+
         $CONFIG = $xmlconfig->CONFIG;
 
         $CONFIG->databaseserver = $_SESSION['config']['databaseserver'];
@@ -830,7 +768,7 @@ class Install extends functions
         $CONFIG->databasepassword = $_SESSION['config']['databasepassword'];
         $CONFIG->lang = $_SESSION['lang'];
         $res = $xmlconfig->asXML();
-        // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
+
         $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/config.xml', 'w+');
         if (!$fp) {
             return false;
@@ -845,26 +783,6 @@ class Install extends functions
         return true;
     }
 
-    // private function setConfigXmlVisa()
-    // {
-    //     $xmlconfig = simplexml_load_file('modules/visa/xml/config.xml.default');
-    //     $CONFIG = $xmlconfig->CONFIG;
-    //     //TODO fill the file...
-
-    //     $res = $xmlconfig->asXML();
-    //     $fp = @fopen("modules/visa/xml/config.xml", "w+");
-    //     if (!$fp) {
-    //         return false;
-    //         exit;
-    //     }
-    //     $write = fwrite($fp,$res);
-    //     if (!$write) {
-    //         return false;
-    //         exit;
-    //     }
-    //     return true;
-    // }
-
 
     private function setConfig_batch_XmlNotifications()
     {
@@ -876,10 +794,7 @@ class Install extends functions
 
         $CONFIG = $xmlconfig->CONFIG;
         $CONFIG->MaarchDirectory = realpath('.').'/';
-        //$path = "ifconfig eth2 | grep 'inet addr' | cut -f2 -d: | awk '{print $1}'";
-        //$ipconfig = shell_exec($path);
-        //$ipconfig = trim($ipconfig);
-        //$chemin = $ipconfig . dirname($_SERVER['PHP_SELF'] .'cs_'.$_SESSION['config']['databasename']);
+
         if ($_SERVER['SERVER_ADDR'] == '::1') {
             $SERVER_ADDR = 'localhost';
         } else {
@@ -920,7 +835,6 @@ class Install extends functions
     private function setConfig_LDAP()
     {
         $xmlconfig = simplexml_load_file('modules/ldap/xml/config.xml.default');
-        //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $CONFIG_BASE = $xmlconfig->config_base;
 
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
@@ -1050,7 +964,6 @@ class Install extends functions
 
             $fp = fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.bat', 'w+');
             if (!$fp) {
-                //var_dump('FALSE');
                 return false;
                 exit;
             }
@@ -1073,7 +986,6 @@ class Install extends functions
             $fp = fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh', 'w+');
 
             if (!$fp) {
-                //var_dump('FALSE');
                 return false;
                 exit;
             }
