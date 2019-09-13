@@ -32,7 +32,7 @@ export class IndexingModelAdministrationComponent implements OnInit {
 
     lang: any = LANG;
 
-    loading: boolean = false;
+    loading: boolean = true;
 
     indexingModel: any = {
         id: 0,

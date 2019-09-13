@@ -165,71 +165,91 @@ export class IndexingFormComponent implements OnInit {
             this['indexingModels_' + category] = [];
         });
 
-        this.http.get("../../rest/customFields").pipe(
-            tap((data: any) => {
-                this.availableCustomFields = data.customFields.map((info: any) => {
-                    info.identifier = 'indexingCustomField_' + info.id;
-                    info.system = false;
-                    return info;
-                });
-            }),
-            exhaustMap((data) => this.http.get("../../rest/indexingModels/" + this.indexingFormId)),
-            tap((data: any) => {
-                let fieldExist: boolean;
-                if (data.indexingModel.fields.length === 0) {
+        if (this.indexingFormId <= 0) {
+            this.http.get("../../rest/customFields").pipe(
+                tap((data: any) => {
+                    this.availableCustomFields = data.customFields.map((info: any) => {
+                        info.identifier = 'indexingCustomField_' + info.id;
+                        info.system = false;
+                        return info;
+                    });
                     this.fieldCategories.forEach(element => {
                         this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
                     });
-                    this.notify.error("Champs introuvables! les données de base ont été chargés");
-                } else {
-                    data.indexingModel.fields.forEach((field: any) => {
-                        fieldExist = false;
-                        field.label = this.lang[field.identifier];
-                        field.system = false;
-                        field.values = [];
-    
-                        let indexFound = this.availableFields.map(avField => avField.identifier).indexOf(field.identifier);
-    
-                        if (indexFound > -1) {
-                            field.label = this.availableFields[indexFound].label;
-                            field.values = this.availableFields[indexFound].values;
-                            field.type = this.availableFields[indexFound].type;
-                            this.availableFields.splice(indexFound, 1);
-                            fieldExist = true;
-                        }
-    
-                        indexFound = this.availableCustomFields.map(avField => avField.identifier).indexOf(field.identifier);
-                        
-                        if (indexFound > -1) {
-                            field.label = this.availableCustomFields[indexFound].label;
-                            field.values = this.availableCustomFields[indexFound].values;
-                            field.type = this.availableCustomFields[indexFound].type;
-                            this.availableCustomFields.splice(indexFound, 1);
-                            fieldExist = true;
-                        }
-                        if (this.indexingModelsCore.map(info => info.identifier).indexOf(field.identifier) > -1) {
-                            fieldExist = true;
-                            field.system = true;
-                        }
-    
-                        if (fieldExist) {
-                            this['indexingModels_' + field.unit].push(field);
-                        } else {
-                            this.notify.error("Le champ "+ field.identifier+" n'existe pas !");
-                        }
-                        
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.http.get("../../rest/customFields").pipe(
+                tap((data: any) => {
+                    this.availableCustomFields = data.customFields.map((info: any) => {
+                        info.identifier = 'indexingCustomField_' + info.id;
+                        info.system = false;
+                        return info;
                     });
-                }
-                this.fieldCategories.forEach(element => {
-                    this['indexingModels_' + element + 'Clone'] = JSON.parse(JSON.stringify(this['indexingModels_' + element]));
-                });
-            }),
-            finalize(() => this.loading = false),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+                }),
+                exhaustMap((data) => this.http.get("../../rest/indexingModels/" + this.indexingFormId)),
+                tap((data: any) => {
+                    let fieldExist: boolean;
+                    if (data.indexingModel.fields.length === 0) {
+                        this.fieldCategories.forEach(element => {
+                            this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
+                        });
+                        this.notify.error("Champs introuvables! les données de base ont été chargés");
+                    } else {
+                        data.indexingModel.fields.forEach((field: any) => {
+                            fieldExist = false;
+                            field.label = this.lang[field.identifier];
+                            field.system = false;
+                            field.values = [];
+
+                            let indexFound = this.availableFields.map(avField => avField.identifier).indexOf(field.identifier);
+
+                            if (indexFound > -1) {
+                                field.label = this.availableFields[indexFound].label;
+                                field.values = this.availableFields[indexFound].values;
+                                field.type = this.availableFields[indexFound].type;
+                                this.availableFields.splice(indexFound, 1);
+                                fieldExist = true;
+                            }
+
+                            indexFound = this.availableCustomFields.map(avField => avField.identifier).indexOf(field.identifier);
+
+                            if (indexFound > -1) {
+                                field.label = this.availableCustomFields[indexFound].label;
+                                field.values = this.availableCustomFields[indexFound].values;
+                                field.type = this.availableCustomFields[indexFound].type;
+                                this.availableCustomFields.splice(indexFound, 1);
+                                fieldExist = true;
+                            }
+                            if (this.indexingModelsCore.map(info => info.identifier).indexOf(field.identifier) > -1) {
+                                fieldExist = true;
+                                field.system = true;
+                            }
+
+                            if (fieldExist) {
+                                this['indexingModels_' + field.unit].push(field);
+                            } else {
+                                this.notify.error("Le champ " + field.identifier + " n'existe pas !");
+                            }
+
+                        });
+                    }
+                    this.fieldCategories.forEach(element => {
+                        this['indexingModels_' + element + 'Clone'] = JSON.parse(JSON.stringify(this['indexingModels_' + element]));
+                    });
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
     drop(event: CdkDragDrop<string[]>) {
