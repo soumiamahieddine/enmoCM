@@ -61,8 +61,7 @@ class CustomFieldController
         $id = CustomFieldModel::create([
             'label'         => $body['label'],
             'type'          => $body['type'],
-            'values'        => empty($body['values']) ? '[]' : json_encode($body['values']),
-            'default_value' => $body['default_value']
+            'values'        => empty($body['values']) ? '[]' : json_encode($body['values'])
         ]);
 
         return $response->withStatus(201)->withJson(['customFieldId' => $id]);
@@ -99,8 +98,7 @@ class CustomFieldController
         CustomFieldModel::update([
             'set'   => [
                 'label'         => $body['label'],
-                'values'        => empty($body['values']) ? '[]' : json_encode($body['values']),
-                'default_value' => $body['default_value']
+                'values'        => empty($body['values']) ? '[]' : json_encode($body['values'])
             ],
             'where' => ['id = ?'],
             'data'  => [$args['id']]
@@ -115,7 +113,7 @@ class CustomFieldController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        IndexingModelFieldModel::delete(['where' => ['type = ?', 'identifier = ?'], 'data' => ['custom', $args['id']]]);
+        IndexingModelFieldModel::delete(['where' => ['identifier = ?'], 'data' => [$args['id']]]);
 
         //TODO Suppression des valeurs liés aux courriers ?
 

@@ -26,14 +26,14 @@ use Slim\Http\Response;
 
 class IndexingModelController
 {
-    const FIELDS_TYPES = ['standard', 'custom'];
+    const FIELDS_TYPES = ['string', 'integer', 'select', 'date', 'radio', 'checkbox'];
 
     public function get(Request $request, Response $response)
     {
         $models = IndexingModelModel::get(['where' => ['owner = ? OR private = ?'], 'data' => [$GLOBALS['id'], 'false']]);
 
         foreach ($models as $key => $model) {
-            $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$model['id']]]);
+            $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$model['id']]]);
             $models[$key]['fields'] = $fields;
         }
 
@@ -47,9 +47,9 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
         } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
-         }
+        }
 
-        $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
+        $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
         $model['fields'] = $fields;
 
         return $response->withJson(['indexingModel' => $model]);
@@ -65,7 +65,7 @@ class IndexingModelController
         foreach ($body['fields'] as $key => $field) {
             if (!Validator::stringType()->notEmpty()->validate($field['type']) || !in_array($field['type'], IndexingModelController::FIELDS_TYPES)) {
                 return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] type is empty or not a validate type"]);
-            } elseif (!Validator::intVal()->notEmpty()->validate($field['identifier'])) {
+            } elseif (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
                 return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not an integer"]);
             }
         }
@@ -84,18 +84,13 @@ class IndexingModelController
         ]);
 
         foreach ($body['fields'] as $field) {
-            if ($field['type'] == 'custom') {
-                $unit = $field['unit'] ?? null;
-            } else {
-                $unit = null;
-            }
             IndexingModelFieldModel::create([
                 'model_id'      => $modelId,
                 'type'          => $field['type'],
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
-                'value'         => $field['value'] ?? null,
-                'unit'          => $unit
+                'default_value' => $field['default_value'] ?? null,
+                'unit'          => $field['unit'] ?? null
             ]);
         }
 
@@ -112,7 +107,7 @@ class IndexingModelController
         foreach ($body['fields'] as $key => $field) {
             if (!Validator::stringType()->notEmpty()->validate($field['type']) || !in_array($field['type'], IndexingModelController::FIELDS_TYPES)) {
                 return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] type is empty or not a validate type"]);
-            } elseif (!Validator::intVal()->notEmpty()->validate($field['identifier'])) {
+            } elseif (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
                 return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not an integer"]);
             }
         }
@@ -137,18 +132,13 @@ class IndexingModelController
         IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$args['id']]]);
 
         foreach ($body['fields'] as $field) {
-            if ($field['type'] == 'custom') {
-                $unit = $field['unit'] ?? null;
-            } else {
-                $unit = null;
-            }
             IndexingModelFieldModel::create([
                 'model_id'      => $args['id'],
                 'type'          => $field['type'],
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
-                'value'         => $field['value'] ?? null,
-                'unit'          => $unit
+                'default_value' => $field['default_value'] ?? null,
+                'unit'          => $field['unit'] ?? null
             ]);
         }
 

@@ -26,25 +26,25 @@ class IndexingModelControllerTest extends TestCase
             'private'   => true,
             'fields'    => [
                 [
-                    'type'          => 'standard',
-                    'identifier'    => 1,
+                    'type'          => 'string',
+                    'identifier'    => 'subject',
                     'mandatory'     => true,
-                    'value'         => 'tika',
+                    'default_value' => 'tika',
                 ],
                 [
-                    'type'          => 'standard',
-                    'identifier'    => 2,
+                    'type'          => 'string',
+                    'identifier'    => 'name',
                     'mandatory'     => true,
-                    'value'         => 'massala',
+                    'default_value' => 'massala',
                 ]
             ]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
 
         $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
-        $this->assertSame(200, $response->getStatusCode());
-
         $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(200, $response->getStatusCode());
 
         self::$id = $responseBody->id;
 
@@ -59,14 +59,14 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame('mon model d indexation', $responseBody->indexingModel->label);
         $this->assertSame(true, $responseBody->indexingModel->private);
-        $this->assertSame('standard', $responseBody->indexingModel->fields[0]->type);
-        $this->assertSame(1, $responseBody->indexingModel->fields[0]->identifier);
+        $this->assertSame('string', $responseBody->indexingModel->fields[0]->type);
+        $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
-        $this->assertSame('tika', $responseBody->indexingModel->fields[0]->value);
-        $this->assertSame('standard', $responseBody->indexingModel->fields[1]->type);
-        $this->assertSame(2, $responseBody->indexingModel->fields[1]->identifier);
+        $this->assertSame('tika', $responseBody->indexingModel->fields[0]->default_value);
+        $this->assertSame('string', $responseBody->indexingModel->fields[1]->type);
+        $this->assertSame('name', $responseBody->indexingModel->fields[1]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[1]->mandatory);
-        $this->assertSame('massala', $responseBody->indexingModel->fields[1]->value);
+        $this->assertSame('massala', $responseBody->indexingModel->fields[1]->default_value);
 
 
         //  Errors
@@ -95,16 +95,16 @@ class IndexingModelControllerTest extends TestCase
             'label'     => 'mon model d indexation modifié',
             'fields'    => [
                 [
-                    'type'          => 'standard',
-                    'identifier'    => 4,
+                    'type'          => 'string',
+                    'identifier'    => 'subject',
                     'mandatory'     => true,
-                    'value'         => 'butter',
+                    'default_value' => 'butter',
                 ],
                 [
-                    'type'          => 'custom',
-                    'identifier'    => 8,
+                    'type'          => 'string',
+                    'identifier'    => 'siret',
                     'mandatory'     => false,
-                    'value'         => 'chicken',
+                    'default_value' => 'chicken',
                 ]
             ]
         ];
@@ -125,14 +125,14 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame('mon model d indexation modifié', $responseBody->indexingModel->label);
         $this->assertSame(true, $responseBody->indexingModel->private);
-        $this->assertSame('standard', $responseBody->indexingModel->fields[0]->type);
-        $this->assertSame(4, $responseBody->indexingModel->fields[0]->identifier);
+        $this->assertSame('string', $responseBody->indexingModel->fields[0]->type);
+        $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
-        $this->assertSame('butter', $responseBody->indexingModel->fields[0]->value);
-        $this->assertSame('custom', $responseBody->indexingModel->fields[1]->type);
-        $this->assertSame(8, $responseBody->indexingModel->fields[1]->identifier);
+        $this->assertSame('butter', $responseBody->indexingModel->fields[0]->default_value);
+        $this->assertSame('string', $responseBody->indexingModel->fields[1]->type);
+        $this->assertSame('siret', $responseBody->indexingModel->fields[1]->identifier);
         $this->assertSame(false, $responseBody->indexingModel->fields[1]->mandatory);
-        $this->assertSame('chicken', $responseBody->indexingModel->fields[1]->value);
+        $this->assertSame('chicken', $responseBody->indexingModel->fields[1]->default_value);
 
 
         //  Errors
