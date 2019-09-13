@@ -487,5 +487,8 @@ define("_FOLDER_CREATION", "Folder creation");
 define("_FOLDER_MODIFICATION", "Folder modification");
 define("_FOLDER_SUPPRESSION", "Folder suppression");
 define("_FOLDER_SHARING_MODIFICATION", "Folder sharing modification");
+define("_FOLDER_RESOURCES_ADDED", "Added resources");
+define("_FOLDER_RESOURCES_REMOVED", "Removed resources");
+define("_FOLDER_TO_FOLDER", "to folder");
 
 define('_NOT_EXISTS', "doesn't exist");

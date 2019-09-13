@@ -485,6 +485,15 @@ class FolderController
             ResourceFolderModel::create(['folder_id' => $args['id'], 'res_id' => $value]);
         }
 
+        HistoryController::add([
+            'tableName' => 'resources_folders',
+            'recordId'  => $args['id'],
+            'eventType' => 'ADD',
+            'info'      => _FOLDER_RESOURCES_ADDED . " : " . implode(", ", $resourcesToClassify) . " " . _FOLDER_TO_FOLDER . " " . $args['id'],
+            'moduleId'  => 'folder',
+            'eventId'   => 'folderResourceAdded',
+        ]);
+
         return $response->withJson(['countResources' => count($foldersResources) + count($resourcesToClassify)]);
     }
 
@@ -518,6 +527,15 @@ class FolderController
         foreach ($resourcesToUnclassify as $value) {
             ResourceFolderModel::delete(['where' => ['folder_id = ?', 'res_id = ?'], 'data' => [$args['id'], $value]]);
         }
+
+        HistoryController::add([
+            'tableName' => 'resources_folders',
+            'recordId'  => $args['id'],
+            'eventType' => 'DEL',
+            'info'      => _FOLDER_RESOURCES_REMOVED . " : " . implode(", ", $resourcesToUnclassify) . " " . _FOLDER_TO_FOLDER . " " . $args['id'],
+            'moduleId'  => 'folder',
+            'eventId'   => 'folderResourceAdded',
+        ]);
 
         return $response->withJson(['countResources' => count($foldersResources) - count($resourcesToUnclassify)]);
     }
