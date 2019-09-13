@@ -1,0 +1,131 @@
+<div *ngIf="availableCustomFields !== undefined" class="content" cdkDropList id="customFieldsList"
+    [cdkDropListConnectedTo]="['indexingModelsCustomFieldsList_mail','indexingModelsCustomFieldsList_contact','indexingModelsCustomFieldsList_process','indexingModelsCustomFieldsList_classement']"
+    [cdkDropListData]="availableCustomFields" (cdkDropListDropped)="drop($event)">
+    <div class="customFieldRow" *ngFor="let field of availableCustomFields" cdkDrag
+        [cdkDragData]="field">
+        <div class="customFieldDrag">
+            <i color="primary" class="fas fa-arrows-alt fa-2x" cdkDragHandle></i>
+        </div>
+        <div style="flex:1;display: flex;">
+            <div class="fieldLabel">
+                {{field.label}}
+            </div>
+            <div class="fieldInput" [class.advancedInput]="field.type === 'checkbox'">
+                <ng-container *ngIf="field.type === 'string'">
+                    <mat-form-field class="input-form" floatLabel="never">
+                        <textarea matInput [placeholder]="lang[field.type + 'Input']" matTextareaAutosize
+                            matAutosizeMinRows="1" cdkAutosizeMaxRows="6"></textarea>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'select'">
+                    <mat-form-field class="input-form" floatLabel="never">
+                        <mat-select [placeholder]="lang[field.type + 'Input']">
+                            <mat-option *ngFor="let value of field.values" [value]="value">
+                                {{value}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'date'">
+                    <mat-form-field class="input-form" floatLabel="never">
+                        <input matInput [matDatepicker]="picker" [placeholder]="lang[field.type + 'Input']"
+                            (click)="picker.open()">
+                        <mat-datepicker-toggle matSuffix [for]="picker">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'radio'">
+                    <mat-radio-group class="radio-form" color="primary">
+                        <mat-radio-button *ngFor="let value of field.values" [value]="value">
+                            {{value}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'checkbox'">
+                    <div class="input-form checkbox-form">
+                        <mat-selection-list #shoes class="div-list">
+                            <mat-list-option *ngFor="let value of field.values" [value]="value"
+                                checkboxPosition="before">
+                                {{value}}
+                            </mat-list-option>
+                        </mat-selection-list>
+                    </div>
+                    <mat-chip-list class="checkbox-selected-list">
+                        <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
+                            {{lang.selectedValue}}
+                        </mat-chip>
+                    </mat-chip-list>
+                </ng-container>
+            </div>
+            <div class="fieldState">
+                <i class="fas fa-asterisk" [class.noMandatory]="!field.mandatory"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="availableFields !== undefined" class="content" cdkDropList id="fieldsList"
+    [cdkDropListConnectedTo]="['indexingModelsCustomFieldsList_mail','indexingModelsCustomFieldsList_contact','indexingModelsCustomFieldsList_process','indexingModelsCustomFieldsList_classement']"
+    [cdkDropListData]="availableFields" (cdkDropListDropped)="drop($event)">
+    <div class="customFieldRow" *ngFor="let field of availableFields" cdkDrag [cdkDragData]="field">
+        <div class="customFieldDrag" cdkDragHandle>
+            <i color="primary" class="fas fa-arrows-alt fa-2x"></i>
+        </div>
+        <div style="flex:1;display: flex;">
+            <div class="fieldLabel">
+                {{field.label}}
+            </div>
+            <div class="fieldInput">
+                <ng-container *ngIf="field.type === 'string'">
+                    <mat-form-field class="input-form" floatLabel="never">
+                        <textarea matInput [placeholder]="lang[field.type + 'Input']" matTextareaAutosize
+                            matAutosizeMinRows="1" cdkAutosizeMaxRows="6"></textarea>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'select'">
+                    <mat-form-field class="input-form" floatLabel="never">
+                        <mat-select [placeholder]="lang[field.type + 'Input']">
+                            <mat-option *ngFor="let value of field.values" [value]="value">
+                                {{value}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'date'">
+                    <mat-form-field class="input-form" floatLabel="never">
+                        <input matInput [matDatepicker]="picker" [placeholder]="lang[field.type + 'Input']"
+                            (click)="picker.open()">
+                        <mat-datepicker-toggle matSuffix [for]="picker">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'radio'">
+                    <mat-radio-group class="radio-form" color="primary">
+                        <mat-radio-button *ngFor="let value of field.values" [value]="value">
+                            {{value}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'checkbox'">
+                    <div class="input-form checkbox-form">
+                        <mat-selection-list #shoes class="div-list">
+                            <mat-list-option *ngFor="let value of field.values" [value]="value"
+                                checkboxPosition="before">
+                                {{value}}
+                            </mat-list-option>
+                        </mat-selection-list>
+                    </div>
+                    <mat-chip-list class="checkbox-selected-list">
+                        <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
+                            {{lang.selectedValue}}
+                        </mat-chip>
+                    </mat-chip-list>
+                </ng-container>
+            </div>
+            <div class="fieldState">
+                <i class="fas fa-asterisk" [class.noMandatory]="!field.mandatory"></i>
+            </div>
+        </div>
+    </div>
+</div>

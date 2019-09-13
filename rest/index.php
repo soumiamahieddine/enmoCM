@@ -133,6 +133,13 @@ $app->post('/customFields', \CustomField\controllers\CustomFieldController::clas
 $app->put('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':update');
 $app->delete('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':delete');
 
+//IndexingModels
+$app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
+$app->get('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':getById');
+$app->post('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':create');
+$app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':update');
+$app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
+
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
 $app->post('/docservers', \Docserver\controllers\DocserverController::class . ':create');

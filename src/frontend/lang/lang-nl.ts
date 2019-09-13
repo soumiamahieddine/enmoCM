@@ -1127,4 +1127,14 @@ export const LANG_NL = {
     "privateFolder" : "Private folder", //_TO_TRANSLATE
     "visibleBy" : "Visible by", //_TO_TRANSLATE
     "folderInformations" : "Folder Informations", //_TO_TRANSLATE
+    "process" : "Process", //_TO_TRANSLATE
+    "modelName" : "Model name", //_TO_TRANSLATE
+    "defaultModel" : "Default model", //_TO_TRANSLATE
+    "indexingForm" : "Indexing form", //_TO_TRANSLATE
+    "availableFields" : "Available field(s)", //_TO_TRANSLATE
+    "availableCustomFields" : "Available custom field(s)", //_TO_TRANSLATE
+    "indexingModel" : "Indexing model", //_TO_TRANSLATE
+    "indexingModelModification" : "Indexing model modification", //_TO_TRANSLATE
+    "mandatoryField" : "Mandatory field", //_TO_TRANSLATE
+    "optionalField" : "Optional field", //_TO_TRANSLATE
 };

@@ -50,6 +50,7 @@ import { ListAdministrationComponent }                  from './basket/list/list
 import { ShippingsAdministrationComponent }              from './shipping/shippings-administration.component';
 import { ShippingAdministrationComponent }              from './shipping/shipping-administration.component';
 import { CustomFieldsAdministrationComponent }              from './customField/custom-fields-administration.component';
+import { IndexingModelsAdministrationComponent }              from './indexingModel/indexing-models-administration.component';
 
 @NgModule({
     imports:      [
@@ -109,7 +110,8 @@ import { CustomFieldsAdministrationComponent }              from './customField/
         ShippingsAdministrationComponent,
         ShippingAdministrationComponent,
         AccountLinkComponent,
-        CustomFieldsAdministrationComponent
+        CustomFieldsAdministrationComponent,
+        IndexingModelsAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,

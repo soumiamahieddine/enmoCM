@@ -436,11 +436,11 @@
     <id>admin_indexing_models</id>
     <name>_ADMIN_INDEXING_MODELS</name>
     <comment>_ADMIN_INDEXING_MODELS</comment>
-    <servicepage>/administration/indexing-models</servicepage>
+    <servicepage>/administration/indexingModels</servicepage>
     <servicetype>admin</servicetype>
     <category>organisation</category>
     <system_service>false</system_service>
-    <style>fa fa-user</style>
+    <style>fab fa-wpforms</style>
     <enabled>true</enabled>
     <angular>true</angular>
   </SERVICE>

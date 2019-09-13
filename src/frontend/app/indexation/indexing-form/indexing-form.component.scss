@@ -1,0 +1,241 @@
+@import '../../../css/vars.scss';
+
+.banner {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    border-radius: 20px;
+    border: solid 1px #ccc;
+    position: relative;
+    padding: 20px;
+    width: 100%;
+
+    .title {
+        white-space: pre;
+        overflow: hidden;
+        max-width: 85%;
+        text-overflow: ellipsis;
+        z-index: 1;
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        position: absolute;
+        top: -18px;
+        left: 20px;
+        padding: 0px;
+        margin: 0px;
+        color: $primary;
+
+        &-divider {
+            position: absolute;
+            width: 99%;
+            z-index: -1;
+            top: 17px;
+            background: white;
+            height: 1px;
+        }
+    }
+
+    .content {
+        font-size: 16px;
+    }
+}
+
+.fieldRow {
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.fieldLabel {
+    color: #4A4A4A;
+}
+
+.fieldState {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    i {
+        font-size: 5px;
+        color: $primary;
+    }
+}
+
+.fieldLabel,
+.fieldInput {
+    font-size: 13px;
+    flex: 1;
+}
+
+.fieldLabel,
+.fieldInput,
+.fieldState {
+    align-items: center;
+    display: flex;
+
+}
+
+.input-form {
+    color: #666;
+    width: 500px;
+
+    .mat-input-element {
+        color: $primary;
+        padding-left: 20px;
+    }
+
+    input {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    ::ng-deep.mat-select-value-text {
+        padding-left: 20px;
+        color: $primary;
+    }
+
+    ::ng-deep.mat-form-field-label {
+        left: 20px;
+    }
+
+    ::ng-deep.mat-form-field-infix {
+        padding-bottom: 15px;
+    }
+
+    ::ng-deep.mat-form-field-flex {
+        background: white;
+        border-radius: 30px;
+        border: solid 1px $primary;
+    }
+
+    ::ng-deep .mat-form-field-underline {
+        display: none;
+    }
+
+    ::ng-deep.mat-form-field-suffix {
+        margin-right: 20px;
+    }
+
+    ::ng-deep.mat-select-arrow-wrapper {
+        padding-right: 20px;
+    }
+
+    ::ng-deep.mat-list-option {
+        color: rgba(0, 0, 0, 0.54);
+    }
+
+    ::ng-deep.mat-form-field-wrapper {
+        padding: 0px;
+    }
+
+    textarea.cdk-textarea-autosize-measuring {
+        padding: 4px 0 !important;
+    }
+
+    ::ng-deep.mat-datepicker-toggle-default-icon {
+        height: auto;
+    }
+}
+
+.mat-form-field-disabled {
+    ::ng-deep.mat-input-element {
+        cursor: not-allowed;
+        padding-left: 20px;
+    }
+
+    ::ng-deep.mat-form-field-flex {
+        cursor: not-allowed;
+        border: dashed 1px rgb(53, 50, 50);
+    }
+}
+
+.div-list {
+
+    padding: 0px;
+    max-height: 150px;
+    overflow: auto;
+
+    .mat-list-item {
+        font-size: 13px;
+    }
+}
+
+.checkbox-form {
+    width: 100%;
+    padding: 0px;
+    border: solid 1px $primary;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.checkbox-selected-list {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+
+    ::ng-deep.mat-chip-list-wrapper {
+        justify-content: center;
+    }
+
+    .mat-chip {
+        font-size: 13px;
+    }
+}
+
+.radio-form {
+    display: flex;
+    width: 100%;
+
+    .mat-radio-button {
+        flex: 1;
+
+        ::ng-deep.mat-radio-label-content {
+            font-weight: normal;
+            color: rgba(0, 0, 0, 0.54);
+        }
+    }
+
+}
+
+.disabled {
+    opacity: 0.2;
+}
+
+.customFieldRow {
+    display: flex;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.customFieldDrag {
+    cursor: grab;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-preview {
+    background: white;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.indexingModelsCustomFieldsList.cdk-drop-list-dragging .indexingModelsCustomFieldsList:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.advancedInput {
+    flex-direction: column;
+}
+
+.noMandatory {
+    visibility: hidden;
+}
