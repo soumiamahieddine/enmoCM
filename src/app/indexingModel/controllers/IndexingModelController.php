@@ -111,7 +111,7 @@ class IndexingModelController
     {
         $body = $request->getParsedBody();
 
-        if (!Validator::intType()->notEmpty()->validate($args['id'])) {
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
         }
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
@@ -178,7 +178,7 @@ class IndexingModelController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        if (!Validator::intType()->notEmpty()->validate($args['id'])) {
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
         }
         $model = IndexingModelModel::getById(['select' => ['owner', 'private'], 'id' => $args['id']]);
