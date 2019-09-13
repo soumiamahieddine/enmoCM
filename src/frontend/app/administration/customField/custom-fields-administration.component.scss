@@ -5,100 +5,6 @@
     padding-bottom: 10px;
 }
 
-.div-list {
-    padding: 0px;
-    max-height: 150px;
-    overflow: auto;
-}
-
-.input-form {
-    color: #666;
-    width: 500px;
-
-    button {
-        font-size: 30px;
-    }
-
-    .mat-input-element {
-        color: $primary;
-        padding-left: 20px;
-    }
-
-    input {
-        padding-left: 20px;
-    }
-
-    ::ng-deep.mat-select-value-text {
-        padding-left: 20px;
-        color: $primary;
-    }
-
-    ::ng-deep.mat-form-field-label {
-        left: 20px;
-    }
-
-    ::ng-deep.mat-form-field-infix {
-        padding-bottom: 15px;
-    }
-
-    ::ng-deep.mat-form-field-flex {
-        background: white;
-        border-radius: 30px;
-        border: solid 1px $primary;
-    }
-
-    ::ng-deep .mat-form-field-underline {
-        display: none;
-    }
-
-    ::ng-deep.mat-form-field-suffix {
-        margin-right: 20px;
-    }
-
-    ::ng-deep.mat-select-arrow-wrapper {
-        padding-right: 20px;
-    }
-
-    ::ng-deep.mat-list-option {
-        color: rgba(0, 0, 0, 0.54);
-    }
-
-    textarea.cdk-textarea-autosize-measuring {
-        padding: 4px 0 !important;
-    }
-}
-
-.checkbox-form {
-    width: 100%;
-    padding: 0px;
-    border: solid 1px $primary;
-    border-radius: 30px;
-    overflow: hidden;
-}
-
-.checkbox-selected-list {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-
-    ::ng-deep.mat-chip-list-wrapper {
-        justify-content: center;
-    }
-}
-
-.radio-form {
-    display: flex;
-
-    .mat-radio-button {
-        flex: 1;
-
-        ::ng-deep.mat-radio-label-content {
-            font-weight: normal;
-            color: rgba(0, 0, 0, 0.54);
-        }
-    }
-
-}
 
 .customFielsdPanel {
     padding-left: 0px;
@@ -154,4 +60,8 @@
    display:flex;
    padding-top: 10px;
    padding-bottom: 10px;
+}
+
+::ng-deep.mat-badge-content {
+    top: 2px !important;
 }

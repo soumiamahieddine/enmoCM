@@ -15,7 +15,10 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "custom-fields-administration.component.html",
-    styleUrls: ['custom-fields-administration.component.scss'],
+    styleUrls: [
+        'custom-fields-administration.component.scss', 
+        '../../indexation/indexing-form/indexing-form.component.scss'
+    ],
     providers: [NotificationService, AppService, SortPipe]
 })
 
@@ -113,8 +116,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                 newCustomField = {
                     label: this.lang.newField + ' ' + this.incrementCreation,
                     type: customFieldType.type,
-                    values: [],
-                    default_value: ''
+                    values: []
                 }
             }),
             exhaustMap((data) => this.http.post('../../rest/customFields', newCustomField)),
