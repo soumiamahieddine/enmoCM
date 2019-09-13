@@ -139,7 +139,7 @@ class IndexingModelController
         }
 
         if ($hasServiceAdmin && !$body['private'] && $body['default']) {
-            IndexingModelModel::update(['set' => ['default' => false]]);
+            IndexingModelModel::update(['set' => ['"default"' => 'false'], 'where' => ['"default" = ?'], 'data' => ['true']]);
         }
 
         IndexingModelModel::update([
