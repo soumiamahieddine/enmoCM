@@ -496,3 +496,12 @@ define("_FOLDER_RESOURCES_REMOVED", "Removed resources_TO_TRANSLATE");
 define("_FOLDER_TO_FOLDER", "to folder_TO_TRANSLATE");
 
 define('_NOT_EXISTS', 'bestaat niet');
+
+
+define("_CUSTOMFIELDS_CREATION", "Custom field creation_TO_TRANSLATE");
+define("_CUSTOMFIELDS_MODIFICATION", "Custom field modification_TO_TRANSLATE");
+define("_CUSTOMFIELDS_SUPPRESSION", "Custom field suppression_TO_TRANSLATE");
+
+define("_INDEXINGMODEL_CREATION", "Indexing model creation_TO_TRANSLATE");
+define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification_TO_TRANSLATE");
+define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression_TO_TRANSLATE");

@@ -18,6 +18,7 @@
 namespace IndexingModel\controllers;
 
 use Group\models\ServiceModel;
+use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
 use Respect\Validation\Validator;
@@ -77,10 +78,10 @@ class IndexingModelController
         }
 
         $modelId = IndexingModelModel::create([
-            'label'     => $body['label'],
-            'default'   => 'false',
-            'owner'     => $GLOBALS['id'],
-            'private'   => $body['private']
+            'label'    => $body['label'],
+            'default'  => 'false',
+            'owner'    => $GLOBALS['id'],
+            'private'  => $body['private']
         ]);
 
         foreach ($body['fields'] as $field) {
@@ -94,6 +95,15 @@ class IndexingModelController
             ]);
         }
 
+        HistoryController::add([
+            'tableName' => 'indexing_models',
+            'recordId'  => $modelId,
+            'eventType' => 'ADD',
+            'info'      => _INDEXINGMODEL_CREATION . " : {$body['label']}",
+            'moduleId'  => 'indexingModel',
+            'eventId'   => 'indexingModelCreation',
+        ]);
+
         return $response->withJson(['id' => $modelId]);
     }
 
@@ -101,7 +111,13 @@ class IndexingModelController
     {
         $body = $request->getParsedBody();
 
+        if (!Validator::intType()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
+        }
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        }
+        if (!Validator::boolType()->validate($body['default'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
         foreach ($body['fields'] as $key => $field) {
@@ -113,17 +129,23 @@ class IndexingModelController
         }
 
         $model = IndexingModelModel::getById(['select' => ['owner', 'private'], 'id' => $args['id']]);
+        $hasServiceAdmin = ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
         if (empty($model)) {
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
         } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
-        } elseif (!$model['private'] && !ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        } elseif (!$model['private'] && !$hasServiceAdmin) {
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
+        }
+
+        if ($hasServiceAdmin && !$body['private'] && $body['default']) {
+            IndexingModelModel::update(['set' => ['default' => false]]);
         }
 
         IndexingModelModel::update([
             'set'   => [
-                'label' => $body['label']
+                'label'   => $body['label'],
+                '"default"' => $body['default'] ? 'true' : 'false'
             ],
             'where' => ['id = ?'],
             'data'  => [$args['id']]
@@ -142,11 +164,23 @@ class IndexingModelController
             ]);
         }
 
+        HistoryController::add([
+            'tableName' => 'indexing_models',
+            'recordId'  => $args['id'],
+            'eventType' => 'UP',
+            'info'      => _INDEXINGMODEL_MODIFICATION . " : {$body['label']}",
+            'moduleId'  => 'indexingModel',
+            'eventId'   => 'indexingModelModification',
+        ]);
+
         return $response->withStatus(204);
     }
 
     public function delete(Request $request, Response $response, array $args)
     {
+        if (!Validator::intType()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
+        }
         $model = IndexingModelModel::getById(['select' => ['owner', 'private'], 'id' => $args['id']]);
         if (empty($model)) {
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
@@ -156,12 +190,23 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
         }
 
+        $model = IndexingModelModel::getById(['select' => ['label'], 'id' => $args['id']]);
+
         IndexingModelModel::delete([
             'where' => ['id = ?'],
             'data'  => [$args['id']]
         ]);
 
         IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$args['id']]]);
+
+        HistoryController::add([
+            'tableName' => 'indexing_models',
+            'recordId'  => $args['id'],
+            'eventType' => 'DEL',
+            'info'      => _INDEXINGMODEL_SUPPRESSION . " : {$model['label']}",
+            'moduleId'  => 'indexingModel',
+            'eventId'   => 'indexingModelSuppression',
+        ]);
 
         return $response->withStatus(204);
     }

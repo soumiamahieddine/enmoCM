@@ -58,6 +58,7 @@ class IndexingModelControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('mon model d indexation', $responseBody->indexingModel->label);
+        $this->assertSame(false, $responseBody->indexingModel->default);
         $this->assertSame(true, $responseBody->indexingModel->private);
         $this->assertSame('string', $responseBody->indexingModel->fields[0]->type);
         $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
@@ -93,6 +94,7 @@ class IndexingModelControllerTest extends TestCase
 
         $args = [
             'label'     => 'mon model d indexation modifié',
+            'default'   => false,
             'fields'    => [
                 [
                     'type'          => 'string',
@@ -124,6 +126,7 @@ class IndexingModelControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('mon model d indexation modifié', $responseBody->indexingModel->label);
+        $this->assertSame(false, $responseBody->indexingModel->default);
         $this->assertSame(true, $responseBody->indexingModel->private);
         $this->assertSame('string', $responseBody->indexingModel->fields[0]->type);
         $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
