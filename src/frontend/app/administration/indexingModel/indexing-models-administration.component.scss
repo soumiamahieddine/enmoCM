@@ -1,14 +1,9 @@
 @import '../../../css/vars.scss';
 
-.indexingModelLabel {
-    ::ng-deep.mat-form-field-wrapper {
-        padding: 0px;
-    }
+.dataLabelWarn {
+    color : $warn;
 }
 
-.defaultModel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 10px;
+.dataLabelPrimary {
+    color : $primary;
 }

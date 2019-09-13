@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
@@ -22,6 +22,8 @@ export class IndexingFormComponent implements OnInit {
     lang: any = LANG;
 
     loading: boolean = false;
+
+    @Input('indexingFormId') indexingFormId: number;
 
     fieldCategories: any[] = ['mail', 'contact', 'process', 'classement'];
 
@@ -171,7 +173,7 @@ export class IndexingFormComponent implements OnInit {
                     return info;
                 });
             }),
-            exhaustMap((data) => this.http.get("../../rest/indexingModels/1")),
+            exhaustMap((data) => this.http.get("../../rest/indexingModels/" + this.indexingFormId)),
             tap((data: any) => {
                 let fieldExist: boolean;
                 if (data.indexingModel.fields.length === 0) {

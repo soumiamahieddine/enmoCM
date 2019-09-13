@@ -1,26 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { HeaderService } from '../../../service/header.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
-import { tap, catchError, finalize } from 'rxjs/operators';
+import { tap, finalize, catchError, filter, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { SortPipe } from '../../../plugins/sorting.pipe';
-import { IndexingFormComponent } from '../../indexation/indexing-form/indexing-form.component';
-import { ActivatedRoute } from '@angular/router';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "indexing-models-administration.component.html",
-    styleUrls: [
-        'indexing-models-administration.component.scss',
-        '../../indexation/indexing-form/indexing-form.component.scss'
-    ],
-    providers: [NotificationService, AppService, SortPipe]
+    styleUrls: ['indexing-models-administration.component.scss'],
+    providers: [NotificationService, AppService]
 })
 
 export class IndexingModelsAdministrationComponent implements OnInit {
@@ -28,114 +26,51 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
-    @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
-
     lang: any = LANG;
+    search: string = null;
+
+    indexingModels: any[] = [];
 
     loading: boolean = false;
 
-    indexingModel: any = {
-        id: 0,
-        label: '',
-        default: false,
-        owner: 0,
-        private: false
-    };
+    displayedColumns = ['label', 'private', 'default', 'actions'];
 
-    indexingModelClone: any;
+    dataSource = new MatTableDataSource(this.indexingModels);
 
-    indexingModelsCustomFields: any[] = [];
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-    creationMode: boolean = true;
+    dialogRef: MatDialogRef<any>;
 
-    availableFields: any[] = [
-        {
-            identifier: 'priority',
-            label: this.lang.priority,
-            type: 'select',
-            values: []
-        },
-        {
-            identifier: 'confidential',
-            label: this.lang.confidential,
-            type: 'radio',
-            values: ['yes', 'no']
-        },
-        {
-            identifier: 'initiator',
-            label: this.lang.initiator,
-            type: 'select',
-            values: []
-        },
-        {
-            identifier: 'processLimitDate',
-            label: this.lang.processLimitDate,
-            type: 'date',
-            values: []
-        },
-        {
-            identifier: 'arrivalDate',
-            label: this.lang.arrivalDate,
-            type: 'date',
-            values: []
-        }
-    ];
-
-    availableCustomFields: any[] = []
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
 
     constructor(
         public http: HttpClient,
-        private route: ActivatedRoute,
         private notify: NotificationService,
-        public dialog: MatDialog,
         private headerService: HeaderService,
         public appService: AppService,
-    ) {
-
-    }
+        private dialog: MatDialog,
+    ) { }
 
     ngOnInit(): void {
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+        window['MainHeaderComponent'].setSnavRight(null);
 
-        this.route.params.subscribe((params) => {
-            if (typeof params['id'] == "undefined") {
-                this.headerService.setHeader(this.lang.administration);
-                this.creationMode = true;
-                this.loading = false;
+        this.loading = true;
 
-            } else {
-                this.creationMode = false;
-
-                this.http.get("../../rest/indexingModels/" + params['id']).pipe(
-                    tap((data: any) => {
-                        this.indexingModel = data.indexingModel;
-                        
-                        this.headerService.setHeader(this.lang.indexingModelModification, this.indexingModel.label);
-
-                        this.indexingModelClone = JSON.parse(JSON.stringify(this.indexingModel));
-
-                    }),
-                    finalize(() => this.loading = false),
-                    catchError((err: any) => {
-                        this.notify.handleErrors(err);
-                        return of(false);
-                    })
-                ).subscribe();
-            }
-        });
-
-
-    }
-
-    onSubmit() {
-        this.indexingModel.fields = this.indexingForm.getDatas();
-
-        this.http.put("../../rest/indexingModels/" + this.indexingModel.id, this.indexingModel).pipe(
+        this.http.get("../../rest/indexingModels").pipe(
             tap((data: any) => {
-                this.indexingForm.setModification();
-                this.setModification();
-                this.notify.success('sucess!');
+                this.indexingModels = data.indexingModels;
+                this.headerService.setHeader(this.lang.administration + ' ' + this.lang.indexingModels);
+                setTimeout(() => {
+                    this.dataSource = new MatTableDataSource(this.indexingModels);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }, 0);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -145,21 +80,25 @@ export class IndexingModelsAdministrationComponent implements OnInit {
         ).subscribe();
     }
 
-    isModified() {
-        let compare: string = '';
-        let compareClone: string = '';
+    delete(indexingModel: any) {
 
-        compare = JSON.stringify(this.indexingModel);
-        compareClone = JSON.stringify(this.indexingModelClone);
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
-        if(compare !== compareClone) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete('../../rest/indexingModels' + indexingModel.id)),
+            tap((data: any) => {
+                this.indexingModels = data.indexingModels;
+                this.dataSource = new MatTableDataSource(this.indexingModels);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+                this.notify.success(this.lang.indexingModelDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
 
-    setModification() {
-        this.indexingModelClone = JSON.parse(JSON.stringify(this.indexingModel));
     }
 }
