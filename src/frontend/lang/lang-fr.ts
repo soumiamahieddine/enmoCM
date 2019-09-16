@@ -1154,5 +1154,5 @@ export const LANG_FR = {
     "indexingModelAdded" : "Modèle d'enregistrement ajouté",
     "indexingModelUpdated" : "Modèle d'enregistrement modifié",
     "indexingModelCreation" : "Création d'un modèle d'enregistrement",
-    
+    "integerInput" : "Champ numérique", 
 };

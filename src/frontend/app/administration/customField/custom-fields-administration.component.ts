@@ -37,6 +37,10 @@ export class CustomFieldsAdministrationComponent implements OnInit {
             type: 'string'
         },
         {
+            label: this.lang.integerInput,
+            type: 'integer'
+        },
+        {
             label: this.lang.selectInput,
             type: 'select'
         },

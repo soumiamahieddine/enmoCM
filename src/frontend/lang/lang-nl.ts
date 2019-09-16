@@ -1143,4 +1143,5 @@ export const LANG_NL = {
     "indexingModelAdded" : "Indexing model added", //_TO_TRANSLATE
     "indexingModelUpdated" : "Indexing model updated", //_TO_TRANSLATE
     "indexingModelCreation" : "Indexing model creation", //_TO_TRANSLATE
+    "integerInput" : "Input number", //_TO_TRANSLATE
 };

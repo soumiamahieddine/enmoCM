@@ -1,8 +1,7 @@
 <div *ngIf="availableCustomFields !== undefined" class="content" cdkDropList id="customFieldsList"
     [cdkDropListConnectedTo]="['indexingModelsCustomFieldsList_mail','indexingModelsCustomFieldsList_contact','indexingModelsCustomFieldsList_process','indexingModelsCustomFieldsList_classement']"
     [cdkDropListData]="availableCustomFields" (cdkDropListDropped)="drop($event)">
-    <div class="customFieldRow" *ngFor="let field of availableCustomFields" cdkDrag
-        [cdkDragData]="field">
+    <div class="customFieldRow" *ngFor="let field of availableCustomFields" cdkDrag [cdkDragData]="field">
         <div class="customFieldDrag">
             <i color="primary" class="fas fa-arrows-alt fa-2x" cdkDragHandle></i>
         </div>
@@ -15,6 +14,11 @@
                     <mat-form-field class="input-form" floatLabel="never">
                         <textarea matInput [placeholder]="lang[field.type + 'Input']" matTextareaAutosize
                             matAutosizeMinRows="1" cdkAutosizeMaxRows="6"></textarea>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'integer'">
+                    <mat-form-field class="input-form" floatLabel="never">
+                        <input type="number" matInput [placeholder]="lang[field.type + 'Input']">
                     </mat-form-field>
                 </ng-container>
                 <ng-container *ngIf="field.type === 'select'">
@@ -80,6 +84,11 @@
                     <mat-form-field class="input-form" floatLabel="never">
                         <textarea matInput [placeholder]="lang[field.type + 'Input']" matTextareaAutosize
                             matAutosizeMinRows="1" cdkAutosizeMaxRows="6"></textarea>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'integer'">
+                    <mat-form-field class="input-form" floatLabel="never">
+                        <input type="number" matInput [placeholder]="lang[field.type + 'Input']">
                     </mat-form-field>
                 </ng-container>
                 <ng-container *ngIf="field.type === 'select'">

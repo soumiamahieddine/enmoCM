@@ -36,6 +36,11 @@
                                     [disabled]="field.system"></textarea>
                             </mat-form-field>
                         </ng-container>
+                        <ng-container *ngIf="field.type === 'integer'">
+                            <mat-form-field class="input-form" floatLabel="never">
+                                <input type="number" matInput [(ngModel)]="field.default_value" [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue">
+                            </mat-form-field>
+                        </ng-container>
                         <ng-container *ngIf="field.type === 'select'">
                             <mat-form-field class="input-form" floatLabel="never">
                                 <mat-select

@@ -100,6 +100,11 @@
                                         matTextareaAutosize matAutosizeMinRows="1" cdkAutosizeMaxRows="6"></textarea>
                                 </mat-form-field>
                             </ng-container>
+                            <ng-container *ngIf="customField.type === 'integer'">
+                                <mat-form-field class="input-form" floatLabel="never">
+                                    <input type="number" matInput [placeholder]="lang[customField.type + 'Input']">
+                                </mat-form-field>
+                            </ng-container>
                             <ng-container *ngIf="customField.type === 'select'">
                                 <mat-form-field class="input-form" floatLabel="never">
                                     <mat-select [placeholder]="lang[customField.type + 'Input']">

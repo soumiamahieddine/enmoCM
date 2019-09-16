@@ -1117,4 +1117,5 @@ export const LANG_EN = {
     "indexingModelAdded" : "Indexing model added",
     "indexingModelUpdated" : "Indexing model updated",
     "indexingModelCreation" : "Indexing model creation",
+    "integerInput" : "Input number",
 };
