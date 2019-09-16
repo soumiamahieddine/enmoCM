@@ -135,6 +135,9 @@ class Install extends functions
         if (!$this->isPearRequirements('System.php')) {
             return false;
         }
+        if (!$this->isPhpRequirements('imagick')) {
+            return false;
+        }
         if (!$this->isIniDisplayErrorRequirements()) {
             return false;
         }
