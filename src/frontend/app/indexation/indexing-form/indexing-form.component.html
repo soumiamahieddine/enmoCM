@@ -1,97 +1,104 @@
-<div class="banner" *ngFor="let category of fieldCategories">
-    <div class="title">
-        {{lang[category] | uppercase}}
-        <div class="title-divider"></div>
-    </div>
-    <div class="content">
-        <div cdkDropList id="indexingModelsCustomFieldsList_{{category}}"
-            [cdkDropListConnectedTo]="['indexingModelsCustomFieldsList_mail','indexingModelsCustomFieldsList_contact','indexingModelsCustomFieldsList_process','indexingModelsCustomFieldsList_classement','customFieldsList','fieldsList']"
-            [cdkDropListData]="this['indexingModels_'+category]" (cdkDropListDropped)="drop($event)"
-            class="indexingModelsCustomFieldsList" style="min-height: 50px;">
-            <ng-container *ngFor="let field of this['indexingModels_'+category];let i=index">
-                <div class="fieldRow" *ngIf="field.unit === category" cdkDrag cdkDragLockAxis="y" [cdkDragData]="field">
-                    <div class="fieldLabel">
-                        <i class="fas fa-bars fa-2x" color="primary" style="cursor: move" cdkDragHandle></i>&nbsp;
-                        <button mat-icon-button [matMenuTriggerFor]="fieldActions" *ngIf="!field.system">
-                            <mat-icon class="fa fa-ellipsis-v" color="secondary"></mat-icon>
-                        </button>
-                        <mat-menu #fieldActions="matMenu">
-                            <button mat-menu-item (click)="field.mandatory = !field.mandatory">
-                                <span *ngIf="!field.mandatory">{{lang.mandatoryField}}</span>
-                                <span *ngIf="field.mandatory">{{lang.optionalField}}</span>
+<div *ngIf="loading" style="display:flex;height:100%;">
+    <mat-spinner style="margin:auto;"></mat-spinner>
+</div>
+<ng-container *ngIf="!loading">
+    <div class="banner" *ngFor="let category of fieldCategories">
+        <div class="title">
+            {{lang[category] | uppercase}}
+            <div class="title-divider"></div>
+        </div>
+        <div class="content">
+            <div cdkDropList id="indexingModelsCustomFieldsList_{{category}}"
+                [cdkDropListConnectedTo]="['indexingModelsCustomFieldsList_mail','indexingModelsCustomFieldsList_contact','indexingModelsCustomFieldsList_process','indexingModelsCustomFieldsList_classement','customFieldsList','fieldsList']"
+                [cdkDropListData]="this['indexingModels_'+category]" (cdkDropListDropped)="drop($event)"
+                class="indexingModelsCustomFieldsList" style="min-height: 50px;">
+                <ng-container *ngFor="let field of this['indexingModels_'+category];let i=index">
+                    <div class="fieldRow" *ngIf="field.unit === category" cdkDrag cdkDragLockAxis="y"
+                        [cdkDragData]="field">
+                        <div class="fieldLabel">
+                            <i class="fas fa-bars fa-2x" color="primary" style="cursor: move" cdkDragHandle></i>&nbsp;
+                            <button mat-icon-button [matMenuTriggerFor]="fieldActions" *ngIf="!field.system">
+                                <mat-icon class="fa fa-ellipsis-v" color="secondary"></mat-icon>
                             </button>
-                            <mat-divider></mat-divider>
-                            <button mat-menu-item (click)="removeItem('indexingModels_'+category,field,i)">
-                                <mat-icon class="fa fa-trash" color="warn"></mat-icon>
-                                <span>{{lang.delete}}</span>
-                            </button>
-                        </mat-menu>{{field.label}}
-                    </div>
-                    <div class="fieldInput">
-                        <ng-container *ngIf="field.type === 'string'">
-                            <mat-form-field class="input-form" floatLabel="never">
-                                <textarea matInput [(ngModel)]="field.default_value"
-                                    [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
-                                    matTextareaAutosize matAutosizeMinRows="1" cdkAutosizeMaxRows="6"
-                                    [disabled]="field.system"></textarea>
-                            </mat-form-field>
-                        </ng-container>
-                        <ng-container *ngIf="field.type === 'integer'">
-                            <mat-form-field class="input-form" floatLabel="never">
-                                <input type="number" matInput [(ngModel)]="field.default_value" [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue">
-                            </mat-form-field>
-                        </ng-container>
-                        <ng-container *ngIf="field.type === 'select'">
-                            <mat-form-field class="input-form" floatLabel="never">
-                                <mat-select
-                                    [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
-                                    [(ngModel)]="field.default_value" [disabled]="field.system">
-                                    <mat-option *ngFor="let value of field.values" [value]="value">
-                                        {{value}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </ng-container>
-                        <ng-container *ngIf="field.type === 'date'">
-                            <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()">
-                                <input matInput [matDatepicker]="picker"
-                                    [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
-                                    [(ngModel)]="field.default_value" [disabled]="field.system">
-                                <mat-datepicker-toggle matSuffix [for]="picker">
-                                </mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                            </mat-form-field>
-                        </ng-container>
-                        <ng-container *ngIf="field.type === 'radio'">
-                            <mat-radio-group class="radio-form" color="primary" [disabled]="field.system"
-                                [(ngModel)]="field.default_value">
-                                <mat-radio-button *ngFor="let value of field.values" [value]="value">
-                                    {{value}}
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </ng-container>
-                        <ng-container *ngIf="field.type === 'checkbox'">
-                            <div class="input-form checkbox-form">
-                                <mat-selection-list #shoes class="div-list" [disabled]="field.system"
+                            <mat-menu #fieldActions="matMenu">
+                                <button mat-menu-item (click)="field.mandatory = !field.mandatory">
+                                    <span *ngIf="!field.mandatory">{{lang.mandatoryField}}</span>
+                                    <span *ngIf="field.mandatory">{{lang.optionalField}}</span>
+                                </button>
+                                <mat-divider></mat-divider>
+                                <button mat-menu-item (click)="removeItem('indexingModels_'+category,field,i)">
+                                    <mat-icon class="fa fa-trash" color="warn"></mat-icon>
+                                    <span>{{lang.delete}}</span>
+                                </button>
+                            </mat-menu>{{field.label}}
+                        </div>
+                        <div class="fieldInput">
+                            <ng-container *ngIf="field.type === 'string'">
+                                <mat-form-field class="input-form" floatLabel="never">
+                                    <textarea matInput [(ngModel)]="field.default_value"
+                                        [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
+                                        matTextareaAutosize matAutosizeMinRows="1" cdkAutosizeMaxRows="6"
+                                        [disabled]="field.system"></textarea>
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-container *ngIf="field.type === 'integer'">
+                                <mat-form-field class="input-form" floatLabel="never">
+                                    <input type="number" matInput [(ngModel)]="field.default_value"
+                                        [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue">
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-container *ngIf="field.type === 'select'">
+                                <mat-form-field class="input-form" floatLabel="never">
+                                    <mat-select
+                                        [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
+                                        [(ngModel)]="field.default_value" [disabled]="field.system">
+                                        <mat-option *ngFor="let value of field.values" [value]="value">
+                                            {{value}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-container *ngIf="field.type === 'date'">
+                                <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()">
+                                    <input matInput [matDatepicker]="picker"
+                                        [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
+                                        [(ngModel)]="field.default_value" [disabled]="field.system">
+                                    <mat-datepicker-toggle matSuffix [for]="picker">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-container *ngIf="field.type === 'radio'">
+                                <mat-radio-group class="radio-form" color="primary" [disabled]="field.system"
                                     [(ngModel)]="field.default_value">
-                                    <mat-list-option *ngFor="let value of field.values" [value]="value"
-                                        checkboxPosition="before">
+                                    <mat-radio-button *ngFor="let value of field.values" [value]="value">
                                         {{value}}
-                                    </mat-list-option>
-                                </mat-selection-list>
-                            </div>
-                            <mat-chip-list class="checkbox-selected-list" [disabled]="field.system">
-                                <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
-                                    {{lang.selectedValue}}
-                                </mat-chip>
-                            </mat-chip-list>
-                        </ng-container>
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </ng-container>
+                            <ng-container *ngIf="field.type === 'checkbox'">
+                                <div class="input-form checkbox-form">
+                                    <mat-selection-list #shoes class="div-list" [disabled]="field.system"
+                                        [(ngModel)]="field.default_value">
+                                        <mat-list-option *ngFor="let value of field.values" [value]="value"
+                                            checkboxPosition="before">
+                                            {{value}}
+                                        </mat-list-option>
+                                    </mat-selection-list>
+                                </div>
+                                <mat-chip-list class="checkbox-selected-list" [disabled]="field.system">
+                                    <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
+                                        {{lang.selectedValue}}
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </ng-container>
+                        </div>
+                        <div class="fieldState">
+                            <i class="fas fa-asterisk" [class.noMandatory]="!field.mandatory"></i>
+                        </div>
                     </div>
-                    <div class="fieldState">
-                        <i class="fas fa-asterisk" [class.noMandatory]="!field.mandatory"></i>
-                    </div>
-                </div>
-            </ng-container>
+                </ng-container>
+            </div>
         </div>
     </div>
-</div>
+</ng-container>

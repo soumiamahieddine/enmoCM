@@ -21,7 +21,7 @@ export class IndexingFormComponent implements OnInit {
 
     lang: any = LANG;
 
-    loading: boolean = false;
+    loading: boolean = true;
 
     @Input('indexingFormId') indexingFormId: number;
 

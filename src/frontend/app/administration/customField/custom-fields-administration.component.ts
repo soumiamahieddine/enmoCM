@@ -29,7 +29,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     lang: any = LANG;
 
-    loading: boolean = false;
+    loading: boolean = true;
 
     customFieldsTypes: any[] = [
         {
