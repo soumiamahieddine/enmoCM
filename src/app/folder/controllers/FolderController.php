@@ -534,7 +534,7 @@ class FolderController
             'eventType' => 'DEL',
             'info'      => _FOLDER_RESOURCES_REMOVED . " : " . implode(", ", $resourcesToUnclassify) . " " . _FOLDER_TO_FOLDER . " " . $args['id'],
             'moduleId'  => 'folder',
-            'eventId'   => 'folderResourceAdded',
+            'eventId'   => 'folderResourceRemoved',
         ]);
 
         return $response->withJson(['countResources' => count($foldersResources) - count($resourcesToUnclassify)]);
