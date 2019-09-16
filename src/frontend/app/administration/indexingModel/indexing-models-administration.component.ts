@@ -86,7 +86,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.delete('../../rest/indexingModels' + indexingModel.id)),
+            exhaustMap(() => this.http.delete('../../rest/indexingModels/' + indexingModel.id)),
             tap((data: any) => {
                 this.indexingModels = data.indexingModels;
                 this.dataSource = new MatTableDataSource(this.indexingModels);
