@@ -125,7 +125,7 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'confidential',
             label: this.lang.confidential,
             type: 'radio',
-            values: ['yes', 'no']
+            values: ['Oui', 'Non']
         },
         {
             identifier: 'initiator',
