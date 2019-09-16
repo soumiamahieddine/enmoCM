@@ -51,6 +51,9 @@ class IndexingModelController
         }
 
         $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
+        foreach ($fields as $key => $value) {
+            $fields[$key]['default_value'] = json_decode($value['default_value'], true);
+        }
         $model['fields'] = $fields;
 
         return $response->withJson(['indexingModel' => $model]);
@@ -90,7 +93,7 @@ class IndexingModelController
                 'type'          => $field['type'],
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
-                'default_value' => $field['default_value'] ?? null,
+                'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
                 'unit'          => $field['unit'] ?? null
             ]);
         }
@@ -159,7 +162,7 @@ class IndexingModelController
                 'type'          => $field['type'],
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
-                'default_value' => $field['default_value'] ?? null,
+                'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
                 'unit'          => $field['unit'] ?? null
             ]);
         }
