@@ -33,7 +33,7 @@
                                 </button>
                             </mat-menu>
                         </div>
-                        <div class="fieldInput">
+                        <div class="fieldInput" [class.checkboxInput]="field.type === 'checkbox'">
                             <ng-container *ngIf="field.type === 'string'">
                                 <mat-form-field class="input-form" floatLabel="never">
                                     <textarea matInput [(ngModel)]="field.default_value"
