@@ -156,11 +156,11 @@ class FolderController
         ]);
 
         if ($public && !empty($data['parent_id'])) {
-            $entitiesSharing = EntityFolderModel::getByFolderId(['folder_id' => $data['parent_id']]);
+            $entitiesSharing = EntityFolderModel::getByFolderId(['folder_id' => $data['parent_id'], 'select' => ['entities.id', 'entities_folders.edition']]);
             foreach ($entitiesSharing as $entity) {
                 EntityFolderModel::create([
                     'folder_id' => $id,
-                    'entity_id' => $entity['entity_id'],
+                    'entity_id' => $entity['id'],
                     'edition'   => $entity['edition'],
                 ]);
             }
@@ -485,6 +485,15 @@ class FolderController
             ResourceFolderModel::create(['folder_id' => $args['id'], 'res_id' => $value]);
         }
 
+        HistoryController::add([
+            'tableName' => 'resources_folders',
+            'recordId'  => $args['id'],
+            'eventType' => 'ADD',
+            'info'      => _FOLDER_RESOURCES_ADDED . " : " . implode(", ", $resourcesToClassify) . " " . _FOLDER_TO_FOLDER . " " . $args['id'],
+            'moduleId'  => 'folder',
+            'eventId'   => 'folderResourceAdded',
+        ]);
+
         return $response->withJson(['countResources' => count($foldersResources) + count($resourcesToClassify)]);
     }
 
@@ -518,6 +527,15 @@ class FolderController
         foreach ($resourcesToUnclassify as $value) {
             ResourceFolderModel::delete(['where' => ['folder_id = ?', 'res_id = ?'], 'data' => [$args['id'], $value]]);
         }
+
+        HistoryController::add([
+            'tableName' => 'resources_folders',
+            'recordId'  => $args['id'],
+            'eventType' => 'DEL',
+            'info'      => _FOLDER_RESOURCES_REMOVED . " : " . implode(", ", $resourcesToUnclassify) . " " . _FOLDER_TO_FOLDER . " " . $args['id'],
+            'moduleId'  => 'folder',
+            'eventId'   => 'folderResourceAdded',
+        ]);
 
         return $response->withJson(['countResources' => count($foldersResources) - count($resourcesToUnclassify)]);
     }
@@ -673,8 +691,6 @@ class FolderController
     {
         $folderChild = FolderModel::getChild(['id' => $parentId]);
         if (!empty($folderChild)) {
-
-            $level = -1;
             foreach ($folderChild as $child) {
                 $level = $levelParent + 1;
                 FolderController::updateChildren($child['id'], $level);

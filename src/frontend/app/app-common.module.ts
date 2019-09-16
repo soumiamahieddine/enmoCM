@@ -43,6 +43,10 @@ import { SearchHomeComponent }                        from './search/search-home
 import { BasketHomeComponent }                        from './basket/basket-home.component';
 
 
+import { IndexingFormComponent }                        from './indexation/indexing-form/indexing-form.component';
+import { FieldListComponent }                        from './indexation/field-list/field-list.component';
+
+
 /*MODAL*/
 import { AlertComponent }                        from '../plugins/modal/alert.component';
 import { ConfirmComponent }                        from '../plugins/modal/confirm.component';
@@ -92,7 +96,9 @@ export class MyHammerConfig extends HammerGestureConfig {
         SmdFabSpeedDialActions,
         AlertComponent,
         ConfirmComponent,
-        PluginAutocomplete
+        PluginAutocomplete,
+        IndexingFormComponent,
+        FieldListComponent
     ],
     exports: [
         CommonModule,
@@ -122,7 +128,9 @@ export class MyHammerConfig extends HammerGestureConfig {
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
         DragDropModule,
-        PluginAutocomplete
+        PluginAutocomplete,
+        IndexingFormComponent,
+        FieldListComponent
     ],
     providers: [
         LatinisePipe,

@@ -486,5 +486,16 @@ define("_FOLDER_CREATION", "Dossier créé");
 define("_FOLDER_MODIFICATION", "Dossier modifié");
 define("_FOLDER_SUPPRESSION", "Dossier supprimé");
 define("_FOLDER_SHARING_MODIFICATION", "Partage de dossier modifié");
+define("_FOLDER_RESOURCES_ADDED", "Ressource(s) ajoutée(s)");
+define("_FOLDER_RESOURCES_REMOVED", "Ressource(s) retirée(s)");
+define("_FOLDER_TO_FOLDER", "au dossier");
 
 define("_NOT_EXISTS", "n'existe pas");
+
+define("_CUSTOMFIELDS_CREATION", "Champ personnalisé créé");
+define("_CUSTOMFIELDS_MODIFICATION", "Champ personnalisé modifié");
+define("_CUSTOMFIELDS_SUPPRESSION", "Champ personnalisé supprimé");
+
+define("_INDEXINGMODEL_CREATION", "Modèle d'enregistrement créé");
+define("_INDEXINGMODEL_MODIFICATION", "Modèle d'enregistrement modifié");
+define("_INDEXINGMODEL_SUPPRESSION", "Modèle d'enregistrement supprimé");

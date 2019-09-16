@@ -37,8 +37,10 @@ import { SecuritiesAdministrationComponent }            from './security/securit
 import { SendmailAdministrationComponent }              from './sendmail/sendmail-administration.component';
 import { ShippingsAdministrationComponent }             from './shipping/shippings-administration.component';
 import { ShippingAdministrationComponent }              from './shipping/shipping-administration.component';
-import { CustomFieldsAdministrationComponent }              from './customField/custom-fields-administration.component';
-import { AppGuard } from '../../service/app.guard';
+import { CustomFieldsAdministrationComponent }          from './customField/custom-fields-administration.component';
+import { AppGuard }                                     from '../../service/app.guard';
+import { IndexingModelAdministrationComponent }        from './indexingModel/indexing-model-administration.component';
+import { IndexingModelsAdministrationComponent }        from './indexingModel/indexing-models-administration.component';
 
 @NgModule({
     imports: [
@@ -92,6 +94,9 @@ import { AppGuard } from '../../service/app.guard';
             { path: 'administration/shippings/new', canActivate: [AppGuard], component: ShippingAdministrationComponent },
             { path: 'administration/shippings/:id', canActivate: [AppGuard], component: ShippingAdministrationComponent },
             { path: 'administration/customFields', canActivate: [AppGuard], component: CustomFieldsAdministrationComponent },
+            { path: 'administration/indexingModels', canActivate: [AppGuard], component: IndexingModelsAdministrationComponent },
+            { path: 'administration/indexingModels/new', canActivate: [AppGuard], component: IndexingModelAdministrationComponent },
+            { path: 'administration/indexingModels/:id', canActivate: [AppGuard], component: IndexingModelAdministrationComponent },
         ]),
     ],
     exports: [

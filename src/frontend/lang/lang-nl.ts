@@ -1,7 +1,7 @@
 export const LANG_NL = {
-    'ARsimple'                              : 'AR simple', //_TO_TRANSLATE
-    'ARsva'                                 : 'AR SVA', //_TO_TRANSLATE
-    'ARsvr'                                 : 'AR SVR', //_TO_TRANSLATE
+    "ARsimple"                              : "AR simple", //_TO_TRANSLATE
+    "ARsva"                                 : "AR SVA", //_TO_TRANSLATE
+    "ARsvr"                                 : "AR SVR", //_TO_TRANSLATE
     "aboutUs"                               : "Over Maarch Courrier",
     "abs"                                   : "Afwezig",
     "absOff"                                : "Afwezigheid uitgeschakeld",
@@ -888,7 +888,7 @@ export const LANG_NL = {
     "statusModification"                    : "Wijziging van status",
     "statusName"                            : "Statusnaam",
     "statusUpdated"                         : "Bijgewerkte status",
-    "string"                                : "Karakterreeks",
+    "stringInput"                           : "Karakterreeks",
     "subEntities"                           : "_TO_TRANSLATE",
     "subject"                               : "_TO_TRANSLATE",
     "summarySheet"                          : "_TO_TRANSLATE",
@@ -1102,7 +1102,6 @@ export const LANG_NL = {
     "customFields" : "custom field(s)", //_TO_TRANSLATE
     "avaiblableCustomFieldsTypes" : "Available(s) custom type(s)", //_TO_TRANSLATE
     "customField" : "custom field", //_TO_TRANSLATE
-    "stringInput" : "String input", //_TO_TRANSLATE
     "selectInput" : "Select input", //_TO_TRANSLATE
     "dateInput" : "Date input", //_TO_TRANSLATE
     "radioInput" : "Radio input", //_TO_TRANSLATE
@@ -1124,4 +1123,25 @@ export const LANG_NL = {
     "chooseDate" : "Choose a date", //_TO_TRANSLATE
     "selectedValue" : "Selected value", //_TO_TRANSLATE
     "choice" : "Choice", //_TO_TRANSLATE
+    "owner" : "Owner", //_TO_TRANSLATE
+    "privateFolder" : "Private folder", //_TO_TRANSLATE
+    "visibleBy" : "Visible by", //_TO_TRANSLATE
+    "folderInformations" : "Folder Informations", //_TO_TRANSLATE
+    "process" : "Process", //_TO_TRANSLATE
+    "modelName" : "Model name", //_TO_TRANSLATE
+    "defaultModel" : "Default model", //_TO_TRANSLATE
+    "indexingForm" : "Indexing form", //_TO_TRANSLATE
+    "availableFields" : "Available field(s)", //_TO_TRANSLATE
+    "availableCustomFields" : "Available custom field(s)", //_TO_TRANSLATE
+    "indexingModel" : "Indexing model", //_TO_TRANSLATE
+    "indexingModelModification" : "Indexing model modification", //_TO_TRANSLATE
+    "mandatoryField" : "Mandatory field", //_TO_TRANSLATE
+    "optionalField" : "Optional field", //_TO_TRANSLATE
+    "indexingModels" : "Indexing model(s)", //_TO_TRANSLATE
+    "perimeter" : "Perimeter", //_TO_TRANSLATE
+    "indexingModelDeleted" : "Indexing model deleted", //_TO_TRANSLATE
+    "indexingModelAdded" : "Indexing model added", //_TO_TRANSLATE
+    "indexingModelUpdated" : "Indexing model updated", //_TO_TRANSLATE
+    "indexingModelCreation" : "Indexing model creation", //_TO_TRANSLATE
+    "integerInput" : "Input number", //_TO_TRANSLATE
 };

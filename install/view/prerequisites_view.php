@@ -106,6 +106,18 @@
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpRequirements(
+                                'pdo_pgsql'
+                            )
+                        );?>
+                    </td>
+                    <td>
+                        <?php echo _PDO_PGSQL;?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPhpRequirements(
                                 'gd'
                             )
                         );?>

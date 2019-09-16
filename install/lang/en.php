@@ -139,6 +139,9 @@ if (!defined('_UNOCONV_NOT_INSTALLED')) {
 if (!defined('_PGSQL')) {
     define('_PGSQL', 'pgsql library');
 }
+if (!defined('_PDO_PGSQL')) {
+    define('_PDO_PGSQL', 'pdo_pgsql library');
+}
 if (!defined('_GD')) {
     define('_GD', 'gd library');
 }

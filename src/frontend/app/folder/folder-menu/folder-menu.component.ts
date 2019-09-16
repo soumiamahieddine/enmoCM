@@ -1,11 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, Renderer2 } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { HttpClient } from '@angular/common/http';
-import { map, tap, catchError, filter, exhaustMap } from 'rxjs/operators';
+import { map, tap, catchError, filter, exhaustMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'folder-menu',
@@ -24,15 +25,47 @@ export class FolderMenuComponent implements OnInit {
     @Output('refreshFolders') refreshFolders = new EventEmitter<string>();
     @Output('refreshList') refreshList = new EventEmitter<string>();
 
+    searchTerm: FormControl = new FormControl();
+
     dialogRef: MatDialogRef<any>;
-    
+
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private renderer: Renderer2
     ) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.searchTerm.valueChanges.pipe(
+            debounceTime(300),
+            tap((value: any) => {
+                if (value.length === 0) {
+                    this.getFolders();
+                }
+            }),
+            filter(value => value.length > 2),
+            distinctUntilChanged(),
+            switchMap(data => this.http.get('../../rest/autocomplete/folders', { params: { "search": data } })),
+            tap((data: any) => {
+                this.foldersList = data.map(
+                    (info: any) => {
+                        return {
+                            id: info.id,
+                            label: info.idToDisplay
+                        }
+                    }
+                );
+            })
+        ).subscribe();
+    }
+
+    initFolderMenu() {
+        this.searchTerm.setValue('');
+        setTimeout(() => {
+            this.renderer.selectRootElement('#searchTerm').focus();
+        }, 200);
+    }
 
     getFolders() {
         this.http.get("../../rest/folders").pipe(
