@@ -289,7 +289,7 @@ export const LANG_FR = {
     "descOrder"                             : "Ordre descendant",
     "description"                           : "Description",
     "dest_user"                             : "Attributaire",
-    "destination"                           : "entité traitante",
+    "destination"                           : "Entité traitante",
     "destinationChangingInfo"               : "Le courrier sera réattribué à l'entité",
     "destinationChangingInfoMass"           : "Les courriers issus d'une entité externe à",
     "destinationChangingInfoMass2"          : "seront redirigés à l'entité",

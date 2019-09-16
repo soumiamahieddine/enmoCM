@@ -30,7 +30,7 @@ export class IndexingFormComponent implements OnInit {
     indexingModelsCore: any[] = [
         {
             identifier: 'category_id',
-            label: 'Catégorie',
+            label: this.lang.category_id,
             unit: 'mail',
             type: 'select',
             system: true,
@@ -39,7 +39,7 @@ export class IndexingFormComponent implements OnInit {
         },
         {
             identifier: 'doctype',
-            label: 'Type de courrier',
+            label: this.lang.doctype,
             unit: 'mail',
             type: 'select',
             system: true,
@@ -48,7 +48,7 @@ export class IndexingFormComponent implements OnInit {
         },
         {
             identifier: 'docDate',
-            label: 'Date du courrier',
+            label: this.lang.docDate,
             unit: 'mail',
             type: 'date',
             system: true,
@@ -57,7 +57,7 @@ export class IndexingFormComponent implements OnInit {
         },
         {
             identifier: 'arrivalDate',
-            label: 'Date d\'arrivée',
+            label: this.lang.arrivalDate,
             unit: 'mail',
             type: 'date',
             system: true,
@@ -66,7 +66,7 @@ export class IndexingFormComponent implements OnInit {
         },
         {
             identifier: 'subject',
-            label: 'Objet',
+            label: this.lang.subject,
             unit: 'mail',
             type: 'string',
             system: true,
@@ -75,7 +75,7 @@ export class IndexingFormComponent implements OnInit {
         },
         {
             identifier: 'contact',
-            label: 'Expéditeur',
+            label: this.lang.getSenders,
             unit: 'contact',
             type: 'string',
             system: true,
@@ -84,7 +84,7 @@ export class IndexingFormComponent implements OnInit {
         },
         {
             identifier: 'destination',
-            label: 'Service traitant',
+            label: this.lang.destination,
             unit: 'process',
             type: 'select',
             system: true,
@@ -93,7 +93,7 @@ export class IndexingFormComponent implements OnInit {
         },
         {
             identifier: 'folder',
-            label: 'Dossier',
+            label: this.lang.folder,
             unit: 'classement',
             type: 'string',
             system: true,
@@ -115,6 +115,12 @@ export class IndexingFormComponent implements OnInit {
     indexingModelsCustomFields: any[] = [];
 
     availableFields: any[] = [
+        {
+            identifier: 'recipient',
+            label: this.lang.getRecipients,
+            type: 'string',
+            values: []
+        },
         {
             identifier: 'priority',
             label: this.lang.priority,
