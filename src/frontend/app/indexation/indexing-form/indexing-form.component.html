@@ -17,6 +17,7 @@
                         [cdkDragData]="field">
                         <div class="fieldLabel">
                             <i class="fas fa-bars fa-2x" color="primary" style="cursor: move" cdkDragHandle></i>&nbsp;
+                            {{field.label}}
                             <button mat-icon-button [matMenuTriggerFor]="fieldActions" *ngIf="!field.system">
                                 <mat-icon class="fa fa-ellipsis-v" color="secondary"></mat-icon>
                             </button>
@@ -30,7 +31,7 @@
                                     <mat-icon class="fa fa-trash" color="warn"></mat-icon>
                                     <span>{{lang.delete}}</span>
                                 </button>
-                            </mat-menu>{{field.label}}
+                            </mat-menu>
                         </div>
                         <div class="fieldInput">
                             <ng-container *ngIf="field.type === 'string'">

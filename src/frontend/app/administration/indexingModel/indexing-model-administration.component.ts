@@ -153,6 +153,7 @@ export class IndexingModelAdministrationComponent implements OnInit {
                 tap((data: any) => {
                     this.indexingForm.setModification();
                     this.setModification();
+                    this.router.navigate(['/administration/indexingModels']);
                     this.notify.success(this.lang.indexingModelUpdated);
                 }),
                 finalize(() => this.loading = false),

@@ -49,6 +49,10 @@
 
 .fieldLabel {
     color: #4A4A4A;
+
+    .cdk-drag-handle {
+        margin-right: 10px;
+    }
 }
 
 .fieldState {
