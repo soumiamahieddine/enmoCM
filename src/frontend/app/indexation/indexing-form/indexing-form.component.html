@@ -89,7 +89,7 @@
                                 </div>
                                 <mat-chip-list class="checkbox-selected-list" [disabled]="field.system">
                                     <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
-                                        {{lang.selectedValue}}
+                                        {{chip.value}}
                                     </mat-chip>
                                 </mat-chip-list>
                             </ng-container>

@@ -144,12 +144,6 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.processLimitDate,
             type: 'date',
             values: []
-        },
-        {
-            identifier: 'arrivalDate',
-            label: this.lang.arrivalDate,
-            type: 'date',
-            values: []
         }
     ];
 
