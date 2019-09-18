@@ -41,8 +41,8 @@ export class HistoryAdministrationComponent implements OnInit {
     accessHistory                   : boolean   = true;
 
 
-    @ViewChild('paginator', { static: true }) paginator: MatPaginator;
-    @ViewChild('batchPaginator', { static: true }) batchPaginator: MatPaginator;
+    @ViewChild('paginator', { static: false }) paginator: MatPaginator;
+    @ViewChild('batchPaginator', { static: false }) batchPaginator: MatPaginator;
     @ViewChild('sort', { static: true }) sort: MatSort;
     @ViewChild('batchSort', { static: true }) batchSort: MatSort;
     applyFilter(filterValue: string, historyType : string) {

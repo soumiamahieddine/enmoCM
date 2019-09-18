@@ -56,7 +56,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get('../..rest/contactsGroups')
+        this.http.get('../../rest/contactsGroups')
             .subscribe((data) => {
                 this.contactsGroups = data['contactsGroups'];
                 this.loading = false;
@@ -76,7 +76,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + contactsGroup.label + ' »');
 
         if (r) {
-            this.http.delete('../..rest/contactsGroups/' + contactsGroup.id)
+            this.http.delete('../../rest/contactsGroups/' + contactsGroup.id)
                 .subscribe(() => {
                     var lastElement = this.contactsGroups.length - 1;
                     this.contactsGroups[row] = this.contactsGroups[lastElement];

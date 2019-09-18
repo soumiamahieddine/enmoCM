@@ -47,8 +47,8 @@ export class EntitiesAdministrationComponent implements OnInit {
     displayedColumnsTemplates   = ['template_label', 'template_target'];
 
 
-    @ViewChild('paginatorUsers', { static: true }) paginatorUsers: MatPaginator;
-    @ViewChild('paginatorTemplates', { static: true }) paginatorTemplates: MatPaginator;
+    @ViewChild('paginatorUsers', { static: false }) paginatorUsers: MatPaginator;
+    @ViewChild('paginatorTemplates', { static: false }) paginatorTemplates: MatPaginator;
     @ViewChild('tableUsers', { static: true }) sortUsers: MatSort;
     @ViewChild('tableTemplates', { static: true }) sortTemplates: MatSort;
     applyFilterUsers(filterValue: string) {
