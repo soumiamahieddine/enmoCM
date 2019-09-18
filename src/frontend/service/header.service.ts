@@ -37,6 +37,7 @@ export class HeaderService {
         if (this.shortcut === null) {
             this.http.get('../../rest/shortcuts').pipe(
                 tap((data: any) => this.setShortcut(data.shortcuts)),
+                tap((data: any) => console.log(this.shortcut)),
                 catchError((err: any) => {
                     console.log(err);
                     return of(false);
@@ -72,7 +73,7 @@ export class HeaderService {
     setShortcut(shortcuts: any) {
         this.shortcut = [];
         shortcuts.forEach((element: any) => {
-            if (['indexing', 'search'].indexOf(element.id) > -1) {
+            if (['search'].indexOf(element.id) > -1) {
                 // TO DO : DELETE AFTER FULL V2
                 this.setShortcutV1(element);
             } else {

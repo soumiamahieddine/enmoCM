@@ -1,0 +1,74 @@
+<mat-sidenav-container class="maarch-container">
+    <mat-sidenav #snavLeft class="panel-left" #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
+        [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
+        autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '95%' : '600px'}">
+        <header-panel [snavLeft]="snav"></header-panel>
+        <div style="background: #F9F9F9;display: flex;padding: 10px;padding-left: 40px;padding-right: 40px;">
+            <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu" style="flex:1;margin-right:20px;">
+                <span class="menu-label">
+                    Mon modèle (par défaut)
+                </span>
+                <i class="fa fa-chevron-down menu-icon"></i></button>
+            <mat-menu #menu="matMenu" [class]="'menuForm'">
+                <button mat-menu-item>Item 1</button>
+                <button mat-menu-item>Item 2</button>
+            </mat-menu>
+            <button mat-button class="button-form-primary"
+                style="flex:1;align-items: center;justify-content: center;text-align: center;display: flex;">Enregistrer
+                comme modèle</button>
+        </div>
+        <div class="indexing-form-container">
+            <app-indexing-form #indexingForm [indexingFormId]="1"></app-indexing-form>
+        </div>
+        <div class="actions-indexing-form">
+            <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu" style="flex:1;margin-right:20px;">
+                <span class="menu-label">
+                    Enregistrer (par défaut)
+                </span>
+                <i class="fa fa-chevron-down menu-icon"></i></button>
+            <mat-menu #menu="matMenu" [class]="'menuForm'">
+                <button mat-menu-item>Item 1</button>
+                <button mat-menu-item>Item 2</button>
+            </mat-menu>
+            <button mat-button class="button-form-primary"
+                style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;">Valider</button>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="bg-head">
+            <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
+                <div class="bg-head-title-label">
+                    <header-left [snavLeft]="snav"></header-left>
+                </div>
+                <div class="bg-head-title-tool">
+                    <header-right></header-right>
+                </div>
+            </div>
+        </div>
+        <div class="document-container" [class.fullContainer]="appService.getViewMode()">
+            <div class="content">
+                <i class="fa fa-file-upload upload-icon"></i><br />
+                Glisser-déposer<br />ou
+                <div style="display: flex;">
+                    <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu"
+                        style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
+                        <span class="menu-label">
+                            Choisir un modèle
+                        </span>
+                        <i class="fa fa-chevron-down menu-icon"></i>
+                    </button>
+                    <mat-menu #menu="matMenu" [class]="'menuForm'">
+                        <button mat-menu-item>Item 1</button>
+                        <button mat-menu-item>Item 2</button>
+                    </mat-menu>
+                    <button mat-button class="button-form-primary" style="align-items: center;justify-content: center;text-align: center;display: flex;">Choisissez votre fichier</button>
+                </div>
+            </div>
+        </div>
+    </mat-sidenav-content>
+    <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
+        [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
+        class="panel-right" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode"
+        [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
+    </mat-sidenav>
+</mat-sidenav-container>

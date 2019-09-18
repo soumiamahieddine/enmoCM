@@ -24,6 +24,7 @@ export class IndexingFormComponent implements OnInit {
     loading: boolean = true;
 
     @Input('indexingFormId') indexingFormId: number;
+    @Input('admin') adminMode: boolean;
 
     fieldCategories: any[] = ['mail', 'contact', 'process', 'classement'];
 
@@ -160,7 +161,8 @@ export class IndexingFormComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        this.adminMode === undefined ? this.adminMode = false : this.adminMode = true;
+        
         this.fieldCategories.forEach(category => {
             this['indexingModels_' + category] = [];
         });
