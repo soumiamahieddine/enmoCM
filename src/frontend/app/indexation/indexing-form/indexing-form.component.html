@@ -59,8 +59,7 @@
                                     <mat-select [formControl]="arrFormControl[field.identifier]"
                                         [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue">
                                         <mat-option *ngIf="adminMode"></mat-option>
-                                        <mat-option *ngFor="let value of field.values" [value]="value.id" [title]="value.label" [disabled]="value.isTitle" [class.opt-group]="value.isTitle" [style.color]="value.color">
-                                            {{value.label}}
+                                        <mat-option *ngFor="let value of field.values" [value]="value.id" [title]="value.title !== undefined ? value.title : value.label" [disabled]="value.disabled" [class.opt-group]="value.isTitle" [style.color]="value.color" [innerHTML]="value.label">
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>

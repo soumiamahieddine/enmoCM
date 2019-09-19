@@ -25,6 +25,7 @@ export class IndexingFormComponent implements OnInit {
     loading: boolean = true;
 
     @Input('indexingFormId') indexingFormId: number;
+    @Input('groupId') groupId: number;
     @Input('admin') adminMode: boolean;
 
     fieldCategories: any[] = ['mail', 'contact', 'process', 'classement'];
@@ -291,16 +292,60 @@ export class IndexingFormComponent implements OnInit {
                     elem.endDate = '_TODAY';
                 } else
                     if (elem.identifier === 'destination') {
-                        elem.values = [
-                            {
-                                label : 'test',
-                                id: 1
-                            },
-                            {
-                                label : 'plus',
-                                id: 2
-                            }
-                        ];
+                        if (this.adminMode) {
+                            this.http.get("../../rest/indexing/entities").pipe(
+                                tap((data: any) => {
+                                    let title = '';
+                                    elem.values = data.entities.map((entity: any) => {
+                                        title = entity.entity_label;
+
+                                        for (let index = 0; index < entity.level; index++) {
+                                            entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
+                                        }
+                                        return {
+                                            id: entity.id,
+                                            title: title,
+                                            label: entity.entity_label,
+                                            disabled: false
+                                        }
+                                    });
+                                }),
+                                finalize(() => this.loading = false),
+                                catchError((err: any) => {
+                                    this.notify.handleErrors(err);
+                                    return of(false);
+                                })
+                            ).subscribe();
+                        } else {
+                            this.http.get("../../rest/indexing/" + this.groupId + "/entities").pipe(
+                                tap((data: any) => {
+                                    let title = '';
+
+                                    let defaultVal = data.entities.filter((entity: any) => entity.enabled === true && entity.id === elem.default_value);
+                                    elem.default_value = defaultVal.length > 0 ? defaultVal[0].id : '';
+                                    this.arrFormControl[elem.identifier].setValue(defaultVal.length > 0 ? defaultVal[0].id : '');
+
+                                    elem.values = data.entities.map((entity: any) => {
+                                        title = entity.entity_label;
+
+                                        for (let index = 0; index < entity.level; index++) {
+                                            entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
+                                        }
+                                        return {
+                                            id: entity.id,
+                                            title: title,
+                                            label: entity.entity_label,
+                                            disabled: !entity.enabled
+                                        }
+                                    });
+                                }),
+                                finalize(() => this.loading = false),
+                                catchError((err: any) => {
+                                    this.notify.handleErrors(err);
+                                    return of(false);
+                                })
+                            ).subscribe();
+                        }
                     } else
                         if (elem.identifier === 'arrivalDate') {
                             elem.startDate = 'docDate';
@@ -351,6 +396,7 @@ export class IndexingFormComponent implements OnInit {
                                                             arrValues.push({
                                                                 id: doctype.doctypes_first_level_id,
                                                                 label: doctype.doctypes_first_level_label,
+                                                                disabled: true,
                                                                 isTitle: true,
                                                                 color: doctype.css_style
                                                             });
@@ -358,6 +404,7 @@ export class IndexingFormComponent implements OnInit {
                                                             arrValues.push({
                                                                 id: doctype.doctypes_second_level_id,
                                                                 label: doctype.doctypes_second_level_label,
+                                                                disabled: true,
                                                                 isTitle: true,
                                                                 color: doctype.css_style
                                                             });
@@ -366,7 +413,8 @@ export class IndexingFormComponent implements OnInit {
                                                                 return {
                                                                     id: info.type_id,
                                                                     label: info.description,
-                                                                    isTitle: false
+                                                                    disabled: false,
+                                                                    isTitle: false,
                                                                 }
                                                             }));
                                                         }

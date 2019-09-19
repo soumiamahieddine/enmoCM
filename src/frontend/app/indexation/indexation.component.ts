@@ -38,6 +38,7 @@ export class IndexationComponent implements OnInit {
 
     indexingModels: any[] = [];
     currentIndexingModel: any = {};
+    currentGroupId: number;
 
     constructor(
         private route: ActivatedRoute,
@@ -56,6 +57,7 @@ export class IndexationComponent implements OnInit {
         this.headerService.setHeader("Enregistrement d'un courrier");
 
         this.route.params.subscribe(params => {
+            this.currentGroupId = params['groupId'];
             this.http.get("../../rest/indexingModels").pipe(
                 tap((data: any) => {
                     //

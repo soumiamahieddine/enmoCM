@@ -27,7 +27,7 @@ import { IndexationComponent }              from './indexation/indexation.compon
             { path: 'saveNumericPackage', canActivate: [AppGuard], component: SaveNumericPackageComponent },
             { path: 'separators/print', canActivate: [AppGuard], component: PrintSeparatorComponent },
             { path: 'signatureBook/users/:userId/groups/:groupId/baskets/:basketId/resources/:resId', canActivate: [AppGuard],component: SignatureBookComponent },
-            { path: 'indexing/:group', canActivate: [AppGuard],component: IndexationComponent },
+            { path: 'indexing/:groupId', canActivate: [AppGuard],component: IndexationComponent },
             { path: '**',  redirectTo: 'home', pathMatch: 'full' },
         ], { useHash: true }),
     ],

@@ -19,7 +19,7 @@
                 comme modèle</button>
         </div>
         <div class="indexing-form-container">
-            <app-indexing-form *ngIf="currentIndexingModel.id !== undefined" #indexingForm [indexingFormId]="currentIndexingModel.id"></app-indexing-form>
+            <app-indexing-form *ngIf="currentIndexingModel.id !== undefined" #indexingForm [groupId]="currentGroupId" [indexingFormId]="currentIndexingModel.id"></app-indexing-form>
         </div>
         <div class="actions-indexing-form">
             <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu" style="flex:1;margin-right:20px;">
