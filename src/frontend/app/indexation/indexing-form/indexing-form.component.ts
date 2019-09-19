@@ -244,6 +244,8 @@ export class IndexingFormComponent implements OnInit {
                     this.fieldCategories.forEach(element => {
                         this['indexingModels_' + element + 'Clone'] = JSON.parse(JSON.stringify(this['indexingModels_' + element]));
                     });
+
+                    this.initElemForm();
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
@@ -328,6 +330,63 @@ export class IndexingFormComponent implements OnInit {
     cancelModification() {
         this.fieldCategories.forEach(element => {
             this['indexingModels_' + element] = JSON.parse(JSON.stringify(this['indexingModels_' + element + 'Clone']));
+        });
+    }
+
+    initElemForm() {
+        this.fieldCategories.forEach(element => {
+            this['indexingModels_' + element].forEach((elem: any) => {
+                if (elem.identifier === 'category_id') {
+                    this.http.get("../../rest/categories").pipe(
+                        tap((data: any) => {
+                            elem.values = data.categories;
+                        }),
+                        finalize(() => this.loading = false),
+                        catchError((err: any) => {
+                            this.notify.handleErrors(err);
+                            return of(false);
+                        })
+                    ).subscribe();
+                }
+                if (elem.identifier === 'doctype') {
+                    this.http.get("../../rest/doctypes").pipe(
+                        tap((data: any) => {
+                            let arrValues: any[] = [];
+                            data.structure.forEach((doctype: any) => {
+                                if (doctype['doctypes_second_level_id'] === undefined) {
+                                    arrValues.push({
+                                        id: doctype.doctypes_first_level_id,
+                                        label: doctype.doctypes_first_level_label,
+                                        isTitle: true,
+                                        color: doctype.css_style
+                                    });
+                                } else if (doctype['description'] === undefined) {
+                                    arrValues.push({
+                                        id: doctype.doctypes_second_level_id,
+                                        label: doctype.doctypes_second_level_label,
+                                        isTitle: true,
+                                        color: doctype.css_style
+                                    });
+
+                                    arrValues = arrValues.concat(data.structure.filter((info: any) => info.doctypes_second_level_id === doctype.doctypes_second_level_id && info.description !== undefined).map((info: any) => {
+                                        return {
+                                            id: info.type_id,
+                                            label: info.description,
+                                            isTitle: false 
+                                        }
+                                    }));
+                                }
+                            });
+                            elem.values = arrValues;
+                        }),
+                        finalize(() => this.loading = false),
+                        catchError((err: any) => {
+                            this.notify.handleErrors(err);
+                            return of(false);
+                        })
+                    ).subscribe();
+                }
+            });
         });
     }
 }

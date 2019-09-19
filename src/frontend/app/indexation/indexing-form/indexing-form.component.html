@@ -46,7 +46,7 @@
                                     <textarea matInput [(ngModel)]="field.default_value"
                                         [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
                                         matTextareaAutosize matAutosizeMinRows="1" cdkAutosizeMaxRows="6"
-                                        [disabled]="field.system"></textarea>
+                                        [disabled]="field.system && adminMode"></textarea>
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="field.type === 'integer'">
@@ -59,9 +59,9 @@
                                 <mat-form-field class="input-form" floatLabel="never">
                                     <mat-select
                                         [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
-                                        [(ngModel)]="field.default_value" [disabled]="field.system">
-                                        <mat-option *ngFor="let value of field.values" [value]="value">
-                                            {{value}}
+                                        [(ngModel)]="field.default_value" [disabled]="field.system && adminMode">
+                                        <mat-option *ngFor="let value of field.values" [value]="value.id" [title]="value.label" [disabled]="value.isTitle" [class.opt-group]="value.isTitle" [style.color]="value.color">
+                                            {{value.label}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -70,14 +70,14 @@
                                 <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()">
                                     <input matInput [matDatepicker]="picker"
                                         [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
-                                        [(ngModel)]="field.default_value" [disabled]="field.system">
+                                        [(ngModel)]="field.default_value" [disabled]="field.system && adminMode">
                                     <mat-datepicker-toggle matSuffix [for]="picker">
                                     </mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="field.type === 'radio'">
-                                <mat-radio-group class="radio-form" color="primary" [disabled]="field.system"
+                                <mat-radio-group class="radio-form" color="primary" [disabled]="field.system && adminMode"
                                     [(ngModel)]="field.default_value">
                                     <mat-radio-button *ngFor="let value of field.values" [value]="value">
                                         {{value}}
@@ -86,7 +86,7 @@
                             </ng-container>
                             <ng-container *ngIf="field.type === 'checkbox'">
                                 <div class="input-form checkbox-form">
-                                    <mat-selection-list #shoes class="div-list" [disabled]="field.system"
+                                    <mat-selection-list #shoes class="div-list" [disabled]="field.system && adminMode"
                                         [(ngModel)]="field.default_value">
                                         <mat-list-option *ngFor="let value of field.values" [value]="value"
                                             checkboxPosition="before">
@@ -94,7 +94,7 @@
                                         </mat-list-option>
                                     </mat-selection-list>
                                 </div>
-                                <mat-chip-list class="checkbox-selected-list" [disabled]="field.system">
+                                <mat-chip-list class="checkbox-selected-list" [disabled]="field.system && adminMode">
                                     <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
                                         {{chip.value}}
                                     </mat-chip>
