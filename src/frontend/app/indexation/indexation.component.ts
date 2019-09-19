@@ -13,6 +13,8 @@ import { FiltersListService } from '../../service/filtersList.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { IndexingFormComponent } from './indexing-form/indexing-form.component';
+import { tap, finalize, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -34,7 +36,8 @@ export class IndexationComponent implements OnInit {
 
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
 
-    currentSelectedChrono: string = '';
+    indexingModels: any[] = [];
+    currentIndexingModel: any = {};
 
     constructor(
         private route: ActivatedRoute,
@@ -50,10 +53,21 @@ export class IndexationComponent implements OnInit {
     ngOnInit(): void {
         this.loading = false;
 
-        this.headerService.setHeader("Enregistrement d'un courrer");
+        this.headerService.setHeader("Enregistrement d'un courrier");
 
         this.route.params.subscribe(params => {
-
+            this.http.get("../../rest/indexingModels").pipe(
+                tap((data: any) => {
+                    //
+                    this.indexingModels = data.indexingModels;
+                    this.currentIndexingModel = this.indexingModels.filter(model => model.default === true)[0];
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         },
         (err: any) => {
             this.notify.handleErrors(err);
@@ -65,5 +79,10 @@ export class IndexationComponent implements OnInit {
             alert('Form OK !');
         }
         
+    }
+
+    loadIndexingModel(indexingModel: any) {
+        this.currentIndexingModel = indexingModel;
+        this.indexingForm.loadForm(indexingModel.id);
     }
 }
