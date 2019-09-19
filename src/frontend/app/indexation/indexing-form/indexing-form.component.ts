@@ -194,7 +194,6 @@ export class IndexingFormComponent implements OnInit {
                 })
             ).subscribe();
         } else {
-            console.log(this.indexingFormId)
             this.loadForm(this.indexingFormId);
         }
     }
@@ -237,7 +236,11 @@ export class IndexingFormComponent implements OnInit {
             arrIndexingModels = arrIndexingModels.concat(this['indexingModels_' + category]);
         });
         arrIndexingModels.forEach(element => {
-            element.default_value = this.arrFormControl[element.identifier].value;
+            if (element.today === true) {
+                element.default_value = '_TODAY';
+            } else {
+                element.default_value = this.arrFormControl[element.identifier].value;
+            }
         });
         return arrIndexingModels;
     }
@@ -282,7 +285,7 @@ export class IndexingFormComponent implements OnInit {
     initElemForm() {
         this.fieldCategories.forEach(element => {
             this['indexingModels_' + element].forEach((elem: any) => {
-                console.log(elem);
+
                 if (elem.identifier === 'docDate') {
                     elem.startDate = '';
                     elem.endDate = '_TODAY';
@@ -386,6 +389,8 @@ export class IndexingFormComponent implements OnInit {
     }
 
     loadForm(indexModelId: number) {
+        this.loading = true;
+
         this.fieldCategories.forEach(category => {
             this['indexingModels_' + category] = [];
         });
@@ -437,9 +442,14 @@ export class IndexingFormComponent implements OnInit {
                             field.system = true;
                         }
 
+                        if (field.type === 'date' && field.default_value === '_TODAY') {
+                            field.today = true;
+                            field.default_value = new Date();
+                        }
+
                         if (fieldExist) {
                             this['indexingModels_' + field.unit].push(field);
-                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.system && this.adminMode) }, field.mandatory ? [Validators.required] : []);
+                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false }, (field.mandatory && !this.adminMode) ? [Validators.required] : []);
                         } else {
                             this.notify.error("Le champ " + field.identifier + " n'existe pas !");
                         }
@@ -491,6 +501,16 @@ export class IndexingFormComponent implements OnInit {
             return new Date();
         } else {
             return '';
+        }
+    }
+
+    toggleTodayDate(field: any) {
+        field.today = !field.today;
+        if (field.today) {
+            this.arrFormControl[field.identifier].disable();
+            this.arrFormControl[field.identifier].setValue(new Date());
+        } else {
+            this.arrFormControl[field.identifier].enable();
         }
     }
 }

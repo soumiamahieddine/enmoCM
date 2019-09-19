@@ -58,6 +58,7 @@
                                 <mat-form-field class="input-form" floatLabel="never">
                                     <mat-select [formControl]="arrFormControl[field.identifier]"
                                         [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue">
+                                        <mat-option *ngIf="adminMode"></mat-option>
                                         <mat-option *ngFor="let value of field.values" [value]="value.id" [title]="value.label" [disabled]="value.isTitle" [class.opt-group]="value.isTitle" [style.color]="value.color">
                                             {{value.label}}
                                         </mat-option>
@@ -66,6 +67,12 @@
                             </ng-container>
                             <ng-container *ngIf="field.type === 'date'">
                                 <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()">
+                                    <button mat-button color="primary" *ngIf="adminMode" matPrefix mat-icon-button
+                                        (click)="$event.stopPropagation();toggleTodayDate(field);"
+                                        matTooltip="Jour d'aujourd'hui">
+                                        <mat-icon color="primary" class="{{field.today ? 'fas fa-circle' : 'far fa-circle'}}">
+                                        </mat-icon>
+                                    </button>
                                     <input [formControl]="arrFormControl[field.identifier]" matInput [matDatepicker]="picker"
                                         [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
                                         [min]="getMinDate(field.startDate)" [max]="getMaxDate(field.endDate)">
