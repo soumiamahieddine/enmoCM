@@ -12,6 +12,7 @@ import { FiltersListService } from '../../service/filtersList.service';
 
 import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
+import { IndexingFormComponent } from './indexing-form/indexing-form.component';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -30,6 +31,8 @@ export class IndexationComponent implements OnInit {
 
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
+
+    @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
 
     currentSelectedChrono: string = '';
 
@@ -55,5 +58,12 @@ export class IndexationComponent implements OnInit {
         (err: any) => {
             this.notify.handleErrors(err);
         });
+    }
+
+    onSubmit() {
+        if (this.indexingForm.isValidForm()) {
+            alert('Form OK !');
+        }
+        
     }
 }
