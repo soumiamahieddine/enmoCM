@@ -347,7 +347,19 @@ export class IndexingFormComponent implements OnInit {
                             return of(false);
                         })
                     ).subscribe();
-                }
+                } else
+                if (elem.identifier === 'priority') {
+                    this.http.get("../../rest/priorities").pipe(
+                        tap((data: any) => {
+                            elem.values = data.priorities;
+                        }),
+                        finalize(() => this.loading = false),
+                        catchError((err: any) => {
+                            this.notify.handleErrors(err);
+                            return of(false);
+                        })
+                    ).subscribe();
+                } else
                 if (elem.identifier === 'doctype') {
                     this.http.get("../../rest/doctypes").pipe(
                         tap((data: any) => {
