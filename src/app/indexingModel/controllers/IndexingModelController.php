@@ -32,12 +32,6 @@ class IndexingModelController
     public function get(Request $request, Response $response)
     {
         $models = IndexingModelModel::get(['where' => ['owner = ? OR private = ?'], 'data' => [$GLOBALS['id'], 'false']]);
-
-        foreach ($models as $key => $model) {
-            $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$model['id']]]);
-            $models[$key]['fields'] = $fields;
-        }
-
         return $response->withJson(['indexingModels' => $models]);
     }
 
