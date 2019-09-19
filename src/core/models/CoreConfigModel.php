@@ -115,7 +115,16 @@ class CoreConfigModel
 
             $strpos = strpos($fileContent, "=");
             $substr = substr(trim($fileContent), $strpos + 2, -1);
-            return json_decode($substr);
+            $decode = json_decode($substr);
+
+            if (json_last_error() != JSON_ERROR_NONE) {
+                // decoded String is not a valid JSON String, probably because of an extra ',' at the end
+                $correctedString = substr_replace($substr, '', strlen($substr) - 2, 1);
+
+                $decode = json_decode($correctedString);
+            }
+
+            return $decode;
         }
 
         return '';
