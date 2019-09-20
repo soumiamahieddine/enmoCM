@@ -146,6 +146,16 @@
     font-weight: bold; 
 }
 
+.smallInput {
+    font-size: 11px;
+    padding-left: 20px;
+    padding-right: 20px;
+    ::ng-deep.mat-form-field-infix {
+        padding : 0px;
+        padding-bottom: 5px;
+    }
+}
+
 .button-form-primary {
     background: $primary;
     border: solid 1px white;

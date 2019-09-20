@@ -55,24 +55,31 @@
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="field.type === 'select'">
-                                <mat-form-field class="input-form" floatLabel="never">
+                                <plugin-select-search [placeholderLabel]="field.system ? lang[field.type + 'Input'] : lang.defaultValue" [formControlSelect]="arrFormControl[field.identifier]" [datas]="field.values" style="width:100%;"></plugin-select-search>
+                                <!--<mat-form-field class="input-form" floatLabel="never">
                                     <mat-select [formControl]="arrFormControl[field.identifier]"
                                         [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue">
+                                        <plugin-select-search></plugin-select-search>
                                         <mat-option *ngIf="adminMode"></mat-option>
-                                        <mat-option *ngFor="let value of field.values" [value]="value.id" [title]="value.title !== undefined ? value.title : value.label" [disabled]="value.disabled" [class.opt-group]="value.isTitle" [style.color]="value.color" [innerHTML]="value.label">
+                                        <mat-option *ngFor="let value of field.values" [value]="value.id"
+                                            [title]="value.title !== undefined ? value.title : value.label"
+                                            [disabled]="value.disabled" [class.opt-group]="value.isTitle"
+                                            [style.color]="value.color" [innerHTML]="value.label">
                                         </mat-option>
                                     </mat-select>
-                                </mat-form-field>
+                                </mat-form-field>-->
                             </ng-container>
                             <ng-container *ngIf="field.type === 'date'">
                                 <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()">
                                     <button mat-button color="primary" *ngIf="adminMode" matPrefix mat-icon-button
                                         (click)="$event.stopPropagation();toggleTodayDate(field);"
                                         matTooltip="Jour d'aujourd'hui">
-                                        <mat-icon color="primary" class="{{field.today ? 'fas fa-circle' : 'far fa-circle'}}">
+                                        <mat-icon color="primary"
+                                            class="{{field.today ? 'fas fa-circle' : 'far fa-circle'}}">
                                         </mat-icon>
                                     </button>
-                                    <input [formControl]="arrFormControl[field.identifier]" matInput [matDatepicker]="picker"
+                                    <input [formControl]="arrFormControl[field.identifier]" matInput
+                                        [matDatepicker]="picker"
                                         [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
                                         [min]="getMinDate(field.startDate)" [max]="getMaxDate(field.endDate)">
                                     <mat-datepicker-toggle matSuffix [for]="picker">
@@ -81,7 +88,8 @@
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="field.type === 'radio'">
-                                <mat-radio-group class="radio-form" color="primary" [formControl]="arrFormControl[field.identifier]">
+                                <mat-radio-group class="radio-form" color="primary"
+                                    [formControl]="arrFormControl[field.identifier]">
                                     <mat-radio-button *ngFor="let value of field.values" [value]="value">
                                         {{value}}
                                     </mat-radio-button>
@@ -89,7 +97,8 @@
                             </ng-container>
                             <ng-container *ngIf="field.type === 'checkbox'">
                                 <div class="input-form checkbox-form">
-                                    <mat-selection-list #shoes class="div-list" [formControl]="arrFormControl[field.identifier]">
+                                    <mat-selection-list #shoes class="div-list"
+                                        [formControl]="arrFormControl[field.identifier]">
                                         <mat-list-option *ngFor="let value of field.values" [value]="value"
                                             checkboxPosition="before">
                                             {{value}}
@@ -104,9 +113,13 @@
                             </ng-container>
                         </div>
                         <div class="fieldState">
-                            <i class="fas fa-asterisk" *ngIf="adminMode || (arrFormControl[field.identifier].hasError('required') && arrFormControl[field.identifier].untouched)" [class.noMandatory]="!field.mandatory"></i>
-                            <i class="fas fa-times" style="color:red;font-size:15px;" *ngIf="!adminMode && arrFormControl[field.identifier].touched && arrFormControl[field.identifier].hasError('required')"></i>
-                            <i class="fas fa-check" style="color:green;font-size:15px;" *ngIf="!adminMode && arrFormControl[field.identifier].valid && (arrFormControl[field.identifier].value!==null && arrFormControl[field.identifier].value!=='')"></i>
+                            <i class="fas fa-asterisk"
+                                *ngIf="adminMode || (arrFormControl[field.identifier].hasError('required') && arrFormControl[field.identifier].untouched)"
+                                [class.noMandatory]="!field.mandatory"></i>
+                            <i class="fas fa-times" style="color:red;font-size:15px;"
+                                *ngIf="!adminMode && arrFormControl[field.identifier].touched && arrFormControl[field.identifier].hasError('required')"></i>
+                            <i class="fas fa-check" style="color:green;font-size:15px;"
+                                *ngIf="!adminMode && arrFormControl[field.identifier].valid && (arrFormControl[field.identifier].value!==null && arrFormControl[field.identifier].value!=='')"></i>
                         </div>
                     </div>
                 </ng-container>

@@ -561,4 +561,14 @@ export class IndexingFormComponent implements OnInit {
             this.arrFormControl[field.identifier].enable();
         }
     }
+
+
+    // TO DO
+    _handleKeydown(event: KeyboardEvent) {
+        if (event.keyCode === 32) {
+            // do not propagate spaces to MatSelect, as this would select the currently active option
+            event.stopPropagation();
+        }
+
+    }
 }
