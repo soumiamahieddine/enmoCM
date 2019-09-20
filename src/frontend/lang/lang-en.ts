@@ -188,7 +188,6 @@ export const LANG_EN = {
     "contactGroupCreation"                  : "Contacts group creation",
     "contactGroupList"                      : "Contact group list",
     "contactInfo"                           : "Contact card",
-    "contactLink"                           : "Link contact",
     "contacts"                              : "Contact(s)",
     "contactsFilling_address_complement"    : "Address complement",
     "contactsFilling_address_country"       : "Country",

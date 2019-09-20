@@ -198,7 +198,6 @@ export const LANG_FR = {
     "contactGroupCreation"                  : "Création d'un groupement de contact",
     "contactGroupList"                      : "Liste des groupements",
     "contactInfo"                           : "Fiche contact",
-    "contactLink"                           : "Associer un contact",
     "contacts"                              : "Contact(s)",
     "contactsFilling_address_complement"    : "Tour, bâtiment, immeuble, résidence",
     "contactsFilling_address_country"       : "Pays",

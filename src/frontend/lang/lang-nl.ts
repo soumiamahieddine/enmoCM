@@ -191,7 +191,6 @@ export const LANG_NL = {
     "contactGroupCreation"                  : "Aanmaak van een contactgroepering",
     "contactGroupList"                      : "Lijst met contactgroepen",
     "contactInfo"                           : "Contactfiche",
-    "contactLink"                           : "Een contact koppelen",
     "contacts"                              : "Contact(s)", //_TO_TRANSLATE
     "contactsFilling_address_complement"    : "Toren, gebouw, pand, residentie",
     "contactsFilling_address_country"       : "Land",
