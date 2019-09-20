@@ -25,7 +25,8 @@ $multiple-check-width: 33px;
 ::ng-deep.mat-select-search-panel {
   /* allow absolute positioning relative to outer options container */
   transform: none !important;
-  max-height: 350px;
+  max-height: 350px !important;
+  max-width: inherit !important;
 }
 
 .mat-select-search-input {

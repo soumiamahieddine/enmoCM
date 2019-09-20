@@ -149,8 +149,10 @@ export class IndexingFormComponent implements OnInit {
             values: []
         }
     ];
+    availableFieldsClone: any[] = [];
 
-    availableCustomFields: any[] = []
+    availableCustomFields: any[] = [];
+    availableCustomFieldsClone: any[] = []
 
     indexingFormGroup: FormGroup;
 
@@ -168,6 +170,8 @@ export class IndexingFormComponent implements OnInit {
 
     ngOnInit(): void {
         this.adminMode === undefined ? this.adminMode = false : this.adminMode = true;
+
+        this.availableFieldsClone = JSON.parse(JSON.stringify(this.availableFields));
 
         this.fieldCategories.forEach(category => {
             this['indexingModels_' + category] = [];
@@ -188,7 +192,7 @@ export class IndexingFormComponent implements OnInit {
                         });
                     });
                 }),
-                finalize(() => this.loading = false),
+                //finalize(() => this.loading = false),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -284,6 +288,13 @@ export class IndexingFormComponent implements OnInit {
     }
 
     initElemForm() {
+        this.loading = true;
+
+        // FAKE LOADER : MERGE ROUTES FOR REAL LOADER
+        setTimeout(() => {
+            this.loading = false;
+        }, 800);
+
         this.fieldCategories.forEach(element => {
             this['indexingModels_' + element].forEach((elem: any) => {
 
@@ -310,7 +321,7 @@ export class IndexingFormComponent implements OnInit {
                                         }
                                     });
                                 }),
-                                finalize(() => this.loading = false),
+                                //finalize(() => this.loading = false),
                                 catchError((err: any) => {
                                     this.notify.handleErrors(err);
                                     return of(false);
@@ -339,7 +350,7 @@ export class IndexingFormComponent implements OnInit {
                                         }
                                     });
                                 }),
-                                finalize(() => this.loading = false),
+                                //finalize(() => this.loading = false),
                                 catchError((err: any) => {
                                     this.notify.handleErrors(err);
                                     return of(false);
@@ -356,7 +367,7 @@ export class IndexingFormComponent implements OnInit {
                                     tap((data: any) => {
                                         elem.values = data.categories;
                                     }),
-                                    finalize(() => this.loading = false),
+                                    //finalize(() => this.loading = false),
                                     catchError((err: any) => {
                                         this.notify.handleErrors(err);
                                         return of(false);
@@ -368,7 +379,7 @@ export class IndexingFormComponent implements OnInit {
                                         tap((data: any) => {
                                             elem.values = data.priorities;
                                         }),
-                                        finalize(() => this.loading = false),
+                                        //finalize(() => this.loading = false),
                                         catchError((err: any) => {
                                             this.notify.handleErrors(err);
                                             return of(false);
@@ -380,7 +391,7 @@ export class IndexingFormComponent implements OnInit {
                                             tap((data: any) => {
                                                 elem.values = data.categories;
                                             }),
-                                            finalize(() => this.loading = false),
+                                            //finalize(() => this.loading = false),
                                             catchError((err: any) => {
                                                 this.notify.handleErrors(err);
                                                 return of(false);
@@ -403,7 +414,7 @@ export class IndexingFormComponent implements OnInit {
                                                         } else if (doctype['description'] === undefined) {
                                                             arrValues.push({
                                                                 id: doctype.doctypes_second_level_id,
-                                                                label: doctype.doctypes_second_level_label,
+                                                                label: '&nbsp;&nbsp;&nbsp;&nbsp;' + doctype.doctypes_second_level_label,
                                                                 disabled: true,
                                                                 isTitle: true,
                                                                 color: doctype.css_style
@@ -412,7 +423,7 @@ export class IndexingFormComponent implements OnInit {
                                                             arrValues = arrValues.concat(data.structure.filter((info: any) => info.doctypes_second_level_id === doctype.doctypes_second_level_id && info.description !== undefined).map((info: any) => {
                                                                 return {
                                                                     id: info.type_id,
-                                                                    label: info.description,
+                                                                    label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + info.description,
                                                                     disabled: false,
                                                                     isTitle: false,
                                                                 }
@@ -421,7 +432,7 @@ export class IndexingFormComponent implements OnInit {
                                                     });
                                                     elem.values = arrValues;
                                                 }),
-                                                finalize(() => this.loading = false),
+                                                //finalize(() => this.loading = false),
                                                 catchError((err: any) => {
                                                     this.notify.handleErrors(err);
                                                     return of(false);
@@ -438,6 +449,8 @@ export class IndexingFormComponent implements OnInit {
 
     loadForm(indexModelId: number) {
         this.loading = true;
+
+        this.availableFields = JSON.parse(JSON.stringify(this.availableFieldsClone));
 
         this.fieldCategories.forEach(category => {
             this['indexingModels_' + category] = [];
@@ -508,7 +521,7 @@ export class IndexingFormComponent implements OnInit {
                 this.initElemForm();
                 this.createForm();
             }),
-            finalize(() => this.loading = false),
+            //finalize(() => this.loading = false),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);

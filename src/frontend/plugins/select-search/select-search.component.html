@@ -15,7 +15,7 @@
     <div *ngIf="noEntriesFoundLabel && value && _options?.length === 0 && datas.length > 5" class="mat-select-search-no-entries-found">
       {{lang.noResult}}
     </div>
-    <mat-option *ngIf="adminMode"></mat-option>
+    <mat-option *ngIf="showResetOption"></mat-option>
     <mat-option *ngFor="let value of filteredDatas | async" [value]="value.id"
       [title]="value.title !== undefined ? value.title : value.label" [disabled]="value.disabled"
       [class.opt-group]="value.isTitle" [style.color]="value.color" [innerHTML]="value.label">

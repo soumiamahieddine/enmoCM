@@ -4,7 +4,7 @@ import {
     ViewChild,
     Renderer2
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
+import { ControlValueAccessor, FormControl } from '@angular/forms';
 import { MatOption, MatSelect } from '@angular/material';
 import { take, takeUntil, startWith, map } from 'rxjs/operators';
 import { Subject, ReplaySubject, Observable } from 'rxjs';
@@ -21,13 +21,11 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     /** Label of the search placeholder */
     @Input() placeholderLabel = this.lang.chooseValue;
 
-    /** Label to be shown when no entries are found. Set to null if no message should be shown. */
-    @Input() noEntriesFoundLabel = 'Aucun résultat';
-
     @Input('formControlSelect') formControlSelect: FormControl;
 
     @Input('datas') datas: any;
 
+    @Input('showResetOption') showResetOption: boolean;
 
     /** Reference to the search input field */
     @ViewChild('searchSelectInput', { read: ElementRef, static: true }) searchSelectInput: ElementRef;
@@ -118,42 +116,19 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
                     });
             });
 
-        // detect changes when the input changes
-        /*this.change
-            .pipe(takeUntil(this._onDestroy))
-            .subscribe(() => {
-                this.changeDetectorRef.detectChanges();
-            });*/
 
-
-        setTimeout(() => {
-            this.filteredDatas = this.formControlSearch.valueChanges
-                .pipe(
-                    startWith(''),
-                    map(value => this._filter(value))
-                );
-        }, 800);
+        /*setTimeout(() => {
+            
+        }, 800);*/
+        this.filteredDatas = this.formControlSearch.valueChanges
+        .pipe(
+            startWith(''),
+            map(value => this._filter(value))
+        );
 
 
         // this.initMultipleHandling();
 
-        // load the initial bank list
-
-        //this.filteredDatas.next(this.datas.slice());
-
-        //this.filteredDatasMulti.next(this.datas.slice());
-
-        // listen for search field value changes
-        /*this.formControlSelect.valueChanges
-            .pipe(takeUntil(this._onDestroy))
-            .subscribe(() => {
-                this.filterDatas();
-            });*/
-        /*this.formControlSelect.valueChanges
-            .pipe(takeUntil(this._onDestroy))
-            .subscribe(() => {
-                this.filterDatasMulti();
-            });*/
     }
 
     ngOnDestroy() {

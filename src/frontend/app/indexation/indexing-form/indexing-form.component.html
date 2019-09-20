@@ -55,29 +55,20 @@
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="field.type === 'select'">
-                                <plugin-select-search [placeholderLabel]="field.system ? lang[field.type + 'Input'] : lang.defaultValue" [formControlSelect]="arrFormControl[field.identifier]" [datas]="field.values" style="width:100%;"></plugin-select-search>
-                                <!--<mat-form-field class="input-form" floatLabel="never">
-                                    <mat-select [formControl]="arrFormControl[field.identifier]"
-                                        [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue">
-                                        <plugin-select-search></plugin-select-search>
-                                        <mat-option *ngIf="adminMode"></mat-option>
-                                        <mat-option *ngFor="let value of field.values" [value]="value.id"
-                                            [title]="value.title !== undefined ? value.title : value.label"
-                                            [disabled]="value.disabled" [class.opt-group]="value.isTitle"
-                                            [style.color]="value.color" [innerHTML]="value.label">
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>-->
+                                <plugin-select-search [showResetOption]="adminMode"
+                                    [placeholderLabel]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
+                                    [formControlSelect]="arrFormControl[field.identifier]" [datas]="field.values"
+                                    style="width:100%;"></plugin-select-search>
                             </ng-container>
                             <ng-container *ngIf="field.type === 'date'">
+                                <button mat-button color="primary" *ngIf="adminMode" matPrefix mat-icon-button
+                                    (click)="$event.stopPropagation();toggleTodayDate(field);"
+                                    matTooltip="Jour d'aujourd'hui" style="position: absolute;left: -40px;">
+                                    <mat-icon color="primary"
+                                        class="{{field.today ? 'far fa-bell-slash' : 'far fa-bell'}}">
+                                    </mat-icon>
+                                </button>
                                 <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()">
-                                    <button mat-button color="primary" *ngIf="adminMode" matPrefix mat-icon-button
-                                        (click)="$event.stopPropagation();toggleTodayDate(field);"
-                                        matTooltip="Jour d'aujourd'hui">
-                                        <mat-icon color="primary"
-                                            class="{{field.today ? 'fas fa-circle' : 'far fa-circle'}}">
-                                        </mat-icon>
-                                    </button>
                                     <input [formControl]="arrFormControl[field.identifier]" matInput
                                         [matDatepicker]="picker"
                                         [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
