@@ -4,16 +4,16 @@ TRUNCATE TABLE usergroups;
 TRUNCATE TABLE usergroups_services;
 DELETE FROM usergroups WHERE group_id = 'COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'COURRIER';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('COURRIER', 'Scanning operator', TRUE, , '{"actions":["21"], "entities":[], "keywords":[]}');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('COURRIER', 'Scanning operator', TRUE, , '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'AGENT';
 DELETE FROM usergroups_services WHERE group_id = 'AGENT';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('AGENT', 'Agent', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('AGENT', 'Agent', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESP_COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'RESP_COURRIER';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESP_COURRIER', 'Supervisor', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESP_COURRIER', 'Supervisor', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESPONSABLE';
 DELETE FROM usergroups_services WHERE group_id = 'RESPONSABLE';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESPONSABLE', 'Manager', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESPONSABLE', 'Manager', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'ADMINISTRATEUR_N1';
 DELETE FROM usergroups_services WHERE group_id = 'ADMINISTRATEUR_N1';
 INSERT INTO usergroups (group_id,group_desc) VALUES ('ADMINISTRATEUR_N1', 'Func. Admin n1');
@@ -1591,6 +1591,21 @@ INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_th
 TRUNCATE TABLE folders;
 INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('HR', FALSE, 1, 0, 0);
 INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('BUSINESS', FALSE, 1, 0, 0);
+
+TRUNCATE TABLE indexing_models;
+INSERT INTO indexing_models (id, label, "default", owner, private) VALUES (1, 'Courrier arrivée', TRUE, 23, FALSE);
+Select setval('indexing_models_id_seq', (select max(id)+1 from shipping_templates), false);
+
+TRUNCATE TABLE indexing_models_fields;
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'select', 'category_id', TRUE, '"incoming"', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'select', 'doctype', TRUE, '""', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'date', 'docDate', TRUE, '""', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'date', 'arrivalDate', TRUE, '""', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'string', 'subject', TRUE, '""', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'string', 'contact', TRUE, '""', 'contact');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'select', 'destination', TRUE, '""', 'process');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'string', 'folder', TRUE, '""', 'classement');
+
 
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise
 --Update res_letterbox set status='VAL' where res_id=108;
