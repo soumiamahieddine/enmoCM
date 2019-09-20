@@ -27,6 +27,7 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
+use Tag\models\TagModel;
 use User\models\UserModel;
 use Folder\models\FolderModel;
 use Folder\controllers\FolderController;
@@ -703,5 +704,40 @@ class AutoCompleteController
             ];
         };
         return $response->withJson(array_map($getFomatedFolders, $selectedFolders));
+    }
+
+    public static function getTags(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+        $check = Validator::stringType()->notEmpty()->validate($data['search']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $requestData = AutoCompleteController::getDataForRequest([
+            'search'        => $data['search'],
+            'fields'        => '(tag_label ilike ?)',
+            'where'         => ['1 = ?'],
+            'data'          => ['1'],
+            'fieldsNumber'  => 1,
+        ]);
+
+        $tags = TagModel::get([
+            'select'    => ['tag_id', 'tag_label'],
+            'where'     => $requestData['where'],
+            'data'      => $requestData['data'],
+            'orderBy'   => ['tag_label'],
+            'limit'     => self::LIMIT
+        ]);
+
+        $data = [];
+        foreach ($tags as $value) {
+            $data[] = [
+                'id'            => $value['tag_id'],
+                'idToDisplay'   => $value['tag_label']
+            ];
+        }
+
+        return $response->withJson($data);
     }
 }
