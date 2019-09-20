@@ -307,6 +307,10 @@ $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures'
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
 $app->post('/resources/checkFileUpload', \Resource\controllers\StoreController::class . ':checkFileUpload');
 
+//Indexing
+$app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
+$app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
+
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions', \Resource\controllers\ResourceListController::class . ':getActions');

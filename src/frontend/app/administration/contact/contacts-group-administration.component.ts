@@ -17,7 +17,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "contacts-group-administration.component.html",
-    providers: [NotificationService]
+    providers: [NotificationService, AppService]
 })
 export class ContactsGroupAdministrationComponent implements OnInit {
 

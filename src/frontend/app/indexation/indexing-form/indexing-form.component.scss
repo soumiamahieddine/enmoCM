@@ -49,11 +49,17 @@
 
 .fieldLabel {
     color: #4A4A4A;
+
+    .cdk-drag-handle {
+        margin-right: 10px;
+    }
 }
 
 .fieldState {
     padding-left: 10px;
     padding-right: 10px;
+    width: 40px;
+    justify-content: center;
 
     i {
         font-size: 5px;
@@ -136,6 +142,130 @@
         height: auto;
     }
 }
+.opt-group {
+    font-weight: bold; 
+}
+
+.button-form-primary {
+    background: $primary;
+    border: solid 1px white;
+    color: white;
+    border-radius: 30px;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 240px;
+    transition: all 0.1s;
+    ::ng-deep.mat-button-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        
+        .menu-label {
+            display: flex;
+            flex: 1;
+        }
+        
+        .menu-icon {
+            display: flex;
+        }
+    }
+}
+
+.button-form-primary-alt {
+    font-size: 13px;
+    background: white;
+    border: solid 1px $primary;
+    color: $primary;
+    border-radius: 30px;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 240px;
+    transition: all 0.1s;
+
+    ::ng-deep.mat-button-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+        .menu-label {
+            display: flex;
+            flex: 1;
+        }
+        
+        .menu-icon {
+            display: flex;
+        }
+    }
+    
+}
+
+
+
+.button-form-primary:hover {
+    color: $primary;
+    background: white;
+    transition: all 0.1s;
+    border: solid 1px $primary;
+}
+
+
+.button-form-primary[aria-expanded=true] {
+    color: $primary;
+    background: white;
+    transition: all 0.1s;
+    border: solid 1px $primary;
+    /*border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;*/
+}
+
+.button-form {
+    background: white;
+    color: $primary;
+    border-radius: 30px;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 240px;
+    transition: all 0.1s; 
+}
+
+.button-form[aria-expanded=true] {
+    transition: all 0.1s; 
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+::ng-deep.menuForm {
+    width: 240px;
+    border-radius: 30px;
+
+    border: solid 1px white;
+
+    .mat-menu-content {
+        padding-top: 0px;
+        padding-bottom: 0px;
+
+        .mat-menu-item {
+            transition: all 0.1s;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .mat-menu-item:hover {
+            transition: all 0.1s;
+            color: white;
+            background: $primary;
+        }
+    }
+}
 
 .mat-form-field-disabled {
     ::ng-deep.mat-input-element {
@@ -208,7 +338,7 @@
 }
 
 .customFieldDrag {
-    cursor: grab;
+    cursor: move;
     width: 50px;
     display: flex;
     align-items: center;
@@ -238,4 +368,8 @@
 
 .noMandatory {
     visibility: hidden;
+}
+
+.checkboxInput {
+    display: block;
 }

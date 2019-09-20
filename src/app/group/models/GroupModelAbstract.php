@@ -216,6 +216,21 @@ abstract class GroupModelAbstract
         return $allGroups;
     }
 
+    public static function getGroupByLogin(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['login', 'groupId']);
+        ValidatorModel::stringType($aArgs, ['login', 'groupId']);
+
+        $aGroups = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['usergroup_content, usergroups'],
+            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?', 'usergroups.id = ?'],
+            'data'      => [$aArgs['login'], $aArgs['groupId']]
+        ]);
+
+        return $aGroups;
+    }
+
     public static function getSecurityByGroupId(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['groupId']);

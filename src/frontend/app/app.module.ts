@@ -65,6 +65,8 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
 
 import { PrintSeparatorComponent }                        from './separator/print-separator/print-separator.component';
 
+import { IndexationComponent }                        from './indexation/indexation.component';
+
 
 @NgModule({
     imports: [
@@ -123,7 +125,8 @@ import { PrintSeparatorComponent }                        from './separator/prin
         FolderDocumentListComponent,
         FolderMenuComponent,
         FolderUpdateComponent,
-        FolderActionListComponent
+        FolderActionListComponent,
+        IndexationComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,

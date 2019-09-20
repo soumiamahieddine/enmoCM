@@ -438,7 +438,7 @@
     <comment>_ADMIN_INDEXING_MODELS</comment>
     <servicepage>/administration/indexingModels</servicepage>
     <servicetype>admin</servicetype>
-    <category>organisation</category>
+    <category>production</category>
     <system_service>false</system_service>
     <style>fab fa-wpforms</style>
     <enabled>true</enabled>
@@ -450,7 +450,7 @@
     <comment>_ADMIN_CUSTOM_FIELDS</comment>
     <servicepage>/administration/customFields</servicepage>
     <servicetype>admin</servicetype>
-    <category>organisation</category>
+    <category>production</category>
     <system_service>false</system_service>
     <style>fas fa-code</style>
     <enabled>true</enabled>

@@ -78,7 +78,7 @@ export class SummarySheetComponent implements OnInit {
             label: this.lang.avis,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destination + ')',
+                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destination.toLowerCase() + ')',
                 this.lang.role,
                 this.lang.processDate
             ],
@@ -90,7 +90,7 @@ export class SummarySheetComponent implements OnInit {
             label: this.lang.visaWorkflow,
             css: 'col-md-4 text-center',
             desc: [
-                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destination + ')',
+                this.lang.firstname + ' ' + this.lang.lastname + ' (' + this.lang.destination.toLowerCase() + ')',
                 this.lang.role,
                 this.lang.processDate
             ],

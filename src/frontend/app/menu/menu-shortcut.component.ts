@@ -39,11 +39,14 @@ export class MenuShortcutComponent implements OnInit {
     }
 
     onSpeedDialFabClicked(group: any, shortcut:any) {
-        location.href = shortcut.servicepage+'&groupId='+group.id;
+        this.router.navigate(['/indexing/' + group.id]);
+        // location.href = shortcut.servicepage+'&groupId='+group.id;
     }
 
     gotToMenu(shortcut:any) {
-        if (shortcut.angular == 'true') {
+        if (shortcut.id === 'indexing') {
+            this.router.navigate([shortcut.servicepage + '/' + shortcut.groups[0].id]);
+        } else if (shortcut.angular == 'true') {
             this.router.navigate([shortcut.servicepage]);
         } else {
             location.href = shortcut.servicepage;

@@ -258,9 +258,7 @@ class ActionController
         $obj['action']['id_status']        = '_NOSTATUS_';
         $obj['categoriesList']             = ResModel::getCategories();
 
-        foreach ($obj['categoriesList'] as $key => $value) {
-            $obj['action']['actionCategories'][] = $value['id'];
-        }
+        $obj['action']['actionCategories'] = array_column($obj['categoriesList'], 'id');
 
         $obj['statuses'] = StatusModel::get();
         array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);

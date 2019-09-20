@@ -36,7 +36,7 @@ export class GroupAdministrationComponent implements OnInit {
     basketsDataSource               : any;
 
 
-    @ViewChild('paginatorBaskets', { static: true }) paginatorBaskets: MatPaginator;
+    @ViewChild('paginatorBaskets', { static: false }) paginatorBaskets: MatPaginator;
     @ViewChild('sortBaskets', { static: true }) sortBaskets: MatSort;
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild('sortUsers', { static: true }) sortUsers: MatSort;

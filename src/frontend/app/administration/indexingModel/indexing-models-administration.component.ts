@@ -8,7 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
-import { tap, finalize, catchError, filter, exhaustMap } from 'rxjs/operators';
+import { tap, finalize, catchError, filter, exhaustMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -63,8 +63,11 @@ export class IndexingModelsAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.http.get("../../rest/indexingModels").pipe(
+            map((data: any) => {
+                return data.indexingModels.filter((info: any) => info.private === false);
+            }),
             tap((data: any) => {
-                this.indexingModels = data.indexingModels;
+                this.indexingModels = data;
                 this.headerService.setHeader(this.lang.administration + ' ' + this.lang.indexingModels);
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.indexingModels);

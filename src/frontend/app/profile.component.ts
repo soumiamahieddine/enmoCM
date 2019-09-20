@@ -102,7 +102,7 @@ export class ProfileComponent implements OnInit {
     contactsGroups: any[] = [];
     displayedColumnsGroupsList: string[] = ['label', 'description','nbContacts','public', 'actions'];
     dataSourceGroupsList: any;
-    @ViewChild('paginatorGroupsList', { static: true }) paginatorGroupsList: MatPaginator;
+    @ViewChild('paginatorGroupsList', { static: false }) paginatorGroupsList: MatPaginator;
     @ViewChild('tableGroupsListSort', { static: true }) sortGroupsList: MatSort;
     applyFilterGroupsList(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -122,7 +122,7 @@ export class ProfileComponent implements OnInit {
     contactTypes: string[] = [];
     displayedColumnsContactsListAutocomplete: string[] = ['select', 'contact', 'address'];
     dataSourceContactsListAutocomplete: any;
-    @ViewChild('paginatorGroupsListAutocomplete', { static: true }) paginatorGroupsListAutocomplete: MatPaginator;
+    @ViewChild('paginatorGroupsListAutocomplete', { static: false }) paginatorGroupsListAutocomplete: MatPaginator;
     selection = new SelectionModel<Element>(true, []);
     masterToggle(event: any) {
         if (event.checked) {
@@ -142,7 +142,7 @@ export class ProfileComponent implements OnInit {
     contactsList: any[] = [];
     displayedColumnsContactsList: string[] = ['contact', 'address', 'actions'];
     dataSourceContactsList: any;
-    @ViewChild('paginatorContactsList', { static: true }) paginatorContactsList: MatPaginator;
+    @ViewChild('paginatorContactsList', { static: false }) paginatorContactsList: MatPaginator;
     @ViewChild('tableContactsListSort', { static: true }) sortContactsList: MatSort;
     applyFilterContactsList(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -153,7 +153,7 @@ export class ProfileComponent implements OnInit {
     //History
     displayedColumns = ['event_date', 'info'];
     dataSource: any;
-    @ViewChild('paginatorHistory', { static: true }) paginatorHistory: MatPaginator;
+    @ViewChild('paginatorHistory', { static: false }) paginatorHistory: MatPaginator;
     @ViewChild('tableHistorySort', { static: true }) sortHistory: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace

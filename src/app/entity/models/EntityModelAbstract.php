@@ -246,6 +246,22 @@ abstract class EntityModelAbstract
         return $entities;
     }
 
+    public static function getEntityChildrenSubLevel(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['entitiesId']);
+        ValidatorModel::arrayType($aArgs, ['entitiesId']);
+
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['entities'],
+            'where'     => ['parent_entity_id in (?)', 'enabled = ?'],
+            'data'      => [$aArgs['entitiesId'], 'Y'],
+            'order_by'  => ['entity_label']
+        ]);
+
+        return $aReturn;
+    }
+
     public static function getAllEntitiesByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
