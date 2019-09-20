@@ -17,10 +17,12 @@
 
 namespace IndexingModel\controllers;
 
+use Entity\models\EntityModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
+use Resource\controllers\IndexingController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -206,5 +208,42 @@ class IndexingModelController
         ]);
 
         return $response->withStatus(204);
+    }
+
+    public function getEntities(Request $request, Response $response, array $aArgs)
+    {
+        $entitiesTmp = EntityModel::get([
+            'select'   => ['id', 'entity_label', 'entity_id'],
+            'where'    => ['enabled = ?', '(parent_entity_id is null OR parent_entity_id = \'\')'],
+            'data'     => ['Y'],
+            'orderBy'  => ['entity_label']
+        ]);
+        if (!empty($entitiesTmp)) {
+            foreach ($entitiesTmp as $key => $value) {
+                $entitiesTmp[$key]['level'] = 0;
+            }
+            $entitiesId = array_column($entitiesTmp, 'entity_id');
+            $entitiesChild = IndexingController::getEntitiesChildrenLevel(['entitiesId' => $entitiesId, 'level' => 1]);
+            $entitiesTmp = array_merge([$entitiesTmp], $entitiesChild);
+        }
+
+        $entities = [];
+        foreach ($entitiesTmp as $keyLevel => $levels) {
+            foreach ($levels as $entity) {
+                if ($keyLevel == 0) {
+                    $entities[] = $entity;
+                    continue;
+                } else {
+                    foreach ($entities as $key => $oEntity) {
+                        if ($oEntity['entity_id'] == $entity['parent_entity_id']) {
+                            array_splice($entities, $key+1, 0, [$entity]);
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $response->withJson(['entities' => $entities]);
     }
 }

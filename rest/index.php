@@ -136,6 +136,7 @@ $app->delete('/customFields/{id}', \CustomField\controllers\CustomFieldControlle
 
 //IndexingModels
 $app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
+$app->get('/indexingModels/entities', \IndexingModel\controllers\IndexingModelController::class . ':getEntities');
 $app->get('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':getById');
 $app->post('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':create');
 $app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':update');

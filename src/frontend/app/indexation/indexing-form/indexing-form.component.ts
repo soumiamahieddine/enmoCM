@@ -293,7 +293,7 @@ export class IndexingFormComponent implements OnInit {
                 } else
                     if (elem.identifier === 'destination') {
                         if (this.adminMode) {
-                            this.http.get("../../rest/indexing/entities").pipe(
+                            this.http.get("../../rest/indexingModels/entities").pipe(
                                 tap((data: any) => {
                                     let title = '';
                                     elem.values = data.entities.map((entity: any) => {
