@@ -1157,4 +1157,5 @@ export const LANG_FR = {
     "noSelectedValue" : "Aucun élément sélectionné", 
     "searchValue" : "Rechercher un élément",
     "initiatorEntityAlt" : "Entité initiatrice",
+    "autocompleteInput" : "Auto-completion",
 };

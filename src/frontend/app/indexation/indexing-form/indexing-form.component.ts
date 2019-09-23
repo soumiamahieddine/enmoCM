@@ -160,6 +160,13 @@ export class IndexingFormComponent implements OnInit {
             type: 'date',
             default_value : '',
             values: []
+        },
+        {
+            identifier: 'tags',
+            label: this.lang.tags,
+            type: 'autocomplete',
+            default_value : '',
+            values: ['/rest/autocomplete/tags']
         }
     ];
     availableFieldsClone: any[] = [];

@@ -1120,4 +1120,5 @@ export const LANG_EN = {
     "noSelectedValue" : "No selected value",
     "searchValue" : "Search a value", 
     "initiatorEntityAlt" : "Initiator entity",
+    "autocompleteInput" : "Autocomplete input",
 };
