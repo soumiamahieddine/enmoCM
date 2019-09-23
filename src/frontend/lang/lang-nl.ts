@@ -1144,4 +1144,5 @@ export const LANG_NL = {
     "indexingModelCreation" : "Indexing model creation", //_TO_TRANSLATE
     "integerInput" : "Input number", //_TO_TRANSLATE
     "noSelectedValue" : "No selected value", //_TO_TRANSLATE 
+    "searchValue" : "Search a value", //_TO_TRANSLATE 
 };

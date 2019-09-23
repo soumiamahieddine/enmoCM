@@ -44,19 +44,19 @@
                             <ng-container *ngIf="field.type === 'string'">
                                 <mat-form-field class="input-form" floatLabel="never">
                                     <textarea matInput [formControl]="arrFormControl[field.identifier]"
-                                        [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
+                                        [placeholder]="!adminMode ? lang.typeValue : lang.defaultValue"
                                         matTextareaAutosize matAutosizeMinRows="1" cdkAutosizeMaxRows="6"></textarea>
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="field.type === 'integer'">
                                 <mat-form-field class="input-form" floatLabel="never">
                                     <input type="number" matInput [formControl]="arrFormControl[field.identifier]"
-                                        [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue">
+                                        [placeholder]="!adminMode ? lang.typeValue : lang.defaultValue">
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="field.type === 'select'">
                                 <plugin-select-search [showResetOption]="adminMode"
-                                    [placeholderLabel]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
+                                    [placeholderLabel]="!adminMode ? lang.chooseValue : lang.defaultValue"
                                     [formControlSelect]="arrFormControl[field.identifier]" [datas]="field.values"
                                     style="width:100%;"></plugin-select-search>
                             </ng-container>
@@ -71,7 +71,7 @@
                                 <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()">
                                     <input [formControl]="arrFormControl[field.identifier]" matInput
                                         [matDatepicker]="picker"
-                                        [placeholder]="field.system ? lang[field.type + 'Input'] : lang.defaultValue"
+                                        [placeholder]="!adminMode ? lang.chooseDate : lang.defaultValue"
                                         [min]="getMinDate(field.startDate)" [max]="getMaxDate(field.endDate)">
                                     <mat-datepicker-toggle matSuffix [for]="picker">
                                     </mat-datepicker-toggle>
@@ -103,7 +103,7 @@
                                 </mat-chip-list>
                             </ng-container>
                             <ng-container *ngIf="field.type === 'autocomplete'">
-                                <plugin-autocomplete [labelPlaceholder]="lang.chooseValue"
+                                <plugin-autocomplete [labelPlaceholder]="lang.searchValue"
                                     [routeDatas]="[field.values[0]]" [targetSearchKey]="'idToDisplay'" [size]="'small'"
                                     [control]="arrFormControl[field.identifier]"
                                     style="width:100%;"></plugin-autocomplete>

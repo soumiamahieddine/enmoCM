@@ -77,7 +77,7 @@ export class IndexingFormComponent implements OnInit {
             values: []
         },
         {
-            identifier: 'contact',
+            identifier: 'getSenders',
             label: this.lang.getSenders,
             unit: 'contact',
             type: 'autocomplete',
@@ -119,9 +119,9 @@ export class IndexingFormComponent implements OnInit {
 
     availableFields: any[] = [
         {
-            identifier: 'recipient',
+            identifier: 'getRecipients',
             label: this.lang.getRecipients,
-            type: 'string',
+            type: 'autocomplete',
             values: []
         },
         {
@@ -488,7 +488,6 @@ export class IndexingFormComponent implements OnInit {
                         let indexFound = this.availableFields.map(avField => avField.identifier).indexOf(field.identifier);
 
                         if (indexFound > -1) {
-                            field.label = this.availableFields[indexFound].label;
                             field.values = this.availableFields[indexFound].values;
                             field.type = this.availableFields[indexFound].type;
                             this.availableFields.splice(indexFound, 1);
@@ -508,7 +507,6 @@ export class IndexingFormComponent implements OnInit {
                         indexFound = this.indexingModelsCore.map(info => info.identifier).indexOf(field.identifier);
 
                         if (indexFound > -1) {
-                            field.label = this.indexingModelsCore[indexFound].label;
                             field.values = this.indexingModelsCore[indexFound].values;
                             field.type = this.indexingModelsCore[indexFound].type;
                             fieldExist = true;

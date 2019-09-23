@@ -1155,4 +1155,5 @@ export const LANG_FR = {
     "indexingModelCreation" : "Création d'un modèle d'enregistrement",
     "integerInput" : "Champ numérique", 
     "noSelectedValue" : "Aucun élément sélectionné", 
+    "searchValue" : "Rechercher un élément", 
 };
