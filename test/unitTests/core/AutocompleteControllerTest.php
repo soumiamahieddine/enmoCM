@@ -314,4 +314,29 @@ class AutocompleteControllerTest extends TestCase
 
         $this->assertSame('Bad Request', $responseBody->errors);
     }
+
+    public function testGetTags()
+    {
+        $autocompleteController = new \SrcCore\controllers\AutoCompleteController();
+
+        //  CREATE
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'search'    => 'maa'
+        ];
+        $fullRequest = $request->withQueryParams($aArgs);
+
+        $response     = $autocompleteController->getTags($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody);
+        $this->assertNotEmpty($responseBody);
+
+        $this->assertInternalType('int', $responseBody[0]->id);
+        $this->assertNotEmpty($responseBody[0]->id);
+        $this->assertInternalType('string', $responseBody[0]->idToDisplay);
+        $this->assertNotEmpty($responseBody[0]->idToDisplay);
+    }
 }
