@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
     selector: 'plugin-autocomplete',
     templateUrl: 'autocomplete.component.html',
-    styleUrls: ['autocomplete.component.scss'],
+    styleUrls: ['autocomplete.component.scss', '../../app/indexation/indexing-form/indexing-form.component.scss'],
 })
 export class PluginAutocomplete implements OnInit {
     lang: any = LANG;
@@ -20,8 +20,8 @@ export class PluginAutocomplete implements OnInit {
     listInfo: string;
 
     type = {
-        user : 'fa-user',
-        entity : 'fa-sitemap'
+        user: 'fa-user',
+        entity: 'fa-sitemap'
     }
 
     @Input('size') size: string;
@@ -33,7 +33,12 @@ export class PluginAutocomplete implements OnInit {
     @Input('labelList') optGroupLabel: string;
     @Input('targetSearchKey') key: string;
     @Input('subInfoKey') subInfoKey: string;
+
+    @Input('control') controlAutocomplete: FormControl;
+
+
     @Output('triggerEvent') selectedOpt = new EventEmitter();
+
 
     @ViewChild('autoCompleteInput', { static: true }) autoCompleteInput: ElementRef;
 
@@ -47,7 +52,12 @@ export class PluginAutocomplete implements OnInit {
     ngOnInit() {
         this.optGroupLabel = this.optGroupLabel === undefined ? this.lang.availableValues : this.optGroupLabel;
         this.placeholder = this.placeholder === undefined ? this.lang.chooseValue : this.placeholder;
-        this.size = this.size === undefined ? 'default' : 'small';
+
+        if (this.controlAutocomplete !== undefined) {
+            this.controlAutocomplete.setValue(this.controlAutocomplete.value === null ? [] : this.controlAutocomplete.value);
+        }
+
+        this.size = this.size === undefined ? 'default' : this.size;
 
         if (this.routeDatas !== undefined) {
             this.initAutocompleteRoute();
@@ -85,7 +95,7 @@ export class PluginAutocomplete implements OnInit {
     }
 
     getDatas(data: string) {
-        let arrayObs:any = [];
+        let arrayObs: any = [];
         let test: any = [];
         this.routeDatas.forEach(element => {
             arrayObs.push(this.http.get('../..' + element, { params: { "search": data } }));
@@ -104,17 +114,25 @@ export class PluginAutocomplete implements OnInit {
     }
 
     selectOpt(ev: any) {
-        if (this.singleMode !== undefined) {
-            this.myControl.setValue(ev.option.value[this.key]);
+        if (this.controlAutocomplete !== undefined) {
+            let arrvalue = [];
+            if (this.controlAutocomplete.value !== null) {
+                arrvalue = this.controlAutocomplete.value;
+            }
+            arrvalue.push(ev.option.value[this.key]);
+            this.controlAutocomplete.setValue(arrvalue);
         }
-        this.resetAutocomplete();
-        this.autoCompleteInput.nativeElement.blur();
-        this.selectedOpt.emit(ev.option.value);
+
+        if (this.selectedOpt !== undefined) {
+            this.resetAutocomplete();
+            this.autoCompleteInput.nativeElement.blur();
+            this.selectedOpt.emit(ev.option.value);
+        }
     }
 
     resetAutocomplete() {
         if (this.singleMode === undefined) {
-            this.myControl.setValue(''); 
+            this.myControl.setValue('');
         }
         if (this.routeDatas !== undefined) {
             this.options = [];
@@ -129,5 +147,17 @@ export class PluginAutocomplete implements OnInit {
         } else {
             return this.options;
         }
+    }
+
+    unsetValue() {
+        this.controlAutocomplete.setValue('');
+        this.myControl.setValue('');
+        this.myControl.enable();
+    }
+
+    removeItem(index: number) {
+        let arrValue = this.controlAutocomplete.value;
+        arrValue.splice(index, 1);
+        this.controlAutocomplete.setValue(arrValue);
     }
 }

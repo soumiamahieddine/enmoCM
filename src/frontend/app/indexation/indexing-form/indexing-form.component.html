@@ -102,6 +102,12 @@
                                     </mat-chip>
                                 </mat-chip-list>
                             </ng-container>
+                            <ng-container *ngIf="field.type === 'autocomplete'">
+                                <plugin-autocomplete [labelPlaceholder]="lang.chooseValue"
+                                    [routeDatas]="[field.values[0]]" [targetSearchKey]="'idToDisplay'" [size]="'small'"
+                                    [control]="arrFormControl[field.identifier]"
+                                    style="width:100%;"></plugin-autocomplete>
+                            </ng-container>
                         </div>
                         <div class="fieldState">
                             <i class="fas fa-asterisk"

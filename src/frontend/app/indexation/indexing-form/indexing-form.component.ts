@@ -80,10 +80,10 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'contact',
             label: this.lang.getSenders,
             unit: 'contact',
-            type: 'string',
+            type: 'autocomplete',
             system: true,
             mandatory: true,
-            values: []
+            values: ['/rest/autocomplete/contacts']
         },
         {
             identifier: 'destination',
@@ -98,10 +98,10 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'folder',
             label: this.lang.folder,
             unit: 'classement',
-            type: 'string',
+            type: 'autocomplete',
             system: true,
             mandatory: true,
-            values: []
+            values: ['/rest/autocomplete/folders']
         }
     ];
 
@@ -192,7 +192,7 @@ export class IndexingFormComponent implements OnInit {
                         });
                     });
                 }),
-                //finalize(() => this.loading = false),
+                finalize(() => this.loading = false),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -297,7 +297,6 @@ export class IndexingFormComponent implements OnInit {
 
         this.fieldCategories.forEach(element => {
             this['indexingModels_' + element].forEach((elem: any) => {
-
                 if (elem.identifier === 'docDate') {
                     elem.startDate = '';
                     elem.endDate = '_TODAY';
@@ -401,12 +400,14 @@ export class IndexingFormComponent implements OnInit {
                                         if (elem.identifier === 'doctype') {
                                             this.http.get("../../rest/doctypes").pipe(
                                                 tap((data: any) => {
+                                                    let title = '';
                                                     let arrValues: any[] = [];
                                                     data.structure.forEach((doctype: any) => {
                                                         if (doctype['doctypes_second_level_id'] === undefined) {
                                                             arrValues.push({
                                                                 id: doctype.doctypes_first_level_id,
                                                                 label: doctype.doctypes_first_level_label,
+                                                                title: doctype.doctypes_first_level_label,
                                                                 disabled: true,
                                                                 isTitle: true,
                                                                 color: doctype.css_style
@@ -415,6 +416,7 @@ export class IndexingFormComponent implements OnInit {
                                                             arrValues.push({
                                                                 id: doctype.doctypes_second_level_id,
                                                                 label: '&nbsp;&nbsp;&nbsp;&nbsp;' + doctype.doctypes_second_level_label,
+                                                                title: doctype.doctypes_second_level_label,
                                                                 disabled: true,
                                                                 isTitle: true,
                                                                 color: doctype.css_style
@@ -424,6 +426,7 @@ export class IndexingFormComponent implements OnInit {
                                                                 return {
                                                                     id: info.type_id,
                                                                     label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + info.description,
+                                                                    title: info.description,
                                                                     disabled: false,
                                                                     isTitle: false,
                                                                 }
@@ -470,6 +473,9 @@ export class IndexingFormComponent implements OnInit {
                 if (data.indexingModel.fields.length === 0) {
                     this.fieldCategories.forEach(element => {
                         this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
+                        this.indexingModelsCore.forEach(field => {
+                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false }, (field.mandatory && !this.adminMode) ? [Validators.required] : []);                            
+                        });
                     });
                     this.notify.error("Champs introuvables! les données de base ont été chargés");
                 } else {
@@ -498,7 +504,13 @@ export class IndexingFormComponent implements OnInit {
                             this.availableCustomFields.splice(indexFound, 1);
                             fieldExist = true;
                         }
-                        if (this.indexingModelsCore.map(info => info.identifier).indexOf(field.identifier) > -1) {
+
+                        indexFound = this.indexingModelsCore.map(info => info.identifier).indexOf(field.identifier);
+
+                        if (indexFound > -1) {
+                            field.label = this.indexingModelsCore[indexFound].label;
+                            field.values = this.indexingModelsCore[indexFound].values;
+                            field.type = this.indexingModelsCore[indexFound].type;
                             fieldExist = true;
                             field.system = true;
                         }

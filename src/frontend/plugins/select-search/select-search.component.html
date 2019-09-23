@@ -12,7 +12,7 @@
       </button>
     </div>
 
-    <div *ngIf="noEntriesFoundLabel && value && _options?.length === 0 && datas.length > 5" class="mat-select-search-no-entries-found">
+    <div *ngIf="value && _options?.length === 0 && datas.length > 5" class="mat-select-search-no-entries-found">
       {{lang.noResult}}
     </div>
     <mat-option *ngIf="showResetOption"></mat-option>
