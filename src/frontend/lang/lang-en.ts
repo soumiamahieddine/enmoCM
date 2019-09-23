@@ -1119,4 +1119,5 @@ export const LANG_EN = {
     "integerInput" : "Input number",
     "noSelectedValue" : "No selected value",
     "searchValue" : "Search a value", 
+    "initiatorEntityAlt" : "Initiator entity",
 };

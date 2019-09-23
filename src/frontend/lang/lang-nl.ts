@@ -1145,4 +1145,5 @@ export const LANG_NL = {
     "integerInput" : "Input number", //_TO_TRANSLATE
     "noSelectedValue" : "No selected value", //_TO_TRANSLATE 
     "searchValue" : "Search a value", //_TO_TRANSLATE 
+    "initiatorEntityAlt" : "Initiator entity", //_TO_TRANSLATE 
 };
