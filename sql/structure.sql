@@ -1927,12 +1927,10 @@ CREATE TABLE indexing_models
 )
 WITH (OIDS=FALSE);
 
-CREATE TYPE indexing_models_fields_type AS ENUM ('string', 'integer', 'select', 'date', 'radio', 'checkbox');
 CREATE TABLE indexing_models_fields
 (
     id SERIAL NOT NULL,
     model_id INTEGER NOT NULL,
-    type indexing_models_fields_type NOT NULL,
     identifier text NOT NULL,
     mandatory BOOLEAN NOT NULL,
     default_value json,

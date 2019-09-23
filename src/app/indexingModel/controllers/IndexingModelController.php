@@ -63,10 +63,8 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
         foreach ($body['fields'] as $key => $field) {
-            if (!Validator::stringType()->notEmpty()->validate($field['type']) || !in_array($field['type'], IndexingModelController::FIELDS_TYPES)) {
-                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] type is empty or not a validate type"]);
-            } elseif (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
-                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not an integer"]);
+            if (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
+                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not a string"]);
             }
         }
 
@@ -86,7 +84,6 @@ class IndexingModelController
         foreach ($body['fields'] as $field) {
             IndexingModelFieldModel::create([
                 'model_id'      => $modelId,
-                'type'          => $field['type'],
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
                 'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
@@ -120,10 +117,8 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
         foreach ($body['fields'] as $key => $field) {
-            if (!Validator::stringType()->notEmpty()->validate($field['type']) || !in_array($field['type'], IndexingModelController::FIELDS_TYPES)) {
-                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] type is empty or not a validate type"]);
-            } elseif (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
-                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not an integer"]);
+            if (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
+                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not a string"]);
             }
         }
 
@@ -155,7 +150,6 @@ class IndexingModelController
         foreach ($body['fields'] as $field) {
             IndexingModelFieldModel::create([
                 'model_id'      => $args['id'],
-                'type'          => $field['type'],
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
                 'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
