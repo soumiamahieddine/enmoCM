@@ -46,7 +46,7 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
         }
 
-        $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
+        $fields = IndexingModelFieldModel::get(['select' => ['identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
         foreach ($fields as $key => $value) {
             $fields[$key]['default_value'] = json_decode($value['default_value'], true);
         }
