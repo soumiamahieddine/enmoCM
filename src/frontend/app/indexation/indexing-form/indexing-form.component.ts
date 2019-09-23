@@ -38,6 +38,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'select',
             system: true,
             mandatory: true,
+            default_value : '',
             values: []
         },
         {
@@ -47,6 +48,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'select',
             system: true,
             mandatory: true,
+            default_value : '',
             values: []
         },
         {
@@ -56,6 +58,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'date',
             system: true,
             mandatory: true,
+            default_value : '',
             values: []
         },
         {
@@ -65,6 +68,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'date',
             system: true,
             mandatory: true,
+            default_value : '',
             values: []
         },
         {
@@ -74,6 +78,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'string',
             system: true,
             mandatory: true,
+            default_value : '',
             values: []
         },
         {
@@ -83,6 +88,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'autocomplete',
             system: true,
             mandatory: true,
+            default_value : '',
             values: ['/rest/autocomplete/contacts']
         },
         {
@@ -92,6 +98,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'select',
             system: true,
             mandatory: true,
+            default_value : '',
             values: []
         },
         {
@@ -101,6 +108,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'autocomplete',
             system: true,
             mandatory: true,
+            default_value : '',
             values: ['/rest/autocomplete/folders']
         }
     ];
@@ -122,30 +130,35 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'getRecipients',
             label: this.lang.getRecipients,
             type: 'autocomplete',
+            default_value : '',
             values: []
         },
         {
             identifier: 'priority',
             label: this.lang.priority,
             type: 'select',
+            default_value : '',
             values: []
         },
         {
             identifier: 'confidential',
             label: this.lang.confidential,
             type: 'radio',
+            default_value : '',
             values: ['Oui', 'Non']
         },
         {
             identifier: 'initiator',
             label: this.lang.initiator,
             type: 'select',
+            default_value : '',
             values: []
         },
         {
             identifier: 'processLimitDate',
             label: this.lang.processLimitDate,
             type: 'date',
+            default_value : '',
             values: []
         }
     ];
@@ -361,22 +374,14 @@ export class IndexingFormComponent implements OnInit {
                             elem.startDate = 'docDate';
                             elem.endDate = '_TODAY';
                         } else
-                            if (elem.identifier === 'category_id') {
-                                this.http.get("../../rest/categories").pipe(
-                                    tap((data: any) => {
-                                        elem.values = data.categories;
-                                    }),
-                                    //finalize(() => this.loading = false),
-                                    catchError((err: any) => {
-                                        this.notify.handleErrors(err);
-                                        return of(false);
-                                    })
-                                ).subscribe();
+                            if (elem.identifier === 'processLimitDate') {
+                                elem.startDate = '_TODAY';
+                                elem.endDate = '';
                             } else
-                                if (elem.identifier === 'priority') {
-                                    this.http.get("../../rest/priorities").pipe(
+                                if (elem.identifier === 'category_id') {
+                                    this.http.get("../../rest/categories").pipe(
                                         tap((data: any) => {
-                                            elem.values = data.priorities;
+                                            elem.values = data.categories;
                                         }),
                                         //finalize(() => this.loading = false),
                                         catchError((err: any) => {
@@ -385,10 +390,10 @@ export class IndexingFormComponent implements OnInit {
                                         })
                                     ).subscribe();
                                 } else
-                                    if (elem.identifier === 'category_id') {
-                                        this.http.get("../../rest/categories").pipe(
+                                    if (elem.identifier === 'priority') {
+                                        this.http.get("../../rest/priorities").pipe(
                                             tap((data: any) => {
-                                                elem.values = data.categories;
+                                                elem.values = data.priorities;
                                             }),
                                             //finalize(() => this.loading = false),
                                             catchError((err: any) => {
@@ -397,43 +402,10 @@ export class IndexingFormComponent implements OnInit {
                                             })
                                         ).subscribe();
                                     } else
-                                        if (elem.identifier === 'doctype') {
-                                            this.http.get("../../rest/doctypes").pipe(
+                                        if (elem.identifier === 'category_id') {
+                                            this.http.get("../../rest/categories").pipe(
                                                 tap((data: any) => {
-                                                    let title = '';
-                                                    let arrValues: any[] = [];
-                                                    data.structure.forEach((doctype: any) => {
-                                                        if (doctype['doctypes_second_level_id'] === undefined) {
-                                                            arrValues.push({
-                                                                id: doctype.doctypes_first_level_id,
-                                                                label: doctype.doctypes_first_level_label,
-                                                                title: doctype.doctypes_first_level_label,
-                                                                disabled: true,
-                                                                isTitle: true,
-                                                                color: doctype.css_style
-                                                            });
-                                                        } else if (doctype['description'] === undefined) {
-                                                            arrValues.push({
-                                                                id: doctype.doctypes_second_level_id,
-                                                                label: '&nbsp;&nbsp;&nbsp;&nbsp;' + doctype.doctypes_second_level_label,
-                                                                title: doctype.doctypes_second_level_label,
-                                                                disabled: true,
-                                                                isTitle: true,
-                                                                color: doctype.css_style
-                                                            });
-
-                                                            arrValues = arrValues.concat(data.structure.filter((info: any) => info.doctypes_second_level_id === doctype.doctypes_second_level_id && info.description !== undefined).map((info: any) => {
-                                                                return {
-                                                                    id: info.type_id,
-                                                                    label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + info.description,
-                                                                    title: info.description,
-                                                                    disabled: false,
-                                                                    isTitle: false,
-                                                                }
-                                                            }));
-                                                        }
-                                                    });
-                                                    elem.values = arrValues;
+                                                    elem.values = data.categories;
                                                 }),
                                                 //finalize(() => this.loading = false),
                                                 catchError((err: any) => {
@@ -441,7 +413,52 @@ export class IndexingFormComponent implements OnInit {
                                                     return of(false);
                                                 })
                                             ).subscribe();
-                                        }
+                                        } else
+                                            if (elem.identifier === 'doctype') {
+                                                this.http.get("../../rest/doctypes").pipe(
+                                                    tap((data: any) => {
+                                                        let title = '';
+                                                        let arrValues: any[] = [];
+                                                        data.structure.forEach((doctype: any) => {
+                                                            if (doctype['doctypes_second_level_id'] === undefined) {
+                                                                arrValues.push({
+                                                                    id: doctype.doctypes_first_level_id,
+                                                                    label: doctype.doctypes_first_level_label,
+                                                                    title: doctype.doctypes_first_level_label,
+                                                                    disabled: true,
+                                                                    isTitle: true,
+                                                                    color: doctype.css_style
+                                                                });
+                                                            } else if (doctype['description'] === undefined) {
+                                                                arrValues.push({
+                                                                    id: doctype.doctypes_second_level_id,
+                                                                    label: '&nbsp;&nbsp;&nbsp;&nbsp;' + doctype.doctypes_second_level_label,
+                                                                    title: doctype.doctypes_second_level_label,
+                                                                    disabled: true,
+                                                                    isTitle: true,
+                                                                    color: doctype.css_style
+                                                                });
+
+                                                                arrValues = arrValues.concat(data.structure.filter((info: any) => info.doctypes_second_level_id === doctype.doctypes_second_level_id && info.description !== undefined).map((info: any) => {
+                                                                    return {
+                                                                        id: info.type_id,
+                                                                        label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + info.description,
+                                                                        title: info.description,
+                                                                        disabled: false,
+                                                                        isTitle: false,
+                                                                    }
+                                                                }));
+                                                            }
+                                                        });
+                                                        elem.values = arrValues;
+                                                    }),
+                                                    //finalize(() => this.loading = false),
+                                                    catchError((err: any) => {
+                                                        this.notify.handleErrors(err);
+                                                        return of(false);
+                                                    })
+                                                ).subscribe();
+                                            }
             });
         });
     }
@@ -474,7 +491,7 @@ export class IndexingFormComponent implements OnInit {
                     this.fieldCategories.forEach(element => {
                         this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
                         this.indexingModelsCore.forEach(field => {
-                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false }, (field.mandatory && !this.adminMode) ? [Validators.required] : []);                            
+                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false }, (field.mandatory && !this.adminMode) ? [Validators.required] : []);
                         });
                     });
                     this.notify.error("Champs introuvables! les données de base ont été chargés");
