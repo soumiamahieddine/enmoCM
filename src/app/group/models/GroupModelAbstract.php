@@ -219,7 +219,8 @@ abstract class GroupModelAbstract
     public static function getGroupByLogin(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['login', 'groupId']);
-        ValidatorModel::stringType($aArgs, ['login', 'groupId']);
+        ValidatorModel::stringType($aArgs, ['login']);
+        ValidatorModel::intVal($aArgs, ['groupId']);
 
         $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
