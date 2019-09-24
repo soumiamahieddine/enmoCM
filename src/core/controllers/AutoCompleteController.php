@@ -716,25 +716,25 @@ class AutoCompleteController
 
         $requestData = AutoCompleteController::getDataForRequest([
             'search'        => $data['search'],
-            'fields'        => '(tag_label ilike ?)',
+            'fields'        => '(label ilike ?)',
             'where'         => ['1 = ?'],
             'data'          => ['1'],
             'fieldsNumber'  => 1,
         ]);
 
         $tags = TagModel::get([
-            'select'    => ['tag_id', 'tag_label'],
+            'select'    => ['id', 'label'],
             'where'     => $requestData['where'],
             'data'      => $requestData['data'],
-            'orderBy'   => ['tag_label'],
+            'orderBy'   => ['label'],
             'limit'     => self::LIMIT
         ]);
 
         $data = [];
         foreach ($tags as $value) {
             $data[] = [
-                'id'            => $value['tag_id'],
-                'idToDisplay'   => $value['tag_label']
+                'id'            => $value['id'],
+                'idToDisplay'   => $value['label']
             ];
         }
 

@@ -142,6 +142,9 @@ define('_AR_DISPLAYING', 'Displaying acknowledgement receipt');
 define('_DOC_ADDED', 'Document added');
 define('_ATTACH_DISPLAYING', 'Displaying attachment');
 define('_NOTE_ADDED', 'Note added');
+define('_TAG_ADDED', 'Tag added');
+define('_TAG_DELETED', 'Tag deleted');
+define('_TAG_UPDATED', 'Tag updated');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');

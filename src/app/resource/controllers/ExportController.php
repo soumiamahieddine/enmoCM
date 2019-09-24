@@ -492,6 +492,7 @@ class ExportController
 
             if (!empty($tagsRes)) {
                 $resId = '';
+                $tags = '';
                 foreach ($tagsRes as $key => $value) {
                     if ($key != 0 && $resId == $value['res_id']) {
                         $tags .= "\n";
@@ -501,8 +502,8 @@ class ExportController
                     } else {
                         $tags = '';
                     }
-                    $tag = TagModel::getById(['id' => $value['tag_id'], 'select' => ['tag_label']]);
-                    $tags .= $tag['tag_label'];
+                    $tag = TagModel::getById(['id' => $value['tag_id'], 'select' => ['label']]);
+                    $tags .= $tag['label'];
                     $resId = $value['res_id'];
                 }
                 $aTags[$value['res_id']] = $tags;

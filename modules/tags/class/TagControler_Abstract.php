@@ -553,8 +553,8 @@ abstract class tag_controler_Abstract extends ObjectControler
         //Primo, test de l'existance du mot clé en base.
         $stmt = $db->query(
             "UPDATE " ._TAG_TABLE_NAME
-            . " SET  tag_label = ?"
-            . " WHERE  tag_id = ?",
+            . " SET  label = ?"
+            . " WHERE  id = ?",
             array($new_tag_label,$tag_id)
         );
         
@@ -569,7 +569,7 @@ abstract class tag_controler_Abstract extends ObjectControler
             foreach ($_SESSION['m_admin']['tag']['entities'] as $entity_id) {
                 $stmt = $db->query(
                     "INSERT INTO tags_entities"
-                    . "(tag_id, entity_id) VALUES (?, ?)",
+                    . "(id, entity_id) VALUES (?, ?)",
                     array($tag_id,$entity_id)
                 );
             }
@@ -597,17 +597,17 @@ abstract class tag_controler_Abstract extends ObjectControler
         {*/
         $stmt = $db->query(
                 "INSERT INTO " ._TAG_TABLE_NAME
-                . "(tag_label, coll_id, entity_id_owner) VALUES (?, ?, ?)",
-                 array($new_tag_label,$coll_id,$_SESSION['user']['primaryentity']['id'])
+                . "(label, entity_id_owner) VALUES (?, ?)",
+                 array($new_tag_label,$_SESSION['user']['primaryentity']['id'])
              );
              
-        $tag_id = $db->lastInsertId('tag_id_seq');
+        $tag_id = $db->lastInsertId('tags_id_seq');
             
         if (!empty($_SESSION['m_admin']['tag']['entities'])) {
             foreach ($_SESSION['m_admin']['tag']['entities'] as $entity_id) {
                 $stmt = $db->query(
                         "INSERT INTO tags_entities"
-                        . "(tag_id, entity_id) VALUES (?, ?)",
+                        . "(id, entity_id) VALUES (?, ?)",
                         array($tag_id,$entity_id)
                     );
             }

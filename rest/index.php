@@ -358,6 +358,10 @@ $app->put('/statuses/{identifier}', \Status\controllers\StatusController::class 
 $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
+//Tags
+$app->post('/tags', \Tag\controllers\TagController::class . ':create');
+$app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
+
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');
 $app->post('/templates', \Template\controllers\TemplateController::class . ':create');

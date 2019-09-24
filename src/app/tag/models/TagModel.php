@@ -17,7 +17,7 @@ namespace Tag\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-abstract class TagModel
+class TagModel
 {
     public static function get(array $aArgs = [])
     {
@@ -36,17 +36,17 @@ abstract class TagModel
         return $tags;
     }
 
-    public static function getById(array $aArgs)
+    public static function getById(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::arrayType($args, ['select']);
 
         $tag = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['tags'],
-            'where'     => ['tag_id = ?'],
-            'data'      => [$aArgs['id']],
+            'where'     => ['id = ?'],
+            'data'      => [$args['id']],
         ]);
 
         if (empty($tag[0])) {
@@ -54,6 +54,38 @@ abstract class TagModel
         }
 
         return $tag[0];
+    }
+
+    public static function create(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['label']);
+        ValidatorModel::stringType($args, ['label']);
+
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'tags_id_seq']);
+
+        DatabaseModel::insert([
+            'table'         => 'tags',
+            'columnsValues' => [
+                'id'        => $nextSequenceId,
+                'label'     => $args['label'],
+            ]
+        ]);
+
+        return $nextSequenceId;
+    }
+
+    public static function delete(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'tags',
+            'where' => $args['where'],
+            'data'  => $args['data']
+        ]);
+
+        return true;
     }
 
     public static function getTagRes(array $aArgs)

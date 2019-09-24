@@ -154,6 +154,19 @@ CREATE TABLE indexing_models_fields
 WITH (OIDS=FALSE);
 
 
+/* TAGS */
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'tags') AND attname = 'tag_label') = 1 THEN
+	  ALTER TABLE tags RENAME COLUMN tag_label TO label;
+	  ALTER TABLE tags DROP COLUMN IF EXISTS coll_id;
+	  ALTER TABLE tags ADD COLUMN id serial NOT NULL;
+	  UPDATE tags SET id = tag_id;
+	  SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
+      ALTER TABLE tags DROP COLUMN IF EXISTS tag_id;
+  END IF;
+END$$;
+
+
 /* REFACTORING DATA */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN
@@ -186,14 +199,8 @@ DELETE FROM usergroups_services WHERE service_id = 'join_res_case';
 DELETE FROM usergroups_services WHERE service_id = 'join_res_case_in_process';
 DELETE FROM usergroups_services WHERE service_id = 'close_case';
 DELETE FROM usergroups_services WHERE service_id = 'add_cases';
-
-/* OLD FOLDERS */
-DROP VIEW IF EXISTS view_folders;
 DELETE FROM usergroups_services WHERE service_id IN ('folder_search', 'view_folder_tree', 'select_folder', 'show_history_folder', 'modify_folder', 'associate_folder', 'delete_folder', 'admin_foldertypes', 'create_folder', 'folder_freeze', 'close_folder');
-DROP TABLE IF EXISTS foldertypes;
-DROP TABLE IF EXISTS foldertypes_doctypes;
-DROP TABLE IF EXISTS foldertypes_doctypes_level1;
-DROP TABLE IF EXISTS foldertypes_indexes;
+
 
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
@@ -231,6 +238,12 @@ ALTER TABLE actions DROP COLUMN IF EXISTS category_id;
 DROP VIEW IF EXISTS fp_view_fileplan;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS folders_system_id;
+DROP TABLE IF EXISTS foldertypes;
+DROP TABLE IF EXISTS foldertypes_doctypes;
+DROP TABLE IF EXISTS foldertypes_doctypes_level1;
+DROP TABLE IF EXISTS foldertypes_indexes;
+DROP VIEW IF EXISTS view_folders;
+
 
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
