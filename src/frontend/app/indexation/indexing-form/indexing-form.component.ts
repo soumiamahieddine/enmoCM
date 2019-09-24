@@ -109,7 +109,7 @@ export class IndexingFormComponent implements OnInit {
             system: true,
             mandatory: true,
             default_value : '',
-            values: ['/rest/autocomplete/folders']
+            values: ['/rest/autocomplete/folders', '/rest/folders']
         }
     ];
 
@@ -166,7 +166,7 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.tags,
             type: 'autocomplete',
             default_value : '',
-            values: ['/rest/autocomplete/tags']
+            values: ['/rest/autocomplete/tags', '/rest/tags']
         }
     ];
     availableFieldsClone: any[] = [];

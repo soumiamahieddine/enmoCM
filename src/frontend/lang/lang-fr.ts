@@ -1158,4 +1158,5 @@ export const LANG_FR = {
     "searchValue" : "Rechercher un élément",
     "initiatorEntityAlt" : "Entité initiatrice",
     "autocompleteInput" : "Auto-completion",
+    "typeEnterToCreate" : "Taper sur <b>entrée</b> pour créer l'element",
 };

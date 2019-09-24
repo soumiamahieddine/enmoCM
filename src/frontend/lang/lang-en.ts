@@ -1121,4 +1121,5 @@ export const LANG_EN = {
     "searchValue" : "Search a value", 
     "initiatorEntityAlt" : "Initiator entity",
     "autocompleteInput" : "Autocomplete input",
+    "typeEnterToCreate" : "Type on <b>enter</b> to create element",
 };

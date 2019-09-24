@@ -7,7 +7,7 @@
     <mat-icon *ngIf="size !== 'small' && myControl.enabled" color="primary" class="fa fa-search" matPrefix></mat-icon>
     <input type="text" #autoCompleteInput [placeholder]="singleMode !== undefined ? '' : placeholder"
       aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" (click)="$event.stopPropagation()"
-      (focus)="resetAutocomplete()" [required]="required">
+      (focus)="resetAutocomplete()" [required]="required" (keyup.enter)="addItem()">
     <button type="button" *ngIf="myControl.disabled" matSuffix mat-icon-button color="warn" (click)="unsetValue()">
       <mat-icon class="fa fa-times" color="warn" [title]="lang.delete"></mat-icon>
     </button>
@@ -18,7 +18,7 @@
           </mat-icon>&nbsp;<span color="primary">{{option[key]}}</span>&nbsp;<small>{{option[subInfoKey]}}</small>
         </mat-option>
       </ng-container>
-      <mat-option *ngIf="options.length === 0 && !loading" [class.smallInputInfo]="size === 'small'" disabled
+      <mat-option class="autoCompleteInfoResult" *ngIf="options.length === 0 && !loading" [class.smallInputInfo]="size === 'small'" disabled
         [innerHTML]="listInfo">
       </mat-option>
       <mat-option *ngIf="loading" disabled>
@@ -30,7 +30,7 @@
     <mat-chip-list class="mat-chip-list-stacked" color="default">
       <mat-chip *ngFor="let item of controlAutocomplete.value;let i=index" class="activeListAutocomplete"
         color="default" [removable]="true" (removed)="removeItem(i)">
-        <span style="display: flex;flex: 1;" [innerHTML]="item"></span>
+        <span style="display: flex;flex: 1;" [innerHTML]="this.valuesToDisplay[item]"></span>
         <mat-icon matChipRemove class="fa fa-times"></mat-icon>
       </mat-chip>
     </mat-chip-list>

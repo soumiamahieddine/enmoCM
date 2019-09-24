@@ -1146,5 +1146,6 @@ export const LANG_NL = {
     "noSelectedValue" : "No selected value", //_TO_TRANSLATE 
     "searchValue" : "Search a value", //_TO_TRANSLATE 
     "initiatorEntityAlt" : "Initiator entity", //_TO_TRANSLATE 
-    "autocompleteInput" : "Autocomplete input", //_TO_TRANSLATE 
+    "autocompleteInput" : "Autocomplete input", //_TO_TRANSLATE
+    "typeEnterToCreate" : "Type on <b>enter</b> to create element", //_TO_TRANSLATE
 };
