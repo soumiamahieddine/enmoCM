@@ -108,10 +108,6 @@ class BasketControllerTest extends TestCase
                     'used_in_action_page'   => true,
                     'default_action_list'   => true,
                     'checked'               => true,
-                    'statuses'              => [
-                        'NEW',
-                        'END'
-                    ],
                     'redirects'             => [
                         [
                             'entity_id'     => '',
@@ -148,10 +144,6 @@ class BasketControllerTest extends TestCase
                 $this->assertSame('N', $groupAction->used_in_basketlist);
                 $this->assertSame('Y', $groupAction->used_in_action_page);
                 $this->assertSame('Y', $groupAction->default_action_list);
-                $this->assertInternalType('array', $groupAction->statuses);
-                $this->assertNotNull($groupAction->statuses);
-                $this->assertSame('NEW', $groupAction->statuses[0]);
-                $this->assertSame('END', $groupAction->statuses[1]);
                 $this->assertInternalType('array', $groupAction->redirects);
                 $this->assertNotNull($groupAction->redirects);
                 $this->assertSame('', $groupAction->redirects[0]->entity_id);
@@ -227,9 +219,6 @@ class BasketControllerTest extends TestCase
                     'used_in_action_page'   => true,
                     'default_action_list'   => true,
                     'checked'               => true,
-                    'statuses'              => [
-                        'END',
-                    ],
                     'redirects'             => [
                         [
                             'entity_id'     => '',
@@ -245,10 +234,6 @@ class BasketControllerTest extends TestCase
                     'used_in_action_page'   => true,
                     'default_action_list'   => false,
                     'checked'               => true,
-                    'statuses'              => [
-                        'NEW',
-                        'COU'
-                    ],
                     'redirects'             => [
                         [
                             'entity_id'     => 'PSO',
@@ -289,9 +274,6 @@ class BasketControllerTest extends TestCase
                 $this->assertSame('Y', $groupAction->used_in_basketlist);
                 $this->assertSame('Y', $groupAction->used_in_action_page);
                 $this->assertSame('Y', $groupAction->default_action_list);
-                $this->assertInternalType('array', $groupAction->statuses);
-                $this->assertNotNull($groupAction->statuses);
-                $this->assertSame('END', $groupAction->statuses[0]);
                 $this->assertInternalType('array', $groupAction->redirects);
                 $this->assertNotNull($groupAction->redirects);
                 $this->assertSame('', $groupAction->redirects[0]->entity_id);
@@ -303,10 +285,6 @@ class BasketControllerTest extends TestCase
                 $this->assertSame('N', $groupAction->used_in_basketlist);
                 $this->assertSame('Y', $groupAction->used_in_action_page);
                 $this->assertSame('N', $groupAction->default_action_list);
-                $this->assertInternalType('array', $groupAction->statuses);
-                $this->assertNotNull($groupAction->statuses);
-                $this->assertSame('NEW', $groupAction->statuses[0]);
-                $this->assertSame('COU', $groupAction->statuses[1]);
                 $this->assertInternalType('array', $groupAction->redirects);
                 $this->assertNotNull($groupAction->redirects);
                 $this->assertSame('PSO', $groupAction->redirects[0]->entity_id);

@@ -161,10 +161,10 @@ DO $$ BEGIN
 	  ALTER TABLE tags DROP COLUMN IF EXISTS coll_id;
 	  ALTER TABLE tags ADD COLUMN id serial NOT NULL;
 	  UPDATE tags SET id = tag_id;
-	  SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
       ALTER TABLE tags DROP COLUMN IF EXISTS tag_id;
   END IF;
 END$$;
+SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
 
 
 /* REFACTORING DATA */
