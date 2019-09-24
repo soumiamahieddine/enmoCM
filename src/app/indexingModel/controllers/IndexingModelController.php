@@ -29,8 +29,6 @@ use Slim\Http\Response;
 
 class IndexingModelController
 {
-    const FIELDS_TYPES = ['string', 'integer', 'select', 'date', 'radio', 'checkbox'];
-
     public function get(Request $request, Response $response)
     {
         $models = IndexingModelModel::get(['where' => ['owner = ? OR private = ?'], 'data' => [$GLOBALS['id'], 'false']]);

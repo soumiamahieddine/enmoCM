@@ -208,7 +208,6 @@ abstract class ActionModelAbstract
         $tabKeyword   = [];
         $tabKeyword[] = ['value' => '', 'label' => _NO_KEYWORD];
         $tabKeyword[] = ['value' => 'redirect', 'label' => _REDIRECTION, 'desc' => _KEYWORD_REDIRECT_DESC];
-        $tabKeyword[] = ['value' => 'indexing', 'label' => _INDEXING, 'desc' => _KEYWORD_INDEXING_DESC];
 
         return $tabKeyword;
     }

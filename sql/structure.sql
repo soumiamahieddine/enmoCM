@@ -1261,20 +1261,6 @@ CREATE TABLE doctypes_indexes
 )
 WITH (OIDS=FALSE);
 
-CREATE TABLE groupbasket_status
-(
-  system_id serial NOT NULL,
-  group_id character varying(32) NOT NULL,
-  basket_id character varying(32) NOT NULL,
-  action_id integer NOT NULL,
-  status_id character varying(32),
-  "order" integer NOT NULL,
-  CONSTRAINT groupbasket_status_pkey PRIMARY KEY (system_id)
-)
-WITH (
-  OIDS=FALSE
-);
-
 CREATE TABLE user_signatures
 (
   id serial,

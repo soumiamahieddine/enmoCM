@@ -164,11 +164,6 @@ abstract class BasketModelAbstract
             'data'  => [$aArgs['id']]
         ]);
         DatabaseModel::delete([
-            'table' => 'groupbasket_status',
-            'where' => ['basket_id = ?'],
-            'data'  => [$aArgs['id']]
-        ]);
-        DatabaseModel::delete([
             'table' => 'actions_groupbaskets',
             'where' => ['basket_id = ?'],
             'data'  => [$aArgs['id']]
@@ -177,43 +172,6 @@ abstract class BasketModelAbstract
             'table' => 'users_baskets_preferences',
             'where' => ['basket_id = ?'],
             'data'  => [$aArgs['id']]
-        ]);
-
-        return true;
-    }
-
-    public static function getGroupActionStatus(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
-
-        $aStatuses = DatabaseModel::select([
-            'select'    => $aArgs['select'],
-            'table'     => ['groupbasket_status'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
-        ]);
-
-        return $aStatuses;
-    }
-
-    public static function createGroupActionStatus(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'statusId']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'statusId']);
-        ValidatorModel::intVal($aArgs, ['actionId']);
-        ValidatorModel::intType($aArgs, ['order']);
-
-        DatabaseModel::insert([
-            'table'         => 'groupbasket_status',
-            'columnsValues' => [
-                'action_id'     => $aArgs['actionId'],
-                'group_id'      => $aArgs['groupId'],
-                'basket_id'     => $aArgs['id'],
-                'status_id'     => $aArgs['statusId'],
-                '"order"'       => $aArgs['order']
-            ]
         ]);
 
         return true;
