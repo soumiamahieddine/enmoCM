@@ -52,26 +52,6 @@ export class IndexingFormComponent implements OnInit {
             values: []
         },
         {
-            identifier: 'docDate',
-            label: this.lang.docDate,
-            unit: 'mail',
-            type: 'date',
-            system: true,
-            mandatory: true,
-            default_value : '',
-            values: []
-        },
-        {
-            identifier: 'arrivalDate',
-            label: this.lang.arrivalDate,
-            unit: 'mail',
-            type: 'date',
-            system: true,
-            mandatory: true,
-            default_value : '',
-            values: []
-        },
-        {
             identifier: 'subject',
             label: this.lang.subject,
             unit: 'mail',
@@ -81,36 +61,6 @@ export class IndexingFormComponent implements OnInit {
             default_value : '',
             values: []
         },
-        {
-            identifier: 'senders',
-            label: this.lang.getSenders,
-            unit: 'contact',
-            type: 'autocomplete',
-            system: true,
-            mandatory: true,
-            default_value : '',
-            values: ['/rest/autocomplete/contacts']
-        },
-        {
-            identifier: 'destination',
-            label: this.lang.destination,
-            unit: 'process',
-            type: 'select',
-            system: true,
-            mandatory: true,
-            default_value : '',
-            values: []
-        },
-        {
-            identifier: 'folder',
-            label: this.lang.folder,
-            unit: 'classement',
-            type: 'autocomplete',
-            system: true,
-            mandatory: true,
-            default_value : '',
-            values: ['/rest/autocomplete/folders', '/rest/folders']
-        }
     ];
 
     indexingModels_mail: any[] = [];
@@ -167,7 +117,54 @@ export class IndexingFormComponent implements OnInit {
             type: 'autocomplete',
             default_value : '',
             values: ['/rest/autocomplete/tags', '/rest/tags']
-        }
+        },
+        {
+            identifier: 'senders',
+            label: this.lang.getSenders,
+            type: 'autocomplete',
+            system: true,
+            mandatory: true,
+            default_value : '',
+            values: ['/rest/autocomplete/contacts']
+        },
+        {
+            identifier: 'destination',
+            label: this.lang.destination,
+            type: 'select',
+            system: true,
+            mandatory: true,
+            default_value : '',
+            values: []
+        },
+        {
+            identifier: 'folder',
+            label: this.lang.folder,
+            type: 'autocomplete',
+            system: true,
+            mandatory: true,
+            default_value : '',
+            values: ['/rest/autocomplete/folders', '/rest/folders']
+        },
+        {
+            identifier: 'docDate',
+            label: this.lang.docDate,
+            unit: 'mail',
+            type: 'date',
+            system: true,
+            mandatory: true,
+            default_value : '',
+            values: []
+        },
+        {
+            identifier: 'arrivalDate',
+            label: this.lang.arrivalDate,
+            unit: 'mail',
+            type: 'date',
+            system: true,
+            mandatory: true,
+            default_value : '',
+            values: []
+        },
     ];
     availableFieldsClone: any[] = [];
 
@@ -208,11 +205,12 @@ export class IndexingFormComponent implements OnInit {
                     this.fieldCategories.forEach(element => {
                         this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
                         this['indexingModels_' + element].forEach((field: any) => {
-                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.system && this.adminMode) }, field.mandatory ? [Validators.required] : []);
+                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: false }, field.mandatory ? [Validators.required] : []);
                         });
                     });
+                    this.initElemForm();
                 }),
-                finalize(() => this.loading = false),
+                //finalize(() => this.loading = false),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);

@@ -104,7 +104,7 @@ export class PluginAutocomplete implements OnInit {
         this.placeholder = this.placeholder === undefined ? this.lang.chooseValue : this.placeholder;
 
         if (this.controlAutocomplete !== undefined) {
-            this.controlAutocomplete.setValue(this.controlAutocomplete.value === null ? [] : this.controlAutocomplete.value);
+            this.controlAutocomplete.setValue(this.controlAutocomplete.value === null || this.controlAutocomplete.value === '' ? [] : this.controlAutocomplete.value);
             this.initFormValue();
         }
 

@@ -7,120 +7,125 @@
             <mat-icon color="primary" class="far fa-star" style="font-size: 20px;"></mat-icon>
         </button>
     </div>
-    <div class="banner" *ngFor="let category of fieldCategories">
-        <div class="title">
-            {{lang[category] | uppercase}}
-            <div class="title-divider"></div>
-        </div>
-        <div class="content">
-            <div cdkDropList id="indexingModelsCustomFieldsList_{{category}}"
-                [cdkDropListConnectedTo]="['indexingModelsCustomFieldsList_mail','indexingModelsCustomFieldsList_contact','indexingModelsCustomFieldsList_process','indexingModelsCustomFieldsList_classement','customFieldsList','fieldsList']"
-                [cdkDropListData]="this['indexingModels_'+category]" [cdkDropListDisabled]="!adminMode"
-                (cdkDropListDropped)="drop($event)" class="indexingModelsCustomFieldsList" style="min-height: 50px;">
-                <ng-container *ngFor="let field of this['indexingModels_'+category];let i=index">
-                    <div class="fieldRow" *ngIf="field.unit === category" cdkDrag cdkDragLockAxis="y"
-                        [cdkDragData]="field">
-                        <div class="fieldLabel">
-                            <i *ngIf="adminMode" class="fas fa-bars fa-2x" color="primary" style="cursor: move"
-                                cdkDragHandle></i>&nbsp;
-                            {{field.label}}
-                            <button *ngIf="adminMode && !field.system" mat-icon-button
-                                [matMenuTriggerFor]="fieldActions">
-                                <mat-icon class="fa fa-ellipsis-v" color="secondary"></mat-icon>
-                            </button>
-                            <mat-menu #fieldActions="matMenu">
-                                <button mat-menu-item (click)="field.mandatory = !field.mandatory">
-                                    <span *ngIf="!field.mandatory">{{lang.mandatoryField}}</span>
-                                    <span *ngIf="field.mandatory">{{lang.optionalField}}</span>
+    <ng-container *ngFor="let category of fieldCategories">
+        <div *ngIf="this['indexingModels_'+category].length > 0 || adminMode" class="banner">
+            <div class="title">
+                {{lang[category] | uppercase}}
+                <div class="title-divider"></div>
+            </div>
+            <div class="content">
+                <div cdkDropList id="indexingModelsCustomFieldsList_{{category}}"
+                    [cdkDropListConnectedTo]="['indexingModelsCustomFieldsList_mail','indexingModelsCustomFieldsList_contact','indexingModelsCustomFieldsList_process','indexingModelsCustomFieldsList_classement','customFieldsList','fieldsList']"
+                    [cdkDropListData]="this['indexingModels_'+category]" [cdkDropListDisabled]="!adminMode"
+                    (cdkDropListDropped)="drop($event)" class="indexingModelsCustomFieldsList"
+                    style="min-height: 50px;">
+                    <ng-container *ngFor="let field of this['indexingModels_'+category];let i=index">
+                        <div class="fieldRow" *ngIf="field.unit === category" cdkDrag cdkDragLockAxis="y"
+                            [cdkDragData]="field">
+                            <div class="fieldLabel">
+                                <i *ngIf="adminMode" class="fas fa-bars fa-2x" color="primary" style="cursor: move"
+                                    cdkDragHandle></i>&nbsp;
+                                {{field.label}}
+                                <button *ngIf="adminMode && !field.system" mat-icon-button
+                                    [matMenuTriggerFor]="fieldActions">
+                                    <mat-icon class="fa fa-ellipsis-v" color="secondary"></mat-icon>
                                 </button>
-                                <mat-divider></mat-divider>
-                                <button mat-menu-item (click)="removeItem('indexingModels_'+category,field,i)">
-                                    <mat-icon class="fa fa-trash" color="warn"></mat-icon>
-                                    <span>{{lang.delete}}</span>
-                                </button>
-                            </mat-menu>
-                        </div>
-                        <div class="fieldInput" [class.checkboxInput]="field.type === 'checkbox'">
-                            <ng-container *ngIf="field.type === 'string'">
-                                <mat-form-field class="input-form" floatLabel="never">
-                                    <textarea matInput [formControl]="arrFormControl[field.identifier]"
-                                        [placeholder]="!adminMode ? lang.typeValue : lang.defaultValue"
-                                        matTextareaAutosize matAutosizeMinRows="1" cdkAutosizeMaxRows="6"></textarea>
-                                </mat-form-field>
-                            </ng-container>
-                            <ng-container *ngIf="field.type === 'integer'">
-                                <mat-form-field class="input-form" floatLabel="never">
-                                    <input type="number" matInput [formControl]="arrFormControl[field.identifier]"
-                                        [placeholder]="!adminMode ? lang.typeValue : lang.defaultValue">
-                                </mat-form-field>
-                            </ng-container>
-                            <ng-container *ngIf="field.type === 'select'">
-                                <plugin-select-search [showResetOption]="adminMode"
-                                    [placeholderLabel]="!adminMode ? lang.chooseValue : lang.defaultValue"
-                                    [formControlSelect]="arrFormControl[field.identifier]" [datas]="field.values"
-                                    style="width:100%;"></plugin-select-search>
-                            </ng-container>
-                            <ng-container *ngIf="field.type === 'date'">
-                                <button mat-button color="primary" *ngIf="adminMode" matPrefix mat-icon-button
-                                    (click)="$event.stopPropagation();toggleTodayDate(field);"
-                                    matTooltip="Jour d'aujourd'hui" style="position: absolute;left: -40px;">
-                                    <mat-icon color="primary"
-                                        class="{{field.today ? 'far fa-bell-slash' : 'far fa-bell'}}">
-                                    </mat-icon>
-                                </button>
-                                <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()">
-                                    <input [formControl]="arrFormControl[field.identifier]" matInput
-                                        [matDatepicker]="picker"
-                                        [placeholder]="!adminMode ? lang.chooseDate : lang.defaultValue"
-                                        [min]="getMinDate(field.startDate)" [max]="getMaxDate(field.endDate)">
-                                    <mat-datepicker-toggle matSuffix [for]="picker">
-                                    </mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-                                </mat-form-field>
-                            </ng-container>
-                            <ng-container *ngIf="field.type === 'radio'">
-                                <mat-radio-group class="radio-form" color="primary"
-                                    [formControl]="arrFormControl[field.identifier]">
-                                    <mat-radio-button *ngFor="let value of field.values" [value]="value">
-                                        {{value}}
-                                    </mat-radio-button>
-                                </mat-radio-group>
-                            </ng-container>
-                            <ng-container *ngIf="field.type === 'checkbox'">
-                                <div class="input-form checkbox-form">
-                                    <mat-selection-list #shoes class="div-list"
+                                <mat-menu #fieldActions="matMenu">
+                                    <button mat-menu-item (click)="field.mandatory = !field.mandatory">
+                                        <span *ngIf="!field.mandatory">{{lang.mandatoryField}}</span>
+                                        <span *ngIf="field.mandatory">{{lang.optionalField}}</span>
+                                    </button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item (click)="removeItem('indexingModels_'+category,field,i)">
+                                        <mat-icon class="fa fa-trash" color="warn"></mat-icon>
+                                        <span>{{lang.delete}}</span>
+                                    </button>
+                                </mat-menu>
+                            </div>
+                            <div class="fieldInput" [class.checkboxInput]="field.type === 'checkbox'">
+                                <ng-container *ngIf="field.type === 'string'">
+                                    <mat-form-field class="input-form" floatLabel="never">
+                                        <textarea matInput [formControl]="arrFormControl[field.identifier]"
+                                            [placeholder]="!adminMode ? lang.typeValue : lang.defaultValue"
+                                            matTextareaAutosize matAutosizeMinRows="1"
+                                            cdkAutosizeMaxRows="6"></textarea>
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container *ngIf="field.type === 'integer'">
+                                    <mat-form-field class="input-form" floatLabel="never">
+                                        <input type="number" matInput [formControl]="arrFormControl[field.identifier]"
+                                            [placeholder]="!adminMode ? lang.typeValue : lang.defaultValue">
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container *ngIf="field.type === 'select'">
+                                    <plugin-select-search [showResetOption]="adminMode"
+                                        [placeholderLabel]="!adminMode ? lang.chooseValue : lang.defaultValue"
+                                        [formControlSelect]="arrFormControl[field.identifier]" [datas]="field.values"
+                                        style="width:100%;"></plugin-select-search>
+                                </ng-container>
+                                <ng-container *ngIf="field.type === 'date'">
+                                    <button mat-button color="primary" *ngIf="adminMode" matPrefix mat-icon-button
+                                        (click)="$event.stopPropagation();toggleTodayDate(field);"
+                                        matTooltip="Jour d'aujourd'hui" style="position: absolute;left: -40px;">
+                                        <mat-icon color="primary"
+                                            class="{{field.today ? 'far fa-bell-slash' : 'far fa-bell'}}">
+                                        </mat-icon>
+                                    </button>
+                                    <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()">
+                                        <input [formControl]="arrFormControl[field.identifier]" matInput
+                                            [matDatepicker]="picker"
+                                            [placeholder]="!adminMode ? lang.chooseDate : lang.defaultValue"
+                                            [min]="getMinDate(field.startDate)" [max]="getMaxDate(field.endDate)">
+                                        <mat-datepicker-toggle matSuffix [for]="picker">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container *ngIf="field.type === 'radio'">
+                                    <mat-radio-group class="radio-form" color="primary"
                                         [formControl]="arrFormControl[field.identifier]">
-                                        <mat-list-option *ngFor="let value of field.values" [value]="value"
-                                            checkboxPosition="before">
+                                        <mat-radio-button *ngFor="let value of field.values" [value]="value">
                                             {{value}}
-                                        </mat-list-option>
-                                    </mat-selection-list>
-                                </div>
-                                <mat-chip-list class="checkbox-selected-list" [disabled]="field.system && adminMode">
-                                    <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
-                                        {{chip.value}}
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </ng-container>
-                            <ng-container *ngIf="field.type === 'autocomplete'">
-                                <plugin-autocomplete [labelPlaceholder]="lang.searchValue"
-                                    [routeDatas]="[field.values[0]]" [targetSearchKey]="'idToDisplay'" [size]="'small'"
-                                    [control]="arrFormControl[field.identifier]" [manageDatas]="field.values[1]"
-                                    style="width:100%;"></plugin-autocomplete>
-                            </ng-container>
+                                        </mat-radio-button>
+                                    </mat-radio-group>
+                                </ng-container>
+                                <ng-container *ngIf="field.type === 'checkbox'">
+                                    <div class="input-form checkbox-form">
+                                        <mat-selection-list #shoes class="div-list"
+                                            [formControl]="arrFormControl[field.identifier]">
+                                            <mat-list-option *ngFor="let value of field.values" [value]="value"
+                                                checkboxPosition="before">
+                                                {{value}}
+                                            </mat-list-option>
+                                        </mat-selection-list>
+                                    </div>
+                                    <mat-chip-list class="checkbox-selected-list"
+                                        [disabled]="field.system && adminMode">
+                                        <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
+                                            {{chip.value}}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </ng-container>
+                                <ng-container *ngIf="field.type === 'autocomplete'">
+                                    <plugin-autocomplete [labelPlaceholder]="lang.searchValue"
+                                        [routeDatas]="[field.values[0]]" [targetSearchKey]="'idToDisplay'"
+                                        [size]="'small'" [control]="arrFormControl[field.identifier]"
+                                        [manageDatas]="field.values[1]" style="width:100%;"></plugin-autocomplete>
+                                </ng-container>
+                            </div>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk"
+                                    *ngIf="adminMode || (arrFormControl[field.identifier].hasError('required') && arrFormControl[field.identifier].untouched)"
+                                    [class.noMandatory]="!field.mandatory"></i>
+                                <i class="fas fa-times" style="color:red;font-size:15px;"
+                                    *ngIf="!adminMode && arrFormControl[field.identifier].touched && arrFormControl[field.identifier].hasError('required')"></i>
+                                <i class="fas fa-check" style="color:green;font-size:15px;"
+                                    *ngIf="!adminMode && arrFormControl[field.identifier].valid && (arrFormControl[field.identifier].value!==null && arrFormControl[field.identifier].value!=='')"></i>
+                            </div>
                         </div>
-                        <div class="fieldState">
-                            <i class="fas fa-asterisk"
-                                *ngIf="adminMode || (arrFormControl[field.identifier].hasError('required') && arrFormControl[field.identifier].untouched)"
-                                [class.noMandatory]="!field.mandatory"></i>
-                            <i class="fas fa-times" style="color:red;font-size:15px;"
-                                *ngIf="!adminMode && arrFormControl[field.identifier].touched && arrFormControl[field.identifier].hasError('required')"></i>
-                            <i class="fas fa-check" style="color:green;font-size:15px;"
-                                *ngIf="!adminMode && arrFormControl[field.identifier].valid && (arrFormControl[field.identifier].value!==null && arrFormControl[field.identifier].value!=='')"></i>
-                        </div>
-                    </div>
-                </ng-container>
+                    </ng-container>
+                </div>
             </div>
         </div>
-    </div>
+    </ng-container>
 </ng-container>
