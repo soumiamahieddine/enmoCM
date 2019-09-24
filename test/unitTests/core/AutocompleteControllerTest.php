@@ -97,10 +97,12 @@ class AutocompleteControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody);
         $this->assertNotEmpty($responseBody);
 
-        $this->assertInternalType('int', $responseBody[0]->position);
-        $this->assertInternalType('int', $responseBody[0]->addressId);
-        $this->assertInternalType('string', $responseBody[0]->contact);
-        $this->assertInternalType('string', $responseBody[0]->address);
+        foreach ($responseBody as $value) {
+            $this->assertInternalType('int', $value->position);
+            $this->assertInternalType('int', $value->addressId);
+            $this->assertInternalType('string', $value->contact);
+            $this->assertInternalType('string', $value->address);
+        }
     }
 
     public function testGetContactsAndUsers()
@@ -154,12 +156,14 @@ class AutocompleteControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody);
         $this->assertNotEmpty($responseBody);
 
-        $this->assertSame('user', $responseBody[0]->type);
-        $this->assertInternalType('string', $responseBody[0]->id);
-        $this->assertNotEmpty($responseBody[0]->id);
-        $this->assertInternalType('string', $responseBody[0]->idToDisplay);
-        $this->assertNotEmpty($responseBody[0]->idToDisplay);
-        $this->assertInternalType('string', $responseBody[0]->otherInfo);
+        foreach ($responseBody as $value) {
+            $this->assertSame('user', $value->type);
+            $this->assertInternalType('string', $value->id);
+            $this->assertNotEmpty($value->id);
+            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertNotEmpty($value->idToDisplay);
+            $this->assertInternalType('string', $value->otherInfo);
+        }
     }
 
     public function testGetUsersForAdministration()
@@ -181,11 +185,13 @@ class AutocompleteControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody);
         $this->assertNotEmpty($responseBody);
 
-        $this->assertSame('user', $responseBody[0]->type);
-        $this->assertInternalType('int', $responseBody[0]->id);
-        $this->assertNotEmpty($responseBody[0]->id);
-        $this->assertInternalType('string', $responseBody[0]->idToDisplay);
-        $this->assertNotEmpty($responseBody[0]->idToDisplay);
+        foreach ($responseBody as $value) {
+            $this->assertSame('user', $value->type);
+            $this->assertInternalType('int', $value->id);
+            $this->assertNotEmpty($value->id);
+            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertNotEmpty($value->idToDisplay);
+        }
     }
 
     public function testGetUsersForVisa()
@@ -207,12 +213,14 @@ class AutocompleteControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody);
         $this->assertNotEmpty($responseBody);
 
-        $this->assertSame('user', $responseBody[0]->type);
-        $this->assertInternalType('string', $responseBody[0]->id);
-        $this->assertNotEmpty($responseBody[0]->id);
-        $this->assertInternalType('string', $responseBody[0]->idToDisplay);
-        $this->assertNotEmpty($responseBody[0]->idToDisplay);
-        $this->assertInternalType('string', $responseBody[0]->otherInfo);
+        foreach ($responseBody as $value) {
+            $this->assertSame('user', $value->type);
+            $this->assertInternalType('string', $value->id);
+            $this->assertNotEmpty($value->id);
+            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertNotEmpty($value->idToDisplay);
+            $this->assertInternalType('string', $value->otherInfo);
+        }
     }
 
     public function testGetEntities()
@@ -234,12 +242,14 @@ class AutocompleteControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody);
         $this->assertNotEmpty($responseBody);
 
-        $this->assertSame('entity', $responseBody[0]->type);
-        $this->assertInternalType('string', $responseBody[0]->id);
-        $this->assertNotEmpty($responseBody[0]->id);
-        $this->assertInternalType('string', $responseBody[0]->idToDisplay);
-        $this->assertNotEmpty($responseBody[0]->idToDisplay);
-        $this->assertInternalType('string', $responseBody[0]->otherInfo);
+        foreach ($responseBody as $value) {
+            $this->assertSame('entity', $value->type);
+            $this->assertInternalType('string', $value->id);
+            $this->assertNotEmpty($value->id);
+            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertNotEmpty($value->idToDisplay);
+            $this->assertInternalType('string', $value->otherInfo);
+        }
     }
 
     public function testGetStatuses()
@@ -256,12 +266,14 @@ class AutocompleteControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody);
         $this->assertNotEmpty($responseBody);
 
-        $this->assertSame('status', $responseBody[0]->type);
-        $this->assertInternalType('string', $responseBody[0]->id);
-        $this->assertNotEmpty($responseBody[0]->id);
-        $this->assertInternalType('string', $responseBody[0]->idToDisplay);
-        $this->assertNotEmpty($responseBody[0]->idToDisplay);
-        $this->assertInternalType('string', $responseBody[0]->otherInfo);
+        foreach ($responseBody as $value) {
+            $this->assertSame('status', $value->type);
+            $this->assertInternalType('string', $value->id);
+            $this->assertNotEmpty($value->id);
+            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertNotEmpty($value->idToDisplay);
+            $this->assertInternalType('string', $value->otherInfo);
+        }
     }
 
     public function testGetBanAddresses()
@@ -284,18 +296,20 @@ class AutocompleteControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody);
         $this->assertNotEmpty($responseBody);
 
-        $this->assertInternalType('string', $responseBody[0]->banId);
-        $this->assertNotEmpty($responseBody[0]->banId);
-        $this->assertInternalType('string', $responseBody[0]->number);
-        $this->assertNotEmpty($responseBody[0]->number);
-        $this->assertInternalType('string', $responseBody[0]->afnorName);
-        $this->assertNotEmpty($responseBody[0]->afnorName);
-        $this->assertInternalType('string', $responseBody[0]->postalCode);
-        $this->assertNotEmpty($responseBody[0]->postalCode);
-        $this->assertInternalType('string', $responseBody[0]->city);
-        $this->assertNotEmpty($responseBody[0]->city);
-        $this->assertInternalType('string', $responseBody[0]->address);
-        $this->assertNotEmpty($responseBody[0]->address);
+        foreach ($responseBody as $value) {
+            $this->assertInternalType('string', $value->banId);
+            $this->assertNotEmpty($value->banId);
+            $this->assertInternalType('string', $value->number);
+            $this->assertNotEmpty($value->number);
+            $this->assertInternalType('string', $value->afnorName);
+            $this->assertNotEmpty($value->afnorName);
+            $this->assertInternalType('string', $value->postalCode);
+            $this->assertNotEmpty($value->postalCode);
+            $this->assertInternalType('string', $value->city);
+            $this->assertNotEmpty($value->city);
+            $this->assertInternalType('string', $value->address);
+            $this->assertNotEmpty($value->address);
+        }
 
         // Errors
         $aArgs = [
@@ -334,9 +348,11 @@ class AutocompleteControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody);
         $this->assertNotEmpty($responseBody);
 
-        $this->assertInternalType('int', $responseBody[0]->id);
-        $this->assertNotEmpty($responseBody[0]->id);
-        $this->assertInternalType('string', $responseBody[0]->idToDisplay);
-        $this->assertNotEmpty($responseBody[0]->idToDisplay);
+        foreach ($responseBody as $value) {
+            $this->assertInternalType('int', $value->id);
+            $this->assertNotEmpty($value->id);
+            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertNotEmpty($value->idToDisplay);
+        }
     }
 }
