@@ -5,8 +5,8 @@ import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AppService } from '../../../service/app.service';
-import { tap, catchError, finalize, exhaustMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { tap, catchError, finalize, exhaustMap, map } from 'rxjs/operators';
+import { of, forkJoin } from 'rxjs';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, Validators, FormGroup, ValidationErrors } from '@angular/forms';
@@ -38,7 +38,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'select',
             system: true,
             mandatory: true,
-            default_value : '',
+            default_value: '',
             values: []
         },
         {
@@ -48,7 +48,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'select',
             system: true,
             mandatory: true,
-            default_value : '',
+            default_value: '',
             values: []
         },
         {
@@ -58,7 +58,7 @@ export class IndexingFormComponent implements OnInit {
             type: 'string',
             system: true,
             mandatory: true,
-            default_value : '',
+            default_value: '',
             values: []
         },
     ];
@@ -80,63 +80,63 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'getRecipients',
             label: this.lang.getRecipients,
             type: 'autocomplete',
-            default_value : '',
+            default_value: '',
             values: []
         },
         {
             identifier: 'priority',
             label: this.lang.priority,
             type: 'select',
-            default_value : '',
+            default_value: '',
             values: []
         },
         {
             identifier: 'confidential',
             label: this.lang.confidential,
             type: 'radio',
-            default_value : '',
+            default_value: '',
             values: ['Oui', 'Non']
         },
         {
             identifier: 'initiator',
             label: this.lang.initiatorEntityAlt,
             type: 'select',
-            default_value : '',
+            default_value: '',
             values: []
         },
         {
             identifier: 'processLimitDate',
             label: this.lang.processLimitDate,
             type: 'date',
-            default_value : '',
+            default_value: '',
             values: []
         },
         {
             identifier: 'tags',
             label: this.lang.tags,
             type: 'autocomplete',
-            default_value : '',
+            default_value: '',
             values: ['/rest/autocomplete/tags', '/rest/tags']
         },
         {
             identifier: 'senders',
             label: this.lang.getSenders,
             type: 'autocomplete',
-            default_value : '',
+            default_value: '',
             values: ['/rest/autocomplete/contacts']
         },
         {
             identifier: 'destination',
             label: this.lang.destination,
             type: 'select',
-            default_value : '',
+            default_value: '',
             values: []
         },
         {
             identifier: 'folder',
             label: this.lang.folder,
             type: 'autocomplete',
-            default_value : '',
+            default_value: '',
             values: ['/rest/autocomplete/folders', '/rest/folders']
         },
         {
@@ -144,7 +144,7 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.docDate,
             unit: 'mail',
             type: 'date',
-            default_value : '',
+            default_value: '',
             values: []
         },
         {
@@ -152,7 +152,7 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.arrivalDate,
             unit: 'mail',
             type: 'date',
-            default_value : '',
+            default_value: '',
             values: []
         },
     ];
@@ -299,165 +299,161 @@ export class IndexingFormComponent implements OnInit {
     initElemForm() {
         this.loading = true;
 
-        // FAKE LOADER : MERGE ROUTES FOR REAL LOADER
-        setTimeout(() => {
-            this.loading = false;
-        }, 800);
+        const myObservable = of(42);
+
+        myObservable.pipe(
+            tap(() => {
+                console.log('fuu');
+            }),
+            exhaustMap(() => this.initializeRoutes()),
+            tap((data) => {
+                console.log(data.structure);
+                this.fieldCategories.forEach(element => {
+                    this['indexingModels_' + element].forEach((elem: any) => {
+                        if (elem.identifier === 'docDate') {
+                            elem.startDate = '';
+                            elem.endDate = '_TODAY';
+
+                        } else if (elem.identifier === 'destination') {
+                            if (this.adminMode) {
+                                let title = '';
+                                elem.values = data.entities.map((entity: any) => {
+                                    title = entity.entity_label;
+
+                                    for (let index = 0; index < entity.level; index++) {
+                                        entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
+                                    }
+                                    return {
+                                        id: entity.id,
+                                        title: title,
+                                        label: entity.entity_label,
+                                        disabled: false
+                                    }
+                                });
+
+                            } else {
+                                let title = '';
+
+                                let defaultVal = data.entities.filter((entity: any) => entity.enabled === true && entity.id === elem.default_value);
+                                elem.default_value = defaultVal.length > 0 ? defaultVal[0].id : '';
+                                this.arrFormControl[elem.identifier].setValue(defaultVal.length > 0 ? defaultVal[0].id : '');
+
+                                elem.values = data.entities.map((entity: any) => {
+                                    title = entity.entity_label;
+
+                                    for (let index = 0; index < entity.level; index++) {
+                                        entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
+                                    }
+                                    return {
+                                        id: entity.id,
+                                        title: title,
+                                        label: entity.entity_label,
+                                        disabled: !entity.enabled
+                                    }
+                                });
+                            }
+                        } else if (elem.identifier === 'arrivalDate') {
+                            elem.startDate = 'docDate';
+                            elem.endDate = '_TODAY';
+
+                        } else if (elem.identifier === 'processLimitDate') {
+                            elem.startDate = '_TODAY';
+                            elem.endDate = '';
+
+                        } else if (elem.identifier === 'category_id') {
+                            elem.values = data.categories;
+
+                        } else if (elem.identifier === 'priority') {
+                            elem.values = data.priorities;
+                        } else if (elem.identifier === 'doctype') {
+                            let title = '';
+                            let arrValues: any[] = [];
+                            data.structure.forEach((doctype: any) => {
+                                if (doctype['doctypes_second_level_id'] === undefined) {
+                                    arrValues.push({
+                                        id: doctype.doctypes_first_level_id,
+                                        label: doctype.doctypes_first_level_label,
+                                        title: doctype.doctypes_first_level_label,
+                                        disabled: true,
+                                        isTitle: true,
+                                        color: doctype.css_style
+                                    });
+                                } else if (doctype['description'] === undefined) {
+                                    arrValues.push({
+                                        id: doctype.doctypes_second_level_id,
+                                        label: '&nbsp;&nbsp;&nbsp;&nbsp;' + doctype.doctypes_second_level_label,
+                                        title: doctype.doctypes_second_level_label,
+                                        disabled: true,
+                                        isTitle: true,
+                                        color: doctype.css_style
+                                    });
+
+                                    arrValues = arrValues.concat(data.structure.filter((info: any) => info.doctypes_second_level_id === doctype.doctypes_second_level_id && info.description !== undefined).map((info: any) => {
+                                        return {
+                                            id: info.type_id,
+                                            label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + info.description,
+                                            title: info.description,
+                                            disabled: false,
+                                            isTitle: false,
+                                        }
+                                    }));
+                                }
+                            });
+                            elem.values = arrValues;
+                        }
+                    });
+                });
+            }),
+            finalize(() => this.loading = false)
+        ).subscribe();
+
+    }
+
+    initializeRoutes() {
+        let arrayRoutes: any = [];
+        let mergedRoutesDatas: any = {};
 
         this.fieldCategories.forEach(element => {
             this['indexingModels_' + element].forEach((elem: any) => {
-                if (elem.identifier === 'docDate') {
-                    elem.startDate = '';
-                    elem.endDate = '_TODAY';
-                } else
-                    if (elem.identifier === 'destination') {
-                        if (this.adminMode) {
-                            this.http.get("../../rest/indexingModels/entities").pipe(
-                                tap((data: any) => {
-                                    let title = '';
-                                    elem.values = data.entities.map((entity: any) => {
-                                        title = entity.entity_label;
+                if (elem.identifier === 'destination') {
+                    if (this.adminMode) {
+                        arrayRoutes.push(this.http.get('../../rest/indexingModels/entities'));
 
-                                        for (let index = 0; index < entity.level; index++) {
-                                            entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
-                                        }
-                                        return {
-                                            id: entity.id,
-                                            title: title,
-                                            label: entity.entity_label,
-                                            disabled: false
-                                        }
-                                    });
-                                }),
-                                //finalize(() => this.loading = false),
-                                catchError((err: any) => {
-                                    this.notify.handleErrors(err);
-                                    return of(false);
-                                })
-                            ).subscribe();
-                        } else {
-                            this.http.get("../../rest/indexing/" + this.groupId + "/entities").pipe(
-                                tap((data: any) => {
-                                    let title = '';
+                    } else {
+                        arrayRoutes.push(this.http.get('../../rest/indexing/' + this.groupId + '/entities'));
+                    }
+                } else if (elem.identifier === 'category_id') {
+                    arrayRoutes.push(this.http.get('../../rest/categories'));
 
-                                    let defaultVal = data.entities.filter((entity: any) => entity.enabled === true && entity.id === elem.default_value);
-                                    elem.default_value = defaultVal.length > 0 ? defaultVal[0].id : '';
-                                    this.arrFormControl[elem.identifier].setValue(defaultVal.length > 0 ? defaultVal[0].id : '');
+                } else if (elem.identifier === 'priority') {
+                    arrayRoutes.push(this.http.get('../../rest/priorities'));
 
-                                    elem.values = data.entities.map((entity: any) => {
-                                        title = entity.entity_label;
+                } else if (elem.identifier === 'category_id') {
+                    arrayRoutes.push(this.http.get('../../rest/categories'));
 
-                                        for (let index = 0; index < entity.level; index++) {
-                                            entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
-                                        }
-                                        return {
-                                            id: entity.id,
-                                            title: title,
-                                            label: entity.entity_label,
-                                            disabled: !entity.enabled
-                                        }
-                                    });
-                                }),
-                                //finalize(() => this.loading = false),
-                                catchError((err: any) => {
-                                    this.notify.handleErrors(err);
-                                    return of(false);
-                                })
-                            ).subscribe();
-                        }
-                    } else
-                        if (elem.identifier === 'arrivalDate') {
-                            elem.startDate = 'docDate';
-                            elem.endDate = '_TODAY';
-                        } else
-                            if (elem.identifier === 'processLimitDate') {
-                                elem.startDate = '_TODAY';
-                                elem.endDate = '';
-                            } else
-                                if (elem.identifier === 'category_id') {
-                                    this.http.get("../../rest/categories").pipe(
-                                        tap((data: any) => {
-                                            elem.values = data.categories;
-                                        }),
-                                        //finalize(() => this.loading = false),
-                                        catchError((err: any) => {
-                                            this.notify.handleErrors(err);
-                                            return of(false);
-                                        })
-                                    ).subscribe();
-                                } else
-                                    if (elem.identifier === 'priority') {
-                                        this.http.get("../../rest/priorities").pipe(
-                                            tap((data: any) => {
-                                                elem.values = data.priorities;
-                                            }),
-                                            //finalize(() => this.loading = false),
-                                            catchError((err: any) => {
-                                                this.notify.handleErrors(err);
-                                                return of(false);
-                                            })
-                                        ).subscribe();
-                                    } else
-                                        if (elem.identifier === 'category_id') {
-                                            this.http.get("../../rest/categories").pipe(
-                                                tap((data: any) => {
-                                                    elem.values = data.categories;
-                                                }),
-                                                //finalize(() => this.loading = false),
-                                                catchError((err: any) => {
-                                                    this.notify.handleErrors(err);
-                                                    return of(false);
-                                                })
-                                            ).subscribe();
-                                        } else
-                                            if (elem.identifier === 'doctype') {
-                                                this.http.get("../../rest/doctypes").pipe(
-                                                    tap((data: any) => {
-                                                        let title = '';
-                                                        let arrValues: any[] = [];
-                                                        data.structure.forEach((doctype: any) => {
-                                                            if (doctype['doctypes_second_level_id'] === undefined) {
-                                                                arrValues.push({
-                                                                    id: doctype.doctypes_first_level_id,
-                                                                    label: doctype.doctypes_first_level_label,
-                                                                    title: doctype.doctypes_first_level_label,
-                                                                    disabled: true,
-                                                                    isTitle: true,
-                                                                    color: doctype.css_style
-                                                                });
-                                                            } else if (doctype['description'] === undefined) {
-                                                                arrValues.push({
-                                                                    id: doctype.doctypes_second_level_id,
-                                                                    label: '&nbsp;&nbsp;&nbsp;&nbsp;' + doctype.doctypes_second_level_label,
-                                                                    title: doctype.doctypes_second_level_label,
-                                                                    disabled: true,
-                                                                    isTitle: true,
-                                                                    color: doctype.css_style
-                                                                });
-
-                                                                arrValues = arrValues.concat(data.structure.filter((info: any) => info.doctypes_second_level_id === doctype.doctypes_second_level_id && info.description !== undefined).map((info: any) => {
-                                                                    return {
-                                                                        id: info.type_id,
-                                                                        label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + info.description,
-                                                                        title: info.description,
-                                                                        disabled: false,
-                                                                        isTitle: false,
-                                                                    }
-                                                                }));
-                                                            }
-                                                        });
-                                                        elem.values = arrValues;
-                                                    }),
-                                                    //finalize(() => this.loading = false),
-                                                    catchError((err: any) => {
-                                                        this.notify.handleErrors(err);
-                                                        return of(false);
-                                                    })
-                                                ).subscribe();
-                                            }
+                } else if (elem.identifier === 'doctype') {
+                    arrayRoutes.push(this.http.get('../../rest/doctypes'));
+                }
             });
         });
+        return forkJoin(arrayRoutes).pipe(
+            map(data => {
+                let objectId = '';
+                let index = '';
+                for (var key in data) {
+
+                    index = key;
+
+                    objectId = Object.keys(data[key])[0];
+
+                    mergedRoutesDatas[Object.keys(data[key])[0]] = data[index][objectId]
+                }
+                return mergedRoutesDatas;
+            })
+        )
     }
+
+
 
     createForm() {
         this.indexingFormGroup = new FormGroup(this.arrFormControl);
