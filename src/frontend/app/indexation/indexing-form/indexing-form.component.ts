@@ -122,8 +122,6 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'senders',
             label: this.lang.getSenders,
             type: 'autocomplete',
-            system: true,
-            mandatory: true,
             default_value : '',
             values: ['/rest/autocomplete/contacts']
         },
@@ -131,8 +129,6 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'destination',
             label: this.lang.destination,
             type: 'select',
-            system: true,
-            mandatory: true,
             default_value : '',
             values: []
         },
@@ -140,8 +136,6 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'folder',
             label: this.lang.folder,
             type: 'autocomplete',
-            system: true,
-            mandatory: true,
             default_value : '',
             values: ['/rest/autocomplete/folders', '/rest/folders']
         },
@@ -150,8 +144,6 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.docDate,
             unit: 'mail',
             type: 'date',
-            system: true,
-            mandatory: true,
             default_value : '',
             values: []
         },
@@ -160,8 +152,6 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.arrivalDate,
             unit: 'mail',
             type: 'date',
-            system: true,
-            mandatory: true,
             default_value : '',
             values: []
         },
@@ -232,6 +222,7 @@ export class IndexingFormComponent implements OnInit {
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex);
+            this.initElemForm();
         }
     }
 
