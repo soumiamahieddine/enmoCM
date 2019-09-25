@@ -32,16 +32,6 @@ export class IndexingFormComponent implements OnInit {
 
     indexingModelsCore: any[] = [
         {
-            identifier: 'category_id',
-            label: this.lang.category_id,
-            unit: 'mail',
-            type: 'select',
-            system: true,
-            mandatory: true,
-            default_value: '',
-            values: []
-        },
-        {
             identifier: 'doctype',
             label: this.lang.doctype,
             unit: 'mail',
@@ -164,6 +154,8 @@ export class IndexingFormComponent implements OnInit {
     indexingFormGroup: FormGroup;
 
     arrFormControl: any = {};
+
+    currentCategory: string = '';
 
     constructor(
         public http: HttpClient,
@@ -486,6 +478,8 @@ export class IndexingFormComponent implements OnInit {
             }),
             exhaustMap((data) => this.http.get("../../rest/indexingModels/" + indexModelId)),
             tap((data: any) => {
+                
+                this.currentCategory = data.indexingModel.category;
                 let fieldExist: boolean;
                 if (data.indexingModel.fields.length === 0) {
                     this.fieldCategories.forEach(element => {

@@ -33,7 +33,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
-    displayedColumns = ['label', 'private', 'default', 'actions'];
+    displayedColumns = ['category', 'label', 'private', 'default', 'actions'];
 
     dataSource = new MatTableDataSource(this.indexingModels);
 

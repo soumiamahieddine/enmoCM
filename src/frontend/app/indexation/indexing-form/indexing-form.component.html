@@ -3,6 +3,7 @@
 </div>
 <ng-container *ngIf="!loading">
     <div *ngIf="!adminMode" style="display: flex;align-items: center;justify-content: flex-end;">
+        <span class="categoryLabel">{{lang[currentCategory]}}</span>
         <button mat-icon-button>
             <mat-icon color="primary" class="far fa-star" style="font-size: 20px;"></mat-icon>
         </button>
