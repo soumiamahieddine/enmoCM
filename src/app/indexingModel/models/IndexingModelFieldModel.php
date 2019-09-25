@@ -38,15 +38,14 @@ class IndexingModelFieldModel
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['model_id', 'type', 'identifier', 'mandatory']);
-        ValidatorModel::stringType($args, ['type', 'mandatory', 'identifier', 'unit']);
+        ValidatorModel::notEmpty($args, ['model_id', 'identifier', 'mandatory']);
+        ValidatorModel::stringType($args, ['mandatory', 'identifier', 'unit']);
         ValidatorModel::intVal($args, ['model_id']);
 
         DatabaseModel::insert([
             'table'         => 'indexing_models_fields',
             'columnsValues' => [
                 'model_id'      => $args['model_id'],
-                'type'          => $args['type'],
                 'identifier'    => $args['identifier'],
                 'mandatory'     => $args['mandatory'],
                 'default_value' => $args['default_value'],

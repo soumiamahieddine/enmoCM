@@ -106,9 +106,9 @@ abstract class tag_controler_Abstract extends ObjectControler
             
             //CHECK TAG WHO IS NOT RESTRICTED
             $stmt = $db->query(
-            'SELECT tag_id'
+            'SELECT id'
             . ' FROM tags'
-            . ' WHERE tag_id NOT IN (select distinct(tag_id) from tags_entities)',
+            . ' WHERE id NOT IN (select distinct(tag_id) from tags_entities)',
                 array()
             );
             $freeTagIdList = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
@@ -118,24 +118,24 @@ abstract class tag_controler_Abstract extends ObjectControler
             
             if (!empty($tagIdList)) {
                 $tagIdList = "'".implode("','", $tagIdList)."'";
-                $where = ' WHERE tag_id IN ('.$tagIdList.')';
+                $where = ' WHERE id IN ('.$tagIdList.')';
             } else {
                 // NO TAG ALLOWED
-                $where = ' WHERE tag_id = 0';
+                $where = ' WHERE id = 0';
             }
             
             $stmt = $db->query(
-            'SELECT tag_id, tag_label FROM '
+            'SELECT id, label FROM '
             . _TAG_TABLE_NAME
             . $where
-            . ' ORDER BY tag_label ASC ',
+            . ' ORDER BY label ASC ',
                 $where_what
             );
         } else {
             $stmt = $db->query(
-            'SELECT tag_id, tag_label FROM '
+            'SELECT id, label FROM '
             . _TAG_TABLE_NAME
-            . ' ORDER BY tag_label ASC ',
+            . ' ORDER BY label ASC ',
                 $where_what
             );
         }
@@ -144,9 +144,8 @@ abstract class tag_controler_Abstract extends ObjectControler
       
         if ($stmt->rowCount() > 0) {
             while ($tag=$stmt->fetchObject()) {
-                $tougue['tag_id']    = $tag->tag_id;
-                $tougue['tag_label'] = $tag->tag_label;
-                $tougue['coll_id']   = $tag->coll_id;
+                $tougue['tag_id']    = $tag->id;
+                $tougue['tag_label'] = $tag->label;
                 array_push($return, $tougue);
             }
             return $return;
@@ -168,13 +167,12 @@ abstract class tag_controler_Abstract extends ObjectControler
         $entities = array();
 
         $stmt = $db->query(
-                'SELECT tag_id, tag_label, coll_id FROM ' . _TAG_TABLE_NAME
-                . ' WHERE tag_id = ? AND'
-                . ' coll_id = ?',
-            array($tag_id, $coll_id)
+                'SELECT id, label FROM ' . _TAG_TABLE_NAME
+                . ' WHERE id = ?',
+            array($tag_id)
         );
 
-        self::set_specific_id('tag_id');
+        self::set_specific_id('id');
 
         $tag = $stmt->fetchObject();
 
@@ -208,10 +206,9 @@ abstract class tag_controler_Abstract extends ObjectControler
 
         $db = new Database();
         $stmt = $db->query(
-            'SELECT tag_id, tag_label FROM '._TAG_TABLE_NAME
-            . ' WHERE tag_label = ? AND'
-            . ' coll_id = ?',
-            array($tag_label,$coll_id)
+            'SELECT id, label FROM '._TAG_TABLE_NAME
+            . ' WHERE label = ?',
+            array($tag_label)
         );
         
         $tag=$stmt->fetchObject();
@@ -253,9 +250,9 @@ abstract class tag_controler_Abstract extends ObjectControler
         
         $stmt = $db->query(
             "SELECT tag_res.tag_id FROM tag_res"
-            . " INNER JOIN tags ON tag_res.tag_id = tags.tag_id"
-            . " WHERE tag_res.res_id = ? AND tags.coll_id = ?",
-            array($res_id,$coll_id)
+            . " INNER JOIN tags ON tag_res.tag_id = tags.id"
+            . " WHERE tag_res.res_id = ?",
+            array($res_id)
         );
         //$db->show();
         
@@ -278,8 +275,8 @@ abstract class tag_controler_Abstract extends ObjectControler
          */
         $db = new Database();
         $stmt = $db->query(
-            "SELECT tag_label FROM " ._TAG_TABLE_NAME
-            . " WHERE res_id = ? AND coll_id = ? AND tag_label = ?",
+            "SELECT label FROM " ._TAG_TABLE_NAME
+            . " WHERE res_id = ? AND coll_id = ? AND label = ?",
             array($res_id,$coll_id,$tag_label)
         );
 
@@ -305,7 +302,7 @@ abstract class tag_controler_Abstract extends ObjectControler
                 return true;
             }
         }
-        return fasle;
+        return false;
         
         //$db->show();
     }
@@ -553,8 +550,8 @@ abstract class tag_controler_Abstract extends ObjectControler
         //Primo, test de l'existance du mot clé en base.
         $stmt = $db->query(
             "UPDATE " ._TAG_TABLE_NAME
-            . " SET  tag_label = ?"
-            . " WHERE  tag_id = ?",
+            . " SET  label = ?"
+            . " WHERE  id = ?",
             array($new_tag_label,$tag_id)
         );
         
@@ -569,7 +566,7 @@ abstract class tag_controler_Abstract extends ObjectControler
             foreach ($_SESSION['m_admin']['tag']['entities'] as $entity_id) {
                 $stmt = $db->query(
                     "INSERT INTO tags_entities"
-                    . "(tag_id, entity_id) VALUES (?, ?)",
+                    . "(id, entity_id) VALUES (?, ?)",
                     array($tag_id,$entity_id)
                 );
             }
@@ -597,17 +594,17 @@ abstract class tag_controler_Abstract extends ObjectControler
         {*/
         $stmt = $db->query(
                 "INSERT INTO " ._TAG_TABLE_NAME
-                . "(tag_label, coll_id, entity_id_owner) VALUES (?, ?, ?)",
-                 array($new_tag_label,$coll_id,$_SESSION['user']['primaryentity']['id'])
+                . "(label, entity_id_owner) VALUES (?, ?)",
+                 array($new_tag_label,$_SESSION['user']['primaryentity']['id'])
              );
              
-        $tag_id = $db->lastInsertId('tag_id_seq');
+        $tag_id = $db->lastInsertId('tags_id_seq');
             
         if (!empty($_SESSION['m_admin']['tag']['entities'])) {
             foreach ($_SESSION['m_admin']['tag']['entities'] as $entity_id) {
                 $stmt = $db->query(
                         "INSERT INTO tags_entities"
-                        . "(tag_id, entity_id) VALUES (?, ?)",
+                        . "(id, entity_id) VALUES (?, ?)",
                         array($tag_id,$entity_id)
                     );
             }

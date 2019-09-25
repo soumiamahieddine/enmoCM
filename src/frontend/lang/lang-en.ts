@@ -188,7 +188,6 @@ export const LANG_EN = {
     "contactGroupCreation"                  : "Contacts group creation",
     "contactGroupList"                      : "Contact group list",
     "contactInfo"                           : "Contact card",
-    "contactLink"                           : "Link contact",
     "contacts"                              : "Contact(s)",
     "contactsFilling_address_complement"    : "Address complement",
     "contactsFilling_address_country"       : "Country",
@@ -1118,4 +1117,9 @@ export const LANG_EN = {
     "indexingModelUpdated" : "Indexing model updated",
     "indexingModelCreation" : "Indexing model creation",
     "integerInput" : "Input number",
+    "noSelectedValue" : "No selected value",
+    "searchValue" : "Search a value", 
+    "initiatorEntityAlt" : "Initiator entity",
+    "autocompleteInput" : "Autocomplete input",
+    "typeEnterToCreate" : "Type on <b>enter</b> to create element",
 };

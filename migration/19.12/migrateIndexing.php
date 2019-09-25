@@ -137,11 +137,90 @@ foreach ($customs as $custom) {
         'data'  => ['IndexingBasket']
     ]);
     \SrcCore\models\DatabaseModel::delete([
+        'table' => 'baskets',
+        'where' => ['basket_id = ?'],
+        'data'  => ['IndexingBasket']
+    ]);
+    \SrcCore\models\DatabaseModel::delete([
         'table' => 'usergroups_services',
         'where' => ['service_id = ?'],
         'data'  => ['index_mlb']
     ]);
 
     printf("Migration Indexing Basket (CUSTOM {$custom}) : " . $migrated . " groupe(s) avec le service et la bannette IndexingBasket trouvé(s) et migré(s).\n");
+
+
+    //MIGRATION ACTIONS AVEC STATUS
+    $basketsWithStatuses = \SrcCore\models\DatabaseModel::select([
+        'select'    => ['group_id', 'basket_id', 'status_id', 'action_id'],
+        'table'     => ['groupbasket_status']
+    ]);
+
+    $migrated = 0;
+    $actionsToDelete = [];
+    foreach ($basketsWithStatuses as $value) {
+        if (!in_array($value['action_id'], $actionsToDelete)) {
+            $actionsToDelete[] = $value['action_id'];
+        }
+
+        $existingActions = \SrcCore\models\DatabaseModel::select([
+            'select'    => ['id'],
+            'table'     => ['actions'],
+            'where'     => ['id_status = ?', '(action_page = ? OR component = ?)'],
+            'data'      => [$value['status_id'], 'confirm_status', 'confirmAction']
+        ]);
+
+        if (!empty($existingActions[0])) {
+            $id = (string)$existingActions[0]['id'];
+        } else {
+            $statusLabel = \Status\models\StatusModel::getById(['id' => $value['status_id'], 'select' => ['label_status']]);
+
+            $id = \Action\models\ActionModel::create([
+                'label_action'  => "Enregistrer vers le status : {$statusLabel['label_status']}" ,
+                'id_status'     => $value['status_id'],
+                'history'       => 'Y',
+                'component'     => 'confirmAction'
+            ]);
+            \Action\models\ActionModel::createCategories(['id' => $id, 'categories' => ['incoming', 'outgoing', 'internal', 'ged_doc']]);
+        }
+        \Basket\models\ActionGroupBasketModel::create([
+            'id'                => $value['basket_id'],
+            'groupId'           => $value['group_id'],
+            'actionId'          => $id,
+            'whereClause'       => '',
+            'usedInBasketlist'  => 'N',
+            'usedInActionPage'  => 'Y',
+            'defaultActionList' => 'N'
+        ]);
+
+        $migrated++;
+    }
+
+    if (!empty($actionsToDelete)) {
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'actions',
+            'where' => ['id in (?)'],
+            'data'  => [$actionsToDelete]
+        ]);
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'actions_groupbaskets',
+            'where' => ['id_action in (?)'],
+            'data'  => [$actionsToDelete]
+        ]);
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'actions_categories',
+            'where' => ['action_id in (?)'],
+            'data'  => [$actionsToDelete]
+        ]);
+    }
+
+    \SrcCore\models\DatabaseModel::update([
+        'set'   => ['keyword' => null],
+        'table' => 'actions',
+        'where' => ['keyword = ?'],
+        'data'  => ['indexing']
+    ]);
+
+    printf("Migration Indexing Basket (CUSTOM {$custom}) : " . $migrated . " action(s) avec des status (mot clé indexation) trouvé(s) et migré(s).\n");
 }
 

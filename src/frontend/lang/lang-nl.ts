@@ -191,7 +191,6 @@ export const LANG_NL = {
     "contactGroupCreation"                  : "Aanmaak van een contactgroepering",
     "contactGroupList"                      : "Lijst met contactgroepen",
     "contactInfo"                           : "Contactfiche",
-    "contactLink"                           : "Een contact koppelen",
     "contacts"                              : "Contact(s)", //_TO_TRANSLATE
     "contactsFilling_address_complement"    : "Toren, gebouw, pand, residentie",
     "contactsFilling_address_country"       : "Land",
@@ -1144,4 +1143,9 @@ export const LANG_NL = {
     "indexingModelUpdated" : "Indexing model updated", //_TO_TRANSLATE
     "indexingModelCreation" : "Indexing model creation", //_TO_TRANSLATE
     "integerInput" : "Input number", //_TO_TRANSLATE
+    "noSelectedValue" : "No selected value", //_TO_TRANSLATE 
+    "searchValue" : "Search a value", //_TO_TRANSLATE 
+    "initiatorEntityAlt" : "Initiator entity", //_TO_TRANSLATE 
+    "autocompleteInput" : "Autocomplete input", //_TO_TRANSLATE
+    "typeEnterToCreate" : "Type on <b>enter</b> to create element", //_TO_TRANSLATE
 };

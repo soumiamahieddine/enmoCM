@@ -67,6 +67,10 @@
     }
 }
 
+.fieldInput {
+    position: relative;
+}
+
 .fieldLabel,
 .fieldInput {
     font-size: 13px;
@@ -144,6 +148,16 @@
 }
 .opt-group {
     font-weight: bold; 
+}
+
+.smallInput {
+    font-size: 11px;
+    padding-left: 20px;
+    padding-right: 20px;
+    ::ng-deep.mat-form-field-infix {
+        padding : 0px;
+        padding-bottom: 5px;
+    }
 }
 
 .button-form-primary {

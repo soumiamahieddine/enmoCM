@@ -142,6 +142,9 @@ define('_AR_DISPLAYING', 'Visualisation de l\'accusé de réception');
 define('_DOC_ADDED', 'Document ajouté');
 define('_ATTACH_DISPLAYING', 'Visualisation de la pièce jointe');
 define('_NOTE_ADDED', 'Annotation ajoutée');
+define('_TAG_ADDED', 'Mot-clé ajouté');
+define('_TAG_DELETED', 'Mot-clé supprimé');
+define('_TAG_UPDATED', 'Mot-clé modifié');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');

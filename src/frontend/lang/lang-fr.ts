@@ -198,7 +198,6 @@ export const LANG_FR = {
     "contactGroupCreation"                  : "Création d'un groupement de contact",
     "contactGroupList"                      : "Liste des groupements",
     "contactInfo"                           : "Fiche contact",
-    "contactLink"                           : "Associer un contact",
     "contacts"                              : "Contact(s)",
     "contactsFilling_address_complement"    : "Tour, bâtiment, immeuble, résidence",
     "contactsFilling_address_country"       : "Pays",
@@ -1155,4 +1154,9 @@ export const LANG_FR = {
     "indexingModelUpdated" : "Modèle d'enregistrement modifié",
     "indexingModelCreation" : "Création d'un modèle d'enregistrement",
     "integerInput" : "Champ numérique", 
+    "noSelectedValue" : "Aucun élément sélectionné", 
+    "searchValue" : "Rechercher un élément",
+    "initiatorEntityAlt" : "Entité initiatrice",
+    "autocompleteInput" : "Auto-completion",
+    "typeEnterToCreate" : "Taper sur <b>entrée</b> pour créer l'element",
 };

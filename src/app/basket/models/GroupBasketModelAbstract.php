@@ -94,11 +94,6 @@ abstract class GroupBasketModelAbstract
             'where' => ['basket_id = ?', 'group_id = ?'],
             'data'  => [$aArgs['basketId'], $aArgs['groupId']]
         ]);
-        DatabaseModel::delete([
-            'table' => 'groupbasket_status',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['basketId'], $aArgs['groupId']]
-        ]);
 
         if (!empty($aArgs['preferences'])) {
             DatabaseModel::delete([

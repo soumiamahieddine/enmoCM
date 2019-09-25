@@ -4,16 +4,16 @@ TRUNCATE TABLE usergroups;
 TRUNCATE TABLE usergroups_services;
 DELETE FROM usergroups WHERE group_id = 'COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'COURRIER';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('COURRIER', 'Scanning operator', TRUE, , '{"actions":["21"], "entities":[], "keywords":[]}');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('COURRIER', 'Scanning operator', TRUE, , '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'AGENT';
 DELETE FROM usergroups_services WHERE group_id = 'AGENT';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('AGENT', 'Agent', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('AGENT', 'Agent', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESP_COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'RESP_COURRIER';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESP_COURRIER', 'Supervisor', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESP_COURRIER', 'Supervisor', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESPONSABLE';
 DELETE FROM usergroups_services WHERE group_id = 'RESPONSABLE';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESPONSABLE', 'Manager', TRUE, '{"actions":["21"], "entities":[], "keywords":[]}');
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESPONSABLE', 'Manager', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'ADMINISTRATEUR_N1';
 DELETE FROM usergroups_services WHERE group_id = 'ADMINISTRATEUR_N1';
 INSERT INTO usergroups (group_id,group_desc) VALUES ('ADMINISTRATEUR_N1', 'Func. Admin n1');
@@ -1147,17 +1147,6 @@ INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, key
 Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 from groupbasket_redirect), false);
 
 ------------
---GROUPBASKET_STATUS
-------------
-TRUNCATE TABLE groupbasket_status;
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'QualificationBasket', 18, 'VAL', 4);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'QualificationBasket', 18, 'NEW', 5);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'NumericBasket', 18, 'VAL', 6);
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'NumericBasket', 18, 'NEW', 7);
-
-Select setval('groupbasket_status_system_id_seq', (select max(system_id)+1 from groupbasket_status), false);
-
-------------
 --TEMPLATES_DOCTYPE_EXT--
 ------------
 TRUNCATE TABLE templates_doctype_ext;
@@ -1168,21 +1157,19 @@ INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (9
 --KEYWORDS / TAGS
 ------------
 TRUNCATE TABLE tags;
-ALTER SEQUENCE tag_id_seq RESTART WITH 1;
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('SEMINAIRE', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('INNOVATION', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('MAARCH', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('ENVIRONNEMENT', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('PARTENARIAT', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('JUMELAGE', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('ECONOMIE', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('ASSOCIATIONS', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('RH', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('BUDGET', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('QUARTIERS', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('LITTORAL', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('SPORT', 'letterbox_coll', 'COU');
-Select setval('tag_id_seq', (select max(tag_id)+1 from tags), false);
+INSERT INTO tags (label, entity_id_owner) VALUES ('SEMINAIRE', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('INNOVATION', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('MAARCH', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('ENVIRONNEMENT', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('PARTENARIAT', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('JUMELAGE', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('ECONOMIE', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('ASSOCIATIONS', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('RH', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('BUDGET', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('QUARTIERS', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('LITTORAL', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('SPORT', 'COU');
 
 TRUNCATE TABLE tags_entities;
 INSERT INTO tags_entities (tag_id, entity_id) VALUES (1, 'COU');
@@ -1591,6 +1578,21 @@ INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_th
 TRUNCATE TABLE folders;
 INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('HR', FALSE, 1, 0, 0);
 INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('BUSINESS', FALSE, 1, 0, 0);
+
+TRUNCATE TABLE indexing_models;
+INSERT INTO indexing_models (id, label, "default", owner, private) VALUES (1, 'Courrier arrivée', TRUE, 23, FALSE);
+Select setval('indexing_models_id_seq', (select max(id)+1 from shipping_templates), false);
+
+TRUNCATE TABLE indexing_models_fields;
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'select', 'category_id', TRUE, '"incoming"', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'select', 'doctype', TRUE, '""', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'date', 'docDate', TRUE, '""', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'date', 'arrivalDate', TRUE, '""', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'string', 'subject', TRUE, '""', 'mail');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'string', 'contact', TRUE, '""', 'contact');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'select', 'destination', TRUE, '""', 'process');
+INSERT INTO indexing_models_fields (model_id, type, identifier, mandatory, default_value, unit) VALUES (1, 'string', 'folder', TRUE, '""', 'classement');
+
 
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise
 --Update res_letterbox set status='VAL' where res_id=108;

@@ -239,15 +239,8 @@ class BasketController
             foreach ($actions as $action) {
                 $actionIds[] = $action['id_action'];
             }
-            $statuses = [];
             $redirects = [];
             if (!empty($actionIds)) {
-                $statuses = BasketModel::getGroupActionStatus([
-                    'select'    => ['status_id', 'action_id'],
-                    'where'     => ['basket_id = ?', 'group_id = ?', 'action_id in (?)'],
-                    'data'      => [$aArgs['id'], $group['group_id'], $actionIds],
-                    'orderBy'   => ['"order"']
-                ]);
                 $redirects = GroupBasketRedirectModel::get([
                     'select'    => ['entity_id', 'action_id', 'keyword', 'redirect_mode'],
                     'where'     => ['basket_id = ?', 'group_id = ?', 'action_id in (?)'],
@@ -255,13 +248,7 @@ class BasketController
                 ]);
             }
             foreach ($actions as $actionKey => $action) {
-                $actions[$actionKey]['statuses'] = [];
                 $actions[$actionKey]['redirects'] = [];
-                foreach ($statuses as $status) {
-                    if ($status['action_id'] == $action['id_action']) {
-                        $actions[$actionKey]['statuses'][] = $status['status_id'];
-                    }
-                }
                 foreach ($redirects as $redirect) {
                     if ($redirect['action_id'] == $action['id_action']) {
                         $actions[$actionKey]['redirects'][] = $redirect;
@@ -282,7 +269,6 @@ class BasketController
                     $actionsForGroup[$actionKey]['used_in_basketlist'] = 'N';
                     $actionsForGroup[$actionKey]['used_in_action_page'] = 'Y';
                     $actionsForGroup[$actionKey]['default_action_list'] = 'N';
-                    $actionsForGroup[$actionKey]['statuses'] = [];
                     $actionsForGroup[$actionKey]['redirects'] = [];
                     $actionsForGroup[$actionKey]['checked'] = false;
                 }
@@ -345,17 +331,6 @@ class BasketController
                     'defaultActionList' => $groupAction['default_action_list']
                 ]);
 
-                if (!empty($groupAction['statuses'])) {
-                    foreach ($groupAction['statuses'] as $key => $status) {
-                        BasketModel::createGroupActionStatus([
-                            'id'        => $aArgs['id'],
-                            'groupId'   => $data['group_id'],
-                            'actionId'  => $groupAction['id'],
-                            'statusId'  => $status,
-                            'order'     => $key
-                        ]);
-                    }
-                }
                 if (!empty($groupAction['redirects'])) {
                     foreach ($groupAction['redirects'] as $redirect) {
                         GroupBasketRedirectModel::create([
@@ -432,17 +407,6 @@ class BasketController
                     'defaultActionList' => $groupAction['default_action_list']
                 ]);
 
-                if (!empty($groupAction['statuses'])) {
-                    foreach ($groupAction['statuses'] as $key => $status) {
-                        BasketModel::createGroupActionStatus([
-                            'id'        => $aArgs['id'],
-                            'groupId'   => $aArgs['groupId'],
-                            'actionId'  => $groupAction['id'],
-                            'statusId'  => $status,
-                            'order'     => $key
-                        ]);
-                    }
-                }
                 if (!empty($groupAction['redirects'])) {
                     foreach ($groupAction['redirects'] as $redirect) {
                         GroupBasketRedirectModel::create([

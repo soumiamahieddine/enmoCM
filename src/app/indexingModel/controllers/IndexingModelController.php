@@ -17,18 +17,19 @@
 
 namespace IndexingModel\controllers;
 
+use Entity\models\EntityModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
+use Resource\controllers\IndexingController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
 class IndexingModelController
 {
-    const FIELDS_TYPES = ['string', 'integer', 'select', 'date', 'radio', 'checkbox'];
-
     public function get(Request $request, Response $response)
     {
         $models = IndexingModelModel::get(['where' => ['owner = ? OR private = ?'], 'data' => [$GLOBALS['id'], 'false']]);
@@ -44,7 +45,7 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
         }
 
-        $fields = IndexingModelFieldModel::get(['select' => ['type', 'identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
+        $fields = IndexingModelFieldModel::get(['select' => ['identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$args['id']]]);
         foreach ($fields as $key => $value) {
             $fields[$key]['default_value'] = json_decode($value['default_value'], true);
         }
@@ -57,14 +58,16 @@ class IndexingModelController
     {
         $body = $request->getParsedBody();
 
+        $categories = ResModel::getCategories();
+        $categories = array_column($categories, 'id');
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['category']) || !in_array($body['category'], $categories)) {
+            return $response->withStatus(400)->withJson(['errors' => "Body category is empty, not a string or not a valid category"]);
         }
         foreach ($body['fields'] as $key => $field) {
-            if (!Validator::stringType()->notEmpty()->validate($field['type']) || !in_array($field['type'], IndexingModelController::FIELDS_TYPES)) {
-                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] type is empty or not a validate type"]);
-            } elseif (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
-                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not an integer"]);
+            if (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
+                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not a string"]);
             }
         }
 
@@ -75,16 +78,16 @@ class IndexingModelController
         }
 
         $modelId = IndexingModelModel::create([
-            'label'    => $body['label'],
-            'default'  => 'false',
-            'owner'    => $GLOBALS['id'],
-            'private'  => $body['private']
+            'label'     => $body['label'],
+            'category'  => $body['category'],
+            'default'   => 'false',
+            'owner'     => $GLOBALS['id'],
+            'private'   => $body['private']
         ]);
 
         foreach ($body['fields'] as $field) {
             IndexingModelFieldModel::create([
                 'model_id'      => $modelId,
-                'type'          => $field['type'],
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
                 'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
@@ -113,15 +116,14 @@ class IndexingModelController
         }
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
-        }
-        if (!Validator::boolType()->validate($body['default'])) {
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['category'])) {
+            return $response->withStatus(400)->withJson(['errors' => "Body category is empty or not a string"]);
+        } elseif (!Validator::boolType()->validate($body['default'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
         foreach ($body['fields'] as $key => $field) {
-            if (!Validator::stringType()->notEmpty()->validate($field['type']) || !in_array($field['type'], IndexingModelController::FIELDS_TYPES)) {
-                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] type is empty or not a validate type"]);
-            } elseif (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
-                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not an integer"]);
+            if (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
+                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not a string"]);
             }
         }
 
@@ -141,7 +143,8 @@ class IndexingModelController
 
         IndexingModelModel::update([
             'set'   => [
-                'label'   => $body['label'],
+                'label'     => $body['label'],
+                'category'  => $body['category'],
                 '"default"' => $body['default'] ? 'true' : 'false'
             ],
             'where' => ['id = ?'],
@@ -153,7 +156,6 @@ class IndexingModelController
         foreach ($body['fields'] as $field) {
             IndexingModelFieldModel::create([
                 'model_id'      => $args['id'],
-                'type'          => $field['type'],
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
                 'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
@@ -206,5 +208,42 @@ class IndexingModelController
         ]);
 
         return $response->withStatus(204);
+    }
+
+    public function getEntities(Request $request, Response $response, array $aArgs)
+    {
+        $entitiesTmp = EntityModel::get([
+            'select'   => ['id', 'entity_label', 'entity_id'],
+            'where'    => ['enabled = ?', '(parent_entity_id is null OR parent_entity_id = \'\')'],
+            'data'     => ['Y'],
+            'orderBy'  => ['entity_label']
+        ]);
+        if (!empty($entitiesTmp)) {
+            foreach ($entitiesTmp as $key => $value) {
+                $entitiesTmp[$key]['level'] = 0;
+            }
+            $entitiesId = array_column($entitiesTmp, 'entity_id');
+            $entitiesChild = IndexingController::getEntitiesChildrenLevel(['entitiesId' => $entitiesId, 'level' => 1]);
+            $entitiesTmp = array_merge([$entitiesTmp], $entitiesChild);
+        }
+
+        $entities = [];
+        foreach ($entitiesTmp as $keyLevel => $levels) {
+            foreach ($levels as $entity) {
+                if ($keyLevel == 0) {
+                    $entities[] = $entity;
+                    continue;
+                } else {
+                    foreach ($entities as $key => $oEntity) {
+                        if ($oEntity['entity_id'] == $entity['parent_entity_id']) {
+                            array_splice($entities, $key+1, 0, [$entity]);
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $response->withJson(['entities' => $entities]);
     }
 }

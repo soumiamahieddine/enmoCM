@@ -124,7 +124,7 @@ class IndexingController
         return $response->withJson(['entities' => $entities]);
     }
 
-    public function getEntitiesChildrenLevel($aArgs = [])
+    public static function getEntitiesChildrenLevel($aArgs = [])
     {
         $entities = EntityModel::getEntityChildrenSubLevel([
             'entitiesId' => $aArgs['entitiesId'],
@@ -143,7 +143,7 @@ class IndexingController
         return $entities;
     }
 
-    public function getIndexingParameters($aArgs = [])
+    public static function getIndexingParameters($aArgs = [])
     {
         $group = GroupModel::getGroupByLogin(['login' => $aArgs['login'], 'groupId' => $aArgs['groupId'], 'select' => ['can_index', 'indexation_parameters']]);
         if (empty($group)) {

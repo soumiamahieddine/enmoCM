@@ -15,3 +15,5 @@ DROP TABLE IF EXISTS fp_res_fileplan_positions;
 
 DROP TABLE IF EXISTS folder_tmp;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS folders_system_id;
+
+DROP TABLE IF EXISTS groupbasket_status;

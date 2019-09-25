@@ -162,11 +162,6 @@ abstract class GroupModelAbstract
             'data'      => [$group['group_id']]
         ]);
         DatabaseModel::delete([
-            'table'     => 'groupbasket_status',
-            'where'     => ['group_id = ?'],
-            'data'      => [$group['group_id']]
-        ]);
-        DatabaseModel::delete([
             'table' => 'users_baskets_preferences',
             'where' => ['group_serial_id = ?'],
             'data'  => [$aArgs['id']]
@@ -219,7 +214,8 @@ abstract class GroupModelAbstract
     public static function getGroupByLogin(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['login', 'groupId']);
-        ValidatorModel::stringType($aArgs, ['login', 'groupId']);
+        ValidatorModel::stringType($aArgs, ['login']);
+        ValidatorModel::intVal($aArgs, ['groupId']);
 
         $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],

@@ -4,6 +4,8 @@ import { NotificationService } from '../../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
+import { map, tap, finalize, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
     templateUrl: "send-external-note-book-action.component.html",
@@ -32,15 +34,23 @@ export class SendExternalNoteBookActionComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
 
-        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkExternalNoteBook', { resources: this.data.selectedRes })
-            .subscribe((data: any) => {
+        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkExternalNoteBook', { resources: this.data.selectedRes }).pipe(
+            map((data: any) => {
+                data.additionalsInfos.users.forEach((element: any) => {
+                    element.displayName = element.firstname + ' ' + element.lastname;
+                });
+                return data;
+            }),
+            tap((data) => {
                 this.additionalsInfos = data.additionalsInfos;
                 this.errors = data.errors;
-                this.loading = false;
-            }, (err: any) => {
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
                 this.notify.handleErrors(err);
-                this.loading = false;
-            });
+                return of(false);
+            })
+        ).subscribe();
     }
 
     onSubmit(): void {
@@ -73,5 +83,9 @@ export class SendExternalNoteBookActionComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    setVal(user: any) {
+        this.externalSignatoryBookDatas.processingUser = user;
     }
 }

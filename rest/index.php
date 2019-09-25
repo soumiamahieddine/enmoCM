@@ -87,6 +87,7 @@ $app->get('/autocomplete/entities', \SrcCore\controllers\AutoCompleteController:
 $app->get('/autocomplete/statuses', \SrcCore\controllers\AutoCompleteController::class . ':getStatuses');
 $app->get('/autocomplete/banAddresses', \SrcCore\controllers\AutoCompleteController::class . ':getBanAddresses');
 $app->get('/autocomplete/folders', \SrcCore\controllers\AutoCompleteController::class . ':getFolders');
+$app->get('/autocomplete/tags', \SrcCore\controllers\AutoCompleteController::class . ':getTags');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
@@ -135,6 +136,7 @@ $app->delete('/customFields/{id}', \CustomField\controllers\CustomFieldControlle
 
 //IndexingModels
 $app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
+$app->get('/indexingModels/entities', \IndexingModel\controllers\IndexingModelController::class . ':getEntities');
 $app->get('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':getById');
 $app->post('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':create');
 $app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':update');
@@ -355,6 +357,10 @@ $app->get('/status/{id}', \Status\controllers\StatusController::class . ':getByI
 $app->put('/statuses/{identifier}', \Status\controllers\StatusController::class . ':update');
 $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
+
+//Tags
+$app->post('/tags', \Tag\controllers\TagController::class . ':create');
+$app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
 
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');

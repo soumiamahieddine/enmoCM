@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
 	<REPORT>
-		<ID>folder_view_stat</ID>
-		<LABEL>_FOLDER_VIEW_STAT</LABEL>
-		<DESCRIPTION>_FOLDER_VIEW_STAT</DESCRIPTION>
-		<URL>folder_view_stats</URL>
-		<IN_MENU_REPORTS>true</IN_MENU_REPORTS><!--  the report can be accessed by the menu report -->
-		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
-		<MODULE>folder</MODULE>
-		<MODULE_LABEL>_FOLDERS_COMMENT</MODULE_LABEL>
-	</REPORT>
-	<REPORT>
 		<ID>entity_vol_stat</ID>
 		<LABEL>_ENTITY_VOL_STAT</LABEL>
 		<DESCRIPTION>_ENTITY_VOL_STAT_DESC</DESCRIPTION>

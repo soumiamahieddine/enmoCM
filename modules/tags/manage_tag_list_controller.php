@@ -186,7 +186,7 @@ function display_list()
 
     $select['tags'] = [];
     array_push(
-        $select['tags'], 'tag_id', 'tag_label'
+        $select['tags'], 'id', 'label'
     );
     if ($_SESSION['user']['UserId'] == 'superadmin') {
         $where = '';
@@ -206,11 +206,11 @@ function display_list()
     }
 
     if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $where .= " (tag_label ilike ? ) ";
+        $where .= " (label ilike ? ) ";
         $where_what[] = $what.'%';
 
     } else {
-        $where .= " (tag_label like ? ) ";
+        $where .= " (label like ? ) ";
         $where_what[] = $what.'%';
     }
 
@@ -220,7 +220,7 @@ function display_list()
         $order = trim($_REQUEST['order']);
     }
 
-    $field = 'tag_label';
+    $field = 'label';
     if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
         $field = trim($_REQUEST['order_field']);
     }
@@ -242,13 +242,13 @@ function display_list()
     for ($i=0;$i<count($tab);$i++) {
         foreach ($tab[$i] as &$item) {
             switch ($item['column']) {
-            case 'tag_id':
+            case 'id':
                 format_item(
                     $item, _ID, '10', 'left', 'left', 'bottom', true
                 );
                 break;
             
-            case 'tag_label':
+            case 'label':
                 format_item(
                     $item, _NAME_TAGS, '70', 'left', 'left', 'bottom', true
                 );

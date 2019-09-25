@@ -3,6 +3,7 @@
 .mat-form-field-appearance-outline {
     font-size: 11px;
 }
+
 ::ng-deep.mat-form-field-appearance-outline .mat-form-field-outline-thick {
     color: $primary;
 }
@@ -10,10 +11,12 @@
 ::ng-deep.mat-form-field-prefix {
     top: 0px !important;
 }
+
 .mat-option {
     ::ng-deep.mat-option-text {
         display: flex;
     }
+
     span {
         font-size: 110%;
         font-weight: bold;
@@ -29,8 +32,9 @@
 .smallInput {
     padding-left: 20px;
     padding-right: 20px;
+
     ::ng-deep.mat-form-field-infix {
-        padding : 0px;
+        padding: 0px;
         padding-bottom: 5px;
     }
 }
@@ -41,4 +45,28 @@
     line-height: 13px;
     display: table-cell;
     vertical-align: middle;
+}
+
+.input-form {
+    ::ng-deep.mat-form-field-prefix {
+        left: 15px;
+    }
+}
+
+.activeListAutocomplete {
+    font-size: 13px;
+    height: auto;
+}
+
+.noResult {
+    text-align: center;
+    font-style: italic;
+    opacity: 0.5;
+}
+
+.autoCompleteInfoResult {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
 }

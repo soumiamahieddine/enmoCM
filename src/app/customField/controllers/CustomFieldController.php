@@ -74,7 +74,7 @@ class CustomFieldController
             'eventId'   => 'customFieldCreation',
         ]);
 
-        return $response->withStatus(201)->withJson(['customFieldId' => $id]);
+        return $response->withJson(['customFieldId' => $id]);
     }
 
     public function update(Request $request, Response $response, array $args)

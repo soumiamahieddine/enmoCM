@@ -1,11 +1,16 @@
 <form>
+  <input *ngIf="controlAutocomplete !== undefined" type="hidden" [formControl]="controlAutocomplete">
   <mat-form-field [class.smallInput]="size === 'small'"
-    [appearance]="singleMode !== undefined ? 'standard' : 'outline'">
+    [appearance]="singleMode !== undefined && controlAutocomplete === undefined ? 'legacy' : 'outline'"
+    floatLabel="never">
     <mat-label *ngIf="singleMode !== undefined">{{placeholder}}</mat-label>
-    <mat-icon *ngIf="size === 'default'" color="primary" class="fa fa-search" matPrefix></mat-icon>
+    <mat-icon *ngIf="size !== 'small' && (myControl.enabled && !singleMode)" color="primary" class="fa fa-search" matPrefix></mat-icon>
     <input type="text" #autoCompleteInput [placeholder]="singleMode !== undefined ? '' : placeholder"
       aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" (click)="$event.stopPropagation()"
-      (focus)="resetAutocomplete()" [required]="required">
+      (focus)="resetAutocomplete()" [required]="required" (keyup.enter)="addItem()">
+    <button type="button" *ngIf="myControl.disabled" matSuffix mat-icon-button color="warn" (click)="unsetValue()">
+      <mat-icon class="fa fa-times" color="warn" [title]="lang.delete"></mat-icon>
+    </button>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOpt($event)">
       <ng-container *ngIf="options.length > 0 && !loading">
         <mat-option *ngFor="let option of filteredOptions | async | sortBy: key" [value]="option">
@@ -13,7 +18,7 @@
           </mat-icon>&nbsp;<span color="primary">{{option[key]}}</span>&nbsp;<small>{{option[subInfoKey]}}</small>
         </mat-option>
       </ng-container>
-      <mat-option *ngIf="options.length === 0 && !loading" [class.smallInputInfo]="size === 'small'" disabled
+      <mat-option class="autoCompleteInfoResult" *ngIf="options.length === 0 && !loading" [class.smallInputInfo]="size === 'small'" disabled
         [innerHTML]="listInfo">
       </mat-option>
       <mat-option *ngIf="loading" disabled>
@@ -21,4 +26,16 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
+  <ng-container *ngIf="controlAutocomplete !== undefined">
+    <mat-chip-list class="mat-chip-list-stacked" color="default">
+      <mat-chip *ngFor="let item of controlAutocomplete.value;let i=index" class="activeListAutocomplete"
+        color="default" [removable]="true" (removed)="removeItem(i)">
+        <span style="display: flex;flex: 1;" [innerHTML]="this.valuesToDisplay[item]"></span>
+        <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+    <div class="noResult" *ngIf="controlAutocomplete.value.length === 0">
+      {{lang.noSelectedValue}}
+    </div>
+  </ng-container>
 </form>

@@ -1052,20 +1052,12 @@ CREATE TABLE doctypes_second_level
 )
 WITH (OIDS=FALSE);
 
-CREATE SEQUENCE tag_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 7
-  CACHE 1;
-
 CREATE TABLE tags
 (
-  tag_id bigint NOT NULL DEFAULT nextval('tag_id_seq'::regclass),
-  tag_label character varying(50) NOT NULL,
-  coll_id character varying(50) NOT NULL,
+  id serial NOT NULL,
+  label character varying(50) NOT NULL,
   entity_id_owner character varying(32),
-  CONSTRAINT tag_id_pkey PRIMARY KEY (tag_id)
+  CONSTRAINT tags_id_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
@@ -1260,20 +1252,6 @@ CREATE TABLE doctypes_indexes
   CONSTRAINT doctypes_indexes_pkey PRIMARY KEY (type_id, coll_id, field_name)
 )
 WITH (OIDS=FALSE);
-
-CREATE TABLE groupbasket_status
-(
-  system_id serial NOT NULL,
-  group_id character varying(32) NOT NULL,
-  basket_id character varying(32) NOT NULL,
-  action_id integer NOT NULL,
-  status_id character varying(32),
-  "order" integer NOT NULL,
-  CONSTRAINT groupbasket_status_pkey PRIMARY KEY (system_id)
-)
-WITH (
-  OIDS=FALSE
-);
 
 CREATE TABLE user_signatures
 (
@@ -1927,12 +1905,10 @@ CREATE TABLE indexing_models
 )
 WITH (OIDS=FALSE);
 
-CREATE TYPE indexing_models_fields_type AS ENUM ('string', 'integer', 'select', 'date', 'radio', 'checkbox');
 CREATE TABLE indexing_models_fields
 (
     id SERIAL NOT NULL,
     model_id INTEGER NOT NULL,
-    type indexing_models_fields_type NOT NULL,
     identifier text NOT NULL,
     mandatory BOOLEAN NOT NULL,
     default_value json,
