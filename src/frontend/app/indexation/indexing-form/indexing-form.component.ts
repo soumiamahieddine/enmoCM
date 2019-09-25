@@ -190,6 +190,12 @@ export class IndexingFormComponent implements OnInit {
                     this.availableCustomFields = data.customFields.map((info: any) => {
                         info.identifier = 'indexingCustomField_' + info.id;
                         info.system = false;
+                        info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
+                            return {
+                                id: custVal,
+                                label: custVal
+                            }
+                        }) : info.values;
                         return info;
                     });
                     this.fieldCategories.forEach(element => {
@@ -302,12 +308,8 @@ export class IndexingFormComponent implements OnInit {
         const myObservable = of(42);
 
         myObservable.pipe(
-            tap(() => {
-                console.log('fuu');
-            }),
             exhaustMap(() => this.initializeRoutes()),
             tap((data) => {
-                console.log(data.structure);
                 this.fieldCategories.forEach(element => {
                     this['indexingModels_' + element].forEach((elem: any) => {
                         if (elem.identifier === 'docDate') {
@@ -473,6 +475,12 @@ export class IndexingFormComponent implements OnInit {
                 this.availableCustomFields = data.customFields.map((info: any) => {
                     info.identifier = 'indexingCustomField_' + info.id;
                     info.system = false;
+                    info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
+                        return {
+                            id: custVal,
+                            label: custVal
+                        }
+                    }) : info.values;
                     return info;
                 });
             }),
