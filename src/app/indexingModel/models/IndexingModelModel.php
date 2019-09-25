@@ -58,8 +58,8 @@ class IndexingModelModel
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['label', 'default', 'owner', 'private']);
-        ValidatorModel::stringType($args, ['label', 'default', 'private']);
+        ValidatorModel::notEmpty($args, ['label', 'category', 'default', 'owner', 'private']);
+        ValidatorModel::stringType($args, ['label', 'category', 'default', 'private']);
         ValidatorModel::intVal($args, ['owner']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'indexing_models_id_seq']);
@@ -69,6 +69,7 @@ class IndexingModelModel
             'columnsValues' => [
                 'id'        => $nextSequenceId,
                 'label'     => $args['label'],
+                'category'  => $args['category'],
                 '"default"' => $args['default'],
                 'owner'     => $args['owner'],
                 'private'   => $args['private']

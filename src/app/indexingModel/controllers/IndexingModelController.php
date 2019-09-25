@@ -23,6 +23,7 @@ use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
 use Resource\controllers\IndexingController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -57,8 +58,12 @@ class IndexingModelController
     {
         $body = $request->getParsedBody();
 
+        $categories = ResModel::getCategories();
+        $categories = array_column($categories, 'id');
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['category']) || !in_array($body['category'], $categories)) {
+            return $response->withStatus(400)->withJson(['errors' => "Body category is empty, not a string or not a valid category"]);
         }
         foreach ($body['fields'] as $key => $field) {
             if (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
@@ -73,10 +78,11 @@ class IndexingModelController
         }
 
         $modelId = IndexingModelModel::create([
-            'label'    => $body['label'],
-            'default'  => 'false',
-            'owner'    => $GLOBALS['id'],
-            'private'  => $body['private']
+            'label'     => $body['label'],
+            'category'  => $body['category'],
+            'default'   => 'false',
+            'owner'     => $GLOBALS['id'],
+            'private'   => $body['private']
         ]);
 
         foreach ($body['fields'] as $field) {
@@ -110,8 +116,9 @@ class IndexingModelController
         }
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
-        }
-        if (!Validator::boolType()->validate($body['default'])) {
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['category'])) {
+            return $response->withStatus(400)->withJson(['errors' => "Body category is empty or not a string"]);
+        } elseif (!Validator::boolType()->validate($body['default'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
         foreach ($body['fields'] as $key => $field) {
@@ -136,7 +143,8 @@ class IndexingModelController
 
         IndexingModelModel::update([
             'set'   => [
-                'label'   => $body['label'],
+                'label'     => $body['label'],
+                'category'  => $body['category'],
                 '"default"' => $body['default'] ? 'true' : 'false'
             ],
             'where' => ['id = ?'],

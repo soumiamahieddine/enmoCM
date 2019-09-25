@@ -133,9 +133,11 @@ CREATE TABLE indexing_models
 (
   id SERIAL NOT NULL,
   label character varying(256) NOT NULL,
+  category character varying(256) NOT NULL,
   "default" BOOLEAN NOT NULL,
   owner INTEGER NOT NULL,
   private BOOLEAN NOT NULL,
+  master INTEGER DEFAULT NULL,
   CONSTRAINT indexing_models_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
