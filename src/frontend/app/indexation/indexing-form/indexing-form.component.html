@@ -110,7 +110,7 @@
                                     <plugin-autocomplete [labelPlaceholder]="lang.searchValue"
                                         [routeDatas]="[field.values[0]]" [targetSearchKey]="'idToDisplay'"
                                         [size]="'small'" [control]="arrFormControl[field.identifier]"
-                                        [manageDatas]="field.values[1]" style="width:100%;"></plugin-autocomplete>
+                                        [manageDatas]="!adminMode ? field.values[1] : undefined" style="width:100%;"></plugin-autocomplete>
                                 </ng-container>
                             </div>
                             <div class="fieldState">
