@@ -86,6 +86,6 @@ export class SendExternalNoteBookActionComponent implements OnInit {
     }
 
     setVal(user: any) {
-        this.externalSignatoryBookDatas.processingUser = user;
+        this.externalSignatoryBookDatas.processingUser = user.id;
     }
 }
