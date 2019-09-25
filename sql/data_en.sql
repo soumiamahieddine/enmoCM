@@ -1157,21 +1157,19 @@ INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (9
 --KEYWORDS / TAGS
 ------------
 TRUNCATE TABLE tags;
-ALTER SEQUENCE tag_id_seq RESTART WITH 1;
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('SEMINAIRE', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('INNOVATION', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('MAARCH', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('ENVIRONNEMENT', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('PARTENARIAT', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('JUMELAGE', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('ECONOMIE', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('ASSOCIATIONS', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('RH', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('BUDGET', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('QUARTIERS', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('LITTORAL', 'letterbox_coll', 'COU');
-INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('SPORT', 'letterbox_coll', 'COU');
-Select setval('tag_id_seq', (select max(tag_id)+1 from tags), false);
+INSERT INTO tags (label, entity_id_owner) VALUES ('SEMINAIRE', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('INNOVATION', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('MAARCH', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('ENVIRONNEMENT', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('PARTENARIAT', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('JUMELAGE', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('ECONOMIE', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('ASSOCIATIONS', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('RH', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('BUDGET', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('QUARTIERS', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('LITTORAL', 'COU');
+INSERT INTO tags (label, entity_id_owner) VALUES ('SPORT', 'COU');
 
 TRUNCATE TABLE tags_entities;
 INSERT INTO tags_entities (tag_id, entity_id) VALUES (1, 'COU');
