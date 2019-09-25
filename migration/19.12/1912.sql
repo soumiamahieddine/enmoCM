@@ -10,6 +10,8 @@ UPDATE parameters SET param_value_string = '19.12' WHERE id = 'database_version'
 
 /* VIEWS */
 DROP VIEW IF EXISTS res_view_letterbox;
+DROP VIEW IF EXISTS res_view_attachments;
+DROP VIEW IF EXISTS view_folders;
 
 
 /* FULL TEXT */
@@ -244,7 +246,6 @@ DROP TABLE IF EXISTS foldertypes;
 DROP TABLE IF EXISTS foldertypes_doctypes;
 DROP TABLE IF EXISTS foldertypes_doctypes_level1;
 DROP TABLE IF EXISTS foldertypes_indexes;
-DROP VIEW IF EXISTS view_folders;
 
 
 /* RE CREATE VIEWS */
@@ -373,7 +374,6 @@ FROM doctypes d,
          LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
 WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
 
-DROP VIEW IF EXISTS res_view_attachments;
 CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
   creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,

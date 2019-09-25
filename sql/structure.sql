@@ -1883,14 +1883,17 @@ CONSTRAINT acknowledgment_receipts_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
-CREATE TABLE custom_fields
+DROP TABLE IF EXISTS indexing_models;
+CREATE TABLE indexing_models
 (
-  id serial NOT NULL,
-  label character varying(256) NOT NULL,
-  type character varying(256) NOT NULL,
-  values jsonb,
-  CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
-  CONSTRAINT custom_fields_unique_key UNIQUE (label)
+    id SERIAL NOT NULL,
+    label character varying(256) NOT NULL,
+    category character varying(256) NOT NULL,
+    "default" BOOLEAN NOT NULL,
+    owner INTEGER NOT NULL,
+    private BOOLEAN NOT NULL,
+    master INTEGER DEFAULT NULL,
+    CONSTRAINT indexing_models_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
