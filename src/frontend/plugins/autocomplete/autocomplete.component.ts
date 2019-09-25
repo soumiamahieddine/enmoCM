@@ -173,12 +173,16 @@ export class PluginAutocomplete implements OnInit {
     }
 
     selectOpt(ev: any) {
-        if (this.controlAutocomplete !== undefined) {
+        if (this.singleMode) {
+            this.myControl.setValue(ev.option.value[this.key]);
+        } else if (this.controlAutocomplete !== undefined) {
             this.setFormValue(ev.option.value);
         }
 
         if (this.selectedOpt !== undefined) {
-            this.resetAutocomplete();
+            if (this.singleMode) {
+                this.resetAutocomplete();
+            }
             this.autoCompleteInput.nativeElement.blur();
             this.selectedOpt.emit(ev.option.value);
         }
