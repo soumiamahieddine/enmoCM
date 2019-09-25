@@ -23,6 +23,7 @@ class IndexingModelControllerTest extends TestCase
 
         $args = [
             'label'     => 'mon model d indexation',
+            'category'  => 'incoming',
             'private'   => true,
             'fields'    => [
                 [
@@ -90,6 +91,7 @@ class IndexingModelControllerTest extends TestCase
 
         $args = [
             'label'     => 'mon model d indexation modifié',
+            'category'  => 'incoming',
             'default'   => false,
             'fields'    => [
                 [
