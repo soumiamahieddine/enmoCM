@@ -73,14 +73,17 @@ class IndexingModelController
 
         if (ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             $body['private'] = empty($body['private']) ? 'false' : 'true';
+            $defaultModel = IndexingModelModel::get(['select' => [1], 'where' => ['default = ?'], 'data' => ['true']]);
+            $body['default'] = empty($defaultModel) ? 'true' : 'false';
         } else {
-            $body['private'] = true;
+            $body['private'] = 'true';
+            $body['default'] = 'false';
         }
 
         $modelId = IndexingModelModel::create([
             'label'     => $body['label'],
             'category'  => $body['category'],
-            'default'   => 'false',
+            'default'   => $body['default'],
             'owner'     => $GLOBALS['id'],
             'private'   => $body['private']
         ]);
@@ -180,13 +183,15 @@ class IndexingModelController
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
         }
-        $model = IndexingModelModel::getById(['select' => ['owner', 'private'], 'id' => $args['id']]);
+        $model = IndexingModelModel::getById(['select' => ['owner', 'private', 'default'], 'id' => $args['id']]);
         if (empty($model)) {
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
         } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
         } elseif (!$model['private'] && !ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
+        } elseif ($model['default']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Default model can not be deleted']);
         }
 
         $model = IndexingModelModel::getById(['select' => ['label'], 'id' => $args['id']]);
