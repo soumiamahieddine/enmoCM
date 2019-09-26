@@ -205,8 +205,6 @@ define('_ADMIN', 'Beheer');
 define('_ADV_SEARCH_MLB', 'Opzoeken');
 define('_INDEXING_MLB', 'Een brief/doc bewaren');
 define('_SEARCH_CONTACTS', 'Een contact zoeken');
-define('_PARAM_MLB_DOCTYPES', 'Instelling van de documenttypes');
-define('_PARAM_MLB_DOCTYPES_DESC', 'Instelling van de documenttypes');
 define('_WELCOME_TEXT_LOAD', 'Laden van tekst homepage');
 define('_QUICKLAUNCH', 'Sneltoetsen');
 define('_MY_CONTACTS', 'Contacten aanmaken vanuit indexering/kwalificering');

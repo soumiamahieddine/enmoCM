@@ -1233,16 +1233,6 @@ CREATE TABLE mlb_coll_ext (
   address_id bigint
 )WITH (OIDS=FALSE);
 
-CREATE TABLE mlb_doctype_ext (
-  type_id bigint NOT NULL,
-  process_delay bigint NOT NULL DEFAULT '21',
-  delay1 bigint NOT NULL DEFAULT '14',
-  delay2 bigint NOT NULL DEFAULT '1',
-  process_mode character varying(255),
-  CONSTRAINT type_id PRIMARY KEY (type_id)
-)
-WITH (OIDS=FALSE);
-
 CREATE TABLE doctypes_indexes
 (
   type_id bigint NOT NULL,

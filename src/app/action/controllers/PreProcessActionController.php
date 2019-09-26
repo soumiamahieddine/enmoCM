@@ -20,9 +20,8 @@ use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
-use Doctype\models\DoctypeExtModel;
+use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
-use Entity\models\ListInstanceModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\models\GroupModel;
 use Parameter\models\ParameterModel;
@@ -229,7 +228,7 @@ class PreProcessActionController
 
             //Verify template
             $resource = ResModel::getById(['select' => ['type_id', 'destination'], 'resId' => $resId]);
-            $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
+            $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
 
             if (empty($resource['destination'])) {
                 $noSendAR['number'] += 1;

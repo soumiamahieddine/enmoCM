@@ -182,7 +182,6 @@ $collParams = $xmlconfig->COLLECTION;
 $collTable = (string)$collParams->Table;
 $collExt = (string)$collParams->Extension;
 $collView = (string)$collParams->View;
-$collDoctypeExt = (string)$collParams->DoctypeExt;
 
   
 // INCLUDES

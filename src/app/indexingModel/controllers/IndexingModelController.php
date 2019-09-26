@@ -183,7 +183,7 @@ class IndexingModelController
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
         }
-        $model = IndexingModelModel::getById(['select' => ['owner', 'private', 'default'], 'id' => $args['id']]);
+        $model = IndexingModelModel::getById(['select' => ['owner', 'private', '"default"'], 'id' => $args['id']]);
         if (empty($model)) {
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
         } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {

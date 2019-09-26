@@ -171,6 +171,25 @@ END$$;
 SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
 
 
+/* DOCTYPES */
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_doctype_ext')) > 0 THEN
+	  ALTER TABLE doctypes ADD COLUMN process_delay INTEGER;
+	  ALTER TABLE doctypes ADD COLUMN delay1 INTEGER;
+	  ALTER TABLE doctypes ADD COLUMN delay2 INTEGER;
+	  ALTER TABLE doctypes ADD COLUMN process_mode CHARACTER VARYING(256);
+	  UPDATE doctypes SET process_delay = (SELECT process_delay FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
+	  UPDATE doctypes SET delay1 = (SELECT delay1 FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
+	  UPDATE doctypes SET delay2 = (SELECT delay2 FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
+	  UPDATE doctypes SET process_mode = (SELECT process_mode FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
+	  ALTER TABLE doctypes ALTER COLUMN process_delay SET DEFAULT NULL;
+	  ALTER TABLE doctypes ALTER COLUMN delay1 SET DEFAULT NULL;
+	  ALTER TABLE doctypes ALTER COLUMN delay2 SET DEFAULT NULL;
+	  ALTER TABLE doctypes ALTER COLUMN process_mode SET DEFAULT NULL;
+  END IF;
+END$$;
+
+
 /* REFACTORING DATA */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN
@@ -246,6 +265,9 @@ DROP TABLE IF EXISTS foldertypes;
 DROP TABLE IF EXISTS foldertypes_doctypes;
 DROP TABLE IF EXISTS foldertypes_doctypes_level1;
 DROP TABLE IF EXISTS foldertypes_indexes;
+DROP TABLE IF EXISTS mlb_doctype_ext;
+ALTER TABLE doctypes DROP COLUMN IF EXISTS coll_id;
+DROP TABLE IF EXISTS mlb_doctype_ext;
 
 
 /* RE CREATE VIEWS */

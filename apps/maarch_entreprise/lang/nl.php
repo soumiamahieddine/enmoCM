@@ -1139,8 +1139,6 @@ if (!defined('_SOURCE_FILE_PROPERTIES')) { define('_SOURCE_FILE_PROPERTIES', 'Ei
 if (!defined('_FINGERPRINT')) { define('_FINGERPRINT', 'Digitale afdruk');}
 if (!defined('_OFFSET')) { define('_OFFSET', 'Offset');}
 if (!defined('_SETUP')) { define('_SETUP', 'Configureren');}
-if (!defined('_PARAM_MLB_DOCTYPES')) { define('_PARAM_MLB_DOCTYPES', 'Instelling van de documenttypes');}
-if (!defined('_PARAM_MLB_DOCTYPES_DESC')) { define('_PARAM_MLB_DOCTYPES_DESC', 'Instelling van de documenttypes');}
 if (!defined('_WELCOME_TEXT_LOAD')) { define('_WELCOME_TEXT_LOAD', 'Laden van tekst homepage');}
 if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) { define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS', 'Foute oproep of foute instelling');}
 if (!defined('_INDEXING_INSERT_ERROR')) { define('_INDEXING_INSERT_ERROR', 'Indexering: fout tijdens het invoegen');}

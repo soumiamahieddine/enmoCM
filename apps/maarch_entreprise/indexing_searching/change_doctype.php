@@ -88,17 +88,6 @@ if ($_SESSION['mail_priorities_attribute'][$fakeId] != 'false') {
     $priorityDelay = $_SESSION['mail_priorities_attribute'][$fakeId];
 }
 
-// Process limit date calcul
-//Bug fix if delay process is disabled in services
-if ($core->service_is_enabled('param_mlb_doctypes')) {
-    $stmt = $db->query('SELECT process_delay FROM '
-        .$_SESSION['tablename']['mlb_doctype_ext'].' WHERE type_id = ?',
-        array($_REQUEST['type_id'])
-    );
-
-    $res = $stmt->fetchObject();
-    $delay = $res->process_delay;
-}
 $mandatory_indexes = $type->get_mandatory_indexes($_REQUEST['type_id'], $coll_id);
 $indexes = $type->get_indexes($_REQUEST['type_id'], $coll_id);
 

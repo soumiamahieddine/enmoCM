@@ -120,7 +120,6 @@ abstract class business_app_tools_Abstract extends Database
             $tablename = $xmlconfig->TABLENAME;
             $_SESSION['tablename']['doctypes_first_level']  = (string) $tablename->doctypes_first_level;
             $_SESSION['tablename']['doctypes_second_level'] = (string) $tablename->doctypes_second_level;
-            $_SESSION['tablename']['mlb_doctype_ext']       = (string) $tablename->mlb_doctype_ext;
             $_SESSION['tablename']['doctypes_indexes']      = (string) $tablename->doctypes_indexes;
             $_SESSION['tablename']['saved_queries']         = (string) $tablename->saved_queries;
             $_SESSION['tablename']['contacts_v2']           = (string) $tablename->contacts_v2;

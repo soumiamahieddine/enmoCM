@@ -206,8 +206,6 @@ define('_ADMIN', 'Administration');
 define('_ADV_SEARCH_MLB', 'Rechercher');
 define('_INDEXING_MLB', 'Enregistrer un courrier');
 define('_SEARCH_CONTACTS', 'Rechercher un contact');
-define('_PARAM_MLB_DOCTYPES', 'Paramétrage des types de document ');
-define('_PARAM_MLB_DOCTYPES_DESC', 'Paramétrage des types de document ');
 define('_WELCOME_TEXT_LOAD', "Chargement texte page d'accueil");
 define('_QUICKLAUNCH', 'Raccourcis');
 define('_MY_CONTACTS', 'Créer des contacts depuis indexation/qualification');

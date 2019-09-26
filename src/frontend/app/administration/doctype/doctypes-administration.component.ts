@@ -160,7 +160,7 @@ export class DoctypesAdministrationComponent implements OnInit {
                 .subscribe((dataValue: any) => {
                     this.currentType  = dataValue['doctype'];
                     this.secondLevels = dataValue['secondLevel'];
-                    this.processModes = dataValue['processModes'];
+                    this.processModes = ['NORMAL', 'SVA', 'SVR'];
                     this.models       = dataValue['models'];
                     this.loadIndexesTable();
 
@@ -426,7 +426,7 @@ export class DoctypesAdministrationComponent implements OnInit {
                 this.folderTypes  = data['folderTypes'];
                 this.firstLevels  = data['firstLevel'];
                 this.secondLevels = data['secondLevel'];
-                this.processModes = data['processModes'];
+                this.processModes = ['NORMAL', 'SVA', 'SVR'];
                 this.models       = data['models'];
                 if(mode == 'doctype'){
                     this.currentType.indexes = data['indexes'];

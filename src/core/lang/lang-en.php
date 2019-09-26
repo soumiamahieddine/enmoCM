@@ -206,8 +206,6 @@ define('_ADMIN', 'Administration');
 define('_ADV_SEARCH_MLB', 'Search');
 define('_INDEXING_MLB', 'Save a mail/document');
 define('_SEARCH_CONTACTS', 'Search a contact');
-define('_PARAM_MLB_DOCTYPES', 'Documents types configuration ');
-define('_PARAM_MLB_DOCTYPES_DESC', 'Doctypes configuration ');
 define('_WELCOME_TEXT_LOAD', 'Text loading of the home page');
 define('_QUICKLAUNCH', 'Short cut');
 define('_MY_CONTACTS', 'Create contacts from indexation/title');

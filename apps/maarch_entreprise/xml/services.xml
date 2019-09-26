@@ -123,31 +123,6 @@
     <angular>true</angular>
   </SERVICE>
   <SERVICE>
-    <id>param_mlb_doctypes</id>
-    <name>_PARAM_MLB_DOCTYPES</name>
-    <comment>_PARAM_MLB_DOCTYPES_DESC</comment>
-    <servicepage>param_mlb_doctypes.php</servicepage>
-    <servicetype>use</servicetype>
-    <system_service>true</system_service>
-    <enabled>true</enabled>
-    <WHEREAMIUSED>
-      <page>doctype_up</page>
-      <nature>include</nature>
-    </WHEREAMIUSED>
-    <WHEREAMIUSED>
-      <page>doctype_info</page>
-      <nature>include</nature>
-    </WHEREAMIUSED>
-    <WHEREAMIUSED>
-      <page>doctype_load_db</page>
-      <nature>include</nature>
-    </WHEREAMIUSED>
-    <WHEREAMIUSED>
-      <page>doctype_del</page>
-      <nature>include</nature>
-    </WHEREAMIUSED>
-  </SERVICE>
-  <SERVICE>
     <id>quicklaunch</id>
     <name>_QUICKLAUNCH</name>
     <comment>_QUICKLAUNCH</comment>

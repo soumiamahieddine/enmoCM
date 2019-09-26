@@ -134,14 +134,6 @@ $app->post('/customFields', \CustomField\controllers\CustomFieldController::clas
 $app->put('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':update');
 $app->delete('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':delete');
 
-//IndexingModels
-$app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
-$app->get('/indexingModels/entities', \IndexingModel\controllers\IndexingModelController::class . ':getEntities');
-$app->get('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':getById');
-$app->post('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':create');
-$app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':update');
-$app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
-
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
 $app->post('/docservers', \Docserver\controllers\DocserverController::class . ':create');
@@ -231,6 +223,19 @@ $app->get('/home', \Home\controllers\HomeController::class . ':get');
 $app->get('/home/lastRessources', \Home\controllers\HomeController::class . ':getLastRessources');
 $app->get('/home/maarchParapheurDocuments', \Home\controllers\HomeController::class . ':getMaarchParapheurDocuments');
 
+//Indexing
+$app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
+$app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
+$app->get('/indexing/processLimitDate', \Resource\controllers\IndexingController::class . ':getProcessLimitDate');
+
+//IndexingModels
+$app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
+$app->get('/indexingModels/entities', \IndexingModel\controllers\IndexingModelController::class . ':getEntities');
+$app->get('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':getById');
+$app->post('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':create');
+$app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':update');
+$app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
+
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
@@ -308,10 +313,6 @@ $app->get('/categories', \Resource\controllers\ResController::class . ':getCateg
 $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
 $app->post('/resources/checkFileUpload', \Resource\controllers\StoreController::class . ':checkFileUpload');
-
-//Indexing
-$app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
-$app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');

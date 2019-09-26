@@ -15,7 +15,6 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
-use Doctype\models\DoctypeExtModel;
 use Doctype\models\DoctypeIndexesModel;
 use Doctype\models\TemplateDoctypeModel;
 use Group\models\ServiceModel;
@@ -53,7 +52,6 @@ class DoctypeController
             }
         }
 
-        $doctypeExt = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
         $template   = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
 
         if (empty($template)) {
@@ -78,14 +76,13 @@ class DoctypeController
             }
         }
 
-        $obj['doctype']      = array_merge($obj['doctype'], $doctypeExt, $template, ['indexes' => $indexes]);
+        $obj['doctype']      = array_merge($obj['doctype'], $template, ['indexes' => $indexes]);
         $obj['secondLevel']  = SecondLevelModel::get([
             'select'    => ['doctypes_second_level_id', 'doctypes_second_level_label'],
             'where'     => ['enabled = ?'],
             'data'      => ['Y'],
             'order_by'  => ['doctypes_second_level_label asc']
         ]);
-        $obj['processModes'] = DoctypeModel::getProcessMode();
         $obj['models']       = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
 
         return $response->withJson($obj);
@@ -117,21 +114,16 @@ class DoctypeController
         $data['doctypes_first_level_id'] = $secondLevelInfo['doctypes_first_level_id'];
     
         $doctypeId = DoctypeModel::create([
-            'coll_id'                     => 'letterbox_coll',
-            'description'                 => $data['description'],
-            'doctypes_first_level_id'     => $data['doctypes_first_level_id'],
-            'doctypes_second_level_id'    => $data['doctypes_second_level_id'],
-            'retention_final_disposition' => $data['retention_final_disposition'],
-            'retention_rule'              => $data['retention_rule'],
-            'duration_current_use'        => $data['duration_current_use']
-        ]);
-
-        DoctypeExtModel::create([
-            "type_id"       => $doctypeId,
-            "process_delay" => $data['process_delay'],
-            "delay1"        => $data['delay1'],
-            "delay2"        => $data['delay2'],
-            "process_mode"  => $data['process_mode'],
+            'description'                   => $data['description'],
+            'doctypes_first_level_id'       => $data['doctypes_first_level_id'],
+            'doctypes_second_level_id'      => $data['doctypes_second_level_id'],
+            'retention_final_disposition'   => $data['retention_final_disposition'],
+            'retention_rule'                => $data['retention_rule'],
+            'duration_current_use'          => $data['duration_current_use'],
+            "process_delay"                 => $data['process_delay'],
+            "delay1"                        => $data['delay1'],
+            "delay2"                        => $data['delay2'],
+            "process_mode"                  => $data['process_mode'],
         ]);
 
         TemplateDoctypeModel::create([
@@ -193,22 +185,18 @@ class DoctypeController
         $data['doctypes_first_level_id'] = $secondLevelInfo['doctypes_first_level_id'];
     
         DoctypeModel::update([
-            'type_id'                     => $data['type_id'],
-            'coll_id'                     => 'letterbox_coll',
-            'description'                 => $data['description'],
-            'doctypes_first_level_id'     => $data['doctypes_first_level_id'],
-            'doctypes_second_level_id'    => $data['doctypes_second_level_id'],
-            'retention_final_disposition' => $data['retention_final_disposition'],
-            'retention_rule'              => $data['retention_rule'],
-            'duration_current_use'        => $data['duration_current_use']
-        ]);
-
-        DoctypeExtModel::update([
-            "type_id"       => $data['type_id'],
-            "process_delay" => $data['process_delay'],
-            "delay1"        => $data['delay1'],
-            "delay2"        => $data['delay2'],
-            "process_mode"  => $data['process_mode'],
+            'type_id'                       => $data['type_id'],
+            'coll_id'                       => 'letterbox_coll',
+            'description'                   => $data['description'],
+            'doctypes_first_level_id'       => $data['doctypes_first_level_id'],
+            'doctypes_second_level_id'      => $data['doctypes_second_level_id'],
+            'retention_final_disposition'   => $data['retention_final_disposition'],
+            'retention_rule'                => $data['retention_rule'],
+            'duration_current_use'          => $data['duration_current_use'],
+            "process_delay"                 => $data['process_delay'],
+            "delay1"                        => $data['delay1'],
+            "delay2"                        => $data['delay2'],
+            "process_mode"                  => $data['process_mode']
         ]);
 
         TemplateDoctypeModel::update([
@@ -340,7 +328,6 @@ class DoctypeController
     {
         $doctypeInfo = DoctypeModel::getById(['id' => $aArgs['type_id']]);
         DoctypeModel::delete(['type_id' => $aArgs['type_id']]);
-        DoctypeExtModel::delete(["type_id" => $aArgs['type_id']]);
         TemplateDoctypeModel::delete(["type_id" => $aArgs['type_id']]);
         DoctypeIndexesModel::delete(["type_id" => $aArgs['type_id']]);
 

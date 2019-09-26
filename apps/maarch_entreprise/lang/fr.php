@@ -3558,12 +3558,6 @@ if (!defined('_SETUP')) {
     define('_SETUP', 'Configurer');
 }
 
-if (!defined('_PARAM_MLB_DOCTYPES')) {
-    define('_PARAM_MLB_DOCTYPES', 'Paramétrage des types de document ');
-}
-if (!defined('_PARAM_MLB_DOCTYPES_DESC')) {
-    define('_PARAM_MLB_DOCTYPES_DESC', 'Paramétrage des types de document ');
-}
 if (!defined('_WELCOME_TEXT_LOAD')) {
     define('_WELCOME_TEXT_LOAD', "Chargement texte page d'accueil");
 }

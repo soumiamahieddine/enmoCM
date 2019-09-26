@@ -15,6 +15,7 @@
 namespace Resource\controllers;
 
 use Action\models\ActionModel;
+use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Group\models\GroupModel;
 use Respect\Validation\Validator;
@@ -122,6 +123,18 @@ class IndexingController
         }
 
         return $response->withJson(['entities' => $entities]);
+    }
+
+    public function getProcessLimitDate(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!empty($queryParams['doctype'])) {
+            $obj['doctype'] = DoctypeModel::getById(['id' => $queryParams['doctype']]);
+        }
+
+
+        return $response->withJson(['actions' => $actions]);
     }
 
     public static function getEntitiesChildrenLevel($aArgs = [])

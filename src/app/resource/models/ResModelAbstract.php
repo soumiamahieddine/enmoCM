@@ -14,6 +14,7 @@
 
 namespace Resource\models;
 
+use Doctype\models\DoctypeModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
@@ -273,13 +274,8 @@ abstract class ResModelAbstract
 
         $processDelay = 30;
         if (!empty($typeId)) {
-            $doctypeExt = DatabaseModel::select([
-                'select'    => ['process_delay'],
-                'table'     => ['mlb_doctype_ext'],
-                'where'     => ['type_id = ?'],
-                'data'      => [$typeId]
-            ]);
-            $processDelay = $doctypeExt[0]['process_delay'];
+            $doctype = DoctypeModel::getById(['select' => ['process_delay'], 'id' => $typeId]);
+            $processDelay = $doctype['process_delay'];
         }
 
         if (!empty($aArgs['admissionDate'])) {
