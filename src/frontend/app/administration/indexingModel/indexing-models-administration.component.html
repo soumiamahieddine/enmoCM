@@ -58,8 +58,7 @@
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
-                            <button mat-icon-button color="warn" [disabled]="element.is_system == 'Y'"
-                                matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();delete(element)">
+                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();delete(element)" [disabled]="element.default">
                                 <mat-icon class="fa fa-trash-alt fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>
