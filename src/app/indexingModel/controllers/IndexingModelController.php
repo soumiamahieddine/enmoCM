@@ -73,7 +73,7 @@ class IndexingModelController
 
         if (ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             $body['private'] = empty($body['private']) ? 'false' : 'true';
-            $defaultModel = IndexingModelModel::get(['select' => [1], 'where' => ['default = ?'], 'data' => ['true']]);
+            $defaultModel = IndexingModelModel::get(['select' => [1], 'where' => ['"default" = ?'], 'data' => ['true']]);
             $body['default'] = empty($defaultModel) ? 'true' : 'false';
         } else {
             $body['private'] = 'true';
