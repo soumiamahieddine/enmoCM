@@ -62,6 +62,7 @@ export class IndexationComponent implements OnInit {
                 tap((data: any) => {
                     //
                     this.indexingModels = data.indexingModels;
+                    console.log(this.indexingModels.length);
                     this.currentIndexingModel = this.indexingModels.filter(model => model.default === true)[0];
                 }),
                 finalize(() => this.loading = false),

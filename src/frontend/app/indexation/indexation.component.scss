@@ -59,3 +59,17 @@
     padding-left: 40px;
     padding-right: 40px;
 }
+
+.emptyModel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 25px;
+    opacity: 0.3;
+    font-weight: bold;
+}
