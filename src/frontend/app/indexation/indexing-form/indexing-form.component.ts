@@ -350,6 +350,14 @@ export class IndexingFormComponent implements OnInit {
                             elem.startDate = 'docDate';
                             elem.endDate = '_TODAY';
 
+                        } else if (elem.identifier === 'initiator' && !this.adminMode) {
+                            elem.values = this.headerService.user.entities.map((entity: any) => {
+                                return {
+                                    id: entity.id,
+                                    label: entity.entity_label
+                                }
+                            });
+
                         } else if (elem.identifier === 'processLimitDate') {
                             elem.startDate = '_TODAY';
                             elem.endDate = '';
