@@ -1122,4 +1122,5 @@ export const LANG_EN = {
     "initiatorEntityAlt" : "Initiator entity",
     "autocompleteInput" : "Autocomplete input",
     "typeEnterToCreate" : "Type on <b>enter</b> to create element",
+    "ged_doc" : "GED Document",
 };

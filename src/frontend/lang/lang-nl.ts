@@ -1148,4 +1148,5 @@ export const LANG_NL = {
     "initiatorEntityAlt" : "Initiator entity", //_TO_TRANSLATE 
     "autocompleteInput" : "Autocomplete input", //_TO_TRANSLATE
     "typeEnterToCreate" : "Type on <b>enter</b> to create element", //_TO_TRANSLATE
+    "ged_doc" : "GED Document", //_TO_TRANSLATE
 };

@@ -1159,4 +1159,5 @@ export const LANG_FR = {
     "initiatorEntityAlt" : "Entité initiatrice",
     "autocompleteInput" : "Auto-completion",
     "typeEnterToCreate" : "Taper sur <b>entrée</b> pour créer l'element",
+    "ged_doc" : "Document GED",
 };

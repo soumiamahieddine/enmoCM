@@ -81,7 +81,7 @@
                                         <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="!arrFormControl[field.identifier].value">
                                         </mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
-                                        <button mat-button color="warn" matSuffix mat-icon-button *ngIf="arrFormControl[field.identifier].value"
+                                        <button mat-button color="warn" matSuffix mat-icon-button *ngIf="arrFormControl[field.identifier].value && !arrFormControl[field.identifier].disabled"
                                             (click)="$event.stopPropagation();arrFormControl[field.identifier].reset();" title="Effacer la valeur">
                                             <mat-icon color="warn"
                                                 class="fa fa-calendar-times">

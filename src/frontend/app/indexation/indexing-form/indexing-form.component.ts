@@ -625,6 +625,7 @@ export class IndexingFormComponent implements OnInit {
             this.arrFormControl[field.identifier].disable();
             this.arrFormControl[field.identifier].setValue(new Date());
         } else {
+            this.arrFormControl[field.identifier].setValue('');
             this.arrFormControl[field.identifier].enable();
         }
     }
