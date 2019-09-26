@@ -9,7 +9,7 @@ import { tap, catchError, finalize, exhaustMap, map } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { FormControl, Validators, FormGroup, ValidationErrors } from '@angular/forms';
+import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 
 @Component({
     selector: 'app-indexing-form',
@@ -193,7 +193,7 @@ export class IndexingFormComponent implements OnInit {
                     this.fieldCategories.forEach(element => {
                         this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
                         this['indexingModels_' + element].forEach((field: any) => {
-                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: false }, field.mandatory ? [Validators.required] : []);
+                            this.initValidator(field);
                         });
                     });
                     this.initElemForm();
@@ -215,7 +215,7 @@ export class IndexingFormComponent implements OnInit {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            this.arrFormControl[event.item.data.identifier] = new FormControl({ value: '', disabled: false }, event.item.data.mandatory ? [Validators.required] : []);
+            this.initValidator(event.item.data);
             transferArrayItem(event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
@@ -491,7 +491,7 @@ export class IndexingFormComponent implements OnInit {
                     this.fieldCategories.forEach(element => {
                         this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
                         this.indexingModelsCore.forEach(field => {
-                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false }, (field.mandatory && !this.adminMode) ? [Validators.required] : []);
+                            this.initValidator(field);
                         });
                     });
                     this.notify.error("Champs introuvables! les données de base ont été chargés");
@@ -538,7 +538,7 @@ export class IndexingFormComponent implements OnInit {
 
                         if (fieldExist) {
                             this['indexingModels_' + field.unit].push(field);
-                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false }, (field.mandatory && !this.adminMode) ? [Validators.required] : []);
+                            this.initValidator(field);
                         } else {
                             this.notify.error("Le champ " + field.identifier + " n'existe pas !");
                         }
@@ -557,6 +557,33 @@ export class IndexingFormComponent implements OnInit {
         ).subscribe();
     }
 
+    initValidator(field: any) {
+        console.log(field);
+        let valArr : ValidatorFn[] = [];
+
+        this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false });
+
+        if (field.type === 'integer') {
+            valArr.push(this.regexValidator(new RegExp('[+-]?([0-9]*[.])?[0-9]+'), { 'floatNumber': '' }));
+        }
+
+        if (field.mandatory && !this.adminMode) {
+            valArr.push(Validators.required);
+        }
+        
+        this.arrFormControl[field.identifier].setValidators(valArr);
+    }
+
+    regexValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (!control.value) {
+                return null;
+            }
+            const valid = regex.test(control.value);
+            return valid ? null : error;
+        };
+    }
+
     isValidForm() {
         if (!this.indexingFormGroup.valid) {
             Object.keys(this.indexingFormGroup.controls).forEach(key => {
@@ -564,9 +591,9 @@ export class IndexingFormComponent implements OnInit {
                 const controlErrors: ValidationErrors = this.indexingFormGroup.get(key).errors;
                 if (controlErrors != null) {
                     this.indexingFormGroup.controls[key].markAsTouched();
-                    /*Object.keys(controlErrors).forEach(keyError => {
+                    Object.keys(controlErrors).forEach(keyError => {
                         console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-                    });*/
+                    });
                 }
             });
         }

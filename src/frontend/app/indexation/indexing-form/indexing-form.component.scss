@@ -179,6 +179,9 @@
         .menu-label {
             display: flex;
             flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
         }
         
         .menu-icon {
@@ -262,6 +265,7 @@
     border-radius: 30px;
 
     border: solid 1px white;
+    min-height: auto;
 
     .mat-menu-content {
         padding-top: 0px;
