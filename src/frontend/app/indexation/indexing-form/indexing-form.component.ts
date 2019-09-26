@@ -558,7 +558,6 @@ export class IndexingFormComponent implements OnInit {
     }
 
     initValidator(field: any) {
-        console.log(field);
         let valArr : ValidatorFn[] = [];
 
         this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false });
@@ -591,9 +590,9 @@ export class IndexingFormComponent implements OnInit {
                 const controlErrors: ValidationErrors = this.indexingFormGroup.get(key).errors;
                 if (controlErrors != null) {
                     this.indexingFormGroup.controls[key].markAsTouched();
-                    Object.keys(controlErrors).forEach(keyError => {
+                    /*Object.keys(controlErrors).forEach(keyError => {
                         console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-                    });
+                    });*/
                 }
             });
         }

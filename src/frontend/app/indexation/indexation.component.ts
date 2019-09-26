@@ -60,10 +60,6 @@ export class IndexationComponent implements OnInit {
             this.currentGroupId = params['groupId'];
             this.http.get("../../rest/indexingModels").pipe(
                 tap((data: any) => {
-                    setTimeout(() => {
-                        console.log(this.headerService);
-                    }, 800);
-                    
                     this.indexingModels = data.indexingModels;
                     this.currentIndexingModel = this.indexingModels.filter(model => model.default === true)[0];
                 }),
