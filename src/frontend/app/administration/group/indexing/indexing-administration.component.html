@@ -3,10 +3,12 @@
 </div>
 <div class="row" style="margin:0px;">
     <div class="col-md-12">
-        <div *ngIf="!indexingInfo.canIndex" class="alert-message alert-message-danger" role="alert" style="margin-top: 30px;">{{lang.warnIndex}} 
+        <div *ngIf="!indexingInfo.canIndex" class="alert-message alert-message-danger" role="alert"
+            style="margin-top: 30px;">{{lang.warnIndex}}
             <button mat-raised-button (click)="toggleIndex(!indexingInfo.canIndex)">{{lang.enableIndex}}</button>
         </div>
-        <button *ngIf="indexingInfo.canIndex" color="warn" mat-raised-button (click)="toggleIndex(!indexingInfo.canIndex)">{{lang.disableIndex}}</button>
+        <button *ngIf="indexingInfo.canIndex" color="warn" mat-raised-button
+            (click)="toggleIndex(!indexingInfo.canIndex)">{{lang.disableIndex}}</button>
     </div>
     <div class="col-md-8" style="margin-top:20px;">
         <div class="formType">
@@ -16,11 +18,19 @@
             <mat-hint class="infoActions">
                 {{lang.actionsInfo}}
             </mat-hint>
-            <plugin-autocomplete [labelPlaceholder]="'Associer une nouvelle action'" [labelList]="'Action(s) disponible(s)'"
-                [datas]="actionList" [targetSearchKey]="'label_action'" (triggerEvent)="addAction($event)"></plugin-autocomplete>
-            <mat-list class="selectedActionList" role="list">
-                <mat-list-item class="selectedAction" role="listitem" *ngFor="let action of indexingInfo.actions;let i=index">
-                    <div class="actionLabel">{{action.label_action}}</div>
+            <plugin-autocomplete [labelPlaceholder]="'Associer une nouvelle action'"
+                [labelList]="'Action(s) disponible(s)'" [datas]="actionList" [targetSearchKey]="'label_action'"
+                (triggerEvent)="addAction($event)"></plugin-autocomplete>
+            <mat-list cdkDropList [cdkDropListData]="indexingInfo.actions" (cdkDropListDropped)="drop($event)"
+                class="selectedActionList" role="list">
+                <mat-list-item class="selectedAction" role="listitem"
+                    *ngFor="let action of indexingInfo.actions;let i=index" [cdkDragData]="action" cdkDrag
+                    cdkDragLockAxis="y">
+                    <div>
+                        <i class="fas fa-bars fa-2x" color="primary" style="cursor: move" cdkDragHandle></i>
+                    </div>
+                    <div class="actionLabel">
+                        {{action.label_action}}</div>
                     <div>
                         <button mat-icon-button color="warn" (click)="removeAction(i)">
                             <mat-icon class="fa fa-trash"></mat-icon>
@@ -38,7 +48,8 @@
             </div>
             <mat-form-field appearance="outline">
                 <mat-icon color="primary" class="fa fa-search" matPrefix></mat-icon>
-                <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
+                <input matInput id="jstree_search" name="jstree_search" type="text"
+                    placeholder="{{lang.searchEntities}}">
             </mat-form-field>
             <div #jstree id="jstree"></div>
         </div>
