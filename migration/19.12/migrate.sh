@@ -9,3 +9,4 @@ php ./migrateMenuEntities.php
 php ./exportCases.php
 php ./exportFileplans.php
 php ./exportFolders.php
+php ./removeProcessModes.php
