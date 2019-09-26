@@ -402,6 +402,7 @@ export class IndexingFormComponent implements OnInit {
                                 }
                             });
                             elem.values = arrValues;
+                            elem.event = 'calcLimitDate';
                         }
                     });
                 });
@@ -483,7 +484,7 @@ export class IndexingFormComponent implements OnInit {
             }),
             exhaustMap((data) => this.http.get("../../rest/indexingModels/" + indexModelId)),
             tap((data: any) => {
-                
+
                 this.currentCategory = data.indexingModel.category;
                 let fieldExist: boolean;
                 if (data.indexingModel.fields.length === 0) {
@@ -600,5 +601,27 @@ export class IndexingFormComponent implements OnInit {
         } else {
             this.arrFormControl[field.identifier].enable();
         }
+    }
+
+    launchEvent(value: any, field: any) {
+        this[field.event](field.identifier, value);
+    }
+
+    calcLimitDate(identifier: string, value: any) {
+
+        // TO DO: REMOVE AFTER BACK
+        if (this.arrFormControl['processLimitDate'] !== undefined) {
+            this.arrFormControl['processLimitDate'].setValue(new Date());
+        }
+        
+        /*this.http.get("../../rest/doctypes/types/" + value + '/getLimitDate').pipe(
+            tap((data: any) => {
+                this.arrFormControl['processLimitDate'].setValue(data);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();*/
     }
 }

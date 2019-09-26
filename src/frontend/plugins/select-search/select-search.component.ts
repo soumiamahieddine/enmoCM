@@ -2,7 +2,8 @@ import {
     AfterViewInit, ChangeDetectorRef,
     Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, QueryList,
     ViewChild,
-    Renderer2
+    Renderer2,
+    Output
 } from '@angular/core';
 import { ControlValueAccessor, FormControl } from '@angular/forms';
 import { MatOption, MatSelect } from '@angular/material';
@@ -26,6 +27,11 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     @Input('datas') datas: any;
 
     @Input('showResetOption') showResetOption: boolean;
+
+    /**
+     * Catch external event after select an element in autocomplete
+     */
+    @Output('afterSelected') afterSelected = new EventEmitter();
 
     /** Reference to the search input field */
     @ViewChild('searchSelectInput', { read: ElementRef, static: true }) searchSelectInput: ElementRef;
@@ -121,10 +127,10 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
             
         }, 800);*/
         this.filteredDatas = this.formControlSearch.valueChanges
-        .pipe(
-            startWith(''),
-            map(value => this._filter(value))
-        );
+            .pipe(
+                startWith(''),
+                map(value => this._filter(value))
+            );
 
 
         // this.initMultipleHandling();
@@ -231,8 +237,10 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
             .pipe(takeUntil(this._onDestroy))
             .subscribe(() => {
                 // note: this is hacky, but currently there is no better way to do this
-                this.searchSelectInput.nativeElement.parentElement.parentElement
-                    .parentElement.parentElement.parentElement.classList.add(overlayClass);
+                if (this.searchSelectInput !== undefined) {
+                    this.searchSelectInput.nativeElement.parentElement.parentElement
+                        .parentElement.parentElement.parentElement.classList.add(overlayClass);
+                }
             });
 
         this.overlayClassSet = true;
@@ -286,4 +294,9 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
         }
     }
 
+    launchEvent(ev: any) {
+        if (this.afterSelected !== undefined) {
+            this.afterSelected.emit(ev.value);
+        }
+    }
 }

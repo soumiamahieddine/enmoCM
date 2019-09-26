@@ -61,7 +61,7 @@
                                 <ng-container *ngIf="field.type === 'select'">
                                     <plugin-select-search [showResetOption]="adminMode"
                                         [placeholderLabel]="!adminMode ? lang.chooseValue : lang.defaultValue"
-                                        [formControlSelect]="arrFormControl[field.identifier]" [datas]="field.values"
+                                        [formControlSelect]="arrFormControl[field.identifier]" [datas]="field.values" (afterSelected)="launchEvent($event, field)"
                                         style="width:100%;"></plugin-select-search>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'date'">
