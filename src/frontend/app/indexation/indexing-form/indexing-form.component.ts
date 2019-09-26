@@ -430,9 +430,6 @@ export class IndexingFormComponent implements OnInit {
                 } else if (elem.identifier === 'priority') {
                     arrayRoutes.push(this.http.get('../../rest/priorities'));
 
-                } else if (elem.identifier === 'category_id') {
-                    arrayRoutes.push(this.http.get('../../rest/categories'));
-
                 } else if (elem.identifier === 'doctype') {
                     arrayRoutes.push(this.http.get('../../rest/doctypes'));
                 }
@@ -603,15 +600,5 @@ export class IndexingFormComponent implements OnInit {
         } else {
             this.arrFormControl[field.identifier].enable();
         }
-    }
-
-
-    // TO DO
-    _handleKeydown(event: KeyboardEvent) {
-        if (event.keyCode === 32) {
-            // do not propagate spaces to MatSelect, as this would select the currently active option
-            event.stopPropagation();
-        }
-
     }
 }
