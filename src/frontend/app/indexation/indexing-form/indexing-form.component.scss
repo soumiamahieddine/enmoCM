@@ -362,6 +362,7 @@
 }
 
 .radio-form {
+    padding-left: 20px;
     display: flex;
     width: 100%;
 
@@ -374,6 +375,17 @@
         }
     }
 
+}
+
+.input-radio {
+    ::ng-deep.mat-form-field-flex {
+        height: 55px;
+    }
+
+    ::ng-deep.mat-form-field-label {
+        top: 0px;
+        font-size: 12px;
+    } 
 }
 
 .disabled {
@@ -424,10 +436,11 @@
 }
 
 .categoryLabel {
+    letter-spacing: 1px;
     font-size: 13px;
     @media (max-width: 768px) {
         font-size: 1em;
     }
-    color: $secondary;
+    color: $primary;
     font-weight: bold;
 }

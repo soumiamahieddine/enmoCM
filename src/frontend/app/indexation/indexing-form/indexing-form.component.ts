@@ -156,6 +156,7 @@ export class IndexingFormComponent implements OnInit {
     arrFormControl: any = {};
 
     currentCategory: string = '';
+    currentPriorityColor: string = '';
 
     constructor(
         public http: HttpClient,
@@ -302,6 +303,7 @@ export class IndexingFormComponent implements OnInit {
             exhaustMap(() => this.initializeRoutes()),
             tap((data) => {
                 this.arrFormControl['mail­tracking'].setValue(false);
+                this.currentPriorityColor = '';
 
                 this.fieldCategories.forEach(element => {
                     this['indexingModels_' + element].forEach((elem: any) => {
@@ -367,6 +369,7 @@ export class IndexingFormComponent implements OnInit {
                             elem.values = data.categories;
 
                         } else if (elem.identifier === 'priority') {
+                            elem.event = 'setPriorityColor';
                             elem.values = data.priorities;
                         } else if (elem.identifier === 'doctype') {
                             let title = '';
@@ -633,10 +636,10 @@ export class IndexingFormComponent implements OnInit {
     }
 
     launchEvent(value: any, field: any) {
-        this[field.event](field.identifier, value);
+        this[field.event](field, value);
     }
 
-    calcLimitDate(identifier: string, value: any) {
+    calcLimitDate(field: any, value: any) {
         
         this.http.get("../../rest/indexing/processLimitDate", { params: { "doctype": value } }).pipe(
             tap((data: any) => {
@@ -652,5 +655,9 @@ export class IndexingFormComponent implements OnInit {
 
     toggleMailTracking() {
         this.arrFormControl['mail­tracking'].setValue(!this.arrFormControl['mail­tracking'].value);
+    }
+
+    setPriorityColor(field: any, value: any) {
+        this.currentPriorityColor = field.values.filter((fieldVal: any) => fieldVal.id === value).map((fieldVal: any) => fieldVal.color)[0];
     }
 }
