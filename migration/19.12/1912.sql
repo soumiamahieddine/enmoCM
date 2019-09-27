@@ -152,7 +152,7 @@ CREATE TABLE indexing_models_fields
   identifier text NOT NULL,
   mandatory BOOLEAN NOT NULL,
   default_value json,
-  unit text,
+  unit text NOT NULL,
   CONSTRAINT indexing_models_fields_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

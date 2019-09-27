@@ -224,11 +224,6 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
     $frmStr .= '<div style="display:table;width:100%;">';
     $frmStr .= '<div style="display:table-cell;vertical-align:middle;">';
-    $frmStr .= '<select id="indexing_models_select" data-placeholder="'._USE_MODEL_MAILING.'" onchange="loadIndexingModel(\''.$actionId.'\');"><option value="none"></option>';
-    while ($resIndexingModels = $stmt->fetchObject()) {
-        $frmStr .= '<option value="'.$resIndexingModels->id.'">'.$resIndexingModels->label.'</option>';
-    }
-    $frmStr .= '</select>';
     $frmStr .= '</div>';
     $frmStr .= '<div style="display:table-cell;text-align:right;vertical-align:middle;width: 12%;">';
     $frmStr .= '<a style="cursor:pointer;"><i id="action1_indexingmodels" class="fa fa-plus fa-2x" onclick="saveIndexingModel();"></i></a> <a id="delete_indexingmodels" style="cursor:pointer;"><i id="action2_indexingmodels" style="visibility:hidden;" class="fa fa-trash-alt fa-2x" onclick="delIndexingModel();"></i></a>';
