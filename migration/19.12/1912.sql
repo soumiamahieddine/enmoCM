@@ -179,9 +179,13 @@ DO $$ BEGIN
 	  ALTER TABLE doctypes ADD COLUMN delay2 INTEGER;
 	  ALTER TABLE doctypes ADD COLUMN process_mode CHARACTER VARYING(256);
 	  UPDATE doctypes SET process_delay = (SELECT process_delay FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
+    UPDATE doctypes SET process_delay = 30 WHERE process_delay is null;
 	  UPDATE doctypes SET delay1 = (SELECT delay1 FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
+    UPDATE doctypes SET delay1 = 14 WHERE delay1 is null;
 	  UPDATE doctypes SET delay2 = (SELECT delay2 FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
+    UPDATE doctypes SET delay2 = 1 WHERE delay2 is null;
 	  UPDATE doctypes SET process_mode = (SELECT process_mode FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
+    UPDATE doctypes SET process_mode = 'NORMAL' WHERE process_mode is null;
 	  ALTER TABLE doctypes ALTER COLUMN process_delay SET NOT NULL;
 	  ALTER TABLE doctypes ALTER COLUMN delay1 SET NOT NULL;
 	  ALTER TABLE doctypes ALTER COLUMN delay2 SET NOT NULL;
@@ -265,7 +269,6 @@ DROP TABLE IF EXISTS foldertypes;
 DROP TABLE IF EXISTS foldertypes_doctypes;
 DROP TABLE IF EXISTS foldertypes_doctypes_level1;
 DROP TABLE IF EXISTS foldertypes_indexes;
-DROP TABLE IF EXISTS mlb_doctype_ext;
 ALTER TABLE doctypes DROP COLUMN IF EXISTS coll_id;
 DROP TABLE IF EXISTS mlb_doctype_ext;
 
