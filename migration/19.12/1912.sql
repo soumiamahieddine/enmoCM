@@ -182,10 +182,10 @@ DO $$ BEGIN
 	  UPDATE doctypes SET delay1 = (SELECT delay1 FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
 	  UPDATE doctypes SET delay2 = (SELECT delay2 FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
 	  UPDATE doctypes SET process_mode = (SELECT process_mode FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
-	  ALTER TABLE doctypes ALTER COLUMN process_delay SET DEFAULT NULL;
-	  ALTER TABLE doctypes ALTER COLUMN delay1 SET DEFAULT NULL;
-	  ALTER TABLE doctypes ALTER COLUMN delay2 SET DEFAULT NULL;
-	  ALTER TABLE doctypes ALTER COLUMN process_mode SET DEFAULT NULL;
+	  ALTER TABLE doctypes ALTER COLUMN process_delay SET NOT NULL;
+	  ALTER TABLE doctypes ALTER COLUMN delay1 SET NOT NULL;
+	  ALTER TABLE doctypes ALTER COLUMN delay2 SET NOT NULL;
+	  ALTER TABLE doctypes ALTER COLUMN process_mode SET NOT NULL;
   END IF;
 END$$;
 

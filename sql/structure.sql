@@ -73,6 +73,10 @@ CREATE TABLE doctypes
   retention_final_disposition character varying(255) DEFAULT NULL,
   retention_rule character varying(15) DEFAULT NULL,
   duration_current_use integer,
+  process_delay INTEGER NOT NULL,
+  delay1 INTEGER NOT NULL,
+  delay2 INTEGER NOT NULL,
+  process_mode INTEGER NOT NULL,
   CONSTRAINT doctypes_pkey PRIMARY KEY (type_id)
 )
 WITH (OIDS=FALSE);
