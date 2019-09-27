@@ -74,6 +74,11 @@
 .fieldLabel,
 .fieldInput {
     font-size: 13px;
+
+    @media (max-width: 768px) {
+        font-size: 1em;
+    }
+
     flex: 1;
 }
 
@@ -146,16 +151,18 @@
         height: auto;
     }
 }
+
 .opt-group {
-    font-weight: bold; 
+    font-weight: bold;
 }
 
 .smallInput {
     font-size: 11px;
     padding-left: 20px;
     padding-right: 20px;
+
     ::ng-deep.mat-form-field-infix {
-        padding : 0px;
+        padding: 0px;
         padding-bottom: 5px;
     }
 }
@@ -165,17 +172,23 @@
     border: solid 1px white;
     color: white;
     border-radius: 30px;
-    padding: 5px;
     padding-left: 20px;
     padding-right: 20px;
     width: 240px;
+    height: 45px;
+
+    @media (max-width: 768px) {
+        width: auto;
+    }
+
     transition: all 0.1s;
+
     ::ng-deep.mat-button-wrapper {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
-        
+
         .menu-label {
             display: flex;
             flex: 1;
@@ -183,7 +196,7 @@
             text-overflow: ellipsis;
             margin-right: 10px;
         }
-        
+
         .menu-icon {
             display: flex;
         }
@@ -192,6 +205,11 @@
 
 .button-form-primary-alt {
     font-size: 13px;
+
+    @media (max-width: 768px) {
+        font-size: 1em;
+    }
+
     background: white;
     border: solid 1px $primary;
     color: $primary;
@@ -212,12 +230,12 @@
             display: flex;
             flex: 1;
         }
-        
+
         .menu-icon {
             display: flex;
         }
     }
-    
+
 }
 
 
@@ -249,11 +267,11 @@
     padding-left: 20px;
     padding-right: 20px;
     width: 240px;
-    transition: all 0.1s; 
+    transition: all 0.1s;
 }
 
 .button-form[aria-expanded=true] {
-    transition: all 0.1s; 
+    transition: all 0.1s;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
     border-top-left-radius: 30px;
@@ -273,7 +291,12 @@
 
         .mat-menu-item {
             transition: all 0.1s;
-            font-size: 12px;
+            font-size: 13px;
+
+            @media (max-width: 768px) {
+                font-size: 1em;
+            }
+
             color: #666;
         }
 
@@ -305,6 +328,10 @@
 
     .mat-list-item {
         font-size: 13px;
+
+        @media (max-width: 768px) {
+            font-size: 1em;
+        }
     }
 }
 
@@ -327,6 +354,10 @@
 
     .mat-chip {
         font-size: 13px;
+
+        @media (max-width: 768px) {
+            font-size: 1em;
+        }
     }
 }
 
@@ -393,6 +424,10 @@
 }
 
 .categoryLabel {
+    font-size: 13px;
+    @media (max-width: 768px) {
+        font-size: 1em;
+    }
     color: $secondary;
     font-weight: bold;
 }

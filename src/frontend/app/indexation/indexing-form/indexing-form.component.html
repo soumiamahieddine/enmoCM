@@ -23,7 +23,7 @@
                     <ng-container *ngFor="let field of this['indexingModels_'+category];let i=index">
                         <div class="fieldRow" *ngIf="field.unit === category" cdkDrag cdkDragLockAxis="y"
                             [cdkDragData]="field">
-                            <div class="fieldLabel">
+                            <div class="fieldLabel" *ngIf="!adminMode && !appService.getViewMode()">
                                 <i *ngIf="adminMode" class="fas fa-bars fa-2x" color="primary" style="cursor: move"
                                     cdkDragHandle></i>&nbsp;
                                 {{field.label}}
@@ -45,7 +45,8 @@
                             </div>
                             <div class="fieldInput" [class.checkboxInput]="field.type === 'checkbox'">
                                 <ng-container *ngIf="field.type === 'string'">
-                                    <mat-form-field class="input-form" floatLabel="never">
+                                    <mat-form-field  class="input-form" [floatLabel]="appService.getViewMode() ? '' : 'never'">
+                                        <mat-label *ngIf="appService.getViewMode()">{{field.label}}</mat-label>
                                         <textarea matInput [formControl]="arrFormControl[field.identifier]"
                                             [placeholder]="!adminMode ? lang.typeValue : lang.defaultValue"
                                             matTextareaAutosize matAutosizeMinRows="1"
@@ -53,13 +54,15 @@
                                     </mat-form-field>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'integer'">
-                                    <mat-form-field class="input-form" floatLabel="never">
+                                    <mat-form-field class="input-form" [floatLabel]="appService.getViewMode() ? '' : 'never'">
+                                        <mat-label *ngIf="appService.getViewMode()">{{field.label}}</mat-label>
                                         <input type="number" matInput [formControl]="arrFormControl[field.identifier]"
                                             [placeholder]="!adminMode ? lang.typeValue : lang.defaultValue" min="0" step="0.1">
                                     </mat-form-field>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'select'">
                                     <plugin-select-search [showResetOption]="adminMode"
+                                        [label]="field.label"
                                         [placeholderLabel]="!adminMode ? lang.chooseValue : lang.defaultValue"
                                         [formControlSelect]="arrFormControl[field.identifier]" [datas]="field.values"
                                         (afterSelected)="launchEvent($event, field)" style="width:100%;">
@@ -73,14 +76,15 @@
                                             class="{{field.today ? 'far fa-bell-slash' : 'far fa-bell'}}">
                                         </mat-icon>
                                     </button>
-                                    <mat-form-field class="input-form" floatLabel="never" (click)="picker.open()" style="cursor:pointer;">
+                                    <mat-form-field class="input-form" [floatLabel]="appService.getViewMode() ? '' : 'never'" (click)="picker.open()" style="cursor:pointer;">
+                                        <mat-label *ngIf="appService.getViewMode()">{{field.label}}</mat-label>
                                         <input [formControl]="arrFormControl[field.identifier]" matInput
                                             [matDatepicker]="picker"
                                             [placeholder]="!adminMode ? lang.chooseDate : lang.defaultValue"
                                             [min]="getMinDate(field.startDate)" [max]="getMaxDate(field.endDate)" readonly style="cursor:pointer;">
                                         <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="!arrFormControl[field.identifier].value">
                                         </mat-datepicker-toggle>
-                                        <mat-datepicker #picker></mat-datepicker>
+                                        <mat-datepicker [touchUi]="appService.getViewMode()" #picker></mat-datepicker>
                                         <button mat-button color="warn" matSuffix mat-icon-button *ngIf="arrFormControl[field.identifier].value && !arrFormControl[field.identifier].disabled"
                                             (click)="$event.stopPropagation();arrFormControl[field.identifier].reset();" title="Effacer la valeur">
                                             <mat-icon color="warn"

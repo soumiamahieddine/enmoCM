@@ -11,6 +11,7 @@ import { take, takeUntil, startWith, map } from 'rxjs/operators';
 import { Subject, ReplaySubject, Observable } from 'rxjs';
 import { LatinisePipe } from 'ngx-pipes';
 import { LANG } from '../../app/translate.component';
+import { AppService } from '../../service/app.service';
 
 @Component({
     selector: 'plugin-select-search',
@@ -25,6 +26,8 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     @Input('formControlSelect') formControlSelect: FormControl;
 
     @Input('datas') datas: any;
+
+    @Input('label') label: string;
 
     @Input('showResetOption') showResetOption: boolean;
 
@@ -69,7 +72,7 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     formControlSearch = new FormControl();
 
 
-    constructor(private latinisePipe: LatinisePipe, private changeDetectorRef: ChangeDetectorRef, private renderer: Renderer2) {
+    constructor(private latinisePipe: LatinisePipe, private changeDetectorRef: ChangeDetectorRef, private renderer: Renderer2, public appService: AppService) {
 
 
     }
@@ -95,7 +98,9 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
             .subscribe((opened) => {
                 if (opened) {
                     // focus the search field when opening
-                    this._focus();
+                    if(!this.appService.getViewMode()) {
+                        this._focus();
+                    }
                 } else {
                     // clear it when closing
                     //this._reset();
