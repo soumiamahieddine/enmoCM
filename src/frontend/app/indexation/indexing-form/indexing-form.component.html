@@ -3,7 +3,7 @@
 </div>
 <ng-container *ngIf="!loading">
     <div *ngIf="!adminMode" style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
-        <button mat-button class="categoryLabel" (click)="toggleMailTracking()" matTooltip="Activer le suivi de courrier">
+        <button mat-button class="categoryLabel" (click)="toggleMailTracking()" [title]="arrFormControl['mail­tracking'].value ? lang.untrackThisMail : lang.trackThisMail">
             {{lang[currentCategory]}}
             <mat-icon color="primary" class="{{this.arrFormControl['mail­tracking'].value ? 'fas':'far'}} fa-star" style="font-size: 20px;"></mat-icon>
         </button>
@@ -23,8 +23,8 @@
                     <ng-container *ngFor="let field of this['indexingModels_'+category];let i=index">
                         <div class="fieldRow" *ngIf="field.unit === category" cdkDrag cdkDragLockAxis="y"
                             [cdkDragData]="field">
-                            <div class="fieldLabel" *ngIf="!adminMode && !appService.getViewMode()">
-                                <i *ngIf="adminMode" class="fas fa-bars fa-2x" color="primary" style="cursor: move"
+                            <div class="fieldLabel" *ngIf="(!adminMode && !appService.getViewMode()) || adminMode">
+                                <i *ngIf="adminMode" [title]="lang.move" class="fas fa-bars fa-2x" color="primary" style="cursor: move"
                                     cdkDragHandle></i>&nbsp;
                                 {{field.label}}
                                 <button *ngIf="adminMode && !field.system" mat-icon-button

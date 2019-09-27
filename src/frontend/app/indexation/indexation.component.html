@@ -8,19 +8,18 @@
                 <button mat-button class="button-form-primary" [matMenuTriggerFor]="IndexingModelsMenu"
                     style="flex:1;margin-right:20px;">
                     <span class="menu-label">
-                        {{currentIndexingModel.label}} {{currentIndexingModel.default ? '(par défaut)': ''}}
+                        {{currentIndexingModel.label}} {{currentIndexingModel.default ? '(' + lang.default + ')': ''}}
                     </span>
                     <i class="fa fa-chevron-down menu-icon"></i></button>
                 <mat-menu #IndexingModelsMenu="matMenu" [class]="'menuForm'">
                     <ng-container *ngFor="let indexingModel of indexingModels">
                         <button *ngIf="indexingModel.id !== currentIndexingModel.id" mat-menu-item
                             (click)="loadIndexingModel(indexingModel)">{{indexingModel.label}}
-                            {{indexingModel.default ? '(par défaut)': ''}}</button>
+                            {{indexingModel.default ? '(' + lang.default + ')': ''}}</button>
                     </ng-container>
                 </mat-menu>
                 <button mat-button *ngIf="!appService.getViewMode()" class="button-form-primary"
-                    style="flex:1;align-items: center;justify-content: center;text-align: center;display: flex;">Enregistrer
-                    comme modèle</button>
+                    style="flex:1;align-items: center;justify-content: center;text-align: center;display: flex;">{{lang.saveAsModel}}</button>
                 <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"
                     (click)="onSubmit()">
                     <mat-icon class="far fa-edit"></mat-icon>
@@ -38,22 +37,19 @@
                     </span>
                     <i class="fa fa-chevron-down menu-icon"></i></button>
                 <mat-menu #menu="matMenu" [class]="'menuForm'">
-                    <button mat-menu-item>Item 1</button>
-                    <button mat-menu-item>Item 2</button>
+                    <button mat-menu-item>Action 2</button>
+                    <button mat-menu-item>Action 3</button>
                 </mat-menu>
                 <button mat-button *ngIf="!appService.getViewMode()" class="button-form-primary"
                     style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
-                    (click)="onSubmit()">Valider</button>
+                    (click)="onSubmit()">{{lang.validate}}</button>
                 <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"
                     (click)="onSubmit()">
                     <mat-icon class="fa fa-check"></mat-icon>
                 </button>
             </div>
         </ng-container>
-        <div *ngIf="indexingModels.length === 0" class="emptyModel">
-            Aucun modèle d'enregistrement disponible<br /><br />
-            <small>Veuillez créer un modèle depuis Administation > Modèle d'enregistrement</small>
-        </div>
+        <div *ngIf="indexingModels.length === 0" class="emptyModel" [innerHTML]="lang.noAvailableIndexingModel"></div>
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="bg-head">
@@ -79,8 +75,8 @@
                         <i class="fa fa-chevron-down menu-icon"></i>
                     </button>
                     <mat-menu #menu="matMenu" [class]="'menuForm'">
-                        <button mat-menu-item>Item 1</button>
-                        <button mat-menu-item>Item 2</button>
+                        <button mat-menu-item>Modèle 1</button>
+                        <button mat-menu-item>Modèle 2</button>
                     </mat-menu>
                     <button mat-button class="button-form-primary"
                         style="align-items: center;justify-content: center;text-align: center;display: flex;">Choisissez

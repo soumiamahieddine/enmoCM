@@ -1160,4 +1160,10 @@ export const LANG_FR = {
     "autocompleteInput" : "Auto-completion",
     "typeEnterToCreate" : "Taper sur <b>entrée</b> pour créer l'element",
     "ged_doc" : "Document GED",
+    "trackThisMail" : "Suivre le courrier",
+    "untrackThisMail" : "Ne plus suivre le courrier",
+    "noFieldInModelMsg" : "Champs introuvables! les données de base ont été chargées",
+    "fieldNotExist" : "Le champ n'existe pas",
+    "saveAsModel" : "Enregistrer comme modèle",
+    "noAvailableIndexingModel" : "Aucun modèle d'enregistrement disponible<br /><br /><small>Veuillez créer un modèle depuis Administation > Modèle d'enregistrement</small>",
 };

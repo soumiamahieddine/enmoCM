@@ -1123,4 +1123,10 @@ export const LANG_EN = {
     "autocompleteInput" : "Autocomplete input",
     "typeEnterToCreate" : "Type on <b>enter</b> to create element",
     "ged_doc" : "GED Document",
+    "trackThisMail" : "Track this mail",
+    "untrackThisMail" : "Untrack this mail",
+    "noFieldInModelMsg" : "No field found ! Default fields have been loaded",
+    "fieldNotExist" : "Field not exist",
+    "saveAsModel" : "Save as Model",
+    "noAvailableIndexingModel" : "No indexing model found<br /><br /><small>Please create a model in Administation > Indexing model</small>",
 };

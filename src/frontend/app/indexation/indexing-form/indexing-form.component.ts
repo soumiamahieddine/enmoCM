@@ -198,7 +198,6 @@ export class IndexingFormComponent implements OnInit {
                     });
                     this.initElemForm();
                 }),
-                //finalize(() => this.loading = false),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -498,7 +497,7 @@ export class IndexingFormComponent implements OnInit {
                             this.initValidator(field);
                         });
                     });
-                    this.notify.error("Champs introuvables! les données de base ont été chargés");
+                    this.notify.error(this.lang.noFieldInModelMsg);
                 } else {
                     data.indexingModel.fields.forEach((field: any) => {
                         fieldExist = false;
@@ -544,7 +543,7 @@ export class IndexingFormComponent implements OnInit {
                             this['indexingModels_' + field.unit].push(field);
                             this.initValidator(field);
                         } else {
-                            this.notify.error("Le champ " + field.identifier + " n'existe pas !");
+                            this.notify.error(this.lang.fieldNotExist + ': ' + field.identifier);
                         }
 
                     });
@@ -553,7 +552,6 @@ export class IndexingFormComponent implements OnInit {
                 this.initElemForm();
                 this.createForm();
             }),
-            //finalize(() => this.loading = false),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
