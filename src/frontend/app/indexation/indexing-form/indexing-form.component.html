@@ -2,10 +2,10 @@
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <ng-container *ngIf="!loading">
-    <div *ngIf="!adminMode" style="display: flex;align-items: center;justify-content: flex-end;">
-        <span class="categoryLabel">{{lang[currentCategory]}}</span>
-        <button mat-icon-button>
-            <mat-icon color="primary" class="far fa-star" style="font-size: 20px;"></mat-icon>
+    <div *ngIf="!adminMode" style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
+        <button mat-button class="categoryLabel" (click)="toggleMailTracking()" matTooltip="Activer le suivi de courrier">
+            {{lang[currentCategory]}}
+            <mat-icon color="primary" class="{{this.arrFormControl['mail­tracking'].value ? 'fas':'far'}} fa-star" style="font-size: 20px;"></mat-icon>
         </button>
     </div>
     <ng-container *ngFor="let category of fieldCategories">

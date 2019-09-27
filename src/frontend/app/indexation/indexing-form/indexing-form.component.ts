@@ -302,6 +302,8 @@ export class IndexingFormComponent implements OnInit {
         myObservable.pipe(
             exhaustMap(() => this.initializeRoutes()),
             tap((data) => {
+                this.arrFormControl['mail­tracking'].setValue(false);
+
                 this.fieldCategories.forEach(element => {
                     this['indexingModels_' + element].forEach((elem: any) => {
                         if (elem.identifier === 'docDate') {
@@ -463,6 +465,8 @@ export class IndexingFormComponent implements OnInit {
         this.loading = true;
 
         this.availableFields = JSON.parse(JSON.stringify(this.availableFieldsClone));
+
+        this.arrFormControl['mail­tracking'] = new FormControl({ value: '', disabled: this.adminMode ? true : false });
 
         this.fieldCategories.forEach(category => {
             this['indexingModels_' + category] = [];
@@ -650,5 +654,9 @@ export class IndexingFormComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();*/
+    }
+
+    toggleMailTracking() {
+        this.arrFormControl['mail­tracking'].setValue(!this.arrFormControl['mail­tracking'].value);
     }
 }
