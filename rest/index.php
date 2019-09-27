@@ -392,6 +392,7 @@ $app->put('/users/{id}/externalSignatures', \ExternalSignatoryBook\controllers\M
 $app->post('/users/{id}/groups', \User\controllers\UserController::class . ':addGroup');
 $app->put('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':updateGroup');
 $app->delete('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':deleteGroup');
+$app->get('/users/{id}/entities', \User\controllers\UserController::class . ':getEntities');
 $app->post('/users/{id}/entities', \User\controllers\UserController::class . ':addEntity');
 $app->put('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':updateEntity');
 $app->put('/users/{id}/entities/{entityId}/primaryEntity', \User\controllers\UserController::class . ':updatePrimaryEntity');

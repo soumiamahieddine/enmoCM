@@ -1024,6 +1024,18 @@ class UserController
         ]);
     }
 
+    public function getEntities(Request $request, Response $response, array $args)
+    {
+        $user = UserModel::getById(['id' => $args['id'], 'select' => ['user_id']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
+        }
+
+        $entities = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+
+        return $response->withJson(['entities' => $entities]);
+    }
+
     public function addEntity(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id']]);
