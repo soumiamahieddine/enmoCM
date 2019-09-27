@@ -637,21 +637,17 @@ export class IndexingFormComponent implements OnInit {
     }
 
     calcLimitDate(identifier: string, value: any) {
-
-        // TO DO: REMOVE AFTER BACK
-        if (this.arrFormControl['processLimitDate'] !== undefined) {
-            this.arrFormControl['processLimitDate'].setValue(new Date());
-        }
         
-        /*this.http.get("../../rest/doctypes/types/" + value + '/getLimitDate').pipe(
+        this.http.get("../../rest/indexing/processLimitDate", { params: { "doctype": value } }).pipe(
             tap((data: any) => {
-                this.arrFormControl['processLimitDate'].setValue(data);
+                const limitDate = new Date(data.processLimitDate);
+                this.arrFormControl['processLimitDate'].setValue(limitDate);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
             })
-        ).subscribe();*/
+        ).subscribe();
     }
 
     toggleMailTracking() {
