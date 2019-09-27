@@ -186,7 +186,6 @@ class DoctypeController
     
         DoctypeModel::update([
             'type_id'                       => $data['type_id'],
-            'coll_id'                       => 'letterbox_coll',
             'description'                   => $data['description'],
             'doctypes_first_level_id'       => $data['doctypes_first_level_id'],
             'doctypes_second_level_id'      => $data['doctypes_second_level_id'],

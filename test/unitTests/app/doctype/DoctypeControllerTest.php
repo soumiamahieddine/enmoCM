@@ -53,9 +53,6 @@ class DoctypeControllerTest extends TestCase
         $this->assertNotNull($responseBody->firstLevel[0]->doctypes_first_level_label);
 
         $this->assertNotNull($responseBody->secondLevel);
-        $this->assertNotNull($responseBody->processModes);
-        $this->assertNotNull($responseBody->processModes->processing_modes);
-        $this->assertNotNull($responseBody->processModes->process_mode_priority);
         $this->assertNotNull($responseBody->models);
         $this->assertNotNull($responseBody->models[0]->template_id);
         $this->assertNotNull($responseBody->models[0]->template_label);
@@ -460,7 +457,6 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame(6, $responseBody->doctype->delay2);
         $this->assertSame('SVR', $responseBody->doctype->process_mode);
         $this->assertNotNull($responseBody->secondLevel);
-        $this->assertNotNull($responseBody->processModes);
         $this->assertSame(null, $responseBody->doctype->template_id);
         $this->assertSame('N', $responseBody->doctype->is_generated);
         $this->assertNotNull($responseBody->models);
