@@ -104,4 +104,16 @@ class TagModel
 
         return $tags;
     }
+
+    public static function getList(array $args)
+    {
+        ValidatorModel::arrayType($args, ['select']);
+
+        $tags = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['tags']
+        ]);
+
+        return $tags;
+    }
 }

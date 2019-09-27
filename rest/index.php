@@ -362,6 +362,8 @@ $app->get('/administration/statuses/new', \Status\controllers\StatusController::
 //Tags
 $app->post('/tags', \Tag\controllers\TagController::class . ':create');
 $app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
+$app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
+$app->get('/tags', \Tag\controllers\TagController::class . ':getList');
 
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');

@@ -75,4 +75,29 @@ class TagController
 
         return $response->withStatus(201);
     }
+
+    public function getById(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $tag = TagModel::getById(['id' => $args['id']]);
+        if (empty($tag)) {
+            return $response->withStatus(404)->withJson(['errors' => 'id not found']);
+        }
+
+        return $response->withJson($tag);
+    }
+
+    public function getList(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $tag = TagModel::getList(['select' => []]);
+
+        return $response->withJson($tag);
+    }
 }
