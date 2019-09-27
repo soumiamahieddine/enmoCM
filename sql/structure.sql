@@ -76,7 +76,7 @@ CREATE TABLE doctypes
   process_delay INTEGER NOT NULL,
   delay1 INTEGER NOT NULL,
   delay2 INTEGER NOT NULL,
-  process_mode INTEGER NOT NULL,
+  process_mode CHARACTER VARYING(256) NOT NULL,
   CONSTRAINT doctypes_pkey PRIMARY KEY (type_id)
 )
 WITH (OIDS=FALSE);

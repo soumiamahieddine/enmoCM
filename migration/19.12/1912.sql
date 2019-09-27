@@ -410,6 +410,7 @@ CREATE VIEW res_view_attachments AS
   FROM res_attachments;
 
 
+/* DATA */
 TRUNCATE TABLE custom_fields;
 INSERT INTO custom_fields (id, label, type, values) VALUES (1, 'Nature', 'select', '["Courrier simple", "Courriel", "Chronopost", "Pli numérique"]');
 INSERT INTO custom_fields (id, label, type, values) VALUES (2, 'N° recommandé', 'string', '""');

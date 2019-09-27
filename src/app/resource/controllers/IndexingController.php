@@ -18,10 +18,12 @@ use Action\models\ActionModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Group\models\GroupModel;
+use Priority\models\PriorityModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\ValidatorModel;
 
 class IndexingController
 {
@@ -130,11 +132,19 @@ class IndexingController
         $queryParams = $request->getQueryParams();
 
         if (!empty($queryParams['doctype'])) {
-            $obj['doctype'] = DoctypeModel::getById(['id' => $queryParams['doctype']]);
+            $doctype = DoctypeModel::getById(['id' => $queryParams['doctype'], 'select' => ['process_delay']]);
+            $delay = $doctype['process_delay'];
+        } elseif (!empty($queryParams['priority'])) {
+            $priority = PriorityModel::getById(['id' => $queryParams['priority'], 'select' => ['delays']]);
+            $delay = $priority['delays'];
+        }
+        if (empty($delay)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Delay is empty']);
         }
 
+        $processLimitDate = IndexingController::calculateProcessDate(['date' => date('c'), 'delay' => $delay]);
 
-        return $response->withJson(['actions' => $actions]);
+        return $response->withJson(['processLimitDate' => $processLimitDate]);
     }
 
     public static function getEntitiesChildrenLevel($aArgs = [])
@@ -169,5 +179,47 @@ class IndexingController
         $group[0]['indexation_parameters'] = json_decode($group[0]['indexation_parameters'], true);
 
         return ['indexingParameters' => $group[0]['indexation_parameters']];
+    }
+
+    public static function calculateProcessDate(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['date', 'delay']);
+        ValidatorModel::intVal($args, ['delay']);
+
+        $date = new \DateTime($args['date']);
+
+        $calendarType = 'calendar';
+
+        if ($calendarType == 'workingDay') {
+            $hollidays = [
+                '01-01',
+                '01-05',
+                '08-05',
+                '14-07',
+                '15-08',
+                '01-11',
+                '11-11',
+                '25-12'
+            ];
+            if (function_exists('easter_date')) {
+                $hollidays[] = date('d-m', easter_date() + 86400);
+            }
+
+            $processDelayUpdated = 1;
+            for ($i = 1; $i <= $args['delay']; $i++) {
+                $tmpDate = new \DateTime($args['delay']);
+                $tmpDate->add(new \DateInterval("P{$i}D"));
+                if (in_array($tmpDate->format('N'), [6, 7]) || in_array($tmpDate->format('d-m'), $hollidays)) {
+                    ++$args['delay'];
+                }
+                ++$processDelayUpdated;
+            }
+
+            $date->add(new \DateInterval("P{$processDelayUpdated}D"));
+        } else {
+            $date->add(new \DateInterval("P{$args['delay']}D"));
+        }
+
+        return $date->format('Y-m-d H:i:s');
     }
 }

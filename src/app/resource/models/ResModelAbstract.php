@@ -15,6 +15,7 @@
 namespace Resource\models;
 
 use Doctype\models\DoctypeModel;
+use Resource\controllers\IndexingController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
@@ -288,46 +289,7 @@ abstract class ResModelAbstract
             $defaultDate = date('c');
         }
 
-        $date = new \DateTime($defaultDate);
-
-        $calendarType = 'calendar';
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/features.xml']);
-
-        if ($loadedXml && !empty((string)$loadedXml->FEATURES->type_calendar)) {
-            $calendarType = (string)$loadedXml->FEATURES->type_calendar;
-        }
-
-        if ($calendarType == 'workingDay') {
-            $hollidays = [
-                '01-01',
-                '01-05',
-                '08-05',
-                '14-07',
-                '15-08',
-                '01-11',
-                '11-11',
-                '25-12'
-            ];
-            if (function_exists('easter_date')) {
-                $hollidays[] = date('d-m', easter_date() + 86400);
-            }
-
-            $processDelayUpdated = 1;
-            for ($i = 1; $i <= $processDelay; $i++) {
-                $tmpDate = new \DateTime($defaultDate);
-                $tmpDate->add(new \DateInterval("P{$i}D"));
-                if (in_array($tmpDate->format('N'), [6, 7]) || in_array($tmpDate->format('d-m'), $hollidays)) {
-                    ++$processDelay;
-                }
-                ++$processDelayUpdated;
-            }
-
-            $date->add(new \DateInterval("P{$processDelayUpdated}D"));
-        } else {
-            $date->add(new \DateInterval("P{$processDelay}D"));
-        }
-
-        return $date->format('Y-m-d H:i:s');
+        return IndexingController::calculateProcessDate(['date' => $defaultDate, 'delay' => $processDelay]);
     }
 
     public static function getCategories()
