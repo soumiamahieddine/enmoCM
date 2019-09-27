@@ -2022,7 +2022,7 @@ function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId
     }
 
     $j("#" + inputId).typeahead({
-        order: "asc",
+        // order: "asc",
         display: "idToDisplay",
         templateValue: "{{otherInfo}}",
         emptyTemplate: "Aucune donnée pour <b>{{query}}</b>",
