@@ -430,7 +430,7 @@ CREATE VIEW res_view_attachments AS
 /* DATA */
 TRUNCATE TABLE custom_fields;
 INSERT INTO custom_fields (id, label, type, values) VALUES (1, 'Nature', 'select', '["Courrier simple", "Courriel", "Chronopost", "Pli numérique"]');
-INSERT INTO custom_fields (id, label, type, values) VALUES (2, 'N° recommandé', 'string', '""');
+INSERT INTO custom_fields (id, label, type, values) VALUES (2, 'N° recommandé', 'string', '[]');
 SELECT setval('custom_fields_id_seq', (select max(id)+1 from custom_fields), false);
 
 TRUNCATE TABLE indexing_models;
