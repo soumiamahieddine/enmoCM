@@ -464,6 +464,13 @@ export class IndexingFormComponent implements OnInit {
     }
 
     loadForm(indexModelId: number) {
+
+        Object.keys(this.arrFormControl).forEach(element => {
+            delete this.arrFormControl[element];
+        });
+
+        console.log(this.arrFormControl);
+
         this.loading = true;
 
         this.availableFields = JSON.parse(JSON.stringify(this.availableFieldsClone));
@@ -563,7 +570,7 @@ export class IndexingFormComponent implements OnInit {
     }
 
     initValidator(field: any) {
-        let valArr : ValidatorFn[] = [];
+        let valArr: ValidatorFn[] = [];
 
         this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false });
 
@@ -574,7 +581,7 @@ export class IndexingFormComponent implements OnInit {
         if (field.mandatory && !this.adminMode) {
             valArr.push(Validators.required);
         }
-        
+
         this.arrFormControl[field.identifier].setValidators(valArr);
     }
 
@@ -640,17 +647,19 @@ export class IndexingFormComponent implements OnInit {
     }
 
     calcLimitDate(field: any, value: any) {
-        
-        this.http.get("../../rest/indexing/processLimitDate", { params: { "doctype": value } }).pipe(
-            tap((data: any) => {
-                const limitDate = new Date(data.processLimitDate);
-                this.arrFormControl['processLimitDate'].setValue(limitDate);
-            }),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+
+        if (this.arrFormControl['processLimitDate'] !== undefined) {
+            this.http.get("../../rest/indexing/processLimitDate", { params: { "doctype": value } }).pipe(
+                tap((data: any) => {
+                    const limitDate = new Date(data.processLimitDate);
+                    this.arrFormControl['processLimitDate'].setValue(limitDate);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
     toggleMailTracking() {
