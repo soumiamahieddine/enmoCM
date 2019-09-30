@@ -459,7 +459,8 @@ if ($mode == 'normal') {
                     $query .= 'OR ';
                     $query .= 'user_id = ? ';
                     $query .= ') ';
-                    $arrayPDO = array_merge($arrayPDO, array($_SESSION['user']['UserId']));
+                    $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+                    $arrayPDO = array_merge($arrayPDO, array($user['id']));
 
                     $stmt = $db->query($query, $arrayPDO);
                     $tab[$i][$j]['hasNotes'] = $stmt->fetchObject();
