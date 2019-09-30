@@ -39,6 +39,10 @@ class TagController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Param id must be an integer val']);
+        }
+
         $tag = TagModel::getById(['id' => $args['id']]);
         if (empty($tag)) {
             return $response->withStatus(404)->withJson(['errors' => 'id not found']);
@@ -80,6 +84,11 @@ class TagController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Param id must be an integer val']);
+        }
+
+
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
@@ -110,6 +119,11 @@ class TagController
         if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
+
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Param id must be an integer val']);
+        }
+
 
         $tag = TagModel::getById(['select' => ['label'], 'id' => $args['id']]);
         if (empty($tag)) {
