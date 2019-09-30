@@ -101,7 +101,7 @@ class ReceiveMessageExchangeController
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Message enregistré';
         /************** NOTES *****************/
-        $notesReturn = self::saveNotes(["dataObject" => $sDataObject, "resId" => $resLetterboxReturn]);
+        $notesReturn = self::saveNotes(["dataObject" => $sDataObject, "resId" => $resLetterboxReturn, "userId" => $GLOBALS['id']]);
         if (!empty($notesReturn['errors'])) {
             return $response->withStatus(400)->withJson(["errors" => $notesReturn['errors']]);
         }
@@ -349,7 +349,7 @@ class ReceiveMessageExchangeController
         foreach ($aArgs['dataObject']->Comment as $value) {
             NoteModel::create([
                 "resId" => $aArgs['resId'],
-                "user_id"    => 0,
+                "user_id"    => $aArgs['userId'],
                 "note_text"  => $value->value
             ]);
 
