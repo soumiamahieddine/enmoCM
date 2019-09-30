@@ -3,16 +3,8 @@ installed.lck
 apps/maarch_entreprise/xml/config.xml
 apps/maarch_entreprise/xml/mailevaConfig.xml
 apps/maarch_entreprise/xml/log4php.xml
-.vscode/
-.phplint-cache
-.phplint.yml
 *.log
-xdelete.sh
 test/unitTests/build/
-modules/convert/batch/scripts/launch_fulltext_letterbox.sh
-modules/convert/batch/scripts/launch_convert_letterbox.sh
-modules/convert/batch/config/config_only_indexes.xml
-modules/convert/batch/tmp/
 modules/visa/xml/remoteSignatoryBooks.xml
 dist/
 node_modules/

@@ -11,3 +11,5 @@ php ./exportCases.php
 php ./exportFileplans.php
 php ./exportFolders.php
 php ./removeProcessModes.php
+php ./migrateCategories.php
+php ./migrateOldIndexingModels.php
