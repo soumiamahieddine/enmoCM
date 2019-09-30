@@ -222,7 +222,7 @@ foreach ($customs as $custom) {
     }
 
     \SrcCore\models\DatabaseModel::update([
-        'set'   => ['keyword' => null],
+        'set'   => ['keyword' => ''],
         'table' => 'actions',
         'where' => ['keyword = ?'],
         'data'  => ['indexing']
@@ -230,4 +230,3 @@ foreach ($customs as $custom) {
 
     printf("Migration Indexing Basket (CUSTOM {$custom}) : " . $migrated . " action(s) avec des status (mot clé indexation) trouvé(s) et migré(s).\n");
 }
-

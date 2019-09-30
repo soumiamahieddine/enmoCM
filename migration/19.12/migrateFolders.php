@@ -18,7 +18,7 @@ foreach ($customs as $custom) {
     $folders = \SrcCore\models\DatabaseModel::select([
         'select'   => ['folders_system_id', 'typist', 'destination', 'folder_name', 'parent_id'],
         'table'    => ['folder_tmp'],
-        'order_by' => ['level asc']
+        'order_by' => ['folder_level asc']
     ]);
 
     if (!empty($folders)) {

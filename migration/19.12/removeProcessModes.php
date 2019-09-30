@@ -13,18 +13,20 @@ foreach ($customs as $custom) {
 
     $xmlfile = null;
     $path = "custom/{$custom}/apps/maarch_entreprise/xml/entreprise.xml";
-    $xmlfile = simplexml_load_file($path);
+    if (file_exists($path)) {
+        $xmlfile = simplexml_load_file($path);
 
-    if ($xmlfile) {
-        unset($xmlfile->process_modes);
+        if ($xmlfile) {
+            unset($xmlfile->process_modes);
 
-        $res = $xmlfile->asXML();
-        $fp = fopen($path, "w+");
-        if ($fp) {
-            fwrite($fp, $res);
+            $res = $xmlfile->asXML();
+            $fp = fopen($path, "w+");
+            if ($fp) {
+                fwrite($fp, $res);
+            }
+
+            $migrated++;
         }
-
-        $migrated++;
     }
 }
 

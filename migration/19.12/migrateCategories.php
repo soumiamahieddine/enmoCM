@@ -23,47 +23,49 @@ foreach ($customs as $custom) {
         $loadedXml = simplexml_load_file($path);
         
         if ($loadedXml) {
-            foreach ($loadedXml->COLLECTION[0]->categories->category as $category) {
-                $aCategories[] = (string)$category->id;
-            }
-            if (!empty($aCategories)) {
-                $indexingModels = \IndexingModel\models\IndexingModelModel::get([
-                    'select'=> ['id'],
-                    'where' => ['category not in (?)'],
-                    'data'  => [$aCategories]
-                ]);
-
-                if (!empty($indexingModels)) {
-                    $indexingModelsId = array_column($indexingModels, 'id');
-
-                    \IndexingModel\models\IndexingModelFieldModel::delete([
-                        'where' => ['model_id in (?)'],
-                        'data'  => [$indexingModelsId]
+            if (!empty($loadedXml->COLLECTION[0]->categories->category)) {
+                foreach ($loadedXml->COLLECTION[0]->categories->category as $category) {
+                    $aCategories[] = (string)$category->id;
+                }
+                if (!empty($aCategories)) {
+                    $indexingModels = \IndexingModel\models\IndexingModelModel::get([
+                        'select'=> ['id'],
+                        'where' => ['category not in (?)'],
+                        'data'  => [$aCategories]
+                    ]);
+    
+                    if (!empty($indexingModels)) {
+                        $indexingModelsId = array_column($indexingModels, 'id');
+    
+                        \IndexingModel\models\IndexingModelFieldModel::delete([
+                            'where' => ['model_id in (?)'],
+                            'data'  => [$indexingModelsId]
+                        ]);
+                    }
+    
+                    \IndexingModel\models\IndexingModelModel::delete([
+                        'where' => ['category not in (?)'],
+                        'data'  => [$aCategories]
                     ]);
                 }
-
-                \IndexingModel\models\IndexingModelModel::delete([
-                    'where' => ['category not in (?)'],
-                    'data'  => [$aCategories]
+                $defaultCategory = (string)$loadedXml->COLLECTION[0]->categories->default_category;
+    
+                \IndexingModel\models\IndexingModelModel::update([
+                    'set'   => [
+                        '"default"' => 'false'
+                    ],
+                    'where' => ['1=?'],
+                    'data' => [1]
+                ]);
+    
+                \IndexingModel\models\IndexingModelModel::update([
+                    'set'   => [
+                        '"default"' => 'true'
+                    ],
+                    'where' => ['category = ?'],
+                    'data' => [$defaultCategory],
                 ]);
             }
-            $defaultCategory = (string)$loadedXml->COLLECTION[0]->categories->default_category;
-
-            \IndexingModel\models\IndexingModelModel::update([
-                'set'   => [
-                    '"default"' => 'false'
-                ],
-                'where' => ['1=?'],
-                'data' => [1]
-            ]);
-
-            \IndexingModel\models\IndexingModelModel::update([
-                'set'   => [
-                    '"default"' => 'true'
-                ],
-                'where' => ['category = ?'],
-                'data' => [$defaultCategory],
-            ]);
 
             $i = 0;
             foreach ($loadedXml->COLLECTION as $value) {
