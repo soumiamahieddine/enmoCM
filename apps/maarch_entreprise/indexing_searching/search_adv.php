@@ -360,8 +360,7 @@ $param['confidentiality'] = $arr_tmp2;
 //doc_type
 $stmt = $conn->query(
     'SELECT type_id, description  FROM  '
-    .$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' and coll_id = ? order by description asc",
-    array($coll_id)
+    .$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' order by description asc", []
 );
 $arr_tmp = array();
 while ($res = $stmt->fetchObject()) {
