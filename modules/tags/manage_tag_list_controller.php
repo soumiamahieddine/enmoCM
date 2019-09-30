@@ -138,9 +138,8 @@ function display_up($tag_id)
         $state = false;
     } else {
         //put_in_session('tag', $tag->getArray());
-        $_SESSION['m_admin']['tag']['tag_id']    = $tag->tag_id;
-        $_SESSION['m_admin']['tag']['tag_label'] = $tag->tag_label;
-        $_SESSION['m_admin']['tag']['tag_coll']  = $tag->coll_id;
+        $_SESSION['m_admin']['tag']['tag_id']    = $tag->id;
+        $_SESSION['m_admin']['tag']['tag_label'] = $tag->label;
         $_SESSION['m_admin']['tag']['entities']  = $tag->entities;
         $_SESSION['m_admin']['tag']['tag_count'] = (string) $tagCtrl->countdocs(
             $tag->tag_id
