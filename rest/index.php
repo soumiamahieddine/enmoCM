@@ -134,14 +134,6 @@ $app->post('/customFields', \CustomField\controllers\CustomFieldController::clas
 $app->put('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':update');
 $app->delete('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':delete');
 
-//IndexingModels
-$app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
-$app->get('/indexingModels/entities', \IndexingModel\controllers\IndexingModelController::class . ':getEntities');
-$app->get('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':getById');
-$app->post('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':create');
-$app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':update');
-$app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
-
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
 $app->post('/docservers', \Docserver\controllers\DocserverController::class . ':create');
@@ -231,6 +223,19 @@ $app->get('/home', \Home\controllers\HomeController::class . ':get');
 $app->get('/home/lastRessources', \Home\controllers\HomeController::class . ':getLastRessources');
 $app->get('/home/maarchParapheurDocuments', \Home\controllers\HomeController::class . ':getMaarchParapheurDocuments');
 
+//Indexing
+$app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
+$app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
+$app->get('/indexing/processLimitDate', \Resource\controllers\IndexingController::class . ':getProcessLimitDate');
+
+//IndexingModels
+$app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
+$app->get('/indexingModels/entities', \IndexingModel\controllers\IndexingModelController::class . ':getEntities');
+$app->get('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':getById');
+$app->post('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':create');
+$app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':update');
+$app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
+
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
@@ -262,6 +267,8 @@ $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplat
 $app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplates');
 $app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
+$app->put('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':update');
+$app->delete('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':delete');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
@@ -308,10 +315,6 @@ $app->get('/categories', \Resource\controllers\ResController::class . ':getCateg
 $app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
 $app->post('/resources/checkFileUpload', \Resource\controllers\StoreController::class . ':checkFileUpload');
-
-//Indexing
-$app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
-$app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
@@ -361,6 +364,9 @@ $app->get('/administration/statuses/new', \Status\controllers\StatusController::
 //Tags
 $app->post('/tags', \Tag\controllers\TagController::class . ':create');
 $app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
+$app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
+$app->get('/tags', \Tag\controllers\TagController::class . ':get');
+$app->put('/tags/{id}', \Tag\controllers\TagController::class . ':update');
 
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');
@@ -391,6 +397,7 @@ $app->put('/users/{id}/externalSignatures', \ExternalSignatoryBook\controllers\M
 $app->post('/users/{id}/groups', \User\controllers\UserController::class . ':addGroup');
 $app->put('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':updateGroup');
 $app->delete('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':deleteGroup');
+$app->get('/users/{id}/entities', \User\controllers\UserController::class . ':getEntities');
 $app->post('/users/{id}/entities', \User\controllers\UserController::class . ':addEntity');
 $app->put('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':updateEntity');
 $app->put('/users/{id}/entities/{entityId}/primaryEntity', \User\controllers\UserController::class . ':updatePrimaryEntity');

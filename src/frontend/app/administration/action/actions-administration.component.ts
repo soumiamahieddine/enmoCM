@@ -32,7 +32,7 @@ export class ActionsAdministrationComponent implements OnInit {
     displayedColumns = ['id', 'label_action', 'history', 'actions'];
     dataSource = new MatTableDataSource(this.actions);
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

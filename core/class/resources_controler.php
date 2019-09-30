@@ -519,11 +519,7 @@ class resources_controler
                 $typeId = $line->type_id;
                 $admissionDate = $line->admission_date;
                 $creationDate = $line->creation_date;
-                $stmtDelay = $db->query("select process_delay from mlb_doctype_ext where type_id = ?" 
-                    , array($line->type_id)
-                );
-                $lineDelay = $stmtDelay->fetchObject();
-                $delay = $lineDelay->process_delay;
+                $delay = 30;
             }
             if ($admissionDate == '') {
                 $dateToCompute = $creationDate;

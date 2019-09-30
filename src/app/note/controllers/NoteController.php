@@ -46,10 +46,10 @@ class NoteController
         $aNotes = NoteModel::getByUserIdForResource(['select' => ['*'], 'resId' => $aArgs['resId'], 'userId' => $user['id']]);
         
         foreach ($aNotes as $key => $aNote) {
-            $aUser = UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $aNote['user_id']]);
-            $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aNote['user_id']]);
-            $aNotes[$key]['firstname'] = $aUser['firstname'];
-            $aNotes[$key]['lastname'] = $aUser['lastname'];
+            $user = UserModel::getById(['select' => ['firstname', 'lastname', 'user_id'], 'id' => $aNote['user_id']]);
+            $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']]);
+            $aNotes[$key]['firstname'] = $user['firstname'];
+            $aNotes[$key]['lastname'] = $user['lastname'];
             $aNotes[$key]['entity_label'] = $primaryEntity['entity_label'];
         }
 
@@ -87,7 +87,7 @@ class NoteController
 
         $noteId = NoteModel::create([
             'resId'     => $aArgs['resId'],
-            'login'     => $GLOBALS['userId'],
+            'user_id'   => $GLOBALS['id'],
             'note_text' => $data['note_text']
         ]);
     
@@ -101,13 +101,105 @@ class NoteController
             'tableName' => "notes",
             'recordId'  => $noteId,
             'eventType' => "ADD",
-            'userId'    => $GLOBALS['userId'],
             'info'      => _NOTE_ADDED . " (" . $noteId . ")",
             'moduleId'  => 'notes',
             'eventId'   => 'noteadd'
         ]);
 
         return $response->withJson(['noteId' => $noteId]);
+    }
+
+    public function update(Request $request, Response $response, array $args)
+    {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $note = NoteModel::getById(['select' => ['user_id'], 'id' => $args['id']]);
+        if (empty($note) || $note['user_id'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Note out of perimeter']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['value'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body value is empty or not a string']);
+        }
+
+        if (!empty($body['entities'])) {
+            if (!Validator::arrayType()->validate($body['entities'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body entities is not an array']);
+            }
+            foreach ($body['entities'] as $entityId) {
+                $entities = Entitymodel::get(['select' => ['count(1)'], 'where' => ['entity_id in (?)'], 'data' => [$body['entities']]]);
+                if ($entities[0]['count'] != count($body['entities'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Body entities : one or more entities do not exist']);
+                }
+            }
+        }
+
+        NoteModel::update([
+            'set' => [
+                'note_text' => $body['value']
+            ],
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        NoteEntityModel::delete([
+            'where' => ['note_id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        if (!empty($body['entities'])) {
+            foreach ($body['entities'] as $entity) {
+                NoteEntityModel::create(['item_id' => $entity, 'note_id' => $args['id']]);
+            }
+        }
+
+        HistoryController::add([
+            'tableName' => 'notes',
+            'recordId'  => $args['id'],
+            'eventType' => "UP",
+            'info'      => _NOTE_UPDATED,
+            'moduleId'  => 'notes',
+            'eventId'   => 'noteModification'
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function delete(Request $request, Response $response, array $args)
+    {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $note = NoteModel::getById(['select' => ['user_id'], 'id' => $args['id']]);
+        if (empty($note) || $note['user_id'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Note out of perimeter']);
+        }
+
+        NoteModel::delete([
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        NoteEntityModel::delete([
+            'where' => ['note_id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'notes',
+            'recordId'  => $args['id'],
+            'eventType' => "DEL",
+            'info'      => _NOTE_DELETED,
+            'moduleId'  => 'notes',
+            'eventId'   => 'noteSuppression'
+        ]);
+
+        return $response->withStatus(204);
     }
 
     public static function getEncodedPdfByIds(array $aArgs)
@@ -122,7 +214,7 @@ class NoteController
         foreach ($aArgs['ids'] as $noteId) {
             $note = NoteModel::getById(['id' => $noteId, 'select' => ['note_text', 'creation_date', 'user_id']]);
 
-            $user = UserModel::getByLogin(['login' => $note['user_id'], 'select' => ['firstname', 'lastname']]);
+            $user = UserModel::getById(['id' => $note['user_id'], 'select' => ['firstname', 'lastname']]);
             $date = new \DateTime($note['creation_date']);
             $date = $date->format('d-m-Y H:i');
 
@@ -161,5 +253,30 @@ class NoteController
         }
 
         return $response->withJson(['templates' => $templates]);
+    }
+
+    public static function hasRightById(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id', 'userId']);
+        ValidatorModel::intVal($args, ['id', 'userId']);
+
+        $note = NoteModel::getById(['select' => ['user_id'], 'id' => $args['id']]);
+        if ($note['user_id'] == $args['userId']) {
+            return true;
+        }
+
+        $user = UserModel::getById(['select' => ['user_id'], 'id' => $args['userId']]);
+        $userEntities = EntityModel::getByLogin(['login' => $user['user_id'], 'select' => ['entity_id']]);
+        $userEntities = array_column($userEntities, 'entity_id');
+        if (empty($userEntities)) {
+            return false;
+        }
+
+        $noteEntities = NoteEntityModel::get(['select' => [1], 'where' => ['note_id = ?', 'item_id in (?)'], 'data' => [$args['id'], $userEntities]]);
+        if (empty($noteEntities)) {
+            return false;
+        }
+
+        return true;
     }
 }

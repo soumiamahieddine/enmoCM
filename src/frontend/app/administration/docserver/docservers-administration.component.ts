@@ -29,7 +29,7 @@ export class DocserversAdministrationComponent implements OnInit {
     docserversTypes     : any = {};
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
     
     constructor(
         public http: HttpClient, 

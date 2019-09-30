@@ -84,7 +84,7 @@ export class UserAdministrationComponent implements OnInit {
     maarchParapheurConnectionStatus = true;
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

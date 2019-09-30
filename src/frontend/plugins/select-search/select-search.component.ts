@@ -2,7 +2,8 @@ import {
     AfterViewInit, ChangeDetectorRef,
     Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, QueryList,
     ViewChild,
-    Renderer2
+    Renderer2,
+    Output
 } from '@angular/core';
 import { ControlValueAccessor, FormControl } from '@angular/forms';
 import { MatOption, MatSelect } from '@angular/material';
@@ -10,6 +11,7 @@ import { take, takeUntil, startWith, map } from 'rxjs/operators';
 import { Subject, ReplaySubject, Observable } from 'rxjs';
 import { LatinisePipe } from 'ngx-pipes';
 import { LANG } from '../../app/translate.component';
+import { AppService } from '../../service/app.service';
 
 @Component({
     selector: 'plugin-select-search',
@@ -25,7 +27,14 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
 
     @Input('datas') datas: any;
 
+    @Input('label') label: string;
+
     @Input('showResetOption') showResetOption: boolean;
+
+    /**
+     * Catch external event after select an element in autocomplete
+     */
+    @Output('afterSelected') afterSelected = new EventEmitter();
 
     /** Reference to the search input field */
     @ViewChild('searchSelectInput', { read: ElementRef, static: true }) searchSelectInput: ElementRef;
@@ -63,7 +72,7 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     formControlSearch = new FormControl();
 
 
-    constructor(private latinisePipe: LatinisePipe, private changeDetectorRef: ChangeDetectorRef, private renderer: Renderer2) {
+    constructor(private latinisePipe: LatinisePipe, private changeDetectorRef: ChangeDetectorRef, private renderer: Renderer2, public appService: AppService) {
 
 
     }
@@ -89,7 +98,9 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
             .subscribe((opened) => {
                 if (opened) {
                     // focus the search field when opening
-                    this._focus();
+                    if(!this.appService.getViewMode()) {
+                        this._focus();
+                    }
                 } else {
                     // clear it when closing
                     //this._reset();
@@ -121,10 +132,10 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
             
         }, 800);*/
         this.filteredDatas = this.formControlSearch.valueChanges
-        .pipe(
-            startWith(''),
-            map(value => this._filter(value))
-        );
+            .pipe(
+                startWith(''),
+                map(value => this._filter(value))
+            );
 
 
         // this.initMultipleHandling();
@@ -231,8 +242,10 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
             .pipe(takeUntil(this._onDestroy))
             .subscribe(() => {
                 // note: this is hacky, but currently there is no better way to do this
-                this.searchSelectInput.nativeElement.parentElement.parentElement
-                    .parentElement.parentElement.parentElement.classList.add(overlayClass);
+                if (this.searchSelectInput !== undefined) {
+                    this.searchSelectInput.nativeElement.parentElement.parentElement
+                        .parentElement.parentElement.parentElement.classList.add(overlayClass);
+                }
             });
 
         this.overlayClassSet = true;
@@ -286,4 +299,9 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
         }
     }
 
+    launchEvent(ev: any) {
+        if (this.afterSelected !== undefined) {
+            this.afterSelected.emit(ev.value);
+        }
+    }
 }

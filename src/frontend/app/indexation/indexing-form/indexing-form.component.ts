@@ -9,7 +9,7 @@ import { tap, catchError, finalize, exhaustMap, map } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { FormControl, Validators, FormGroup, ValidationErrors } from '@angular/forms';
+import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 
 @Component({
     selector: 'app-indexing-form',
@@ -31,16 +31,6 @@ export class IndexingFormComponent implements OnInit {
     fieldCategories: any[] = ['mail', 'contact', 'process', 'classement'];
 
     indexingModelsCore: any[] = [
-        {
-            identifier: 'category_id',
-            label: this.lang.category_id,
-            unit: 'mail',
-            type: 'select',
-            system: true,
-            mandatory: true,
-            default_value: '',
-            values: []
-        },
         {
             identifier: 'doctype',
             label: this.lang.doctype,
@@ -165,6 +155,9 @@ export class IndexingFormComponent implements OnInit {
 
     arrFormControl: any = {};
 
+    currentCategory: string = '';
+    currentPriorityColor: string = '';
+
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
@@ -190,17 +183,22 @@ export class IndexingFormComponent implements OnInit {
                     this.availableCustomFields = data.customFields.map((info: any) => {
                         info.identifier = 'indexingCustomField_' + info.id;
                         info.system = false;
+                        info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
+                            return {
+                                id: custVal,
+                                label: custVal
+                            }
+                        }) : info.values;
                         return info;
                     });
                     this.fieldCategories.forEach(element => {
                         this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
                         this['indexingModels_' + element].forEach((field: any) => {
-                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: false }, field.mandatory ? [Validators.required] : []);
+                            this.initValidator(field);
                         });
                     });
                     this.initElemForm();
                 }),
-                //finalize(() => this.loading = false),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -217,7 +215,7 @@ export class IndexingFormComponent implements OnInit {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            this.arrFormControl[event.item.data.identifier] = new FormControl({ value: '', disabled: false }, event.item.data.mandatory ? [Validators.required] : []);
+            this.initValidator(event.item.data);
             transferArrayItem(event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
@@ -302,12 +300,13 @@ export class IndexingFormComponent implements OnInit {
         const myObservable = of(42);
 
         myObservable.pipe(
-            tap(() => {
-                console.log('fuu');
-            }),
             exhaustMap(() => this.initializeRoutes()),
             tap((data) => {
-                console.log(data.structure);
+                if (!this.adminMode) {
+                    this.arrFormControl['mail­tracking'].setValue(false);
+                }
+                this.currentPriorityColor = '';
+
                 this.fieldCategories.forEach(element => {
                     this['indexingModels_' + element].forEach((elem: any) => {
                         if (elem.identifier === 'docDate') {
@@ -356,6 +355,14 @@ export class IndexingFormComponent implements OnInit {
                             elem.startDate = 'docDate';
                             elem.endDate = '_TODAY';
 
+                        } else if (elem.identifier === 'initiator' && !this.adminMode) {
+                            elem.values = this.headerService.user.entities.map((entity: any) => {
+                                return {
+                                    id: entity.id,
+                                    label: entity.entity_label
+                                }
+                            });
+
                         } else if (elem.identifier === 'processLimitDate') {
                             elem.startDate = '_TODAY';
                             elem.endDate = '';
@@ -364,6 +371,7 @@ export class IndexingFormComponent implements OnInit {
                             elem.values = data.categories;
 
                         } else if (elem.identifier === 'priority') {
+                            elem.event = 'setPriorityColor';
                             elem.values = data.priorities;
                         } else if (elem.identifier === 'doctype') {
                             let title = '';
@@ -400,6 +408,7 @@ export class IndexingFormComponent implements OnInit {
                                 }
                             });
                             elem.values = arrValues;
+                            elem.event = 'calcLimitDate';
                         }
                     });
                 });
@@ -427,9 +436,6 @@ export class IndexingFormComponent implements OnInit {
 
                 } else if (elem.identifier === 'priority') {
                     arrayRoutes.push(this.http.get('../../rest/priorities'));
-
-                } else if (elem.identifier === 'category_id') {
-                    arrayRoutes.push(this.http.get('../../rest/categories'));
 
                 } else if (elem.identifier === 'doctype') {
                     arrayRoutes.push(this.http.get('../../rest/doctypes'));
@@ -460,9 +466,19 @@ export class IndexingFormComponent implements OnInit {
     }
 
     loadForm(indexModelId: number) {
+
+        Object.keys(this.arrFormControl).forEach(element => {
+            delete this.arrFormControl[element];
+        });
+
         this.loading = true;
 
         this.availableFields = JSON.parse(JSON.stringify(this.availableFieldsClone));
+
+        if (!this.adminMode) {
+            this.arrFormControl['mail­tracking'] = new FormControl({ value: '', disabled: this.adminMode ? true : false });
+        }
+        
 
         this.fieldCategories.forEach(category => {
             this['indexingModels_' + category] = [];
@@ -473,20 +489,28 @@ export class IndexingFormComponent implements OnInit {
                 this.availableCustomFields = data.customFields.map((info: any) => {
                     info.identifier = 'indexingCustomField_' + info.id;
                     info.system = false;
+                    info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
+                        return {
+                            id: custVal,
+                            label: custVal
+                        }
+                    }) : info.values;
                     return info;
                 });
             }),
             exhaustMap((data) => this.http.get("../../rest/indexingModels/" + indexModelId)),
             tap((data: any) => {
+
+                this.currentCategory = data.indexingModel.category;
                 let fieldExist: boolean;
                 if (data.indexingModel.fields.length === 0) {
                     this.fieldCategories.forEach(element => {
                         this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
                         this.indexingModelsCore.forEach(field => {
-                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false }, (field.mandatory && !this.adminMode) ? [Validators.required] : []);
+                            this.initValidator(field);
                         });
                     });
-                    this.notify.error("Champs introuvables! les données de base ont été chargés");
+                    this.notify.error(this.lang.noFieldInModelMsg);
                 } else {
                     data.indexingModel.fields.forEach((field: any) => {
                         fieldExist = false;
@@ -530,9 +554,9 @@ export class IndexingFormComponent implements OnInit {
 
                         if (fieldExist) {
                             this['indexingModels_' + field.unit].push(field);
-                            this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false }, (field.mandatory && !this.adminMode) ? [Validators.required] : []);
+                            this.initValidator(field);
                         } else {
-                            this.notify.error("Le champ " + field.identifier + " n'existe pas !");
+                            this.notify.error(this.lang.fieldNotExist + ': ' + field.identifier);
                         }
 
                     });
@@ -541,12 +565,37 @@ export class IndexingFormComponent implements OnInit {
                 this.initElemForm();
                 this.createForm();
             }),
-            //finalize(() => this.loading = false),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
             })
         ).subscribe();
+    }
+
+    initValidator(field: any) {
+        let valArr: ValidatorFn[] = [];
+
+        this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false });
+
+        if (field.type === 'integer') {
+            valArr.push(this.regexValidator(new RegExp('[+-]?([0-9]*[.])?[0-9]+'), { 'floatNumber': '' }));
+        }
+
+        if (field.mandatory && !this.adminMode) {
+            valArr.push(Validators.required);
+        }
+
+        this.arrFormControl[field.identifier].setValidators(valArr);
+    }
+
+    regexValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (!control.value) {
+                return null;
+            }
+            const valid = regex.test(control.value);
+            return valid ? null : error;
+        };
     }
 
     isValidForm() {
@@ -591,17 +640,40 @@ export class IndexingFormComponent implements OnInit {
             this.arrFormControl[field.identifier].disable();
             this.arrFormControl[field.identifier].setValue(new Date());
         } else {
+            this.arrFormControl[field.identifier].setValue('');
             this.arrFormControl[field.identifier].enable();
         }
     }
 
+    launchEvent(value: any, field: any) {
+        this[field.event](field, value);
+    }
 
-    // TO DO
-    _handleKeydown(event: KeyboardEvent) {
-        if (event.keyCode === 32) {
-            // do not propagate spaces to MatSelect, as this would select the currently active option
-            event.stopPropagation();
+    calcLimitDate(field: any, value: any) {
+
+        if (this.arrFormControl['processLimitDate'] !== undefined) {
+            this.http.get("../../rest/indexing/processLimitDate", { params: { "doctype": value } }).pipe(
+                tap((data: any) => {
+                    const limitDate = new Date(data.processLimitDate);
+                    this.arrFormControl['processLimitDate'].setValue(limitDate);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         }
+    }
 
+    toggleMailTracking() {
+        this.arrFormControl['mail­tracking'].setValue(!this.arrFormControl['mail­tracking'].value);
+    }
+
+    setPriorityColor(field: any, value: any) {
+        this.currentPriorityColor = field.values.filter((fieldVal: any) => fieldVal.id === value).map((fieldVal: any) => fieldVal.color)[0];
+    }
+
+    changeCategory(categoryId: string) {
+        this.currentCategory = categoryId;
     }
 }

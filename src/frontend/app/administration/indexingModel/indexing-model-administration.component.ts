@@ -6,7 +6,7 @@ import { HeaderService } from '../../../service/header.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../service/app.service';
-import { tap, catchError, finalize } from 'rxjs/operators';
+import { tap, catchError, finalize, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { IndexingFormComponent } from '../../indexation/indexing-form/indexing-form.component';
@@ -37,6 +37,7 @@ export class IndexingModelAdministrationComponent implements OnInit {
     indexingModel: any = {
         id: 0,
         label: '',
+        category: 'incoming',
         default: false,
         owner: 0,
         private: false
@@ -81,7 +82,9 @@ export class IndexingModelAdministrationComponent implements OnInit {
         }
     ];
 
-    availableCustomFields: any[] = []
+    availableCustomFields: any[] = [];
+
+    categoriesList: any [];
 
     constructor(
         public http: HttpClient,
@@ -101,11 +104,27 @@ export class IndexingModelAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
+                this.creationMode = true;
+
                 this.headerService.setHeader(this.lang.indexingModelCreation);
 
+                this.http.get('../../rest/categories').pipe(
+                    tap((data: any) => {
+                        this.categoriesList = data.categories;
+                        
+                    }),
+                    tap((data: any) => {
+                        this.loading = false;
+                        setTimeout(() => {
+                            this.indexingForm.changeCategory(this.indexingModel.category); 
+                        }, 0);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
                 this.indexingModelClone = JSON.parse(JSON.stringify(this.indexingModel));
-                this.creationMode = true;
-                this.loading = false;
 
             } else {
                 this.creationMode = false;
@@ -118,6 +137,10 @@ export class IndexingModelAdministrationComponent implements OnInit {
 
                         this.indexingModelClone = JSON.parse(JSON.stringify(this.indexingModel));
 
+                    }),
+                    exhaustMap(() => this.http.get('../../rest/categories')),
+                    tap((data: any) => {
+                        this.categoriesList = data.categories;
                     }),
                     finalize(() => this.loading = false),
                     catchError((err: any) => {
@@ -182,5 +205,9 @@ export class IndexingModelAdministrationComponent implements OnInit {
 
     setModification() {
         this.indexingModelClone = JSON.parse(JSON.stringify(this.indexingModel));
+    }
+
+    changeCategory(ev: any) {
+        this.indexingForm.changeCategory(ev.value);
     }
 }

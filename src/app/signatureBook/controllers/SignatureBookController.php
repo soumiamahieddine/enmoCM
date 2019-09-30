@@ -105,7 +105,7 @@ class SignatureBookController
         $datas['documents']             = $documents;
         $datas['currentAction']         = $currentAction;
         $datas['resList']               = $resources;
-        $datas['nbNotes']               = NoteModel::countByResId(['resId' => $resId, 'login' => $GLOBALS['userId']]);
+        $datas['nbNotes']               = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['id'], 'login' => $GLOBALS['userId']]);
         $datas['nbLinks']               = count(LinkModel::getByResId(['resId' => $resId]));
         $datas['signatures']            = UserSignatureModel::getByUserSerialId(['userSerialid' => $currentUser['id']]);
         $datas['consigne']              = UserModel::getCurrentConsigneById(['resId' => $resId]);

@@ -12,7 +12,6 @@
 namespace Doctype\models;
 
 use SrcCore\models\ValidatorModel;
-use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
 class DoctypeModelAbstract
@@ -55,7 +54,7 @@ class DoctypeModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['description', 'doctypes_first_level_id', 'doctypes_second_level_id', 'coll_id']);
+        ValidatorModel::notEmpty($aArgs, ['description', 'doctypes_first_level_id', 'doctypes_second_level_id']);
         ValidatorModel::intVal($aArgs, ['doctypes_first_level_id', 'doctypes_second_level_id']);
 
         $aArgs['type_id'] = DatabaseModel::getNextSequenceValue(['sequenceId' => 'doctypes_type_id_seq']);
@@ -110,25 +109,6 @@ class DoctypeModelAbstract
         ]);
 
         return true;
-    }
-
-    public static function getProcessMode()
-    {
-        $return['processing_modes']      = [];
-        $return['process_mode_priority'] = [];
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
-        if ($loadedXml) {
-            $processingModes = $loadedXml->process_modes;
-            if (count($processingModes) > 0) {
-                foreach ($processingModes->process_mode as $process) {
-                    $return['processing_modes'][]      = (string) $process->label;
-                    $return['process_mode_priority'][] = (string) $process->process_mode_priority;
-                }
-            }
-        }
-
-        return $return;
     }
 
     public static function delete(array $aArgs)

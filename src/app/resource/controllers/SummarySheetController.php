@@ -518,12 +518,13 @@ class SummarySheetController
             } elseif ($unit['unit'] == 'notes') {
                 $notes = [];
                 $found = false;
+                $user = UserModel::getByLogin(['select' => ['id'], 'login' => $args['login']]);
                 foreach ($args['data']['notes'] as $noteKey => $rawNote) {
                     if ($found && $rawNote['identifier'] != $resource['res_id']) {
                         break;
                     } elseif ($rawNote['identifier'] == $resource['res_id']) {
                         $allowed = false;
-                        if ($rawNote['user_id'] == $args['login']) {
+                        if ($rawNote['user_id'] == $user['id']) {
                             $allowed = true;
                         } else {
                             $noteEntities = NoteEntityModel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$rawNote['id']]]);
@@ -540,7 +541,7 @@ class SummarySheetController
                         }
                         if ($allowed) {
                             $notes[] = [
-                                'user'  => UserModel::getLabelledUserById(['login' => $rawNote['user_id']]),
+                                'user'  => UserModel::getLabelledUserById(['id' => $rawNote['user_id']]),
                                 'date'  => TextFormatModel::formatDate($rawNote['creation_date']),
                                 'note'  => $rawNote['note_text']
                             ];

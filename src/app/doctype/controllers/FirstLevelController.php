@@ -115,7 +115,6 @@ class FirstLevelController
             'data'      => ['Y'],
             'order_by'  => ['doctypes_second_level_label asc']
         ]);
-        $obj['processModes'] = DoctypeModel::getProcessMode();
         $obj['models'] = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
         $obj['indexes'] = DoctypeIndexesModel::getAllIndexes();
 

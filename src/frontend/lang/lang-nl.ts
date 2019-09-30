@@ -1148,4 +1148,14 @@ export const LANG_NL = {
     "initiatorEntityAlt" : "Initiator entity", //_TO_TRANSLATE 
     "autocompleteInput" : "Autocomplete input", //_TO_TRANSLATE
     "typeEnterToCreate" : "Type on <b>enter</b> to create element", //_TO_TRANSLATE
+    "ged_doc" : "GED Document", //_TO_TRANSLATE
+    "trackThisMail" : "Track this mail", //_TO_TRANSLATE
+    "untrackThisMail" : "Untrack this mail", //_TO_TRANSLATE
+    "noFieldInModelMsg" : "No field found ! Default fields have been loaded", //_TO_TRANSLATE
+    "fieldNotExist" : "Field not exist", //_TO_TRANSLATE
+    "saveAsModel" : "Save as Model", //_TO_TRANSLATE
+    "noAvailableIndexingModel" : "No indexing model found<br /><br /><small>Please create a model in Administation > Indexing model</small>", //_TO_TRANSLATE
+    "noAvaiblableAction" : "<b>No available action</b>, please set an action in <b>Administration > User groups > Mail indexing</b>.", //_TO_TRANSLATE
+    "eraseValue" : "Erase value", //_TO_TRANSLATE
+    "todayDate" : "Today date", //_TO_TRANSLATE
 };

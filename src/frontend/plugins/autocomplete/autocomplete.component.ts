@@ -91,7 +91,7 @@ export class PluginAutocomplete implements OnInit {
     valuesToDisplay: any = {};
 
     dialogRef: MatDialogRef<any>;
-    
+
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
@@ -198,7 +198,7 @@ export class PluginAutocomplete implements OnInit {
                     }
                 })
             ).subscribe();
-        });   
+        });
     }
 
     setFormValue(item: any) {
@@ -245,26 +245,28 @@ export class PluginAutocomplete implements OnInit {
     }
 
     addItem() {
-        const newElem = {};
+        if (this.manageDatas !== undefined) {
+            const newElem = {};
 
-        newElem[this.key] = this.myControl.value;
+            newElem[this.key] = this.myControl.value;
 
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: 'Voulez-vous créer cet élément <b>' + newElem[this.key] + '</b>&nbsp;?' } });
+            this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: 'Voulez-vous créer cet élément <b>' + newElem[this.key] + '</b>&nbsp;?' } });
 
-        this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.post('../..' + this.manageDatas, {label : newElem[this.key]})),
-            tap((data: any) => {
-                for (var key in data) {
-                    newElem['id'] = data[key];
-                }
-                this.setFormValue(newElem);
-                this.notify.success(this.lang.elementAdded);
-            }),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+            this.dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'ok'),
+                exhaustMap(() => this.http.post('../..' + this.manageDatas, { label: newElem[this.key] })),
+                tap((data: any) => {
+                    for (var key in data) {
+                        newElem['id'] = data[key];
+                    }
+                    this.setFormValue(newElem);
+                    this.notify.success(this.lang.elementAdded);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 }

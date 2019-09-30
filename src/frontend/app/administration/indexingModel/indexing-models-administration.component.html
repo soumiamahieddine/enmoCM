@@ -33,27 +33,32 @@
                     </div>
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="label" matSortDirection="asc">
+                    <ng-container matColumnDef="category">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.category_id}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{lang[element.category]}} </mat-cell>
+                    </ng-container>
                     <ng-container matColumnDef="label">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.label}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2">{{lang.label}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:2"> {{element.label}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="private">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.perimeter}}</mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                            <span [ngClass]="{'dataLabelWarn': element.private, 'dataLabelPrimary': !element.private}" class="label">{{element.private ? lang.private : lang.public}}</span>
+                            <span [ngClass]="{'dataLabelWarn': element.private, 'dataLabelPrimary': !element.private}"
+                                class="label">{{element.private ? lang.private : lang.public}}</span>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="default">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.default}}</mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                                <span [ngClass]="{'dataLabelWarn': !element.default, 'dataLabelPrimary': element.default}" class="label">{{element.default ? lang.yes : lang.no}}</span>
+                            <span [ngClass]="{'dataLabelWarn': !element.default, 'dataLabelPrimary': element.default}"
+                                class="label">{{element.default ? lang.yes : lang.no}}</span>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
-                            <button mat-icon-button color="warn" [disabled]="element.is_system == 'Y'"
-                                matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();delete(element)">
+                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();delete(element)" [disabled]="element.default">
                                 <mat-icon class="fa fa-trash-alt fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>

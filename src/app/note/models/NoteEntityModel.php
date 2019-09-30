@@ -50,6 +50,20 @@ class NoteEntityModel
         return true;
     }
 
+    public static function delete(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'note_entities',
+            'where' => $args['where'],
+            'data'  => $args['data']
+        ]);
+
+        return true;
+    }
+
     public static function getWithEntityInfo(array $aArgs = [])
     {
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);

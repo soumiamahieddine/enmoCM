@@ -115,20 +115,6 @@
             <process_mode/>
         </type>
     </attachment_types>
-    <process_modes>
-        <process_mode>
-            <label>NORMAL</label>
-            <process_mode_priority>poiuytre1357nbvc</process_mode_priority>
-        </process_mode>
-        <process_mode>
-            <label>SVA</label>
-            <process_mode_priority>poiuytre1357nbvc</process_mode_priority>
-        </process_mode>
-        <process_mode>
-            <label>SVR</label>
-            <process_mode_priority>poiuytre1357nbvc</process_mode_priority>
-        </process_mode>
-    </process_modes>
     <contact_check>
         <check_days_before>5</check_days_before>  <!-- 0 if you want to disabled -->
     </contact_check>

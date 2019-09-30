@@ -3531,12 +3531,6 @@ if (!defined('_SETUP')) {
     define('_SETUP', 'Set up');
 }
 
-if (!defined('_PARAM_MLB_DOCTYPES')) {
-    define('_PARAM_MLB_DOCTYPES', 'Documents types configuration ');
-}
-if (!defined('_PARAM_MLB_DOCTYPES_DESC')) {
-    define('_PARAM_MLB_DOCTYPES_DESC', 'Doctypes configuration ');
-}
 if (!defined('_WELCOME_TEXT_LOAD')) {
     define('_WELCOME_TEXT_LOAD', 'Text loading of the home page');
 }

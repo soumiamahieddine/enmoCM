@@ -1,5 +1,6 @@
-<mat-form-field class="input-form" floatLabel="never">
-  <mat-select [formControl]="formControlSelect" [placeholder]="placeholderLabel" #test>
+<mat-form-field class="input-form" [floatLabel]="appService.getViewMode() ? '' : 'never'">
+  <mat-label *ngIf="appService.getViewMode()">{{label}}</mat-label>
+  <mat-select [formControl]="formControlSelect" [placeholder]="placeholderLabel" #test (selectionChange)="launchEvent($event)">
     <input *ngIf="datas.length > 5" matInput class="mat-select-search-input mat-select-search-hidden" />
 
     <div *ngIf="datas.length > 5" class="mat-select-search-inner" [ngClass]="{'mat-select-search-inner-multiple': matSelect.multiple}">

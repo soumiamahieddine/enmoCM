@@ -38,7 +38,10 @@ foreach ($customs as $custom) {
                 }
 
                 $label = (string)$value->label;
-                $type = (string)$value->type;
+                $type = trim((string)$value->type);
+                if ($type == 'float') {
+                    $type = 'integer';
+                }
 
                 $values = [];
                 if (!empty($value->values_list)) {

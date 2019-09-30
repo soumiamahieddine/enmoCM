@@ -4,11 +4,9 @@
 require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
 
 
-$db = new Database();
+$res = \Doctype\models\DoctypeModel::getById(['id' => $_POST['type_id']]);
 
-$stmt = $db->query("SELECT process_mode from mlb_doctype_ext WHERE type_id = ?", array($_POST['type_id']));
-$res = $stmt->fetchObject();
-$sve_type = $res->process_mode;
+$sve_type = $res['process_mode'];
 $_SESSION['process_mode'] = $sve_type;
 
 if (!empty($_SESSION['process_mode_priority'])) {

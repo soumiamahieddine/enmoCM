@@ -104,4 +104,19 @@ class TagModel
 
         return $tags;
     }
+
+    public static function update(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table'     => 'tags',
+            'set'       => empty($args['set']) ? [] : $args['set'],
+            'where'     => $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data']
+        ]);
+
+        return true;
+    }
 }

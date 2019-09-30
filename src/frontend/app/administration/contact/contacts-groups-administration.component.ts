@@ -32,7 +32,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
     displayedColumns = ['label', 'description', 'nbContacts', 'public', 'owner', 'actions',];
     dataSource = new MatTableDataSource(this.contactsGroups);
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

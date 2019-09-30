@@ -349,7 +349,7 @@ class ReceiveMessageExchangeController
         foreach ($aArgs['dataObject']->Comment as $value) {
             NoteModel::create([
                 "resId" => $aArgs['resId'],
-                "login"    => "superadmin",
+                "user_id"    => 0,
                 "note_text"  => $value->value
             ]);
 

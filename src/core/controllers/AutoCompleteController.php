@@ -35,7 +35,7 @@ use Folder\controllers\FolderController;
 class AutoCompleteController
 {
     const LIMIT = 50;
-    const TINY_LIMIT = 5;
+    const TINY_LIMIT = 10;
 
     public static function getContacts(Request $request, Response $response)
     {
@@ -191,8 +191,14 @@ class AutoCompleteController
 
         $searchItems = explode(' ', $data['search']);
 
-        $fields = '(contact_firstname ilike ? OR contact_lastname ilike ? OR firstname ilike ? OR lastname ilike ? OR society ilike ? 
-                    OR address_num ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postal_code ilike ?)';
+        $fields = ['contact_firstname', 'contact_lastname', 'firstname', 'lastname', 'society', 'address_num', 'address_street', 'address_town', 'address_postal_code'];
+        foreach ($fields as $key => $field) {
+            $fields[$key] = "translate({$field}, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
+            $fields[$key] .= "ilike translate(?, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
+        }
+        $fields = implode(' OR ', $fields);
+        $fields = "($fields)";
+
         $where = [];
         $requestData = [];
         foreach ($searchItems as $item) {
@@ -208,6 +214,7 @@ class AutoCompleteController
             'select'    => ['*'],
             'where'     => $where,
             'data'      => $requestData,
+            'orderBy'   => ["is_corporate_person DESC", "case is_corporate_person when 'Y' then (society, lastname) else (contact_lastname, society) end"],
             'limit'     => self::TINY_LIMIT
         ]);
 

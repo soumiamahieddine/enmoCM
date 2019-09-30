@@ -43,8 +43,8 @@ export class HistoryAdministrationComponent implements OnInit {
 
     @ViewChild('paginator', { static: false }) paginator: MatPaginator;
     @ViewChild('batchPaginator', { static: false }) batchPaginator: MatPaginator;
-    @ViewChild('sort', { static: true }) sort: MatSort;
-    @ViewChild('batchSort', { static: true }) batchSort: MatSort;
+    @ViewChild('sort', { static: false }) sort: MatSort;
+    @ViewChild('batchSort', { static: false }) batchSort: MatSort;
     applyFilter(filterValue: string, historyType : string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

@@ -74,7 +74,7 @@ class ActionMethodController
             if (!empty(trim($aArgs['note']))) {
                 NoteModel::create([
                     'resId'     => $resource,
-                    'login'     => $GLOBALS['userId'],
+                    'user_id'   => $GLOBALS['id'],
                     'note_text' => $aArgs['note']
                 ]);
             }

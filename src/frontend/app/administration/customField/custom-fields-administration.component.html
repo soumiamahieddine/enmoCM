@@ -97,17 +97,17 @@
                             <ng-container *ngIf="customField.type === 'string'">
                                 <mat-form-field class="input-form" floatLabel="never">
                                     <textarea matInput [placeholder]="lang[customField.type + 'Input']"
-                                        matTextareaAutosize matAutosizeMinRows="1" cdkAutosizeMaxRows="6"></textarea>
+                                        matTextareaAutosize matAutosizeMinRows="1" cdkAutosizeMaxRows="6" disabled></textarea>
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="customField.type === 'integer'">
                                 <mat-form-field class="input-form" floatLabel="never">
-                                    <input type="number" matInput [placeholder]="lang[customField.type + 'Input']">
+                                    <input type="number" matInput [placeholder]="lang[customField.type + 'Input']" disabled>
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="customField.type === 'select'">
                                 <mat-form-field class="input-form" floatLabel="never">
-                                    <mat-select [placeholder]="lang[customField.type + 'Input']">
+                                    <mat-select [placeholder]="lang[customField.type + 'Input']" disabled>
                                         <mat-option *ngFor="let sample of sampleIncrement" [value]="sample">
                                             {{lang.choice}} {{sample}}
                                         </mat-option>
@@ -117,13 +117,13 @@
                             <ng-container *ngIf="customField.type === 'date'">
                                 <mat-form-field class="input-form" floatLabel="never">
                                     <input matInput [matDatepicker]="picker"
-                                        [placeholder]="lang[customField.type + 'Input']" (click)="picker.open()">
+                                        [placeholder]="lang[customField.type + 'Input']" (click)="picker.open()" disabled>
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
                             </ng-container>
                             <ng-container *ngIf="customField.type === 'radio'">
-                                <mat-radio-group class="radio-form" color="primary">
+                                <mat-radio-group class="radio-form" color="primary" disabled>
                                     <mat-radio-button *ngFor="let sample of sampleIncrement" [value]="sample">
                                         {{lang.choice}} {{sample}}
                                     </mat-radio-button>
@@ -131,7 +131,7 @@
                             </ng-container>
                             <ng-container *ngIf="customField.type === 'checkbox'">
                                 <div class="input-form checkbox-form">
-                                    <mat-selection-list #shoes class="div-list">
+                                    <mat-selection-list #sampleList class="div-list" disabled>
                                         <mat-list-option *ngFor="let sample of sampleIncrement" [value]="sample"
                                             checkboxPosition="before">
                                             {{lang.choice}} {{sample}}
@@ -139,7 +139,7 @@
                                     </mat-selection-list>
                                 </div>
                                 <mat-chip-list class="checkbox-selected-list">
-                                    <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
+                                    <mat-chip *ngFor="let chip of sampleList.selectedOptions.selected">
                                         {{lang.selectedValue}}
                                     </mat-chip>
                                 </mat-chip-list>

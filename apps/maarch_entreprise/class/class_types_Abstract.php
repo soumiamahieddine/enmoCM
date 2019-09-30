@@ -75,13 +75,12 @@ abstract class types_Abstract extends database
             . " dsl.css_style as style_level2 FROM " . DOCTYPES_TABLE . " d, "
             . $_SESSION['tablename']['doctypes_second_level'] . " dsl, "
             . $_SESSION['tablename']['doctypes_first_level']
-            . " dfl WHERE coll_id = ? and d.enabled = 'Y' "
+            . " dfl WHERE d.enabled = 'Y' "
             . "and d.doctypes_second_level_id = dsl.doctypes_second_level_id "
             . "and d.doctypes_first_level_id = dfl.doctypes_first_level_id "
             . "and dsl.enabled = 'Y' and dfl.enabled = 'Y' "
             . "order by dfl.doctypes_first_level_label,"
-            . "dsl.doctypes_second_level_label, d.description ",
-            array($collId)
+            . "dsl.doctypes_second_level_label, d.description "
         );
         $lastLevel1 = '';
         $nbLevel1 = 0;

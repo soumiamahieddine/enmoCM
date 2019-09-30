@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 import { HeaderService } from '../../../../service/header.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 declare function $j(selector: any): any;
 
@@ -120,7 +121,7 @@ export class IndexingAdministrationComponent implements OnInit {
                 "three_state": false //no cascade selection
             },
             'core': {
-                force_text : true,
+                force_text: true,
                 'themes': {
                     'name': 'proton',
                     'responsive': true
@@ -335,5 +336,21 @@ export class IndexingAdministrationComponent implements OnInit {
             })
         ).subscribe();
     }
+    drop(event: CdkDragDrop<string[]>) {
 
+        if (event.previousContainer === event.container) {
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            const newActionListIds = this.indexingInfo.actions.map((action: any) => action.id);
+
+            this.http.put('../../rest/groups/' + this.groupId + '/indexing', { actions: newActionListIds }).pipe(
+                tap(() => {
+                    this.notify.success(this.lang.actionAdded);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
 }

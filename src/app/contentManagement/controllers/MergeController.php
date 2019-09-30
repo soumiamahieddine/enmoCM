@@ -16,7 +16,7 @@ namespace ContentManagement\controllers;
 
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
-use Doctype\models\DoctypeExtModel;
+use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
@@ -94,7 +94,7 @@ class MergeController
         if (!empty($resource['nature_id'])) {
             $resource['nature_id'] = ResModel::getNatureLabel(['nature_id' => $resource['nature_id']]);
         }
-        $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_delay', 'process_mode']]);
+        $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_delay', 'process_mode']]);
         $resource['process_delay'] = $doctype['process_delay'];
         $resource['process_mode'] = $doctype['process_mode'];
 
@@ -144,7 +144,7 @@ class MergeController
         $mergedNote = '';
         $notes = NoteModel::getByUserIdForResource(['select' => ['note_text', 'creation_date', 'user_id'], 'resId' => $args['resId'], 'userId' => $args['userId']]);
         foreach ($notes as $note) {
-            $labelledUser = UserModel::getLabelledUserById(['login' => $note['user_id']]);
+            $labelledUser = UserModel::getLabelledUserById(['id' => $note['user_id']]);
             $creationDate = TextFormatModel::formatDate($note['creation_date'], 'd/m/Y');
             $mergedNote .= "{$labelledUser} : {$creationDate} : {$note['note_text']}\n";
         }

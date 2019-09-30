@@ -159,7 +159,7 @@ abstract class tag_controler_Abstract extends ObjectControler
          * Searching a tag by label
          * @If tag exists, return this value, else, return false
          */
-        if (empty($tag_id) || empty($coll_id)) {
+        if (empty($tag_id)) {
             return null;
         }
 

@@ -70,15 +70,6 @@ if (!isset($_REQUEST['priority_id']) || $_REQUEST['priority_id'] == '') {
 
 //Process limit process date compute
 //Bug fix if delay process is disabled in services
-if ($core->service_is_enabled('param_mlb_doctypes')) {
-
-    $stmt = $db->query("SELECT process_delay FROM " 
-        . $_SESSION['tablename']['mlb_doctype_ext'] . " WHERE type_id = ?", 
-        array($typeId)
-    );
-    $res = $stmt->fetchObject();
-    $delay = $res->process_delay;
-}
 
 if ($priorityDelay <> '') {
     $delay = $priorityDelay;

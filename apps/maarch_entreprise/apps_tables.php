@@ -35,9 +35,6 @@ if (! defined('APPS_DOCTYPES_LEVEL1')) {
 if (! defined('APPS_DOCTYPES_LEVEL2')) {
     define('APPS_DOCTYPES_LEVEL2', 'doctypes_second_level');
 }
-if (! defined('APPS_MLB_DOCTYPE_EXT')) {
-    define('APPS_MLB_DOCTYPE_EXT', 'mlb_doctype_ext');
-}
 if (! defined('APPS_SAVED_QUERIES')) {
     define('APPS_SAVED_QUERIES', 'saved_queries');
 }

@@ -73,6 +73,10 @@ CREATE TABLE doctypes
   retention_final_disposition character varying(255) DEFAULT NULL,
   retention_rule character varying(15) DEFAULT NULL,
   duration_current_use integer,
+  process_delay INTEGER NOT NULL,
+  delay1 INTEGER NOT NULL,
+  delay2 INTEGER NOT NULL,
+  process_mode CHARACTER VARYING(256) NOT NULL,
   CONSTRAINT doctypes_pkey PRIMARY KEY (type_id)
 )
 WITH (OIDS=FALSE);
@@ -1233,16 +1237,6 @@ CREATE TABLE mlb_coll_ext (
   address_id bigint
 )WITH (OIDS=FALSE);
 
-CREATE TABLE mlb_doctype_ext (
-  type_id bigint NOT NULL,
-  process_delay bigint NOT NULL DEFAULT '21',
-  delay1 bigint NOT NULL DEFAULT '14',
-  delay2 bigint NOT NULL DEFAULT '1',
-  process_mode character varying(255),
-  CONSTRAINT type_id PRIMARY KEY (type_id)
-)
-WITH (OIDS=FALSE);
-
 CREATE TABLE doctypes_indexes
 (
   type_id bigint NOT NULL,
@@ -1767,18 +1761,6 @@ CREATE TABLE convert_stack
 )
 WITH (OIDS=FALSE);
 
-DROP TABLE IF EXISTS indexingmodels;
-CREATE TABLE indexingmodels
-(
-  id serial NOT NULL,
-  label character varying(255) NOT NULL,
-  fields_content text NOT NULL,
-  CONSTRAINT indexingmodels_pkey PRIMARY KEY (id)
-)
-WITH (
-  OIDS=FALSE
-);
-
 CREATE TABLE password_rules
 (
   id serial,
@@ -1885,23 +1867,25 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE custom_fields
 (
-  id serial NOT NULL,
-  label character varying(256) NOT NULL,
-  type character varying(256) NOT NULL,
-  values jsonb,
-  CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
-  CONSTRAINT custom_fields_unique_key UNIQUE (label)
+    id serial NOT NULL,
+    label character varying(256) NOT NULL,
+    type character varying(256) NOT NULL,
+    values jsonb,
+    CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
+    CONSTRAINT custom_fields_unique_key UNIQUE (label)
 )
 WITH (OIDS=FALSE);
 
 CREATE TABLE indexing_models
 (
-  id SERIAL NOT NULL,
-  label character varying(256) NOT NULL,
-  "default" BOOLEAN NOT NULL,
-  owner INTEGER NOT NULL,
-  private BOOLEAN NOT NULL,
-  CONSTRAINT indexing_models_pkey PRIMARY KEY (id)
+    id SERIAL NOT NULL,
+    label character varying(256) NOT NULL,
+    category character varying(256) NOT NULL,
+    "default" BOOLEAN NOT NULL,
+    owner INTEGER NOT NULL,
+    private BOOLEAN NOT NULL,
+    master INTEGER DEFAULT NULL,
+    CONSTRAINT indexing_models_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 

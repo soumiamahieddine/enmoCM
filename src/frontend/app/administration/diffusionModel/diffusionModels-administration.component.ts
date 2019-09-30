@@ -35,7 +35,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
 
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();

@@ -240,6 +240,32 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     }
 
 
+//    if (
+//
+//        $sequence == $circuit_avis->nbAvis($res_id, $coll_id)-1
+//
+//    ){
+//
+//        $stmt = $db->query("SELECT status_id FROM groupbasket_status WHERE group_id = ? and basket_id = ? and action_id = ?"
+//
+//            ,array($_SESSION['current_basket']['group_id'],$_SESSION['current_basket']['id'],$id_action));
+//
+//
+//
+//        if($status = $stmt->fetchObject()){
+//
+//            $mailStatus = $status->status_id;
+//
+//            $stmt = $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", array($mailStatus, $res_id));
+//
+//        }
+//
+//    } else {
+//
+//        //$mailStatus = 'EAVIS';
+//
+//    }
+
     $circuit_avis->processAvis($res_id);
 
     # save note

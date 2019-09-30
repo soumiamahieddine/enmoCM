@@ -183,15 +183,22 @@ foreach ($customs as $custom) {
             ]);
             \Action\models\ActionModel::createCategories(['id' => $id, 'categories' => ['incoming', 'outgoing', 'internal', 'ged_doc']]);
         }
-        \Basket\models\ActionGroupBasketModel::create([
-            'id'                => $value['basket_id'],
-            'groupId'           => $value['group_id'],
-            'actionId'          => $id,
-            'whereClause'       => '',
-            'usedInBasketlist'  => 'N',
-            'usedInActionPage'  => 'Y',
-            'defaultActionList' => 'N'
+        $actionAlreadyExists = \Basket\models\ActionGroupBasketModel::get([
+            'select'            => [1],
+            'where'             => ['group_id = ?', 'basket_id = ?', 'id_action = ?'],
+            'data'          => [$value['group_id'], $value['basket_id'], $id]
         ]);
+        if (empty($actionAlreadyExists)) {
+            \Basket\models\ActionGroupBasketModel::create([
+                'id'                => $value['basket_id'],
+                'groupId'           => $value['group_id'],
+                'actionId'          => $id,
+                'whereClause'       => '',
+                'usedInBasketlist'  => 'N',
+                'usedInActionPage'  => 'Y',
+                'defaultActionList' => 'N'
+            ]);
+        }
 
         $migrated++;
     }
@@ -215,7 +222,7 @@ foreach ($customs as $custom) {
     }
 
     \SrcCore\models\DatabaseModel::update([
-        'set'   => ['keyword' => null],
+        'set'   => ['keyword' => ''],
         'table' => 'actions',
         'where' => ['keyword = ?'],
         'data'  => ['indexing']
@@ -223,4 +230,3 @@ foreach ($customs as $custom) {
 
     printf("Migration Indexing Basket (CUSTOM {$custom}) : " . $migrated . " action(s) avec des status (mot clé indexation) trouvé(s) et migré(s).\n");
 }
-

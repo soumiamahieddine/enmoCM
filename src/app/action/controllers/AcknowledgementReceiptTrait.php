@@ -18,7 +18,7 @@ use ContentManagement\controllers\MergeController;
 use Convert\controllers\ConvertPdfController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
-use Doctype\models\DoctypeExtModel;
+use Doctype\models\DoctypeModel;
 use Email\controllers\EmailController;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
@@ -62,7 +62,7 @@ trait AcknowledgementReceiptTrait
         }
 
         $resource = ResModel::getById(['select' => ['type_id', 'destination', 'subject'], 'resId' => $aArgs['resId']]);
-        $doctype = DoctypeExtModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
+        $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
 
         if ($doctype['process_mode'] == 'SVA') {
             $templateAttachmentType = 'sva';

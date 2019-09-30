@@ -42,10 +42,10 @@ while ($state <> 'END') {
     /* Load parameters                                                   */
     /**********************************************************************/
     case 'LOAD_DOCTYPES' :
-        $query = "SELECT count(1) as count FROM " . $collDoctypeExt;
+        $query = "SELECT count(1) as count FROM doctypes";
         $stmt = Bt_doQuery($db, $query);
         $totalDocTypes = $stmt->fetchObject()->count;
-        $query = "SELECT * FROM " . $collDoctypeExt;
+        $query = "SELECT * FROM doctypes";
         $stmt = Bt_doQuery($db, $query);
         $GLOBALS['doctypes'] = array();
         while ($doctypeRecordset = $stmt->fetchObject()) {

@@ -48,7 +48,7 @@ export class NotificationsAdministrationComponent implements OnInit {
     displayedColumns = ['notification_id', 'description', 'is_enabled', 'notifications'];
     dataSource = new MatTableDataSource(this.notifications);
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

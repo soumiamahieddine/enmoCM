@@ -38,17 +38,17 @@ class NoteModel
         return $notes;
     }
 
-    public static function getById(array $aArgs)
+    public static function getById(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::arrayType($args, ['select']);
 
         $note = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['notes'],
             'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']],
+            'data'      => [$args['id']],
         ]);
 
         if (empty($note[0])) {
@@ -58,58 +58,11 @@ class NoteModel
         return $note[0];
     }
 
-    public static function countByResId(array $aArgs)
+    public static function create(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'login']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['login']);
-
-        $nb = 0;
-        $countedNotes = [];
-        $entities = [];
-
-        $aEntities = DatabaseModel::select([
-            'select'    => ['entity_id'],
-            'table'     => ['users_entities'],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['login']]
-        ]);
-
-        foreach ($aEntities as $value) {
-            $entities[] = $value['entity_id'];
-        }
-
-        $aNotes = DatabaseModel::select([
-            'select'    => ['notes.id', 'user_id', 'item_id'],
-            'table'     => ['notes', 'note_entities'],
-            'left_join' => ['notes.id = note_entities.note_id'],
-            'where'     => ['identifier = ?'],
-            'data'      => [$aArgs['resId']]
-        ]);
-
-        foreach ($aNotes as $value) {
-            if (empty($value['item_id']) && !in_array($value['id'], $countedNotes)) {
-                ++$nb;
-                $countedNotes[] = $value['id'];
-            } elseif (!empty($value['item_id'])) {
-                if ($value['user_id'] == $aArgs['login'] && !in_array($value['id'], $countedNotes)) {
-                    ++$nb;
-                    $countedNotes[] = $value['id'];
-                } elseif (in_array($value['item_id'], $entities) && !in_array($value['id'], $countedNotes)) {
-                    ++$nb;
-                    $countedNotes[] = $value['id'];
-                }
-            }
-        }
-
-        return $nb;
-    }
-
-    public static function create(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'note_text', 'login']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['login', 'note_text']);
+        ValidatorModel::notEmpty($args, ['resId', 'note_text', 'user_id']);
+        ValidatorModel::intVal($args, ['resId', 'user_id']);
+        ValidatorModel::stringType($args, ['note_text']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'notes_id_seq']);
 
@@ -117,14 +70,43 @@ class NoteModel
             'table'         => 'notes',
             'columnsValues' => [
                 'id'            => $nextSequenceId,
-                'identifier'    => $aArgs['resId'],
-                'user_id'       => $aArgs['login'],
+                'identifier'    => $args['resId'],
+                'user_id'       => $args['user_id'],
                 'creation_date' => 'CURRENT_TIMESTAMP',
-                'note_text'     => $aArgs['note_text']
+                'note_text'     => $args['note_text']
             ]
         ]);
 
         return $nextSequenceId;
+    }
+
+    public static function update(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table' => 'notes',
+            'set'   => $args['set'],
+            'where' => $args['where'],
+            'data'  => $args['data']
+        ]);
+
+        return true;
+    }
+
+    public static function delete(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'notes',
+            'where' => $args['where'],
+            'data'  => $args['data']
+        ]);
+
+        return true;
     }
 
     public static function getByResId(array $aArgs = [])
@@ -136,7 +118,7 @@ class NoteModel
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['notes', 'users', 'users_entities', 'entities'],
-            'left_join' => ['notes.user_id = users.user_id', 'users.user_id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id'],
+            'left_join' => ['notes.user_id = users.id', 'users.user_id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id'],
             'where'     => ['notes.identifier = ?', '(users_entities.primary_entity=\'Y\' or notes.user_id = \'superadmin\')'],
             'data'      => [$aArgs['resId']],
             'order_by'  => empty($aArgs['orderBy']) ? ['creation_date'] : $aArgs['orderBy']
@@ -172,6 +154,53 @@ class NoteModel
         return $aReturn;
     }
 
+    public static function countByResId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'login', 'userId']);
+        ValidatorModel::intVal($aArgs, ['resId', 'userId']);
+        ValidatorModel::stringType($aArgs, ['login']);
+
+        $nb = 0;
+        $countedNotes = [];
+        $entities = [];
+
+        $aEntities = DatabaseModel::select([
+            'select'    => ['entity_id'],
+            'table'     => ['users_entities'],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['login']]
+        ]);
+
+        foreach ($aEntities as $value) {
+            $entities[] = $value['entity_id'];
+        }
+
+        $aNotes = DatabaseModel::select([
+            'select'    => ['notes.id', 'user_id', 'item_id'],
+            'table'     => ['notes', 'note_entities'],
+            'left_join' => ['notes.id = note_entities.note_id'],
+            'where'     => ['identifier = ?'],
+            'data'      => [$aArgs['resId']]
+        ]);
+
+        foreach ($aNotes as $value) {
+            if (empty($value['item_id']) && !in_array($value['id'], $countedNotes)) {
+                ++$nb;
+                $countedNotes[] = $value['id'];
+            } elseif (!empty($value['item_id'])) {
+                if ($value['user_id'] == $aArgs['userId'] && !in_array($value['id'], $countedNotes)) {
+                    ++$nb;
+                    $countedNotes[] = $value['id'];
+                } elseif (in_array($value['item_id'], $entities) && !in_array($value['id'], $countedNotes)) {
+                    ++$nb;
+                    $countedNotes[] = $value['id'];
+                }
+            }
+        }
+
+        return $nb;
+    }
+
     public static function getByUserIdForResource(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId', 'resId', 'select']);
@@ -197,7 +226,7 @@ class NoteModel
         foreach ($allNotes as $note) {
             $allowed = false;
 
-            if ($note['user_id'] == $user['user_id']) {
+            if ($note['user_id'] == $aArgs['userId']) {
                 $allowed = true;
             }
 
