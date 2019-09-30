@@ -15,7 +15,7 @@
                     <mat-form-field>
                         <mat-label>{{lang.category_id}}</mat-label>
                         <mat-select name="category" [(ngModel)]="indexingModel.category" [placeholder]="lang.category_id"
-                            required>
+                            required (selectionChange)="changeCategory($event)">
                             <mat-option *ngFor="let category of categoriesList;let i=index" [value]="category.id">
                                 {{category.label}}
                             </mat-option>

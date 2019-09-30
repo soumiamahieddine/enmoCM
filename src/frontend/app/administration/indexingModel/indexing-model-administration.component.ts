@@ -200,4 +200,8 @@ export class IndexingModelAdministrationComponent implements OnInit {
     setModification() {
         this.indexingModelClone = JSON.parse(JSON.stringify(this.indexingModel));
     }
+
+    changeCategory(ev: any) {
+        this.indexingForm.changeCategory(ev.value);
+    }
 }

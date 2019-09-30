@@ -669,4 +669,8 @@ export class IndexingFormComponent implements OnInit {
     setPriorityColor(field: any, value: any) {
         this.currentPriorityColor = field.values.filter((fieldVal: any) => fieldVal.id === value).map((fieldVal: any) => fieldVal.color)[0];
     }
+
+    changeCategory(categoryId: string) {
+        this.currentCategory = categoryId;
+    }
 }

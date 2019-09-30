@@ -4,9 +4,9 @@
 <ng-container *ngIf="!loading">
     <div *ngIf="!adminMode"
         style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
-        <button mat-button class="categoryLabel" [style.color]="currentPriorityColor" (click)="toggleMailTracking()"
+        <button mat-button class="categoryLabel" (click)="toggleMailTracking()"
             [title]="arrFormControl['mail­tracking'].value ? lang.untrackThisMail : lang.trackThisMail">
-            {{lang[currentCategory]}}
+            {{arrFormControl['mail­tracking'].value ? lang.untrackThisMail : lang.trackThisMail}}
             <mat-icon color="primary" class="{{this.arrFormControl['mail­tracking'].value ? 'fas':'far'}} fa-star"
                 style="font-size: 20px;"></mat-icon>
         </button>
@@ -15,7 +15,7 @@
         <div *ngIf="this['indexingModels_'+category].length > 0 || adminMode" class="banner"
             [style.borderColor]="currentPriorityColor">
             <div class="title" [style.color]="currentPriorityColor">
-                {{lang[category] | uppercase}}
+                {{category === 'mail' ? lang[currentCategory] : lang[category] | uppercase}}
                 <div class="title-divider"></div>
             </div>
             <div class="content">
