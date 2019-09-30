@@ -30,23 +30,27 @@
                     [groupId]="currentGroupId" [indexingFormId]="currentIndexingModel.id"></app-indexing-form>
             </div>
             <div class="actions-indexing-form">
-                <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu"
-                    style="flex:1;margin-right:20px;">
-                    <span class="menu-label">
-                        Enregistrer (par défaut)
-                    </span>
-                    <i class="fa fa-chevron-down menu-icon"></i></button>
-                <mat-menu #menu="matMenu" [class]="'menuForm'">
-                    <button mat-menu-item>Action 2</button>
-                    <button mat-menu-item>Action 3</button>
-                </mat-menu>
-                <button mat-button *ngIf="!appService.getViewMode()" class="button-form-primary"
-                    style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
-                    (click)="onSubmit()">{{lang.validate}}</button>
-                <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"
-                    (click)="onSubmit()">
-                    <mat-icon class="fa fa-check"></mat-icon>
-                </button>
+                <ng-container *ngIf="actionsList.length > 0">
+                    <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu"
+                        style="flex:1;margin-right:20px;">
+                        <span class="menu-label" [innerHTML]="selectedAction.label">
+                        </span>
+                        <i class="fa fa-chevron-down menu-icon"></i></button>
+                    <mat-menu #menu="matMenu" [class]="'menuForm'">
+                        <ng-container *ngFor="let action of actionsList">
+                            <button mat-menu-item *ngIf="action.id !== selectedAction.id" (click)="selectAction(action)"
+                                [innerHTML]="action.label"></button>
+                        </ng-container>
+                    </mat-menu>
+                    <button mat-button *ngIf="!appService.getViewMode()" class="button-form-primary"
+                        style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
+                        (click)="onSubmit()">{{lang.validate}}</button>
+                    <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"
+                        (click)="onSubmit()">
+                        <mat-icon class="fa fa-check"></mat-icon>
+                    </button>
+                </ng-container>
+                <div class="emptyAction" *ngIf="actionsList.length === 0" [innerHTML]="lang.noAvaiblableAction"></div>
             </div>
         </ng-container>
         <div *ngIf="indexingModels.length === 0" class="emptyModel" [innerHTML]="lang.noAvailableIndexingModel"></div>

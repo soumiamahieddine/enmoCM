@@ -1129,4 +1129,5 @@ export const LANG_EN = {
     "fieldNotExist" : "Field not exist",
     "saveAsModel" : "Save as Model",
     "noAvailableIndexingModel" : "No indexing model found<br /><br /><small>Please create a model in Administation > Indexing model</small>",
+    "noAvaiblableAction" : "<b>No available action</b>, please set an action in <b>Administration > User groups > Mail indexing</b>.",
 };

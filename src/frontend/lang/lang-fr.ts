@@ -1166,4 +1166,5 @@ export const LANG_FR = {
     "fieldNotExist" : "Le champ n'existe pas",
     "saveAsModel" : "Enregistrer comme modèle",
     "noAvailableIndexingModel" : "Aucun modèle d'enregistrement disponible<br /><br /><small>Veuillez créer un modèle depuis Administation > Modèle d'enregistrement</small>",
+    "noAvaiblableAction" : "<b>Aucune action disponible</b>, veuillez paramétrer une action dans <b>Administration > Groupes d'utilisateur > Enregistrement de courrier</b>.",
 };
