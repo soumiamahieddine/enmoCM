@@ -144,8 +144,6 @@ class IndexingController
 
         $processLimitDate = IndexingController::calculateProcessDate(['date' => date('c'), 'delay' => $delay]);
 
-        $processLimitDate = explode(' ', $processLimitDate);
-
         return $response->withJson(['processLimitDate' => $processLimitDate[0]]);
     }
 
@@ -222,6 +220,6 @@ class IndexingController
             $date->add(new \DateInterval("P{$args['delay']}D"));
         }
 
-        return $date->format('Y-m-d H:i:s');
+        return $date->format('Y-m-d');
     }
 }
