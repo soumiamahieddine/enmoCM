@@ -32,7 +32,7 @@ export class TemplatesAdministrationComponent implements OnInit {
     displayedColumns = ['template_label', 'template_comment', 'template_type', 'template_target', 'actions'];
     dataSource = new MatTableDataSource(this.templates);
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

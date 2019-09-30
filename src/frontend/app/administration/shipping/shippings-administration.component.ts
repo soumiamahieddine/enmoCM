@@ -29,7 +29,7 @@ export class ShippingsAdministrationComponent implements OnInit {
     displayedColumns = ['label', 'description', 'accountid', 'actions'];
     dataSource: any;
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
 
 
     constructor(

@@ -38,7 +38,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     dataSource = new MatTableDataSource(this.indexingModels);
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
 
     dialogRef: MatDialogRef<any>;
 
