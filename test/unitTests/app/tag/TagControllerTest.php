@@ -70,7 +70,7 @@ class TagControllerTest extends TestCase
         $this->assertSame('Body label is empty or not a string', $responseBody->errors);
     }
 
-    public function testGet()
+    public function testGetById()
     {
         $tagController = new \Tag\controllers\TagController();
 
@@ -155,7 +155,7 @@ class TagControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
     }
 
-    public function testGetList()
+    public function testGet()
     {
         $tagController = new \Tag\controllers\TagController();
 
