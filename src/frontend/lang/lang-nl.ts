@@ -1158,4 +1158,5 @@ export const LANG_NL = {
     "noAvaiblableAction" : "<b>No available action</b>, please set an action in <b>Administration > User groups > Mail indexing</b>.", //_TO_TRANSLATE
     "eraseValue" : "Erase value", //_TO_TRANSLATE
     "todayDate" : "Today date", //_TO_TRANSLATE
+    "noDefaultIndexingModel" : "No default indexing model found, the first model of the list have been loaded.", //_TO_TRANSLATE
 };

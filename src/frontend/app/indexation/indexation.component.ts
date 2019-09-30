@@ -64,7 +64,10 @@ export class IndexationComponent implements OnInit {
                 tap((data: any) => {
                     this.indexingModels = data.indexingModels;
                     this.currentIndexingModel = this.indexingModels.filter(model => model.default === true)[0];
-
+                    if (this.currentIndexingModel === undefined) {
+                        this.currentIndexingModel = this.indexingModels[0];
+                        this.notify.error(this.lang.noDefaultIndexingModel);
+                    }
                     if (this.appService.getViewMode()) {
                         setTimeout(() => {
                             this.sidenavLeft.open();

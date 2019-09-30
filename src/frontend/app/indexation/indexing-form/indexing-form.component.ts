@@ -373,7 +373,9 @@ export class IndexingFormComponent implements OnInit {
                         } else if (elem.identifier === 'priority') {
                             elem.values = data.priorities;
                             elem.event = 'setPriorityColor';
-                            this.setPriorityColor(elem, elem.default_value);
+                            if (elem.default_value !== '') {
+                                this.setPriorityColor(elem, elem.default_value);
+                            }
                         } else if (elem.identifier === 'doctype') {
                             let title = '';
                             let arrValues: any[] = [];
@@ -410,7 +412,10 @@ export class IndexingFormComponent implements OnInit {
                             });
                             elem.values = arrValues;
                             elem.event = 'calcLimitDate';
-                            this.calcLimitDate(elem, elem.default_value);
+                            if (elem.default_value !== '') {
+                                this.calcLimitDate(elem, elem.default_value);
+                            }
+                            
                         }
                     });
                 });

@@ -1169,4 +1169,5 @@ export const LANG_FR = {
     "noAvaiblableAction" : "<b>Aucune action disponible</b>, veuillez paramétrer une action dans <b>Administration > Groupes d'utilisateurs > Enregistrement de courrier</b>.",
     "eraseValue" : "Effacer la valeur",
     "todayDate" : "Date du jour",
+    "noDefaultIndexingModel" : "Aucun modèle par défaut trouvé, chargement du premier de la liste.",
 };
