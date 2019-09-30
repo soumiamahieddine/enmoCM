@@ -90,14 +90,45 @@ class TagController
         return $response->withJson($tag);
     }
 
-    public function getList(Request $request, Response $response, array $args)
+    public function get(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $tag = TagModel::getList(['select' => []]);
+        $tags = TagModel::get();
 
-        return $response->withJson($tag);
+        return $response->withJson(["tags" => $tags]);
+    }
+
+    public function update(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        }
+
+        TagModel::update([
+            'set' => [
+                'label' => $body['label']
+            ],
+            'where' => ['id = ?'],
+            'data' => [$args['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'tags',
+            'recordId'  => $args['id'],
+            'eventType' => 'UP',
+            'info'      =>  _TAG_UPDATED . " : {$body['label']}",
+            'eventId'   => 'tagModification',
+        ]);
+
+        return $response->withStatus(200);
     }
 }

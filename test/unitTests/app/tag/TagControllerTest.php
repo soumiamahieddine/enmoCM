@@ -70,6 +70,59 @@ class TagControllerTest extends TestCase
         $this->assertSame('Body label is empty or not a string', $responseBody->errors);
     }
 
+    public function testGet()
+    {
+        $tagController = new \Tag\controllers\TagController();
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $tagController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('int', $responseBody->id);
+        $this->assertInternalType('string', $responseBody->label);
+    }
+
+    public function testUpdate()
+    {
+        $tagController = new \Tag\controllers\TagController();
+
+        //  Update working
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'label'    => 'TEST_LABEL_2'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $tagController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        // Update fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'label'    => ''
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $tagController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertSame('Body label is empty or not a string', $responseBody->errors);
+    }
+
     public function testDelete()
     {
         //  DELETE
@@ -102,23 +155,6 @@ class TagControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
     }
 
-    public function testGet()
-    {
-        $tagController = new \Tag\controllers\TagController();
-
-        //  READ
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $tagController->getById($request, new \Slim\Http\Response(), ['id' => 1]);
-
-        $this->assertSame(200, $response->getStatusCode());
-
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertInternalType('int', $responseBody->id);
-        $this->assertInternalType('string', $responseBody->label);
-    }
-
     public function testGetList()
     {
         $tagController = new \Tag\controllers\TagController();
@@ -126,13 +162,18 @@ class TagControllerTest extends TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $tagController->getList($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response     = $tagController->get($request, new \Slim\Http\Response(), ['id' => self::$id]);
 
         $this->assertSame(200, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody());
 
-        foreach ($responseBody as $value) {
+        $this->assertInternalType('array', $responseBody->tags);
+        $this->assertNotEmpty($responseBody->tags);
+
+        $tags = $responseBody->tags;
+
+        foreach ($tags as $value) {
             $this->assertInternalType('int', $value->id);
             $this->assertInternalType('string', $value->label);
         }

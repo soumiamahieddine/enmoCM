@@ -363,7 +363,8 @@ $app->get('/administration/statuses/new', \Status\controllers\StatusController::
 $app->post('/tags', \Tag\controllers\TagController::class . ':create');
 $app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
 $app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
-$app->get('/tags', \Tag\controllers\TagController::class . ':getList');
+$app->get('/tags', \Tag\controllers\TagController::class . ':get');
+$app->put('/tags/{id}', \Tag\controllers\TagController::class . ':update');
 
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');

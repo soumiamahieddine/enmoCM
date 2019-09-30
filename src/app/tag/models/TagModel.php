@@ -105,15 +105,18 @@ class TagModel
         return $tags;
     }
 
-    public static function getList(array $args)
+    public static function update(array $args)
     {
-        ValidatorModel::arrayType($args, ['select']);
+        ValidatorModel::notEmpty($args, ['where']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
 
-        $tags = DatabaseModel::select([
-            'select'    => empty($args['select']) ? ['*'] : $args['select'],
-            'table'     => ['tags']
+        DatabaseModel::update([
+            'table'     => 'tags',
+            'set'       => empty($args['set']) ? [] : $args['set'],
+            'where'     => $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data']
         ]);
 
-        return $tags;
+        return true;
     }
 }
