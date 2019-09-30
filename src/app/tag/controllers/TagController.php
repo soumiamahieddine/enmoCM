@@ -22,6 +22,31 @@ use Tag\models\TagModel;
 
 class TagController
 {
+    public function get(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $tags = TagModel::get();
+
+        return $response->withJson(['tags' => $tags]);
+    }
+
+    public function getById(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $tag = TagModel::getById(['id' => $args['id']]);
+        if (empty($tag)) {
+            return $response->withStatus(404)->withJson(['errors' => 'id not found']);
+        }
+
+        return $response->withJson($tag);
+    }
+
     public function create(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
@@ -47,58 +72,6 @@ class TagController
         ]);
 
         return $response->withJson(['id' => $id]);
-    }
-
-    public function delete(Request $request, Response $response, array $args)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $tag = TagModel::getById(['select' => ['label'], 'id' => $args['id']]);
-        if (empty($tag)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Tag does not exist']);
-        }
-
-        TagModel::delete([
-            'where' => ['id = ?'],
-            'data'  => [$args['id']]
-        ]);
-
-        HistoryController::add([
-            'tableName' => 'tags',
-            'recordId'  => $args['id'],
-            'eventType' => 'DEL',
-            'info'      =>  _TAG_DELETED . " : {$tag['label']}",
-            'eventId'   => 'tagSuppression',
-        ]);
-
-        return $response->withStatus(201);
-    }
-
-    public function getById(Request $request, Response $response, array $args)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $tag = TagModel::getById(['id' => $args['id']]);
-        if (empty($tag)) {
-            return $response->withStatus(404)->withJson(['errors' => 'id not found']);
-        }
-
-        return $response->withJson($tag);
-    }
-
-    public function get(Request $request, Response $response)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $tags = TagModel::get();
-
-        return $response->withJson(["tags" => $tags]);
     }
 
     public function update(Request $request, Response $response, array $args)
@@ -129,6 +102,33 @@ class TagController
             'eventId'   => 'tagModification',
         ]);
 
-        return $response->withStatus(200);
+        return $response->withStatus(204);
+    }
+
+    public function delete(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'tags', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $tag = TagModel::getById(['select' => ['label'], 'id' => $args['id']]);
+        if (empty($tag)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Tag does not exist']);
+        }
+
+        TagModel::delete([
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'tags',
+            'recordId'  => $args['id'],
+            'eventType' => 'DEL',
+            'info'      =>  _TAG_DELETED . " : {$tag['label']}",
+            'eventId'   => 'tagSuppression',
+        ]);
+
+        return $response->withStatus(204);
     }
 }

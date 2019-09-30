@@ -144,7 +144,7 @@ class MergeController
         $mergedNote = '';
         $notes = NoteModel::getByUserIdForResource(['select' => ['note_text', 'creation_date', 'user_id'], 'resId' => $args['resId'], 'userId' => $args['userId']]);
         foreach ($notes as $note) {
-            $labelledUser = UserModel::getLabelledUserById(['login' => $note['user_id']]);
+            $labelledUser = UserModel::getLabelledUserById(['id' => $note['user_id']]);
             $creationDate = TextFormatModel::formatDate($note['creation_date'], 'd/m/Y');
             $mergedNote .= "{$labelledUser} : {$creationDate} : {$note['note_text']}\n";
         }

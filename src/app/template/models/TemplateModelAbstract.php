@@ -113,30 +113,30 @@ abstract class TemplateModelAbstract
         return $nextSequenceId;
     }
 
-    public static function update(array $aArgs)
+    public static function update(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
 
         DatabaseModel::update([
             'table' => 'templates',
-            'set'   => $aArgs['set'],
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
+            'set'   => $args['set'],
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;
     }
 
-    public static function delete(array $aArgs)
+    public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'templates',
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;

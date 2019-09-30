@@ -179,7 +179,7 @@ DO $$ BEGIN
 	  ALTER TABLE doctypes ADD COLUMN delay2 INTEGER;
 	  ALTER TABLE doctypes ADD COLUMN process_mode CHARACTER VARYING(256);
 	  UPDATE doctypes SET process_delay = (SELECT process_delay FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
-    UPDATE doctypes SET process_delay = 30 WHERE process_delay is null;
+	  UPDATE doctypes SET process_delay = 30 WHERE process_delay is null;
 	  UPDATE doctypes SET delay1 = (SELECT delay1 FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
     UPDATE doctypes SET delay1 = 14 WHERE delay1 is null;
 	  UPDATE doctypes SET delay2 = (SELECT delay2 FROM mlb_doctype_ext where doctypes.type_id = mlb_doctype_ext.type_id);
@@ -191,6 +191,20 @@ DO $$ BEGIN
 	  ALTER TABLE doctypes ALTER COLUMN delay2 SET NOT NULL;
 	  ALTER TABLE doctypes ALTER COLUMN process_mode SET NOT NULL;
   END IF;
+END$$;
+
+
+/* NOTES */
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'notes') AND attname = 'type') THEN
+        ALTER TABLE notes ADD COLUMN user_tmp_id integer;
+        UPDATE notes set user_tmp_id = (select id FROM users where users.user_id = notes.user_id);
+        UPDATE notes set user_tmp_id = 0 WHERE user_tmp_id IS NULL;
+        ALTER TABLE notes ALTER COLUMN user_tmp_id set not null;
+        ALTER TABLE notes DROP COLUMN IF EXISTS user_id;
+        ALTER TABLE notes RENAME COLUMN user_tmp_id TO user_id;
+        ALTER TABLE notes DROP COLUMN IF EXISTS type;
+    END IF;
 END$$;
 
 

@@ -141,6 +141,8 @@ define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
 define('_ATTACH_DISPLAYING', 'Weergave van de bijlage');
 define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
+define('_NOTE_UPDATED', 'Note updated');//TRANSLATE
+define('_NOTE_DELETED', 'Note deleted');//TRANSLATE
 define('_TAG_ADDED', 'Tag added'); //TRANSLATE
 define('_TAG_DELETED', 'Tag deleted'); //TRANSLATE
 define('_TAG_UPDATED', 'Tag updated'); //TRANSLATE
