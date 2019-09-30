@@ -469,8 +469,6 @@ export class IndexingFormComponent implements OnInit {
             delete this.arrFormControl[element];
         });
 
-        console.log(this.arrFormControl);
-
         this.loading = true;
 
         this.availableFields = JSON.parse(JSON.stringify(this.availableFieldsClone));
