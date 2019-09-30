@@ -1170,4 +1170,8 @@ export const LANG_FR = {
     "eraseValue" : "Effacer la valeur",
     "todayDate" : "Date du jour",
     "noDefaultIndexingModel" : "Aucun modèle par défaut trouvé, chargement du premier de la liste.",
+    "indexing_incoming" : "arrivée",
+    "indexing_outgoing" : "départ",
+    "indexing_internal" : "interne",
+    "indexing_ged_doc" : "GED",
 };
