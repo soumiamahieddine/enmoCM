@@ -111,8 +111,14 @@ export class IndexingModelAdministrationComponent implements OnInit {
                 this.http.get('../../rest/categories').pipe(
                     tap((data: any) => {
                         this.categoriesList = data.categories;
+                        
                     }),
-                    finalize(() => this.loading = false),
+                    tap((data: any) => {
+                        this.loading = false;
+                        setTimeout(() => {
+                            this.indexingForm.changeCategory(this.indexingModel.category); 
+                        }, 0);
+                    }),
                     catchError((err: any) => {
                         this.notify.handleErrors(err);
                         return of(false);

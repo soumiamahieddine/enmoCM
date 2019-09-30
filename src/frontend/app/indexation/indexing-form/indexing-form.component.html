@@ -98,7 +98,7 @@
                                         <button mat-button color="warn" matSuffix mat-icon-button
                                             *ngIf="arrFormControl[field.identifier].value && !arrFormControl[field.identifier].disabled"
                                             (click)="$event.stopPropagation();arrFormControl[field.identifier].reset();"
-                                            title="Effacer la valeur">
+                                            [title]="lang.eraseValue">
                                             <mat-icon color="warn" class="fa fa-calendar-times">
                                             </mat-icon>
                                         </button>

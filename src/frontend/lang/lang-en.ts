@@ -1126,8 +1126,10 @@ export const LANG_EN = {
     "trackThisMail" : "Track this mail",
     "untrackThisMail" : "Untrack this mail",
     "noFieldInModelMsg" : "No field found ! Default fields have been loaded",
-    "fieldNotExist" : "Field not exist",
+    "fieldNotExist" : "Field does not exist",
     "saveAsModel" : "Save as Model",
     "noAvailableIndexingModel" : "No indexing model found<br /><br /><small>Please create a model in Administation > Indexing model</small>",
-    "noAvaiblableAction" : "<b>No available action</b>, please set an action in <b>Administration > User groups > Mail indexing</b>.",
+    "noAvaiblableAction" : "<b>No available action</b>, please set an action in <b>Administration > Users groups > Mail indexing</b>.",
+    "eraseValue" : "Erase value",
+    "todayDate" : "Today date",
 };

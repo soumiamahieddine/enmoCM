@@ -90,8 +90,12 @@ export class IndexingModelsAdministrationComponent implements OnInit {
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.delete('../../rest/indexingModels/' + indexingModel.id)),
-            tap((data: any) => {
-                this.indexingModels = data.indexingModels;
+            tap(() => {
+                for (let i in this.indexingModels) {
+                    if (this.indexingModels[i].id == indexingModel.id) {
+                        this.indexingModels.splice(Number(i), 1);
+                    }
+                }
                 this.dataSource = new MatTableDataSource(this.indexingModels);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;

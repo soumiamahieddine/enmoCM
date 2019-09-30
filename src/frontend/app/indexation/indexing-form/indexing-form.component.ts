@@ -302,7 +302,9 @@ export class IndexingFormComponent implements OnInit {
         myObservable.pipe(
             exhaustMap(() => this.initializeRoutes()),
             tap((data) => {
-                this.arrFormControl['mail­tracking'].setValue(false);
+                if (!this.adminMode) {
+                    this.arrFormControl['mail­tracking'].setValue(false);
+                }
                 this.currentPriorityColor = '';
 
                 this.fieldCategories.forEach(element => {
@@ -473,7 +475,10 @@ export class IndexingFormComponent implements OnInit {
 
         this.availableFields = JSON.parse(JSON.stringify(this.availableFieldsClone));
 
-        this.arrFormControl['mail­tracking'] = new FormControl({ value: '', disabled: this.adminMode ? true : false });
+        if (!this.adminMode) {
+            this.arrFormControl['mail­tracking'] = new FormControl({ value: '', disabled: this.adminMode ? true : false });
+        }
+        
 
         this.fieldCategories.forEach(category => {
             this['indexingModels_' + category] = [];
