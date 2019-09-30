@@ -30,11 +30,13 @@ class IndexingModelControllerTest extends TestCase
                     'identifier'    => 'subject',
                     'mandatory'     => true,
                     'default_value' => 'tika',
+                    'unit'          => 'mail'
                 ],
                 [
                     'identifier'    => 'name',
                     'mandatory'     => true,
                     'default_value' => 'massala',
+                    'unit'          => 'contact'
                 ]
             ]
         ];
@@ -98,11 +100,13 @@ class IndexingModelControllerTest extends TestCase
                     'identifier'    => 'subject',
                     'mandatory'     => true,
                     'default_value' => 'butter',
+                    'unit'          => 'mail'
                 ],
                 [
                     'identifier'    => 'siret',
                     'mandatory'     => false,
                     'default_value' => 'chicken',
+                    'unit'          => 'classement'
                 ]
             ]
         ];
@@ -127,9 +131,12 @@ class IndexingModelControllerTest extends TestCase
         $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
         $this->assertSame('butter', $responseBody->indexingModel->fields[0]->default_value);
+        $this->assertSame('mail', $responseBody->indexingModel->fields[0]->unit);
         $this->assertSame('siret', $responseBody->indexingModel->fields[1]->identifier);
         $this->assertSame(false, $responseBody->indexingModel->fields[1]->mandatory);
         $this->assertSame('chicken', $responseBody->indexingModel->fields[1]->default_value);
+        $this->assertSame('classement', $responseBody->indexingModel->fields[1]->unit);
+
 
 
         //  Errors

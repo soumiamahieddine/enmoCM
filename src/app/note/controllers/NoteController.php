@@ -62,12 +62,12 @@ class NoteController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        if (NoteController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!NoteController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Note out of perimeter']);
         }
         $note = NoteModel::getById(['id' => $args['id']]);
 
-        $entities = Entitymodel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$args['id']]]);
+        $entities = NoteEntityModel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$args['id']]]);
         $entities = array_column($entities, 'item_id');
 
         $note['entities'] = $entities;
@@ -84,7 +84,7 @@ class NoteController
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['value'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data note_text is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'Data value is empty or not a string']);
         }
 
         if (!empty($body['entities'])) {
