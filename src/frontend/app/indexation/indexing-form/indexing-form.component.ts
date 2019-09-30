@@ -220,7 +220,10 @@ export class IndexingFormComponent implements OnInit {
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex);
-            this.initElemForm();
+            if (['destination', 'priority'].indexOf(event.item.data.identifier) > -1) {
+                this.initElemForm();
+            }
+
         }
     }
 
@@ -415,7 +418,7 @@ export class IndexingFormComponent implements OnInit {
                             if (elem.default_value !== '') {
                                 this.calcLimitDate(elem, elem.default_value);
                             }
-                            
+
                         }
                     });
                 });
@@ -485,7 +488,7 @@ export class IndexingFormComponent implements OnInit {
         if (!this.adminMode) {
             this.arrFormControl['mail­tracking'] = new FormControl({ value: '', disabled: this.adminMode ? true : false });
         }
-        
+
 
         this.fieldCategories.forEach(category => {
             this['indexingModels_' + category] = [];
@@ -653,7 +656,9 @@ export class IndexingFormComponent implements OnInit {
     }
 
     launchEvent(value: any, field: any) {
-        this[field.event](field, value);
+        if (field.event !== undefined) {
+            this[field.event](field, value);
+        }
     }
 
     calcLimitDate(field: any, value: any) {
