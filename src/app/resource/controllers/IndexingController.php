@@ -144,7 +144,7 @@ class IndexingController
 
         $processLimitDate = IndexingController::calculateProcessDate(['date' => date('c'), 'delay' => $delay]);
 
-        return $response->withJson(['processLimitDate' => $processLimitDate[0]]);
+        return $response->withJson(['processLimitDate' => $processLimitDate]);
     }
 
     public static function getEntitiesChildrenLevel($aArgs = [])
