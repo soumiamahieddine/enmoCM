@@ -265,8 +265,9 @@ $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplat
 
 //Notes
 $app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplates');
-$app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
-$app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
+$app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':get');
+$app->post('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':create');
+$app->get('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':getById');
 $app->put('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':update');
 $app->delete('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':delete');
 
