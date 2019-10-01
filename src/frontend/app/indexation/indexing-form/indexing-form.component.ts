@@ -415,7 +415,7 @@ export class IndexingFormComponent implements OnInit {
                             });
                             elem.values = arrValues;
                             elem.event = 'calcLimitDate';
-                            if (elem.default_value !== '') {
+                            if (elem.default_value !== null && !this.adminMode) {
                                 this.calcLimitDate(elem, elem.default_value);
                             }
 
@@ -656,7 +656,7 @@ export class IndexingFormComponent implements OnInit {
     }
 
     launchEvent(value: any, field: any) {
-        if (field.event !== undefined) {
+        if (field.event !== undefined && value !== null) {
             this[field.event](field, value);
         }
     }
