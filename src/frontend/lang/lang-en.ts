@@ -1133,4 +1133,12 @@ export const LANG_EN = {
     "eraseValue" : "Erase value",
     "todayDate" : "Today date",
     "noDefaultIndexingModel" : "No default indexing model found, the first model of the list have been loaded.",
+    "indexing_incoming" : "incoming",
+    "indexing_outgoing" : "outgoing",
+    "indexing_internal" : "internal",
+    "indexing_ged_doc" : "GED",
+    "folderCreateMsg" : "Do want create",
+    "folderDeleteWarnMsg" : "Do want delete",
+    "folderDeleteWarnMsg2" : "previously created ?",
+    "noSelectedFolder" : "No selected folder",
 };

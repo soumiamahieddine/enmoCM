@@ -1159,4 +1159,12 @@ export const LANG_NL = {
     "eraseValue" : "Erase value", //_TO_TRANSLATE
     "todayDate" : "Today date", //_TO_TRANSLATE
     "noDefaultIndexingModel" : "No default indexing model found, the first model of the list have been loaded.", //_TO_TRANSLATE
+    "indexing_incoming" : "incoming", //_TO_TRANSLATE
+    "indexing_outgoing" : "outgoing", //_TO_TRANSLATE
+    "indexing_internal" : "internal", //_TO_TRANSLATE
+    "indexing_ged_doc" : "GED", //_TO_TRANSLATE
+    "folderCreateMsg" : "Do want create", //_TO_TRANSLATE
+    "folderDeleteWarnMsg" : "Do want delete", //_TO_TRANSLATE
+    "folderDeleteWarnMsg2" : "previously created ?", //_TO_TRANSLATE
+    "noSelectedFolder" : "No selected folder", //_TO_TRANSLATE
 };

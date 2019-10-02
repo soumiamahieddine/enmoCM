@@ -54,6 +54,7 @@ import { ConfirmComponent }                        from '../plugins/modal/confir
 /*PLUGIN COMPONENT*/
 import { PluginAutocomplete }                        from '../plugins/autocomplete/autocomplete.component';
 import { PluginSelectSearchComponent }                        from '../plugins/select-search/select-search.component';
+import { FolderInputComponent }                        from '../app/folder/Indexing/folder-input.component';
 
 
 
@@ -100,7 +101,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         PluginAutocomplete,
         IndexingFormComponent,
         FieldListComponent,
-        PluginSelectSearchComponent
+        PluginSelectSearchComponent,
+        FolderInputComponent
     ],
     exports: [
         CommonModule,
@@ -133,7 +135,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         PluginAutocomplete,
         IndexingFormComponent,
         FieldListComponent,
-        PluginSelectSearchComponent
+        PluginSelectSearchComponent,
+        FolderInputComponent
     ],
     providers: [
         LatinisePipe,

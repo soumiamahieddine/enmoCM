@@ -370,7 +370,10 @@ export class IndexingFormComponent implements OnInit {
                             elem.startDate = '_TODAY';
                             elem.endDate = '';
 
-                        } else if (elem.identifier === 'category_id') {
+                        } else if (elem.identifier === 'folder') {
+                            elem.values = null;
+
+                        }  else if (elem.identifier === 'category_id') {
                             elem.values = data.categories;
 
                         } else if (elem.identifier === 'priority') {
@@ -609,6 +612,7 @@ export class IndexingFormComponent implements OnInit {
     }
 
     isValidForm() {
+        console.log(this.indexingFormGroup.controls['folder']);
         if (!this.indexingFormGroup.valid) {
             Object.keys(this.indexingFormGroup.controls).forEach(key => {
 

@@ -134,12 +134,16 @@
                                         </mat-chip>
                                     </mat-chip-list>
                                 </ng-container>
-                                <ng-container *ngIf="field.type === 'autocomplete'">
+                                <!--<ng-container *ngIf="field.type === 'autocomplete'">
                                     <plugin-autocomplete [labelPlaceholder]="lang.searchValue"
                                         [routeDatas]="[field.values[0]]" [targetSearchKey]="'idToDisplay'"
                                         [size]="'small'" [control]="arrFormControl[field.identifier]"
                                         [manageDatas]="!adminMode ? field.values[1] : undefined" style="width:100%;">
                                     </plugin-autocomplete>
+                                </ng-container>-->
+                                <ng-container *ngIf="field.identifier === 'folder'">
+                                    <app-folder-input [control]="arrFormControl[field.identifier]" style="width:100%;">
+                                    </app-folder-input>
                                 </ng-container>
                             </div>
                             <div class="fieldState">
@@ -149,7 +153,7 @@
                                 <i class="fas fa-times" style="color:red;font-size:15px;"
                                     *ngIf="!adminMode && arrFormControl[field.identifier].touched && arrFormControl[field.identifier].hasError('required')"></i>
                                 <i class="fas fa-check" style="color:green;font-size:15px;"
-                                    *ngIf="!adminMode && arrFormControl[field.identifier].valid && (arrFormControl[field.identifier].value!==null && arrFormControl[field.identifier].value!=='')"></i>
+                                    *ngIf="!adminMode && arrFormControl[field.identifier].valid && (arrFormControl[field.identifier].value!==null && arrFormControl[field.identifier].value!=='' && arrFormControl[field.identifier].value.length > 0)"></i>
                             </div>
                         </div>
                     </ng-container>

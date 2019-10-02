@@ -1174,4 +1174,8 @@ export const LANG_FR = {
     "indexing_outgoing" : "départ",
     "indexing_internal" : "interne",
     "indexing_ged_doc" : "GED",
+    "folderCreateMsg" : "Voulez-vous créer",
+    "folderDeleteWarnMsg" : "Voulez-vous supprimer",
+    "folderDeleteWarnMsg2" : "récemment créé ?",
+    "noSelectedFolder" : "Aucun dossier lié",
 };
