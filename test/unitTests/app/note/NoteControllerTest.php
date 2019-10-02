@@ -172,9 +172,6 @@ class NoteControllerTest extends TestCase
             $this->assertNotEmpty($value->firstname);
             $this->assertInternalType('string', $value->lastname);
             $this->assertNotEmpty($value->lastname);
-            // $this->assertInternalType('int', $value->);
-            // $this->assertInternalType('int', $value->id);
-            // $this->assertInternalType('int', $value->id);
         }
     }
 

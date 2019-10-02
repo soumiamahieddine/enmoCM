@@ -619,7 +619,7 @@ CREATE TABLE notes
 (
   id serial,
   identifier bigint NOT NULL,
-  user_id character varying(128) NOT NULL,
+  user_id bigint NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   note_text text NOT NULL,
   type CHARACTER VARYING (32) DEFAULT 'resource' NOT NULL,
@@ -1888,7 +1888,7 @@ CREATE TABLE indexing_models_fields
     identifier text NOT NULL,
     mandatory BOOLEAN NOT NULL,
     default_value json,
-    unit text,
+    unit text NOT NULL,
     CONSTRAINT indexing_models_fields_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
