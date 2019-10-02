@@ -72,7 +72,8 @@ class IndexingModelModel
                 'category'  => $args['category'],
                 '"default"' => $args['default'],
                 'owner'     => $args['owner'],
-                'private'   => $args['private']
+                'private'   => $args['private'],
+                'master'    => $args['master']
             ]
         ]);
 
