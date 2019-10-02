@@ -15,6 +15,10 @@ class ResControllerTest extends TestCase
 
     public function testCreate()
     {
+        $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
         $resController = new \Resource\controllers\ResController();
 
         //  CREATE
@@ -56,6 +60,10 @@ class ResControllerTest extends TestCase
         $this->assertSame('NEW', $res['status']);
         $this->assertSame('LLane', $res['typist']);
         $this->assertSame(null, $res['destination']);
+
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 
     public function testGetFileContent()
@@ -319,6 +327,10 @@ class ResControllerTest extends TestCase
 
     public function testCreateMultipleDocument()
     {
+        $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
         $resController = new \Resource\controllers\ResController();
 
         $aNewDocument = [
@@ -368,5 +380,9 @@ class ResControllerTest extends TestCase
                 $GLOBALS['resources'][] = $newId;
             }
         }
+
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 }
