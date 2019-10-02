@@ -148,7 +148,7 @@ class SummarySheetController
                     'orderBy' => ['listinstance_id']
                 ]);
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $data['mlbCollExt'] = ResModel::getExt([
+                $data['senderRecipient'] = ResModel::get([
                     'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
                     'where' => ['res_id in (?)'],
                     'data' => [$tmpIds]
@@ -283,7 +283,7 @@ class SummarySheetController
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
                 $senders = [];
                 $recipients = [];
-                foreach ($args['data']['mlbCollExt'] as $mlbKey => $mlbValue) {
+                foreach ($args['data']['senderRecipient'] as $mlbKey => $mlbValue) {
                     if ($mlbValue['res_id'] == $resource['res_id']) {
                         $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $resource['res_id']]);
                         
@@ -361,7 +361,7 @@ class SummarySheetController
                             $senders    = $oldContacts;
                             $recipients = $resourcesContacts;
                         }
-                        unset($args['data']['mlbCollExt'][$mlbKey]);
+                        unset($args['data']['senderRecipient'][$mlbKey]);
                         break;
                     }
                 }

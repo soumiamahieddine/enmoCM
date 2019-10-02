@@ -132,7 +132,7 @@ class MaarchParapheurController
                     'orderBy' => ['listinstance_id']
                 ]);
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $data['mlbCollExt'] = ResModel::getExt([
+                $data['senderRecipient'] = ResModel::get([
                     'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
                     'where'  => ['res_id in (?)'],
                     'data'   => [$tmpIds]

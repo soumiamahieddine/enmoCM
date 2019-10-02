@@ -26,7 +26,7 @@ class SendMessageExchangeController
         if (!empty($errors)) {
             return ['errors' => $errors];
         }
-        $mlbCollExt = Resource\models\ResModel::getExtById(['resId' => $aArgs['identifier']]);
+        $mlbCollExt = Resource\models\ResModel::getById(['resId' => $aArgs['identifier']]);
         if (empty($mlbCollExt)) {
             return ['errors' => "wrong identifier"];
         }

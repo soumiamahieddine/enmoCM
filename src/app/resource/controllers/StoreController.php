@@ -36,10 +36,6 @@ class StoreController
         ValidatorModel::notEmpty($aArgs, ['encodedFile', 'format', 'status', 'type_id', 'category_id']);
         ValidatorModel::stringType($aArgs, ['format', 'status']);
 
-        $mlbColumns = [
-            'category_id', 'exp_contact_id', 'exp_user_id', 'dest_contact_id', 'dest_user_id',
-            'nature_id', 'alt_identifier', 'admission_date', 'process_limit_date', 'closing_date', 'address_id'
-        ];
         try {
             foreach ($aArgs as $column => $value) {
                 if (empty($value)) {
@@ -72,17 +68,7 @@ class StoreController
             $data = array_merge($aArgs, $data);
             $data = StoreController::prepareStorage($data);
 
-            $dataMlb = [];
-            foreach ($data as $key => $value) {
-                if (in_array($key, $mlbColumns)) {
-                    $dataMlb[$key] = $value;
-                    unset($data[$key]);
-                }
-            }
             ResModel::create($data);
-
-            $dataMlb['res_id'] = $resId;
-            ResModel::createExt($dataMlb);
 
             return $resId;
         } catch (\Exception $e) {
@@ -90,21 +76,17 @@ class StoreController
         }
     }
 
-    public static function storeResourceRes(array $aArgs)
+    public static function storeAttachment(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['encodedFile', 'data', 'collId', 'table', 'fileFormat', 'status']);
         ValidatorModel::stringType($aArgs, ['collId', 'table', 'fileFormat', 'status']);
         ValidatorModel::arrayType($aArgs, ['data']);
 
-        if (!in_array($aArgs['table'], ['res_letterbox', 'res_attachments', 'res_version_attachments'])) {
-            return ['errors' => '[storeResource] Table not valid'];
-        }
-
         try {
             $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
 
             $storeResult = DocserverController::storeResourceOnDocServer([
-                'collId'            => $aArgs['collId'],
+                'collId'            => empty($aArgs['version']) ? 'attachments_coll' : 'attachments_version_coll',
                 'docserverTypeId'   => 'DOC',
                 'encodedResource'   => base64_encode($fileContent),
                 'format'            => $aArgs['fileFormat']
@@ -113,7 +95,7 @@ class StoreController
                 return ['errors' => '[storeResource] ' . $storeResult['errors']];
             }
 
-            $data = StoreController::prepareStorageRes([
+            $data = StoreController::prepareAttachmentStorage([
                 'data'          => $aArgs['data'],
                 'docserverId'   => $storeResult['docserver_id'],
                 'status'        => $aArgs['status'],
@@ -124,16 +106,13 @@ class StoreController
                 'fingerPrint'   => $storeResult['fingerPrint']
             ]);
 
-            $resId = false;
-            if ($aArgs['table'] == 'res_letterbox') {
-                $resId = ResModel::create($data);
-            } elseif ($aArgs['table'] == 'res_attachments') {
-                $resId = AttachmentModel::create($data);
-            } elseif ($aArgs['table'] == 'res_version_attachments') {
-                $resId = AttachmentModel::createVersion($data);
+            if (empty($aArgs['version'])) {
+                $id = AttachmentModel::create($data);
+            } else {
+                $id = AttachmentModel::createVersion($data);
             }
 
-            return $resId;
+            return $id;
         } catch (\Exception $e) {
             return ['errors' => '[storeResource] ' . $e->getMessage()];
         }
@@ -227,118 +206,15 @@ class StoreController
         return $aArgs;
     }
 
-    public static function prepareStorageRes(array $aArgs)
+    public static function prepareAttachmentStorage(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['data', 'docserverId', 'fileName', 'fileFormat', 'fileSize', 'path', 'fingerPrint']);
         ValidatorModel::stringType($aArgs, ['docserverId', 'status', 'fileName', 'fileFormat', 'path', 'fingerPrint']);
         ValidatorModel::arrayType($aArgs, ['data']);
         ValidatorModel::intVal($aArgs, ['fileSize']);
 
-        $statusFound        = false;
-        $typistFound        = false;
-        $toAddressFound     = false;
-        $userPrimaryEntity  = false;
-
         foreach ($aArgs['data'] as $key => $value) {
             $aArgs['data'][$key]['column'] = strtolower($value['column']);
-        }
-
-        foreach ($aArgs['data'] as $key => $value) {
-            if (strtolower($value['type']) == 'integer' || strtolower($value['type']) == 'float') {
-                if (empty($value['value'])) {
-                    $aArgs['data'][$key]['value'] = '0';
-                }
-            } elseif (strtolower($value['type']) == 'string') {
-                $aArgs['data'][$key]['value'] = str_replace(';', '', $value['value']);
-                $aArgs['data'][$key]['value'] = str_replace('--', '', $value['value']);
-            }
-
-            if ($value['column'] == 'status') {
-                $statusFound = true;
-            } elseif ($value['column'] == 'typist') {
-                $typistFound = true;
-            } elseif ($value['column'] == 'custom_t10') {
-                $theString = str_replace('>', '', $value['value']);
-                $mail = explode("<", $theString);
-                $user =  UserModel::getByEmail(['mail' => $mail[count($mail) -1], 'select' => ['user_id']]);
-                if (!empty($user[0]['user_id'])) {
-                    $toAddressFound = true;
-                    $destUser = $user[0]['user_id'];
-                    $entity = EntityModel::getByLogin(['login' => $destUser, 'select' => ['entity_id']]);
-                    if (!empty($entity[0]['entity_id'])) {
-                        $userEntity = $entity[0]['entity_id'];
-                        $userPrimaryEntity = true;
-                    }
-                } else {
-                    $entity = EntityModel::getByEmail(['email' => $mail[count($mail) -1], 'select' => ['entity_id']]);
-                    if (!empty($entity[0]['entity_id'])) {
-                        $userPrimaryEntity = true;
-                    }
-                }
-            }
-        }
-
-        $destUser   = empty($destUser) ? '' : $destUser;
-        $userEntity = empty($userEntity) ? '' : $userEntity;
-
-        if (!$typistFound && !$toAddressFound) {
-            $aArgs['data'][] = [
-                'column'    => 'typist',
-                'value'     => 'auto',
-                'type'      => 'string'
-            ];
-        }
-        if (!$statusFound) {
-            $aArgs['data'][] = [
-                'column'    => 'status',
-                'value'     => $aArgs['status'],
-                'type'      => 'string'
-            ];
-        }
-        if ($toAddressFound) {
-            $aArgs['data'][] = [
-                'column'    => 'dest_user',
-                'value'     => $destUser,
-                'type'      => 'string'
-            ];
-            if (!$typistFound) {
-                $aArgs['data'][] = [
-                    'column'    => 'typist',
-                    'value'     => $destUser,
-                    'type'      => 'string'
-                ];
-            }
-        }
-        if ($userPrimaryEntity) {
-            $destinationFound = false;
-            $initiatorFound = false;
-            foreach ($aArgs['data'] as $key => $value) {
-                if ($value['column'] == 'destination') {
-                    if (empty($value['value'])) {
-                        $aArgs['data'][$key]['value'] = $userEntity;
-                    }
-                    $destinationFound = true;
-                } elseif ($value['column'] == 'initiator') {
-                    if (empty($value['value'])) {
-                        $aArgs['data'][$key]['value'] = $userEntity;
-                    }
-                    $initiatorFound = true;
-                }
-            }
-            if (!$destinationFound) {
-                $aArgs['data'][] = [
-                    'column'    => 'destination',
-                    'value'     => $userEntity,
-                    'type'      => 'string'
-                ];
-            }
-            if (!$initiatorFound) {
-                $aArgs['data'][] = [
-                    'column'    => 'initiator',
-                    'value'     => $userEntity,
-                    'type'      => 'string'
-                ];
-            }
         }
 
         $aArgs['data'][] = [
@@ -381,79 +257,6 @@ class StoreController
         foreach ($aArgs['data'] as $value) {
             $formatedData[$value['column']] = $value['value'];
         }
-
-        return $formatedData;
-    }
-
-    public static function prepareExtStorage(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['data', 'resId']);
-        ValidatorModel::arrayType($aArgs, ['data']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-
-        $processLimitDateFound  = false;
-        $admissionDate          = null;
-
-        foreach ($aArgs['data'] as $key => $value) {
-            $aArgs['data'][$key]['column'] = strtolower($value['column']);
-        }
-
-        foreach ($aArgs['data'] as $value) {
-            if ($value['column'] == 'process_limit_date') {
-                $processLimitDateFound = true;
-            }
-            if ($value['column'] == 'category_id') {
-                $categoryId = $value['value'];
-            }
-            if ($value['column'] == 'admission_date') {
-                $admissionDate = $value['value'];
-            }
-        }
-
-        if (!$processLimitDateFound) {
-            $processLimitDate = ResModel::getStoredProcessLimitDate(['resId' => $aArgs['resId'], 'admissionDate' => $admissionDate]);
-
-            $aArgs['data'][] = [
-                'column'    => 'process_limit_date',
-                'value'     => $processLimitDate,
-                'type'      => 'date'
-            ];
-        }
-
-        foreach ($aArgs['data'] as $key => $value) {
-            if (strtolower($value['type']) == 'integer' || strtolower($value['type']) == 'float') {
-                if ($value['value'] == '') {
-                    $aArgs['data'][$key]['value'] = '0';
-                }
-                $aArgs['data'][$key]['value'] = str_replace(',', '.', $value['value']);
-            }
-            if ($value['column'] == 'alt_identifier' && empty($value['value']) && !empty($categoryId)) {
-                $document = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination, type_id']]);
-                $aArgs['data'][$key]['value'] = ChronoModel::getChrono(['id' => $categoryId, 'entityId' => $document['destination'], 'typeId' => $document['type_id']]);
-            } elseif ($value['column'] == 'exp_contact_id' && !empty($value['value']) && !is_numeric($value['value'])) {
-                $mail = explode('<', str_replace('>', '', $value['value']));
-                $contact = ContactModel::getByEmail(['email' => $mail[count($mail) - 1], 'select' => ['contacts_v2.contact_id']]);
-                if (!empty($contact['contact_id'])) {
-                    $aArgs['data'][$key]['value'] = $contact['contact_id'];
-                } else {
-                    $aArgs['data'][$key]['value'] = 0;
-                }
-            } elseif ($value['column'] == 'address_id' && !empty($value['value']) && !is_numeric($value['value'])) {
-                $mail = explode('<', str_replace('>', '', $value['value']));
-                $contact = ContactModel::getByEmail(['email' => $mail[count($mail) - 1], 'select' => ['contact_addresses.id']]);
-                if (!empty($contact['id'])) {
-                    $aArgs['data'][$key]['value'] = $contact['ca_id'];
-                } else {
-                    $aArgs['data'][$key]['value'] = 0;
-                }
-            }
-        }
-
-        $formatedData = [];
-        foreach ($aArgs['data'] as $value) {
-            $formatedData[$value['column']] = $value['value'];
-        }
-        $formatedData['res_id'] = $aArgs['resId'];
 
         return $formatedData;
     }

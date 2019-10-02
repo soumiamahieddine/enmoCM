@@ -60,21 +60,6 @@ abstract class ResModelAbstract
         return $aResources;
     }
 
-    public static function getExt(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
-
-        $aResources = DatabaseModel::select([
-            'select'    => $aArgs['select'],
-            'table'     => ['mlb_coll_ext'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
-        ]);
-
-        return $aResources;
-    }
-
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
@@ -95,29 +80,10 @@ abstract class ResModelAbstract
         return $aResources[0];
     }
 
-    public static function getExtById(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-
-        $aResources = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['mlb_coll_ext'],
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
-        ]);
-
-        if (empty($aResources[0])) {
-            return [];
-        }
-
-        return $aResources[0];
-    }
-
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status']);
-        ValidatorModel::stringType($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status']);
+        ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status', 'category_id']);
+        ValidatorModel::stringType($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status', 'category_id']);
         ValidatorModel::intVal($aArgs, ['filesize', 'res_id']);
 
         if (empty($aArgs['res_id'])) {
@@ -132,20 +98,6 @@ abstract class ResModelAbstract
         return $aArgs['res_id'];
     }
 
-    public static function createExt(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['res_id', 'category_id']);
-        ValidatorModel::stringType($aArgs, ['category_id']);
-        ValidatorModel::intVal($aArgs, ['res_id']);
-
-        DatabaseModel::insert([
-            'table'         => 'mlb_coll_ext',
-            'columnsValues' => $aArgs
-        ]);
-
-        return true;
-    }
-
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
@@ -153,21 +105,6 @@ abstract class ResModelAbstract
 
         DatabaseModel::update([
             'table' => 'res_letterbox',
-            'set'   => $aArgs['set'],
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
-        ]);
-
-        return true;
-    }
-
-    public static function updateExt(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
-
-        DatabaseModel::update([
-            'table' => 'mlb_coll_ext',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
@@ -202,7 +139,7 @@ abstract class ResModelAbstract
 
         $resources = DatabaseModel::select([
             'select'    => $aArgs['select'],
-            'table'     => ['history, res_letterbox r, mlb_coll_ext mlb, status, priorities'],
+            'table'     => ['history, res_letterbox r, status, priorities'],
             'where'     => [
                 'history.user_id = ?', 'history.table_name IN (?)',
                 'history.record_id IS NOT NULL', 'history.record_id != ?',
@@ -210,11 +147,10 @@ abstract class ResModelAbstract
                 'CAST(history.record_id AS INT) = r.res_id',
                 'r.res_id = r.res_id', 'r.status != ?',
                 'r.status = status.id',
-                'r.priority = priorities.id',
-                'r.res_id = mlb.res_id',
+                'r.priority = priorities.id'
             ],
             'data'      => [$aArgs['userId'], ['res_letterbox', 'res_view_letterbox'], 'none', 'linkup', 'attach%', 'DEL'],
-            'groupBy'   => ['r.subject', 'r.creation_date', 'r.res_id', 'mlb.alt_identifier', 'mlb.closing_date', 'mlb.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
+            'groupBy'   => ['r.subject', 'r.creation_date', 'r.res_id', 'r.alt_identifier', 'r.closing_date', 'r.process_limit_date', 'status.id', 'status.label_status', 'status.img_filename', 'priorities.color', 'priorities.label'],
             'order_by'  => ['MAX(history.event_date) DESC'],
             'limit'     => $aArgs['limit']
         ]);
@@ -242,23 +178,23 @@ abstract class ResModelAbstract
         return $aReturn;
     }
 
-    public static function getResIdByAltIdentifier(array $aArgs)
+    public static function getByAltIdentifier(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['altIdentifier']);
-        ValidatorModel::stringType($aArgs, ['altIdentifier']);
+        ValidatorModel::notEmpty($args, ['altIdentifier']);
+        ValidatorModel::stringType($args, ['altIdentifier']);
 
-        $aResources = DatabaseModel::select([
-            'select'    => ['res_id'],
-            'table'     => ['mlb_coll_ext'],
+        $resource = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['res_letterbox'],
             'where'     => ['alt_identifier = ?'],
-            'data'      => [$aArgs['altIdentifier']]
+            'data'      => [$args['altIdentifier']]
         ]);
 
-        if (empty($aResources[0])) {
+        if (empty($resource[0])) {
             return [];
         }
 
-        return $aResources[0];
+        return $resource[0];
     }
 
     public static function getStoredProcessLimitDate(array $aArgs)
@@ -294,30 +230,23 @@ abstract class ResModelAbstract
 
     public static function getCategories()
     {
-        static $categories;
-
-        if (!empty($categories)) {
-            return $categories;
-        }
-
         $categories = [
-          [
-              'id'              => 'incoming',
-              'label'           => defined('_INCOMING') ? _INCOMING : '_INCOMING',
-              'defaultCategory' => true
-          ], [
-              'id'              => 'outgoing',
-              'label'           => defined('_OUTGOING') ? _OUTGOING : '_OUTGOING',
-              'defaultCategory' => false
-          ], [
-              'id'              => 'internal',
-              'label'           => defined('_INTERNAL') ? _INTERNAL : '_INTERNAL',
-              'defaultCategory' => false
-          ], [
-              'id'              => 'ged_doc',
-              'label'           => defined('_GED_DOC') ? _GED_DOC : '_GED_DOC',
-              'defaultCategory' => false
-          ]
+            [
+                'id'              => 'incoming',
+                'label'           => _INCOMING
+            ],
+            [
+                'id'              => 'outgoing',
+                'label'           =>  _OUTGOING
+            ],
+            [
+                'id'              => 'internal',
+                'label'           => _INTERNAL
+            ],
+            [
+                'id'              => 'ged_doc',
+                'label'           => _GED_DOC
+            ]
         ];
 
         return $categories;

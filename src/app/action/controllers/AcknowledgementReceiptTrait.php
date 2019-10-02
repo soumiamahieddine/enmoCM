@@ -35,13 +35,13 @@ trait AcknowledgementReceiptTrait
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
 
-        $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'is_multicontacts'], 'resId' => $aArgs['resId']]);
-        if (empty($ext) || $ext['category_id'] != 'incoming') {
+        $resource = ResModel::getById(['select' => ['type_id', 'destination', 'subject', 'category_id', 'address_id', 'is_multicontacts'], 'resId' => $aArgs['resId']]);
+        if (empty($resource) || $resource['category_id'] != 'incoming') {
             return [];
         }
 
         $contactsToProcess = [];
-        if ($ext['is_multicontacts'] == 'Y') {
+        if ($resource['is_multicontacts'] == 'Y') {
             $multiContacts = DatabaseModel::select([
                 'select'    => ['address_id'],
                 'table'     => ['contacts_res'],
@@ -52,7 +52,7 @@ trait AcknowledgementReceiptTrait
                 $contactsToProcess[] = $multiContact['address_id'];
             }
         } else {
-            $contactsToProcess[] = $ext['address_id'];
+            $contactsToProcess[] = $resource['address_id'];
         }
 
         foreach ($contactsToProcess as $contactToProcess) {
@@ -61,7 +61,6 @@ trait AcknowledgementReceiptTrait
             }
         }
 
-        $resource = ResModel::getById(['select' => ['type_id', 'destination', 'subject'], 'resId' => $aArgs['resId']]);
         $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
 
         if ($doctype['process_mode'] == 'SVA') {

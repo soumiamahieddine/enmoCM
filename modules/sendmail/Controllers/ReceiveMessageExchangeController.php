@@ -338,6 +338,7 @@ class ReceiveMessageExchangeController
         array_push($dataValue, ['column' => 'admission_date',  'value' => 'CURRENT_TIMESTAMP',   'type' => 'date']);
 
         $formatedData = StoreController::prepareExtStorage(['resId' => $aArgs['resId'], 'data' => $dataValue]);
+        //mlb_coll_ext
         $return       = ResModel::createExt($formatedData);
 
         return $return;

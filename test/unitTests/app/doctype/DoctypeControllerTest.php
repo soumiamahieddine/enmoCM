@@ -548,35 +548,18 @@ class DoctypeControllerTest extends TestCase
         $fileContent = file_get_contents('test/unitTests/samples/test.txt');
         $encodedFile = base64_encode($fileContent);
 
-        $data = [
-            [
-                'column'    => 'subject',
-                'value'     => 'subject value test U',
-                'type'      => 'string',
-            ],
-            [
-                'column'    => 'type_id',
-                'value'     => $doctypeId,
-                'type'      => 'integer',
-            ],
-            [
-                'column'    => 'typist',
-                'value'     => 'LLane',
-                'type'      => 'string',
-            ]
-        ];
-
         $aArgs = [
-            'collId'        => 'letterbox_coll',
-            'table'         => 'res_letterbox',
             'status'        => 'NEW',
             'encodedFile'   => $encodedFile,
-            'fileFormat'    => 'txt',
-            'data'          => $data
+            'format'        => 'txt',
+            'type_id'       => $doctypeId,
+            'category_id'   => 'incoming',
+            'subject'       => 'subject value test U',
+            'typist'        => 'LLane'
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $resController->createRes($fullRequest, new \Slim\Http\Response());
+        $response     = $resController->create($fullRequest, new \Slim\Http\Response());
 
         $responseBody = json_decode((string)$response->getBody());
 

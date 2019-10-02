@@ -300,7 +300,7 @@ class IxbusController
 
             $encodedZipFile = IxbusController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename'], 'res_id_master' => $aArgs['resIdMaster']]);
 
-            $mainResource = \Resource\models\ResModel::getExtById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
+            $mainResource = \Resource\models\ResModel::getById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
             if (empty($mainResource['process_limit_date'])) {
                 $processLimitDate = date('Y-m-d', strtotime(date("Y-m-d"). ' + 14 days'));
             } else {

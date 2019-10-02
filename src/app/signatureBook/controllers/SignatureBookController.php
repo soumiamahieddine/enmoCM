@@ -164,18 +164,12 @@ class SignatureBookController
 
         $incomingMail = ResModel::getById([
             'resId'     => $resId,
-            'select'    => ['res_id', 'subject']
+            'select'    => ['res_id', 'subject', 'alt_identifier', 'category_id']
         ]);
 
         if (empty($incomingMail)) {
             return ['error' => 'No Document Found'];
         }
-        $incomingExtMail = ResModel::getExtById([
-            'resId'     => $resId,
-            'select'    => ['alt_identifier', 'category_id']
-        ]);
-        $incomingMail['alt_identifier'] = $incomingExtMail['alt_identifier'];
-        $incomingMail['category_id'] = $incomingExtMail['category_id'];
 
         $incomingMailAttachments = AttachmentModel::getOnView([
             'select'      => ['res_id', 'res_id_version', 'title', 'format', 'attachment_type', 'path', 'filename'],

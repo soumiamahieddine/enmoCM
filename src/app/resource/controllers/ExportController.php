@@ -613,16 +613,16 @@ class ExportController
         }
 
         foreach ($args['chunkedResIds'] as $resIds) {
-            $exts = ResModel::getExt([
+            $resources = ResModel::get([
                 'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
                 'where' => ['res_id in (?)'],
                 'data' => [$resIds]
             ]);
 
-            if (!empty($exts)) {
+            if (!empty($resources)) {
                 $resId   = '';
                 $senders = [];
-                foreach ($exts as $key => $ext) {
+                foreach ($resources as $key => $ext) {
                     if ($key != 0 && $resId != $ext['res_id']) {
                         $aSenders[$resId] = $senders;
                         $senders = [];
@@ -698,16 +698,16 @@ class ExportController
         }
 
         foreach ($args['chunkedResIds'] as $resIds) {
-            $exts = ResModel::getExt([
+            $resources = ResModel::get([
                 'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
                 'where' => ['res_id in (?)'],
                 'data' => [$resIds]
             ]);
 
-            if (!empty($exts)) {
+            if (!empty($resources)) {
                 $resId      = '';
                 $recipients = [];
-                foreach ($exts as $key => $ext) {
+                foreach ($resources as $key => $ext) {
                     if ($key != 0 && $resId != $ext['res_id']) {
                         $aRecipients[$resId] = $recipients;
                         $recipients = [];
