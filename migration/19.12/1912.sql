@@ -208,6 +208,74 @@ DO $$ BEGIN
 END$$;
 
 
+/* MLB COLL EXT */
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext') AND attname = 'category_id') THEN
+        ALTER TABLE res_letterbox ADD COLUMN category_id character varying(32);
+        UPDATE res_letterbox SET category_id = mlb_coll_ext.category_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        UPDATE res_letterbox set category_id = 'incoming' WHERE category_id IS NULL;
+        ALTER TABLE res_letterbox ALTER COLUMN category_id set not null;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS category_id;
+
+        ALTER TABLE res_letterbox ADD COLUMN exp_contact_id integer;
+        UPDATE res_letterbox SET exp_contact_id = mlb_coll_ext.exp_contact_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS exp_contact_id;
+
+        ALTER TABLE res_letterbox ADD COLUMN exp_user_id character varying(128);
+        UPDATE res_letterbox SET exp_user_id = mlb_coll_ext.exp_user_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS exp_user_id;
+
+        ALTER TABLE res_letterbox ADD COLUMN dest_contact_id integer;
+        UPDATE res_letterbox SET dest_contact_id = mlb_coll_ext.dest_contact_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS dest_contact_id;
+
+        ALTER TABLE res_letterbox ADD COLUMN dest_user_id character varying(128);
+        UPDATE res_letterbox SET dest_user_id = mlb_coll_ext.dest_user_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS dest_user_id;
+
+        ALTER TABLE res_letterbox ADD COLUMN alt_identifier character varying(256);
+        UPDATE res_letterbox SET alt_identifier = mlb_coll_ext.alt_identifier FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alt_identifier;
+
+        ALTER TABLE res_letterbox ADD COLUMN admission_date timestamp without time zone;
+        UPDATE res_letterbox SET admission_date = mlb_coll_ext.admission_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS admission_date;
+
+        ALTER TABLE res_letterbox ADD COLUMN process_limit_date timestamp without time zone;
+        UPDATE res_letterbox SET process_limit_date = mlb_coll_ext.process_limit_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS process_limit_date;
+
+        ALTER TABLE res_letterbox ADD COLUMN closing_date timestamp without time zone;
+        UPDATE res_letterbox SET closing_date = mlb_coll_ext.closing_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS closing_date;
+
+        ALTER TABLE res_letterbox ADD COLUMN flag_alarm1 character(1) DEFAULT 'N'::character varying;
+        UPDATE res_letterbox SET flag_alarm1 = mlb_coll_ext.flag_alarm1 FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_alarm1;
+
+        ALTER TABLE res_letterbox ADD COLUMN flag_alarm2 character(1) DEFAULT 'N'::character varying;
+        UPDATE res_letterbox SET flag_alarm2 = mlb_coll_ext.flag_alarm2 FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_alarm2;
+
+        ALTER TABLE res_letterbox ADD COLUMN is_multicontacts character(1);
+        UPDATE res_letterbox SET is_multicontacts = mlb_coll_ext.is_multicontacts FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS is_multicontacts;
+
+        ALTER TABLE res_letterbox ADD COLUMN address_id INTEGER;
+        UPDATE res_letterbox SET address_id = mlb_coll_ext.address_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS address_id;
+
+        ALTER TABLE res_letterbox ADD COLUMN alarm1_date timestamp without time zone;
+        UPDATE res_letterbox SET alarm1_date = mlb_coll_ext.alarm1_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm1_date;
+
+        ALTER TABLE res_letterbox ADD COLUMN alarm2_date timestamp without time zone;
+        UPDATE res_letterbox SET alarm2_date = mlb_coll_ext.alarm2_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm2_date;
+    END IF;
+END$$;
+
+
 /* REFACTORING DATA */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN
@@ -373,22 +441,21 @@ SELECT r.tablename,
        r.destination,
        r.dest_user,
        r.confidentiality,
-       mlb.category_id,
-       mlb.exp_contact_id,
-       mlb.exp_user_id,
-       mlb.dest_user_id,
-       mlb.dest_contact_id,
-       mlb.address_id,
-       mlb.nature_id,
-       mlb.alt_identifier,
-       mlb.admission_date,
-       mlb.process_limit_date,
-       mlb.closing_date,
-       mlb.alarm1_date,
-       mlb.alarm2_date,
-       mlb.flag_alarm1,
-       mlb.flag_alarm2,
-       mlb.is_multicontacts,
+       r.category_id,
+       r.exp_contact_id,
+       r.exp_user_id,
+       r.dest_user_id,
+       r.dest_contact_id,
+       r.address_id,
+       r.alt_identifier,
+       r.admission_date,
+       r.process_limit_date,
+       r.closing_date,
+       r.alarm1_date,
+       r.alarm2_date,
+       r.flag_alarm1,
+       r.flag_alarm2,
+       r.is_multicontacts,
        r.subject,
        r.identifier,
        r.title,
@@ -408,9 +475,8 @@ FROM doctypes d,
      doctypes_second_level dsl,
      res_letterbox r
          LEFT JOIN entities en ON r.destination::text = en.entity_id::text
-         LEFT JOIN mlb_coll_ext mlb ON mlb.res_id = r.res_id
-         LEFT JOIN contacts_v2 cont ON mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id
-         LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
+         LEFT JOIN contacts_v2 cont ON r.exp_contact_id = cont.contact_id OR r.dest_contact_id = cont.contact_id
+         LEFT JOIN users u ON r.exp_user_id::text = u.user_id::text OR r.dest_user_id::text = u.user_id::text
 WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
 
 CREATE VIEW res_view_attachments AS
