@@ -123,11 +123,6 @@ export class ExportComponent implements OnInit {
             isFunction: false
         },
         {
-            value: 'case_label',
-            label: this.lang.caseLabel,
-            isFunction: false
-        },
-        {
             value: 'getStatus',
             label: this.lang.status,
             isFunction: true
@@ -150,11 +145,6 @@ export class ExportComponent implements OnInit {
         {
             value: 'getParentFolder',
             label: this.lang.parentFolder,
-            isFunction: true
-        },
-        {
-            value: 'getNature',
-            label: this.lang.nature,
             isFunction: true
         },
         {
@@ -260,7 +250,7 @@ export class ExportComponent implements OnInit {
             let realIndex = event.previousIndex;
 
             if (event.container.id == 'cdk-drop-list-1') {
-                realIndex = 0
+                realIndex = 0;
                 if ($j('.available-data .columns')[event.previousIndex] !== undefined) {
                     const fakeIndex = $j('.available-data .columns')[event.previousIndex].id;
                     realIndex = this.dataAvailable.map((dataAv: any) => (dataAv.value)).indexOf(fakeIndex);

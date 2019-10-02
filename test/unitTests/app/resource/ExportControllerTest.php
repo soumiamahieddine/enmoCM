@@ -61,20 +61,10 @@ class ExportControllerTest extends TestCase
                     "isFunction" => true
                 ],
                 [
-                    "value" => "getCopyEntities",
-                    "label" => "Copies",
-                    "isFunction" => true
-                ],
-                [
                     "value" => "getDetailLink",
                     "label" => "Lien page détaillé",
                     "isFunction" => true
                 ],
-                // [
-                //     "value" => "getParentFolder",
-                //     "label" => "Dossier",
-                //     "isFunction" => true
-                // ],
                 [
                     "value" => "getInitiatorEntity",
                     "label" => "Entité initiatrice",

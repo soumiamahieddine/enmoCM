@@ -85,7 +85,7 @@ class SummarySheetController
         foreach ($units as $unit) {
             $unit = (array)$unit;
             if ($unit['unit'] == 'primaryInformations') {
-                $informations = ['admission_date', 'creation_date', 'nature_id', 'doc_date', 'type_label', 'initiator', 'typist'];
+                $informations = ['admission_date', 'creation_date', 'doc_date', 'type_label', 'initiator', 'typist'];
                 $select = array_merge($select, $informations);
             } elseif ($unit['unit'] == 'secondaryInformations') {
                 $informations = ['category_id', 'priority', 'process_limit_date', 'status'];
@@ -219,7 +219,7 @@ class SummarySheetController
         }
         foreach ($units as $key => $unit) {
             if ($unit['unit'] == 'primaryInformations') {
-                $nature        = ResModel::getNatureLabel(['natureId' => $resource['nature_id']]);
+                $nature        = ResModel::getNatureLabel(['natureId' => '']);
                 $nature        = empty($nature) ? '<i>'._UNDEFINED.'</i>' : "<b>{$nature}</b>";
                 $admissionDate = TextFormatModel::formatDate($resource['admission_date'], 'd-m-Y');
                 $admissionDate = empty($admissionDate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$admissionDate}</b>";
