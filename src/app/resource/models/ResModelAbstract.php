@@ -300,26 +300,25 @@ abstract class ResModelAbstract
             return $categories;
         }
 
-        $categories = [];
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
-        if ($loadedXml) {
-            foreach ($loadedXml->COLLECTION as $collection) {
-                $collection = (array)$collection;
-
-                if ($collection['id'] == 'letterbox_coll') {
-                    foreach ($collection['categories']->category as $category) {
-                        $category = (array)$category;
-
-                        $categories[] = [
-                            'id'                => $category['id'],
-                            'label'             => defined($category['label']) ? constant($category['label']) : $category['label'],
-                            'defaultCategory'   => $category['id'] == $collection['categories']->default_category
-                        ];
-                    }
-                }
-            }
-        }
+        $categories = [
+          [
+              'id'              => 'incoming',
+              'label'           => defined('_INCOMING') ? _INCOMING : '_INCOMING',
+              'defaultCategory' => true
+          ], [
+              'id'              => 'outgoing',
+              'label'           => defined('_OUTGOING') ? _OUTGOING : '_OUTGOING',
+              'defaultCategory' => false
+          ], [
+              'id'              => 'internal',
+              'label'           => defined('_INTERNAL') ? _INTERNAL : '_INTERNAL',
+              'defaultCategory' => false
+          ], [
+              'id'              => 'ged_doc',
+              'label'           => defined('_GED_DOC') ? _GED_DOC : '_GED_DOC',
+              'defaultCategory' => false
+          ]
+        ];
 
         return $categories;
     }
