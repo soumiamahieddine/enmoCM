@@ -15,7 +15,8 @@
         <div *ngIf="this['indexingModels_'+category].length > 0 || adminMode" class="banner"
             [style.borderColor]="currentPriorityColor">
             <div class="title" [style.color]="currentPriorityColor">
-                {{lang[category] | uppercase}} <small *ngIf="category === 'mail'" [title]="lang.category_id">{{lang['indexing_' + currentCategory] | titlecase}}</small>
+                {{lang[category] | uppercase}} <small *ngIf="category === 'mail'"
+                    [title]="lang.category_id">{{lang['indexing_' + currentCategory] | titlecase}}</small>
                 <div class="title-divider"></div>
             </div>
             <div class="content">
@@ -144,6 +145,10 @@
                                 <ng-container *ngIf="field.identifier === 'folder'">
                                     <app-folder-input [control]="arrFormControl[field.identifier]" style="width:100%;">
                                     </app-folder-input>
+                                </ng-container>
+                                <ng-container *ngIf="field.identifier === 'tags'">
+                                    <app-tag-input [control]="arrFormControl[field.identifier]" style="width:100%;">
+                                    </app-tag-input>
                                 </ng-container>
                             </div>
                             <div class="fieldState">

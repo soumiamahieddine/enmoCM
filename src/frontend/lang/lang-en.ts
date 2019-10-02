@@ -1137,8 +1137,12 @@ export const LANG_EN = {
     "indexing_outgoing" : "outgoing",
     "indexing_internal" : "internal",
     "indexing_ged_doc" : "GED",
-    "folderCreateMsg" : "Do want create",
+    "createMsg" : "Do want create",
     "folderDeleteWarnMsg" : "Do want delete",
     "folderDeleteWarnMsg2" : "previously created ?",
     "noSelectedFolder" : "No selected folder",
+    "noSelectedTag" : "No selected tag",
+    "searchTag" : "Search tag",
+    "tagAdded" : "Tag added",
+    "tagDeleted" : "Tag deleted",
 };

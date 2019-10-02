@@ -13,16 +13,16 @@ import { LatinisePipe } from 'ngx-pipes';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
 @Component({
-    selector: 'app-folder-input',
-    templateUrl: "folder-input.component.html",
+    selector: 'app-tag-input',
+    templateUrl: "tag-input.component.html",
     styleUrls: [
-        'folder-input.component.scss',
+        'tag-input.component.scss',
         '../../indexation/indexing-form/indexing-form.component.scss'
     ],
     providers: [NotificationService, AppService, SortPipe]
 })
 
-export class FolderInputComponent implements OnInit {
+export class TagInputComponent implements OnInit {
 
     lang: any = LANG;
 
@@ -90,7 +90,7 @@ export class FolderInputComponent implements OnInit {
     }
 
     getDatas(data: string) {
-        return this.http.get('../../rest/autocomplete/folders', { params: { "search": data } });
+        return this.http.get('../../rest/autocomplete/tags', { params: { "search": data } });
     }
 
     selectOpt(ev: any) {
@@ -102,7 +102,7 @@ export class FolderInputComponent implements OnInit {
     initFormValue() {
 
         this.controlAutocomplete.value.forEach((ids: any) => {
-            this.http.get('../../rest/folders/' + ids).pipe(
+            this.http.get('../../rest/tags/' + ids).pipe(
                 tap((data) => {
                     for (var key in data) {
                         this.valuesToDisplay[data[key].id] = data[key].label;
@@ -155,13 +155,13 @@ export class FolderInputComponent implements OnInit {
 
             this.dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'ok'),
-                exhaustMap(() => this.http.delete('../../rest/folders/' + this.controlAutocomplete.value[index])),
+                exhaustMap(() => this.http.delete('../../rest/tags/' + this.controlAutocomplete.value[index])),
                 tap((data: any) => {
                     let arrValue = this.controlAutocomplete.value;
                     this.controlAutocomplete.value.splice(index, 1);
                     this.controlAutocomplete.setValue(arrValue);
 
-                    this.notify.success(this.lang.folderDeleted);
+                    this.notify.success(this.lang.tagDeleted);
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
@@ -180,7 +180,7 @@ export class FolderInputComponent implements OnInit {
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.post('../../rest/folders', { label: newElem[this.key] })),
+            exhaustMap(() => this.http.post('../../rest/tags', { label: newElem[this.key] })),
             tap((data: any) => {
                 for (var key in data) {
                     newElem['id'] = data[key];
@@ -188,7 +188,7 @@ export class FolderInputComponent implements OnInit {
                 }
                 this.setFormValue(newElem);
                 this.myControl.setValue('');
-                this.notify.success(this.lang.folderAdded);
+                this.notify.success(this.lang.tagAdded);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
