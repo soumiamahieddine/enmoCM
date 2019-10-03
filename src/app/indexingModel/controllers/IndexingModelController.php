@@ -226,7 +226,7 @@ class IndexingModelController
             'data'  => [$args['id']]
         ]);
 
-        $childrenModels = IndexingModelModel::get(['select' => ['id'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
+        $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
 
         // If model has children, update the children
         if (!empty($childrenModels)) {
@@ -267,6 +267,15 @@ class IndexingModelController
                         'unit'          => $field['unit'] ?? null
                     ]);
                 }
+
+                HistoryController::add([
+                    'tableName' => 'indexing_models',
+                    'recordId'  => $child['id'],
+                    'eventType' => 'UP',
+                    'info'      => _INDEXINGMODEL_MODIFICATION . " : {$child['label']}",
+                    'moduleId'  => 'indexingModel',
+                    'eventId'   => 'indexingModelModification',
+                ]);
             }
         }
 
@@ -299,7 +308,7 @@ class IndexingModelController
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
         }
-        $model = IndexingModelModel::getById(['select' => ['owner', 'private', '"default"'], 'id' => $args['id']]);
+        $model = IndexingModelModel::getById(['select' => ['owner', 'private', '"default"', 'label'], 'id' => $args['id']]);
         if (empty($model)) {
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
         } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {
@@ -310,7 +319,28 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Default model can not be deleted']);
         }
 
-        $model = IndexingModelModel::getById(['select' => ['label'], 'id' => $args['id']]);
+        $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
+
+        // If model has children, delete the children
+        if (!empty($childrenModels)) {
+            foreach ($childrenModels as $child) {
+                IndexingModelModel::delete([
+                    'where' => ['id = ?'],
+                    'data'  => [$child['id']]
+                ]);
+
+                IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$child['id']]]);
+
+                HistoryController::add([
+                    'tableName' => 'indexing_models',
+                    'recordId'  => $child['id'],
+                    'eventType' => 'DEL',
+                    'info'      => _INDEXINGMODEL_SUPPRESSION . " : {$child['label']}",
+                    'moduleId'  => 'indexingModel',
+                    'eventId'   => 'indexingModelSuppression',
+                ]);
+            }
+        }
 
         IndexingModelModel::delete([
             'where' => ['id = ?'],

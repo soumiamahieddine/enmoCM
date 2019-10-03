@@ -13,6 +13,7 @@ class IndexingModelControllerTest extends TestCase
 {
     private static $masterId = null;
     private static $childId = null;
+    private static $childId2 = null;
 
     public function testCreate()
     {
@@ -207,9 +208,16 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame(200, $response->getStatusCode());
 
+        $this->assertInternalType('int', $responseBody->id);
         self::$childId = $responseBody->id;
 
-        $this->assertInternalType('int', self::$childId);
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $this->assertInternalType('int', $responseBody->id);
+        self::$childId2 = $responseBody->id;
     }
 
     public function testUpdate()
@@ -350,7 +358,25 @@ class IndexingModelControllerTest extends TestCase
     {
         $indexingModelController = new \IndexingModel\controllers\IndexingModelController();
 
-        //  DELETE
+        //  DELETE 1 child model
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+
+        $response     = $indexingModelController->delete($request, new \Slim\Http\Response(), ['id' => self::$childId2]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId2]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Model not found', $responseBody->errors);
+
+        //  DELETE master + child
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -358,8 +384,24 @@ class IndexingModelControllerTest extends TestCase
         $response     = $indexingModelController->delete($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
         $this->assertSame(204, $response->getStatusCode());
 
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Model not found', $responseBody->errors);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Model not found', $responseBody->errors);
+
         //  Errors
-        $response     = $indexingModelController->delete($request, new \Slim\Http\Response(), ['id' => 99999]);
+        $response     = $indexingModelController->delete($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
 
