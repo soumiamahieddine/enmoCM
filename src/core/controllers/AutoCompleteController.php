@@ -698,19 +698,21 @@ class AutoCompleteController
         $arrScopedFoldersIds = array_column($scopedFolders, 'id');
 
         $selectedFolders = FolderModel::get([
-            'where'    => ['label ilike ? AND id IN(?)'],
+            'where'    => ['label ilike ? AND id in (?)'],
             'data'     => [ '%'.$data['search'].'%', $arrScopedFoldersIds],
             'orderBy'  => ['label']
         ]);
 
-        $getFomatedFolders = function ($value) {
-            return $return = [
-                'id' => $value['id'],
-                'idToDisplay' => $value['label'],
-                'otherInfo' => ''
+        $data = [];
+        foreach ($selectedFolders as $value) {
+            $data[] = [
+                'id'            => $value['id'],
+                'idToDisplay'   => $value['label'],
+                'otherInfo'     => $value['public']
             ];
-        };
-        return $response->withJson(array_map($getFomatedFolders, $selectedFolders));
+        }
+
+        return $response->withJson($data);
     }
 
     public static function getTags(Request $request, Response $response)
