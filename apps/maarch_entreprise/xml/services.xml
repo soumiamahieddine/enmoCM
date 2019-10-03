@@ -431,4 +431,28 @@
     <enabled>true</enabled>
     <angular>true</angular>
   </SERVICE>
+  <SERVICE>
+    <id>admin_tag</id>
+    <name>_TAGS</name>
+    <comment>_ADMIN_TAGS_DESC</comment>
+    <servicepage>index.php?page=manage_tag_list_controller&amp;module=tags</servicepage>
+    <servicetype>admin</servicetype>
+    <category>classement</category>
+    <system_service>false</system_service>
+    <style>fa fa-tags</style>
+    <enabled>true</enabled>
+    <WHEREAMIUSED>
+      <page>admin.php</page>
+      <nature>listelement</nature>
+    </WHEREAMIUSED>
+  </SERVICE>
+  <SERVICE>
+    <id>manage_tags_application</id>
+    <name>_MANAGE_TAGS_IN_APPLICATION</name>
+    <comment>_MANAGE_TAGS_IN_APPLICATION_DESC</comment>
+    <servicepage></servicepage>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+  </SERVICE>
 </root>

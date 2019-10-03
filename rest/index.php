@@ -291,10 +291,6 @@ $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class
 $app->get('/sortedPriorities', \Priority\controllers\PriorityController::class . ':getSorted');
 $app->put('/sortedPriorities', \Priority\controllers\PriorityController::class . ':updateSort');
 
-//Reconciliation
-$app->post('/reconciliation/add', \Attachment\controllers\ReconciliationController::class . ':create');
-$app->get('/reconciliation/check', \Attachment\controllers\ReconciliationController::class . ':checkAttachment');
-
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
 $app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':getByGroupId');
@@ -361,11 +357,11 @@ $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::cla
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
 //Tags
-$app->post('/tags', \Tag\controllers\TagController::class . ':create');
-$app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
-$app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
 $app->get('/tags', \Tag\controllers\TagController::class . ':get');
+$app->post('/tags', \Tag\controllers\TagController::class . ':create');
+$app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
 $app->put('/tags/{id}', \Tag\controllers\TagController::class . ':update');
+$app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
 
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');
@@ -421,6 +417,7 @@ $app->post('/currentUser/emailSignature', \User\controllers\UserController::clas
 $app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateCurrentUserBasketPreferences');
+$app->get('/currentUser/privileges', \User\controllers\UserController::class . ':getPrivileges');
 
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');

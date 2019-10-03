@@ -78,9 +78,8 @@ class StoreController
 
     public static function storeAttachment(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['encodedFile', 'data', 'collId', 'table', 'fileFormat', 'status']);
+        ValidatorModel::notEmpty($aArgs, ['encodedFile', 'data', 'table', 'fileFormat', 'status']);
         ValidatorModel::stringType($aArgs, ['collId', 'table', 'fileFormat', 'status']);
-        ValidatorModel::arrayType($aArgs, ['data']);
 
         try {
             $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
