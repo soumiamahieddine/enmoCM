@@ -2996,7 +2996,7 @@ if (!defined('_CLOSE_MAIL')) {
 }
 
 if (!defined('_CLOSE_MAIL_DESC')) {
-    define('_CLOSE_MAIL_DESC', "Allows you to update the closing date of a document (\'closing_date\' of the mlb_coll_ext table). ESSENTIAL in order to complete your document workflow.'");
+    define('_CLOSE_MAIL_DESC', "Allows you to update the closing date of a document (\'closing_date\' of the res_letterbox table). ESSENTIAL in order to complete your document workflow.'");
 }
 
 /******************** Keywords Helper ************/
@@ -4074,7 +4074,7 @@ if (!defined('_CLOSE_MAIL_AND_INDEX')) {
 }
 
 if (!defined('_CLOSE_MAIL_AND_INDEX_DESC')) {
-    define('_CLOSE_MAIL_AND_INDEX_DESC', "Allows you to update the closing date of a mail ('closing_date' in the mlb_coll_ext table) AND opens the index page to save a new mail.");
+    define('_CLOSE_MAIL_AND_INDEX_DESC', "Allows you to update the closing date of a mail ('closing_date' in the res_letterbox table) AND opens the index page to save a new mail.");
 }
 
 if (!defined('_DOC_NOT_CLOSED')) {

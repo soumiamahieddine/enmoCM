@@ -2786,7 +2786,7 @@ abstract class contacts_v2_Abstract extends Database
 
             if ($mode == 'contact_address') {
                 $aRes = [];
-                $stmt = $db->query("SELECT mlb.res_id FROM mlb_coll_ext mlb LEFT JOIN res_letterbox rl ON rl.res_id = mlb.res_id WHERE rl.status <> 'DEL' AND mlb.address_id = ?", array($id));
+                $stmt = $db->query("SELECT res_id FROM res_letterbox  WHERE status <> 'DEL' AND address_id = ?", array($id));
                 while($object = $stmt->fetchObject()){
                     $aRes[$object->res_id] = $object->res_id;
                 }

@@ -341,16 +341,6 @@ while ($GLOBALS['state'] <> "END") {
                     array($resourcesArray[$cptRes]["res_id"])
                 );
 
-                if ($GLOBALS['extensionTable'] <> "") {
-                    $deleteExtQuery = "DELETE FROM " . $GLOBALS['extensionTable']
-                       . " WHERE res_id = ?";
-                    $stmt = Bt_doQuery(
-                        $GLOBALS['db'], 
-                        $deleteExtQuery,
-                        array($resourcesArray[$cptRes]["res_id"])
-                    );
-                }
-
                 if ($GLOBALS['versionTable'] <> "") {
                     $deleteVersionQuery = "DELETE FROM " . $GLOBALS['versionTable']
                        . " WHERE res_id_master = ?";

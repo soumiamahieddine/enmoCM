@@ -1363,7 +1363,7 @@ if (isset($_REQUEST['id'])) {
 
     //On recherche le type de document attaché à ce courrier
 }
-    $stmt = $db->query('SELECT r.type_id, r.creation_date, m.category_id FROM res_letterbox r INNER JOIN mlb_coll_ext m ON m.res_id = r.res_id WHERE r.res_id = ?', array($_SESSION['doc_id']));
+    $stmt = $db->query('SELECT type_id, creation_date, category_id FROM res_letterbox WHERE res_id = ?', array($_SESSION['doc_id']));
     $mail_doctype = $stmt->fetchObject();
     $type_id = $mail_doctype->type_id;
     $category_id = $mail_doctype->category_id;

@@ -76,7 +76,6 @@ while ($GLOBALS['state'] <> "END") {
                     echo 'attach turn' . PHP_EOL;
                     //SECOND SELECT THE ATTACH IN DEL STATUS
                     $GLOBALS['table'] = 'res_attachments';
-                    $GLOBALS['exTable'] = '';
                     $GLOBALS['versionTable'] = 'res_version_attachments';
                     $GLOBALS['adrTable'] = 'adr_attachments';
                     $GLOBALS['attachAlreadyDone'] = true;
@@ -85,7 +84,6 @@ while ($GLOBALS['state'] <> "END") {
                     echo 'res turn' . PHP_EOL;
                     //FIRST SELECT THE DOC IN DEL STATUS
                     $GLOBALS['table'] = 'res_letterbox';
-                    $GLOBALS['exTable'] = 'mlb_coll_ext';
                     $GLOBALS['versionTable'] = '';
                     $GLOBALS['adrTable'] = 'adr_letterbox';
                     $GLOBALS['resAlreadyDone'] = true;
@@ -100,7 +98,6 @@ while ($GLOBALS['state'] <> "END") {
                 //THIRD SELECT THE ATTACH IN OBS STATUS
                 $where_clause = "STATUS = 'OBS' and creation_date <= '" . $GLOBALS['dateToPurgeOBS'] . "'";
                 $GLOBALS['table'] = 'res_attachments';
-                $GLOBALS['exTable'] = '';
                 $GLOBALS['versionTable'] = 'res_version_attachments';
                 $GLOBALS['adrTable'] = 'adr_attachments';
                 $GLOBALS['obsAlreadyDone'] = true;
@@ -157,7 +154,6 @@ while ($GLOBALS['state'] <> "END") {
                         array(
                             'res_id' => $resoucesRecordset->res_id,
                             'table' => $GLOBALS['table'],
-                            'ext_table' => $GLOBALS['extTable'],
                             'version_table' => $GLOBALS['versionTable'],
                             'docserver_id' => $resoucesRecordset->docserver_id,
                             'path_template' => $dsPath,
@@ -349,16 +345,6 @@ while ($GLOBALS['state'] <> "END") {
                     $deleteResQuery,
                     array($resourcesArray[$cptRes]["res_id"])
                 );
-
-                if ($resourcesArray[$cptRes]['ext_table'] <> "") {
-                    $deleteExtQuery = "$action FROM " . $resourcesArray[$cptRes]['ext_table']
-                       . " WHERE res_id = ?";
-                    $stmt = Bt_doQuery(
-                        $GLOBALS['db'], 
-                        $deleteExtQuery,
-                        array($resourcesArray[$cptRes]["res_id"])
-                    );
-                }
 
                 if ($resourcesArray[$cptRes]['version_table'] <> "") {
                     $deleteVersionQuery = "$action FROM " . $resourcesArray[$cptRes]['version_table']

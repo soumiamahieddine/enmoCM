@@ -130,9 +130,13 @@ if (isset($_REQUEST['load'])) {
         $userEntities = array_column($rawUserEntities, 'entity_id');
         $userEntities = !empty($userEntities) ? $userEntities : [''];
 
+        $db = new Database();
+        $stmt3 = $db->query("SELECT id FROM USERS WHERE user_id = ?", array($_SESSION['user']['UserId']));
+        $userInfo = $stmt3->fetchObject();
+
         $where_tab[] = "identifier = ?";
         $where_tab[] = "type = ?";
-        $where_tab[] = "notes.id in (select notes.id from notes left join note_entities on notes.id = note_entities.note_id where item_id IS NULL OR item_id in (?) or notes.user_id = '".$_SESSION['user']['UserId']."')";
+        $where_tab[] = "notes.id in (select notes.id from notes left join note_entities on notes.id = note_entities.note_id where item_id IS NULL OR item_id in (?) or notes.user_id = ".$userInfo->id.")";
         $arrayPDO = array($identifier);
         $arrayPDO[] = 'resource';
         $arrayPDO[] = $userEntities;
@@ -161,22 +165,22 @@ if (isset($_REQUEST['load'])) {
         }
     
         //Request
-        $tabNotes=$request->PDOselect(
-        $select,
-        $where,
-        $arrayPDO,
-        $orderstr,
-        $_SESSION['config']['databasetype'],
-        "default",
-        true,
-        NOTES_TABLE,
-        USERS_TABLE,
-        "user_id",
-        true,
-        false,
-        false,
-        $start
-    );
+    //     $tabNotes=$request->PDOselect(
+    //     $select,
+    //     $where,
+    //     $arrayPDO,
+    //     $orderstr,
+    //     $_SESSION['config']['databasetype'],
+    //     "default",
+    //     true,
+    //     NOTES_TABLE,
+    //     USERS_TABLE,
+    //     "user_id",
+    //     true,
+    //     false,
+    //     false,
+    //     $start
+    // );
         
         // $request->show_array($tabNotes);
         for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++) {

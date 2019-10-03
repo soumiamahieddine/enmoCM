@@ -76,14 +76,6 @@ class ReceiveMessageExchangeController
 
         $aDefaultConfig = self::readXmlConfig();
 
-        /*************** RES LETTERBOX **************/
-        $this->addComment('['.date("d/m/Y H:i:s") . '] Enregistrement du message');
-        $resLetterboxReturn = self::saveResLetterbox(["dataObject" => $sDataObject, "defaultConfig" => $aDefaultConfig]);
-
-        if (!empty($resLetterboxReturn['errors'])) {
-            return $response->withStatus(400)->withJson(["errors" => $resLetterboxReturn['errors']]);
-        }
-
         /*************** CONTACT **************/
         $this->addComment('['.date("d/m/Y H:i:s") . '] Selection ou création du contact');
         $contactReturn = self::saveContact(["dataObject" => $sDataObject, "defaultConfig" => $aDefaultConfig]);
@@ -93,12 +85,14 @@ class ReceiveMessageExchangeController
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Contact sélectionné ou créé';
 
-        /************** MLB COLL EXT **************/
-        $return = self::saveExtensionTable(["contact" => $contactReturn, "resId" => $resLetterboxReturn]);
+        /*************** RES LETTERBOX **************/
+        $this->addComment('['.date("d/m/Y H:i:s") . '] Enregistrement du message');
+        $resLetterboxReturn = self::saveResLetterbox(["dataObject" => $sDataObject, "defaultConfig" => $aDefaultConfig, "contact" => $contactReturn]);
 
-        if (!empty($return['errors'])) {
-            return $response->withStatus(400)->withJson(["errors" => $return['errors']]);
+        if (!empty($resLetterboxReturn['errors'])) {
+            return $response->withStatus(400)->withJson(["errors" => $resLetterboxReturn['errors']]);
         }
+
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Message enregistré';
         /************** NOTES *****************/
         $notesReturn = self::saveNotes(["dataObject" => $sDataObject, "resId" => $resLetterboxReturn, "userId" => $GLOBALS['id']]);
@@ -249,28 +243,30 @@ class ReceiveMessageExchangeController
             $destUser = UserModel::getByEmail(['mail' => $email]);
         }
 
+        $contact = $aArgs['contact'];
+
         $dataValue = [];
-        array_push($dataValue, ['column' => 'typist',           'value' => 'superadmin',                        'type' => 'string']);
-        array_push($dataValue, ['column' => 'type_id',          'value' => $defaultConfig['type_id'],           'type' => 'integer']);
-        array_push($dataValue, ['column' => 'subject',          'value' => str_replace("[CAPTUREM2M]", "", $mainDocumentMetaData->Title[0]),     'type' => 'string']);
-        array_push($dataValue, ['column' => 'doc_date',         'value' => $mainDocumentMetaData->CreatedDate,  'type' => 'date']);
-        array_push($dataValue, ['column' => 'destination',      'value' => $destination[0]['entity_id'],        'type' => 'string']);
-        array_push($dataValue, ['column' => 'initiator',        'value' => $destination[0]['entity_id'],        'type' => 'string']);
-        array_push($dataValue, ['column' => 'dest_user',        'value' => $destUser[0]['user_id'],             'type' => 'string']);
-        array_push($dataValue, ['column' => 'reference_number', 'value' => $dataObject->MessageIdentifier->value, 'type' => 'string']);
-        array_push($dataValue, ['column' => 'priority',         'value' => $defaultConfig['priority'],          'type' => 'integer']);
-        array_push($dataValue, ['column' => 'confidentiality',  'value' => 'N',                                 'type' => 'string']);
+        array_push($dataValue, ['typist'           => 'superadmin']);
+        array_push($dataValue, ['type_id'          => $defaultConfig['type_id']]);
+        array_push($dataValue, ['subject'          => str_replace("[CAPTUREM2M]", "", $mainDocumentMetaData->Title[0])]);
+        array_push($dataValue, ['doc_date'         => $mainDocumentMetaData->CreatedDate]);
+        array_push($dataValue, ['destination'      => $destination[0]['entity_id']]);
+        array_push($dataValue, ['initiator'        => $destination[0]['entity_id']]);
+        array_push($dataValue, ['dest_user'        => $destUser[0]['user_id']]);
+        array_push($dataValue, ['reference_number' => $dataObject->MessageIdentifier->value]);
+        array_push($dataValue, ['priority'         => $defaultConfig['priority']]);
+        array_push($dataValue, ['confidentiality'  => 'N']);
+        // array_push($dataValue, ['nature_id' => 'message_exchange');
+        array_push($dataValue, ['category_id'     => 'incoming']);
+        array_push($dataValue, ['alt_identifier'  => '']);
+        array_push($dataValue, ['exp_contact_id'  => $contact['contactId']]);
+        array_push($dataValue, ['address_id'      => $contact['addressId']]);
+        array_push($dataValue, ['admission_date'  => 'CURRENT_TIMESTAMP']);
+        array_push($dataValue, ['encodedFile'  => $documentMetaData->Attachment->value]);
+        array_push($dataValue, ['fileFormat'  => $fileFormat]);
+        array_push($dataValue, ['status'  => $defaultConfig['status']]);
 
-        $allDatas = [
-            "encodedFile" => $documentMetaData->Attachment->value,
-            "data"        => $dataValue,
-            "collId"      => "letterbox_coll",
-            "table"       => "res_letterbox",
-            "fileFormat"  => $fileFormat,
-            "status"      => $defaultConfig['status']
-        ];
-
-        return StoreController::storeResourceRes($allDatas);
+        return StoreController::storeResource($dataValue);
     }
 
     protected static function saveContact($aArgs = [])
@@ -325,25 +321,6 @@ class ReceiveMessageExchangeController
         return $contact;
     }
 
-    protected static function saveExtensionTable($aArgs = [])
-    {
-        $contact = $aArgs['contact'];
-        
-        $dataValue = [];
-        array_push($dataValue, ['column' => 'nature_id',       'value' => 'message_exchange',    'type' => 'string']);
-        array_push($dataValue, ['column' => 'category_id',     'value' => 'incoming',            'type' => 'string']);
-        array_push($dataValue, ['column' => 'alt_identifier',  'value' => '',                    'type' => 'string']);
-        array_push($dataValue, ['column' => 'exp_contact_id',  'value' => $contact['contactId'], 'type' => 'integer']);
-        array_push($dataValue, ['column' => 'address_id',      'value' => $contact['addressId'], 'type' => 'integer']);
-        array_push($dataValue, ['column' => 'admission_date',  'value' => 'CURRENT_TIMESTAMP',   'type' => 'date']);
-
-        $formatedData = StoreController::prepareExtStorage(['resId' => $aArgs['resId'], 'data' => $dataValue]);
-        //mlb_coll_ext
-        $return       = ResModel::createExt($formatedData);
-
-        return $return;
-    }
-
     protected static function saveNotes($aArgs = [])
     {
         $countNote = 0;
@@ -396,20 +373,18 @@ class ReceiveMessageExchangeController
                 array_push($dataValue, ['column' => 'attachment_type', 'value' => $defaultConfig['attachment_type'], 'type' => 'string']);
                 array_push($dataValue, ['column' => 'relation',        'value' => '1',                               'type' => 'integer']);
                 array_push($dataValue, ['column' => 'coll_id',         'value' => 'letterbox_coll',                  'type' => 'string']);
-
                 array_push($dataValue, ['column' => 'doc_date',        'value' => $attachmentContent->CreatedDate,   'type' => 'date']);
                 array_push($dataValue, ['column' => 'title',           'value' => $attachmentContent->Title[0],      'type' => 'string']);
 
                 $allDatas = [
                     "encodedFile" => $BinaryDataObjectInfo->Attachment->value,
                     "data"        => $dataValue,
-                    "collId"      => "letterbox_coll",
-                    "table"       => "res_attachments",
+                    "version"       => false,
                     "fileFormat"  => $fileFormat,
                     "status"      => 'TRA'
                 ];
                 
-                $resId = StoreController::storeResourceRes($allDatas);
+                $resId = StoreController::storeAttachment($allDatas);
                 $countAttachment++;
             }
         }

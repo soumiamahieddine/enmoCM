@@ -269,7 +269,7 @@ class LinkController
     {
         $db = new Database();
 
-        $altIdentifierRequest = 'SELECT alt_identifier FROM mlb_coll_ext where res_id = ?';
+        $altIdentifierRequest = 'SELECT alt_identifier FROM res_letterbox where res_id = ?';
         $stmt = $db->query($altIdentifierRequest, array($resId));
         while ($altIdentifierResult = $stmt->fetchObject()) {
             $altIdentifier = $altIdentifierResult->alt_identifier;

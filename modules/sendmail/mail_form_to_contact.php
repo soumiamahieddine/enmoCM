@@ -198,7 +198,7 @@ if ($mode == 'add') {
     $adresse_mail = null;
     $db = new Database();
     $stmt = $db->query('SELECT res_id, category_id, address_id, exp_user_id, dest_user_id, admission_date
-                FROM mlb_coll_ext 
+                FROM res_letterbox 
                 WHERE (( exp_contact_id is not null 
                 or dest_contact_id is not null 
                 or exp_user_id is not null 

@@ -59,13 +59,16 @@ if (isset($_REQUEST['identifier'])) {
     } else {
         $query .= "''";
     }
+
+    $stmt3 = $db->query("SELECT id FROM USERS WHERE user_id = ?", array($_SESSION['user']['UserId']));
+    $userInfo = $stmt3->fetchObject();
           
     $query .= ") ";
     $query .= "OR ";
     $query .= "item_id IS NULL ";
     $query .= ") ";
     $query .= "OR ";
-    $query .= "user_id = '" . $_SESSION['user']['UserId'] . "' ";
+    $query .= "user_id = " . $userInfo->id . " ";
     $query .= ") ";
     $query .= " order by creation_date desc";
 

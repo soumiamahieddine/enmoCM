@@ -28,31 +28,6 @@ $SOAP_typedef['returnViewResource'] = array('status'=>'string',
                                             'called_by_ws'=>'boolean',
                                             'error'=>'string'
                                     );
-$SOAP_dispatch_map['docserverSave'] = array(
-                                        'in'  => array('docserver' => '{urn:MaarchSoapServer}docservers', 'mode' => 'string'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docservers::save"
-                                    );
-$SOAP_dispatch_map['docserverDelete'] = array(
-                                        'in'  => array('docserver' => '{urn:MaarchSoapServer}docservers'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docservers::delete"
-                                    );
-$SOAP_dispatch_map['docserverEnable'] = array(
-                                        'in'  => array('docserver' => '{urn:MaarchSoapServer}docservers'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docservers::enable"
-                                    );                                    
-$SOAP_dispatch_map['docserverDisable'] = array(
-                                        'in'  => array('docserver' => '{urn:MaarchSoapServer}docservers'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docservers::disable"
-                                    );
-$SOAP_dispatch_map['docserverGet'] = array(
-                                        'in'  => array('docserverId' => 'string'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}docservers'),
-                                        'method' => "core#docservers::getWs"
-                                    );
 $SOAP_dispatch_map['viewResource'] = array(
                                         'in'  => Array('gedId' => 'string', 'tableName' => 'string', 'adrTableName' => 'string', 'calledByWS' => 'string'),
                                         'out' => Array('return' => '{urn:MaarchSoapServer}returnViewResource'),
@@ -64,31 +39,6 @@ $SOAP_typedef['docserverTypes'] = array(    'docserver_type_id'=>'string',
                                             'docserver_type_label'=>'string',
                                             'fingerprint_mode'=>'string'
                                             );
-$SOAP_dispatch_map['docserverTypeSave'] = array(
-                                        'in'  => array('docserver_type' => '{urn:MaarchSoapServer}docserverTypes', 'mode' => 'string'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docserver_types::save"
-                                        );
-$SOAP_dispatch_map['docserverTypeDelete'] = array(
-                                        'in'  => array('docserver_type' => '{urn:MaarchSoapServer}docserverTypes'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docserver_types::delete"
-                                    );
-$SOAP_dispatch_map['docserverTypeEnable'] = array(
-                                        'in'  => array('docserver_type' => '{urn:MaarchSoapServer}docserverTypes'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docserver_types::enable"
-                                    );
-$SOAP_dispatch_map['docserverTypeDisable'] = array(
-                                        'in'  => array('docserver_type' => '{urn:MaarchSoapServer}docserverTypes'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docserver_types::disable"
-                                    );
-$SOAP_dispatch_map['docserverTypeGet'] = array(
-                                        'in'  => array('docserverTypeId' => 'string'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}docserverTypes'),
-                                        'method' => "core#docserver_types::getWs"
-                                    );
 /**************************************************************************************************/
 // USERS
 $SOAP_typedef['users'] = array(    'user_id'=>'string',
@@ -99,30 +49,11 @@ $SOAP_typedef['users'] = array(    'user_id'=>'string',
                                 'mail'=>'string',
                                 'loginmode'=>'string'
                                 );
-$SOAP_dispatch_map['userSave'] = array(
-                                        'in'  => array('user' => '{urn:MaarchSoapServer}users', 'mode' => 'string'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#users::save"
-                                        );
+
 $SOAP_dispatch_map['userDelete'] = array(
                                         'in'  => array('user' => '{urn:MaarchSoapServer}users'),
                                         'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
                                         'method' => "core#users::delete"
-                                    );
-$SOAP_dispatch_map['userEnable'] = array(
-                                        'in'  => array('user' => '{urn:MaarchSoapServer}users'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#users::enable"
-                                    );
-$SOAP_dispatch_map['userDisable'] = array(
-                                        'in'  => array('user' => '{urn:MaarchSoapServer}users'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#users::disable"
-                                    );
-$SOAP_dispatch_map['userGet'] = array(
-                                        'in'  => array('user' => 'string'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}users'),
-                                        'method' => "core#users::getWs"
                                     );
 
 $SOAP_typedef['returnArrayUser'] = array(   'userEntities'=>'{urn:MaarchSoapServer}arrayOfEntities',
@@ -167,29 +98,6 @@ $SOAP_typedef['returnResArray'] = array(
     'returnCode'=> 'int',
     'resId' => 'string',
     'error' => 'string'
-);
-
-$SOAP_dispatch_map['storeResource'] = array(
-    'in'  => array(
-        'encodedFile' => 'string',
-        'data' => '{urn:MaarchSoapServer}arrayOfData',
-        'collId' => 'string',
-        'table' => 'string',
-        'fileFormat' => 'string',
-        'status' => 'string',
-    ),
-    'out' => array('return' => '{urn:MaarchSoapServer}returnResArray'),
-    'method' => "core#resources::storeResource",
-);
-
-$SOAP_dispatch_map['storeExtResource'] = array(
-    'in'  => array(
-        'resId' => 'long',
-        'data' => '{urn:MaarchSoapServer}arrayOfData',
-        'table' => 'string',
-    ),
-    'out' => array('return' => '{urn:MaarchSoapServer}returnResArray'),
-    'method' => "core#resources::storeExtResource",
 );
 
 $SOAP_typedef['searchParams'] = array(

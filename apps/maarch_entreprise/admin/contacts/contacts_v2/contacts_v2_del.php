@@ -72,10 +72,8 @@ if(isset($_REQUEST['valid']))
         $new_address = $_REQUEST['address'];
 
         $i=0;
-        $db->query("UPDATE ".$_SESSION['collections'][$i]['extensions'][$i] 
-            . " SET exp_contact_id = ?, address_id = ? WHERE exp_contact_id = ?", array($new_contact, $new_address, $s_id));
-        $db->query("UPDATE ".$_SESSION['collections'][$i]['extensions'][$i] 
-            . " SET dest_contact_id = ?, address_id = ? WHERE dest_contact_id = ?", array($new_contact, $new_address, $s_id));
+        $db->query("UPDATE res_letterbox SET exp_contact_id = ?, address_id = ? WHERE exp_contact_id = ?", array($new_contact, $new_address, $s_id));
+        $db->query("UPDATE res_letterbox SET dest_contact_id = ?, address_id = ? WHERE dest_contact_id = ?", array($new_contact, $new_address, $s_id));
         $db->query("UPDATE contacts_res SET contact_id = ?, address_id = ? WHERE contact_id = ?", array($new_contact, $new_address, $s_id));
 
 		$aAddressesTmp = \SrcCore\models\DatabaseModel::select([

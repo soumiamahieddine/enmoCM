@@ -12,7 +12,6 @@
         <Table>res_letterbox</Table>
         <View>res_view_letterbox</View>
         <Adr>adr_letterbox</Adr>
-		<Extension>mlb_coll_ext</Extension>
     </COLLECTION>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>

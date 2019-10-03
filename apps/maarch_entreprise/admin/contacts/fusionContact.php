@@ -16,12 +16,12 @@ $del_address_id = explode(',', $_POST['del_address_id']);
 foreach ($contacts_id as $key => $value) {
 
     //mise à jour des contacts courriers de type arrivé
-    $query = "UPDATE mlb_coll_ext SET dest_contact_id = ? WHERE dest_contact_id = ?";
+    $query = "UPDATE res_letterbox SET dest_contact_id = ? WHERE dest_contact_id = ?";
     $arrayPDO = array($master_contact_id,$value);
     $db->query($query, $arrayPDO);
 
     //mise à jour des contacts courriers de type départ
-    $query = "UPDATE mlb_coll_ext SET exp_contact_id = ? WHERE exp_contact_id = ?";
+    $query = "UPDATE res_letterbox SET exp_contact_id = ? WHERE exp_contact_id = ?";
     $arrayPDO = array($master_contact_id,$value);
     $db->query($query, $arrayPDO);
 
@@ -49,7 +49,7 @@ foreach ($contacts_id as $key => $value) {
 foreach ($del_address_id as $key => $value) {
     if (!empty($value)) {
         //mise à jour des adresses courriers de type arrivé
-        $query = "UPDATE mlb_coll_ext SET address_id = ? WHERE address_id = ?";
+        $query = "UPDATE res_letterbox SET address_id = ? WHERE address_id = ?";
         $arrayPDO = array($master_address_id,$value);
         $db->query($query, $arrayPDO);
 

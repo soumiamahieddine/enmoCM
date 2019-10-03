@@ -1526,7 +1526,7 @@ if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT')) {
     define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');
 }
 // if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT_DESC')) {
-//     define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', "Permet de mettre à jour la date de clôture d'un courrier ('closing_date' de la table mlb_coll_ext) avec présence OBLIGATOIRE de pièce(s) jointe(s) / annotation(s).");
+//     define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', "Permet de mettre à jour la date de clôture d'un courrier ('closing_date' de la table res_letterbox) avec présence OBLIGATOIRE de pièce(s) jointe(s) / annotation(s).");
 // }
 if (!defined('_ACTION_NOT_IN_DB')) {
     define('_ACTION_NOT_IN_DB', 'Action non enregistrée en base');
@@ -3026,7 +3026,7 @@ if (!defined('_CLOSE_MAIL')) {
     define('_CLOSE_MAIL', 'Clôturer un courrier');
 }
 if (!defined('_CLOSE_MAIL_DESC')) {
-    define('_CLOSE_MAIL_DESC', "Permet de mettre à jour la date de clôture d'un courrier ('closing_date' de la table mlb_coll_ext). ESSENTIEL afin de terminer votre workflow de courrier.");
+    define('_CLOSE_MAIL_DESC', "Permet de mettre à jour la date de clôture d'un courrier ('closing_date' de la table res_letterbox). ESSENTIEL afin de terminer votre workflow de courrier.");
 }
 
 /******************** Keywords Helper ************/
@@ -4111,7 +4111,7 @@ if (!defined('_CLOSE_MAIL_AND_INDEX')) {
     define('_CLOSE_MAIL_AND_INDEX', "Clôturer un courrier et lancer l'indexation");
 }
 if (!defined('_CLOSE_MAIL_AND_INDEX_DESC')) {
-    define('_CLOSE_MAIL_AND_INDEX_DESC', "Permet de mettre à jour la date de clôture d'un courrier ('closing_date' de la table mlb_coll_ext) ET ouvre la page d'indexation afin d'enregistrer un nouveau courrier.");
+    define('_CLOSE_MAIL_AND_INDEX_DESC', "Permet de mettre à jour la date de clôture d'un courrier ('closing_date' de la table res_letterbox) ET ouvre la page d'indexation afin d'enregistrer un nouveau courrier.");
 }
 if (!defined('_DOC_NOT_CLOSED')) {
     define('_DOC_NOT_CLOSED', "Ce courrier n'est pas clôturé");

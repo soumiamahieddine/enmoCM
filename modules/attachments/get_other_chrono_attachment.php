@@ -35,7 +35,7 @@ while ($res = $stmt->fetchObject()) {
     array_push($listIdentifier, $res->identifier);
 }
 
-$stmt = $db->query("SELECT category_id, alt_identifier FROM mlb_coll_ext WHERE res_id = ? ", array($_SESSION['doc_id']));
+$stmt = $db->query("SELECT category_id, alt_identifier FROM res_letterbox WHERE res_id = ? ", array($_SESSION['doc_id']));
 $res = $stmt->fetchObject();
 
 $category_id = $res->category_id;

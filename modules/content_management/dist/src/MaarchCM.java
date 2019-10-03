@@ -374,7 +374,6 @@ public class MaarchCM {
         Set<String> whiteList = new HashSet<>();
         whiteList.add("res_letterbox");
         whiteList.add("res_attachments");
-        whiteList.add("mlb_coll_ext");
         whiteList.add("res_version_letterbox");
         whiteList.add("res_view_attachments");
         whiteList.add("res_view_letterbox");

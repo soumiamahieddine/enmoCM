@@ -375,7 +375,7 @@ class ExportFunctions
     {
         $db = new Database();
 
-        $query = 'SELECT ct.label from contacts_v2 cont LEFT JOIN mlb_coll_ext mlb ON (mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id) LEFT JOIN contact_types ct ON ct.id = cont.contact_type WHERE mlb.res_id = ?';
+        $query = 'SELECT ct.label from contacts_v2 cont LEFT JOIN res_letterbox rlb ON (rlb.exp_contact_id = cont.contact_id OR rlb.dest_contact_id = cont.contact_id) LEFT JOIN contact_types ct ON ct.id = cont.contact_type WHERE rlb.res_id = ?';
         $stmt = $db->query($query, array($res_id));
         $result = $stmt->fetchObject();
 
@@ -386,7 +386,7 @@ class ExportFunctions
     {
         $db = new Database();
 
-        $query = 'SELECT cont.title from contacts_v2 cont LEFT JOIN mlb_coll_ext mlb ON (mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id) WHERE mlb.res_id = ?';
+        $query = 'SELECT cont.title from contacts_v2 cont LEFT JOIN res_letterbox rlb ON (rlb.exp_contact_id = cont.contact_id OR rlb.dest_contact_id = cont.contact_id) WHERE rlb.res_id = ?';
         $stmt = $db->query($query, array($res_id));
         $result = $stmt->fetchObject();
 
@@ -397,7 +397,7 @@ class ExportFunctions
     {
         $db = new Database();
 
-        $query = 'SELECT c.function FROM mlb_coll_ext r LEFT JOIN contacts_v2 c ON c.contact_id = r.dest_contact_id WHERE r.res_id = ?';
+        $query = 'SELECT c.function FROM res_letterbox r LEFT JOIN contacts_v2 c ON c.contact_id = r.dest_contact_id WHERE r.res_id = ?';
         $stmt = $db->query($query, array($res_id));
         $result = $stmt->fetchObject();
 
@@ -475,7 +475,7 @@ class ExportFunctions
     {
         $db = new Database();
 
-        $query = 'SELECT category_id FROM mlb_coll_ext WHERE res_id = ?';
+        $query = 'SELECT category_id FROM res_letterbox WHERE res_id = ?';
         $stmt = $db->query($query, array($res_id));
         $result = $stmt->fetchObject();
 

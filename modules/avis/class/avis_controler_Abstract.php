@@ -19,7 +19,7 @@ abstract class avis_controler_Abstract
         //define avis limit date
         $db = new Database();
 
-        $query = "SELECT notes.user_id,notes.note_text, opinion_limit_date FROM notes,mlb_coll_ext WHERE identifier = ? AND note_text LIKE '[POUR AVIS]%' AND notes.identifier = res_letterbox.res_id";
+        $query = "SELECT notes.user_id,notes.note_text, opinion_limit_date FROM notes,res_letterbox WHERE identifier = ? AND note_text LIKE '[POUR AVIS]%' AND notes.identifier = res_letterbox.res_id";
 
         $stmt = $db->query($query, array($resId));
 

@@ -51,32 +51,6 @@
         <script_search>search_letterbox.php</script_search>
         <script_search_result>list_results_letterbox.php</script_search_result>
         <script_details>details.php</script_details>
-        <extensions>
-            <table>mlb_coll_ext</table>
-        </extensions>
-        <categories>
-            <category>
-                <id>incoming</id>
-                <label>_INCOMING</label>
-            </category>
-            <category>
-                <id>outgoing</id>
-                <label>_OUTGOING</label>
-            </category>
-            <category>
-                <id>internal</id>
-                <label>_INTERNAL</label>
-            </category>
-            <category>
-                <id>ged_doc</id>
-                <label>_GED_DOC</label>
-            </category>
-            <category>
-                <id>attachment</id>
-                <label>_ATTACHMENT</label>
-            </category>
-            <default_category>incoming</default_category>
-        </categories>
     </COLLECTION>
     <COLLECTION>
         <id>attachments_coll</id>
@@ -90,16 +64,6 @@
         <script_search>search_attachments.php</script_search>
         <script_search_result>list_results_attachments.php</script_search_result>
         <script_details>details_attachments.php</script_details>
-        <extensions>
-            <table/>
-        </extensions>
-        <categories>
-            <category>
-                <id>incoming</id>
-                <label>_INCOMING</label>
-            </category>
-            <default_category>incoming</default_category>
-        </categories>
     </COLLECTION>
     <COLLECTION>
         <id>attachments_version_coll</id>
@@ -113,16 +77,6 @@
         <script_search>search_attachments.php</script_search>
         <script_search_result>list_results_attachments.php</script_search_result>
         <script_details>details_attachments.php</script_details>
-        <extensions>
-            <table/>
-        </extensions>
-        <categories>
-            <category>
-                <id>incoming</id>
-                <label>_INCOMING</label>
-            </category>
-            <default_category>incoming</default_category>
-        </categories>
     </COLLECTION>
     <COLLECTION>
         <id>archive_transfer_coll</id>

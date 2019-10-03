@@ -24,7 +24,6 @@
         <Id>letterbox_coll</Id>
         <Table>res_letterbox</Table>
         <View>res_view_letterbox</View>
-        <ExtTable>mlb_coll_ext</ExtTable>
         <VersionTable>res_version_letterbox</VersionTable>
         <Adr>adr_x</Adr>
     </COLLECTION>

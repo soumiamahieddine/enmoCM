@@ -721,22 +721,19 @@ else
 
 			foreach(array_keys($_SESSION['coll_categories']['letterbox_coll']) as $key)
 			{
-				if($key!='default_category'){
-					$stmt = $db->query("SELECT count(res_id) as total FROM ".$view
-                                                . " WHERE status not in ('DEL','BAD') AND category_id = '".$key."' ".$where_date." ".$where_status." ".$where_priority." ".$where_entities, $arrayPDO);
-					$res = $stmt->fetchObject();
+				$stmt = $db->query("SELECT count(res_id) as total FROM ".$view
+											. " WHERE status not in ('DEL','BAD') AND category_id = '".$key."' ".$where_date." ".$where_status." ".$where_priority." ".$where_entities, $arrayPDO);
+				$res = $stmt->fetchObject();
 
-					if($report_type == 'graph')
-					{
-						array_push($_SESSION['labels1'], utf8_decode(functions::wash_html($_SESSION['coll_categories']['letterbox_coll'][$key], 'NO_ACCENT')));
-						array_push($vol_an, $res->total);
-					}
-					elseif($report_type == 'array')
-					{
-						array_push($data, array('LABEL' => $_SESSION['coll_categories']['letterbox_coll'][$key], 'VALUE' => $res->total ));
-						array_push($totalCourrier, $res->total);
-					}
-
+				if($report_type == 'graph')
+				{
+					array_push($_SESSION['labels1'], utf8_decode(functions::wash_html($_SESSION['coll_categories']['letterbox_coll'][$key], 'NO_ACCENT')));
+					array_push($vol_an, $res->total);
+				}
+				elseif($report_type == 'array')
+				{
+					array_push($data, array('LABEL' => $_SESSION['coll_categories']['letterbox_coll'][$key], 'VALUE' => $res->total ));
+					array_push($totalCourrier, $res->total);
 				}
 			}
 

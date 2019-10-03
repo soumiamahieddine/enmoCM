@@ -304,16 +304,14 @@ abstract class lists_Abstract extends Database
                          .$this->divListId.'\', '.$this->modeReturn.');">';
                 $filters .= '<option value="none" style="text-align:center;"></option>';
                 foreach (array_keys($_SESSION['coll_categories'][$this->collId]) as $catId) {
-                    if ($catId != 'default_category') {
-                        if (isset($_SESSION['filters']['category']['VALUE'])
-                            && $_SESSION['filters']['category']['VALUE'] == $catId
-                        ) {
-                            $selected = 'selected="selected"';
-                        } else {
-                            $selected = '';
-                        }
-                        $filters .= '<option value="'.$catId.'" '.$selected.'>'.$_SESSION['coll_categories'][$this->collId][$catId].'</option>';
+                    if (isset($_SESSION['filters']['category']['VALUE'])
+                        && $_SESSION['filters']['category']['VALUE'] == $catId
+                    ) {
+                        $selected = 'selected="selected"';
+                    } else {
+                        $selected = '';
                     }
+                    $filters .= '<option value="'.$catId.'" '.$selected.'>'.$_SESSION['coll_categories'][$this->collId][$catId].'</option>';
                 }
                 $filters .= '</select>&nbsp;';
                 $filters .= '<script> $j("#category_id_list").chosen({width:"150px",allow_single_deselect: true});</script>';
