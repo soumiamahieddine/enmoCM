@@ -18,3 +18,5 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS folders_system_id;
 
 DROP TABLE IF EXISTS groupbasket_status;
 DROP TABLE IF EXISTS indexingmodels;
+
+DROP TABLE IF EXISTS mlb_coll_ext;

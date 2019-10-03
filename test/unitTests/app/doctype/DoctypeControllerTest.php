@@ -474,6 +474,10 @@ class DoctypeControllerTest extends TestCase
 
     public function testDeleteRedirectDoctype()
     {
+        $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
         $doctypeController = new \Doctype\controllers\DoctypeController();
 
         //  CREATE
@@ -610,6 +614,10 @@ class DoctypeControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('wrong format for new_type_id', $responseBody->errors);
+
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 
     public function testDeleteDoctype()

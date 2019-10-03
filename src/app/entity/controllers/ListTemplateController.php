@@ -281,11 +281,11 @@ class ListTemplateController
                 if (!empty($listTemplates[$key]['externalId']['maarchParapheur'])) {
                     $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
                     if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
-                        foreach ($loadedXml->signatoryBook as $value) {
-                            if ($value->id == "maarchParapheur") {
-                                $url      = $value->url;
-                                $userId   = $value->userId;
-                                $password = $value->password;
+                        foreach ($loadedXml->signatoryBook as $signatoryBook) {
+                            if ($signatoryBook->id == "maarchParapheur") {
+                                $url      = $signatoryBook->url;
+                                $userId   = $signatoryBook->userId;
+                                $password = $signatoryBook->password;
                                 break;
                             }
                         }

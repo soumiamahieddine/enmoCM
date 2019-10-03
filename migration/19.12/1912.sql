@@ -215,63 +215,48 @@ DO $$ BEGIN
         UPDATE res_letterbox SET category_id = mlb_coll_ext.category_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
         UPDATE res_letterbox set category_id = 'incoming' WHERE category_id IS NULL;
         ALTER TABLE res_letterbox ALTER COLUMN category_id set not null;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS category_id;
 
         ALTER TABLE res_letterbox ADD COLUMN exp_contact_id integer;
         UPDATE res_letterbox SET exp_contact_id = mlb_coll_ext.exp_contact_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS exp_contact_id;
 
         ALTER TABLE res_letterbox ADD COLUMN exp_user_id character varying(128);
         UPDATE res_letterbox SET exp_user_id = mlb_coll_ext.exp_user_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS exp_user_id;
 
         ALTER TABLE res_letterbox ADD COLUMN dest_contact_id integer;
         UPDATE res_letterbox SET dest_contact_id = mlb_coll_ext.dest_contact_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS dest_contact_id;
 
         ALTER TABLE res_letterbox ADD COLUMN dest_user_id character varying(128);
         UPDATE res_letterbox SET dest_user_id = mlb_coll_ext.dest_user_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS dest_user_id;
 
         ALTER TABLE res_letterbox ADD COLUMN alt_identifier character varying(256);
         UPDATE res_letterbox SET alt_identifier = mlb_coll_ext.alt_identifier FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alt_identifier;
 
         ALTER TABLE res_letterbox ADD COLUMN admission_date timestamp without time zone;
         UPDATE res_letterbox SET admission_date = mlb_coll_ext.admission_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS admission_date;
 
         ALTER TABLE res_letterbox ADD COLUMN process_limit_date timestamp without time zone;
         UPDATE res_letterbox SET process_limit_date = mlb_coll_ext.process_limit_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS process_limit_date;
 
         ALTER TABLE res_letterbox ADD COLUMN closing_date timestamp without time zone;
         UPDATE res_letterbox SET closing_date = mlb_coll_ext.closing_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS closing_date;
 
         ALTER TABLE res_letterbox ADD COLUMN flag_alarm1 character(1) DEFAULT 'N'::character varying;
         UPDATE res_letterbox SET flag_alarm1 = mlb_coll_ext.flag_alarm1 FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_alarm1;
 
         ALTER TABLE res_letterbox ADD COLUMN flag_alarm2 character(1) DEFAULT 'N'::character varying;
         UPDATE res_letterbox SET flag_alarm2 = mlb_coll_ext.flag_alarm2 FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS flag_alarm2;
 
         ALTER TABLE res_letterbox ADD COLUMN is_multicontacts character(1);
         UPDATE res_letterbox SET is_multicontacts = mlb_coll_ext.is_multicontacts FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS is_multicontacts;
 
         ALTER TABLE res_letterbox ADD COLUMN address_id INTEGER;
         UPDATE res_letterbox SET address_id = mlb_coll_ext.address_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS address_id;
 
         ALTER TABLE res_letterbox ADD COLUMN alarm1_date timestamp without time zone;
         UPDATE res_letterbox SET alarm1_date = mlb_coll_ext.alarm1_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm1_date;
 
         ALTER TABLE res_letterbox ADD COLUMN alarm2_date timestamp without time zone;
         UPDATE res_letterbox SET alarm2_date = mlb_coll_ext.alarm2_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
-        ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS alarm2_date;
     END IF;
 END$$;
 
