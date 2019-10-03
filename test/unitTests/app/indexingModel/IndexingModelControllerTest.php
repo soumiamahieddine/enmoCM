@@ -155,6 +155,7 @@ class IndexingModelControllerTest extends TestCase
 
 
         // Create private model from master model
+        // Fail
         $args = [
             'label'     => 'mon sous model d indexation',
             'category'  => 'incoming',
@@ -191,6 +192,7 @@ class IndexingModelControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
         $this->assertSame('Field \'name\' from master model is missing', $responseBody->errors);
 
+        // Success
         array_push($args['fields'], [
             'identifier'    => 'name',
             'mandatory'     => true,
@@ -230,6 +232,12 @@ class IndexingModelControllerTest extends TestCase
                     'unit'          => 'mail'
                 ],
                 [
+                    'identifier'    => 'doctype',
+                    'mandatory'     => true,
+                    'default_value' => 'type_test2',
+                    'unit'          => 'mail'
+                ],
+                [
                     'identifier'    => 'siret',
                     'mandatory'     => false,
                     'default_value' => 'chicken',
@@ -247,7 +255,7 @@ class IndexingModelControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $indexingModelController->getById($fullRequest, new \Slim\Http\Response(), ['id' => self::$masterId]);
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
         $this->assertSame(200, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody());
@@ -259,12 +267,54 @@ class IndexingModelControllerTest extends TestCase
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
         $this->assertSame('butter', $responseBody->indexingModel->fields[0]->default_value);
         $this->assertSame('mail', $responseBody->indexingModel->fields[0]->unit);
-        $this->assertSame('siret', $responseBody->indexingModel->fields[1]->identifier);
-        $this->assertSame(false, $responseBody->indexingModel->fields[1]->mandatory);
-        $this->assertSame('chicken', $responseBody->indexingModel->fields[1]->default_value);
-        $this->assertSame('classement', $responseBody->indexingModel->fields[1]->unit);
 
+        $this->assertSame('doctype', $responseBody->indexingModel->fields[1]->identifier);
+        $this->assertSame(true, $responseBody->indexingModel->fields[1]->mandatory);
+        $this->assertSame('type_test2', $responseBody->indexingModel->fields[1]->default_value);
+        $this->assertSame('mail', $responseBody->indexingModel->fields[1]->unit);
 
+        $this->assertSame('siret', $responseBody->indexingModel->fields[2]->identifier);
+        $this->assertSame(false, $responseBody->indexingModel->fields[2]->mandatory);
+        $this->assertSame('chicken', $responseBody->indexingModel->fields[2]->default_value);
+        $this->assertSame('classement', $responseBody->indexingModel->fields[2]->unit);
+
+        // Read child
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBodyChild = json_decode((string)$response->getBody());
+
+        // check fields of child
+
+        $this->assertSame(3, count($responseBodyChild->indexingModel->fields));
+
+        $foundDoctype = false;
+        $foundSubject = false;
+        $foundSiret = false;
+        foreach ($responseBodyChild->indexingModel->fields as $field) {
+           if ($field->identifier == 'subject') {
+                $foundSubject = true;
+
+                $this->assertSame(true, $field->mandatory);
+                $this->assertSame('tika', $field->default_value);
+                $this->assertSame('mail', $field->unit);
+           } else if ($field->identifier == 'doctype') {
+                $foundDoctype = true;
+
+                $this->assertSame(true, $field->mandatory);
+                $this->assertSame('type_test', $field->default_value);
+                $this->assertSame('mail', $field->unit);
+           } else if ($field->identifier == 'siret') {
+                $foundSiret = true;
+
+                $this->assertSame(false, $field->mandatory);
+                $this->assertSame('chicken', $field->default_value);
+                $this->assertSame('classement', $field->unit);
+           }
+        }
+
+        $this->assertSame(true, $foundSubject);
+        $this->assertSame(true, $foundDoctype);
+        $this->assertSame(true, $foundSiret);
 
         //  Errors
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
