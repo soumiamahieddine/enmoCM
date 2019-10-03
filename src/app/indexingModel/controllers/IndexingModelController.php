@@ -65,6 +65,30 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['category']) || !in_array($body['category'], $categories)) {
             return $response->withStatus(400)->withJson(['errors' => "Body category is empty, not a string or not a valid category"]);
+        } elseif (!Validator::arrayType()->notEmpty()->validate($body['fields'])) {
+            return $response->withStatus(400)->withJson(['errors' => "Body fields is empty or not an array"]);
+        }
+
+        $foundDoctype = false;
+        $foundSubject = false;
+
+        foreach ($body['fields'] as $key => $field) {
+            if (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
+                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not a string"]);
+            }
+
+            if ($field['identifier'] == 'doctype') {
+                $foundDoctype = true;
+            } elseif ($field['identifier'] == 'subject') {
+                $foundSubject = true;
+            }
+        }
+
+        if (!$foundDoctype) {
+            return $response->withStatus(400)->withJson(['errors' => "Mandatory 'doctype' field is missing"]);
+        }
+        if (!$foundSubject) {
+            return $response->withStatus(400)->withJson(['errors' => "Mandatory 'subject' field is missing"]);
         }
 
         if (Validator::intVal()->notEmpty()->validate($body['master'])) {
@@ -99,12 +123,6 @@ class IndexingModelController
             }
             $body['fields'] = $arrayTmp;
 
-        }
-
-        foreach ($body['fields'] as $key => $field) {
-            if (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
-                return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not a string"]);
-            }
         }
 
         if (ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
