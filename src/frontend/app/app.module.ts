@@ -59,7 +59,6 @@ import { ExportComponent }                      from './list/export/export.compo
 import { NoteEditorComponent }                  from './notes/note-editor.component';
 import { NotesListComponent }                   from './notes/notes.component';
 import { AttachmentsListComponent }             from './attachments/attachments-list.component';
-import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
 import { VisaWorkflowComponent }             from './visa/visa-workflow.component';
 import { AvisWorkflowComponent }             from './avis/avis-workflow.component';
 
@@ -92,7 +91,6 @@ import { IndexationComponent }                        from './indexation/indexat
         NotesListComponent,
         NoteEditorComponent,
         AttachmentsListComponent,
-        DiffusionsListComponent,
         VisaWorkflowComponent,
         AvisWorkflowComponent,
         FiltersListComponent,

@@ -18,7 +18,7 @@
           </mat-icon>&nbsp;<span color="primary">{{option[key]}}</span>&nbsp;<small>{{option[subInfoKey]}}</small>
         </mat-option>
       </ng-container>
-      <mat-option class="autoCompleteInfoResult" *ngIf="options.length === 0 && !loading" [class.smallInputInfo]="size === 'small'" disabled
+      <mat-option class="autoCompleteInfoResult smallInputInfo" *ngIf="options.length === 0 && !loading" disabled
         [innerHTML]="listInfo">
       </mat-option>
       <mat-option *ngIf="loading" disabled>

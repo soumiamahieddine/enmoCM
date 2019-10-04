@@ -158,8 +158,32 @@
                                 <i class="fas fa-times" style="color:red;font-size:15px;"
                                     *ngIf="!adminMode && arrFormControl[field.identifier].touched && arrFormControl[field.identifier].hasError('required')"></i>
                                 <i class="fas fa-check" style="color:green;font-size:15px;"
-                                    *ngIf="!adminMode && arrFormControl[field.identifier].valid && (arrFormControl[field.identifier].value!==null && arrFormControl[field.identifier].value!=='' && arrFormControl[field.identifier].value.length > 0)"></i>
+                                    *ngIf="!adminMode && arrFormControl[field.identifier].valid && !isEmptyField(field)"></i>
                             </div>
+                        </div>
+                        <div *ngIf="field.identifier === 'destination' && !adminMode">
+                            <mat-divider></mat-divider>
+                            <div style="padding: 10px;font-size: 16px;color: #135F7F;letter-spacing: 2px;font-weight: bold;display: flex;
+                                align-items: center;">
+                                <div style="display: flex;flex: 1;align-items: center;">
+                                    Liste de diffusion <button mat-icon-button color="primary"
+                                            (click)="appDiffusionsList.switchMode()">
+                                            <mat-icon class="fa fa-edit"></mat-icon>
+                                        </button>
+                                </div>
+                                <div class="fieldState" style="width: 20px;padding: 0px;">
+                                    <i class="fas fa-asterisk"
+                                        *ngIf="adminMode || (arrFormControl['diffusionList'].hasError('required') && arrFormControl['diffusionList'].untouched)"
+                                        [class.noMandatory]="!field.mandatory"></i>
+                                    <i class="fas fa-times" style="color:red;font-size:15px;"
+                                        *ngIf="!adminMode && arrFormControl['diffusionList'].touched && arrFormControl['diffusionList'].hasError('required')"></i>
+                                    <i class="fas fa-check" style="color:green;font-size:15px;"
+                                        *ngIf="!adminMode && arrFormControl['diffusionList'].valid && !isEmptyField(field)"></i>
+                                </div>
+                            </div>
+                            <app-diffusions-list #appDiffusionsList [entityId]="arrFormControl[field.identifier].value" [diffFormControl]="arrFormControl['diffusionList']" [allowedEntities]="[1,2,3,5]">
+                            </app-diffusions-list>
+                            <mat-divider></mat-divider>
                         </div>
                     </ng-container>
                 </div>

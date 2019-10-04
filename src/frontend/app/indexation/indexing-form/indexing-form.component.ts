@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
@@ -10,6 +10,7 @@ import { of, forkJoin } from 'rxjs';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
+import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
 
 @Component({
     selector: 'app-indexing-form',
@@ -27,6 +28,8 @@ export class IndexingFormComponent implements OnInit {
     @Input('indexingFormId') indexingFormId: number;
     @Input('groupId') groupId: number;
     @Input('admin') adminMode: boolean;
+
+    @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
 
     fieldCategories: any[] = ['mail', 'contact', 'process', 'classement'];
 
@@ -339,7 +342,6 @@ export class IndexingFormComponent implements OnInit {
                                 let defaultVal = data.entities.filter((entity: any) => entity.enabled === true && entity.id === elem.default_value);
                                 elem.default_value = defaultVal.length > 0 ? defaultVal[0].id : '';
                                 this.arrFormControl[elem.identifier].setValue(defaultVal.length > 0 ? defaultVal[0].id : '');
-
                                 elem.values = data.entities.map((entity: any) => {
                                     title = entity.entity_label;
 
@@ -353,6 +355,7 @@ export class IndexingFormComponent implements OnInit {
                                         disabled: !entity.enabled
                                     }
                                 });
+                                elem.event = 'loadDiffusionList';
                             }
                         } else if (elem.identifier === 'arrivalDate') {
                             elem.startDate = 'docDate';
@@ -373,7 +376,7 @@ export class IndexingFormComponent implements OnInit {
                         } else if (elem.identifier === 'folder') {
                             elem.values = null;
 
-                        }  else if (elem.identifier === 'category_id') {
+                        } else if (elem.identifier === 'category_id') {
                             elem.values = data.categories;
 
                         } else if (elem.identifier === 'priority') {
@@ -599,6 +602,19 @@ export class IndexingFormComponent implements OnInit {
         }
 
         this.arrFormControl[field.identifier].setValidators(valArr);
+
+        if (field.identifier === 'destination') {
+            let valArr: ValidatorFn[] = [];
+
+            valArr.push(Validators.required);
+
+            this.arrFormControl['diffusionList'] = new FormControl({ value: null, disabled: false });
+
+            this.arrFormControl['diffusionList'].setValidators(valArr);
+
+            this.arrFormControl['diffusionList'].setValue([]);
+
+        }
     }
 
     regexValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
@@ -612,7 +628,6 @@ export class IndexingFormComponent implements OnInit {
     }
 
     isValidForm() {
-        console.log(this.indexingFormGroup.controls['folder']);
         if (!this.indexingFormGroup.valid) {
             Object.keys(this.indexingFormGroup.controls).forEach(key => {
 
@@ -626,6 +641,14 @@ export class IndexingFormComponent implements OnInit {
             });
         }
         return this.indexingFormGroup.valid;
+    }
+
+    isEmptyField(field: any) {
+        if (this.arrFormControl[field.identifier].value !== null || String(this.arrFormControl[field.identifier].value) !== '' || this.arrFormControl[field.identifier].value.length > 0 ) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     getMinDate(id: string) {
@@ -691,5 +714,9 @@ export class IndexingFormComponent implements OnInit {
 
     changeCategory(categoryId: string) {
         this.currentCategory = categoryId;
+    }
+
+    loadDiffusionList(field: any, value: any) {
+        this.appDiffusionsList.loadListModel(value);
     }
 }

@@ -57,6 +57,8 @@ import { PluginSelectSearchComponent }                        from '../plugins/s
 import { FolderInputComponent }                        from '../app/folder/indexing/folder-input.component';
 import { TagInputComponent }                        from '../app/tag/indexing/tag-input.component';
 
+import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
+
 
 
 export class MyHammerConfig extends HammerGestureConfig {
@@ -104,7 +106,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         FieldListComponent,
         PluginSelectSearchComponent,
         FolderInputComponent,
-        TagInputComponent
+        TagInputComponent,
+        DiffusionsListComponent
     ],
     exports: [
         CommonModule,
@@ -139,7 +142,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         FieldListComponent,
         PluginSelectSearchComponent,
         FolderInputComponent,
-        TagInputComponent
+        TagInputComponent,
+        DiffusionsListComponent
     ],
     providers: [
         LatinisePipe,
